@@ -2,25 +2,40 @@
   "name": "aims",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://institute-for-future-intelligence.github.io/aims",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "antd": "^5.8.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "recharts": "^2.8.0",
+    "three": "^0.156.0",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4",
+    "zustand": "^4.4.1"
+  },
+  "devDependencies": {
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.47",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "gh-pages": "^6.0.0",
+    "prettier": "^3.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "lint-staged": {
+    "*.ts?(x)": [
+      "prettier --parser=typescript --write"
+    ]
   },
   "eslintConfig": {
     "extends": [
