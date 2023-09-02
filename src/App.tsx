@@ -10,7 +10,7 @@ function App() {
         <p>
           AIMS: Artificial Intelligence for Molecular Sciences
         </p>
-        Under construction...
+          🚧 Under construction...
       </header>
     </div>
   );
