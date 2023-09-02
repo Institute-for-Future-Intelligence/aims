@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/aims/static/css/main.fe251f2b.css",
+    "main.js": "/aims/static/js/main.d868e9ed.js",
+    "static/js/787.657ab9af.chunk.js": "/aims/static/js/787.657ab9af.chunk.js",
+    "static/media/ifi-logo.png": "/aims/static/media/ifi-logo.eb3600167fe3fa8ccbb1.png",
+    "index.html": "/aims/index.html",
+    "main.fe251f2b.css.map": "/aims/static/css/main.fe251f2b.css.map",
+    "main.d868e9ed.js.map": "/aims/static/js/main.d868e9ed.js.map",
+    "787.657ab9af.chunk.js.map": "/aims/static/js/787.657ab9af.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fe251f2b.css",
+    "static/js/main.d868e9ed.js"
+  ]
+}
