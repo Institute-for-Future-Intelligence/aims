@@ -1,29 +1,29 @@
 {
   "name": "aims",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
   "homepage": "https://institute-for-future-intelligence.github.io/aims",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "antd": "^5.8.6",
+    "antd": "^5.11.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "recharts": "^2.8.0",
-    "three": "^0.156.0",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4",
-    "zustand": "^4.4.1"
+    "react-scripts": "^5.0.1",
+    "recharts": "^2.10.1",
+    "three": "^0.158.0",
+    "typescript": "^5.2.2",
+    "web-vitals": "^3.5.0",
+    "zustand": "^4.4.6"
   },
   "devDependencies": {
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.47",
-    "@types/react": "^18.2.21",
-    "@types/react-dom": "^18.2.7",
-    "gh-pages": "^6.0.0",
-    "prettier": "^3.0.3"
+    "@types/jest": "^29.5.8",
+    "@types/node": "^20.9.2",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "gh-pages": "^6.1.0",
+    "prettier": "^3.1.0",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.5.1"
   },
   "scripts": {
     "predeploy": "npm run build",
