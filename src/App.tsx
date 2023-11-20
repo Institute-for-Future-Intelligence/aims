@@ -1,5 +1,9 @@
+/*
+ * @Copyright 2023. Institute for Future Intelligence, Inc.
+ */
+
 import React from 'react';
-import aimsLogo from './images/aims-logo-300.png';
+import aimsLogo from './images/aims-logo-250.png';
 import './App.css';
 
 function App() {
@@ -7,7 +11,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={aimsLogo} alt="logo" />
-        <p>
+        <p style={{paddingTop: '20px'}}>
           AIMS: Artificial Intelligence for Molecular Sciences
         </p>
           🚧 Under construction...
