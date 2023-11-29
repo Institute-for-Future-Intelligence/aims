@@ -14,7 +14,7 @@ function App() {
         <p style={{paddingTop: '20px'}}>
           AIMS: Artificial Intelligence for Molecular Sciences
         </p>
-          🚧 Under construction...
+          🚧🚧🚧 Under construction...
       </header>
     </div>
   );
