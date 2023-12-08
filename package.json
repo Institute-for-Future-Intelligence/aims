@@ -5,8 +5,11 @@
   "homepage": "https://institute-for-future-intelligence.github.io/aims",
   "dependencies": {
     "antd": "^5.11.5",
+    "i18next": "^23.7.8",
+    "i18next-browser-languagedetector": "^7.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^13.5.0",
     "react-scripts": "^5.0.1",
     "recharts": "^2.10.2",
     "three": "^0.158.0",
