@@ -367,36 +367,38 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
         {
           key: 'language',
           label: (
-            <Radio.Group
-              value={language}
-              style={{ height: '100px' }}
-              onChange={(e) => {
-                setUpdateMenuFlag(!updateMenuFlag);
-                setCommonStore((state) => {
-                  state.language = e.target.value;
-                  switch (state.language) {
-                    case 'zh_cn':
-                      state.locale = zhCN;
-                      break;
-                    case 'zh_tw':
-                      state.locale = zhTW;
-                      break;
-                    default:
-                      state.locale = enUS;
-                  }
-                });
-              }}
-            >
-              <Radio style={radioStyle} value={'en'}>
-                {Language.English}
-              </Radio>
-              <Radio style={radioStyle} value={'zh_cn'}>
-                {Language.ChineseSimplified}
-              </Radio>
-              <Radio style={radioStyle} value={'zh_tw'}>
-                {Language.ChineseTraditional}
-              </Radio>
-            </Radio.Group>
+            <MenuItem stayAfterClick noPadding>
+              <Radio.Group
+                value={language}
+                style={{ height: '100px', backgroundColor: 'white' }}
+                onChange={(e) => {
+                  setUpdateMenuFlag(!updateMenuFlag);
+                  setCommonStore((state) => {
+                    state.language = e.target.value;
+                    switch (state.language) {
+                      case 'zh_cn':
+                        state.locale = zhCN;
+                        break;
+                      case 'zh_tw':
+                        state.locale = zhTW;
+                        break;
+                      default:
+                        state.locale = enUS;
+                    }
+                  });
+                }}
+              >
+                <Radio style={radioStyle} value={'en'}>
+                  {Language.English}
+                </Radio>
+                <Radio style={radioStyle} value={'zh_cn'}>
+                  {Language.ChineseSimplified}
+                </Radio>
+                <Radio style={radioStyle} value={'zh_tw'}>
+                  {Language.ChineseTraditional}
+                </Radio>
+              </Radio.Group>
+            </MenuItem>
           ),
         },
       ],
