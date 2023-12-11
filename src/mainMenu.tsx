@@ -9,7 +9,7 @@ import enUS from 'antd/lib/locale/en_US';
 import React, { useMemo, useState } from 'react';
 import { useStore } from './stores/common';
 import styled from 'styled-components';
-import { Dropdown, Menu, MenuProps, Radio } from 'antd';
+import { Dropdown, MenuProps, Radio } from 'antd';
 import logo from './assets/aims-logo-32.png';
 import About from './about';
 import { saveImage, showInfo } from './helpers';
