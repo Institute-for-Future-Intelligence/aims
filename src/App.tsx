@@ -17,8 +17,6 @@ const App = () => {
     return { lng: language };
   }, [language]);
 
-  console.log('check');
-
   return (
     <div className="App">
       <div

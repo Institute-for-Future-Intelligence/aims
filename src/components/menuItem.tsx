@@ -5,8 +5,7 @@
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 
 export interface MenuItemProps {
-  backgroundColor?: string;
-  noPadding?: boolean;
+  hasPadding?: boolean;
   stayAfterClick?: boolean;
   textSelectable?: boolean;
   update?: boolean;
@@ -15,9 +14,8 @@ export interface MenuItemProps {
 }
 
 export const MenuItem: React.FC<MenuItemProps> = ({
-  backgroundColor,
   stayAfterClick,
-  noPadding,
+  hasPadding,
   textSelectable = true,
   update,
   onClick,
@@ -39,11 +37,10 @@ export const MenuItem: React.FC<MenuItemProps> = ({
     <span
       onClick={handleClick}
       style={{
-        backgroundColor: backgroundColor,
         userSelect: textSelectable ? 'auto' : 'none',
         display: 'inline-block',
         width: '100%',
-        paddingLeft: noPadding ? '0px' : '24px',
+        paddingLeft: hasPadding ? '24px' : '0px',
       }}
     >
       {children}

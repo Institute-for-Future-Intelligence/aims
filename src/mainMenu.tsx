@@ -409,7 +409,6 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
       key: 'about',
       label: (
         <MenuItem
-          noPadding
           onClick={() => {
             setAboutUs(true);
           }}
