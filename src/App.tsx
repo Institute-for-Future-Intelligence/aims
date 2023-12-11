@@ -8,6 +8,7 @@ import i18n from './i18n/i18n';
 import {useStore} from "./stores/common";
 import * as Selector from './stores/selector';
 import {visitHomepage} from "./helpers";
+import MainMenu from "./mainMenu";
 
 const App= () => {
 
@@ -42,6 +43,10 @@ const App= () => {
           {`${i18n.t('name.AIMS', lang)}`}
         </span>
             </div>
+            <MainMenu
+                viewOnly={false}
+                canvas={null}
+            />
         </div>
     );
 }

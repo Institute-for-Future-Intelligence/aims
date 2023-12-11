@@ -7,6 +7,11 @@ import produce, { enableMapSet } from 'immer';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import {Util} from "../Util";
 import {VERSION} from "../constants";
+import {Undoable} from "../undo/Undoable";
+import {UndoManager} from "../undo/UndoManager";
+import {ActionInfo, User} from "../types";
+import {Locale} from "antd/lib/locale";
+import enUS from 'antd/lib/locale/en_US';
 
 enableMapSet();
 
@@ -16,6 +21,16 @@ export interface CommonStoreState {
     // only the following properties are persisted (see the whitelist at the end)
     version: string | undefined;
     language: string;
+    locale: Locale;
+    user: User;
+    cloudFile: string | undefined;
+
+    undoManager: UndoManager;
+    addUndoable: (undoable: Undoable) => void;
+    loggable: boolean;
+    actionInfo: ActionInfo | undefined;
+    currentUndoable: Undoable | undefined;
+
 }
 
 export const useStore = createWithEqualityFn<CommonStoreState>()(
@@ -35,6 +50,23 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                     },
                     version: VERSION,
                     language: 'en',
+                    locale: enUS,
+                    user: {} as User,
+                    cloudFile: undefined,
+
+                    undoManager: new UndoManager(),
+                    addUndoable(undoable: Undoable) {
+                        immerSet((state: CommonStoreState) => {
+                            if (state.loggable) {
+                                state.currentUndoable = undoable;
+                            }
+                            state.undoManager.add(undoable);
+                        });
+                    },
+                    loggable: false,
+                    actionInfo: undefined,
+                    currentUndoable: undefined,
+
                 };
             },
             {
