@@ -398,6 +398,7 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
               </Radio>
             </Radio.Group>
           ),
+          style: { backgroundColor: 'white' },
         },
       ],
     },
