@@ -361,7 +361,7 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
 
     // language menu
     {
-      key: 'language',
+      key: 'language-sub-menu',
       label: t('menu.languageSubMenu', lang),
       children: [
         {
@@ -370,7 +370,7 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
             <MenuItem stayAfterClick>
               <Radio.Group
                 value={language}
-                style={{ height: '100px', backgroundColor: 'white' }}
+                style={{ height: '100px' }}
                 onChange={(e) => {
                   setUpdateMenuFlag(!updateMenuFlag);
                   setCommonStore((state) => {
