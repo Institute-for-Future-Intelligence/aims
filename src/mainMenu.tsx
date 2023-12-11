@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import {usePrimitiveStore} from "./stores/commonPrimitive";
 import {UNDO_SHOW_INFO_DURATION} from "./constants";
 import {Language} from "./types";
+import {MenuItem} from "./components/menuItem";
 
 const radioStyle = {
     display: 'block',
@@ -111,14 +112,13 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
         // file menu
         {
             key: 'file',
-            type: 'group',
             label: t('menu.fileSubMenu', lang),
             children: [
 
                 {
                     key: 'create-new-file',
                     label: (
-                        <Menu.Item
+                        <MenuItem
                             onClick={() => {
                                 undoManager.clear();
                                 setCommonStore((state) => {
@@ -135,14 +135,14 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                         >
                             {t('menu.file.CreateNewFile', lang)}
                             <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+F)</span>
-                        </Menu.Item>
+                        </MenuItem>
                     ),
                 },
 
                 {
                     key: 'open-local-file',
                     label: (
-                        <Menu.Item
+                        <MenuItem
                             onClick={() => {
                                 undoManager.clear();
                                 setCommonStore((state) => {
@@ -160,14 +160,14 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                         >
                             {t('menu.file.OpenLocalFile', lang)}
                             <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+O)</span>...
-                        </Menu.Item>
+                        </MenuItem>
                     ),
                 },
 
                 {
                     key: 'save-local-file',
                     label: (
-                        <Menu.Item
+                        <MenuItem
                             onClick={() => {
                                 usePrimitiveStore.getState().set((state) => {
                                     // state.saveLocalFileDialogVisible = true;
@@ -184,14 +184,14 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                         >
                             {t('menu.file.SaveAsLocalFile', lang)}
                             <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+S)</span>...
-                        </Menu.Item>
+                        </MenuItem>
                     ),
                 },
 
                 {
                     key: 'open-cloud-file',
                     label: (
-                        <Menu.Item
+                        <MenuItem
                             onClick={() => {
                                 usePrimitiveStore.getState().set((state) => {
                                     // state.listCloudFilesFlag = true;
@@ -211,14 +211,14 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                         >
                             {t('menu.file.OpenCloudFile', lang)}
                             <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+Shift+O)</span>...
-                        </Menu.Item>
+                        </MenuItem>
                     ),
                 },
 
                 {
                     key: 'save-cloud-file',
                     label: (
-                        <Menu.Item
+                        <MenuItem
                             onClick={() => {
                                 // usePrimitiveStore.getState().setSaveCloudFileFlag(true);
                                 if (loggable) {
@@ -233,14 +233,14 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                         >
                             {t('menu.file.SaveCloudFile', lang)}
                             <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+Shift+S)</span>
-                        </Menu.Item>
+                        </MenuItem>
                     ),
                 },
 
                 {
                     key: 'save-as-cloud-file',
                     label: (
-                        <Menu.Item
+                        <MenuItem
                             onClick={() => {
                                 setCommonStore((state) => {
                                     // state.showCloudFileTitleDialogFlag = !state.showCloudFileTitleDialogFlag;
@@ -255,16 +255,16 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                             }}
                         >
                             {t('menu.file.SaveAsCloudFile', lang)}...
-                        </Menu.Item>
+                        </MenuItem>
                     ),
                 },
 
                 {
                     key: 'screenshot',
                     label: (
-                        <Menu.Item key="screenshot" onClick={takeScreenshot}>
+                        <MenuItem key="screenshot" onClick={takeScreenshot}>
                             {t('menu.file.TakeScreenshot', lang)}
-                        </Menu.Item>),
+                        </MenuItem>),
                 },
             ],
         },
@@ -272,13 +272,12 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
         // edit menu
         {
             key: 'edit',
-            type: 'group',
             label: t('menu.editSubMenu', lang),
             children: [
                 {
                     key: 'undo',
                     label: (
-                        <Menu.Item
+                        <MenuItem
                             onClick={() => {
                                 if (undoManager.hasUndo()) {
                                     const commandName = undoManager.undo();
@@ -296,13 +295,13 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                         >
                             {t('menu.edit.Undo', lang) + ': ' + undoManager.getLastUndoName()}
                             <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+Z)</span>
-                        </Menu.Item>
+                        </MenuItem>
                     ),
                 },
                 {
                     key: 'redo',
                     label: (
-                        <Menu.Item
+                        <MenuItem
                             onClick={() => {
                                 if (undoManager.hasRedo()) {
                                     const commandName = undoManager.redo();
@@ -320,7 +319,7 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                         >
                             {t('menu.edit.Redo', lang) + ': ' + undoManager.getLastRedoName()}
                             <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+Y)</span>
-                        </Menu.Item>
+                        </MenuItem>
                     ),
                 },
             ]
@@ -329,34 +328,31 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
         // view menu
         {
             key: 'view',
-            type: 'group',
             label: t('menu.viewSubMenu', lang),
             children: [
                 {
                     key: 'zoom-out-view',
                     label: (
-                        <Menu.Item
+                        <MenuItem
                             onClick={() => {
                                 // zoomView(1.1);
                             }}
-                            style={{paddingLeft: '36px'}}
                         >
                             {t('menu.view.ZoomOut', lang)}
                             <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+])</span>
-                        </Menu.Item>),
+                        </MenuItem>),
                 },
                 {
                     key: 'zoom-in-view',
                     label: (
-                        <Menu.Item
+                        <MenuItem
                             onClick={() => {
                                 // zoomView(0.9);
                             }}
-                            style={{paddingLeft: '36px'}}
                         >
                             {t('menu.view.ZoomIn', lang)}
                             <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+[)</span>
-                        </Menu.Item>
+                        </MenuItem>
                     ),
                 },
             ]
@@ -365,7 +361,6 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
         // language menu
         {
             key: 'language',
-            type: 'group',
             label: t('menu.languageSubMenu', lang),
             children: [
                 {
@@ -406,17 +401,18 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
             ]
         },
 
-        // about window
+                // about window
         {
             key: 'about',
             label: (
-                <Menu.Item
+                <MenuItem
+                    noPadding
                     onClick={() => {
                         setAboutUs(true);
                     }}
                 >
                     {t('menu.AboutUs', lang)}...
-                </Menu.Item>),
+                </MenuItem>),
         }
     ];
 
