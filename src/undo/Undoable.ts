@@ -3,8 +3,8 @@
  */
 
 export interface Undoable {
-    undo: () => void;
-    redo: () => void;
-    name: string;
-    timestamp: number; // for logging
+  undo: () => void;
+  redo: () => void;
+  name: string;
+  timestamp: number; // for logging
 }

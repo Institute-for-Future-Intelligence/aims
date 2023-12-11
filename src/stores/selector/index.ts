@@ -3,7 +3,7 @@
  */
 
 import { CommonStoreState } from '../common';
-import {PrimitiveStoreState} from "../commonPrimitive";
+import { PrimitiveStoreState } from '../commonPrimitive';
 
 export const set = (state: CommonStoreState) => state.set;
 
@@ -22,4 +22,3 @@ export const loggable = (state: CommonStoreState) => state.loggable;
 export const actionInfo = (state: CommonStoreState) => state.actionInfo;
 
 export const currentUndoable = (state: CommonStoreState) => state.currentUndoable;
-

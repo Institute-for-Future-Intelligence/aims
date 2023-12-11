@@ -25,26 +25,26 @@ const Container = styled.div`
 `;
 
 const About = ({ close }: { close: () => void }) => {
-    const language = useStore(Selector.language);
-    return (
-        <Container>
-            <Team top={10} color={'antiquewhite'} />
-            <div
-                style={{
-                    position: 'absolute',
-                    fontSize: 'small',
-                    color: 'antiquewhite',
-                    cursor: 'pointer',
-                    bottom: '10px',
-                }}
-                onMouseDown={() => {
-                    close();
-                }}
-            >
-                {i18n.t('word.Close', { lng: language })}
-            </div>
-        </Container>
-    );
+  const language = useStore(Selector.language);
+  return (
+    <Container>
+      <Team top={10} color={'antiquewhite'} />
+      <div
+        style={{
+          position: 'absolute',
+          fontSize: 'small',
+          color: 'antiquewhite',
+          cursor: 'pointer',
+          bottom: '10px',
+        }}
+        onMouseDown={() => {
+          close();
+        }}
+      >
+        {i18n.t('word.Close', { lng: language })}
+      </div>
+    </Container>
+  );
 };
 
 export default React.memo(About);
