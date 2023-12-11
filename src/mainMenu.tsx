@@ -71,7 +71,7 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
 
   const user = useStore.getState().user;
   const loggable = useStore.getState().loggable;
-  const language = useStore.getState().language;
+  const language = useStore(Selector.language);
   const undoManager = useStore.getState().undoManager;
   const cloudFile = useStore.getState().cloudFile;
   const changed = usePrimitiveStore.getState().changed;
@@ -80,6 +80,9 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
 
   // Manually update menu when visible to avoid listen to common store change.
   const [updateMenuFlag, setUpdateMenuFlag] = useState(false);
+
+  const hasUndo = undoManager.hasUndo();
+  const hasRedo = undoManager.hasRedo();
 
   const handleVisibleChange = (visible: boolean) => {
     if (visible) {
@@ -108,173 +111,165 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
     }
   };
 
-  const items: MenuProps['items'] = [
+  const createItems = useMemo(() => {
+    const items: MenuProps['items'] = [];
+
     // file menu
-    {
-      key: 'file',
-      label: t('menu.fileSubMenu', lang),
-      children: [
-        {
-          key: 'create-new-file',
-          label: (
-            <MenuItem
-              onClick={() => {
-                undoManager.clear();
-                setCommonStore((state) => {
-                  // state.createNewFileFlag = true;
-                  // window.history.pushState({}, document.title, HOME_URL);
-                  if (loggable) {
-                    state.actionInfo = {
-                      name: 'Create New File',
-                      timestamp: new Date().getTime(),
-                    };
-                  }
-                });
-              }}
-            >
-              {t('menu.file.CreateNewFile', lang)}
-              <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+F)</span>
-            </MenuItem>
-          ),
-        },
-
-        {
-          key: 'open-local-file',
-          label: (
-            <MenuItem
-              onClick={() => {
-                undoManager.clear();
-                setCommonStore((state) => {
-                  // state.openLocalFileFlag = true;
-                  // state.cloudFile = undefined;
-                  // window.history.pushState({}, document.title, HOME_URL);
-                  if (loggable) {
-                    state.actionInfo = {
-                      name: 'Open Local File',
-                      timestamp: new Date().getTime(),
-                    };
-                  }
-                });
-              }}
-            >
-              {t('menu.file.OpenLocalFile', lang)}
-              <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+O)</span>...
-            </MenuItem>
-          ),
-        },
-
-        {
-          key: 'save-local-file',
-          label: (
-            <MenuItem
-              onClick={() => {
-                usePrimitiveStore.getState().set((state) => {
-                  // state.saveLocalFileDialogVisible = true;
-                });
-                if (loggable) {
-                  setCommonStore((state) => {
-                    state.actionInfo = {
-                      name: 'Save as Local File',
-                      timestamp: new Date().getTime(),
-                    };
-                  });
-                }
-              }}
-            >
-              {t('menu.file.SaveAsLocalFile', lang)}
-              <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+S)</span>...
-            </MenuItem>
-          ),
-        },
-
-        {
-          key: 'open-cloud-file',
-          label: (
-            <MenuItem
-              onClick={() => {
-                usePrimitiveStore.getState().set((state) => {
-                  // state.listCloudFilesFlag = true;
-                });
-                setCommonStore((state) => {
-                  // state.selectedFloatingWindow = 'cloudFilePanel';
-                });
-                if (loggable) {
-                  setCommonStore((state) => {
-                    state.actionInfo = {
-                      name: 'List Cloud Files',
-                      timestamp: new Date().getTime(),
-                    };
-                  });
-                }
-              }}
-            >
-              {t('menu.file.OpenCloudFile', lang)}
-              <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Shift+O)</span>...
-            </MenuItem>
-          ),
-        },
-
-        {
-          key: 'save-cloud-file',
-          label: (
-            <MenuItem
-              onClick={() => {
-                // usePrimitiveStore.getState().setSaveCloudFileFlag(true);
-                if (loggable) {
-                  setCommonStore((state) => {
-                    state.actionInfo = {
-                      name: 'Save Cloud File',
-                      timestamp: new Date().getTime(),
-                    };
-                  });
-                }
-              }}
-            >
-              {t('menu.file.SaveCloudFile', lang)}
-              <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Shift+S)</span>
-            </MenuItem>
-          ),
-        },
-
-        {
-          key: 'save-as-cloud-file',
-          label: (
-            <MenuItem
-              onClick={() => {
-                setCommonStore((state) => {
-                  // state.showCloudFileTitleDialogFlag = !state.showCloudFileTitleDialogFlag;
-                  // state.showCloudFileTitleDialog = true;
-                  if (loggable) {
-                    state.actionInfo = {
-                      name: 'Save as Cloud File',
-                      timestamp: new Date().getTime(),
-                    };
-                  }
-                });
-              }}
-            >
-              {t('menu.file.SaveAsCloudFile', lang)}...
-            </MenuItem>
-          ),
-        },
-
-        {
-          key: 'screenshot',
-          label: (
-            <MenuItem key="screenshot" onClick={takeScreenshot}>
-              {t('menu.file.TakeScreenshot', lang)}
-            </MenuItem>
-          ),
-        },
-      ],
-    },
+    const fileMenuItems: MenuProps['items'] = [];
+    items.push({ key: 'file-sub-menu', label: t('menu.fileSubMenu', lang), children: fileMenuItems });
+    fileMenuItems.push({
+      key: 'create-new-file',
+      label: (
+        <MenuItem
+          onClick={() => {
+            undoManager.clear();
+            setCommonStore((state) => {
+              // state.createNewFileFlag = true;
+              // window.history.pushState({}, document.title, HOME_URL);
+              if (loggable) {
+                state.actionInfo = {
+                  name: 'Create New File',
+                  timestamp: new Date().getTime(),
+                };
+              }
+            });
+          }}
+        >
+          {t('menu.file.CreateNewFile', lang)}
+          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+F)</span>
+        </MenuItem>
+      ),
+    });
+    fileMenuItems.push({
+      key: 'open-local-file',
+      label: (
+        <MenuItem
+          onClick={() => {
+            undoManager.clear();
+            setCommonStore((state) => {
+              // state.openLocalFileFlag = true;
+              // state.cloudFile = undefined;
+              // window.history.pushState({}, document.title, HOME_URL);
+              if (loggable) {
+                state.actionInfo = {
+                  name: 'Open Local File',
+                  timestamp: new Date().getTime(),
+                };
+              }
+            });
+          }}
+        >
+          {t('menu.file.OpenLocalFile', lang)}
+          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+O)</span>...
+        </MenuItem>
+      ),
+    });
+    fileMenuItems.push({
+      key: 'save-local-file',
+      label: (
+        <MenuItem
+          onClick={() => {
+            usePrimitiveStore.getState().set((state) => {
+              // state.saveLocalFileDialogVisible = true;
+            });
+            if (loggable) {
+              setCommonStore((state) => {
+                state.actionInfo = {
+                  name: 'Save as Local File',
+                  timestamp: new Date().getTime(),
+                };
+              });
+            }
+          }}
+        >
+          {t('menu.file.SaveAsLocalFile', lang)}
+          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+S)</span>...
+        </MenuItem>
+      ),
+    });
+    fileMenuItems.push({
+      key: 'open-cloud-file',
+      label: (
+        <MenuItem
+          onClick={() => {
+            usePrimitiveStore.getState().set((state) => {
+              // state.listCloudFilesFlag = true;
+            });
+            setCommonStore((state) => {
+              // state.selectedFloatingWindow = 'cloudFilePanel';
+            });
+            if (loggable) {
+              setCommonStore((state) => {
+                state.actionInfo = {
+                  name: 'List Cloud Files',
+                  timestamp: new Date().getTime(),
+                };
+              });
+            }
+          }}
+        >
+          {t('menu.file.OpenCloudFile', lang)}
+          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Shift+O)</span>...
+        </MenuItem>
+      ),
+    });
+    fileMenuItems.push({
+      key: 'save-cloud-file',
+      label: (
+        <MenuItem
+          onClick={() => {
+            // usePrimitiveStore.getState().setSaveCloudFileFlag(true);
+            if (loggable) {
+              setCommonStore((state) => {
+                state.actionInfo = {
+                  name: 'Save Cloud File',
+                  timestamp: new Date().getTime(),
+                };
+              });
+            }
+          }}
+        >
+          {t('menu.file.SaveCloudFile', lang)}
+          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Shift+S)</span>
+        </MenuItem>
+      ),
+    });
+    fileMenuItems.push({
+      key: 'save-as-cloud-file',
+      label: (
+        <MenuItem
+          onClick={() => {
+            setCommonStore((state) => {
+              // state.showCloudFileTitleDialogFlag = !state.showCloudFileTitleDialogFlag;
+              // state.showCloudFileTitleDialog = true;
+              if (loggable) {
+                state.actionInfo = {
+                  name: 'Save as Cloud File',
+                  timestamp: new Date().getTime(),
+                };
+              }
+            });
+          }}
+        >
+          {t('menu.file.SaveAsCloudFile', lang)}...
+        </MenuItem>
+      ),
+    });
+    fileMenuItems.push({
+      key: 'screenshot',
+      label: (
+        <MenuItem key="screenshot" onClick={takeScreenshot}>
+          {t('menu.file.TakeScreenshot', lang)}
+        </MenuItem>
+      ),
+    });
 
     // edit menu
-    {
-      key: 'edit',
-      label: t('menu.editSubMenu', lang),
-      children: [
-        {
+    if (hasUndo || hasRedo) {
+      const editMenuItems: MenuProps['items'] = [];
+      items.push({ key: 'edit-sub-menu', label: t('menu.editSubMenu', lang), children: editMenuItems });
+      if (hasUndo) {
+        editMenuItems.push({
           key: 'undo',
           label: (
             <MenuItem
@@ -297,8 +292,10 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
               <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Z)</span>
             </MenuItem>
           ),
-        },
-        {
+        });
+      }
+      if (hasRedo) {
+        editMenuItems.push({
           key: 'redo',
           label: (
             <MenuItem
@@ -321,92 +318,85 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
               <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Y)</span>
             </MenuItem>
           ),
-        },
-      ],
-    },
+        });
+      }
+    }
 
     // view menu
-    {
-      key: 'view',
-      label: t('menu.viewSubMenu', lang),
-      children: [
-        {
-          key: 'zoom-out-view',
-          label: (
-            <MenuItem
-              onClick={() => {
-                // zoomView(1.1);
-              }}
-            >
-              {t('menu.view.ZoomOut', lang)}
-              <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+])</span>
-            </MenuItem>
-          ),
-        },
-        {
-          key: 'zoom-in-view',
-          label: (
-            <MenuItem
-              onClick={() => {
-                // zoomView(0.9);
-              }}
-            >
-              {t('menu.view.ZoomIn', lang)}
-              <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+[)</span>
-            </MenuItem>
-          ),
-        },
-      ],
-    },
+    const viewMenuItems: MenuProps['items'] = [];
+    items.push({ key: 'view-sub-menu', label: t('menu.viewSubMenu', lang), children: viewMenuItems });
+    viewMenuItems.push({
+      key: 'zoom-out-view',
+      label: (
+        <MenuItem
+          onClick={() => {
+            // zoomView(1.1);
+          }}
+        >
+          {t('menu.view.ZoomOut', lang)}
+          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+])</span>
+        </MenuItem>
+      ),
+    });
+    viewMenuItems.push({
+      key: 'zoom-in-view',
+      label: (
+        <MenuItem
+          onClick={() => {
+            // zoomView(0.9);
+          }}
+        >
+          {t('menu.view.ZoomIn', lang)}
+          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+[)</span>
+        </MenuItem>
+      ),
+    });
 
     // language menu
-    {
-      key: 'language-sub-menu',
-      label: t('menu.languageSubMenu', lang),
-      children: [
-        {
-          key: 'language',
-          label: (
-            <MenuItem stayAfterClick>
-              <Radio.Group
-                value={language}
-                style={{ height: '100px' }}
-                onChange={(e) => {
-                  setUpdateMenuFlag(!updateMenuFlag);
-                  setCommonStore((state) => {
-                    state.language = e.target.value;
-                    switch (state.language) {
-                      case 'zh_cn':
-                        state.locale = zhCN;
-                        break;
-                      case 'zh_tw':
-                        state.locale = zhTW;
-                        break;
-                      default:
-                        state.locale = enUS;
-                    }
-                  });
-                }}
-              >
-                <Radio style={radioStyle} value={'en'}>
-                  {Language.English}
-                </Radio>
-                <Radio style={radioStyle} value={'zh_cn'}>
-                  {Language.ChineseSimplified}
-                </Radio>
-                <Radio style={radioStyle} value={'zh_tw'}>
-                  {Language.ChineseTraditional}
-                </Radio>
-              </Radio.Group>
-            </MenuItem>
-          ),
-          style: { backgroundColor: 'white' },
-        },
-      ],
-    },
+    const languageMenuItems: MenuProps['items'] = [
+      {
+        key: 'language',
+        label: (
+          <MenuItem stayAfterClick>
+            <Radio.Group
+              value={language}
+              style={{ height: '100px' }}
+              onChange={(e) => {
+                setUpdateMenuFlag(!updateMenuFlag);
+                setCommonStore((state) => {
+                  state.language = e.target.value;
+                  switch (state.language) {
+                    case 'zh_cn':
+                      state.locale = zhCN;
+                      break;
+                    case 'zh_tw':
+                      state.locale = zhTW;
+                      break;
+                    default:
+                      state.locale = enUS;
+                  }
+                });
+              }}
+            >
+              <Radio style={radioStyle} value={'en'}>
+                {Language.English}
+              </Radio>
+              <Radio style={radioStyle} value={'zh_cn'}>
+                {Language.ChineseSimplified}
+              </Radio>
+              <Radio style={radioStyle} value={'zh_tw'}>
+                {Language.ChineseTraditional}
+              </Radio>
+            </Radio.Group>
+          </MenuItem>
+        ),
+        style: { backgroundColor: 'white' },
+      },
+    ];
+    items.push({ key: 'language-sub-menu', label: t('menu.languageSubMenu', lang), children: languageMenuItems });
 
     // about window
-    {
+    items.push({
       key: 'about',
       label: (
         <MenuItem
@@ -417,12 +407,14 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
           {t('menu.AboutUs', lang)}...
         </MenuItem>
       ),
-    },
-  ];
+    });
+
+    return items;
+  }, [language, hasUndo, hasRedo]);
 
   return (
     <>
-      <Dropdown menu={{ items }} trigger={['click']} onOpenChange={handleVisibleChange}>
+      <Dropdown menu={{ items: createItems }} trigger={['click']} onOpenChange={handleVisibleChange}>
         <MainMenuContainer>
           <StyledImage src={logo} title={t('tooltip.clickToOpenMenu', lang)} />
           <LabelContainer>
