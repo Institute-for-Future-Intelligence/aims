@@ -367,7 +367,7 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
         {
           key: 'language',
           label: (
-            <MenuItem stayAfterClick noPadding>
+            <MenuItem stayAfterClick>
               <Radio.Group
                 value={language}
                 style={{ height: '100px', backgroundColor: 'white' }}
