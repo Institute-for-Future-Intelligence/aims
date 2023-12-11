@@ -1,5 +1,5 @@
 /*
- * @Copyright 2021-2023. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
 import zhCN from 'antd/lib/locale/zh_CN';
@@ -9,7 +9,7 @@ import enUS from 'antd/lib/locale/en_US';
 import React, { useMemo, useState } from 'react';
 import { useStore } from './stores/common';
 import styled from 'styled-components';
-import { Dropdown, Menu, Radio, } from 'antd';
+import {Dropdown, Menu, MenuProps, Radio,} from 'antd';
 import logo from './assets/aims-logo-32.png';
 import About from './about';
 import { saveImage, showInfo } from './helpers';
@@ -19,8 +19,6 @@ import { useTranslation } from 'react-i18next';
 import {usePrimitiveStore} from "./stores/commonPrimitive";
 import {UNDO_SHOW_INFO_DURATION} from "./constants";
 import {Language} from "./types";
-
-const { SubMenu } = Menu;
 
 const radioStyle = {
     display: 'block',
@@ -88,9 +86,9 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
         }
     };
 
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const lang = useMemo(() => {
-        return { lng: language };
+        return {lng: language};
     }, [language]);
 
     const isMac = useMemo(() => Util.isMac(), []);
@@ -109,13 +107,18 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
         }
     };
 
-    const menu = (
-        <Menu triggerSubMenuAction={'click'}>
-            {/* file menu */}
-                <SubMenu key={'file'} title={t('menu.fileSubMenu', lang)}>
-                    {!viewOnly && (
+    const items: MenuProps['items'] = [
+        // file menu
+        {
+            key: 'file',
+            type: 'group',
+            label: t('menu.fileSubMenu', lang),
+            children: [
+
+                {
+                    key: 'create-new-file',
+                    label: (
                         <Menu.Item
-                            key="create-new-file"
                             onClick={() => {
                                 undoManager.clear();
                                 setCommonStore((state) => {
@@ -131,13 +134,15 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                             }}
                         >
                             {t('menu.file.CreateNewFile', lang)}
-                            <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+F)</span>
+                            <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+F)</span>
                         </Menu.Item>
-                    )}
+                    ),
+                },
 
-                    {!viewOnly && (
+                {
+                    key: 'open-local-file',
+                    label: (
                         <Menu.Item
-                            key="open-local-file"
                             onClick={() => {
                                 undoManager.clear();
                                 setCommonStore((state) => {
@@ -154,33 +159,39 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                             }}
                         >
                             {t('menu.file.OpenLocalFile', lang)}
-                            <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+O)</span>...
+                            <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+O)</span>...
                         </Menu.Item>
-                    )}
+                    ),
+                },
 
-                    <Menu.Item
-                        key="save-local-file"
-                        onClick={() => {
-                            usePrimitiveStore.getState().set((state) => {
-                                // state.saveLocalFileDialogVisible = true;
-                            });
-                            if (loggable) {
-                                setCommonStore((state) => {
-                                    state.actionInfo = {
-                                        name: 'Save as Local File',
-                                        timestamp: new Date().getTime(),
-                                    };
-                                });
-                            }
-                        }}
-                    >
-                        {t('menu.file.SaveAsLocalFile', lang)}
-                        <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+S)</span>...
-                    </Menu.Item>
-
-                    {user.uid && !viewOnly && (
+                {
+                    key: 'save-local-file',
+                    label: (
                         <Menu.Item
-                            key="open-cloud-file"
+                            onClick={() => {
+                                usePrimitiveStore.getState().set((state) => {
+                                    // state.saveLocalFileDialogVisible = true;
+                                });
+                                if (loggable) {
+                                    setCommonStore((state) => {
+                                        state.actionInfo = {
+                                            name: 'Save as Local File',
+                                            timestamp: new Date().getTime(),
+                                        };
+                                    });
+                                }
+                            }}
+                        >
+                            {t('menu.file.SaveAsLocalFile', lang)}
+                            <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+S)</span>...
+                        </Menu.Item>
+                    ),
+                },
+
+                {
+                    key: 'open-cloud-file',
+                    label: (
+                        <Menu.Item
                             onClick={() => {
                                 usePrimitiveStore.getState().set((state) => {
                                     // state.listCloudFilesFlag = true;
@@ -199,13 +210,15 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                             }}
                         >
                             {t('menu.file.OpenCloudFile', lang)}
-                            <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Shift+O)</span>...
+                            <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+Shift+O)</span>...
                         </Menu.Item>
-                    )}
+                    ),
+                },
 
-                    {user.uid && cloudFile && !viewOnly && (
+                {
+                    key: 'save-cloud-file',
+                    label: (
                         <Menu.Item
-                            key="save-cloud-file"
                             onClick={() => {
                                 // usePrimitiveStore.getState().setSaveCloudFileFlag(true);
                                 if (loggable) {
@@ -219,13 +232,15 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                             }}
                         >
                             {t('menu.file.SaveCloudFile', lang)}
-                            <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Shift+S)</span>
+                            <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+Shift+S)</span>
                         </Menu.Item>
-                    )}
+                    ),
+                },
 
-                    {user.uid && !viewOnly && (
+                {
+                    key: 'save-as-cloud-file',
+                    label: (
                         <Menu.Item
-                            key="save-as-cloud-file"
                             onClick={() => {
                                 setCommonStore((state) => {
                                     // state.showCloudFileTitleDialogFlag = !state.showCloudFileTitleDialogFlag;
@@ -241,19 +256,29 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                         >
                             {t('menu.file.SaveAsCloudFile', lang)}...
                         </Menu.Item>
-                    )}
+                    ),
+                },
 
-                    <Menu.Item key="screenshot" onClick={takeScreenshot}>
-                        {t('menu.file.TakeScreenshot', lang)}
-                    </Menu.Item>
-                </SubMenu>
+                {
+                    key: 'screenshot',
+                    label: (
+                        <Menu.Item key="screenshot" onClick={takeScreenshot}>
+                            {t('menu.file.TakeScreenshot', lang)}
+                        </Menu.Item>),
+                },
+            ],
+        },
 
-            {/* edit menu */}
-            {(undoManager.hasUndo() || undoManager.hasRedo()) && (
-                <SubMenu key={'edit'} title={t('menu.editSubMenu', lang)}>
-                    {undoManager.hasUndo() && (
+        // edit menu
+        {
+            key: 'edit',
+            type: 'group',
+            label: t('menu.editSubMenu', lang),
+            children: [
+                {
+                    key: 'undo',
+                    label: (
                         <Menu.Item
-                            key="undo"
                             onClick={() => {
                                 if (undoManager.hasUndo()) {
                                     const commandName = undoManager.undo();
@@ -270,12 +295,14 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                             }}
                         >
                             {t('menu.edit.Undo', lang) + ': ' + undoManager.getLastUndoName()}
-                            <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Z)</span>
+                            <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+Z)</span>
                         </Menu.Item>
-                    )}
-                    {undoManager.hasRedo() && (
+                    ),
+                },
+                {
+                    key: 'redo',
+                    label: (
                         <Menu.Item
-                            key="redo"
                             onClick={() => {
                                 if (undoManager.hasRedo()) {
                                     const commandName = undoManager.redo();
@@ -292,95 +319,120 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
                             }}
                         >
                             {t('menu.edit.Redo', lang) + ': ' + undoManager.getLastRedoName()}
-                            <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Y)</span>
+                            <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+Y)</span>
                         </Menu.Item>
-                    )}
-                </SubMenu>
-            )}
+                    ),
+                },
+            ]
+        },
 
-            {/* view menu */}
-                <SubMenu key={'view'} title={t('menu.viewSubMenu', lang)}>
-                    <Menu.Item
-                        key={'zoom-out-view'}
-                        onClick={() => {
-                            // zoomView(1.1);
-                        }}
-                        style={{ paddingLeft: '36px' }}
-                    >
-                        {t('menu.view.ZoomOut', lang)}
-                        <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+])</span>
-                    </Menu.Item>
-                    <Menu.Item
-                        key={'zoom-in-view'}
-                        onClick={() => {
-                            // zoomView(0.9);
-                        }}
-                        style={{ paddingLeft: '36px' }}
-                    >
-                        {t('menu.view.ZoomIn', lang)}
-                        <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+[)</span>
-                    </Menu.Item>
-                </SubMenu>
+        // view menu
+        {
+            key: 'view',
+            type: 'group',
+            label: t('menu.viewSubMenu', lang),
+            children: [
+                {
+                    key: 'zoom-out-view',
+                    label: (
+                        <Menu.Item
+                            onClick={() => {
+                                // zoomView(1.1);
+                            }}
+                            style={{paddingLeft: '36px'}}
+                        >
+                            {t('menu.view.ZoomOut', lang)}
+                            <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+])</span>
+                        </Menu.Item>),
+                },
+                {
+                    key: 'zoom-in-view',
+                    label: (
+                        <Menu.Item
+                            onClick={() => {
+                                // zoomView(0.9);
+                            }}
+                            style={{paddingLeft: '36px'}}
+                        >
+                            {t('menu.view.ZoomIn', lang)}
+                            <span style={{paddingLeft: '2px', fontSize: 9}}>({isMac ? '⌘' : 'Ctrl'}+[)</span>
+                        </Menu.Item>
+                    ),
+                },
+            ]
+        },
 
-            {/*language menu*/}
-            <SubMenu key={'language'} title={t('menu.languageSubMenu', lang)}>
-                <Radio.Group
-                    value={language}
-                    style={{ height: '100px' }}
-                    onChange={(e) => {
-                        setUpdateMenuFlag(!updateMenuFlag);
-                        setCommonStore((state) => {
-                            state.language = e.target.value;
-                            switch (state.language) {
-                                case 'zh_cn':
-                                    state.locale = zhCN;
-                                    break;
-                                case 'zh_tw':
-                                    state.locale = zhTW;
-                                    break;
-                                default:
-                                    state.locale = enUS;
-                            }
-                        });
+        // language menu
+        {
+            key: 'language',
+            type: 'group',
+            label: t('menu.languageSubMenu', lang),
+            children: [
+                {
+                    key: 'language',
+                    label: (
+                        <Radio.Group
+                            value={language}
+                            style={{height: '100px'}}
+                            onChange={(e) => {
+                                setUpdateMenuFlag(!updateMenuFlag);
+                                setCommonStore((state) => {
+                                    state.language = e.target.value;
+                                    switch (state.language) {
+                                        case 'zh_cn':
+                                            state.locale = zhCN;
+                                            break;
+                                        case 'zh_tw':
+                                            state.locale = zhTW;
+                                            break;
+                                        default:
+                                            state.locale = enUS;
+                                    }
+                                });
+                            }}
+                        >
+                            <Radio style={radioStyle} value={'en'}>
+                                {Language.English}
+                            </Radio>
+                            <Radio style={radioStyle} value={'zh_cn'}>
+                                {Language.ChineseSimplified}
+                            </Radio>
+                            <Radio style={radioStyle} value={'zh_tw'}>
+                                {Language.ChineseTraditional}
+                            </Radio>
+                        </Radio.Group>
+                    )
+                }
+            ]
+        },
+
+        // about window
+        {
+            key: 'about',
+            label: (
+                <Menu.Item
+                    onClick={() => {
+                        setAboutUs(true);
                     }}
                 >
-                    <Radio style={radioStyle} value={'en'}>
-                        {Language.English}
-                    </Radio>
-                    <Radio style={radioStyle} value={'zh_cn'}>
-                        {Language.ChineseSimplified}
-                    </Radio>
-                    <Radio style={radioStyle} value={'zh_tw'}>
-                        {Language.ChineseTraditional}
-                    </Radio>
-                </Radio.Group>
-            </SubMenu>
-
-            {/* about window */}
-            <Menu.Item
-                key="about"
-                onClick={() => {
-                    setAboutUs(true);
-                }}
-            >
-                {t('menu.AboutUs', lang)}...
-            </Menu.Item>
-        </Menu>
-    );
+                    {t('menu.AboutUs', lang)}...
+                </Menu.Item>),
+        }
+    ];
 
     return (
         <>
-            <Dropdown overlay={menu} trigger={['click']} onOpenChange={handleVisibleChange}>
+            <Dropdown menu={{items}} trigger={['click']} onOpenChange={handleVisibleChange}>
                 <MainMenuContainer>
-                    <StyledImage src={logo} title={t('tooltip.clickToOpenMenu', lang)} />
+                    <StyledImage src={logo} title={t('tooltip.clickToOpenMenu', lang)}/>
                     <LabelContainer>
-            <span style={{ fontSize: '10px', alignContent: 'center', cursor: 'pointer' }}>
+            <span style={{fontSize: '10px', alignContent: 'center', cursor: 'pointer'}}>
               {t('menu.mainMenu', lang)}
             </span>
                     </LabelContainer>
                 </MainMenuContainer>
             </Dropdown>
-            {aboutUs && <About close={() => setAboutUs(false)} />}
+            {aboutUs && <About close={() => setAboutUs(false)}/>}
         </>
     );
 };
