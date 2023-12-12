@@ -2,20 +2,51 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useMemo } from 'react';
+import React, { Suspense, useMemo, useRef, useState } from 'react';
 import './App.css';
 import i18n from './i18n/i18n';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { visitHomepage } from './helpers';
 import MainMenu from './mainMenu';
+import { Canvas } from '@react-three/fiber';
+import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR } from './constants';
+import SplitPane from 'react-split-pane';
+import { throttle } from 'lodash';
+import { OrbitControls } from '@react-three/drei';
+import Lights from './lights';
+import Axes from './view/axes';
+import MainToolBar from './mainToolBar';
 
 const App = () => {
   const language = useStore(Selector.language);
+  const projectView = useStore(Selector.projectView);
 
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [canvasRelativeWidth, setCanvasRelativeWidth] = useState<number>(50);
+
+  const createCanvas = () => {
+    return (
+      <Canvas
+        ref={canvasRef}
+        shadows={true}
+        gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
+        frameloop={'demand'}
+        style={{ height: '100%', width: '100%', backgroundColor: 'black' }}
+        camera={{ fov: DEFAULT_FOV, far: DEFAULT_SHADOW_CAMERA_FAR, up: [0, 0, 1] }}
+      >
+        <OrbitControls />
+        <Lights />
+        <Suspense fallback={null}>
+          <Axes />
+        </Suspense>
+      </Canvas>
+    );
+  };
 
   return (
     <div className="App">
@@ -42,7 +73,37 @@ const App = () => {
           {`${i18n.t('name.AIMS', lang)}`}
         </span>
       </div>
+      <MainToolBar signIn={() => {}} signOut={() => {}} />
       <MainMenu viewOnly={false} canvas={null} />
+      {/* must specify the height here for the floating window to have correct boundary check*/}
+      <div style={{ height: 'calc(100vh - 82px)' }}>
+        {/* @ts-ignore */}
+        <SplitPane
+          split={'vertical'}
+          defaultSize={projectView ? '50%' : 0}
+          onChange={throttle((size) => {
+            setCanvasRelativeWidth(Math.round(100 - (size / window.innerWidth) * 100));
+          }, 5)}
+          // must specify the height again for the split pane to resize correctly with the window
+          style={{ height: 'calc(100vh - 82px)', display: 'flex' }}
+          pane1Style={{
+            width: projectView ? 100 - canvasRelativeWidth + '%' : '0',
+            minWidth: projectView ? '25%' : 0,
+            maxWidth: projectView ? '75%' : 0,
+          }}
+          pane2Style={{ width: projectView ? canvasRelativeWidth + '%' : '100%' }}
+          resizerStyle={{
+            cursor: 'col-resize',
+            width: projectView ? '6px' : 0,
+            minWidth: projectView ? '6px' : 0,
+            maxWidth: projectView ? '6px' : 0,
+            backgroundImage: 'linear-gradient(to right, white, gray)',
+          }}
+        >
+          {projectView ? <div style={{ backgroundColor: 'white' }} /> : <></>}
+          {createCanvas()}
+        </SplitPane>
+      </div>
     </div>
   );
 };

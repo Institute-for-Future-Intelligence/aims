@@ -25,6 +25,8 @@ export interface CommonStoreState {
   user: User;
   cloudFile: string | undefined;
 
+  projectView: boolean;
+
   undoManager: UndoManager;
   addUndoable: (undoable: Undoable) => void;
   loggable: boolean;
@@ -51,6 +53,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           locale: enUS,
           user: {} as User,
           cloudFile: undefined,
+
+          projectView: false,
 
           undoManager: new UndoManager(),
           addUndoable(undoable: Undoable) {

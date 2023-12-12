@@ -9,13 +9,17 @@ export const set = (state: CommonStoreState) => state.set;
 
 export const setPrimitiveStore = (state: PrimitiveStoreState) => state.setPrimitiveStore;
 
+export const user = (state: CommonStoreState) => state.user;
+
 export const language = (state: CommonStoreState) => state.language;
+
+export const locale = (state: CommonStoreState) => state.locale;
+
+export const projectView = (state: CommonStoreState) => state.projectView;
 
 export const undoManager = (state: CommonStoreState) => state.undoManager;
 
 export const addUndoable = (state: CommonStoreState) => state.addUndoable;
-
-export const locale = (state: CommonStoreState) => state.locale;
 
 export const loggable = (state: CommonStoreState) => state.loggable;
 
