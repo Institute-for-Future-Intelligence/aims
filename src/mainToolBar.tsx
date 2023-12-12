@@ -3,12 +3,13 @@
  */
 
 import styled from 'styled-components';
-import { Avatar, Button, Dropdown, Menu, Popover, Space } from 'antd';
+import { Avatar, Button, Dropdown, Menu, MenuProps, Popover, Space } from 'antd';
 import i18n from './i18n/i18n';
 import React, { useMemo } from 'react';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { usePrimitiveStore } from './stores/commonPrimitive';
+import { MenuItem } from './components/menuItem';
 
 const ButtonsContainer = styled.div`
   position: absolute;
@@ -37,30 +38,33 @@ const MainToolBar = ({ signIn, signOut }: MainToolBarProps) => {
     return { lng: language };
   }, [language]);
 
-  const avatarMenu = (
-    <Menu triggerSubMenuAction={'click'}>
-      <Menu.Item
-        key="account"
-        onClick={() => {
-          usePrimitiveStore.getState().set((state) => {
-            // state.showAccountSettingsPanel = true;
-          });
-        }}
-      >
-        {i18n.t('avatarMenu.AccountSettings', lang)}
-      </Menu.Item>
-      <Menu.Item key="signOut" onClick={signOut}>
-        {i18n.t('avatarMenu.SignOut', lang)}
-      </Menu.Item>
-    </Menu>
-  );
+  const avatarMenu: MenuProps['items'] = [
+    {
+      key: 'accout',
+      label: (
+        <MenuItem
+          onClick={() => {
+            usePrimitiveStore.getState().set((state) => {
+              // state.showAccountSettingsPanel = true;
+            });
+          }}
+        >
+          {i18n.t('avatarMenu.AccountSettings', lang)}
+        </MenuItem>
+      ),
+    },
+    {
+      key: 'sign-out',
+      label: <MenuItem onClick={signOut}>{i18n.t('avatarMenu.SignOut', lang)}</MenuItem>,
+    },
+  ];
 
   return (
     <ButtonsContainer>
       <Space direction="horizontal">
         <div style={{ verticalAlign: 'top' }}>
           {user.displayName ? (
-            <Dropdown overlay={avatarMenu} trigger={['click']}>
+            <Dropdown menu={{ items: avatarMenu }} trigger={['click']}>
               <a
                 className="ant-dropdown-link"
                 onClick={(e) => e.preventDefault()}
