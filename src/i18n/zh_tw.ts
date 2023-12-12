@@ -24,6 +24,9 @@ export const i18n_zh_tw = {
 
     word: {
       Close: '關閉',
+      Version: '版本',
+      VersionInitial: '版本',
+      AllRightsReserved: '版權所有',
     },
 
     aboutUs: {

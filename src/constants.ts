@@ -6,6 +6,12 @@ import { Euler, Vector2, Vector3 } from 'three';
 
 export const VERSION = '0.0.1';
 
+export const isProd = process.env.NODE_ENV === 'production';
+
+export const HOME_URL: string = isProd
+  ? 'https://institute-for-future-intelligence.github.io/aims/'
+  : 'http://localhost:3001/aims';
+
 export const DEFAULT_FOV = 45;
 export const DEFAULT_SHADOW_CAMERA_FAR = 10000;
 export const DEFAULT_SHADOW_MAP_SIZE = 4096;

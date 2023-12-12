@@ -24,6 +24,9 @@ export const i18n_en = {
 
     word: {
       Close: 'Close',
+      Version: 'Version',
+      VersionInitial: 'V',
+      AllRightsReserved: 'All Rights Reserved',
     },
 
     aboutUs: {
