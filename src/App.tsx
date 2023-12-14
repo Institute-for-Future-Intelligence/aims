@@ -21,7 +21,8 @@ import MainToolBar from './mainToolBar';
 import ShareLinks from './shareLinks';
 import { PDBLoader } from 'three/examples/jsm/loaders/PDBLoader';
 import { Color, Vector3 } from 'three';
-import moleculeUrl from './molecules/pdb/aspirin.txt';
+// import moleculeUrl from './molecules/pdb/aspirin.txt';
+import naclMolecule from './molecules/pdb/nacl.pdb';
 
 const App = () => {
   const language = useStore(Selector.language);
@@ -37,49 +38,94 @@ const App = () => {
   const [canvasRelativeWidth, setCanvasRelativeWidth] = useState<number>(50);
 
   const loadMolecule = () => {
-    pdbLoader.load(moleculeUrl, (pdb) => {
-      const geometryAtoms = pdb.geometryAtoms;
-      const geometryBonds = pdb.geometryBonds;
-      const json = pdb.json;
+    const pdb = pdbLoader.parse(naclMolecule);
+    console.log('loaded', pdb);
 
-      let positions = geometryAtoms.getAttribute('position');
-      const colors = geometryAtoms.getAttribute('color');
+    const geometryAtoms = pdb.geometryAtoms;
+    const geometryBonds = pdb.geometryBonds;
+    const json = pdb.json;
 
-      const position = new Vector3();
-      const color = new Color();
+    let positions = geometryAtoms.getAttribute('position');
+    const colors = geometryAtoms.getAttribute('color');
 
-      for (let i = 0; i < positions.count; i++) {
-        position.x = positions.getX(i);
-        position.y = positions.getY(i);
-        position.z = positions.getZ(i);
+    const position = new Vector3();
+    const color = new Color();
 
-        color.r = colors.getX(i);
-        color.g = colors.getY(i);
-        color.b = colors.getZ(i);
+    for (let i = 0; i < positions.count; i++) {
+      position.x = positions.getX(i);
+      position.y = positions.getY(i);
+      position.z = positions.getZ(i);
 
-        const atom = json.atoms[i];
+      color.r = colors.getX(i);
+      color.g = colors.getY(i);
+      color.b = colors.getZ(i);
 
-        console.log(atom);
-      }
+      const atom = json.atoms[i];
 
-      positions = geometryBonds.getAttribute('position');
+      console.log(atom);
+    }
 
-      const start = new Vector3();
-      const end = new Vector3();
+    positions = geometryBonds.getAttribute('position');
 
-      for (let i = 0; i < positions.count; i += 2) {
-        start.x = positions.getX(i);
-        start.y = positions.getY(i);
-        start.z = positions.getZ(i);
+    const start = new Vector3();
+    const end = new Vector3();
 
-        end.x = positions.getX(i + 1);
-        end.y = positions.getY(i + 1);
-        end.z = positions.getZ(i + 1);
+    for (let i = 0; i < positions.count; i += 2) {
+      start.x = positions.getX(i);
+      start.y = positions.getY(i);
+      start.z = positions.getZ(i);
 
-        start.multiplyScalar(75);
-        end.multiplyScalar(75);
-      }
-    });
+      end.x = positions.getX(i + 1);
+      end.y = positions.getY(i + 1);
+      end.z = positions.getZ(i + 1);
+
+      start.multiplyScalar(75);
+      end.multiplyScalar(75);
+    }
+
+    // pdbLoader.load(moleculeUrl, (pdb) => {
+    //   const geometryAtoms = pdb.geometryAtoms;
+    //   const geometryBonds = pdb.geometryBonds;
+    //   const json = pdb.json;
+
+    //   let positions = geometryAtoms.getAttribute('position');
+    //   const colors = geometryAtoms.getAttribute('color');
+
+    //   const position = new Vector3();
+    //   const color = new Color();
+
+    //   for (let i = 0; i < positions.count; i++) {
+    //     position.x = positions.getX(i);
+    //     position.y = positions.getY(i);
+    //     position.z = positions.getZ(i);
+
+    //     color.r = colors.getX(i);
+    //     color.g = colors.getY(i);
+    //     color.b = colors.getZ(i);
+
+    //     const atom = json.atoms[i];
+
+    //     console.log(atom);
+    //   }
+
+    //   positions = geometryBonds.getAttribute('position');
+
+    //   const start = new Vector3();
+    //   const end = new Vector3();
+
+    //   for (let i = 0; i < positions.count; i += 2) {
+    //     start.x = positions.getX(i);
+    //     start.y = positions.getY(i);
+    //     start.z = positions.getZ(i);
+
+    //     end.x = positions.getX(i + 1);
+    //     end.y = positions.getY(i + 1);
+    //     end.z = positions.getZ(i + 1);
+
+    //     start.multiplyScalar(75);
+    //     end.multiplyScalar(75);
+    //   }
+    // });
 
     return <></>;
   };
