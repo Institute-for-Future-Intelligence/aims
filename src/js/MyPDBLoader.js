@@ -80,6 +80,7 @@ class MyPDBLoader extends Loader {
       const verticesAtoms = [];
       const colorsAtoms = [];
       const verticesBonds = [];
+      const colorsBonds = [];
 
       // atoms
 
@@ -120,11 +121,27 @@ class MyPDBLoader extends Loader {
 
         verticesBonds.push(x, y, z);
 
+        let r = startAtom[3][0] / 255;
+        let g = startAtom[3][1] / 255;
+        let b = startAtom[3][2] / 255;
+
+        c.set(r, g, b).convertSRGBToLinear();
+
+        colorsBonds.push(c.r, c.g, c.b);
+
         x = endAtom[0];
         y = endAtom[1];
         z = endAtom[2];
 
         verticesBonds.push(x, y, z);
+
+        r = endAtom[3][0] / 255;
+        g = endAtom[3][1] / 255;
+        b = endAtom[3][2] / 255;
+
+        c.set(r, g, b).convertSRGBToLinear();
+
+        colorsBonds.push(c.r, c.g, c.b);
       }
 
       // build geometry
@@ -133,6 +150,7 @@ class MyPDBLoader extends Loader {
       geometryAtoms.setAttribute('color', new Float32BufferAttribute(colorsAtoms, 3));
 
       geometryBonds.setAttribute('position', new Float32BufferAttribute(verticesBonds, 3));
+      geometryBonds.setAttribute('color', new Float32BufferAttribute(colorsBonds, 3));
 
       return build;
     }

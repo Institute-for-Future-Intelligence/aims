@@ -7,5 +7,6 @@ import { Color, Vector3 } from 'three';
 export interface Bond {
   start: Vector3;
   end: Vector3;
-  color?: Color;
+  startColor: Color;
+  endColor: Color;
 }

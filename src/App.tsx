@@ -42,12 +42,11 @@ const App = () => {
   const molecule = useMemo(() => {
     const pdbLoader = new MyPDBLoader();
     const pdb = pdbLoader.parse(moleculeContent);
-    console.log(pdb);
     const geometryAtoms = pdb.geometryAtoms;
     const geometryBonds = pdb.geometryBonds;
     const json = pdb.json;
     let positions = geometryAtoms.getAttribute('position');
-    const colors = geometryAtoms.getAttribute('color');
+    let colors = geometryAtoms.getAttribute('color');
     const atoms: Atom[] = [];
     for (let i = 0; i < positions.count; i++) {
       const atom = json.atoms[i];
@@ -55,16 +54,19 @@ const App = () => {
         name: atom[4] as string,
         position: new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)),
         color: new Color(colors.getX(i), colors.getY(i), colors.getZ(i)),
-      });
+      } as Atom);
     }
     positions = geometryBonds.getAttribute('position');
+    colors = geometryBonds.getAttribute('color');
     const bonds: Bond[] = [];
     for (let i = 0; i < positions.count; i += 2) {
       const j = i + 1;
       bonds.push({
         start: new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)),
         end: new Vector3(positions.getX(j), positions.getY(j), positions.getZ(j)),
-      });
+        startColor: new Color(colors.getX(i), colors.getY(i), colors.getZ(i)),
+        endColor: new Color(colors.getX(j), colors.getY(j), colors.getZ(j)),
+      } as Bond);
     }
     return { atoms, bonds } as Molecule;
   }, [moleculeContent]);
@@ -99,25 +101,45 @@ const App = () => {
     return (
       <group name={'Bonds'}>
         {molecule.bonds.map((e, index) => {
+          const mid = e.start.clone().lerp(e.end, 0.5);
+          const length = e.end.distanceTo(e.start);
           return (
-            <group
-              key={'Bond' + index}
-              position={e.start.clone().lerp(e.end, 0.5)}
-              onUpdate={(self) => {
-                self.lookAt(e.end);
-              }}
-            >
-              <Cylinder
-                userData={{ unintersectable: true }}
-                name={'Bond' + index}
-                castShadow={false}
-                receiveShadow={false}
-                args={[0.1, 0.1, e.end.distanceTo(e.start), 16, 1]}
-                rotation={[HALF_PI, 0, 0]}
+            <React.Fragment key={'Bond' + index}>
+              <group
+                position={e.start.clone().lerp(mid, 0.5)}
+                onUpdate={(self) => {
+                  self.lookAt(e.end);
+                }}
               >
-                <meshStandardMaterial attach="material" color={'white'} />
-              </Cylinder>
-            </group>
+                <Cylinder
+                  userData={{ unintersectable: true }}
+                  name={'Bond1' + index}
+                  castShadow={false}
+                  receiveShadow={false}
+                  args={[0.1, 0.1, length * 0.5, 16, 1]}
+                  rotation={[HALF_PI, 0, 0]}
+                >
+                  <meshStandardMaterial attach="material" color={e.startColor} />
+                </Cylinder>
+              </group>
+              <group
+                position={mid.clone().lerp(e.end, 0.5)}
+                onUpdate={(self) => {
+                  self.lookAt(e.end);
+                }}
+              >
+                <Cylinder
+                  userData={{ unintersectable: true }}
+                  name={'Bond2' + index}
+                  castShadow={false}
+                  receiveShadow={false}
+                  args={[0.1, 0.1, length * 0.5, 16, 1]}
+                  rotation={[HALF_PI, 0, 0]}
+                >
+                  <meshStandardMaterial attach="material" color={e.endColor} />
+                </Cylinder>
+              </group>
+            </React.Fragment>
           );
         })}
       </group>
