@@ -7,8 +7,8 @@ import { DirectionalLight } from 'three';
 import { DEFAULT_SHADOW_CAMERA_FAR, DEFAULT_SHADOW_MAP_SIZE } from './constants';
 
 const Lights = () => {
-  const directLightIntensity = 2.5;
-  const ambientLightIntensity = 0.2;
+  const directLightIntensity = 5;
+  const ambientLightIntensity = 1;
   const shadowCameraFar = DEFAULT_SHADOW_CAMERA_FAR;
   const shadowMapSize = DEFAULT_SHADOW_MAP_SIZE;
   const cameraExtent = 10;
