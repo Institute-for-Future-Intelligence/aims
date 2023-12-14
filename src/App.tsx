@@ -11,17 +11,17 @@ import * as Selector from './stores/selector';
 import { visitHomepage, visitIFI } from './helpers';
 import MainMenu from './mainMenu';
 import { Canvas } from '@react-three/fiber';
-import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, VERSION } from './constants';
+import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI, VERSION } from './constants';
 import SplitPane from 'react-split-pane';
 import { throttle } from 'lodash';
-import { OrbitControls, Sphere, Cylinder, Box } from '@react-three/drei';
+import { OrbitControls, Sphere, Cylinder } from '@react-three/drei';
 import Lights from './lights';
 import Axes from './view/axes';
 import MainToolBar from './mainToolBar';
 import ShareLinks from './shareLinks';
-import { PDBLoader } from 'three/examples/jsm/loaders/PDBLoader';
+import { MyPDBLoader } from './js/MyPDBLoader';
 import { Color, Vector3 } from 'three';
-import testMolecule from './molecules/pdb/buckyball.pdb';
+import testMolecule from './molecules/pdb/aspirin.pdb';
 import { Atom } from './Atom';
 import { Bond } from './Bond';
 import { Molecule } from './Molecule';
@@ -40,8 +40,9 @@ const App = () => {
   const [canvasRelativeWidth, setCanvasRelativeWidth] = useState<number>(50);
 
   const molecule = useMemo(() => {
-    const pdbLoader = new PDBLoader();
+    const pdbLoader = new MyPDBLoader();
     const pdb = pdbLoader.parse(moleculeContent);
+    console.log(pdb);
     const geometryAtoms = pdb.geometryAtoms;
     const geometryBonds = pdb.geometryBonds;
     const json = pdb.json;
@@ -99,20 +100,24 @@ const App = () => {
       <group name={'Bonds'}>
         {molecule.bonds.map((e, index) => {
           return (
-            <Cylinder
+            <group
               key={'Bond' + index}
-              userData={{ unintersectable: true }}
-              name={'Bond' + index}
-              castShadow={false}
-              receiveShadow={false}
-              args={[0.1, 0.1, e.end.distanceTo(e.start), 16, 1]}
               position={e.start.clone().lerp(e.end, 0.5)}
               onUpdate={(self) => {
                 self.lookAt(e.end);
               }}
             >
-              <meshStandardMaterial attach="material" color={'white'} />
-            </Cylinder>
+              <Cylinder
+                userData={{ unintersectable: true }}
+                name={'Bond' + index}
+                castShadow={false}
+                receiveShadow={false}
+                args={[0.1, 0.1, e.end.distanceTo(e.start), 16, 1]}
+                rotation={[HALF_PI, 0, 0]}
+              >
+                <meshStandardMaterial attach="material" color={'white'} />
+              </Cylinder>
+            </group>
           );
         })}
       </group>

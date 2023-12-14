@@ -2,6 +2,20 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
+import { extend, Object3DNode } from '@react-three/fiber';
+import { MyPDBLoader } from './js/MyPDBLoader';
+
+// Extend makes these JSX elements (with the first character lower-cased)
+extend({ MyPDBLoader });
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      myOrbitControls: Object3DNode<MyPDBLoader, typeof MyPDBLoader>;
+    }
+  }
+}
+
 export interface User {
   displayName: string | null;
   email: string | null;
