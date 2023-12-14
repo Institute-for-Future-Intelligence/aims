@@ -4,10 +4,10 @@
 
 import React, { useRef } from 'react';
 import { DirectionalLight } from 'three';
-import { DEFAULT_SHADOW_CAMERA_FAR, DEFAULT_SHADOW_MAP_SIZE, UNIT_VECTOR_POS_Z } from './constants';
+import { DEFAULT_SHADOW_CAMERA_FAR, DEFAULT_SHADOW_MAP_SIZE } from './constants';
 
 const Lights = () => {
-  const directLightIntensity = 3.5;
+  const directLightIntensity = 2.5;
   const ambientLightIntensity = 0.2;
   const shadowCameraFar = DEFAULT_SHADOW_CAMERA_FAR;
   const shadowMapSize = DEFAULT_SHADOW_MAP_SIZE;
@@ -25,13 +25,13 @@ const Lights = () => {
 
   return (
     <>
-      <ambientLight intensity={1} name={'Ambient Light'} />
+      <ambientLight intensity={ambientLightIntensity} name={'Ambient Light'} />
       <directionalLight
         ref={ref}
         name={'Directional Light'}
         color="white"
-        position={[0, 0, 10]}
-        intensity={10}
+        position={[1, 1, 1]}
+        intensity={directLightIntensity}
         castShadow={true}
         shadow-bias={0} // may be used to reduce shadow artifacts
         shadow-mapSize-height={shadowMapSize}

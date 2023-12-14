@@ -19,11 +19,15 @@ import Lights from './lights';
 import Axes from './view/axes';
 import MainToolBar from './mainToolBar';
 import ShareLinks from './shareLinks';
+import { PDBLoader } from 'three/examples/jsm/loaders/PDBLoader';
+import { Color, Vector3 } from 'three';
+import moleculeUrl from './molecules/pdb/aspirin.txt';
 
 const App = () => {
   const language = useStore(Selector.language);
   const projectView = useStore(Selector.projectView);
   const viewOnly = false;
+  const pdbLoader = new PDBLoader();
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -31,6 +35,54 @@ const App = () => {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasRelativeWidth, setCanvasRelativeWidth] = useState<number>(50);
+
+  const loadMolecule = () => {
+    pdbLoader.load(moleculeUrl, (pdb) => {
+      const geometryAtoms = pdb.geometryAtoms;
+      const geometryBonds = pdb.geometryBonds;
+      const json = pdb.json;
+
+      let positions = geometryAtoms.getAttribute('position');
+      const colors = geometryAtoms.getAttribute('color');
+
+      const position = new Vector3();
+      const color = new Color();
+
+      for (let i = 0; i < positions.count; i++) {
+        position.x = positions.getX(i);
+        position.y = positions.getY(i);
+        position.z = positions.getZ(i);
+
+        color.r = colors.getX(i);
+        color.g = colors.getY(i);
+        color.b = colors.getZ(i);
+
+        const atom = json.atoms[i];
+
+        console.log(atom);
+      }
+
+      positions = geometryBonds.getAttribute('position');
+
+      const start = new Vector3();
+      const end = new Vector3();
+
+      for (let i = 0; i < positions.count; i += 2) {
+        start.x = positions.getX(i);
+        start.y = positions.getY(i);
+        start.z = positions.getZ(i);
+
+        end.x = positions.getX(i + 1);
+        end.y = positions.getY(i + 1);
+        end.z = positions.getZ(i + 1);
+
+        start.multiplyScalar(75);
+        end.multiplyScalar(75);
+      }
+    });
+
+    return <></>;
+  };
 
   const createCanvas = () => {
     return (
@@ -46,6 +98,7 @@ const App = () => {
         <Lights />
         <Suspense fallback={null}>
           <Axes />
+          {loadMolecule()}
         </Suspense>
       </Canvas>
     );
