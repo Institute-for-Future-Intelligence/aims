@@ -14,21 +14,23 @@ import { Canvas } from '@react-three/fiber';
 import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, VERSION } from './constants';
 import SplitPane from 'react-split-pane';
 import { throttle } from 'lodash';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Sphere, Cylinder, Box } from '@react-three/drei';
 import Lights from './lights';
 import Axes from './view/axes';
 import MainToolBar from './mainToolBar';
 import ShareLinks from './shareLinks';
 import { PDBLoader } from 'three/examples/jsm/loaders/PDBLoader';
 import { Color, Vector3 } from 'three';
-// import moleculeUrl from './molecules/pdb/aspirin.txt';
-import naclMolecule from './molecules/pdb/nacl.pdb';
+import testMolecule from './molecules/pdb/buckyball.pdb';
+import { Atom } from './Atom';
+import { Bond } from './Bond';
+import { Molecule } from './Molecule';
 
 const App = () => {
   const language = useStore(Selector.language);
   const projectView = useStore(Selector.projectView);
   const viewOnly = false;
-  const pdbLoader = new PDBLoader();
+  const moleculeContent = testMolecule;
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -37,97 +39,84 @@ const App = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasRelativeWidth, setCanvasRelativeWidth] = useState<number>(50);
 
-  const loadMolecule = () => {
-    const pdb = pdbLoader.parse(naclMolecule);
-    console.log('loaded', pdb);
-
+  const molecule = useMemo(() => {
+    const pdbLoader = new PDBLoader();
+    const pdb = pdbLoader.parse(moleculeContent);
     const geometryAtoms = pdb.geometryAtoms;
     const geometryBonds = pdb.geometryBonds;
     const json = pdb.json;
-
     let positions = geometryAtoms.getAttribute('position');
     const colors = geometryAtoms.getAttribute('color');
-
-    const position = new Vector3();
-    const color = new Color();
-
+    const atoms: Atom[] = [];
     for (let i = 0; i < positions.count; i++) {
-      position.x = positions.getX(i);
-      position.y = positions.getY(i);
-      position.z = positions.getZ(i);
-
-      color.r = colors.getX(i);
-      color.g = colors.getY(i);
-      color.b = colors.getZ(i);
-
       const atom = json.atoms[i];
-
-      console.log(atom);
+      atoms.push({
+        name: atom[4] as string,
+        position: new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)),
+        color: new Color(colors.getX(i), colors.getY(i), colors.getZ(i)),
+      });
     }
-
     positions = geometryBonds.getAttribute('position');
-
-    const start = new Vector3();
-    const end = new Vector3();
-
+    const bonds: Bond[] = [];
     for (let i = 0; i < positions.count; i += 2) {
-      start.x = positions.getX(i);
-      start.y = positions.getY(i);
-      start.z = positions.getZ(i);
-
-      end.x = positions.getX(i + 1);
-      end.y = positions.getY(i + 1);
-      end.z = positions.getZ(i + 1);
-
-      start.multiplyScalar(75);
-      end.multiplyScalar(75);
+      const j = i + 1;
+      bonds.push({
+        start: new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)),
+        end: new Vector3(positions.getX(j), positions.getY(j), positions.getZ(j)),
+      });
     }
+    return { atoms, bonds } as Molecule;
+  }, [moleculeContent]);
 
-    // pdbLoader.load(moleculeUrl, (pdb) => {
-    //   const geometryAtoms = pdb.geometryAtoms;
-    //   const geometryBonds = pdb.geometryBonds;
-    //   const json = pdb.json;
+  const showAtoms = () => {
+    return (
+      <group name={'Atoms'}>
+        {molecule.atoms.map((e, index) => {
+          return (
+            <Sphere
+              position={e.position}
+              args={[0.5, 16, 16]}
+              key={'Atom' + index}
+              name={e.name}
+              castShadow={false}
+              receiveShadow={false}
+              onPointerOver={(e) => {}}
+              onPointerOut={(e) => {}}
+              onPointerDown={(e) => {
+                if (e.button === 2) return;
+              }}
+            >
+              <meshStandardMaterial attach="material" color={e.color} />
+            </Sphere>
+          );
+        })}
+      </group>
+    );
+  };
 
-    //   let positions = geometryAtoms.getAttribute('position');
-    //   const colors = geometryAtoms.getAttribute('color');
-
-    //   const position = new Vector3();
-    //   const color = new Color();
-
-    //   for (let i = 0; i < positions.count; i++) {
-    //     position.x = positions.getX(i);
-    //     position.y = positions.getY(i);
-    //     position.z = positions.getZ(i);
-
-    //     color.r = colors.getX(i);
-    //     color.g = colors.getY(i);
-    //     color.b = colors.getZ(i);
-
-    //     const atom = json.atoms[i];
-
-    //     console.log(atom);
-    //   }
-
-    //   positions = geometryBonds.getAttribute('position');
-
-    //   const start = new Vector3();
-    //   const end = new Vector3();
-
-    //   for (let i = 0; i < positions.count; i += 2) {
-    //     start.x = positions.getX(i);
-    //     start.y = positions.getY(i);
-    //     start.z = positions.getZ(i);
-
-    //     end.x = positions.getX(i + 1);
-    //     end.y = positions.getY(i + 1);
-    //     end.z = positions.getZ(i + 1);
-
-    //     start.multiplyScalar(75);
-    //     end.multiplyScalar(75);
-    //   }
-    // });
-
-    return <></>;
+  const showBonds = () => {
+    return (
+      <group name={'Bonds'}>
+        {molecule.bonds.map((e, index) => {
+          return (
+            <Cylinder
+              key={'Bond' + index}
+              userData={{ unintersectable: true }}
+              name={'Bond' + index}
+              castShadow={false}
+              receiveShadow={false}
+              args={[0.1, 0.1, e.end.distanceTo(e.start), 16, 1]}
+              position={e.start.clone().lerp(e.end, 0.5)}
+              onUpdate={(self) => {
+                self.lookAt(e.end);
+              }}
+            >
+              <meshStandardMaterial attach="material" color={'white'} />
+            </Cylinder>
+          );
+        })}
+      </group>
+    );
   };
 
   const createCanvas = () => {
@@ -144,7 +133,8 @@ const App = () => {
         <Lights />
         <Suspense fallback={null}>
           <Axes />
-          {loadMolecule()}
+          {showAtoms()}
+          {showBonds()}
         </Suspense>
       </Canvas>
     );

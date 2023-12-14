@@ -7722,6 +7722,14 @@ micromatch@4.0.5, micromatch@^4.0.2, micromatch@^4.0.4, micromatch@^4.0.5:
     braces "^3.0.2"
     picomatch "^2.3.1"
 
+miew@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/miew/-/miew-0.10.1.tgz#4dc53c6e53c147a5ae7bef54e3c2a8cdcd2c8a12"
+  integrity sha512-ZZI/rPC/Lw+Pqlz1B4PrHm5/UkNbRqKGjIv8TLDrUgx+WhJhkCEaVDfb6vkL6Tv1id93ESTtga4vEINP8VGihw==
+  dependencies:
+    lodash "^4.17.21"
+    three "0.131.3"
+
 mime-db@1.52.0, "mime-db@>= 1.43.0 < 2":
   version "1.52.0"
   resolved "https://registry.npmjs.org/mime-db/-/mime-db-1.52.0.tgz"
@@ -10755,6 +10763,11 @@ three-stdlib@^2.28.0:
     draco3d "^1.4.1"
     fflate "^0.6.9"
     potpack "^1.0.1"
+
+three@0.131.3:
+  version "0.131.3"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.131.3.tgz#406fd210c603ca9154937ae3582996fbfd3cb716"
+  integrity sha512-VkZAv8ZTJqiE/fyEmoWLxcNHImpVcjqW7RO0GzMu3tRpwO0KUvK9pjTmJzJcAbc51BOeB2G38zh80yjHTbP8gQ==
 
 three@^0.158.0:
   version "0.158.0"
