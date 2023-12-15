@@ -61,7 +61,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           user: {} as User,
           cloudFile: undefined,
 
-          projectView: false,
+          projectView: true,
 
           undoManager: new UndoManager(),
           addUndoable(undoable: Undoable) {

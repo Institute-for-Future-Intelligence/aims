@@ -21,7 +21,7 @@ export interface MolecularViewerProps {
 type PDB = {
   geometryAtoms: BufferGeometry<NormalBufferAttributes>;
   geometryBonds: BufferGeometry<NormalBufferAttributes>;
-  elementsBonds: never[];
+  elementsBonds: any[];
   json: {
     atoms: any[];
   };

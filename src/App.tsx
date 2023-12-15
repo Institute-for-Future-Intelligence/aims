@@ -20,7 +20,14 @@ import Axes from './view/axes';
 import MainToolBar from './mainToolBar';
 import ShareLinks from './shareLinks';
 import testMoleculeUrl from './molecules/pdb/aspirin.pdb';
+import testMoleculeUrl1 from './molecules/pdb/nacl.pdb';
+import testMoleculeUrl2 from './molecules/pdb/buckyball.pdb';
+import testMoleculeUrl3 from './molecules/pdb/cholesterol.pdb';
+import testMoleculeUrl4 from './molecules/pdb/caffeine.pdb';
+import testMoleculeUrl5 from './molecules/pdb/ybco.pdb';
+import testMoleculeUrl6 from './molecules/pdb/diamond.pdb';
 import MolecularViewer from './molecularViewer';
+import { Col, Row } from 'antd';
 
 const App = () => {
   const language = useStore(Selector.language);
@@ -37,16 +44,16 @@ const App = () => {
   }, [language]);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [canvasRelativeWidth, setCanvasRelativeWidth] = useState<number>(50);
+  const [canvasRelativeWidth, setCanvasRelativeWidth] = useState<number>(60);
 
-  const createCanvas = () => {
+  const createCanvas = (moleculeUrl: string, forGallery?: boolean) => {
     return (
       <Canvas
         ref={canvasRef}
         shadows={true}
         gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
         frameloop={'demand'}
-        style={{ height: '100%', width: '100%', backgroundColor: 'black' }}
+        style={{ height: '100%', width: '100%', backgroundColor: forGallery ? 'white' : 'black' }}
         camera={{
           fov: DEFAULT_FOV,
           far: DEFAULT_SHADOW_CAMERA_FAR,
@@ -58,8 +65,8 @@ const App = () => {
         <OrbitControls />
         <Lights />
         <Suspense fallback={null}>
-          <Axes />
-          <MolecularViewer moleculeUrl={testMoleculeUrl} />
+          {!forGallery && <Axes />}
+          <MolecularViewer moleculeUrl={moleculeUrl} />
         </Suspense>
       </Canvas>
     );
@@ -138,7 +145,7 @@ const App = () => {
               zIndex: 999,
               fontSize: '10px',
               userSelect: 'none',
-              color: 'antiquewhite',
+              color: projectView ? 'dimgray' : 'antiquewhite',
             }}
           >
             &nbsp;&nbsp; &copy;{new Date().getFullYear()} {`${i18n.t('name.IFI', lang)}`}
@@ -159,7 +166,7 @@ const App = () => {
         {/* @ts-ignore */}
         <SplitPane
           split={'vertical'}
-          defaultSize={projectView ? '50%' : 0}
+          defaultSize={projectView ? '60%' : 0}
           onChange={throttle((size) => {
             setCanvasRelativeWidth(Math.round(100 - (size / window.innerWidth) * 100));
           }, 5)}
@@ -179,8 +186,38 @@ const App = () => {
             backgroundImage: 'linear-gradient(to right, white, gray)',
           }}
         >
-          {projectView ? <div style={{ backgroundColor: 'white' }} /> : <></>}
-          {createCanvas()}
+          {projectView ? (
+            <div style={{ backgroundColor: 'white', overflowY: 'visible' }}>
+              <Row style={{ width: '100%', paddingLeft: '20px', paddingTop: '10px' }} gutter={[6, 6]}>
+                <Col style={{ width: '33%', marginRight: '1px', border: '1px solid lightgray' }}>
+                  {createCanvas(testMoleculeUrl1, true)}
+                </Col>
+                <Col style={{ width: '33%', marginRight: '1px', border: '1px solid lightgray' }}>
+                  {createCanvas(testMoleculeUrl2, true)}
+                </Col>
+                <Col style={{ width: '33%', border: '1px solid lightgray' }}>
+                  {createCanvas(testMoleculeUrl3, true)}
+                </Col>
+              </Row>
+              <Row
+                style={{ width: '100%', paddingLeft: '20px', paddingTop: '2px', paddingBottom: '10px' }}
+                gutter={[6, 6]}
+              >
+                <Col style={{ width: '33%', marginRight: '1px', border: '1px solid lightgray' }}>
+                  {createCanvas(testMoleculeUrl4, true)}
+                </Col>
+                <Col style={{ width: '33%', marginRight: '1px', border: '1px solid lightgray' }}>
+                  {createCanvas(testMoleculeUrl5, true)}
+                </Col>
+                <Col style={{ width: '33%', border: '1px solid lightgray' }}>
+                  {createCanvas(testMoleculeUrl6, true)}
+                </Col>
+              </Row>
+            </div>
+          ) : (
+            <></>
+          )}
+          {createCanvas(testMoleculeUrl)}
         </SplitPane>
       </div>
     </div>
