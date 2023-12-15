@@ -8,4 +8,5 @@ export interface Atom {
   name: string;
   position: Vector3;
   color: Color;
+  radius: number;
 }

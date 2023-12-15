@@ -2,7 +2,7 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { Suspense, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import i18n from './i18n/i18n';
 import ifiLogo from './assets/ifi-logo.png';
@@ -29,8 +29,15 @@ import { Molecule } from './Molecule';
 const App = () => {
   const language = useStore(Selector.language);
   const projectView = useStore(Selector.projectView);
+  const chemicalElements = useStore(Selector.chemicalElements);
+  const loadChemicalElements = useStore(Selector.loadChemicalElements);
+  const getChemicalElement = useStore(Selector.getChemicalElement);
   const viewOnly = false;
   const moleculeContent = testMolecule;
+
+  useEffect(() => {
+    loadChemicalElements();
+  }, []);
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -54,6 +61,7 @@ const App = () => {
         name: atom[4] as string,
         position: new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)),
         color: new Color(colors.getX(i), colors.getY(i), colors.getZ(i)),
+        radius: getChemicalElement(atom[4] as string)?.sigma / 5,
       } as Atom);
     }
     positions = geometryBonds.getAttribute('position');
@@ -69,7 +77,7 @@ const App = () => {
       } as Bond);
     }
     return { atoms, bonds } as Molecule;
-  }, [moleculeContent]);
+  }, [moleculeContent, chemicalElements]);
 
   const showAtoms = () => {
     return (
@@ -78,7 +86,7 @@ const App = () => {
           return (
             <Sphere
               position={e.position}
-              args={[0.5, 16, 16]}
+              args={[e.radius ?? 0.5, 16, 16]}
               key={'Atom' + index}
               name={e.name}
               castShadow={false}

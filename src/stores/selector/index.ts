@@ -26,3 +26,9 @@ export const loggable = (state: CommonStoreState) => state.loggable;
 export const actionInfo = (state: CommonStoreState) => state.actionInfo;
 
 export const currentUndoable = (state: CommonStoreState) => state.currentUndoable;
+
+export const chemicalElements = (state: CommonStoreState) => state.chemicalElements;
+
+export const getChemicalElement = (state: CommonStoreState) => state.getChemicalElement;
+
+export const loadChemicalElements = (state: CommonStoreState) => state.loadChemicalElements;
