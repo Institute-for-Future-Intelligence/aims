@@ -3,7 +3,7 @@
  */
 
 import styled from 'styled-components';
-import { Avatar, Button, Dropdown, Menu, MenuProps, Popover, Space } from 'antd';
+import { Avatar, Button, Dropdown, MenuProps, Popover, Space } from 'antd';
 import i18n from './i18n/i18n';
 import React, { useMemo } from 'react';
 import { useStore } from './stores/common';
@@ -17,7 +17,7 @@ const ButtonsContainer = styled.div`
   right: 10px;
   margin: 0;
   padding-bottom: 0;
-  padding-top: 16px;
+  padding-top: 24px;
   display: flex;
   justify-content: center;
   align-items: center;

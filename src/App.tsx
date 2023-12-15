@@ -14,26 +14,20 @@ import { Canvas } from '@react-three/fiber';
 import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI, VERSION } from './constants';
 import SplitPane from 'react-split-pane';
 import { throttle } from 'lodash';
-import { OrbitControls, Sphere, Cylinder } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import Lights from './lights';
 import Axes from './view/axes';
 import MainToolBar from './mainToolBar';
 import ShareLinks from './shareLinks';
-import { MyPDBLoader } from './js/MyPDBLoader';
-import { Color, Vector3 } from 'three';
 import testMolecule from './molecules/pdb/aspirin.pdb';
-import { Atom } from './Atom';
-import { Bond } from './Bond';
-import { Molecule } from './Molecule';
+import MolecularViewer from './molecularViewer';
 
 const App = () => {
   const language = useStore(Selector.language);
   const projectView = useStore(Selector.projectView);
-  const chemicalElements = useStore(Selector.chemicalElements);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
-  const getChemicalElement = useStore(Selector.getChemicalElement);
   const viewOnly = false;
-  const moleculeContent = testMolecule;
+  const inputMolecule = testMolecule;
 
   useEffect(() => {
     loadChemicalElements();
@@ -46,114 +40,6 @@ const App = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasRelativeWidth, setCanvasRelativeWidth] = useState<number>(50);
 
-  const molecule = useMemo(() => {
-    const pdbLoader = new MyPDBLoader();
-    const pdb = pdbLoader.parse(moleculeContent);
-    const geometryAtoms = pdb.geometryAtoms;
-    const geometryBonds = pdb.geometryBonds;
-    const json = pdb.json;
-    let positions = geometryAtoms.getAttribute('position');
-    let colors = geometryAtoms.getAttribute('color');
-    const atoms: Atom[] = [];
-    for (let i = 0; i < positions.count; i++) {
-      const atom = json.atoms[i];
-      atoms.push({
-        name: atom[4] as string,
-        position: new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)),
-        color: new Color(colors.getX(i), colors.getY(i), colors.getZ(i)),
-        radius: getChemicalElement(atom[4] as string)?.sigma / 5,
-      } as Atom);
-    }
-    positions = geometryBonds.getAttribute('position');
-    colors = geometryBonds.getAttribute('color');
-    const bonds: Bond[] = [];
-    for (let i = 0; i < positions.count; i += 2) {
-      const j = i + 1;
-      bonds.push({
-        start: new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)),
-        end: new Vector3(positions.getX(j), positions.getY(j), positions.getZ(j)),
-        startColor: new Color(colors.getX(i), colors.getY(i), colors.getZ(i)),
-        endColor: new Color(colors.getX(j), colors.getY(j), colors.getZ(j)),
-      } as Bond);
-    }
-    return { atoms, bonds } as Molecule;
-  }, [moleculeContent, chemicalElements]);
-
-  const showAtoms = () => {
-    return (
-      <group name={'Atoms'}>
-        {molecule.atoms.map((e, index) => {
-          return (
-            <Sphere
-              position={e.position}
-              args={[e.radius ?? 0.5, 16, 16]}
-              key={'Atom' + index}
-              name={e.name}
-              castShadow={false}
-              receiveShadow={false}
-              onPointerOver={(e) => {}}
-              onPointerOut={(e) => {}}
-              onPointerDown={(e) => {
-                if (e.button === 2) return;
-              }}
-            >
-              <meshStandardMaterial attach="material" color={e.color} />
-            </Sphere>
-          );
-        })}
-      </group>
-    );
-  };
-
-  const showBonds = () => {
-    return (
-      <group name={'Bonds'}>
-        {molecule.bonds.map((e, index) => {
-          const mid = e.start.clone().lerp(e.end, 0.5);
-          const length = e.end.distanceTo(e.start);
-          return (
-            <React.Fragment key={'Bond' + index}>
-              <group
-                position={e.start.clone().lerp(mid, 0.5)}
-                onUpdate={(self) => {
-                  self.lookAt(e.end);
-                }}
-              >
-                <Cylinder
-                  userData={{ unintersectable: true }}
-                  name={'Bond1' + index}
-                  castShadow={false}
-                  receiveShadow={false}
-                  args={[0.1, 0.1, length * 0.5, 16, 1]}
-                  rotation={[HALF_PI, 0, 0]}
-                >
-                  <meshStandardMaterial attach="material" color={e.startColor} />
-                </Cylinder>
-              </group>
-              <group
-                position={mid.clone().lerp(e.end, 0.5)}
-                onUpdate={(self) => {
-                  self.lookAt(e.end);
-                }}
-              >
-                <Cylinder
-                  userData={{ unintersectable: true }}
-                  name={'Bond2' + index}
-                  castShadow={false}
-                  receiveShadow={false}
-                  args={[0.1, 0.1, length * 0.5, 16, 1]}
-                  rotation={[HALF_PI, 0, 0]}
-                >
-                  <meshStandardMaterial attach="material" color={e.endColor} />
-                </Cylinder>
-              </group>
-            </React.Fragment>
-          );
-        })}
-      </group>
-    );
-  };
-
   const createCanvas = () => {
     return (
       <Canvas
@@ -162,14 +48,19 @@ const App = () => {
         gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
         frameloop={'demand'}
         style={{ height: '100%', width: '100%', backgroundColor: 'black' }}
-        camera={{ fov: DEFAULT_FOV, far: DEFAULT_SHADOW_CAMERA_FAR, up: [0, 0, 1] }}
+        camera={{
+          fov: DEFAULT_FOV,
+          far: DEFAULT_SHADOW_CAMERA_FAR,
+          up: [0, 0, 1],
+          position: [0, 0, 20],
+          rotation: [HALF_PI / 2, 0, HALF_PI / 2],
+        }}
       >
         <OrbitControls />
         <Lights />
         <Suspense fallback={null}>
           <Axes />
-          {showAtoms()}
-          {showBonds()}
+          <MolecularViewer inputMolecule={inputMolecule} />
         </Suspense>
       </Canvas>
     );
