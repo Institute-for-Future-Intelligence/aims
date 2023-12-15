@@ -13,7 +13,7 @@ import { ActionInfo, User } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elements from '../assets/elements.txt';
-import { ChemicalElement } from '../ChemicalElement';
+import { ChemicalElement } from '../models/ChemicalElement';
 import Papa from 'papaparse';
 
 enableMapSet();

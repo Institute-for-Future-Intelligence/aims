@@ -4,10 +4,10 @@
 
 import React, { useMemo } from 'react';
 import { MyPDBLoader } from './js/MyPDBLoader';
-import { Atom } from './Atom';
+import { Atom } from './models/Atom';
 import { Color, Vector3 } from 'three';
-import { Bond } from './Bond';
-import { Molecule } from './Molecule';
+import { Bond } from './models/Bond';
+import { Molecule } from './models/Molecule';
 import { Cylinder, Sphere } from '@react-three/drei';
 import { CPK_COLORS, HALF_PI } from './constants';
 import { useStore } from './stores/common';
