@@ -39,16 +39,6 @@ declare module '*.webp' {
   export default src;
 }
 
-declare module '*.csv' {
-  const src: string;
-  export default src;
-}
-
-declare module '*.pdb' {
-  const src: string;
-  export default src;
-}
-
 declare module '*.svg' {
   import * as React from 'react';
 
@@ -72,3 +62,6 @@ declare module '*.module.sass' {
   const classes: { readonly [key: string]: string };
   export default classes;
 }
+
+declare module '*.csv';
+declare module '*.pdb';

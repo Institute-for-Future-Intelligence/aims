@@ -2,10 +2,10 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useMemo } from 'react';
-import { MyPDBLoader } from './js/MyPDBLoader';
+import React, { useEffect, useMemo, useState } from 'react';
+import { MyPDBLoader } from './js/MyPDBLoader.js';
 import { Atom } from './models/Atom';
-import { Color, Vector3 } from 'three';
+import { BufferGeometry, Color, NormalBufferAttributes, Vector3 } from 'three';
 import { Bond } from './models/Bond';
 import { Molecule } from './models/Molecule';
 import { Cylinder, Sphere } from '@react-three/drei';
@@ -15,70 +15,84 @@ import * as Selector from './stores/selector';
 import { Util } from './Util';
 
 export interface MolecularViewerProps {
-  inputMolecule: string;
+  inputMoleculeUrl: string;
 }
 
-const MolecularViewer = ({ inputMolecule }: MolecularViewerProps) => {
+type PDB = {
+  geometryAtoms: BufferGeometry<NormalBufferAttributes>;
+  geometryBonds: BufferGeometry<NormalBufferAttributes>;
+  elementsBonds: never[];
+  json: {
+    atoms: any[];
+  };
+};
+
+const MolecularViewer = ({ inputMoleculeUrl }: MolecularViewerProps) => {
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
 
-  const molecule = useMemo(() => {
-    const pdbLoader = new MyPDBLoader();
-    const pdb = pdbLoader.parse(inputMolecule);
-    const geometryAtoms = pdb.geometryAtoms;
-    const geometryBonds = pdb.geometryBonds;
-    const elementsBonds: string[] = pdb.elementsBonds;
-    const json = pdb.json;
-    let positions = geometryAtoms.getAttribute('position');
-    const atoms: Atom[] = [];
-    for (let i = 0; i < positions.count; i++) {
-      const atom = json.atoms[i];
-      const c = CPK_COLORS[atom[3]];
-      const elementName = atom[4] as string;
-      atoms.push({
-        elementName,
-        position: new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)),
-        color: new Color(c[0] / 255, c[1] / 255, c[2] / 255).convertSRGBToLinear(),
-        radius: getChemicalElement(elementName)?.sigma / 5,
-      } as Atom);
-    }
-    positions = geometryBonds.getAttribute('position');
-    const bonds: Bond[] = [];
-    for (let i = 0; i < positions.count; i += 2) {
-      const j = i + 1;
-      let elementNameI = elementsBonds[i];
-      let elementNameJ = elementsBonds[j];
-      // cpk element names are all lower case
-      const ci = CPK_COLORS[elementNameI];
-      const cj = CPK_COLORS[elementNameJ];
-      // other element names have capital initial
-      elementNameI = Util.capitalize(elementNameI);
-      elementNameJ = Util.capitalize(elementNameJ);
-      const colorI = new Color(ci[0] / 255, ci[1] / 255, ci[2] / 255).convertSRGBToLinear();
-      const colorJ = new Color(cj[0] / 255, cj[1] / 255, cj[2] / 255).convertSRGBToLinear();
-      const positionI = new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i));
-      const positionJ = new Vector3(positions.getX(j), positions.getY(j), positions.getZ(j));
-      bonds.push(
-        new Bond(
-          {
-            elementName: elementNameI,
-            position: positionI,
-            color: colorI,
-            radius: getChemicalElement(elementNameI)?.sigma / 5,
-          } as Atom,
-          {
-            elementName: elementNameJ,
-            position: positionJ,
-            color: colorJ,
-            radius: getChemicalElement(elementNameJ)?.sigma / 5,
-          } as Atom,
-        ),
-      );
-    }
-    return { atoms, bonds } as Molecule;
-  }, [inputMolecule, chemicalElements]);
+  const pdbLoader = useMemo(() => new MyPDBLoader(), []);
+
+  const [molecule, setMolecule] = useState<Molecule>();
+
+  useEffect(() => {
+    pdbLoader.load(inputMoleculeUrl, (pdb: PDB) => {
+      const geometryAtoms = pdb.geometryAtoms;
+      const geometryBonds = pdb.geometryBonds;
+      const elementsBonds: string[] = pdb.elementsBonds;
+      const json = pdb.json;
+      let positions = geometryAtoms.getAttribute('position');
+      const atoms: Atom[] = [];
+      for (let i = 0; i < positions.count; i++) {
+        const atom = json.atoms[i];
+        const c = CPK_COLORS[atom[3]];
+        const elementName = atom[4] as string;
+        atoms.push({
+          elementName,
+          position: new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)),
+          color: new Color(c[0] / 255, c[1] / 255, c[2] / 255).convertSRGBToLinear(),
+          radius: getChemicalElement(elementName)?.sigma / 5,
+        } as Atom);
+      }
+      positions = geometryBonds.getAttribute('position');
+      const bonds: Bond[] = [];
+      for (let i = 0; i < positions.count; i += 2) {
+        const j = i + 1;
+        let elementNameI = elementsBonds[i];
+        let elementNameJ = elementsBonds[j];
+        // cpk element names are all lower case
+        const ci = CPK_COLORS[elementNameI];
+        const cj = CPK_COLORS[elementNameJ];
+        // other element names have capital initial
+        elementNameI = Util.capitalize(elementNameI);
+        elementNameJ = Util.capitalize(elementNameJ);
+        const colorI = new Color(ci[0] / 255, ci[1] / 255, ci[2] / 255).convertSRGBToLinear();
+        const colorJ = new Color(cj[0] / 255, cj[1] / 255, cj[2] / 255).convertSRGBToLinear();
+        const positionI = new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i));
+        const positionJ = new Vector3(positions.getX(j), positions.getY(j), positions.getZ(j));
+        bonds.push(
+          new Bond(
+            {
+              elementName: elementNameI,
+              position: positionI,
+              color: colorI,
+              radius: getChemicalElement(elementNameI)?.sigma / 5,
+            } as Atom,
+            {
+              elementName: elementNameJ,
+              position: positionJ,
+              color: colorJ,
+              radius: getChemicalElement(elementNameJ)?.sigma / 5,
+            } as Atom,
+          ),
+        );
+      }
+      setMolecule({ atoms, bonds } as Molecule);
+    });
+  }, [inputMoleculeUrl, chemicalElements]);
 
   const showAtoms = () => {
+    if (!molecule) return null;
     return (
       <group name={'Atoms'}>
         {molecule.atoms.map((e, index) => {
@@ -105,6 +119,7 @@ const MolecularViewer = ({ inputMolecule }: MolecularViewerProps) => {
   };
 
   const showBonds = () => {
+    if (!molecule) return null;
     return (
       <group name={'Bonds'}>
         {molecule.bonds.map((e, index) => {

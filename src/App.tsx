@@ -60,7 +60,7 @@ const App = () => {
         <Lights />
         <Suspense fallback={null}>
           <Axes />
-          <MolecularViewer inputMolecule={inputMolecule} />
+          <MolecularViewer inputMoleculeUrl={inputMolecule} />
         </Suspense>
       </Canvas>
     );
