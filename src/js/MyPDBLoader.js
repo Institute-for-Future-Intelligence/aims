@@ -125,11 +125,11 @@ class MyPDBLoader extends Loader {
         const y = parseFloat(lines[i].slice(38, 45));
         const z = parseFloat(lines[i].slice(46, 53));
         const index = parseInt(lines[i].slice(6, 11)) - 1;
-        let e = trim(lines[i].slice(76, 78)).toLowerCase();
+        let e = trim(lines[i].slice(76, 78));
         if (e === '') {
-          e = trim(lines[i].slice(12, 14)).toLowerCase();
+          e = trim(lines[i].slice(12, 14));
         }
-        const atomData = [x, y, z, e, capitalize(e)];
+        const atomData = [x, y, z, capitalize(e)];
         atoms.push(atomData);
         _atomMap[index] = atomData;
       } else if (lines[i].slice(0, 6) === 'CONECT') {

@@ -16,6 +16,14 @@ declare global {
   }
 }
 
+export enum BondType {
+  SINGLE_BOND = 0,
+  DOUBLE_BOND = 1,
+  TRIPLE_BOND = 2,
+  HYDROGEN_BOND = 3,
+  VAN_DER_WAALS_BOND = 4,
+}
+
 export interface User {
   displayName: string | null;
   email: string | null;

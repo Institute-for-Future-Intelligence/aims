@@ -19,7 +19,7 @@ import Lights from './lights';
 import Axes from './view/axes';
 import MainToolBar from './mainToolBar';
 import ShareLinks from './shareLinks';
-import testMolecule from './molecules/pdb/aspirin.pdb';
+import testMoleculeUrl from './molecules/pdb/aspirin.pdb';
 import MolecularViewer from './molecularViewer';
 
 const App = () => {
@@ -27,7 +27,6 @@ const App = () => {
   const projectView = useStore(Selector.projectView);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
   const viewOnly = false;
-  const inputMolecule = testMolecule;
 
   useEffect(() => {
     loadChemicalElements();
@@ -60,7 +59,7 @@ const App = () => {
         <Lights />
         <Suspense fallback={null}>
           <Axes />
-          <MolecularViewer inputMoleculeUrl={inputMolecule} />
+          <MolecularViewer moleculeUrl={testMoleculeUrl} />
         </Suspense>
       </Canvas>
     );

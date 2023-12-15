@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useMemo, useState } from 'react';
@@ -9,13 +9,13 @@ import { BufferGeometry, Color, NormalBufferAttributes, Vector3 } from 'three';
 import { Bond } from './models/Bond';
 import { Molecule } from './models/Molecule';
 import { Cylinder, Sphere } from '@react-three/drei';
-import { CPK_COLORS, HALF_PI } from './constants';
+import { HALF_PI } from './constants';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import { Util } from './Util';
+import { CPK_COLORS } from './scientificConstants';
 
 export interface MolecularViewerProps {
-  inputMoleculeUrl: string;
+  moleculeUrl: string;
 }
 
 type PDB = {
@@ -27,7 +27,7 @@ type PDB = {
   };
 };
 
-const MolecularViewer = ({ inputMoleculeUrl }: MolecularViewerProps) => {
+const MolecularViewer = ({ moleculeUrl }: MolecularViewerProps) => {
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
 
@@ -36,7 +36,7 @@ const MolecularViewer = ({ inputMoleculeUrl }: MolecularViewerProps) => {
   const [molecule, setMolecule] = useState<Molecule>();
 
   useEffect(() => {
-    pdbLoader.load(inputMoleculeUrl, (pdb: PDB) => {
+    pdbLoader.load(moleculeUrl, (pdb: PDB) => {
       const geometryAtoms = pdb.geometryAtoms;
       const geometryBonds = pdb.geometryBonds;
       const elementsBonds: string[] = pdb.elementsBonds;
@@ -45,8 +45,8 @@ const MolecularViewer = ({ inputMoleculeUrl }: MolecularViewerProps) => {
       const atoms: Atom[] = [];
       for (let i = 0; i < positions.count; i++) {
         const atom = json.atoms[i];
-        const c = CPK_COLORS[atom[3]];
-        const elementName = atom[4] as string;
+        const elementName = atom[3] as string;
+        const c = CPK_COLORS[elementName];
         atoms.push({
           elementName,
           position: new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)),
@@ -58,14 +58,10 @@ const MolecularViewer = ({ inputMoleculeUrl }: MolecularViewerProps) => {
       const bonds: Bond[] = [];
       for (let i = 0; i < positions.count; i += 2) {
         const j = i + 1;
-        let elementNameI = elementsBonds[i];
-        let elementNameJ = elementsBonds[j];
-        // cpk element names are all lower case
+        const elementNameI = elementsBonds[i];
+        const elementNameJ = elementsBonds[j];
         const ci = CPK_COLORS[elementNameI];
         const cj = CPK_COLORS[elementNameJ];
-        // other element names have capital initial
-        elementNameI = Util.capitalize(elementNameI);
-        elementNameJ = Util.capitalize(elementNameJ);
         const colorI = new Color(ci[0] / 255, ci[1] / 255, ci[2] / 255).convertSRGBToLinear();
         const colorJ = new Color(cj[0] / 255, cj[1] / 255, cj[2] / 255).convertSRGBToLinear();
         const positionI = new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i));
@@ -89,7 +85,7 @@ const MolecularViewer = ({ inputMoleculeUrl }: MolecularViewerProps) => {
       }
       setMolecule({ atoms, bonds } as Molecule);
     });
-  }, [inputMoleculeUrl, chemicalElements]);
+  }, [moleculeUrl, chemicalElements]);
 
   const showAtoms = () => {
     if (!molecule) return null;
