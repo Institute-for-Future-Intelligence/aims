@@ -4,6 +4,7 @@ import { defineConfig, loadEnv, Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import rawPlugin from 'vite-raw-plugin';
+import content from '@originjs/vite-plugin-content';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -22,6 +23,7 @@ export default defineConfig(({ mode }) => {
       rawPlugin({
         fileRegex: /\.pdb$/,
       }),
+      content(),
     ],
   };
 });

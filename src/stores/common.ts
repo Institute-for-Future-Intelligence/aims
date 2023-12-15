@@ -12,9 +12,8 @@ import { UndoManager } from '../undo/UndoManager';
 import { ActionInfo, User } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
-import elements from '../assets/elements.txt';
+import elements from '../assets/elements.csv';
 import { ChemicalElement } from '../models/ChemicalElement';
-import Papa from 'papaparse';
 
 enableMapSet();
 
@@ -82,27 +81,22 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           },
           loadChemicalElements() {
             const chemicalElements: ChemicalElement[] = [];
-            Papa.parse(elements, {
-              download: true,
-              complete: function (results) {
-                for (const row of results.data) {
-                  if (Array.isArray(row) && row.length > 1) {
-                    const element = {
-                      name: row[0].trim(),
-                      index: parseInt(row[1].trim()),
-                      mass: parseFloat(row[2].trim()),
-                      sigma: parseFloat(row[3].trim()),
-                      epsilon: parseFloat(row[4].trim()),
-                    } as ChemicalElement;
-                    chemicalElements.push(element);
-                  }
-                }
-                immerSet((state: CommonStoreState) => {
-                  for (const model of chemicalElements) {
-                    state.chemicalElements[model.name] = model;
-                  }
-                });
-              },
+            for (const row of elements) {
+              if (Array.isArray(row) && row.length > 1) {
+                const element = {
+                  name: row[0].trim(),
+                  index: parseInt(row[1].trim()),
+                  mass: parseFloat(row[2].trim()),
+                  sigma: parseFloat(row[3].trim()),
+                  epsilon: parseFloat(row[4].trim()),
+                } as ChemicalElement;
+                chemicalElements.push(element);
+              }
+            }
+            immerSet((state: CommonStoreState) => {
+              for (const model of chemicalElements) {
+                state.chemicalElements[model.name] = model;
+              }
             });
           },
         };
