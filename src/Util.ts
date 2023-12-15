@@ -28,4 +28,8 @@ export class Util {
     if (os) return os.includes('Chrome');
     return false;
   }
+
+  static capitalize(text: string): string {
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  }
 }

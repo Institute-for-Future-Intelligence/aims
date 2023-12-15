@@ -2,11 +2,18 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import { Color, Vector3 } from 'three';
+import { Atom } from './Atom';
 
-export interface Bond {
-  start: Vector3;
-  end: Vector3;
-  startColor: Color;
-  endColor: Color;
+export class Bond {
+  startAtom: Atom;
+  endAtom: Atom;
+
+  constructor(startAtom: Atom, endAtom: Atom) {
+    this.startAtom = startAtom;
+    this.endAtom = endAtom;
+  }
+
+  getLength(): number {
+    return this.startAtom.position.distanceTo(this.endAtom.position);
+  }
 }
