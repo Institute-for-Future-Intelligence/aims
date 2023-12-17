@@ -24,6 +24,33 @@ export enum BondType {
   VAN_DER_WAALS_BOND = 4,
 }
 
+export interface DatumEntry {
+  [key: string]: number | undefined | string | boolean;
+}
+
+export interface Range {
+  variable: string;
+  minimum: number;
+  maximum: number;
+}
+
+// use null for undefined, as we need to persist this in Firebase
+export interface ProjectInfo {
+  owner: string | null;
+  timestamp: number;
+  title: string | null;
+  description: string | null;
+  selectedProperty: string | null;
+  sortDescending: boolean | null;
+  ranges: Range[] | null;
+}
+
+export enum DataColoring {
+  ALL = 0,
+  INDIVIDUALS = 1,
+  GROUPS = 2,
+}
+
 export interface User {
   displayName: string | null;
   email: string | null;

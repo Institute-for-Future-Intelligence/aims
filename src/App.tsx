@@ -94,8 +94,9 @@ const App = () => {
           title={i18n.t('tooltip.visitAIMSHomePage', lang)}
           onClick={visitHomepage}
         >
-          {`${i18n.t('name.AIMS', lang)}`} 🚧
-        </span>
+          {`${i18n.t('name.AIMS', lang)}`}
+        </span>{' '}
+        🚧
       </div>
 
       {viewOnly ? (

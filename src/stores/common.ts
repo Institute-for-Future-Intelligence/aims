@@ -9,7 +9,7 @@ import { Util } from '../Util';
 import { VERSION } from '../constants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, User } from '../types';
+import { ActionInfo, ProjectInfo, Range, User } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -28,6 +28,7 @@ export interface CommonStoreState {
   user: User;
   cloudFile: string | undefined;
 
+  projectInfo: ProjectInfo;
   projectView: boolean;
 
   undoManager: UndoManager;
@@ -61,6 +62,15 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           user: {} as User,
           cloudFile: undefined,
 
+          projectInfo: {
+            owner: null,
+            timestamp: -1,
+            title: null,
+            description: null,
+            selectedProperty: null,
+            sortDescending: false,
+            ranges: new Array<Range>(),
+          } as ProjectInfo,
           projectView: true,
 
           undoManager: new UndoManager(),

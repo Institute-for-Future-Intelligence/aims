@@ -15,6 +15,8 @@ export const language = (state: CommonStoreState) => state.language;
 
 export const locale = (state: CommonStoreState) => state.locale;
 
+export const projectInfo = (state: CommonStoreState) => state.projectInfo;
+
 export const projectView = (state: CommonStoreState) => state.projectView;
 
 export const undoManager = (state: CommonStoreState) => state.undoManager;
