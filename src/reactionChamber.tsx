@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { Suspense, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './constants';
 import { OrbitControls } from '@react-three/drei';
@@ -34,10 +34,8 @@ const ReactionChamber = ({ moleculeUrl }: ReactionChamberProps) => {
     >
       <OrbitControls />
       <Lights />
-      <Suspense fallback={null}>
-        <Axes />
-        <MolecularViewer moleculeUrl={moleculeUrl} />
-      </Suspense>
+      <Axes />
+      <MolecularViewer moleculeUrl={moleculeUrl} />
     </Canvas>
   );
 };

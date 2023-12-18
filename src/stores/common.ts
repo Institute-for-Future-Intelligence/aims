@@ -31,6 +31,9 @@ export interface CommonStoreState {
   projectInfo: ProjectInfo;
   projectView: boolean;
 
+  selectedMolecule: string | null;
+  collectedMolecules: string[];
+
   undoManager: UndoManager;
   addUndoable: (undoable: Undoable) => void;
   loggable: boolean;
@@ -72,6 +75,9 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             ranges: new Array<Range>(),
           } as ProjectInfo,
           projectView: true,
+
+          selectedMolecule: null,
+          collectedMolecules: [],
 
           undoManager: new UndoManager(),
           addUndoable(undoable: Undoable) {

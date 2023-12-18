@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import './App.css';
 import i18n from './i18n/i18n';
 import ifiLogo from './assets/ifi-logo.png';
@@ -15,8 +15,7 @@ import SplitPane from 'react-split-pane';
 import { throttle } from 'lodash';
 import MainToolBar from './mainToolBar';
 import ShareLinks from './shareLinks';
-import testMoleculeUrl from './molecules/pdb/aspirin.pdb';
-import testMoleculeUrl1 from './molecules/pdb/nacl.pdb';
+import testMoleculeUrl1 from './molecules/pdb/aspirin.pdb';
 import testMoleculeUrl2 from './molecules/pdb/buckyball.pdb';
 import testMoleculeUrl3 from './molecules/pdb/cholesterol.pdb';
 import testMoleculeUrl4 from './molecules/pdb/caffeine.pdb';
@@ -26,13 +25,27 @@ import ProjectGallery from './projectGallery';
 import ReactionChamber from './reactionChamber';
 
 const App = () => {
+  const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const projectView = useStore(Selector.projectView);
+  const selectedMolecule = useStore(Selector.selectedMolecule);
+  const collectedMolecules = useStore(Selector.collectedMolecules);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
   const viewOnly = false;
 
   useEffect(() => {
     loadChemicalElements();
+    setCommonStore((state) => {
+      state.selectedMolecule = testMoleculeUrl1;
+      state.collectedMolecules = [
+        testMoleculeUrl1,
+        testMoleculeUrl2,
+        testMoleculeUrl3,
+        testMoleculeUrl4,
+        testMoleculeUrl5,
+        testMoleculeUrl6,
+      ];
+    });
     // eslint-disable-next-line
   }, []);
 
@@ -158,21 +171,19 @@ const App = () => {
           }}
         >
           {projectView ? (
-            <ProjectGallery
-              relativeWidth={1 - chamberRelativeWidth * 0.01}
-              moleculeUrls={[
-                testMoleculeUrl1,
-                testMoleculeUrl2,
-                testMoleculeUrl3,
-                testMoleculeUrl4,
-                testMoleculeUrl5,
-                testMoleculeUrl6,
-              ]}
-            />
+            <Suspense fallback={null}>
+              <ProjectGallery relativeWidth={1 - chamberRelativeWidth * 0.01} moleculeUrls={collectedMolecules} />
+            </Suspense>
           ) : (
             <></>
           )}
-          <ReactionChamber moleculeUrl={testMoleculeUrl} />
+          {selectedMolecule ? (
+            <Suspense fallback={null}>
+              <ReactionChamber moleculeUrl={selectedMolecule} />
+            </Suspense>
+          ) : (
+            <div>Loading...</div>
+          )}
         </SplitPane>
       </div>
     </div>
