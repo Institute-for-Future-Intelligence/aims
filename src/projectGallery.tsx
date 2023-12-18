@@ -14,10 +14,11 @@ import { CloseOutlined } from '@ant-design/icons';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { useTranslation } from 'react-i18next';
+import { MoleculeData } from './types';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
-  moleculeUrls: string[];
+  moleculeData: MoleculeData[];
 }
 
 const CanvasContainer = styled.div`
@@ -74,7 +75,7 @@ const Header = styled.div`
   align-items: center;
 `;
 
-const ProjectGallery = ({ relativeWidth, moleculeUrls }: ProjectGalleryProps) => {
+const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const canvasColumns = 3;
@@ -88,7 +89,7 @@ const ProjectGallery = ({ relativeWidth, moleculeUrls }: ProjectGalleryProps) =>
     return { lng: language };
   }, [language]);
 
-  const createCanvas = (moleculeUrl: string) => {
+  const createCanvas = (moleculeData: MoleculeData) => {
     return (
       <Canvas
         shadows={true}
@@ -107,10 +108,15 @@ const ProjectGallery = ({ relativeWidth, moleculeUrls }: ProjectGalleryProps) =>
           position: [0, 0, 20],
           rotation: [HALF_PI / 2, 0, HALF_PI / 2],
         }}
+        onDoubleClick={() => {
+          setCommonStore((state) => {
+            state.selectedMolecule = moleculeData;
+          });
+        }}
       >
         <OrbitControls />
         <Lights />
-        <MolecularViewer moleculeUrl={moleculeUrl} />
+        <MolecularViewer moleculeData={moleculeData} />
       </Canvas>
     );
   };
@@ -155,11 +161,24 @@ const ProjectGallery = ({ relativeWidth, moleculeUrls }: ProjectGalleryProps) =>
               overflowY: 'auto',
             }}
             grid={{ column: canvasColumns, gutter: 0 }}
-            dataSource={moleculeUrls}
-            renderItem={(url: string) => {
+            dataSource={moleculeData}
+            renderItem={(data: MoleculeData) => {
               return (
                 <List.Item onMouseOver={() => {}} onMouseLeave={() => {}}>
-                  {createCanvas(url)}
+                  {createCanvas(data)}
+                  <div
+                    style={{
+                      position: 'relative',
+                      left: '10px',
+                      textAlign: 'left',
+                      bottom: '18px',
+                      color: 'black',
+                      fontSize: '10px',
+                      fontWeight: 'normal',
+                    }}
+                  >
+                    {data.name}
+                  </div>
                 </List.Item>
               );
             }}

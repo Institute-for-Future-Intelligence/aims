@@ -9,7 +9,7 @@ import { Util } from '../Util';
 import { VERSION } from '../constants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, ProjectInfo, Range, User } from '../types';
+import { ActionInfo, MoleculeData, ProjectInfo, Range, User } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -31,8 +31,8 @@ export interface CommonStoreState {
   projectInfo: ProjectInfo;
   projectView: boolean;
 
-  selectedMolecule: string | null;
-  collectedMolecules: string[];
+  selectedMolecule: MoleculeData | null;
+  collectedMolecules: MoleculeData[];
 
   undoManager: UndoManager;
   addUndoable: (undoable: Undoable) => void;

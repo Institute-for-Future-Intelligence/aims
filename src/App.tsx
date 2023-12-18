@@ -23,6 +23,7 @@ import testMoleculeUrl5 from './molecules/pdb/ybco.pdb';
 import testMoleculeUrl6 from './molecules/pdb/diamond.pdb';
 import ProjectGallery from './projectGallery';
 import ReactionChamber from './reactionChamber';
+import { MoleculeData } from './types';
 
 const App = () => {
   const setCommonStore = useStore(Selector.set);
@@ -36,15 +37,15 @@ const App = () => {
   useEffect(() => {
     loadChemicalElements();
     setCommonStore((state) => {
-      state.selectedMolecule = testMoleculeUrl1;
       state.collectedMolecules = [
-        testMoleculeUrl1,
-        testMoleculeUrl2,
-        testMoleculeUrl3,
-        testMoleculeUrl4,
-        testMoleculeUrl5,
-        testMoleculeUrl6,
+        { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
+        { name: 'Buckyball', url: testMoleculeUrl2 } as MoleculeData,
+        { name: 'Cholesterol', url: testMoleculeUrl3 } as MoleculeData,
+        { name: 'Caffeine', url: testMoleculeUrl4 } as MoleculeData,
+        { name: 'YBCO', url: testMoleculeUrl5 } as MoleculeData,
+        { name: 'Diamond', url: testMoleculeUrl6 } as MoleculeData,
       ];
+      state.selectedMolecule = state.collectedMolecules[0];
     });
     // eslint-disable-next-line
   }, []);
@@ -172,14 +173,14 @@ const App = () => {
         >
           {projectView ? (
             <Suspense fallback={null}>
-              <ProjectGallery relativeWidth={1 - chamberRelativeWidth * 0.01} moleculeUrls={collectedMolecules} />
+              <ProjectGallery relativeWidth={1 - chamberRelativeWidth * 0.01} moleculeData={collectedMolecules} />
             </Suspense>
           ) : (
             <></>
           )}
           {selectedMolecule ? (
             <Suspense fallback={null}>
-              <ReactionChamber moleculeUrl={selectedMolecule} />
+              <ReactionChamber moleculeData={selectedMolecule} />
             </Suspense>
           ) : (
             <div>Loading...</div>

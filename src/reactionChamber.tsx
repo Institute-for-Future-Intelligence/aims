@@ -9,12 +9,13 @@ import { OrbitControls } from '@react-three/drei';
 import Lights from './lights';
 import Axes from './view/axes';
 import MolecularViewer from './molecularViewer';
+import { MoleculeData } from './types';
 
 export interface ReactionChamberProps {
-  moleculeUrl: string;
+  moleculeData: MoleculeData;
 }
 
-const ReactionChamber = ({ moleculeUrl }: ReactionChamberProps) => {
+const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   return (
@@ -35,7 +36,7 @@ const ReactionChamber = ({ moleculeUrl }: ReactionChamberProps) => {
       <OrbitControls />
       <Lights />
       <Axes />
-      <MolecularViewer moleculeUrl={moleculeUrl} />
+      <MolecularViewer moleculeData={moleculeData} />
     </Canvas>
   );
 };

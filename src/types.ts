@@ -34,6 +34,11 @@ export interface Range {
   maximum: number;
 }
 
+export interface MoleculeData {
+  name: string;
+  url: string;
+}
+
 // use null for undefined, as we need to persist this in Firebase
 export interface ProjectInfo {
   owner: string | null;

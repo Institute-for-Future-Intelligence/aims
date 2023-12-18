@@ -13,9 +13,10 @@ import { HALF_PI } from './constants';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { CPK_COLORS } from './scientificConstants';
+import { MoleculeData } from './types';
 
 export interface MolecularViewerProps {
-  moleculeUrl: string;
+  moleculeData: MoleculeData;
 }
 
 type PDB = {
@@ -27,7 +28,7 @@ type PDB = {
   };
 };
 
-const MolecularViewer = ({ moleculeUrl }: MolecularViewerProps) => {
+const MolecularViewer = ({ moleculeData }: MolecularViewerProps) => {
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
 
@@ -36,7 +37,7 @@ const MolecularViewer = ({ moleculeUrl }: MolecularViewerProps) => {
   const [molecule, setMolecule] = useState<Molecule>();
 
   useEffect(() => {
-    pdbLoader.load(moleculeUrl, (pdb: PDB) => {
+    pdbLoader.load(moleculeData.url, (pdb: PDB) => {
       const geometryAtoms = pdb.geometryAtoms;
       const geometryBonds = pdb.geometryBonds;
       const elementsBonds: string[] = pdb.elementsBonds;
@@ -85,7 +86,7 @@ const MolecularViewer = ({ moleculeUrl }: MolecularViewerProps) => {
       }
       setMolecule({ atoms, bonds } as Molecule);
     });
-  }, [moleculeUrl, chemicalElements]);
+  }, [moleculeData, chemicalElements]);
 
   const showAtoms = () => {
     if (!molecule) return null;
