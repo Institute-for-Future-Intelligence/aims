@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
 import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
@@ -27,7 +27,7 @@ import testMoleculeUrl4 from './molecules/pdb/caffeine.pdb';
 import testMoleculeUrl5 from './molecules/pdb/ybco.pdb';
 import testMoleculeUrl6 from './molecules/pdb/diamond.pdb';
 import MolecularViewer from './molecularViewer';
-import { Col, Row } from 'antd';
+import ProjectGallery from './projectGallery';
 
 const App = () => {
   const language = useStore(Selector.language);
@@ -46,14 +46,14 @@ const App = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasRelativeWidth, setCanvasRelativeWidth] = useState<number>(60);
 
-  const createCanvas = (moleculeUrl: string, forGallery?: boolean) => {
+  const createMainCanvas = (moleculeUrl: string) => {
     return (
       <Canvas
         ref={canvasRef}
         shadows={true}
         gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
         frameloop={'demand'}
-        style={{ height: '100%', width: '100%', backgroundColor: forGallery ? 'white' : 'black' }}
+        style={{ height: '100%', width: '100%', backgroundColor: 'black' }}
         camera={{
           fov: DEFAULT_FOV,
           far: DEFAULT_SHADOW_CAMERA_FAR,
@@ -65,7 +65,7 @@ const App = () => {
         <OrbitControls />
         <Lights />
         <Suspense fallback={null}>
-          {!forGallery && <Axes />}
+          <Axes />
           <MolecularViewer moleculeUrl={moleculeUrl} />
         </Suspense>
       </Canvas>
@@ -188,37 +188,21 @@ const App = () => {
           }}
         >
           {projectView ? (
-            <div style={{ backgroundColor: 'white', overflowY: 'visible' }}>
-              <Row style={{ width: '100%', paddingLeft: '20px', paddingTop: '10px' }} gutter={[6, 6]}>
-                <Col style={{ width: '33%', marginRight: '1px', border: '1px solid lightgray' }}>
-                  {createCanvas(testMoleculeUrl1, true)}
-                </Col>
-                <Col style={{ width: '33%', marginRight: '1px', border: '1px solid lightgray' }}>
-                  {createCanvas(testMoleculeUrl2, true)}
-                </Col>
-                <Col style={{ width: '33%', border: '1px solid lightgray' }}>
-                  {createCanvas(testMoleculeUrl3, true)}
-                </Col>
-              </Row>
-              <Row
-                style={{ width: '100%', paddingLeft: '20px', paddingTop: '2px', paddingBottom: '10px' }}
-                gutter={[6, 6]}
-              >
-                <Col style={{ width: '33%', marginRight: '1px', border: '1px solid lightgray' }}>
-                  {createCanvas(testMoleculeUrl4, true)}
-                </Col>
-                <Col style={{ width: '33%', marginRight: '1px', border: '1px solid lightgray' }}>
-                  {createCanvas(testMoleculeUrl5, true)}
-                </Col>
-                <Col style={{ width: '33%', border: '1px solid lightgray' }}>
-                  {createCanvas(testMoleculeUrl6, true)}
-                </Col>
-              </Row>
-            </div>
+            <ProjectGallery
+              relativeWidth={1 - canvasRelativeWidth * 0.01}
+              moleculeUrls={[
+                testMoleculeUrl1,
+                testMoleculeUrl2,
+                testMoleculeUrl3,
+                testMoleculeUrl4,
+                testMoleculeUrl5,
+                testMoleculeUrl6,
+              ]}
+            />
           ) : (
             <></>
           )}
-          {createCanvas(testMoleculeUrl)}
+          {createMainCanvas(testMoleculeUrl)}
         </SplitPane>
       </div>
     </div>
