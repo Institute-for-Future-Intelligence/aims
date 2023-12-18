@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
 import i18n from './i18n/i18n';
 import ifiLogo from './assets/ifi-logo.png';
@@ -10,13 +10,9 @@ import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { visitHomepage, visitIFI } from './helpers';
 import MainMenu from './mainMenu';
-import { Canvas } from '@react-three/fiber';
-import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI, VERSION } from './constants';
+import { VERSION } from './constants';
 import SplitPane from 'react-split-pane';
 import { throttle } from 'lodash';
-import { OrbitControls } from '@react-three/drei';
-import Lights from './lights';
-import Axes from './view/axes';
 import MainToolBar from './mainToolBar';
 import ShareLinks from './shareLinks';
 import testMoleculeUrl from './molecules/pdb/aspirin.pdb';
@@ -26,8 +22,8 @@ import testMoleculeUrl3 from './molecules/pdb/cholesterol.pdb';
 import testMoleculeUrl4 from './molecules/pdb/caffeine.pdb';
 import testMoleculeUrl5 from './molecules/pdb/ybco.pdb';
 import testMoleculeUrl6 from './molecules/pdb/diamond.pdb';
-import MolecularViewer from './molecularViewer';
 import ProjectGallery from './projectGallery';
+import ReactionChamber from './reactionChamber';
 
 const App = () => {
   const language = useStore(Selector.language);
@@ -37,40 +33,14 @@ const App = () => {
 
   useEffect(() => {
     loadChemicalElements();
+    // eslint-disable-next-line
   }, []);
 
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [canvasRelativeWidth, setCanvasRelativeWidth] = useState<number>(60);
-
-  const createMainCanvas = (moleculeUrl: string) => {
-    return (
-      <Canvas
-        ref={canvasRef}
-        shadows={true}
-        gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
-        frameloop={'demand'}
-        style={{ height: '100%', width: '100%', backgroundColor: 'black' }}
-        camera={{
-          fov: DEFAULT_FOV,
-          far: DEFAULT_SHADOW_CAMERA_FAR,
-          up: [0, 0, 1],
-          position: [0, 0, 20],
-          rotation: [HALF_PI / 2, 0, HALF_PI / 2],
-        }}
-      >
-        <OrbitControls />
-        <Lights />
-        <Suspense fallback={null}>
-          <Axes />
-          <MolecularViewer moleculeUrl={moleculeUrl} />
-        </Suspense>
-      </Canvas>
-    );
-  };
+  const [chamberRelativeWidth, setChamberRelativeWidth] = useState<number>(60);
 
   return (
     <div className="App">
@@ -169,16 +139,16 @@ const App = () => {
           split={'vertical'}
           defaultSize={projectView ? '60%' : 0}
           onChange={throttle((size) => {
-            setCanvasRelativeWidth(Math.round(100 - (size / window.innerWidth) * 100));
+            setChamberRelativeWidth(Math.round(100 - (size / window.innerWidth) * 100));
           }, 5)}
           // must specify the height again for the split pane to resize correctly with the window
           style={{ height: 'calc(100vh - 82px)', display: 'flex' }}
           pane1Style={{
-            width: projectView ? 100 - canvasRelativeWidth + '%' : '0',
+            width: projectView ? 100 - chamberRelativeWidth + '%' : '0',
             minWidth: projectView ? '25%' : 0,
             maxWidth: projectView ? '75%' : 0,
           }}
-          pane2Style={{ width: projectView ? canvasRelativeWidth + '%' : '100%' }}
+          pane2Style={{ width: projectView ? chamberRelativeWidth + '%' : '100%' }}
           resizerStyle={{
             cursor: 'col-resize',
             width: projectView ? '6px' : 0,
@@ -189,7 +159,7 @@ const App = () => {
         >
           {projectView ? (
             <ProjectGallery
-              relativeWidth={1 - canvasRelativeWidth * 0.01}
+              relativeWidth={1 - chamberRelativeWidth * 0.01}
               moleculeUrls={[
                 testMoleculeUrl1,
                 testMoleculeUrl2,
@@ -202,7 +172,7 @@ const App = () => {
           ) : (
             <></>
           )}
-          {createMainCanvas(testMoleculeUrl)}
+          <ReactionChamber moleculeUrl={testMoleculeUrl} />
         </SplitPane>
       </div>
     </div>
