@@ -24,6 +24,7 @@ import testMoleculeUrl6 from './molecules/pdb/diamond.pdb';
 import ProjectGallery from './projectGallery';
 import ReactionChamber from './reactionChamber';
 import { MoleculeData } from './types';
+import AcceptCookie from './acceptCookie';
 
 const App = () => {
   const setCommonStore = useStore(Selector.set);
@@ -32,7 +33,8 @@ const App = () => {
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const collectedMolecules = useStore(Selector.collectedMolecules);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
-  const viewOnly = false;
+  const params = new URLSearchParams(window.location.search);
+  const viewOnly = params.get('viewonly') === 'true';
 
   useEffect(() => {
     loadChemicalElements();
@@ -92,7 +94,7 @@ const App = () => {
             zIndex: 999,
             fontSize: '8px',
             userSelect: 'none',
-            color: 'antiquewhite',
+            color: 'dimgray',
           }}
         >
           <img
@@ -187,6 +189,7 @@ const App = () => {
           )}
         </SplitPane>
       </div>
+      {!viewOnly && <AcceptCookie />}
     </div>
   );
 };
