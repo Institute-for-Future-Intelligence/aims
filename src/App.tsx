@@ -16,10 +16,10 @@ import { throttle } from 'lodash';
 import MainToolBar from './mainToolBar';
 import ShareLinks from './shareLinks';
 import testMoleculeUrl1 from './molecules/pdb/aspirin.pdb';
-import testMoleculeUrl2 from './molecules/pdb/buckyball.pdb';
-import testMoleculeUrl3 from './molecules/pdb/cholesterol.pdb';
-import testMoleculeUrl4 from './molecules/pdb/caffeine.pdb';
-import testMoleculeUrl5 from './molecules/pdb/ybco.pdb';
+import testMoleculeUrl2 from './molecules/pdb/cholesterol.pdb';
+import testMoleculeUrl3 from './molecules/pdb/caffeine.pdb';
+import testMoleculeUrl4 from './molecules/pdb/glucose.pdb';
+import testMoleculeUrl5 from './molecules/pdb/buckyball.pdb';
 import testMoleculeUrl6 from './molecules/pdb/diamond.pdb';
 import ProjectGallery from './projectGallery';
 import ReactionChamber from './reactionChamber';
@@ -41,10 +41,10 @@ const App = () => {
     setCommonStore((state) => {
       state.collectedMolecules = [
         { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
-        { name: 'Buckyball', url: testMoleculeUrl2 } as MoleculeData,
-        { name: 'Cholesterol', url: testMoleculeUrl3 } as MoleculeData,
-        { name: 'Caffeine', url: testMoleculeUrl4 } as MoleculeData,
-        { name: 'YBCO', url: testMoleculeUrl5 } as MoleculeData,
+        { name: 'Cholesterol', url: testMoleculeUrl2 } as MoleculeData,
+        { name: 'Caffeine', url: testMoleculeUrl3 } as MoleculeData,
+        { name: 'Glucose', url: testMoleculeUrl4 } as MoleculeData,
+        { name: 'Buckyball', url: testMoleculeUrl5 } as MoleculeData,
         { name: 'Diamond', url: testMoleculeUrl6 } as MoleculeData,
       ];
       state.selectedMolecule = state.collectedMolecules[0];
@@ -146,7 +146,7 @@ const App = () => {
         <ShareLinks size={16} round={true} margin={'2px'} style={{ position: 'absolute', right: '0', top: '90px' }} />
       )}
 
-      <MainToolBar signIn={() => {}} signOut={() => {}} />
+      {!viewOnly && <MainToolBar signIn={() => {}} signOut={() => {}} />}
       <MainMenu viewOnly={false} canvas={null} />
       {/* must specify the height here for the floating window to have correct boundary check*/}
       <div style={{ height: 'calc(100vh - 82px)' }}>

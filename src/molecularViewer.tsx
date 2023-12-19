@@ -44,16 +44,33 @@ const MolecularViewer = ({ moleculeData }: MolecularViewerProps) => {
       const json = pdb.json;
       let positions = geometryAtoms.getAttribute('position');
       const atoms: Atom[] = [];
+      let cx = 0;
+      let cy = 0;
+      let cz = 0;
       for (let i = 0; i < positions.count; i++) {
         const atom = json.atoms[i];
         const elementName = atom[3] as string;
         const c = CPK_COLORS[elementName];
+        const v = new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i));
+        cx += v.x;
+        cy += v.y;
+        cz += v.z;
         atoms.push({
           elementName,
-          position: new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i)),
+          position: v,
           color: new Color(c[0] / 255, c[1] / 255, c[2] / 255).convertSRGBToLinear(),
           radius: getChemicalElement(elementName)?.sigma / 5,
         } as Atom);
+      }
+      if (atoms.length > 0) {
+        cx /= atoms.length;
+        cy /= atoms.length;
+        cz /= atoms.length;
+        for (const a of atoms) {
+          a.position.x -= cx;
+          a.position.y -= cy;
+          a.position.z -= cz;
+        }
       }
       positions = geometryBonds.getAttribute('position');
       const bonds: Bond[] = [];
@@ -65,8 +82,8 @@ const MolecularViewer = ({ moleculeData }: MolecularViewerProps) => {
         const cj = CPK_COLORS[elementNameJ];
         const colorI = new Color(ci[0] / 255, ci[1] / 255, ci[2] / 255).convertSRGBToLinear();
         const colorJ = new Color(cj[0] / 255, cj[1] / 255, cj[2] / 255).convertSRGBToLinear();
-        const positionI = new Vector3(positions.getX(i), positions.getY(i), positions.getZ(i));
-        const positionJ = new Vector3(positions.getX(j), positions.getY(j), positions.getZ(j));
+        const positionI = new Vector3(positions.getX(i) - cx, positions.getY(i) - cy, positions.getZ(i) - cz);
+        const positionJ = new Vector3(positions.getX(j) - cx, positions.getY(j) - cy, positions.getZ(j) - cz);
         bonds.push(
           new Bond(
             {
