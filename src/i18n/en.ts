@@ -43,6 +43,22 @@ export const i18n_en = {
       Contact: 'For more information, please contact Charles Xie (charles@intofuture.org).',
     },
 
+    molecularViewer: {
+      Style: 'Style',
+      BallAndStick: 'Ball-and-Stick',
+      Wireframe: 'Wireframe',
+      Stick: 'Stick',
+      SpaceFilling: 'Space-Filling',
+    },
+
+    projectPanel: {
+      Project: 'Project',
+      ProjectType: 'Type',
+      ProjectDescription: 'Description',
+      ProjectSettings: 'Project Settings',
+      DisplayWindowSize: 'Display Window Size',
+    },
+
     menu: {
       mainMenu: 'Main Menu',
       fileSubMenu: 'File',

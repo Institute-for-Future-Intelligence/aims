@@ -13,10 +13,11 @@ import { HALF_PI } from './constants';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { CPK_COLORS } from './scientificConstants';
-import { MoleculeData } from './types';
+import { MolecularViewerStyle, MoleculeData } from './types';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
+  style: MolecularViewerStyle;
 }
 
 type PDB = {
@@ -28,7 +29,7 @@ type PDB = {
   };
 };
 
-const MolecularViewer = ({ moleculeData }: MolecularViewerProps) => {
+const MolecularViewer = ({ moleculeData, style }: MolecularViewerProps) => {
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
 
@@ -107,13 +108,14 @@ const MolecularViewer = ({ moleculeData }: MolecularViewerProps) => {
 
   const showAtoms = () => {
     if (!molecule) return null;
+    if (style === MolecularViewerStyle.Stick || style === MolecularViewerStyle.Wireframe) return null;
     return (
       <group name={'Atoms'}>
         {molecule.atoms.map((e, index) => {
           return (
             <Sphere
               position={e.position}
-              args={[e.radius ?? 0.5, 16, 16]}
+              args={[(style === MolecularViewerStyle.SpaceFilling ? 4 : 1) * (e.radius ?? 0.5), 16, 16]}
               key={'Atom' + index}
               name={e.elementName}
               castShadow={false}
@@ -143,6 +145,7 @@ const MolecularViewer = ({ moleculeData }: MolecularViewerProps) => {
           const midPosition = e.startAtom.position.clone().lerp(e.endAtom.position, alpha);
           const startLength = e.startAtom.position.distanceTo(midPosition);
           const endLength = e.endAtom.position.distanceTo(midPosition);
+          const radius = style === MolecularViewerStyle.Wireframe ? 0.01 : 0.1;
           return (
             <React.Fragment key={'Bond' + index}>
               <group
@@ -156,7 +159,7 @@ const MolecularViewer = ({ moleculeData }: MolecularViewerProps) => {
                   name={'Bond1' + index}
                   castShadow={false}
                   receiveShadow={false}
-                  args={[0.1, 0.1, startLength, 16, 1]}
+                  args={[radius, radius, startLength, 16, 1]}
                   rotation={[HALF_PI, 0, 0]}
                 >
                   <meshStandardMaterial attach="material" color={e.startAtom.color} />
@@ -173,7 +176,7 @@ const MolecularViewer = ({ moleculeData }: MolecularViewerProps) => {
                   name={'Bond2' + index}
                   castShadow={false}
                   receiveShadow={false}
-                  args={[0.1, 0.1, endLength, 16, 1]}
+                  args={[radius, radius, endLength, 16, 1]}
                   rotation={[HALF_PI, 0, 0]}
                 >
                   <meshStandardMaterial attach="material" color={e.endAtom.color} />

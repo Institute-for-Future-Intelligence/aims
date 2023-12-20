@@ -23,6 +23,8 @@ export const selectedMolecule = (state: CommonStoreState) => state.selectedMolec
 
 export const collectedMolecules = (state: CommonStoreState) => state.collectedMolecules;
 
+export const molecularViewerStyle = (state: CommonStoreState) => state.molecularViewerStyle;
+
 export const undoManager = (state: CommonStoreState) => state.undoManager;
 
 export const addUndoable = (state: CommonStoreState) => state.addUndoable;
@@ -38,3 +40,5 @@ export const chemicalElements = (state: CommonStoreState) => state.chemicalEleme
 export const getChemicalElement = (state: CommonStoreState) => state.getChemicalElement;
 
 export const loadChemicalElements = (state: CommonStoreState) => state.loadChemicalElements;
+
+export const contextMenuObjectType = (state: PrimitiveStoreState) => state.contextMenuObjectType;

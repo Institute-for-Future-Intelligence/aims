@@ -44,6 +44,22 @@ export const i18n_zh_cn = {
       Translators: '翻译',
     },
 
+    molecularViewer: {
+      Style: '风格',
+      BallAndStick: '球和棍',
+      Wireframe: '线框架',
+      Stick: '棍',
+      SpaceFilling: '空间填满',
+    },
+
+    projectPanel: {
+      Project: '项目',
+      ProjectType: '类别',
+      ProjectDescription: '描述',
+      ProjectSettings: '项目设定',
+      DisplayWindowSize: '展示窗口大小',
+    },
+
     menu: {
       mainMenu: '主菜单',
       fileSubMenu: '文件',

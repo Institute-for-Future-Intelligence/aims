@@ -43,6 +43,22 @@ export const i18n_zh_tw = {
       Contact: '如您需要更多資訊，請聯繫 Charles Xie (charles@intofuture.org)。我們會盡快回复。',
     },
 
+    molecularViewer: {
+      Style: '風格',
+      BallAndStick: '球和棍',
+      Wireframe: '線框架',
+      Stick: '棍',
+      SpaceFilling: '空間填滿',
+    },
+
+    projectPanel: {
+      Project: '項目',
+      ProjectType: '類别',
+      ProjectDescription: '描述',
+      ProjectSettings: '項目設定',
+      DisplayWindowSize: '展示視窗大小',
+    },
+
     menu: {
       mainMenu: '主菜單',
       fileSubMenu: '文檔',

@@ -25,6 +25,7 @@ import ProjectGallery from './projectGallery';
 import ReactionChamber from './reactionChamber';
 import { MoleculeData } from './types';
 import AcceptCookie from './acceptCookie';
+import DropdownContextMenu from './components/contextMenu';
 
 const App = () => {
   const setCommonStore = useStore(Selector.set);
@@ -148,47 +149,49 @@ const App = () => {
 
       {!viewOnly && <MainToolBar signIn={() => {}} signOut={() => {}} />}
       <MainMenu viewOnly={false} canvas={null} />
-      {/* must specify the height here for the floating window to have correct boundary check*/}
-      <div style={{ height: 'calc(100vh - 82px)' }}>
-        {/* @ts-ignore */}
-        <SplitPane
-          split={'vertical'}
-          defaultSize={projectView ? '60%' : 0}
-          onChange={throttle((size) => {
-            setChamberRelativeWidth(Math.round(100 - (size / window.innerWidth) * 100));
-          }, 5)}
-          // must specify the height again for the split pane to resize correctly with the window
-          style={{ height: 'calc(100vh - 82px)', display: 'flex' }}
-          pane1Style={{
-            width: projectView ? 100 - chamberRelativeWidth + '%' : '0',
-            minWidth: projectView ? '25%' : 0,
-            maxWidth: projectView ? '75%' : 0,
-          }}
-          pane2Style={{ width: projectView ? chamberRelativeWidth + '%' : '100%' }}
-          resizerStyle={{
-            cursor: 'col-resize',
-            width: projectView ? '6px' : 0,
-            minWidth: projectView ? '6px' : 0,
-            maxWidth: projectView ? '6px' : 0,
-            backgroundImage: 'linear-gradient(to right, white, gray)',
-          }}
-        >
-          {projectView ? (
-            <Suspense fallback={null}>
-              <ProjectGallery relativeWidth={1 - chamberRelativeWidth * 0.01} moleculeData={collectedMolecules} />
-            </Suspense>
-          ) : (
-            <></>
-          )}
-          {selectedMolecule ? (
-            <Suspense fallback={null}>
-              <ReactionChamber moleculeData={selectedMolecule} />
-            </Suspense>
-          ) : (
-            <div>Loading...</div>
-          )}
-        </SplitPane>
-      </div>
+      <DropdownContextMenu>
+        {/* must specify the height here for the floating window to have correct boundary check*/}
+        <div style={{ height: 'calc(100vh - 82px)' }}>
+          {/* @ts-ignore */}
+          <SplitPane
+            split={'vertical'}
+            defaultSize={projectView ? '60%' : 0}
+            onChange={throttle((size) => {
+              setChamberRelativeWidth(Math.round(100 - (size / window.innerWidth) * 100));
+            }, 5)}
+            // must specify the height again for the split pane to resize correctly with the window
+            style={{ height: 'calc(100vh - 82px)', display: 'flex' }}
+            pane1Style={{
+              width: projectView ? 100 - chamberRelativeWidth + '%' : '0',
+              minWidth: projectView ? '25%' : 0,
+              maxWidth: projectView ? '75%' : 0,
+            }}
+            pane2Style={{ width: projectView ? chamberRelativeWidth + '%' : '100%' }}
+            resizerStyle={{
+              cursor: 'col-resize',
+              width: projectView ? '6px' : 0,
+              minWidth: projectView ? '6px' : 0,
+              maxWidth: projectView ? '6px' : 0,
+              backgroundImage: 'linear-gradient(to right, white, gray)',
+            }}
+          >
+            {projectView ? (
+              <Suspense fallback={null}>
+                <ProjectGallery relativeWidth={1 - chamberRelativeWidth * 0.01} moleculeData={collectedMolecules} />
+              </Suspense>
+            ) : (
+              <></>
+            )}
+            {selectedMolecule ? (
+              <Suspense fallback={null}>
+                <ReactionChamber moleculeData={selectedMolecule} />
+              </Suspense>
+            ) : (
+              <div>Loading...</div>
+            )}
+          </SplitPane>
+        </div>
+      </DropdownContextMenu>
       {!viewOnly && <AcceptCookie />}
     </div>
   );

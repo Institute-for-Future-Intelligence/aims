@@ -10,12 +10,16 @@ import Lights from './lights';
 import Axes from './view/axes';
 import MolecularViewer from './molecularViewer';
 import { MoleculeData } from './types';
+import { useStore } from './stores/common';
+import * as Selector from './stores/selector';
 
 export interface ReactionChamberProps {
   moleculeData: MoleculeData;
 }
 
 const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
+  const molecularViewerStyle = useStore(Selector.molecularViewerStyle);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   return (
@@ -36,7 +40,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       <OrbitControls />
       <Lights />
       <Axes />
-      <MolecularViewer moleculeData={moleculeData} />
+      <MolecularViewer moleculeData={moleculeData} style={molecularViewerStyle} />
     </Canvas>
   );
 };

@@ -14,7 +14,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { useTranslation } from 'react-i18next';
-import { MoleculeData } from './types';
+import { MolecularViewerStyle, MoleculeData } from './types';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -78,6 +78,8 @@ const Header = styled.div`
 const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
+  const selectedMolecule = useStore(Selector.selectedMolecule);
+
   const canvasColumns = 3;
   const gridGutter = 10;
   const totalWidth = Math.round(window.innerWidth * relativeWidth);
@@ -99,7 +101,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           height: canvasHeight + 'px',
           width: canvasWidth + 'px',
           backgroundColor: 'white',
-          border: '1px solid gray',
+          border: selectedMolecule === moleculeData ? '2px solid red' : '1px solid gray',
         }}
         camera={{
           fov: DEFAULT_FOV,
@@ -108,6 +110,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           position: [0, 0, 20],
           rotation: [HALF_PI / 2, 0, HALF_PI / 2],
         }}
+        onClick={() => {}}
         onDoubleClick={() => {
           setCommonStore((state) => {
             state.selectedMolecule = moleculeData;
@@ -116,7 +119,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
       >
         <OrbitControls />
         <Lights />
-        <MolecularViewer moleculeData={moleculeData} />
+        <MolecularViewer moleculeData={moleculeData} style={MolecularViewerStyle.BallAndStick} />
       </Canvas>
     );
   };
@@ -135,7 +138,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     >
       <ColumnWrapper>
         <Header>
-          <span>Title</span>
+          <span>{t('projectPanel.Project', lang)}</span>
           <span
             style={{ cursor: 'pointer', paddingRight: '20px' }}
             onMouseDown={() => {

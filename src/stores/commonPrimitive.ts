@@ -4,6 +4,7 @@
 
 import { createWithEqualityFn } from 'zustand/traditional';
 import produce from 'immer';
+import { ObjectType } from '../types';
 
 // avoid using undefined value in the store for now.
 export interface PrimitiveStoreState {
@@ -12,6 +13,8 @@ export interface PrimitiveStoreState {
 
   waiting: boolean;
 
+  contextMenuObjectType: ObjectType | null;
+  contextMenuFlag: boolean;
   updateContextMenu: () => void;
 
   updateProjectsFlag: boolean;
@@ -50,7 +53,14 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     },
 
     waiting: false,
-    updateContextMenu() {},
+
+    contextMenuObjectType: null,
+    contextMenuFlag: false,
+    updateContextMenu() {
+      immerSet((state) => {
+        state.contextMenuFlag = !state.contextMenuFlag;
+      });
+    },
 
     updateProjectsFlag: false,
   };

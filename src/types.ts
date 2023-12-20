@@ -34,6 +34,19 @@ export interface Range {
   maximum: number;
 }
 
+export enum ObjectType {
+  Atom = 'Atom',
+  Bond = 'Bond',
+  Surface = 'Surface',
+}
+
+export enum MolecularViewerStyle {
+  BallAndStick = 'Ball-and-Stick',
+  Wireframe = 'Wireframe',
+  Stick = 'Stick',
+  SpaceFilling = 'Space-Filling',
+}
+
 export interface MoleculeData {
   name: string;
   url: string;
