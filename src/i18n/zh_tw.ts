@@ -50,6 +50,7 @@ export const i18n_zh_tw = {
       Wireframe: '線框架',
       Stick: '棍',
       SpaceFilling: '空間填滿',
+      BackgroundColor: '背景顏色',
     },
 
     projectPanel: {

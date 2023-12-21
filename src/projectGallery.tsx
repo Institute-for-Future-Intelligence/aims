@@ -9,7 +9,7 @@ import { OrbitControls } from '@react-three/drei';
 import Lights from './lights';
 import MolecularViewer from './molecularViewer';
 import styled from 'styled-components';
-import { Button, Col, Collapse, List, Popover, Row, Select } from 'antd';
+import { Button, Col, Collapse, ColorPicker, List, Popover, Row, Select } from 'antd';
 import {
   CloseOutlined,
   DeleteOutlined,
@@ -167,33 +167,41 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
       });
     };
 
-    const onStyleChange = (value: MolecularViewerStyle) => {
-      const oldValue = viewerStyle;
-      const newValue = value;
-      const undoableChange = {
-        name: 'Select Molecular Viewer Style for Project',
-        timestamp: Date.now(),
-        oldValue: oldValue,
-        newValue: newValue,
-        undo: () => {
-          setStyle(undoableChange.oldValue as MolecularViewerStyle);
-        },
-        redo: () => {
-          setStyle(undoableChange.newValue as MolecularViewerStyle);
-        },
-      } as UndoableChange;
-      useStore.getState().addUndoable(undoableChange);
-      setStyle(newValue);
+    const setBackground = (color: string) => {
+      useStore.getState().set((state) => {
+        state.projectViewerBackground = color;
+      });
     };
 
     return (
-      <div style={{ width: '250px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
+      <div style={{ width: '300px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
-          <Col span={8} style={{ paddingTop: '5px' }}>
-            <span style={{ fontSize: '12px' }}>{t('molecularViewer.Style', lang)}: </span>
+          <Col span={12} style={{ paddingTop: '5px' }}>
+            <span>{t('molecularViewer.Style', lang)}: </span>
           </Col>
-          <Col span={16}>
-            <Select style={{ width: '100%' }} value={viewerStyle} onChange={onStyleChange}>
+          <Col span={12}>
+            <Select
+              style={{ width: '100%' }}
+              value={viewerStyle}
+              onChange={(value: MolecularViewerStyle) => {
+                const oldValue = viewerStyle;
+                const newValue = value;
+                const undoableChange = {
+                  name: 'Select Molecular Viewer Style for Project',
+                  timestamp: Date.now(),
+                  oldValue: oldValue,
+                  newValue: newValue,
+                  undo: () => {
+                    setStyle(undoableChange.oldValue as MolecularViewerStyle);
+                  },
+                  redo: () => {
+                    setStyle(undoableChange.newValue as MolecularViewerStyle);
+                  },
+                } as UndoableChange;
+                useStore.getState().addUndoable(undoableChange);
+                setStyle(newValue);
+              }}
+            >
               {STYLE_LABELS.map((radio, idx) => (
                 <Option key={`${idx}-${radio.value}`} value={radio.value}>
                   {t(radio.label, lang)}
@@ -202,9 +210,38 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
             </Select>
           </Col>
         </Row>
+        <Row gutter={6} style={{ paddingBottom: '4px' }}>
+          <Col span={12} style={{ paddingTop: '5px' }}>
+            <span>{t('molecularViewer.BackgroundColor', lang)}: </span>
+          </Col>
+          <Col span={12}>
+            <ColorPicker
+              style={{ width: '100%' }}
+              showText={true}
+              value={viewerBackground}
+              onChange={(value, hex) => {
+                const selectedColor = hex;
+                const undoableChange = {
+                  name: 'Change Background Color for Project Viewers',
+                  timestamp: Date.now(),
+                  oldValue: viewerBackground,
+                  newValue: selectedColor,
+                  undo: () => {
+                    setBackground(undoableChange.oldValue as string);
+                  },
+                  redo: () => {
+                    setBackground(undoableChange.newValue as string);
+                  },
+                } as UndoableChange;
+                useStore.getState().addUndoable(undoableChange);
+                setBackground(selectedColor);
+              }}
+            />
+          </Col>
+        </Row>
       </div>
     );
-  }, [lang, viewerStyle]);
+  }, [lang, viewerStyle, viewerBackground]);
 
   return (
     <Container

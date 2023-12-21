@@ -50,6 +50,7 @@ export const i18n_en = {
       Wireframe: 'Wireframe',
       Stick: 'Stick',
       SpaceFilling: 'Space-Filling',
+      BackgroundColor: 'Background Color',
     },
 
     projectPanel: {

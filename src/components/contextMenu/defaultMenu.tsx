@@ -6,7 +6,7 @@ import { useStore } from '../../stores/common';
 import i18n from '../../i18n/i18n';
 import type { MenuProps } from 'antd';
 import { MenuItem } from '../menuItem';
-import { AxesCheckBox, StyleRadioGroup } from './defaultMenuItems';
+import { AxesCheckBox, BackgroundColor, StyleRadioGroup } from './defaultMenuItems';
 
 export const createDefaultMenu = () => {
   const lang = { lng: useStore.getState().language };
@@ -30,6 +30,12 @@ export const createDefaultMenu = () => {
         style: { backgroundColor: 'white' },
       },
     ],
+  });
+
+  // background color
+  items.push({
+    key: 'molecular-viewer-background-color',
+    label: <BackgroundColor />,
   });
 
   return { items } as MenuProps;
