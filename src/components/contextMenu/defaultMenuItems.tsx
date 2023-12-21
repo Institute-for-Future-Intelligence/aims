@@ -12,8 +12,8 @@ import { MenuItem } from '../menuItem';
 import { Radio, Space } from 'antd';
 import { UndoableCheck } from '../../undo/UndoableCheck';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
-import { STYLE_LABELS } from '../../molecularViewer';
 import { useTranslation } from 'react-i18next';
+import { STYLE_LABELS } from '../../constants';
 
 export const AxesCheckBox = () => {
   const axes = useStore(Selector.chamberViewerAxes);

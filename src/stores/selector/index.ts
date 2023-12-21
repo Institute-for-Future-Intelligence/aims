@@ -27,7 +27,11 @@ export const chamberViewerAxes = (state: CommonStoreState) => state.chamberViewe
 
 export const chamberViewerStyle = (state: CommonStoreState) => state.chamberViewerStyle;
 
+export const chamberViewerBackground = (state: CommonStoreState) => state.chamberViewerBackground;
+
 export const projectViewerStyle = (state: CommonStoreState) => state.projectViewerStyle;
+
+export const projectViewerBackground = (state: CommonStoreState) => state.projectViewerBackground;
 
 export const undoManager = (state: CommonStoreState) => state.undoManager;
 

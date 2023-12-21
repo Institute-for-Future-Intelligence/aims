@@ -36,7 +36,9 @@ export interface CommonStoreState {
 
   chamberViewerAxes: boolean;
   chamberViewerStyle: MolecularViewerStyle;
+  chamberViewerBackground: string;
   projectViewerStyle: MolecularViewerStyle;
+  projectViewerBackground: string;
 
   undoManager: UndoManager;
   addUndoable: (undoable: Undoable) => void;
@@ -86,7 +88,9 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
 
           chamberViewerAxes: true,
           chamberViewerStyle: MolecularViewerStyle.BallAndStick,
+          chamberViewerBackground: 'black',
           projectViewerStyle: MolecularViewerStyle.BallAndStick,
+          projectViewerBackground: 'white',
 
           undoManager: new UndoManager(),
           addUndoable(undoable: Undoable) {

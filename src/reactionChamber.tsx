@@ -19,6 +19,7 @@ export interface ReactionChamberProps {
 
 const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const viewerStyle = useStore(Selector.chamberViewerStyle);
+  const viewerBackground = useStore(Selector.chamberViewerBackground);
   const viewerAxes = useStore(Selector.chamberViewerAxes);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -29,7 +30,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       shadows={true}
       gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
       frameloop={'demand'}
-      style={{ height: '100%', width: '100%', backgroundColor: 'black' }}
+      style={{ height: '100%', width: '100%', backgroundColor: viewerBackground }}
       camera={{
         fov: DEFAULT_FOV,
         far: DEFAULT_SHADOW_CAMERA_FAR,

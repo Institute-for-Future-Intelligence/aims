@@ -4,10 +4,10 @@
 
 import React, { useMemo, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './constants';
+import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI, STYLE_LABELS } from './constants';
 import { OrbitControls } from '@react-three/drei';
 import Lights from './lights';
-import MolecularViewer, { STYLE_LABELS } from './molecularViewer';
+import MolecularViewer from './molecularViewer';
 import styled from 'styled-components';
 import { Button, Col, Collapse, List, Popover, Row, Select } from 'antd';
 import {
@@ -100,6 +100,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const language = useStore(Selector.language);
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const viewerStyle = useStore(Selector.projectViewerStyle);
+  const viewerBackground = useStore(Selector.projectViewerBackground);
   const projectInfo = useStore(Selector.projectInfo);
 
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -129,7 +130,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         style={{
           height: canvasHeight + 'px',
           width: canvasWidth + 'px',
-          backgroundColor: 'white',
+          backgroundColor: viewerBackground,
           border: selectedMolecule === moleculeData ? '2px solid red' : '1px solid gray',
         }}
         camera={{
@@ -166,7 +167,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
       });
     };
 
-    const onChange = (value: MolecularViewerStyle) => {
+    const onStyleChange = (value: MolecularViewerStyle) => {
       const oldValue = viewerStyle;
       const newValue = value;
       const undoableChange = {
@@ -192,7 +193,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
             <span style={{ fontSize: '12px' }}>{t('molecularViewer.Style', lang)}: </span>
           </Col>
           <Col span={16}>
-            <Select style={{ width: '100%' }} value={viewerStyle} onChange={onChange}>
+            <Select style={{ width: '100%' }} value={viewerStyle} onChange={onStyleChange}>
               {STYLE_LABELS.map((radio, idx) => (
                 <Option key={`${idx}-${radio.value}`} value={radio.value}>
                   {t(radio.label, lang)}

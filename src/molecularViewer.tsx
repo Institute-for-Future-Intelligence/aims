@@ -15,13 +15,6 @@ import * as Selector from './stores/selector';
 import { CPK_COLORS } from './scientificConstants';
 import { MolecularViewerStyle, MoleculeData } from './types';
 
-export const STYLE_LABELS = [
-  { value: MolecularViewerStyle.BallAndStick, label: 'molecularViewer.BallAndStick' },
-  { value: MolecularViewerStyle.Wireframe, label: 'molecularViewer.Wireframe' },
-  { value: MolecularViewerStyle.Stick, label: 'molecularViewer.Stick' },
-  { value: MolecularViewerStyle.SpaceFilling, label: 'molecularViewer.SpaceFilling' },
-];
-
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
   style: MolecularViewerStyle;
