@@ -5,7 +5,7 @@
 import React, { useMemo } from 'react';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import i18n from './i18n/i18n';
+import { useTranslation } from 'react-i18next';
 
 export interface TeamProps {
   top: number;
@@ -16,6 +16,7 @@ export interface TeamProps {
 const Team = ({ top, height, color }: TeamProps) => {
   const language = useStore(Selector.language);
 
+  const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
@@ -38,7 +39,7 @@ const Team = ({ top, height, color }: TeamProps) => {
           height: (height ?? 300) + 'px',
         }}
       >
-        <h2 style={{ marginTop: '20px', color: color }}>{i18n.t('aboutUs.ProductBroughtToYouBy', lang)}</h2>
+        <h2 style={{ marginTop: '20px', color: color }}>{t('aboutUs.ProductBroughtToYouBy', lang)}</h2>
         <p style={{ fontSize: '12px', color: color, paddingTop: '20px' }}>
           <a
             target="_blank"
@@ -46,7 +47,7 @@ const Team = ({ top, height, color }: TeamProps) => {
             href="https://intofuture.org/aims-terms.html"
             style={{ color: color, textDecoration: 'none' }}
           >
-            {i18n.t('aboutUs.TermsOfService', lang)}
+            {t('aboutUs.TermsOfService', lang)}
           </a>
           &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
           <a
@@ -55,7 +56,7 @@ const Team = ({ top, height, color }: TeamProps) => {
             href="https://intofuture.org/aims-privacy.html"
             style={{ color: color, textDecoration: 'none' }}
           >
-            {i18n.t('aboutUs.PrivacyPolicy', lang)}
+            {t('aboutUs.PrivacyPolicy', lang)}
           </a>
         </p>
       </div>
@@ -87,21 +88,21 @@ const Team = ({ top, height, color }: TeamProps) => {
               }}
             >
               <td>
-                <h3 style={{ color: color }}>{i18n.t('aboutUs.Software', lang)}</h3>
+                <h3 style={{ color: color }}>{t('aboutUs.Software', lang)}</h3>
                 Xiaotong Ding
                 <br />
                 Charles Xie
                 <br />
               </td>
               <td>
-                <h3 style={{ color: color }}>{i18n.t('aboutUs.Content', lang)}</h3>
+                <h3 style={{ color: color }}>{t('aboutUs.Content', lang)}</h3>
                 Dylan Bulseco
                 <br />
                 Charles Xie
                 <br />
               </td>
               <td>
-                <h3 style={{ color: color }}>{i18n.t('aboutUs.Support', lang)}</h3>
+                <h3 style={{ color: color }}>{t('aboutUs.Support', lang)}</h3>
                 Elena Sereiviene
                 <br />
                 Charles Xie
@@ -122,8 +123,7 @@ const Team = ({ top, height, color }: TeamProps) => {
           color: color,
         }}
       >
-        {i18n.t('aboutUs.Acknowledgment', lang)}: {i18n.t('aboutUs.FundingInformation', lang)}{' '}
-        {i18n.t('aboutUs.Contact', lang)}
+        {t('aboutUs.Acknowledgment', lang)}: {t('aboutUs.FundingInformation', lang)} {t('aboutUs.Contact', lang)}
       </div>
     </div>
   );

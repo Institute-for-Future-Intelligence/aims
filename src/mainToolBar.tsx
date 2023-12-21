@@ -4,12 +4,12 @@
 
 import styled from 'styled-components';
 import { Avatar, Button, Dropdown, MenuProps, Popover, Space } from 'antd';
-import i18n from './i18n/i18n';
 import React, { useMemo } from 'react';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { MenuItem } from './components/menuItem';
+import { useTranslation } from 'react-i18next';
 
 const ButtonsContainer = styled.div`
   position: absolute;
@@ -34,13 +34,14 @@ const MainToolBar = ({ signIn, signOut }: MainToolBarProps) => {
   const language = useStore(Selector.language);
   const user = useStore(Selector.user);
 
+  const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
 
   const avatarMenu: MenuProps['items'] = [
     {
-      key: 'accout',
+      key: 'account',
       label: (
         <MenuItem
           onClick={() => {
@@ -49,13 +50,13 @@ const MainToolBar = ({ signIn, signOut }: MainToolBarProps) => {
             });
           }}
         >
-          {i18n.t('avatarMenu.AccountSettings', lang)}
+          {t('avatarMenu.AccountSettings', lang)}
         </MenuItem>
       ),
     },
     {
       key: 'sign-out',
-      label: <MenuItem onClick={signOut}>{i18n.t('avatarMenu.SignOut', lang)}</MenuItem>,
+      label: <MenuItem onClick={signOut}>{t('avatarMenu.SignOut', lang)}</MenuItem>,
     },
   ];
 
@@ -68,26 +69,26 @@ const MainToolBar = ({ signIn, signOut }: MainToolBarProps) => {
               <a
                 className="ant-dropdown-link"
                 onClick={(e) => e.preventDefault()}
-                title={i18n.t('tooltip.clickToAccessAccountSettings', lang)}
+                title={t('tooltip.clickToAccessAccountSettings', lang)}
               >
                 <Avatar size={32} src={user.photoURL} alt={user.displayName} />
               </a>
             </Dropdown>
           ) : (
             <Popover
-              title={<div onClick={(e) => e.stopPropagation()}>{i18n.t('avatarMenu.PrivacyStatementTitle', lang)}</div>}
+              title={<div onClick={(e) => e.stopPropagation()}>{t('avatarMenu.PrivacyStatementTitle', lang)}</div>}
               content={
                 <div style={{ width: '280px', fontSize: '12px' }}>
-                  {i18n.t('avatarMenu.PrivacyStatement', lang)}
+                  {t('avatarMenu.PrivacyStatement', lang)}
                   <a target="_blank" rel="noopener noreferrer" href={'https://intofuture.org/aladdin-privacy.html'}>
-                    {i18n.t('aboutUs.PrivacyPolicy', lang)}
+                    {t('aboutUs.PrivacyPolicy', lang)}
                   </a>
                   .
                 </div>
               }
             >
               <Button type="primary" onClick={signIn}>
-                {i18n.t('avatarMenu.SignIn', lang)}
+                {t('avatarMenu.SignIn', lang)}
               </Button>
             </Popover>
           )}

@@ -4,7 +4,6 @@
 
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import './App.css';
-import i18n from './i18n/i18n';
 import ifiLogo from './assets/ifi-logo.png';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
@@ -26,6 +25,7 @@ import ReactionChamber from './reactionChamber';
 import { MoleculeData } from './types';
 import AcceptCookie from './acceptCookie';
 import DropdownContextMenu from './components/contextMenu';
+import { useTranslation } from 'react-i18next';
 
 const App = () => {
   const setCommonStore = useStore(Selector.set);
@@ -53,6 +53,7 @@ const App = () => {
     // eslint-disable-next-line
   }, []);
 
+  const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
@@ -78,10 +79,10 @@ const App = () => {
             cursor: 'pointer',
             userSelect: 'none',
           }}
-          title={i18n.t('tooltip.visitAIMSHomePage', lang)}
+          title={t('tooltip.visitAIMSHomePage', lang)}
           onClick={visitHomepage}
         >
-          {`${i18n.t('name.AIMS', lang)}`}
+          {`${t('name.AIMS', lang)}`}
         </span>{' '}
         🚧
       </div>
@@ -103,7 +104,7 @@ const App = () => {
             src={ifiLogo}
             height="30px"
             style={{ verticalAlign: 'bottom', cursor: 'pointer' }}
-            title={i18n.t('tooltip.gotoIFI', lang)}
+            title={t('tooltip.gotoIFI', lang)}
             onClick={visitIFI}
           />
           {' V ' + VERSION}
@@ -122,7 +123,7 @@ const App = () => {
               zIndex: 999,
               userSelect: 'none',
             }}
-            title={i18n.t('tooltip.gotoIFI', lang)}
+            title={t('tooltip.gotoIFI', lang)}
             onClick={visitIFI}
           />
           <div
@@ -136,9 +137,9 @@ const App = () => {
               color: projectView ? 'dimgray' : 'antiquewhite',
             }}
           >
-            &nbsp;&nbsp; &copy;{new Date().getFullYear()} {`${i18n.t('name.IFI', lang)}`}
+            &nbsp;&nbsp; &copy;{new Date().getFullYear()} {`${t('name.IFI', lang)}`}
             &nbsp;
-            {i18n.t('word.VersionInitial', lang) + VERSION + '. ' + i18n.t('word.AllRightsReserved', lang) + '. '}
+            {t('word.VersionInitial', lang) + VERSION + '. ' + t('word.AllRightsReserved', lang) + '. '}
           </div>
         </>
       )}

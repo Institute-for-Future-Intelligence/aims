@@ -4,12 +4,12 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ScaleLinear } from 'd3-scale';
-import i18n from '../i18n/i18n';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { InputNumber, Popover } from 'antd';
 import { Range } from '../types';
+import { useTranslation } from 'react-i18next';
 
 type VerticalAxisProps = {
   variable: string;
@@ -59,6 +59,7 @@ const VerticalAxis = ({
     maxRef.current = max;
   }, [max]);
 
+  const { t } = useTranslation();
   const lang = { lng: language };
   const isOwner = user.uid === projectInfo.owner;
   const range = yScale.range();
@@ -144,7 +145,7 @@ const VerticalAxis = ({
             <div>
               <InputNumber
                 style={{ width: '240px' }}
-                addonBefore={createLabel(i18n.t('word.Minimum', lang), 80)}
+                addonBefore={createLabel(t('word.Minimum', lang), 80)}
                 addonAfter={unit}
                 min={getMin()}
                 max={maxRef.current - step}
@@ -194,7 +195,7 @@ const VerticalAxis = ({
               <br />
               <InputNumber
                 style={{ width: '240px' }}
-                addonBefore={createLabel(i18n.t('word.Maximum', lang), 80)}
+                addonBefore={createLabel(t('word.Maximum', lang), 80)}
                 addonAfter={unit}
                 min={minRef.current + step}
                 max={getMax()}

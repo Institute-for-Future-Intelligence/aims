@@ -23,7 +23,11 @@ export const selectedMolecule = (state: CommonStoreState) => state.selectedMolec
 
 export const collectedMolecules = (state: CommonStoreState) => state.collectedMolecules;
 
-export const molecularViewerStyle = (state: CommonStoreState) => state.molecularViewerStyle;
+export const chamberViewerAxes = (state: CommonStoreState) => state.chamberViewerAxes;
+
+export const chamberViewerStyle = (state: CommonStoreState) => state.chamberViewerStyle;
+
+export const projectViewerStyle = (state: CommonStoreState) => state.projectViewerStyle;
 
 export const undoManager = (state: CommonStoreState) => state.undoManager;
 

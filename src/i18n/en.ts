@@ -44,6 +44,7 @@ export const i18n_en = {
     },
 
     molecularViewer: {
+      Axes: 'Axes',
       Style: 'Style',
       BallAndStick: 'Ball-and-Stick',
       Wireframe: 'Wireframe',
@@ -57,6 +58,12 @@ export const i18n_en = {
       ProjectDescription: 'Description',
       ProjectSettings: 'Project Settings',
       DisplayWindowSize: 'Display Window Size',
+      ImportMolecule: 'Import a molecule',
+      RemoveSelectedMolecule: 'Remove selected molecule',
+      MakeDescriptionEditable: 'Make this description editable',
+      MakeDescriptionNonEditable: 'Make this description non-editable',
+      DoubleClickToMakeDescriptionEditable: 'Double-click to make this description editable',
+      ClickToFlipSortingOrder: 'Click to flip the sorting order',
     },
 
     menu: {

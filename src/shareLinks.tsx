@@ -25,7 +25,7 @@ import {
 import { HOME_URL } from './constants';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import i18n from './i18n/i18n';
+import { useTranslation } from 'react-i18next';
 
 const ShareLinkContainer = styled.div`
   display: flex;
@@ -46,11 +46,12 @@ const ShareLinks = ({ style, size, margin, round, handleShareWindowClose }: Shar
   const language = useStore(Selector.language);
   const cloudFile = 'test';
 
+  const { t } = useTranslation();
   const params = new URLSearchParams(window.location.search);
   const userid = params.get('userid');
   const lang = { lng: language };
-  const title = cloudFile ?? i18n.t('name.Tagline', lang);
-  const via = 'aladdinIFI ' + (cloudFile ? i18n.t('name.Tagline', lang) : '');
+  const title = cloudFile ?? t('name.Tagline', lang);
+  const via = 'aladdinIFI ' + (cloudFile ? t('name.Tagline', lang) : '');
   let url = HOME_URL;
   if (cloudFile) {
     // only a cloud file is sharable
@@ -108,7 +109,7 @@ const ShareLinks = ({ style, size, margin, round, handleShareWindowClose }: Shar
         url={url}
         title={title}
         summary={via}
-        source={i18n.t('name.IFI', lang)}
+        source={t('name.IFI', lang)}
         style={{ paddingRight: margin }}
         onShareWindowClose={handleShareWindowClose}
       >

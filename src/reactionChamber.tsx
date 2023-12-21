@@ -18,7 +18,8 @@ export interface ReactionChamberProps {
 }
 
 const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
-  const molecularViewerStyle = useStore(Selector.molecularViewerStyle);
+  const viewerStyle = useStore(Selector.chamberViewerStyle);
+  const viewerAxes = useStore(Selector.chamberViewerAxes);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -39,8 +40,8 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
     >
       <OrbitControls />
       <Lights />
-      <Axes />
-      <MolecularViewer moleculeData={moleculeData} style={molecularViewerStyle} />
+      {viewerAxes && <Axes />}
+      <MolecularViewer moleculeData={moleculeData} style={viewerStyle} />
     </Canvas>
   );
 };

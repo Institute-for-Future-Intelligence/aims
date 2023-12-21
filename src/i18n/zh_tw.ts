@@ -44,6 +44,7 @@ export const i18n_zh_tw = {
     },
 
     molecularViewer: {
+      Axes: '顯示坐標軸',
       Style: '風格',
       BallAndStick: '球和棍',
       Wireframe: '線框架',

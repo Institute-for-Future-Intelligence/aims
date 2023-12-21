@@ -45,6 +45,7 @@ export const i18n_zh_cn = {
     },
 
     molecularViewer: {
+      Axes: '显示坐标轴',
       Style: '风格',
       BallAndStick: '球和棍',
       Wireframe: '线框架',

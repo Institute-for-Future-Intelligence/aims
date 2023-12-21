@@ -9,7 +9,7 @@ import { Util } from '../Util';
 import { VERSION } from '../constants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, MolecularViewerStyle, MoleculeData, ProjectInfo, Range, User } from '../types';
+import { ActionInfo, MolecularViewerStyle, MoleculeData, ProjectInfo, ProjectType, Range, User } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -33,7 +33,10 @@ export interface CommonStoreState {
 
   selectedMolecule: MoleculeData | null;
   collectedMolecules: MoleculeData[];
-  molecularViewerStyle: MolecularViewerStyle;
+
+  chamberViewerAxes: boolean;
+  chamberViewerStyle: MolecularViewerStyle;
+  projectViewerStyle: MolecularViewerStyle;
 
   undoManager: UndoManager;
   addUndoable: (undoable: Undoable) => void;
@@ -69,6 +72,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           projectInfo: {
             owner: null,
             timestamp: -1,
+            type: ProjectType.DEFAULT,
             title: null,
             description: null,
             selectedProperty: null,
@@ -79,7 +83,10 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
 
           selectedMolecule: null,
           collectedMolecules: [],
-          molecularViewerStyle: MolecularViewerStyle.BallAndStick,
+
+          chamberViewerAxes: true,
+          chamberViewerStyle: MolecularViewerStyle.BallAndStick,
+          projectViewerStyle: MolecularViewerStyle.BallAndStick,
 
           undoManager: new UndoManager(),
           addUndoable(undoable: Undoable) {
@@ -135,7 +142,9 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
         skipHydration: Util.isOpenFromURL(),
         partialize: (state) => ({
           language: state.language,
-          molecularViewerStyle: state.molecularViewerStyle,
+          chamberViewerAxes: state.chamberViewerAxes,
+          chamberViewerStyle: state.chamberViewerStyle,
+          projectViewerStyle: state.projectViewerStyle,
         }),
       },
     ),

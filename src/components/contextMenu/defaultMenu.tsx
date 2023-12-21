@@ -6,17 +6,23 @@ import { useStore } from '../../stores/common';
 import i18n from '../../i18n/i18n';
 import type { MenuProps } from 'antd';
 import { MenuItem } from '../menuItem';
-import { StyleRadioGroup } from './defaultMenuItems';
+import { AxesCheckBox, StyleRadioGroup } from './defaultMenuItems';
 
 export const createDefaultMenu = () => {
   const lang = { lng: useStore.getState().language };
 
   const items: MenuProps['items'] = [];
 
+  // axes
+  items.push({
+    key: 'molecular-viewer-axes',
+    label: <AxesCheckBox />,
+  });
+
   // molecular viewer style
   items.push({
     key: 'molecular-viewer-style-submenu',
-    label: <MenuItem>{i18n.t('molecularViewer.Style', lang)}</MenuItem>,
+    label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Style', lang)}</MenuItem>,
     children: [
       {
         key: 'molecular-viewer-style-radio-group',
@@ -26,9 +32,5 @@ export const createDefaultMenu = () => {
     ],
   });
 
-  const onClick: MenuProps['onClick'] = ({ key }) => {
-    // console.log('clicked on item', key);
-  };
-
-  return { items, onClick } as MenuProps;
+  return { items } as MenuProps;
 };

@@ -56,11 +56,16 @@ export interface MoleculeData {
 export interface ProjectInfo {
   owner: string | null;
   timestamp: number;
+  type: ProjectType;
   title: string | null;
   description: string | null;
   selectedProperty: string | null;
   sortDescending: boolean | null;
   ranges: Range[] | null;
+}
+
+export enum ProjectType {
+  DEFAULT = 'Default',
 }
 
 export enum DataColoring {

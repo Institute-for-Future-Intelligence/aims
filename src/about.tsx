@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import Team from './team';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import i18n from './i18n/i18n';
+import { useTranslation } from 'react-i18next';
 
 const Container = styled.div`
   position: absolute;
@@ -26,6 +26,7 @@ const Container = styled.div`
 
 const About = ({ close }: { close: () => void }) => {
   const language = useStore(Selector.language);
+  const { t } = useTranslation();
   return (
     <Container>
       <Team top={10} color={'antiquewhite'} />
@@ -41,7 +42,7 @@ const About = ({ close }: { close: () => void }) => {
           close();
         }}
       >
-        {i18n.t('word.Close', { lng: language })}
+        {t('word.Close', { lng: language })}
       </div>
     </Container>
   );
