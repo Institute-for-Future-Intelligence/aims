@@ -124,7 +124,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const createCanvas = (moleculeData: MoleculeData) => {
     return (
       <Canvas
-        shadows={true}
+        shadows={false}
         gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
         frameloop={'demand'}
         style={{

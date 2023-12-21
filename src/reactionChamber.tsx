@@ -27,7 +27,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   return (
     <Canvas
       ref={canvasRef}
-      shadows={true}
+      shadows={false}
       gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
       frameloop={'demand'}
       style={{ height: '100%', width: '100%', backgroundColor: viewerBackground }}
@@ -42,7 +42,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       <OrbitControls />
       <Lights />
       {viewerAxes && <Axes />}
-      <MolecularViewer moleculeData={moleculeData} style={viewerStyle} />
+      <MolecularViewer moleculeData={moleculeData} style={viewerStyle} highQuality={true} />
     </Canvas>
   );
 };

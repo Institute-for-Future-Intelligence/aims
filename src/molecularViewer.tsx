@@ -8,7 +8,7 @@ import { Atom } from './models/Atom';
 import { BufferGeometry, Color, NormalBufferAttributes, Vector3 } from 'three';
 import { Bond } from './models/Bond';
 import { Molecule } from './models/Molecule';
-import { Cylinder, Sphere } from '@react-three/drei';
+import { Cylinder, Line, Sphere } from '@react-three/drei';
 import { HALF_PI } from './constants';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
@@ -18,6 +18,7 @@ import { MolecularViewerStyle, MoleculeData } from './types';
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
   style: MolecularViewerStyle;
+  highQuality?: boolean;
 }
 
 type PDB = {
@@ -29,7 +30,7 @@ type PDB = {
   };
 };
 
-const MolecularViewer = ({ moleculeData, style }: MolecularViewerProps) => {
+const MolecularViewer = ({ moleculeData, style, highQuality }: MolecularViewerProps) => {
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
 
@@ -112,10 +113,12 @@ const MolecularViewer = ({ moleculeData, style }: MolecularViewerProps) => {
     return (
       <group name={'Atoms'}>
         {molecule.atoms.map((e, index) => {
+          const spaceFilling = style === MolecularViewerStyle.SpaceFilling;
+          const segments = highQuality ? (spaceFilling ? 32 : 16) : 8;
           return (
             <Sphere
               position={e.position}
-              args={[(style === MolecularViewerStyle.SpaceFilling ? 4 : 1) * (e.radius ?? 0.5), 16, 16]}
+              args={[(spaceFilling ? 4 : 1) * (e.radius ?? 0.5), segments, segments]}
               key={'Atom' + index}
               name={e.elementName}
               castShadow={false}
@@ -136,6 +139,7 @@ const MolecularViewer = ({ moleculeData, style }: MolecularViewerProps) => {
 
   const showBonds = () => {
     if (!molecule) return null;
+    if (style === MolecularViewerStyle.SpaceFilling) return null;
     return (
       <group name={'Bonds'}>
         {molecule.bonds.map((e, index) => {
@@ -145,8 +149,9 @@ const MolecularViewer = ({ moleculeData, style }: MolecularViewerProps) => {
           const midPosition = e.startAtom.position.clone().lerp(e.endAtom.position, alpha);
           const startLength = e.startAtom.position.distanceTo(midPosition);
           const endLength = e.endAtom.position.distanceTo(midPosition);
-          const radius = style === MolecularViewerStyle.Wireframe ? 0.01 : 0.1;
-          return (
+          const radius = 0.1;
+          const segments = highQuality ? 16 : 4;
+          return style === MolecularViewerStyle.BallAndStick || style === MolecularViewerStyle.Stick ? (
             <React.Fragment key={'Bond' + index}>
               <group
                 position={e.startAtom.position.clone().lerp(midPosition, 0.5)}
@@ -159,7 +164,7 @@ const MolecularViewer = ({ moleculeData, style }: MolecularViewerProps) => {
                   name={'Bond1' + index}
                   castShadow={false}
                   receiveShadow={false}
-                  args={[radius, radius, startLength, 16, 1]}
+                  args={[radius, radius, startLength, segments, 1]}
                   rotation={[HALF_PI, 0, 0]}
                 >
                   <meshStandardMaterial attach="material" color={e.startAtom.color} />
@@ -176,12 +181,33 @@ const MolecularViewer = ({ moleculeData, style }: MolecularViewerProps) => {
                   name={'Bond2' + index}
                   castShadow={false}
                   receiveShadow={false}
-                  args={[radius, radius, endLength, 16, 1]}
+                  args={[radius, radius, endLength, segments, 1]}
                   rotation={[HALF_PI, 0, 0]}
                 >
                   <meshStandardMaterial attach="material" color={e.endAtom.color} />
                 </Cylinder>
               </group>
+            </React.Fragment>
+          ) : (
+            <React.Fragment key={'Bond' + index}>
+              <Line
+                userData={{ unintersectable: true }}
+                name={'Bond1' + index}
+                castShadow={false}
+                receiveShadow={false}
+                points={[e.startAtom.position, midPosition]}
+                color={e.startAtom.color}
+                lineWidth={2}
+              />
+              <Line
+                userData={{ unintersectable: true }}
+                name={'Bond2' + index}
+                castShadow={false}
+                receiveShadow={false}
+                points={[midPosition, e.endAtom.position]}
+                color={e.endAtom.color}
+                lineWidth={2}
+              />
             </React.Fragment>
           );
         })}

@@ -26,6 +26,7 @@ import { MoleculeData } from './types';
 import AcceptCookie from './acceptCookie';
 import DropdownContextMenu from './components/contextMenu';
 import { useTranslation } from 'react-i18next';
+import Loading from './loading';
 
 const App = () => {
   const setCommonStore = useStore(Selector.set);
@@ -177,14 +178,14 @@ const App = () => {
             }}
           >
             {projectView ? (
-              <Suspense fallback={null}>
+              <Suspense fallback={<Loading />}>
                 <ProjectGallery relativeWidth={1 - chamberRelativeWidth * 0.01} moleculeData={collectedMolecules} />
               </Suspense>
             ) : (
               <></>
             )}
             {selectedMolecule ? (
-              <Suspense fallback={null}>
+              <Suspense fallback={<Loading />}>
                 <ReactionChamber moleculeData={selectedMolecule} />
               </Suspense>
             ) : (
