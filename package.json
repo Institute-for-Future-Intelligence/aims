@@ -6,7 +6,7 @@
   "dependencies": {
     "@react-three/drei": "^9.92.1",
     "@react-three/fiber": "^8.15.12",
-    "antd": "^5.11.5",
+    "antd": "^5.12.4",
     "dayjs": "^1.10.7",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",

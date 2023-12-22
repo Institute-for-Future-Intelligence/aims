@@ -38,7 +38,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
       onClick={handleClick}
       style={{
         userSelect: textSelectable ? 'auto' : 'none',
-        display: 'inline-block',
+        // display: 'inline-block',
         width: '100%',
         paddingLeft: hasPadding ? '24px' : '0px',
       }}
