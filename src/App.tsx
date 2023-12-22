@@ -27,6 +27,7 @@ import AcceptCookie from './acceptCookie';
 import DropdownContextMenu from './components/contextMenu';
 import { useTranslation } from 'react-i18next';
 import Loading from './loading';
+import KeyboardListener from './keyboardListener';
 
 const App = () => {
   const setCommonStore = useStore(Selector.set);
@@ -60,6 +61,21 @@ const App = () => {
   }, [language]);
 
   const [chamberRelativeWidth, setChamberRelativeWidth] = useState<number>(60);
+
+  const setNavigationView = (selected: boolean) => {
+    setCommonStore((state) => {
+      state.navigationView = selected;
+      state.enableRotate = !selected;
+    });
+  };
+
+  const resetView = () => {
+    //TODO
+  };
+
+  const zoomView = (scale: number) => {
+    //TODO
+  };
 
   return (
     <div className="App">
@@ -192,6 +208,7 @@ const App = () => {
               <div>Loading...</div>
             )}
           </SplitPane>
+          <KeyboardListener setNavigationView={setNavigationView} resetView={resetView} zoomView={zoomView} />
         </div>
       </DropdownContextMenu>
       {!viewOnly && <AcceptCookie />}

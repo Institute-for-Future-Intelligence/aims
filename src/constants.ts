@@ -19,6 +19,10 @@ export const DEFAULT_SHADOW_MAP_SIZE = 4096;
 
 export const UNDO_SHOW_INFO_DURATION = 0.5;
 
+export const GRID_RATIO = 5;
+export const FINE_GRID_SCALE = 0.1;
+export const NORMAL_GRID_SCALE = GRID_RATIO * FINE_GRID_SCALE;
+
 export const STYLE_LABELS = [
   { value: MolecularViewerStyle.BallAndStick, label: 'molecularViewer.BallAndStick' },
   { value: MolecularViewerStyle.Wireframe, label: 'molecularViewer.Wireframe' },

@@ -74,6 +74,13 @@ export enum DataColoring {
   GROUPS = 2,
 }
 
+export enum MoveDirection {
+  Left = 'Left',
+  Right = 'Right',
+  Up = 'Up',
+  Down = 'Down',
+}
+
 export interface User {
   displayName: string | null;
   email: string | null;

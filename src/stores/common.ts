@@ -15,6 +15,9 @@ import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
 import { ChemicalElement } from '../models/ChemicalElement';
 import Papa from 'papaparse';
+import { Atom } from '../models/Atom';
+import { Bond } from '../models/Bond';
+import { useRefStore } from './commonRef';
 
 enableMapSet();
 
@@ -39,6 +42,14 @@ export interface CommonStoreState {
   chamberViewerBackground: string;
   projectViewerStyle: MolecularViewerStyle;
   projectViewerBackground: string;
+
+  autoRotate: boolean;
+  navigationView: boolean;
+  enableRotate: boolean;
+
+  selectedObject: Atom | Bond | null;
+  selectedObjectIdSet: Set<string>;
+  selectNone: () => void;
 
   undoManager: UndoManager;
   addUndoable: (undoable: Undoable) => void;
@@ -91,6 +102,20 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           chamberViewerBackground: 'black',
           projectViewerStyle: MolecularViewerStyle.BallAndStick,
           projectViewerBackground: 'white',
+
+          autoRotate: false,
+          navigationView: false,
+          enableRotate: true,
+
+          selectedObject: null,
+          selectedObjectIdSet: new Set<string>(),
+          selectNone() {
+            immerSet((state: CommonStoreState) => {
+              state.selectedObjectIdSet.clear();
+              state.selectedObject = null;
+            });
+            useRefStore.getState().selectNone();
+          },
 
           undoManager: new UndoManager(),
           addUndoable(undoable: Undoable) {

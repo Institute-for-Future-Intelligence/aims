@@ -33,6 +33,16 @@ export const projectViewerStyle = (state: CommonStoreState) => state.projectView
 
 export const projectViewerBackground = (state: CommonStoreState) => state.projectViewerBackground;
 
+export const navigationView = (state: CommonStoreState) => state.navigationView;
+
+export const enableRotate = (state: CommonStoreState) => state.enableRotate;
+
+export const autoRotate = (state: CommonStoreState) => state.autoRotate;
+
+export const selectedObject = (state: CommonStoreState) => state.selectedObject;
+
+export const selectNone = (state: CommonStoreState) => state.selectNone;
+
 export const undoManager = (state: CommonStoreState) => state.undoManager;
 
 export const addUndoable = (state: CommonStoreState) => state.addUndoable;
