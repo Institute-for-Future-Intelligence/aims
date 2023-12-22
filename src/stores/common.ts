@@ -46,6 +46,8 @@ export interface CommonStoreState {
   autoRotate: boolean;
   navigationView: boolean;
   enableRotate: boolean;
+  cameraPosition: number[];
+  panCenter: number[];
 
   selectedObject: Atom | Bond | null;
   selectedObjectIdSet: Set<string>;
@@ -106,6 +108,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           autoRotate: false,
           navigationView: false,
           enableRotate: true,
+          cameraPosition: [5, 10, 20],
+          panCenter: [0, 0, 0],
 
           selectedObject: null,
           selectedObjectIdSet: new Set<string>(),
@@ -176,6 +180,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           chamberViewerBackground: state.chamberViewerBackground,
           projectViewerStyle: state.projectViewerStyle,
           projectViewerBackground: state.projectViewerBackground,
+          cameraPosition: state.cameraPosition,
+          panCenter: state.panCenter,
         }),
       },
     ),

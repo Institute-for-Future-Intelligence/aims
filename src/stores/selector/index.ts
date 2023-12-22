@@ -39,6 +39,10 @@ export const enableRotate = (state: CommonStoreState) => state.enableRotate;
 
 export const autoRotate = (state: CommonStoreState) => state.autoRotate;
 
+export const cameraPosition = (state: CommonStoreState) => state.cameraPosition;
+
+export const panCenter = (state: CommonStoreState) => state.panCenter;
+
 export const selectedObject = (state: CommonStoreState) => state.selectedObject;
 
 export const selectNone = (state: CommonStoreState) => state.selectNone;

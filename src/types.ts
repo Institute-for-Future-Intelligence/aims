@@ -11,7 +11,7 @@ extend({ MyPDBLoader });
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      myOrbitControls: Object3DNode<MyPDBLoader, typeof MyPDBLoader>;
+      myPDBLoader: Object3DNode<MyPDBLoader, typeof MyPDBLoader>;
     }
   }
 }

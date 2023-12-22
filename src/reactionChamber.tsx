@@ -12,17 +12,34 @@ import MolecularViewer from './molecularViewer';
 import { MoleculeData } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
+import { Vector3 } from 'three';
 
 export interface ReactionChamberProps {
   moleculeData: MoleculeData;
 }
 
 const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
+  const setCommonStore = useStore(Selector.set);
   const viewerStyle = useStore(Selector.chamberViewerStyle);
   const viewerBackground = useStore(Selector.chamberViewerBackground);
   const viewerAxes = useStore(Selector.chamberViewerAxes);
+  const cameraPosition = useStore(Selector.cameraPosition);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const onControlEnd = (e: any) => {
+    const control = e.target;
+    setCommonStore((state) => {
+      const p = control.object.position as Vector3;
+      state.cameraPosition[0] = p.x;
+      state.cameraPosition[1] = p.y;
+      state.cameraPosition[2] = p.z;
+      const q = control.target as Vector3;
+      state.panCenter[0] = q.x;
+      state.panCenter[1] = q.y;
+      state.panCenter[2] = q.z;
+    });
+  };
 
   return (
     <Canvas
@@ -35,11 +52,11 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
         fov: DEFAULT_FOV,
         far: DEFAULT_SHADOW_CAMERA_FAR,
         up: [0, 0, 1],
-        position: [0, 0, 20],
+        position: new Vector3().fromArray(cameraPosition),
         rotation: [HALF_PI / 2, 0, HALF_PI / 2],
       }}
     >
-      <OrbitControls />
+      <OrbitControls enableDamping={false} onEnd={onControlEnd} />
       <Lights />
       {viewerAxes && <Axes />}
       <MolecularViewer moleculeData={moleculeData} style={viewerStyle} highQuality={true} />
