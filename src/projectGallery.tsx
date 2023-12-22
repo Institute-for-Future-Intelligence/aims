@@ -9,7 +9,7 @@ import { OrbitControls } from '@react-three/drei';
 import Lights from './lights';
 import MolecularViewer from './molecularViewer';
 import styled from 'styled-components';
-import { Button, Col, Collapse, ColorPicker, List, Popover, Row, Select } from 'antd';
+import { Button, Col, Collapse, CollapseProps, ColorPicker, List, Popover, Row, Select } from 'antd';
 import {
   CloseOutlined,
   DeleteOutlined,
@@ -245,6 +245,134 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     );
   }, [lang, viewerStyle, viewerBackground]);
 
+  const items: CollapseProps['items'] = [
+    {
+      key: '1',
+      label: (
+        <SubHeader>
+          <span>{t('projectPanel.ProjectDescription', lang)}</span>
+          <span>
+            {
+              <>
+                {descriptionExpandedRef.current && (
+                  <Button
+                    style={{ border: 'none', padding: '4px' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      descriptionTextAreaEditableRef.current = !descriptionTextAreaEditableRef.current;
+                      setUpdateFlag(!updateFlag);
+                    }}
+                  >
+                    {descriptionTextAreaEditableRef.current ? (
+                      <EditFilled
+                        style={{ fontSize: '24px', color: 'gray' }}
+                        title={t('projectPanel.MakeDescriptionNonEditable', lang)}
+                      />
+                    ) : (
+                      <EditOutlined
+                        style={{ fontSize: '24px', color: 'gray' }}
+                        title={t('projectPanel.MakeDescriptionEditable', lang)}
+                      />
+                    )}
+                  </Button>
+                )}
+                <Button
+                  style={{ border: 'none', padding: '4px' }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <ImportOutlined
+                    style={{ fontSize: '24px', color: 'gray' }}
+                    title={t('projectPanel.ImportMolecule', lang)}
+                  />
+                </Button>
+                {selectedMolecule && (
+                  <Button
+                    style={{ border: 'none', padding: '4px' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    <DeleteOutlined
+                      style={{ fontSize: '24px', color: 'gray' }}
+                      title={t('projectPanel.RemoveSelectedMolecule', lang)}
+                    />
+                  </Button>
+                )}
+              </>
+            }
+            {projectInfo.selectedProperty && (
+              <Button
+                style={{ border: 'none', padding: '4px' }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCommonStore((state) => {
+                    state.projectInfo.sortDescending = !state.projectInfo.sortDescending;
+                  });
+                }}
+              >
+                {projectInfo.sortDescending ? (
+                  <SortAscendingOutlined
+                    style={{ fontSize: '24px', color: 'gray' }}
+                    title={t('projectPanel.ClickToFlipSortingOrder', lang)}
+                  />
+                ) : (
+                  <SortDescendingOutlined
+                    style={{ fontSize: '24px', color: 'gray' }}
+                    title={t('projectPanel.ClickToFlipSortingOrder', lang)}
+                  />
+                )}
+              </Button>
+            )}
+            <Popover
+              title={<div onClick={(e) => e.stopPropagation()}>{t('projectPanel.ProjectSettings', lang)}</div>}
+              content={createProjectSettingsContent}
+            >
+              <Button style={{ border: 'none', padding: '4px' }} onClick={(e) => e.stopPropagation()}>
+                <SettingOutlined style={{ fontSize: '24px', color: 'gray' }} />
+              </Button>
+            </Popover>
+          </span>
+        </SubHeader>
+      ),
+      children: (
+        <TextArea
+          title={
+            descriptionTextAreaEditableRef.current
+              ? undefined
+              : t('projectPanel.DoubleClickToMakeDescriptionEditable', lang)
+          }
+          bordered={descriptionTextAreaEditableRef.current}
+          readOnly={!descriptionTextAreaEditableRef.current}
+          value={descriptionRef.current ?? undefined}
+          onDoubleClick={() => {
+            descriptionTextAreaEditableRef.current = !descriptionTextAreaEditableRef.current;
+            setUpdateFlag(!updateFlag);
+          }}
+          onChange={(e) => {
+            descriptionRef.current = e.target.value;
+            descriptionChangedRef.current = true;
+            setCommonStore((state) => {
+              state.projectInfo.description = e.target.value;
+            });
+            setUpdateFlag(!updateFlag);
+          }}
+          onBlur={() => {
+            descriptionTextAreaEditableRef.current = false;
+            if (descriptionChangedRef.current) {
+            }
+          }}
+          style={{
+            paddingLeft: '10px',
+            textAlign: 'left',
+            resize: descriptionTextAreaEditableRef.current ? 'vertical' : 'none',
+          }}
+        />
+      ),
+    },
+  ];
+
   return (
     <Container
       onContextMenu={(e) => {
@@ -270,138 +398,13 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           </span>
         </Header>
         <Collapse
+          items={items}
           style={{ backgroundColor: 'white', border: 'none' }}
           onChange={(e) => {
             descriptionExpandedRef.current = e.length > 0;
             setUpdateFlag(!updateFlag);
           }}
-        >
-          <Collapse.Panel
-            style={{ backgroundColor: 'white', border: 'none' }}
-            key={'1'}
-            header={
-              <SubHeader>
-                <span>{t('projectPanel.ProjectDescription', lang)}</span>
-                <span>
-                  {
-                    <>
-                      {descriptionExpandedRef.current && (
-                        <Button
-                          style={{ border: 'none', padding: '4px' }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            descriptionTextAreaEditableRef.current = !descriptionTextAreaEditableRef.current;
-                            setUpdateFlag(!updateFlag);
-                          }}
-                        >
-                          {descriptionTextAreaEditableRef.current ? (
-                            <EditFilled
-                              style={{ fontSize: '24px', color: 'gray' }}
-                              title={t('projectPanel.MakeDescriptionNonEditable', lang)}
-                            />
-                          ) : (
-                            <EditOutlined
-                              style={{ fontSize: '24px', color: 'gray' }}
-                              title={t('projectPanel.MakeDescriptionEditable', lang)}
-                            />
-                          )}
-                        </Button>
-                      )}
-                      <Button
-                        style={{ border: 'none', padding: '4px' }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                      >
-                        <ImportOutlined
-                          style={{ fontSize: '24px', color: 'gray' }}
-                          title={t('projectPanel.ImportMolecule', lang)}
-                        />
-                      </Button>
-                      {selectedMolecule && (
-                        <Button
-                          style={{ border: 'none', padding: '4px' }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                        >
-                          <DeleteOutlined
-                            style={{ fontSize: '24px', color: 'gray' }}
-                            title={t('projectPanel.RemoveSelectedMolecule', lang)}
-                          />
-                        </Button>
-                      )}
-                    </>
-                  }
-                  {projectInfo.selectedProperty && (
-                    <Button
-                      style={{ border: 'none', padding: '4px' }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setCommonStore((state) => {
-                          state.projectInfo.sortDescending = !state.projectInfo.sortDescending;
-                        });
-                      }}
-                    >
-                      {projectInfo.sortDescending ? (
-                        <SortAscendingOutlined
-                          style={{ fontSize: '24px', color: 'gray' }}
-                          title={t('projectPanel.ClickToFlipSortingOrder', lang)}
-                        />
-                      ) : (
-                        <SortDescendingOutlined
-                          style={{ fontSize: '24px', color: 'gray' }}
-                          title={t('projectPanel.ClickToFlipSortingOrder', lang)}
-                        />
-                      )}
-                    </Button>
-                  )}
-                  <Popover
-                    title={<div onClick={(e) => e.stopPropagation()}>{t('projectPanel.ProjectSettings', lang)}</div>}
-                    content={createProjectSettingsContent}
-                  >
-                    <Button style={{ border: 'none', padding: '4px' }} onClick={(e) => e.stopPropagation()}>
-                      <SettingOutlined style={{ fontSize: '24px', color: 'gray' }} />
-                    </Button>
-                  </Popover>
-                </span>
-              </SubHeader>
-            }
-          >
-            <TextArea
-              title={
-                descriptionTextAreaEditableRef.current
-                  ? undefined
-                  : t('projectPanel.DoubleClickToMakeDescriptionEditable', lang)
-              }
-              bordered={descriptionTextAreaEditableRef.current}
-              readOnly={!descriptionTextAreaEditableRef.current}
-              value={descriptionRef.current ?? undefined}
-              onDoubleClick={() => {
-                descriptionTextAreaEditableRef.current = !descriptionTextAreaEditableRef.current;
-                setUpdateFlag(!updateFlag);
-              }}
-              onChange={(e) => {
-                descriptionRef.current = e.target.value;
-                descriptionChangedRef.current = true;
-                setCommonStore((state) => {
-                  state.projectInfo.description = e.target.value;
-                });
-                setUpdateFlag(!updateFlag);
-              }}
-              onBlur={() => {
-                descriptionTextAreaEditableRef.current = false;
-                if (descriptionChangedRef.current) {
-                }
-              }}
-              style={{
-                paddingLeft: '10px',
-                textAlign: 'left',
-                resize: descriptionTextAreaEditableRef.current ? 'vertical' : 'none',
-              }}
-            />
-          </Collapse.Panel>
-        </Collapse>
+        ></Collapse>
         <CanvasContainer>
           <List
             style={{
