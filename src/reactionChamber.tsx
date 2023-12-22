@@ -4,7 +4,7 @@
 
 import React, { useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './constants';
+import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './programmaticConstants';
 import { OrbitControls } from '@react-three/drei';
 import Lights from './lights';
 import Axes from './view/axes';

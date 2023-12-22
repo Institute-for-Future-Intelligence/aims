@@ -9,7 +9,7 @@ import { BufferGeometry, Color, NormalBufferAttributes, Vector3 } from 'three';
 import { Bond } from './models/Bond';
 import { Molecule } from './models/Molecule';
 import { Cylinder, Line, Sphere } from '@react-three/drei';
-import { HALF_PI } from './constants';
+import { HALF_PI } from './programmaticConstants';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { CPK_COLORS } from './scientificConstants';

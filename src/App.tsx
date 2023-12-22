@@ -9,7 +9,7 @@ import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { visitHomepage, visitIFI } from './helpers';
 import MainMenu from './mainMenu';
-import { VERSION } from './constants';
+import { VERSION } from './programmaticConstants';
 import SplitPane from 'react-split-pane';
 import { throttle } from 'lodash';
 import MainToolBar from './mainToolBar';

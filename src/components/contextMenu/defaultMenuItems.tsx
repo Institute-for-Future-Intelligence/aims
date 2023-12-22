@@ -13,7 +13,7 @@ import { Radio, Space } from 'antd';
 import { UndoableCheck } from '../../undo/UndoableCheck';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useTranslation } from 'react-i18next';
-import { STYLE_LABELS } from '../../constants';
+import { STYLE_LABELS } from '../../scientificConstants';
 
 export const AxesCheckBox = () => {
   const axes = useStore(Selector.chamberViewerAxes);

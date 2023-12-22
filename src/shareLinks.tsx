@@ -22,7 +22,7 @@ import {
   WhatsappShareButton,
   XIcon,
 } from 'react-share';
-import { HOME_URL } from './constants';
+import { HOME_URL } from './programmaticConstants';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { useTranslation } from 'react-i18next';

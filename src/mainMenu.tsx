@@ -17,7 +17,7 @@ import * as Selector from './stores/selector';
 import { Util } from './Util';
 import { useTranslation } from 'react-i18next';
 import { usePrimitiveStore } from './stores/commonPrimitive';
-import { UNDO_SHOW_INFO_DURATION } from './constants';
+import { UNDO_SHOW_INFO_DURATION } from './programmaticConstants';
 import { Language } from './types';
 import { MenuItem } from './components/menuItem';
 

@@ -2,6 +2,15 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
+import { MolecularViewerStyle } from './types';
+
+export const STYLE_LABELS = [
+  { value: MolecularViewerStyle.BallAndStick, label: 'molecularViewer.BallAndStick' },
+  { value: MolecularViewerStyle.Wireframe, label: 'molecularViewer.Wireframe' },
+  { value: MolecularViewerStyle.Stick, label: 'molecularViewer.Stick' },
+  { value: MolecularViewerStyle.SpaceFilling, label: 'molecularViewer.SpaceFilling' },
+];
+
 export const CPK_COLORS: { [key: string]: number[] } = {
   H: [255, 255, 255],
   He: [217, 255, 255],

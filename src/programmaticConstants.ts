@@ -3,7 +3,6 @@
  */
 
 import { Euler, Vector2, Vector3 } from 'three';
-import { MolecularViewerStyle } from './types';
 
 export const VERSION = '0.0.1';
 
@@ -22,13 +21,6 @@ export const UNDO_SHOW_INFO_DURATION = 0.5;
 export const GRID_RATIO = 5;
 export const FINE_GRID_SCALE = 0.1;
 export const NORMAL_GRID_SCALE = GRID_RATIO * FINE_GRID_SCALE;
-
-export const STYLE_LABELS = [
-  { value: MolecularViewerStyle.BallAndStick, label: 'molecularViewer.BallAndStick' },
-  { value: MolecularViewerStyle.Wireframe, label: 'molecularViewer.Wireframe' },
-  { value: MolecularViewerStyle.Stick, label: 'molecularViewer.Stick' },
-  { value: MolecularViewerStyle.SpaceFilling, label: 'molecularViewer.SpaceFilling' },
-];
 
 export const HALF_PI = Math.PI / 2;
 

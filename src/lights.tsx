@@ -4,7 +4,7 @@
 
 import React, { useRef } from 'react';
 import { DirectionalLight } from 'three';
-import { DEFAULT_SHADOW_CAMERA_FAR, DEFAULT_SHADOW_MAP_SIZE } from './constants';
+import { DEFAULT_SHADOW_CAMERA_FAR, DEFAULT_SHADOW_MAP_SIZE } from './programmaticConstants';
 
 const Lights = () => {
   const directLightIntensity = 5;

@@ -4,7 +4,7 @@
 
 import React, { useMemo, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI, STYLE_LABELS } from './constants';
+import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './programmaticConstants';
 import { OrbitControls } from '@react-three/drei';
 import Lights from './lights';
 import MolecularViewer from './molecularViewer';
@@ -26,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 import { MolecularViewerStyle, MoleculeData } from './types';
 import TextArea from 'antd/lib/input/TextArea';
 import { UndoableChange } from './undo/UndoableChange';
+import { STYLE_LABELS } from './scientificConstants';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -245,7 +246,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     );
   }, [lang, viewerStyle, viewerBackground]);
 
-  const items: CollapseProps['items'] = [
+  const descriptionItems: CollapseProps['items'] = [
     {
       key: '1',
       label: (
@@ -398,13 +399,13 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           </span>
         </Header>
         <Collapse
-          items={items}
+          items={descriptionItems}
           style={{ backgroundColor: 'white', border: 'none' }}
           onChange={(e) => {
             descriptionExpandedRef.current = e.length > 0;
             setUpdateFlag(!updateFlag);
           }}
-        ></Collapse>
+        />
         <CanvasContainer>
           <List
             style={{

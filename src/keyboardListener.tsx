@@ -11,7 +11,7 @@ import { showInfo } from './helpers';
 import i18n from './i18n/i18n';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { useRefStore } from './stores/commonRef';
-import { GRID_RATIO, HOME_URL, UNDO_SHOW_INFO_DURATION } from './constants';
+import { GRID_RATIO, HOME_URL, UNDO_SHOW_INFO_DURATION } from './programmaticConstants';
 
 export interface KeyboardListenerProps {
   setNavigationView: (selected: boolean) => void;
