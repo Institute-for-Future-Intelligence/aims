@@ -105,8 +105,15 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
 
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
+  const { t } = useTranslation();
+  const lang = useMemo(() => {
+    return { lng: language };
+  }, [language]);
+
   const descriptionTextAreaEditableRef = useRef<boolean>(false);
-  const descriptionRef = useRef<string | null>(projectInfo.description ?? null);
+  const descriptionRef = useRef<string | null>(
+    projectInfo.description ?? t('projectPanel.WriteABriefDescriptionAboutThisProject', lang),
+  );
   const descriptionChangedRef = useRef<boolean>(false);
   const descriptionExpandedRef = useRef<boolean>(false);
 
@@ -115,11 +122,6 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const totalWidth = Math.round(window.innerWidth * relativeWidth);
   const canvasWidth = totalWidth / canvasColumns - gridGutter;
   const canvasHeight = canvasWidth * 0.75;
-
-  const { t } = useTranslation();
-  const lang = useMemo(() => {
-    return { lng: language };
-  }, [language]);
 
   const createCanvas = (moleculeData: MoleculeData) => {
     return (
@@ -252,7 +254,9 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     >
       <ColumnWrapper>
         <Header>
-          <span>{t('projectPanel.Project', lang)}</span>
+          <span>
+            {t('projectPanel.Project', lang)} : {projectInfo.title ?? 'Sample'}
+          </span>
           <span
             style={{ cursor: 'pointer', paddingRight: '20px' }}
             onMouseDown={() => {
@@ -277,13 +281,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
             key={'1'}
             header={
               <SubHeader>
-                <span>
-                  {t('projectPanel.ProjectDescription', lang) +
-                    ' | ' +
-                    t('projectPanel.ProjectType', lang) +
-                    ': ' +
-                    projectInfo.type}
-                </span>
+                <span>{t('projectPanel.ProjectDescription', lang)}</span>
                 <span>
                   {
                     <>

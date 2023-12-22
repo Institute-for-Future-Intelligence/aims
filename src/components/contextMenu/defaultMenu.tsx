@@ -13,12 +13,6 @@ export const createDefaultMenu = () => {
 
   const items: MenuProps['items'] = [];
 
-  // axes
-  items.push({
-    key: 'molecular-viewer-axes',
-    label: <AxesCheckBox />,
-  });
-
   // molecular viewer style
   items.push({
     key: 'molecular-viewer-style-submenu',
@@ -30,6 +24,12 @@ export const createDefaultMenu = () => {
         style: { backgroundColor: 'white' },
       },
     ],
+  });
+
+  // axes
+  items.push({
+    key: 'molecular-viewer-axes',
+    label: <AxesCheckBox />,
   });
 
   // background color

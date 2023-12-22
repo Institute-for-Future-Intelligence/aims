@@ -65,6 +65,7 @@ export const i18n_en = {
       MakeDescriptionNonEditable: 'Make this description non-editable',
       DoubleClickToMakeDescriptionEditable: 'Double-click to make this description editable',
       ClickToFlipSortingOrder: 'Click to flip the sorting order',
+      WriteABriefDescriptionAboutThisProject: 'Write a brief description about this project.',
     },
 
     menu: {

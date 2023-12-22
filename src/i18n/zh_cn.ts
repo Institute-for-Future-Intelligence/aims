@@ -60,6 +60,13 @@ export const i18n_zh_cn = {
       ProjectDescription: '描述',
       ProjectSettings: '项目设定',
       DisplayWindowSize: '展示窗口大小',
+      ImportMolecule: '输入分子',
+      RemoveSelectedMolecule: '移除选中的分子',
+      MakeDescriptionEditable: '编辑描述',
+      MakeDescriptionNonEditable: '不编辑描述',
+      DoubleClickToMakeDescriptionEditable: '双击此描述激活编辑功能',
+      ClickToFlipSortingOrder: '点击逆转排序方向',
+      WriteABriefDescriptionAboutThisProject: '在此处写一个项目简要描述。',
     },
 
     menu: {
