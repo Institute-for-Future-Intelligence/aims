@@ -5,7 +5,7 @@
 import React, { useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './programmaticConstants';
-import { OrbitControls } from '@react-three/drei';
+import { GizmoHelper, GizmoViewport, OrbitControls } from '@react-three/drei';
 import Lights from './lights';
 import Axes from './view/axes';
 import MolecularViewer from './molecularViewer';
@@ -60,6 +60,14 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       <Lights />
       {viewerAxes && <Axes />}
       <MolecularViewer moleculeData={moleculeData} style={viewerStyle} highQuality={true} />
+      <GizmoHelper alignment="bottom-right" margin={[30, 30]}>
+        <GizmoViewport
+          axisColors={['red', 'green', 'blue']}
+          labelColor="white"
+          hideAxisHeads={true}
+          hideNegativeAxes={true}
+        />
+      </GizmoHelper>
     </Canvas>
   );
 };

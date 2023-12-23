@@ -59,7 +59,7 @@ const Axes = ({ lineWidth = 1, endPoint = 1000, showTickMarks = true, showTickLa
           [0, -endPoint, cameraZ],
           [0, endPoint, cameraZ],
         ]}
-        color={'blue'}
+        color={'green'}
         lineWidth={lineWidth}
       />
 
@@ -71,7 +71,7 @@ const Axes = ({ lineWidth = 1, endPoint = 1000, showTickMarks = true, showTickLa
           [0, 0, 0],
           [0, 0, endPoint],
         ]}
-        color={'green'}
+        color={'blue'}
         lineWidth={lineWidth}
       />
     </>
