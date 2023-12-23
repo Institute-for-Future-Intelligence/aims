@@ -65,3 +65,8 @@ declare module '*.module.sass' {
 
 declare module '*.csv';
 declare module '*.pdb';
+
+declare module '*.sdf' {
+  const src: string;
+  export default src;
+}

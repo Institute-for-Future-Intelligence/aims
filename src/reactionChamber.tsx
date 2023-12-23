@@ -8,7 +8,7 @@ import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './programmaticC
 import { GizmoHelper, GizmoViewport, OrbitControls } from '@react-three/drei';
 import Lights from './lights';
 import Axes from './view/axes';
-import MolecularViewer from './molecularViewer';
+import MolecularViewer from './view/molecularViewer';
 import { MoleculeData } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';

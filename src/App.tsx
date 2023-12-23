@@ -19,7 +19,7 @@ import testMoleculeUrl2 from './molecules/pdb/cholesterol.pdb';
 import testMoleculeUrl3 from './molecules/pdb/caffeine.pdb';
 import testMoleculeUrl4 from './molecules/pdb/glucose.pdb';
 import testMoleculeUrl5 from './molecules/pdb/buckyball.pdb';
-import testMoleculeUrl6 from './molecules/pdb/diamond.pdb';
+import testMoleculeUrl6 from './molecules/sdf/ibuprofen.sdf';
 import ProjectGallery from './projectGallery';
 import ReactionChamber from './reactionChamber';
 import { MoleculeData } from './types';
@@ -48,7 +48,7 @@ const App = () => {
         { name: 'Caffeine', url: testMoleculeUrl3 } as MoleculeData,
         { name: 'Glucose', url: testMoleculeUrl4 } as MoleculeData,
         { name: 'Buckyball', url: testMoleculeUrl5 } as MoleculeData,
-        { name: 'Diamond', url: testMoleculeUrl6 } as MoleculeData,
+        { name: 'Ibuprofen', content: testMoleculeUrl6 } as MoleculeData,
       ];
       state.selectedMolecule = state.collectedMolecules[0];
     });

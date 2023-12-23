@@ -7,7 +7,7 @@ import { Canvas } from '@react-three/fiber';
 import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './programmaticConstants';
 import { OrbitControls } from '@react-three/drei';
 import Lights from './lights';
-import MolecularViewer from './molecularViewer';
+import MolecularViewer from './view/molecularViewer';
 import styled from 'styled-components';
 import { Button, Col, Collapse, CollapseProps, ColorPicker, List, Popover, Row, Select } from 'antd';
 import {
