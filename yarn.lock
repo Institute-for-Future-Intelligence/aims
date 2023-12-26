@@ -3931,11 +3931,6 @@ check-types@^11.2.3:
   resolved "https://registry.yarnpkg.com/check-types/-/check-types-11.2.3.tgz#1ffdf68faae4e941fce252840b1787b8edc93b71"
   integrity sha512-+67P1GkJRaxQD6PKK0Et9DhwQB+vGg3PM5+aavopCpZT1lj9jeqfvpgTLAWErNj8qApkkmXlu/Ug74kmhagkXg==
 
-cheminfo-types@^1.1.0:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/cheminfo-types/-/cheminfo-types-1.7.2.tgz#15e77fa571abf80b47c9f002ad926d400369d16b"
-  integrity sha512-Zz7HPnh6wB2beEK7nfsXlNSK1Tpl4O0DpYUod8L6gI/5+INpn/d5UgJLI+3ck6CYY5Qsq34ylyKhERmZ5Wks2A==
-
 chokidar@^3.4.2, chokidar@^3.5.3:
   version "3.5.3"
   resolved "https://registry.npmjs.org/chokidar/-/chokidar-3.5.3.tgz"
@@ -4875,11 +4870,6 @@ duplexer@^0.1.2:
   resolved "https://registry.npmjs.org/duplexer/-/duplexer-0.1.2.tgz"
   integrity sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==
 
-dynamic-typing@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/dynamic-typing/-/dynamic-typing-1.0.0.tgz#023ceb0006cd1b66ca2909b601939f4a7d82a0bf"
-  integrity sha512-Jjvr93gCn8+5q9AP+ilq8gInN5xYRaJakmuE11Un8vgCgt0zwWyRqU7lAdRgHEHnf4FwJp/ppymo1GE1+AKw+Q==
-
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/ee-first/-/ee-first-1.1.1.tgz"
@@ -4944,14 +4934,6 @@ enhanced-resolve@^5.15.0:
   dependencies:
     graceful-fs "^4.2.4"
     tapable "^2.2.0"
-
-ensure-string@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/ensure-string/-/ensure-string-1.2.0.tgz#e105c2cc3768602224cdeeeb6ef67e1e8bef88e0"
-  integrity sha512-Hvv2Xocfn6CSvCWgIGNzf0D5bgE6fAa65cayGOWsEXz03ej3aDpsogP3zstuLKt43zVuojQFST4XHPt9+PtuGQ==
-  dependencies:
-    cheminfo-types "^1.1.0"
-    isutf8 "^4.0.0"
 
 entities@^2.0.0:
   version "2.2.0"
@@ -6712,11 +6694,6 @@ istanbul-reports@^3.1.3:
   dependencies:
     html-escaper "^2.0.0"
     istanbul-lib-report "^3.0.0"
-
-isutf8@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/isutf8/-/isutf8-4.0.0.tgz#8b0061a96cf896faff3f086d7efa4ae93be8a872"
-  integrity sha512-mJtsQGFfAphKdVuRitEpc0eon4v5fuaB6v9ZJIrLnIyybh02sIIwJ2RQbLMp6UICVCfquezllupZIVcqzGzCPg==
 
 iterator.prototype@^1.1.2:
   version "1.1.2"
@@ -10077,14 +10054,6 @@ scroll-into-view-if-needed@^3.1.0:
   integrity sha512-49oNpRjWRvnU8NyGVmUaYG4jtTkNonFZI86MmGRDqBphEK2EXT9gdEUoQPZhuBM8yWHxCWbobltqYO5M4XrUvQ==
   dependencies:
     compute-scroll-into-view "^3.0.2"
-
-sdf-parser@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/sdf-parser/-/sdf-parser-6.0.1.tgz#9d1d2d306fab9555ca3b9a9a1f9ba9aaffb15707"
-  integrity sha512-QorgjqiqTzodCMmYkWYkYJ9nBnOL3w3mWOE9BB1SATUfkFvLOSxHaeZAnJxrHlRkfI7+q3+FsvZOS2OTN74lNA==
-  dependencies:
-    dynamic-typing "^1.0.0"
-    ensure-string "^1.2.0"
 
 select-hose@^2.0.0:
   version "2.0.0"

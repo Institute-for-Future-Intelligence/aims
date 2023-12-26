@@ -14,8 +14,7 @@ import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { CPK_COLORS } from '../scientificConstants';
 import { MolecularViewerStyle, MoleculeData } from '../types';
-//@ts-ignore
-import { parse } from 'sdf-parser';
+// import SDFParser from 'miew/dist/io/parsers/SDFParser';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -40,10 +39,12 @@ const MolecularViewer = ({ moleculeData, style, highQuality }: MolecularViewerPr
 
   const [molecule, setMolecule] = useState<Molecule>();
 
+  const shininess = 1000;
+
   useEffect(() => {
     if (moleculeData.content) {
-      const records = parse(moleculeData.content);
-      console.log(records.molecules[0].molfile);
+      // const records = new SDFParser(moleculeData.content, null);
+      // console.log(records);
     } else if (moleculeData.url?.endsWith('.pdb')) {
       pdbLoader.load(moleculeData.url, (pdb: PDB) => {
         const geometryAtoms = pdb.geometryAtoms;
@@ -136,7 +137,11 @@ const MolecularViewer = ({ moleculeData, style, highQuality }: MolecularViewerPr
                 if (e.button === 2) return;
               }}
             >
-              <meshStandardMaterial attach="material" color={e.color} />
+              {shininess ? (
+                <meshPhongMaterial attach="material" color={e.color} specular={'white'} shininess={shininess} />
+              ) : (
+                <meshStandardMaterial attach="material" color={e.color} />
+              )}
             </Sphere>
           );
         })}
@@ -174,7 +179,16 @@ const MolecularViewer = ({ moleculeData, style, highQuality }: MolecularViewerPr
                   args={[radius, radius, startLength, segments, 1]}
                   rotation={[HALF_PI, 0, 0]}
                 >
-                  <meshStandardMaterial attach="material" color={e.startAtom.color} />
+                  {shininess ? (
+                    <meshPhongMaterial
+                      attach="material"
+                      color={e.startAtom.color}
+                      specular={'white'}
+                      shininess={shininess}
+                    />
+                  ) : (
+                    <meshStandardMaterial attach="material" color={e.startAtom.color} />
+                  )}
                 </Cylinder>
               </group>
               <group
@@ -191,7 +205,16 @@ const MolecularViewer = ({ moleculeData, style, highQuality }: MolecularViewerPr
                   args={[radius, radius, endLength, segments, 1]}
                   rotation={[HALF_PI, 0, 0]}
                 >
-                  <meshStandardMaterial attach="material" color={e.endAtom.color} />
+                  {shininess ? (
+                    <meshPhongMaterial
+                      attach="material"
+                      color={e.endAtom.color}
+                      specular={'white'}
+                      shininess={shininess}
+                    />
+                  ) : (
+                    <meshStandardMaterial attach="material" color={e.endAtom.color} />
+                  )}
                 </Cylinder>
               </group>
             </React.Fragment>

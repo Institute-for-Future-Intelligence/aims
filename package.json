@@ -27,7 +27,6 @@
     "react-timeago": "^7.2.0",
     "recharts": "^2.10.2",
     "save-svg-as-png": "^1.4.17",
-    "sdf-parser": "^6.0.1",
     "styled-components": "^6.1.1",
     "three": "^0.158.0",
     "three-spritetext": "^1.8.1",
