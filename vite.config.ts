@@ -24,6 +24,9 @@ export default defineConfig(({ mode }) => {
         fileRegex: /\.sdf$/,
       }),
     ],
+    build: {
+      assetsInlineLimit: 0,
+    },
   };
 });
 

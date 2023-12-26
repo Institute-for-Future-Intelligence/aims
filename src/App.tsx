@@ -2,6 +2,13 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
+import testMoleculeUrl1 from './molecules/pdb/aspirin.pdb';
+import testMoleculeUrl2 from './molecules/pdb/cholesterol.pdb';
+import testMoleculeUrl3 from './molecules/pdb/caffeine.pdb';
+import testMoleculeUrl4 from './molecules/pdb/glucose.pdb';
+import testMoleculeUrl5 from './molecules/pdb/buckyball.pdb';
+import testMoleculeUrl6 from './molecules/pdb/diamond.pdb';
+
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import './App.css';
 import ifiLogo from './assets/ifi-logo.png';
@@ -14,13 +21,6 @@ import SplitPane from 'react-split-pane';
 import { throttle } from 'lodash';
 import MainToolBar from './mainToolBar';
 import ShareLinks from './shareLinks';
-import testMoleculeUrl1 from './molecules/pdb/aspirin.pdb';
-import testMoleculeUrl2 from './molecules/pdb/cholesterol.pdb';
-import testMoleculeUrl3 from './molecules/pdb/caffeine.pdb';
-import testMoleculeUrl4 from './molecules/pdb/glucose.pdb';
-import testMoleculeUrl5 from './molecules/pdb/buckyball.pdb';
-import testMoleculeUrl6 from './molecules/pdb/diamond.pdb';
-// import testMoleculeUrl6 from './molecules/sdf/ibuprofen.sdf';
 import ProjectGallery from './projectGallery';
 import ReactionChamber from './reactionChamber';
 import { MoleculeData } from './types';
