@@ -59,7 +59,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       <OrbitControls enableDamping={false} onEnd={onControlEnd} />
       <Lights />
       {viewerAxes && <Axes />}
-      <MolecularViewer moleculeData={moleculeData} style={viewerStyle} highQuality={true} />
+      <MolecularViewer moleculeData={moleculeData} style={viewerStyle} shininess={1000} highQuality={true} />
       <GizmoHelper alignment="bottom-right" margin={[30, 30]}>
         <GizmoViewport
           axisColors={['red', 'green', 'blue']}

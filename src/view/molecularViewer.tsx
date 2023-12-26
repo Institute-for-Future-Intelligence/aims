@@ -19,6 +19,7 @@ import { MolecularViewerStyle, MoleculeData } from '../types';
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
   style: MolecularViewerStyle;
+  shininess?: number;
   highQuality?: boolean;
 }
 
@@ -31,15 +32,13 @@ type PDB = {
   };
 };
 
-const MolecularViewer = ({ moleculeData, style, highQuality }: MolecularViewerProps) => {
+const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: MolecularViewerProps) => {
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
 
   const pdbLoader = useMemo(() => new MyPDBLoader(), []);
 
   const [molecule, setMolecule] = useState<Molecule>();
-
-  const shininess = 1000;
 
   useEffect(() => {
     if (moleculeData.content) {
