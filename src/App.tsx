@@ -43,15 +43,26 @@ const App = () => {
   useEffect(() => {
     loadChemicalElements();
     setCommonStore((state) => {
-      state.collectedMolecules = [
-        { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
-        { name: 'Cholesterol', url: testMoleculeUrl2 } as MoleculeData,
-        { name: 'Caffeine', url: testMoleculeUrl3 } as MoleculeData,
-        { name: 'Glucose', url: testMoleculeUrl4 } as MoleculeData,
-        { name: 'Buckyball', url: testMoleculeUrl5 } as MoleculeData,
-        { name: 'Diamond', url: testMoleculeUrl6 } as MoleculeData,
-      ];
-      state.selectedMolecule = state.collectedMolecules[0];
+      if (state.collectedMolecules.length === 0) {
+        state.collectedMolecules.push(
+          ...[
+            { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
+            { name: 'Cholesterol', url: testMoleculeUrl2 } as MoleculeData,
+            { name: 'Caffeine', url: testMoleculeUrl3 } as MoleculeData,
+            { name: 'Glucose', url: testMoleculeUrl4 } as MoleculeData,
+            { name: 'Buckyball', url: testMoleculeUrl5 } as MoleculeData,
+            { name: 'Diamond', url: testMoleculeUrl6 } as MoleculeData,
+          ],
+        );
+      }
+      if (state.selectedMolecule !== null) {
+        for (const m of state.collectedMolecules) {
+          if (m.name === state.selectedMolecule.name) {
+            state.selectedMolecule = m;
+            break;
+          }
+        }
+      }
     });
     // eslint-disable-next-line
   }, []);

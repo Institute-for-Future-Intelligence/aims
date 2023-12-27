@@ -25,6 +25,8 @@ export const collectedMolecules = (state: CommonStoreState) => state.collectedMo
 
 export const chamberViewerAxes = (state: CommonStoreState) => state.chamberViewerAxes;
 
+export const chamberViewerShininess = (state: CommonStoreState) => state.chamberViewerShininess;
+
 export const chamberViewerStyle = (state: CommonStoreState) => state.chamberViewerStyle;
 
 export const chamberViewerBackground = (state: CommonStoreState) => state.chamberViewerBackground;

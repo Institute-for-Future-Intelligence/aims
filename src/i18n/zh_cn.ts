@@ -52,6 +52,7 @@ export const i18n_zh_cn = {
       Stick: '棍',
       SpaceFilling: '空间填满',
       BackgroundColor: '背景颜色',
+      Shininess: '光泽度',
     },
 
     projectPanel: {

@@ -51,6 +51,7 @@ export const i18n_en = {
       Stick: 'Stick',
       SpaceFilling: 'Space-Filling',
       BackgroundColor: 'Background Color',
+      Shininess: 'Shininess',
     },
 
     projectPanel: {

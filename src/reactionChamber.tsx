@@ -23,6 +23,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const viewerStyle = useStore(Selector.chamberViewerStyle);
   const viewerBackground = useStore(Selector.chamberViewerBackground);
   const viewerAxes = useStore(Selector.chamberViewerAxes);
+  const shininess = useStore(Selector.chamberViewerShininess) ?? 1000;
   const cameraPosition = useStore(Selector.cameraPosition);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -59,7 +60,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       <OrbitControls enableDamping={false} onEnd={onControlEnd} />
       <Lights />
       {viewerAxes && <Axes />}
-      <MolecularViewer moleculeData={moleculeData} style={viewerStyle} shininess={1000} highQuality={true} />
+      <MolecularViewer moleculeData={moleculeData} style={viewerStyle} shininess={shininess} highQuality={true} />
       <GizmoHelper alignment="bottom-right" margin={[30, 30]}>
         <GizmoViewport
           axisColors={['red', 'green', 'blue']}

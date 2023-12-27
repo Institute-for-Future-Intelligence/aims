@@ -38,6 +38,7 @@ export interface CommonStoreState {
   collectedMolecules: MoleculeData[];
 
   chamberViewerAxes: boolean;
+  chamberViewerShininess: number;
   chamberViewerStyle: MolecularViewerStyle;
   chamberViewerBackground: string;
   projectViewerStyle: MolecularViewerStyle;
@@ -100,6 +101,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           collectedMolecules: [],
 
           chamberViewerAxes: true,
+          chamberViewerShininess: 1000,
           chamberViewerStyle: MolecularViewerStyle.BallAndStick,
           chamberViewerBackground: 'black',
           projectViewerStyle: MolecularViewerStyle.BallAndStick,
@@ -175,7 +177,10 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
         skipHydration: Util.isOpenFromURL(),
         partialize: (state) => ({
           language: state.language,
+          selectedMolecule: state.selectedMolecule,
+          collectedMolecules: state.collectedMolecules,
           chamberViewerAxes: state.chamberViewerAxes,
+          chamberViewerShininess: state.chamberViewerShininess,
           chamberViewerStyle: state.chamberViewerStyle,
           chamberViewerBackground: state.chamberViewerBackground,
           projectViewerStyle: state.projectViewerStyle,
