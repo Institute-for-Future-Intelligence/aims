@@ -14,7 +14,6 @@ import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { CPK_COLORS } from '../scientificConstants';
 import { MolecularViewerStyle, MoleculeData } from '../types';
-// import SDFParser from 'miew/dist/io/parsers/SDFParser';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
