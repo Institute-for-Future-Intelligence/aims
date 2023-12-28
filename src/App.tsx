@@ -43,17 +43,15 @@ const App = () => {
   useEffect(() => {
     loadChemicalElements();
     setCommonStore((state) => {
-      if (state.collectedMolecules.length === 0) {
-        state.collectedMolecules.push(
-          ...[
-            { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
-            { name: 'Ibuprofen', url: testMoleculeUrl2 } as MoleculeData,
-            { name: 'Paxlovid', url: testMoleculeUrl3 } as MoleculeData,
-            { name: 'Caffeine', url: testMoleculeUrl4 } as MoleculeData,
-            { name: 'Cholesterol', url: testMoleculeUrl5 } as MoleculeData,
-            { name: 'Glucose', url: testMoleculeUrl6 } as MoleculeData,
-          ],
-        );
+      if (!state.collectedMolecules.length || state.collectedMolecules.length === 0) {
+        state.collectedMolecules = [
+          { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
+          { name: 'Ibuprofen', url: testMoleculeUrl2 } as MoleculeData,
+          { name: 'Paxlovid', url: testMoleculeUrl3 } as MoleculeData,
+          { name: 'Caffeine', url: testMoleculeUrl4 } as MoleculeData,
+          { name: 'Cholesterol', url: testMoleculeUrl5 } as MoleculeData,
+          { name: 'Glucose', url: testMoleculeUrl6 } as MoleculeData,
+        ];
       }
       if (state.selectedMolecule !== null) {
         for (const m of state.collectedMolecules) {
@@ -62,6 +60,8 @@ const App = () => {
             break;
           }
         }
+      } else {
+        state.selectedMolecule = state.collectedMolecules[0];
       }
     });
     // eslint-disable-next-line
