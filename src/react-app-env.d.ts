@@ -66,3 +66,4 @@ declare module '*.module.sass' {
 declare module '*.csv';
 declare module '*.pdb';
 declare module '*.sdf';
+declare module '*.xyz';

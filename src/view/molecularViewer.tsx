@@ -17,6 +17,7 @@ import { AtomTS } from '../models/AtomTS';
 import { BondTS } from '../models/BondTS';
 import PDBParser from '../lib/io/parsers/PDBParser';
 import SDFParser from '../lib/io/parsers/SDFParser';
+import XYZParser from '../lib/io/parsers/XYZParser';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -42,6 +43,12 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
       fetch(moleculeData.url).then((response) => {
         response.text().then((text) => {
           new PDBParser(text, {}).parse().then(processResult);
+        });
+      });
+    } else if (moleculeData.url?.endsWith('.xyz')) {
+      fetch(moleculeData.url).then((response) => {
+        response.text().then((text) => {
+          new XYZParser(text, {}).parse().then(processResult);
         });
       });
     }

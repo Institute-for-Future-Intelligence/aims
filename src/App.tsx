@@ -7,7 +7,7 @@ import testMoleculeUrl2 from './molecules/sdf/ibuprofen.sdf';
 import testMoleculeUrl3 from './molecules/sdf/paxlovid.sdf';
 import testMoleculeUrl4 from './molecules/pdb/caffeine.pdb';
 import testMoleculeUrl5 from './molecules/pdb/cholesterol.pdb';
-import testMoleculeUrl6 from './molecules/pdb/glucose.pdb';
+import testMoleculeUrl6 from './molecules/xyz/glucose.xyz';
 
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import './App.css';

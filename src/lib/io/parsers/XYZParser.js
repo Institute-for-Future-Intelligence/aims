@@ -31,7 +31,7 @@ class XYZParser extends Parser {
 
     const startAtomsInf = endComment + source.substring(endComment).search(/\S/);
     this._atomsInf = source.substring(startAtomsInf).split(/[\s,]*\n[\s,]*/);
-    if (!Number.isNaN(nAtoms) && (this._atomsInf.length - 1 !== nAtoms)) {
+    if (!Number.isNaN(nAtoms) && this._atomsInf.length !== nAtoms) {
       this._complex.error = {
         message: 'wrong number of atoms',
       };
@@ -77,7 +77,7 @@ class XYZParser extends Parser {
   }
 
   parseSync() {
-    const result = this._complex = new Complex();
+    const result = (this._complex = new Complex());
 
     this._parseToAtomsInf(this._data);
     this._parseAtomsInf();
