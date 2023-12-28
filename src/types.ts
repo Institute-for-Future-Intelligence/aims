@@ -50,7 +50,6 @@ export enum MolecularViewerStyle {
 export interface MoleculeData {
   name: string;
   url?: string;
-  content?: string;
 }
 
 // use null for undefined, as we need to persist this in Firebase

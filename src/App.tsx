@@ -4,10 +4,10 @@
 
 import testMoleculeUrl1 from './molecules/pdb/aspirin.pdb';
 import testMoleculeUrl2 from './molecules/sdf/ibuprofen.sdf';
-import testMoleculeUrl3 from './molecules/pdb/caffeine.pdb';
-import testMoleculeUrl4 from './molecules/pdb/cholesterol.pdb';
-import testMoleculeUrl5 from './molecules/pdb/glucose.pdb';
-import testMoleculeUrl6 from './molecules/pdb/buckyball.pdb';
+import testMoleculeUrl3 from './molecules/sdf/paxlovid.sdf';
+import testMoleculeUrl4 from './molecules/pdb/caffeine.pdb';
+import testMoleculeUrl5 from './molecules/pdb/cholesterol.pdb';
+import testMoleculeUrl6 from './molecules/pdb/glucose.pdb';
 
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import './App.css';
@@ -48,10 +48,10 @@ const App = () => {
           ...[
             { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
             { name: 'Ibuprofen', url: testMoleculeUrl2 } as MoleculeData,
-            { name: 'Caffeine', url: testMoleculeUrl3 } as MoleculeData,
-            { name: 'Cholesterol', url: testMoleculeUrl4 } as MoleculeData,
-            { name: 'Glucose', url: testMoleculeUrl5 } as MoleculeData,
-            { name: 'Buckyball', url: testMoleculeUrl6 } as MoleculeData,
+            { name: 'Paxlovid', url: testMoleculeUrl3 } as MoleculeData,
+            { name: 'Caffeine', url: testMoleculeUrl4 } as MoleculeData,
+            { name: 'Cholesterol', url: testMoleculeUrl5 } as MoleculeData,
+            { name: 'Glucose', url: testMoleculeUrl6 } as MoleculeData,
           ],
         );
       }
