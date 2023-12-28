@@ -4,7 +4,7 @@
 
 import { Color, Vector3 } from 'three';
 
-export interface Atom {
+export interface AtomTS {
   elementName: string;
   position: Vector3;
   color: Color;

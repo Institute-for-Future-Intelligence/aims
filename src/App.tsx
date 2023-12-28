@@ -7,7 +7,7 @@ import testMoleculeUrl2 from './molecules/pdb/cholesterol.pdb';
 import testMoleculeUrl3 from './molecules/pdb/caffeine.pdb';
 import testMoleculeUrl4 from './molecules/pdb/glucose.pdb';
 import testMoleculeUrl5 from './molecules/pdb/buckyball.pdb';
-import testMoleculeUrl6 from './molecules/pdb/diamond.pdb';
+import testMoleculeUrl6 from './molecules/sdf/ibuprofen.sdf';
 
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import './App.css';
@@ -51,7 +51,7 @@ const App = () => {
             { name: 'Caffeine', url: testMoleculeUrl3 } as MoleculeData,
             { name: 'Glucose', url: testMoleculeUrl4 } as MoleculeData,
             { name: 'Buckyball', url: testMoleculeUrl5 } as MoleculeData,
-            { name: 'Diamond', url: testMoleculeUrl6 } as MoleculeData,
+            { name: 'Ibuprofen', url: testMoleculeUrl6 } as MoleculeData,
           ],
         );
       }

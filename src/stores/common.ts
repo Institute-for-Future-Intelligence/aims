@@ -15,8 +15,8 @@ import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
 import { ChemicalElement } from '../models/ChemicalElement';
 import Papa from 'papaparse';
-import { Atom } from '../models/Atom';
-import { Bond } from '../models/Bond';
+import { AtomTS } from '../models/AtomTS';
+import { BondTS } from '../models/BondTS';
 import { useRefStore } from './commonRef';
 
 enableMapSet();
@@ -50,7 +50,7 @@ export interface CommonStoreState {
   cameraPosition: number[];
   panCenter: number[];
 
-  selectedObject: Atom | Bond | null;
+  selectedObject: AtomTS | BondTS | null;
   selectedObjectIdSet: Set<string>;
   selectNone: () => void;
 
@@ -178,7 +178,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
         partialize: (state) => ({
           language: state.language,
           selectedMolecule: state.selectedMolecule,
-          collectedMolecules: state.collectedMolecules,
+          // collectedMolecules: state.collectedMolecules,
           chamberViewerAxes: state.chamberViewerAxes,
           chamberViewerShininess: state.chamberViewerShininess,
           chamberViewerStyle: state.chamberViewerStyle,

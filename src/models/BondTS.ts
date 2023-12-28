@@ -2,15 +2,15 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import { Atom } from './Atom';
+import { AtomTS } from './AtomTS';
 import { BondType } from '../types';
 
-export class Bond {
-  startAtom: Atom;
-  endAtom: Atom;
+export class BondTS {
+  startAtom: AtomTS;
+  endAtom: AtomTS;
   type: BondType;
 
-  constructor(startAtom: Atom, endAtom: Atom) {
+  constructor(startAtom: AtomTS, endAtom: AtomTS) {
     this.startAtom = startAtom;
     this.endAtom = endAtom;
     this.type = BondType.SINGLE_BOND;
