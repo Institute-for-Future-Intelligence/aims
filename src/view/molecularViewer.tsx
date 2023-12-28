@@ -48,8 +48,8 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
       fetch(moleculeData.url).then((response) => {
         response.text().then((text) => {
           const p = new PDBParser(text, {});
-          p.parse().then(() => {
-            console.log(p._serialAtomMap);
+          p.parse().then((result) => {
+            console.log(result);
           });
         });
       });
