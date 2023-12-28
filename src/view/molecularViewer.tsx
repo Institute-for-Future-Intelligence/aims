@@ -18,6 +18,9 @@ import { BondTS } from '../models/BondTS';
 import PDBParser from '../lib/io/parsers/PDBParser';
 import SDFParser from '../lib/io/parsers/SDFParser';
 import XYZParser from '../lib/io/parsers/XYZParser';
+import MOL2Parser from '../lib/io/parsers/MOL2Parser';
+import CIFParser from '../lib/io/parsers/CIFParser';
+import PubChemParser from '../lib/io/parsers/PubChemParser';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -39,16 +42,34 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
           new SDFParser(text, {}).parse().then(processResult);
         });
       });
+    } else if (moleculeData.url?.endsWith('.cif')) {
+      fetch(moleculeData.url).then((response) => {
+        response.text().then((text) => {
+          new CIFParser(text, {}).parse().then(processResult);
+        });
+      });
     } else if (moleculeData.url?.endsWith('.pdb')) {
       fetch(moleculeData.url).then((response) => {
         response.text().then((text) => {
           new PDBParser(text, {}).parse().then(processResult);
         });
       });
+    } else if (moleculeData.url?.endsWith('.pcj')) {
+      fetch(moleculeData.url).then((response) => {
+        response.text().then((text) => {
+          new PubChemParser(text, {}).parse().then(processResult);
+        });
+      });
     } else if (moleculeData.url?.endsWith('.xyz')) {
       fetch(moleculeData.url).then((response) => {
         response.text().then((text) => {
           new XYZParser(text, {}).parse().then(processResult);
+        });
+      });
+    } else if (moleculeData.url?.endsWith('.mol2')) {
+      fetch(moleculeData.url).then((response) => {
+        response.text().then((text) => {
+          new MOL2Parser(text, {}).parse().then(processResult);
         });
       });
     }

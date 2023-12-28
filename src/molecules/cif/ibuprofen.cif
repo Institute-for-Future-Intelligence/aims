@@ -1,0 +1,218 @@
+#------------------------------------------------------------------------------
+#$Date: 2016-02-20 02:53:41 +0200 (Sat, 20 Feb 2016) $
+#$Revision: 176768 $
+#$URL: file:///home/coder/svn-repositories/cod/cif/2/10/46/2104678.cif $
+#------------------------------------------------------------------------------
+#
+# This file is available in the Crystallography Open Database (COD),
+# http://www.crystallography.net/. The original data for this entry
+# were provided by IUCr Journals, http://journals.iucr.org/.
+#
+# The file may be used within the scientific community so long as
+# proper attribution is given to the journal article from which the
+# data were obtained.
+#
+data_2104678
+loop_
+_publ_author_name
+'Derollez, Patrick'
+'Dudognon, Emeline'
+'Affouard, Fr\'ed\'eric'
+'Dan\`ede, Florence'
+'Correia, Nat\'alia T.'
+'Descamps, Marc'
+_publ_section_title
+;
+ <i>Ab initio</i> structure determination of phase II of racemic
+ ibuprofen by X-ray powder diffraction
+;
+_journal_coeditor_code           WS5072
+_journal_issue                   1
+_journal_name_full               'Acta Crystallographica Section B'
+_journal_page_first              76
+_journal_page_last               80
+_journal_paper_doi               10.1107/S0108768109047363
+_journal_volume                  66
+_journal_year                    2010
+_chemical_formula_moiety         'C13 H18 O2'
+_chemical_formula_sum            'C13 H18 O2'
+_chemical_formula_weight         206.28
+_chemical_name_common            ibuprofen
+_chemical_name_systematic        ' ?'
+_space_group_IT_number           14
+_symmetry_cell_setting           monoclinic
+_symmetry_space_group_name_Hall  '-P 2ybc'
+_symmetry_space_group_name_H-M   'P 1 21/c 1'
+_cell_angle_alpha                90.00000
+_cell_angle_beta                 94.873(4)
+_cell_angle_gamma                90.00000
+_cell_formula_units_Z            4
+_cell_length_a                   12.3794(9)
+_cell_length_b                   5.8723(5)
+_cell_length_c                   17.5615(15)
+_cell_measurement_temperature    258
+_cell_volume                     1272.03(18)
+_computing_structure_refinement  FULLPROF
+_diffrn_measurement_device_type  'Inel CPS120'
+_diffrn_radiation_type           X-ray
+_diffrn_radiation_wavelength     1.540560
+_exptl_absorpt_coefficient_mu    0.562
+_exptl_crystal_density_diffrn    1.077
+_pd_char_colour                  white
+_pd_instr_location               ' ?'
+_pd_meas_2theta_range_inc        0.015002
+_pd_meas_2theta_range_max        113.82300
+_pd_meas_2theta_range_min        0.15300
+_pd_meas_number_of_points        7579
+_pd_meas_scan_method             fixed
+_pd_proc_2theta_range_inc        0.015002
+_pd_proc_2theta_range_max        113.8792
+_pd_proc_2theta_range_min        0.2092
+_pd_proc_ls_background_function
+'linear interpolation between selected points'
+_pd_proc_ls_pref_orient_corr     ' ?'
+_pd_proc_ls_profile_function     pseudo-Voigt
+_pd_proc_ls_prof_R_factor        0.040009
+_pd_proc_ls_prof_wR_expected     0.12564
+_pd_proc_ls_prof_wR_factor       0.056337
+_pd_proc_wavelength              1.540560
+_pd_spec_mounting                ' 0.7 mm diameter Lindemann capillary'
+_pd_spec_mount_mode              transmission
+_pd_spec_shape                   cylinder
+_refine_ls_goodness_of_fit_all   20.1
+_refine_ls_number_parameters     59
+_refine_ls_number_reflns         2063
+_refine_ls_number_restraints     35
+_cod_data_source_file            ws5072.cif
+_cod_data_source_block           ibuprofen
+_cod_depositor_comments
+;
+The following automatic conversions were performed:
+'_symmetry_cell_setting' value 'Monoclinic' changed to 'monoclinic'
+according to '/home/saulius/struct/CIF-dictionaries/cif_core.dic'
+dictionary named 'cif_core.dic' version 2.4.1 from 2010-06-29.
+
+Automatic conversion script
+Id: cif_fix_enum 1527 2010-12-29 10:47:43Z saulius 
+
+The following automatic conversions were performed:
+
+'_symmetry_cell_setting' value 'Monoclinic' changed to 'monoclinic'
+according to /home/saulius/struct/CIF-dictionaries/cif_core.dic
+dictionary named 'cif_core.dic' version 2.4.1 from 2010-06-29.
+
+Automatic conversion script
+Id: cif_fix_values 1715 2011-07-08 13:25:40Z adriana 
+;
+_cod_original_sg_symbol_H-M      'P 21/c'
+_cod_database_code               2104678
+loop_
+_symmetry_equiv_pos_as_xyz
+x,y,z
+-x,y+1/2,-z+1/2
+-x,-y,-z
+x,-y+1/2,z+1/2
+loop_
+_atom_site_type_symbol
+_atom_site_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_U_iso_or_equiv
+_atom_site_adp_type
+_atom_site_occupancy
+C C1 0.5572(6) 0.6766(19) 0.4158(4) 0.00000 Uiso 1.00000
+C C2 0.6059(6) 0.8680(12) 0.3731(4) 0.00000 Uiso 1.00000
+C C3 0.6963(8) 0.967(2) 0.4240(6) 0.00000 Uiso 1.00000
+C C4 0.6641(11) 0.734(4) 0.3179(5) 0.00000 Uiso 1.00000
+C C5 0.7604(12) 0.631(4) 0.3441(7) 0.00000 Uiso 1.00000
+C C6 0.8130(12) 0.489(3) 0.2963(5) 0.00000 Uiso 1.00000
+C C7 0.7692(11) 0.450(3) 0.2225(6) 0.00000 Uiso 1.00000
+C C8 0.6729(11) 0.554(3) 0.1962(6) 0.00000 Uiso 1.00000
+C C9 0.6204(11) 0.696(3) 0.2439(5) 0.00000 Uiso 1.00000
+C C10 0.8061(12) 0.2511(11) 0.1767(6) 0.00000 Uiso 1.00000
+C C11 0.8511(5) 0.3890(10) 0.1113(4) 0.00000 Uiso 1.00000
+C C12 0.9146(10) 0.1809(16) 0.0890(7) 0.00000 Uiso 1.00000
+C C13 0.9565(7) 0.507(2) 0.1420(7) 0.00000 Uiso 1.00000
+O O1 0.6004(8) 0.6812(17) 0.4845(4) 0.00000 Uiso 1.00000
+O O2 0.4615(5) 0.6338(17) 0.4159(5) 0.00000 Uiso 1.00000
+H H1 0.54252 0.59460 0.51577 0.00000 Uiso 1.00000
+H H2 0.54247 0.95211 0.34572 0.00000 Uiso 1.00000
+H H3 0.69457 0.93109 0.47765 0.00000 Uiso 1.00000
+H H4 0.76245 0.93109 0.40258 0.00000 Uiso 1.00000
+H H5 0.68509 1.14351 0.42214 0.00000 Uiso 1.00000
+H H6 0.79091 0.64412 0.39829 0.00000 Uiso 1.00000
+H H7 0.88185 0.41905 0.31802 0.00000 Uiso 1.00000
+H H8 0.64266 0.52523 0.14303 0.00000 Uiso 1.00000
+H H9 0.55273 0.76436 0.22148 0.00000 Uiso 1.00000
+H H10 0.75186 0.17634 0.14443 0.00000 Uiso 1.00000
+H H11 0.85372 0.14644 0.21091 0.00000 Uiso 1.00000
+H H12 0.79116 0.42036 0.07230 0.00000 Uiso 1.00000
+H H13 0.97950 0.16131 0.12476 0.00000 Uiso 1.00000
+H H14 0.94623 0.20722 0.04049 0.00000 Uiso 1.00000
+H H15 0.86032 0.06455 0.06744 0.00000 Uiso 1.00000
+H H16 0.99160 0.58868 0.10212 0.00000 Uiso 1.00000
+H H17 0.98938 0.39791 0.18671 0.00000 Uiso 1.00000
+H H18 0.95001 0.64061 0.18671 0.00000 Uiso 1.00000
+loop_
+_atom_type_symbol
+_atom_type_scat_dispersion_real
+_atom_type_scat_dispersion_imag
+_atom_type_scat_source
+c 0.01700 0.00900
+International_Tables_for_Crystallography_Vol.C(1991)_Tables_6.1.1.4_and_6.1.1.5
+o 0.04700 0.03200
+International_Tables_for_Crystallography_Vol.C(1991)_Tables_6.1.1.4_and_6.1.1.5
+h 0.00000 0.00000
+International_Tables_for_Crystallography_Vol.C(1991)_Tables_6.1.1.4_and_6.1.1.5
+loop_
+_geom_angle_atom_site_label_1
+_geom_angle_atom_site_label_2
+_geom_angle_atom_site_label_3
+_geom_angle_site_symmetry_1
+_geom_angle_site_symmetry_2
+_geom_angle_site_symmetry_3
+_geom_angle
+_geom_angle_publ_flag
+? ? ? ? ? ? ? ?
+loop_
+_geom_bond_atom_site_label_1
+_geom_bond_atom_site_label_2
+_geom_bond_site_symmetry_1
+_geom_bond_site_symmetry_2
+_geom_bond_distance
+_geom_bond_publ_flag
+? ? ? ? ? ?
+loop_
+_geom_contact_atom_site_label_1
+_geom_contact_atom_site_label_2
+_geom_contact_distance
+_geom_contact_site_symmetry_1
+_geom_contact_site_symmetry_2
+_geom_contact_publ_flag
+? ? ? ? ? ?
+loop_
+_geom_hbond_atom_site_label_D
+_geom_hbond_atom_site_label_H
+_geom_hbond_atom_site_label_A
+_geom_hbond_site_symmetry_D
+_geom_hbond_site_symmetry_H
+_geom_hbond_site_symmetry_A
+_geom_hbond_distance_DH
+_geom_hbond_distance_HA
+_geom_hbond_distance_DA
+_geom_hbond_angle_DHA
+_geom_hbond_publ_flag
+? ? ? ? ? ? ? ? ? ? ?
+loop_
+_geom_torsion_atom_site_label_1
+_geom_torsion_atom_site_label_2
+_geom_torsion_atom_site_label_3
+_geom_torsion_atom_site_label_4
+_geom_torsion_site_symmetry_1
+_geom_torsion_site_symmetry_2
+_geom_torsion_site_symmetry_3
+_geom_torsion_site_symmetry_4
+_geom_torsion
+_geom_torsion_publ_flag
+? ? ? ? ? ? ? ? ? ?
