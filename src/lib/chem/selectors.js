@@ -1,15 +1,9 @@
 import Atom from './Atom';
 import ResidueType from './ResidueType';
-import { parser } from '../utils/SelectionParser';
+import parser from '../utils/SelectionParser';
 import { Range, RangeList, ValueList } from './selectors/selectArgs';
 import { PrefixOperator, InfixOperator } from './selectors/selectOps';
-import {
-  Selector,
-  RangeListSelector,
-  ValueListSelector,
-  NoneSelector,
-  AllSelector,
-} from './selectors/selectorsBase';
+import { Selector, RangeListSelector, ValueListSelector, NoneSelector, AllSelector } from './selectors/selectorsBase';
 
 const keywords = {};
 
@@ -22,92 +16,128 @@ function defineSelector(name, SelectorClass) {
   SelectorClass.prototype.keyword = keyword;
   SelectorClass.prototype.name = name;
 
-  const factory = ((...args) => new SelectorClass(...args));
+  const factory = (...args) => new SelectorClass(...args);
   factory.SelectorClass = SelectorClass;
   keywords[keyword] = factory;
 
   return SelectorClass;
 }
 
-defineSelector('Serial', class SerialSelector extends RangeListSelector {
-  includesAtom(atom) {
-    return this.list.includes(atom.serial);
-  }
-});
+defineSelector(
+  'Serial',
+  class SerialSelector extends RangeListSelector {
+    includesAtom(atom) {
+      return this.list.includes(atom.serial);
+    }
+  },
+);
 
-defineSelector('Name', class NameSelector extends ValueListSelector {
-  includesAtom(atom) {
-    return this.list.includes(atom.name);
-  }
-});
+defineSelector(
+  'Name',
+  class NameSelector extends ValueListSelector {
+    includesAtom(atom) {
+      return this.list.includes(atom.name);
+    }
+  },
+);
 
-defineSelector('AltLoc', class AltLocSelector extends ValueListSelector {
-  includesAtom(atom) {
-    return this.list.includes(String.fromCharCode(atom.location));
-  }
-});
+defineSelector(
+  'AltLoc',
+  class AltLocSelector extends ValueListSelector {
+    includesAtom(atom) {
+      return this.list.includes(String.fromCharCode(atom.location));
+    }
+  },
+);
 
-defineSelector('Elem', class ElemSelector extends ValueListSelector {
-  includesAtom(atom) {
-    return this.list.includes(atom.element.name);
-  }
-});
+defineSelector(
+  'Elem',
+  class ElemSelector extends ValueListSelector {
+    includesAtom(atom) {
+      return this.list.includes(atom.element.name);
+    }
+  },
+);
 
-defineSelector('Residue', class ResidueSelector extends ValueListSelector {
-  includesAtom(atom) {
-    return this.list.includes(atom.residue._type._name);
-  }
-});
+defineSelector(
+  'Residue',
+  class ResidueSelector extends ValueListSelector {
+    includesAtom(atom) {
+      return this.list.includes(atom.residue._type._name);
+    }
+  },
+);
 
-defineSelector('Sequence', class SequenceSelector extends RangeListSelector {
-  includesAtom(atom) {
-    return this.list.includes(atom.residue._sequence);
-  }
-});
+defineSelector(
+  'Sequence',
+  class SequenceSelector extends RangeListSelector {
+    includesAtom(atom) {
+      return this.list.includes(atom.residue._sequence);
+    }
+  },
+);
 
-defineSelector('ICode', class ICodeSelector extends ValueListSelector {
-  constructor(arg) {
-    super(arg, true);
-  }
+defineSelector(
+  'ICode',
+  class ICodeSelector extends ValueListSelector {
+    constructor(arg) {
+      super(arg, true);
+    }
 
-  includesAtom(atom) {
-    return this.list.includes(atom.residue._icode);
-  }
-});
+    includesAtom(atom) {
+      return this.list.includes(atom.residue._icode);
+    }
+  },
+);
 
-defineSelector('ResIdx', class ResIdxSelector extends RangeListSelector {
-  includesAtom(atom) {
-    return this.list.includes(atom.residue._index);
-  }
-});
+defineSelector(
+  'ResIdx',
+  class ResIdxSelector extends RangeListSelector {
+    includesAtom(atom) {
+      return this.list.includes(atom.residue._index);
+    }
+  },
+);
 
-defineSelector('Chain', class ChainSelector extends ValueListSelector {
-  constructor(arg) {
-    super(arg, true);
-  }
+defineSelector(
+  'Chain',
+  class ChainSelector extends ValueListSelector {
+    constructor(arg) {
+      super(arg, true);
+    }
 
-  includesAtom(atom) {
-    return this.list.includes(atom.residue._chain._name);
-  }
-});
+    includesAtom(atom) {
+      return this.list.includes(atom.residue._chain._name);
+    }
+  },
+);
 
-defineSelector('Hetatm', class HetatmSelector extends Selector {
-  includesAtom(atom) {
-    return atom.het;
-  }
-});
+defineSelector(
+  'Hetatm',
+  class HetatmSelector extends Selector {
+    includesAtom(atom) {
+      return atom.het;
+    }
+  },
+);
 
-defineSelector('PolarH', class PolarHSelector extends Selector {
-  includesAtom(atom) {
-    return (atom.flags & Atom.Flags.NONPOLARH) === Atom.Flags.HYDROGEN;
-  }
-});
+defineSelector(
+  'PolarH',
+  class PolarHSelector extends Selector {
+    includesAtom(atom) {
+      return (atom.flags & Atom.Flags.NONPOLARH) === Atom.Flags.HYDROGEN;
+    }
+  },
+);
 
-defineSelector('NonPolarH', class NonPolarHSelector extends Selector {
-  includesAtom(atom) {
-    return (atom.flags & Atom.Flags.NONPOLARH) === Atom.Flags.NONPOLARH;
-  }
-});
+defineSelector(
+  'NonPolarH',
+  class NonPolarHSelector extends Selector {
+    includesAtom(atom) {
+      return (atom.flags & Atom.Flags.NONPOLARH) === Atom.Flags.NONPOLARH;
+    }
+  },
+);
 
 defineSelector('All', AllSelector);
 
@@ -123,34 +153,49 @@ function defineOperator(name, priority, OperatorClass) {
   OperatorClass.prototype.priority = priority;
   return defineSelector(name, OperatorClass);
 }
-defineOperator('Not', 1, class NotOperator extends PrefixOperator {
-  includesAtom(atom) {
-    return !this.rhs.includesAtom(atom);
-  }
-});
+defineOperator(
+  'Not',
+  1,
+  class NotOperator extends PrefixOperator {
+    includesAtom(atom) {
+      return !this.rhs.includesAtom(atom);
+    }
+  },
+);
 
-defineOperator('And', 2, class AndOperator extends InfixOperator {
-  includesAtom(atom) {
-    return this.lhs.includesAtom(atom) && this.rhs.includesAtom(atom);
-  }
-});
+defineOperator(
+  'And',
+  2,
+  class AndOperator extends InfixOperator {
+    includesAtom(atom) {
+      return this.lhs.includesAtom(atom) && this.rhs.includesAtom(atom);
+    }
+  },
+);
 
-defineOperator('Or', 3, class OrOperator extends InfixOperator {
-  includesAtom(atom) {
-    return this.lhs.includesAtom(atom) || this.rhs.includesAtom(atom);
-  }
-});
+defineOperator(
+  'Or',
+  3,
+  class OrOperator extends InfixOperator {
+    includesAtom(atom) {
+      return this.lhs.includesAtom(atom) || this.rhs.includesAtom(atom);
+    }
+  },
+);
 
 //----------------------------------------------------------------------------
 // Flag selectors
 //----------------------------------------------------------------------------
 
 function byResidueTypeFlag(flag, name) {
-  return defineSelector(name, class extends Selector {
-    includesAtom(atom) {
-      return (atom.residue._type.flags & flag) !== 0;
-    }
-  });
+  return defineSelector(
+    name,
+    class extends Selector {
+      includesAtom(atom) {
+        return (atom.residue._type.flags & flag) !== 0;
+      }
+    },
+  );
 }
 
 byResidueTypeFlag(ResidueType.Flags.PROTEIN, 'Protein');
@@ -187,7 +232,9 @@ selectors.GetSelector = function (key) {
 };
 
 selectors.ClearContext = function () {
-  Object.keys(selectors.Context).forEach((k) => { delete selectors.Context[k]; });
+  Object.keys(selectors.Context).forEach((k) => {
+    delete selectors.Context[k];
+  });
 };
 
 selectors.keyword = function (key) {

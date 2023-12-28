@@ -14,7 +14,7 @@ import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { CPK_COLORS } from '../scientificConstants';
 import { MolecularViewerStyle, MoleculeData } from '../types';
-import PDBParser from "../lib/io/parsers/PDBParser";
+import PDBParser from '../lib/io/parsers/PDBParser';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -45,7 +45,14 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
       // const records = new SDFParser(moleculeData.content, null);
       // console.log(records);
     } else if (moleculeData.url?.endsWith('.pdb')) {
-      const p = new PDBParser(moleculeData.url, {});
+      fetch(moleculeData.url).then((response) => {
+        response.text().then((text) => {
+          const p = new PDBParser(text, {});
+          p.parse().then(() => {
+            console.log(p._serialAtomMap);
+          });
+        });
+      });
       pdbLoader.load(moleculeData.url, (pdb: PDB) => {
         const geometryAtoms = pdb.geometryAtoms;
         const geometryBonds = pdb.geometryBonds;
