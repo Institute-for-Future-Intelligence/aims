@@ -9,7 +9,6 @@ import { Cylinder, Line, Sphere } from '@react-three/drei';
 import { HALF_PI } from '../programmaticConstants';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
-import { CPK_COLORS } from '../scientificConstants';
 import { MolecularViewerStyle, MoleculeData } from '../types';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
@@ -21,6 +20,8 @@ import XYZParser from '../lib/io/parsers/XYZParser';
 import MOL2Parser from '../lib/io/parsers/MOL2Parser';
 import CIFParser from '../lib/io/parsers/CIFParser';
 import PubChemParser from '../lib/io/parsers/PubChemParser';
+import ElementColorer from '../lib/gfx/colorers/ElementColorer';
+import { Util } from '../Util';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -61,17 +62,19 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
     let cx = 0;
     let cy = 0;
     let cz = 0;
+    const white = { r: 255, g: 255, b: 255 };
+    const elementColorer = new ElementColorer(); // default to Jmol colors
     for (let i = 0; i < result._atoms.length; i++) {
       const atom = result._atoms[i] as AtomJS;
       const elementName = atom.element.name;
-      const c = CPK_COLORS[elementName];
+      const color = Util.decimalColorToRgb(elementColorer.getAtomColor(atom)) ?? white;
       cx += atom.position.x;
       cy += atom.position.y;
       cz += atom.position.z;
       atoms.push({
         elementName,
         position: atom.position.clone(),
-        color: new Color(c[0] / 255, c[1] / 255, c[2] / 255).convertSRGBToLinear(),
+        color: new Color(color.r / 255, color.g / 255, color.b / 255).convertSRGBToLinear(),
         radius: getChemicalElement(elementName)?.sigma / 5,
       } as AtomTS);
     }
@@ -90,27 +93,23 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
       const bond = result._bonds[i] as BondJS;
       const atom1 = bond._left;
       const atom2 = bond._right;
-      const elementNameI = atom1.element.name;
-      const elementNameJ = atom2.element.name;
-      const ci = CPK_COLORS[elementNameI];
-      const cj = CPK_COLORS[elementNameJ];
-      const colorI = new Color(ci[0] / 255, ci[1] / 255, ci[2] / 255).convertSRGBToLinear();
-      const colorJ = new Color(cj[0] / 255, cj[1] / 255, cj[2] / 255).convertSRGBToLinear();
-      const positionI = new Vector3(atom1.position.x - cx, atom1.position.y - cy, atom1.position.z - cz);
-      const positionJ = new Vector3(atom2.position.x - cx, atom2.position.y - cy, atom2.position.z - cz);
+      const elementName1 = atom1.element.name;
+      const elementName2 = atom2.element.name;
+      const c1 = Util.decimalColorToRgb(elementColorer.getAtomColor(atom1)) ?? white;
+      const c2 = Util.decimalColorToRgb(elementColorer.getAtomColor(atom2)) ?? white;
       bonds.push(
         new BondTS(
           {
-            elementName: elementNameI,
-            position: positionI,
-            color: colorI,
-            radius: getChemicalElement(elementNameI)?.sigma / 5,
+            elementName: elementName1,
+            position: new Vector3(atom1.position.x - cx, atom1.position.y - cy, atom1.position.z - cz),
+            color: new Color(c1.r / 255, c1.g / 255, c1.b / 255).convertSRGBToLinear(),
+            radius: getChemicalElement(elementName1)?.sigma / 5,
           } as AtomTS,
           {
-            elementName: elementNameJ,
-            position: positionJ,
-            color: colorJ,
-            radius: getChemicalElement(elementNameJ)?.sigma / 5,
+            elementName: elementName2,
+            position: new Vector3(atom2.position.x - cx, atom2.position.y - cy, atom2.position.z - cz),
+            color: new Color(c2.r / 255, c2.g / 255, c2.b / 255).convertSRGBToLinear(),
+            radius: getChemicalElement(elementName2)?.sigma / 5,
           } as AtomTS,
         ),
       );
