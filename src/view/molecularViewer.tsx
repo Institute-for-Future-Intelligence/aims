@@ -36,40 +36,21 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
   const [molecule, setMolecule] = useState<MoleculeTS>();
 
   useEffect(() => {
-    if (moleculeData.url?.endsWith('.sdf')) {
+    if (moleculeData.url) {
       fetch(moleculeData.url).then((response) => {
         response.text().then((text) => {
-          new SDFParser(text, {}).parse().then(processResult);
-        });
-      });
-    } else if (moleculeData.url?.endsWith('.cif')) {
-      fetch(moleculeData.url).then((response) => {
-        response.text().then((text) => {
-          new CIFParser(text, {}).parse().then(processResult);
-        });
-      });
-    } else if (moleculeData.url?.endsWith('.pdb')) {
-      fetch(moleculeData.url).then((response) => {
-        response.text().then((text) => {
-          new PDBParser(text, {}).parse().then(processResult);
-        });
-      });
-    } else if (moleculeData.url?.endsWith('.pcj')) {
-      fetch(moleculeData.url).then((response) => {
-        response.text().then((text) => {
-          new PubChemParser(text, {}).parse().then(processResult);
-        });
-      });
-    } else if (moleculeData.url?.endsWith('.xyz')) {
-      fetch(moleculeData.url).then((response) => {
-        response.text().then((text) => {
-          new XYZParser(text, {}).parse().then(processResult);
-        });
-      });
-    } else if (moleculeData.url?.endsWith('.mol2')) {
-      fetch(moleculeData.url).then((response) => {
-        response.text().then((text) => {
-          new MOL2Parser(text, {}).parse().then(processResult);
+          const url = moleculeData.url;
+          if (url) {
+            let parser = null;
+            const options = {};
+            if (url.endsWith('.sdf')) parser = new SDFParser(text, options);
+            else if (url.endsWith('.cif')) parser = new CIFParser(text, options);
+            else if (url.endsWith('.pdb')) parser = new PDBParser(text, options);
+            else if (url.endsWith('.pcj')) parser = new PubChemParser(text, options);
+            else if (url.endsWith('.xyz')) parser = new XYZParser(text, options);
+            else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
+            if (parser) parser.parse().then(processResult);
+          }
         });
       });
     }
