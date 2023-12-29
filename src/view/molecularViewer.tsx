@@ -75,7 +75,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
         elementName,
         position: atom.position.clone(),
         color: new Color(color.r / 255, color.g / 255, color.b / 255).convertSRGBToLinear(),
-        radius: getChemicalElement(elementName)?.sigma / 5,
+        radius: (getChemicalElement(elementName)?.sigma ?? 1) / 5,
       } as AtomTS);
     }
     if (atoms.length > 0) {

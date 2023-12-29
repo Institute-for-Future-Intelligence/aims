@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './programmaticConstants';
 import { OrbitControls } from '@react-three/drei';
@@ -117,6 +117,17 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   );
   const descriptionChangedRef = useRef<boolean>(false);
   const descriptionExpandedRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setUpdateFlag(!updateFlag);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateFlag]);
 
   const canvasColumns = 3;
   const gridGutter = 10;
