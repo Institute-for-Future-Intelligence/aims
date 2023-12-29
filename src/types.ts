@@ -2,20 +2,6 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import { extend, Object3DNode } from '@react-three/fiber';
-import { MyPDBLoader } from './js/MyPDBLoader';
-
-// Extend makes these JSX elements (with the first character lower-cased)
-extend({ MyPDBLoader });
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      myPDBLoader: Object3DNode<MyPDBLoader, typeof MyPDBLoader>;
-    }
-  }
-}
-
 export enum BondType {
   SINGLE_BOND = 0,
   DOUBLE_BOND = 1,
