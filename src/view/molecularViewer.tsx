@@ -2,6 +2,14 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
+import PDBParser from '../lib/io/parsers/PDBParser';
+import SDFParser from '../lib/io/parsers/SDFParser';
+import XYZParser from '../lib/io/parsers/XYZParser';
+import MOL2Parser from '../lib/io/parsers/MOL2Parser';
+import CIFParser from '../lib/io/parsers/CIFParser';
+import PubChemParser from '../lib/io/parsers/PubChemParser';
+import ElementColorer from '../lib/gfx/colorers/ElementColorer';
+
 import React, { useEffect, useState } from 'react';
 import { Color, Vector3 } from 'three';
 import { MoleculeTS } from '../models/MoleculeTS';
@@ -14,13 +22,6 @@ import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
 import { AtomTS } from '../models/AtomTS';
 import { BondTS } from '../models/BondTS';
-import PDBParser from '../lib/io/parsers/PDBParser';
-import SDFParser from '../lib/io/parsers/SDFParser';
-import XYZParser from '../lib/io/parsers/XYZParser';
-import MOL2Parser from '../lib/io/parsers/MOL2Parser';
-import CIFParser from '../lib/io/parsers/CIFParser';
-import PubChemParser from '../lib/io/parsers/PubChemParser';
-import ElementColorer from '../lib/gfx/colorers/ElementColorer';
 import { Util } from '../Util';
 
 export interface MolecularViewerProps {

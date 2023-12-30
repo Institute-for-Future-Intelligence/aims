@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Smooth } from '../../../../vendor/js/Smooth';
+import { Smooth } from '../../../vendor/Smooth';
 import gfxutils from '../../gfxutils';
 import chem from '../../../chem';
 
@@ -20,7 +20,7 @@ function _buildStructureInterpolator(points, tension) {
     if (transformT === null) {
       // map our range to the [second .. last but one]
       transformT = function (tt) {
-        return (tt * ((points.length - 1) - 2) + 1) / (points.length - 1);
+        return (tt * (points.length - 1 - 2) + 1) / (points.length - 1);
       };
     }
     const newt = transformT(t);
@@ -43,8 +43,8 @@ function _addPoints(centerPoints, topPoints, idx, residue) {
 
 function _addPointsForLoneResidue(centerPoints, topPoints, idx, residue) {
   const nucleic = (residue._type.flags & ResidueType.Flags.NUCLEIC) !== 0;
-  const nameFrom = nucleic ? 'C5\'' : 'N';
-  const nameTo = nucleic ? 'C3\'' : 'C';
+  const nameFrom = nucleic ? "C5'" : 'N';
+  const nameTo = nucleic ? "C3'" : 'C';
 
   let posFrom;
   let posTo;
