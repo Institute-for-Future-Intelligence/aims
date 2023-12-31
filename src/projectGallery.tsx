@@ -99,7 +99,10 @@ const SubHeader = styled.div`
 const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
+  const loadedMolecule = useStore(Selector.loadedMolecule);
   const selectedMolecule = useStore(Selector.selectedMolecule);
+  const addMolecule = useStore(Selector.addMolecule);
+  const removeMolecule = useStore(Selector.removeMolecule);
   const viewerStyle = useStore(Selector.projectViewerStyle);
   const viewerBackground = useStore(Selector.projectViewerBackground);
   const projectInfo = useStore(Selector.projectInfo);
@@ -158,6 +161,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         onDoubleClick={() => {
           setCommonStore((state) => {
             state.selectedMolecule = moleculeData;
+            state.loadedMolecule = moleculeData;
           });
         }}
       >
@@ -292,6 +296,10 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
                   style={{ border: 'none', padding: '4px' }}
                   onClick={(e) => {
                     e.stopPropagation();
+                    if (loadedMolecule) {
+                      addMolecule(loadedMolecule);
+                    }
+                    setUpdateFlag(!updateFlag);
                   }}
                 >
                   <ImportOutlined
@@ -304,6 +312,11 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
                     style={{ border: 'none', padding: '4px' }}
                     onClick={(e) => {
                       e.stopPropagation();
+                      removeMolecule(selectedMolecule);
+                      setCommonStore((state) => {
+                        state.selectedMolecule = null;
+                      });
+                      setUpdateFlag(!updateFlag);
                     }}
                   >
                     <DeleteOutlined

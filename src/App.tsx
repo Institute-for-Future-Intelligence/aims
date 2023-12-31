@@ -34,6 +34,7 @@ const App = () => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const projectView = useStore(Selector.projectView);
+  const loadedMolecule = useStore(Selector.loadedMolecule);
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const collectedMolecules = useStore(Selector.collectedMolecules);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
@@ -62,6 +63,7 @@ const App = () => {
         }
       } else {
         state.selectedMolecule = state.collectedMolecules[0];
+        state.loadedMolecule = state.collectedMolecules[0];
       }
     });
     // eslint-disable-next-line
@@ -212,9 +214,9 @@ const App = () => {
             ) : (
               <></>
             )}
-            {selectedMolecule ? (
+            {loadedMolecule ? (
               <Suspense fallback={<Loading />}>
-                <ReactionChamber moleculeData={selectedMolecule} />
+                <ReactionChamber moleculeData={loadedMolecule} />
               </Suspense>
             ) : (
               <div>Loading...</div>

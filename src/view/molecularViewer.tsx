@@ -59,6 +59,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
   }, [moleculeData, chemicalElements]);
 
   const processResult = (result: any) => {
+    // new BallsAndSticksMode(options)
     const atoms: AtomTS[] = [];
     let cx = 0;
     let cy = 0;

@@ -34,8 +34,11 @@ export interface CommonStoreState {
   projectInfo: ProjectInfo;
   projectView: boolean;
 
+  loadedMolecule: MoleculeData | null;
   selectedMolecule: MoleculeData | null;
   collectedMolecules: MoleculeData[];
+  addMolecule: (molecule: MoleculeData) => void;
+  removeMolecule: (molecule: MoleculeData) => void;
 
   chamberViewerAxes: boolean;
   chamberViewerShininess: number;
@@ -97,8 +100,33 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           } as ProjectInfo,
           projectView: true,
 
+          loadedMolecule: null,
           selectedMolecule: null,
           collectedMolecules: [],
+          addMolecule(molecule: MoleculeData) {
+            immerSet((state: CommonStoreState) => {
+              let alreadyIncluded = false;
+              for (const m of state.collectedMolecules) {
+                if (m.name === molecule.name) {
+                  alreadyIncluded = true;
+                  break;
+                }
+              }
+              if (!alreadyIncluded) {
+                state.collectedMolecules.push(molecule);
+              }
+            });
+          },
+          removeMolecule(molecule: MoleculeData) {
+            immerSet((state: CommonStoreState) => {
+              for (const [i, m] of state.collectedMolecules.entries()) {
+                if (m.name === molecule.name) {
+                  state.collectedMolecules.splice(i, 1);
+                  break;
+                }
+              }
+            });
+          },
 
           chamberViewerAxes: true,
           chamberViewerShininess: 1000,
@@ -177,6 +205,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
         skipHydration: Util.isOpenFromURL(),
         partialize: (state) => ({
           language: state.language,
+          loadedMolecule: state.loadedMolecule,
           selectedMolecule: state.selectedMolecule,
           // collectedMolecules: state.collectedMolecules,
           chamberViewerAxes: state.chamberViewerAxes,
