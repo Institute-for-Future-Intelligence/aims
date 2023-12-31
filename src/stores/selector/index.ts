@@ -19,8 +19,6 @@ export const projectInfo = (state: CommonStoreState) => state.projectInfo;
 
 export const projectView = (state: CommonStoreState) => state.projectView;
 
-export const loadedMolecule = (state: CommonStoreState) => state.loadedMolecule;
-
 export const selectedMolecule = (state: CommonStoreState) => state.selectedMolecule;
 
 export const collectedMolecules = (state: CommonStoreState) => state.collectedMolecules;

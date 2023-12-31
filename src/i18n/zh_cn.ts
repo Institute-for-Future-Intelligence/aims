@@ -23,6 +23,8 @@ export const i18n_zh_cn = {
     },
 
     word: {
+      OK: '确定',
+      Cancel: '取消',
       Close: '关闭',
       Version: '版本',
       VersionInitial: '版本',
@@ -62,6 +64,7 @@ export const i18n_zh_cn = {
       ProjectSettings: '项目设定',
       DisplayWindowSize: '展示窗口大小',
       ImportMolecule: '输入分子',
+      MoleculeName: '分子名称',
       RemoveSelectedMolecule: '移除选中的分子',
       MakeDescriptionEditable: '编辑描述',
       MakeDescriptionNonEditable: '不编辑描述',

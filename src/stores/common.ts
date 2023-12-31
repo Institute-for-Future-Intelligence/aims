@@ -34,7 +34,6 @@ export interface CommonStoreState {
   projectInfo: ProjectInfo;
   projectView: boolean;
 
-  loadedMolecule: MoleculeData | null;
   selectedMolecule: MoleculeData | null;
   collectedMolecules: MoleculeData[];
   addMolecule: (molecule: MoleculeData) => void;
@@ -100,7 +99,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           } as ProjectInfo,
           projectView: true,
 
-          loadedMolecule: null,
           selectedMolecule: null,
           collectedMolecules: [],
           addMolecule(molecule: MoleculeData) {
@@ -205,7 +203,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
         skipHydration: Util.isOpenFromURL(),
         partialize: (state) => ({
           language: state.language,
-          loadedMolecule: state.loadedMolecule,
           selectedMolecule: state.selectedMolecule,
           // collectedMolecules: state.collectedMolecules,
           chamberViewerAxes: state.chamberViewerAxes,

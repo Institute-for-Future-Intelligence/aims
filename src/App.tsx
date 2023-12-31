@@ -30,11 +30,26 @@ import { useTranslation } from 'react-i18next';
 import Loading from './loading';
 import KeyboardListener from './keyboardListener';
 
+export const testMolecules = [
+  { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
+  { name: 'Ibuprofen', url: testMoleculeUrl2 } as MoleculeData,
+  { name: 'Paxlovid', url: testMoleculeUrl3 } as MoleculeData,
+  { name: 'Caffeine', url: testMoleculeUrl4 } as MoleculeData,
+  { name: 'Benzene', url: testMoleculeUrl5 } as MoleculeData,
+  { name: 'Glucose', url: testMoleculeUrl6 } as MoleculeData,
+];
+
+export const getTestMolecule = (name: string) => {
+  for (const m of testMolecules) {
+    if (name === m.name) return m;
+  }
+  return null;
+};
+
 const App = () => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const projectView = useStore(Selector.projectView);
-  const loadedMolecule = useStore(Selector.loadedMolecule);
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const collectedMolecules = useStore(Selector.collectedMolecules);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
@@ -45,14 +60,7 @@ const App = () => {
     loadChemicalElements();
     setCommonStore((state) => {
       if (!state.collectedMolecules.length || state.collectedMolecules.length === 0) {
-        state.collectedMolecules = [
-          { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
-          { name: 'Ibuprofen', url: testMoleculeUrl2 } as MoleculeData,
-          { name: 'Paxlovid', url: testMoleculeUrl3 } as MoleculeData,
-          { name: 'Caffeine', url: testMoleculeUrl4 } as MoleculeData,
-          { name: 'Benzene', url: testMoleculeUrl5 } as MoleculeData,
-          { name: 'Glucose', url: testMoleculeUrl6 } as MoleculeData,
-        ];
+        state.collectedMolecules = testMolecules;
       }
       if (state.selectedMolecule !== null) {
         for (const m of state.collectedMolecules) {
@@ -63,7 +71,6 @@ const App = () => {
         }
       } else {
         state.selectedMolecule = state.collectedMolecules[0];
-        state.loadedMolecule = state.collectedMolecules[0];
       }
     });
     // eslint-disable-next-line
@@ -214,13 +221,9 @@ const App = () => {
             ) : (
               <></>
             )}
-            {loadedMolecule ? (
-              <Suspense fallback={<Loading />}>
-                <ReactionChamber moleculeData={loadedMolecule} />
-              </Suspense>
-            ) : (
-              <div>Loading...</div>
-            )}
+            <Suspense fallback={<Loading />}>
+              <ReactionChamber moleculeData={selectedMolecule} />
+            </Suspense>
           </SplitPane>
           <KeyboardListener setNavigationView={setNavigationView} resetView={resetView} zoomView={zoomView} />
         </div>

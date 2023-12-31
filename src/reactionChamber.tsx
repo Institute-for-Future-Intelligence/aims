@@ -15,7 +15,7 @@ import * as Selector from './stores/selector';
 import { Vector3 } from 'three';
 
 export interface ReactionChamberProps {
-  moleculeData: MoleculeData;
+  moleculeData: MoleculeData | null;
 }
 
 const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
@@ -60,7 +60,9 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       <OrbitControls enableDamping={false} onEnd={onControlEnd} />
       <Lights />
       {viewerAxes && <Axes />}
-      <MolecularViewer moleculeData={moleculeData} style={viewerStyle} shininess={shininess} highQuality={true} />
+      {moleculeData && (
+        <MolecularViewer moleculeData={moleculeData} style={viewerStyle} shininess={shininess} highQuality={true} />
+      )}
       <GizmoHelper alignment="bottom-right" margin={[30, 30]}>
         <GizmoViewport
           axisColors={['red', 'green', 'blue']}

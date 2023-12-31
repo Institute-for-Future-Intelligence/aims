@@ -23,6 +23,8 @@ export const i18n_en = {
     },
 
     word: {
+      OK: 'OK',
+      Cancel: 'Cancel',
       Close: 'Close',
       Version: 'Version',
       VersionInitial: 'V',
@@ -61,6 +63,7 @@ export const i18n_en = {
       ProjectSettings: 'Project Settings',
       DisplayWindowSize: 'Display Window Size',
       ImportMolecule: 'Import a molecule',
+      MoleculeName: 'Molecule Name',
       RemoveSelectedMolecule: 'Remove selected molecule',
       MakeDescriptionEditable: 'Make this description editable',
       MakeDescriptionNonEditable: 'Make this description non-editable',

@@ -27,6 +27,8 @@ import { MolecularViewerStyle, MoleculeData } from './types';
 import TextArea from 'antd/lib/input/TextArea';
 import { UndoableChange } from './undo/UndoableChange';
 import { STYLE_LABELS } from './scientificConstants';
+import { getTestMolecule } from './App';
+import ImportMoleculeModal from './ImportMoleculeModal';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -99,7 +101,6 @@ const SubHeader = styled.div`
 const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
-  const loadedMolecule = useStore(Selector.loadedMolecule);
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const addMolecule = useStore(Selector.addMolecule);
   const removeMolecule = useStore(Selector.removeMolecule);
@@ -107,7 +108,10 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const viewerBackground = useStore(Selector.projectViewerBackground);
   const projectInfo = useStore(Selector.projectInfo);
 
+  const [loading, setLoading] = useState(false);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
+  const [moleculeName, setMoleculeName] = useState<string>('Aspirin');
+  const [moleculeNameDialogVisible, setMoleculeNameDialogVisible] = useState(false);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -161,7 +165,6 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         onDoubleClick={() => {
           setCommonStore((state) => {
             state.selectedMolecule = moleculeData;
-            state.loadedMolecule = moleculeData;
           });
         }}
       >
@@ -296,10 +299,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
                   style={{ border: 'none', padding: '4px' }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (loadedMolecule) {
-                      addMolecule(loadedMolecule);
-                    }
-                    setUpdateFlag(!updateFlag);
+                    setMoleculeNameDialogVisible(true);
                   }}
                 >
                   <ImportOutlined
@@ -466,6 +466,20 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
             }}
           ></List>
         </CanvasContainer>
+        <ImportMoleculeModal
+          importByName={() => {
+            const m = getTestMolecule(moleculeName);
+            if (m) {
+              addMolecule(m);
+              setUpdateFlag(!updateFlag);
+            }
+          }}
+          isLoading={() => loading}
+          setName={setMoleculeName}
+          getName={() => moleculeName}
+          setDialogVisible={setMoleculeNameDialogVisible}
+          isDialogVisible={() => moleculeNameDialogVisible}
+        />
       </ColumnWrapper>
     </Container>
   );
