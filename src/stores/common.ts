@@ -18,6 +18,7 @@ import Papa from 'papaparse';
 import { AtomTS } from '../models/AtomTS';
 import { BondTS } from '../models/BondTS';
 import { useRefStore } from './commonRef';
+import { getTestMolecule } from '../App';
 
 enableMapSet();
 
@@ -34,9 +35,10 @@ export interface CommonStoreState {
   projectInfo: ProjectInfo;
   projectView: boolean;
 
+  loadedMolecule: MoleculeData | null;
   selectedMolecule: MoleculeData | null;
   collectedMolecules: MoleculeData[];
-  addMolecule: (molecule: MoleculeData) => void;
+  addMolecule: (molecule: MoleculeData) => boolean;
   removeMolecule: (molecule: MoleculeData) => void;
 
   chamberViewerAxes: boolean;
@@ -99,21 +101,23 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           } as ProjectInfo,
           projectView: true,
 
+          loadedMolecule: null,
           selectedMolecule: null,
           collectedMolecules: [],
           addMolecule(molecule: MoleculeData) {
+            let added = true;
             immerSet((state: CommonStoreState) => {
-              let alreadyIncluded = false;
               for (const m of state.collectedMolecules) {
                 if (m.name === molecule.name) {
-                  alreadyIncluded = true;
+                  added = false;
                   break;
                 }
               }
-              if (!alreadyIncluded) {
+              if (added) {
                 state.collectedMolecules.push(molecule);
               }
             });
+            return added;
           },
           removeMolecule(molecule: MoleculeData) {
             immerSet((state: CommonStoreState) => {
@@ -203,8 +207,9 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
         skipHydration: Util.isOpenFromURL(),
         partialize: (state) => ({
           language: state.language,
+          loadedMolecule: state.loadedMolecule,
           selectedMolecule: state.selectedMolecule,
-          // collectedMolecules: state.collectedMolecules,
+          collectedMolecules: state.collectedMolecules,
           chamberViewerAxes: state.chamberViewerAxes,
           chamberViewerShininess: state.chamberViewerShininess,
           chamberViewerStyle: state.chamberViewerStyle,

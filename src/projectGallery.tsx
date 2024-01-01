@@ -29,6 +29,7 @@ import { UndoableChange } from './undo/UndoableChange';
 import { STYLE_LABELS } from './scientificConstants';
 import { getTestMolecule } from './App';
 import ImportMoleculeModal from './ImportMoleculeModal';
+import { showError } from './helpers';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -161,10 +162,15 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           position: [0, 0, 20],
           rotation: [HALF_PI / 2, 0, HALF_PI / 2],
         }}
-        onClick={() => {}}
+        onClick={() => {
+          setCommonStore((state) => {
+            state.selectedMolecule = moleculeData;
+          });
+        }}
         onDoubleClick={() => {
           setCommonStore((state) => {
             state.selectedMolecule = moleculeData;
+            state.loadedMolecule = moleculeData;
           });
         }}
       >
@@ -470,8 +476,14 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           importByName={() => {
             const m = getTestMolecule(moleculeName);
             if (m) {
-              addMolecule(m);
-              setUpdateFlag(!updateFlag);
+              const added = addMolecule(m);
+              if (added) {
+                setUpdateFlag(!updateFlag);
+              } else {
+                showError(t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + moleculeName, 3);
+              }
+            } else {
+              showError(t('projectPanel.MoleculeNotFound', lang) + ': ' + moleculeName, 3);
             }
           }}
           isLoading={() => loading}

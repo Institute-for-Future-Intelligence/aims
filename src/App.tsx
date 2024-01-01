@@ -50,7 +50,7 @@ const App = () => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const projectView = useStore(Selector.projectView);
-  const selectedMolecule = useStore(Selector.selectedMolecule);
+  const loadedMolecule = useStore(Selector.loadedMolecule);
   const collectedMolecules = useStore(Selector.collectedMolecules);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
   const params = new URLSearchParams(window.location.search);
@@ -71,6 +71,16 @@ const App = () => {
         }
       } else {
         state.selectedMolecule = state.collectedMolecules[0];
+      }
+      if (state.loadedMolecule !== null) {
+        for (const m of state.collectedMolecules) {
+          if (m.name === state.loadedMolecule.name) {
+            state.loadedMolecule = m;
+            break;
+          }
+        }
+      } else {
+        state.loadedMolecule = state.collectedMolecules[0];
       }
     });
     // eslint-disable-next-line
@@ -222,7 +232,7 @@ const App = () => {
               <></>
             )}
             <Suspense fallback={<Loading />}>
-              <ReactionChamber moleculeData={selectedMolecule} />
+              <ReactionChamber moleculeData={loadedMolecule} />
             </Suspense>
           </SplitPane>
           <KeyboardListener setNavigationView={setNavigationView} resetView={resetView} zoomView={zoomView} />

@@ -64,6 +64,8 @@ export const i18n_en = {
       DisplayWindowSize: 'Display Window Size',
       ImportMolecule: 'Import a molecule',
       MoleculeName: 'Molecule Name',
+      MoleculeAlreadyAdded: 'Molecule already added',
+      MoleculeNotFound: 'Molecule not found',
       RemoveSelectedMolecule: 'Remove selected molecule',
       MakeDescriptionEditable: 'Make this description editable',
       MakeDescriptionNonEditable: 'Make this description non-editable',

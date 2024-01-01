@@ -8,7 +8,6 @@ import i18n from './i18n/i18n';
 import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react-draggable';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import { REGEX_ALLOWABLE_IN_NAME } from './programmaticConstants';
 import { useTranslation } from 'react-i18next';
 
 export interface ImportMoleculeModalProps {
@@ -94,18 +93,14 @@ const ImportMoleculeModal = ({
       )}
     >
       <Space direction={'horizontal'}>
-        <Space style={{ width: '150px' }}>{i18n.t('projectPanel.MoleculeName', lang)}:</Space>
+        <Space direction={'horizontal'} style={{ width: '150px' }}>
+          {i18n.t('projectPanel.MoleculeName', lang)}:
+        </Space>
         <Input
           style={{ width: '240px' }}
           placeholder="Title"
           value={getName()}
           onPressEnter={onOk}
-          onKeyDown={(e) => {
-            if (!REGEX_ALLOWABLE_IN_NAME.test(e.key)) {
-              e.preventDefault();
-              return false;
-            }
-          }}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setName(e.target.value);
           }}

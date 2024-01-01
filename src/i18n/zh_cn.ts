@@ -65,6 +65,8 @@ export const i18n_zh_cn = {
       DisplayWindowSize: '展示窗口大小',
       ImportMolecule: '输入分子',
       MoleculeName: '分子名称',
+      MoleculeAlreadyAdded: '项目已经有此分子',
+      MoleculeNotFound: '分子没有找到',
       RemoveSelectedMolecule: '移除选中的分子',
       MakeDescriptionEditable: '编辑描述',
       MakeDescriptionNonEditable: '不编辑描述',
