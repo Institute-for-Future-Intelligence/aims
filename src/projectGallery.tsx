@@ -138,10 +138,10 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   }, [updateFlag]);
 
   const canvasColumns = 3;
-  const gridGutter = 10;
+  const gridGutter = 8;
   const totalWidth = Math.round(window.innerWidth * relativeWidth);
-  const canvasWidth = totalWidth / canvasColumns - gridGutter;
-  const canvasHeight = canvasWidth * 0.75;
+  const canvasWidth = totalWidth / canvasColumns - gridGutter * (canvasColumns - 1);
+  const canvasHeight = (canvasWidth * 2) / 3;
 
   const createCanvas = (moleculeData: MoleculeData) => {
     return (
@@ -441,9 +441,9 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
             style={{
               width: '100%',
               height: '100%',
-              paddingTop: '10px',
+              paddingTop: '8px',
               paddingBottom: '0px',
-              paddingLeft: '10px',
+              paddingLeft: '8px',
               paddingRight: '0px',
               overflowX: 'hidden',
               overflowY: 'auto',
@@ -452,7 +452,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
             dataSource={moleculeData}
             renderItem={(data: MoleculeData) => {
               return (
-                <List.Item onMouseOver={() => {}} onMouseLeave={() => {}}>
+                <List.Item style={{ height: canvasHeight }} onMouseOver={() => {}} onMouseLeave={() => {}}>
                   {createCanvas(data)}
                   <div
                     style={{
@@ -463,6 +463,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
                       color: 'black',
                       fontSize: '10px',
                       fontWeight: 'normal',
+                      width: 'calc(100% - 14px)',
                     }}
                   >
                     {data.name}
