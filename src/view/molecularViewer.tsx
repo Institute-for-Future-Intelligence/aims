@@ -23,6 +23,7 @@ import BondJS from '../lib/chem/Bond';
 import { AtomTS } from '../models/AtomTS';
 import { BondTS } from '../models/BondTS';
 import { Util } from '../Util';
+import BallsAndSticksMode from '../lib/gfx/modes/BallsAndSticksMode';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -59,7 +60,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
   }, [moleculeData, chemicalElements]);
 
   const processResult = (result: any) => {
-    // new BallsAndSticksMode(options)
+    new BallsAndSticksMode();
     const atoms: AtomTS[] = [];
     let cx = 0;
     let cy = 0;

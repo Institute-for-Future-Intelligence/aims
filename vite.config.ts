@@ -8,7 +8,17 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig(({ mode }) => {
   setEnv(mode);
   return {
-    assetsInclude: ['**/*.csv', '**/*.pdb', '**/*.sdf', '**/*.cif', '**/*.pcj', '**/*.xyz', '**/*.mol2'],
+    assetsInclude: [
+      '**/*.csv',
+      '**/*.pdb',
+      '**/*.sdf',
+      '**/*.cif',
+      '**/*.pcj',
+      '**/*.xyz',
+      '**/*.mol2',
+      '**/*.vert',
+      '**/*.frag',
+    ],
     plugins: [
       react(),
       tsconfigPaths(),

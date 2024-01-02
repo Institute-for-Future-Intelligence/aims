@@ -10,7 +10,7 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
 /*Constants (these are accessible by Smooth.WHATEVER in user space)
  */
 
-(function () {
+export const Smooth = function () {
   var AbstractInterpolator,
     CubicInterpolator,
     Enum,
@@ -439,5 +439,5 @@ Licensed under MIT license (see "Smooth.js MIT license.txt")
 
   Smooth.deepValidation = true;
 
-  (typeof exports !== 'undefined' && exports !== null ? exports : window).Smooth = Smooth;
-}).call(this);
+  return Smooth;
+}.call(this);
