@@ -29,6 +29,8 @@ export const addMolecule = (state: CommonStoreState) => state.addMolecule;
 
 export const removeMolecule = (state: CommonStoreState) => state.removeMolecule;
 
+export const chamberViewerPercentWidth = (state: CommonStoreState) => state.chamberViewerPercentWidth;
+
 export const chamberViewerAxes = (state: CommonStoreState) => state.chamberViewerAxes;
 
 export const chamberViewerShininess = (state: CommonStoreState) => state.chamberViewerShininess;

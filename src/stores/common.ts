@@ -18,7 +18,6 @@ import Papa from 'papaparse';
 import { AtomTS } from '../models/AtomTS';
 import { BondTS } from '../models/BondTS';
 import { useRefStore } from './commonRef';
-import { getTestMolecule } from '../App';
 
 enableMapSet();
 
@@ -41,6 +40,7 @@ export interface CommonStoreState {
   addMolecule: (molecule: MoleculeData) => boolean;
   removeMolecule: (molecule: MoleculeData) => void;
 
+  chamberViewerPercentWidth: number;
   chamberViewerAxes: boolean;
   chamberViewerShininess: number;
   chamberViewerStyle: MolecularViewerStyle;
@@ -130,6 +130,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             });
           },
 
+          chamberViewerPercentWidth: 70,
           chamberViewerAxes: true,
           chamberViewerShininess: 1000,
           chamberViewerStyle: MolecularViewerStyle.BallAndStick,
@@ -210,6 +211,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           loadedMolecule: state.loadedMolecule,
           selectedMolecule: state.selectedMolecule,
           collectedMolecules: state.collectedMolecules,
+          chamberViewerPercentWidth: state.chamberViewerPercentWidth,
           chamberViewerAxes: state.chamberViewerAxes,
           chamberViewerShininess: state.chamberViewerShininess,
           chamberViewerStyle: state.chamberViewerStyle,

@@ -9,7 +9,7 @@ import testMoleculeUrl4 from './molecules/pcj/caffeine.pcj';
 import testMoleculeUrl5 from './molecules/mol2/benzene.mol2';
 import testMoleculeUrl6 from './molecules/xyz/glucose.xyz';
 
-import React, { Suspense, useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useEffect, useMemo } from 'react';
 import './App.css';
 import ifiLogo from './assets/ifi-logo.png';
 import { useStore } from './stores/common';
@@ -50,6 +50,7 @@ const App = () => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const projectView = useStore(Selector.projectView);
+  const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
   const loadedMolecule = useStore(Selector.loadedMolecule);
   const collectedMolecules = useStore(Selector.collectedMolecules);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
@@ -90,8 +91,6 @@ const App = () => {
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
-
-  const [chamberRelativeWidth, setChamberRelativeWidth] = useState<number>(60);
 
   const setNavigationView = (selected: boolean) => {
     setCommonStore((state) => {
@@ -204,18 +203,19 @@ const App = () => {
           {/* @ts-ignore */}
           <SplitPane
             split={'vertical'}
-            defaultSize={projectView ? '60%' : 0}
             onChange={throttle((size) => {
-              setChamberRelativeWidth(Math.round(100 - (size / window.innerWidth) * 100));
+              setCommonStore((state) => {
+                state.chamberViewerPercentWidth = Math.round(100 - (size / window.innerWidth) * 100);
+              });
             }, 5)}
             // must specify the height again for the split pane to resize correctly with the window
             style={{ height: 'calc(100vh - 82px)', display: 'flex' }}
             pane1Style={{
-              width: projectView ? 100 - chamberRelativeWidth + '%' : '0',
+              width: projectView ? 100 - chamberViewerPercentWidth + '%' : '0',
               minWidth: projectView ? '25%' : 0,
               maxWidth: projectView ? '75%' : 0,
             }}
-            pane2Style={{ width: projectView ? chamberRelativeWidth + '%' : '100%' }}
+            pane2Style={{ width: projectView ? chamberViewerPercentWidth + '%' : '100%' }}
             resizerStyle={{
               cursor: 'col-resize',
               width: projectView ? '6px' : 0,
@@ -226,7 +226,10 @@ const App = () => {
           >
             {projectView ? (
               <Suspense fallback={<Loading />}>
-                <ProjectGallery relativeWidth={1 - chamberRelativeWidth * 0.01} moleculeData={collectedMolecules} />
+                <ProjectGallery
+                  relativeWidth={1 - chamberViewerPercentWidth * 0.01}
+                  moleculeData={collectedMolecules}
+                />
               </Suspense>
             ) : (
               <></>
