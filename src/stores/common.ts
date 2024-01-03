@@ -9,16 +9,7 @@ import { Util } from '../Util';
 import { VERSION } from '../programmaticConstants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import {
-  ActionInfo,
-  MolecularProperties,
-  MolecularViewerStyle,
-  MoleculeData,
-  ProjectInfo,
-  ProjectType,
-  Range,
-  User,
-} from '../types';
+import { ActionInfo, MolecularViewerStyle, MoleculeData, ProjectInfo, ProjectType, Range, User } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -27,6 +18,7 @@ import Papa from 'papaparse';
 import { AtomTS } from '../models/AtomTS';
 import { BondTS } from '../models/BondTS';
 import { useRefStore } from './commonRef';
+import { MolecularProperties } from '../models/MolecularProperties';
 
 enableMapSet();
 
@@ -201,7 +193,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                       atomicNumber: parseInt(row[0].trim()),
                       symbol: row[1].trim(),
                       name: row[2].trim(),
-                      atomicMmass: parseFloat(row[3].trim()),
+                      atomicMass: parseFloat(row[3].trim()),
                       cpkHexColor: row[4].trim(),
                       electronConfiguration: row[5].trim(),
                       electronegativity: parseFloat(row[6].trim()),

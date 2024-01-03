@@ -86,8 +86,7 @@ export const i18n_zh_cn = {
       AtomCount: '原子数目',
       BondCount: '化学键数目',
       MolecularMass: '分子质量',
-      ElectricalCharge: '电荷',
-      GramPerMol: '克/摩尔',
+      PolarSurfaceArea: '极性表面积',
     },
 
     menu: {

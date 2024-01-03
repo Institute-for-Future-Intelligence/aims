@@ -136,9 +136,9 @@ const ParallelCoordinates = ({
           max={maxima[i]}
           step={steps[i]}
           value={
-            hoveredIndex >= 0 && !data[hoveredIndex].invisible
+            hoveredIndex >= 0 && !data[hoveredIndex]?.invisible
               ? (data[hoveredIndex][variable] as number)
-              : selectedIndex >= 0 && !data[selectedIndex].invisible
+              : selectedIndex >= 0 && data[selectedIndex] && !data[selectedIndex].invisible
                 ? (data[selectedIndex][variable] as number)
                 : undefined
           }

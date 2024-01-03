@@ -11,7 +11,8 @@ export class ProjectUtil {
     a.push('atomCount');
     a.push('bondCount');
     a.push('molecularMass');
-    a.push('electricalCharge');
+    a.push('logP');
+    a.push('polarSurfaceArea');
     return a;
   }
 
@@ -20,12 +21,14 @@ export class ProjectUtil {
     a.push(i18n.t('projectPanel.AtomCount', l));
     a.push(i18n.t('projectPanel.BondCount', l));
     a.push(i18n.t('projectPanel.MolecularMass', l));
-    a.push(i18n.t('projectPanel.ElectricalCharge', l));
+    a.push('logP');
+    a.push(i18n.t('projectPanel.PolarSurfaceArea', l));
     return a;
   }
 
   static getTypes(): string[] {
     const a: string[] = [];
+    a.push('number');
     a.push('number');
     a.push('number');
     a.push('number');
@@ -37,13 +40,15 @@ export class ProjectUtil {
     const a: number[] = [];
     a.push(0);
     a.push(0);
-    a.push(0);
-    a.push(1);
+    a.push(2);
+    a.push(2);
+    a.push(2);
     return a;
   }
 
   static getTickIntegers(): boolean[] {
     const a: boolean[] = [];
+    a.push(false);
     a.push(false);
     a.push(false);
     a.push(false);
@@ -55,17 +60,41 @@ export class ProjectUtil {
     const a: string[] = [];
     a.push('');
     a.push('');
-    a.push(' ' + i18n.t('projectPanel.GramPerMol', l));
-    a.push('e');
+    a.push('u');
+    a.push('');
+    a.push('Å²');
     return a;
   }
 
   static getUnit(variable: string, l: { lng: string }): string {
     if (variable === 'atomCount') return '';
     if (variable === 'bondCount') return '';
-    if (variable === 'molecularMass') return i18n.t('projectPanel.GramPerMol', l);
-    if (variable === 'electricalCharge') return 'e';
+    if (variable === 'molecularMass') return 'u';
+    if (variable === 'logP') return '';
+    if (variable === 'polarSurfaceArea') return 'Å²';
     return '';
+  }
+
+  // mimic database calls
+  static getLogP(name: string): number {
+    if (name === 'Aspirin') return 1.2;
+    if (name === 'Ibuprofen') return 3.5;
+    if (name === 'Benzene') return 2.1;
+    if (name === 'Paxlovid') return 2.2;
+    if (name === 'Caffeine') return -0.1;
+    if (name === 'Glucose') return -2.6;
+    return 0;
+  }
+
+  // mimic database calls
+  static getPolarSurfaceArea(name: string): number {
+    if (name === 'Aspirin') return 63.6;
+    if (name === 'Ibuprofen') return 37.3;
+    if (name === 'Benzene') return 0;
+    if (name === 'Paxlovid') return 131;
+    if (name === 'Caffeine') return 58.4;
+    if (name === 'Glucose') return 110;
+    return 0;
   }
 
   static setScatterData(name: string, axis: 'x' | 'y', datum: { x: number; y: number }, m: MoleculeData) {
@@ -77,7 +106,7 @@ export class ProjectUtil {
         break;
       case 'molecularMass':
         break;
-      case 'electricalCharge':
+      case 'logP':
         break;
     }
   }

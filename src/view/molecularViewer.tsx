@@ -17,12 +17,14 @@ import { Cylinder, Line, Sphere } from '@react-three/drei';
 import { HALF_PI } from '../programmaticConstants';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
-import { MolecularProperties, MolecularViewerStyle, MoleculeData } from '../types';
+import { MolecularViewerStyle, MoleculeData } from '../types';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
 import { AtomTS } from '../models/AtomTS';
 import { BondTS } from '../models/BondTS';
 import { Util } from '../Util';
+import { MolecularProperties } from '../models/MolecularProperties';
+import { ProjectUtil } from '../ProjectUtil';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -60,16 +62,11 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
   }, [moleculeData, chemicalElements]);
 
   const processResult = (result: any) => {
-    setMolecularProperties(moleculeData.name, {
-      atomCount: result._atoms.length,
-      bondCount: result._bonds.length,
-      mass: Math.random(),
-      charge: Math.random(),
-    } as MolecularProperties);
     const atoms: AtomTS[] = [];
     let cx = 0;
     let cy = 0;
     let cz = 0;
+    let totalMass = 0;
     const white = { r: 255, g: 255, b: 255 };
     const elementColorer = new ElementColorer(); // default to Jmol colors
     for (let i = 0; i < result._atoms.length; i++) {
@@ -79,11 +76,13 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
       cx += atom.position.x;
       cy += atom.position.y;
       cz += atom.position.z;
+      const element = getChemicalElement(elementSymbol);
+      totalMass += element?.atomicMass;
       atoms.push({
         elementSymbol,
         position: atom.position.clone(),
         color: new Color(color.r / 255, color.g / 255, color.b / 255).convertSRGBToLinear(),
-        radius: (getChemicalElement(elementSymbol)?.atomicRadius ?? 1) / 5,
+        radius: (element?.atomicRadius ?? 1) / 5,
       } as AtomTS);
     }
     if (atoms.length > 0) {
@@ -123,6 +122,13 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
       );
     }
     setMolecule({ atoms, bonds } as MoleculeTS);
+    setMolecularProperties(moleculeData.name, {
+      atomCount: result._atoms.length,
+      bondCount: result._bonds.length,
+      mass: totalMass,
+      logP: ProjectUtil.getLogP(moleculeData.name),
+      polarSurfaceArea: ProjectUtil.getPolarSurfaceArea(moleculeData.name),
+    } as MolecularProperties);
   };
 
   const showAtoms = () => {
@@ -237,7 +243,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
                 receiveShadow={false}
                 points={[e.startAtom.position, midPosition]}
                 color={e.startAtom.color}
-                lineWidth={2}
+                lineWidth={highQuality ? 2 : 1}
               />
               <Line
                 userData={{ unintersectable: true }}
@@ -246,7 +252,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
                 receiveShadow={false}
                 points={[midPosition, e.endAtom.position]}
                 color={e.endAtom.color}
-                lineWidth={2}
+                lineWidth={highQuality ? 2 : 1}
               />
             </React.Fragment>
           );

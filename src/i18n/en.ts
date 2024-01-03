@@ -87,8 +87,7 @@ export const i18n_en = {
       AtomCount: 'Atom Count',
       BondCount: 'Bond Count',
       MolecularMass: 'Molecular Mass',
-      ElectricalCharge: 'Electrical Charge',
-      GramPerMol: 'g/mol',
+      PolarSurfaceArea: 'Polar Surface Area',
     },
 
     menu: {

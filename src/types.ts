@@ -38,13 +38,6 @@ export interface MoleculeData {
   url?: string;
 }
 
-export interface MolecularProperties {
-  atomCount: number;
-  bondCount: number;
-  mass: number;
-  charge: number;
-}
-
 // use null for undefined, as we need to persist this in Firebase
 export interface ProjectInfo {
   owner: string | null;

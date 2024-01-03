@@ -146,8 +146,11 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const descriptionChangedRef = useRef<boolean>(false);
   const descriptionExpandedRef = useRef<boolean>(false);
 
-  const weightSelectionRef = useRef<boolean>(true);
-  const chargeSelectionRef = useRef<boolean>(true);
+  const atomCountSelectionRef = useRef<boolean>(true);
+  const bondCountSelectionRef = useRef<boolean>(true);
+  const massSelectionRef = useRef<boolean>(true);
+  const logPSelectionRef = useRef<boolean>(true);
+  const polarSurfaceAreaSelectionRef = useRef<boolean>(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -435,7 +438,25 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           onChange={(e) => {
             setUpdateHiddenFlag(!updateHiddenFlag);
           }}
-          checked={weightSelectionRef.current}
+          checked={atomCountSelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.AtomCount', lang)}</span>
+        </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={bondCountSelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.BondCount', lang)}</span>
+        </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={massSelectionRef.current}
         >
           <span style={{ fontSize: '12px' }}>{t('projectPanel.MolecularMass', lang)}</span>
         </Checkbox>
@@ -444,9 +465,18 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           onChange={(e) => {
             setUpdateHiddenFlag(!updateHiddenFlag);
           }}
-          checked={chargeSelectionRef.current}
+          checked={logPSelectionRef.current}
         >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.ElectricalCharge', lang)}</span>
+          <span style={{ fontSize: '12px' }}>logP</span>
+        </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={polarSurfaceAreaSelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.PolarSurfaceArea', lang)}</span>
         </Checkbox>
       </div>
     );
@@ -483,7 +513,8 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           d['atomCount'] = p.atomCount;
           d['bondCount'] = p.bondCount;
           d['molecularMass'] = p.mass;
-          d['electricalCharge'] = p.charge;
+          d['logP'] = p.logP;
+          d['polarSurfaceArea'] = p.polarSurfaceArea;
           d['group'] = projectInfo.dataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
           d['selected'] = selectedMolecule === m;
           // d['hovered'] = hoveredMolecule === m;
@@ -512,6 +543,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     array.push(0);
     array.push(0);
     array.push(0);
+    array.push(-10);
     array.push(0);
     return array;
   }, [updateHiddenFlag]);
@@ -520,15 +552,16 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     const array: number[] = [];
     array.push(100);
     array.push(100);
-    array.push(1);
-    array.push(1);
+    array.push(1000);
+    array.push(10);
+    array.push(500);
     return array;
   }, [updateHiddenFlag]);
 
   const steps: number[] = useMemo(() => {
     const array: number[] = [];
-    array.push(0.1);
-    array.push(0.1);
+    array.push(1);
+    array.push(1);
     array.push(0.1);
     array.push(0.1);
     return array;
