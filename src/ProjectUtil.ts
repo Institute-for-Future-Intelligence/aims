@@ -9,6 +9,7 @@ export class ProjectUtil {
   static getVariables(): string[] {
     const a: string[] = [];
     a.push('atomCount');
+    a.push('bondCount');
     a.push('molecularMass');
     a.push('electricalCharge');
     return a;
@@ -17,6 +18,7 @@ export class ProjectUtil {
   static getTitles(l: { lng: string }): string[] {
     const a: string[] = [];
     a.push(i18n.t('projectPanel.AtomCount', l));
+    a.push(i18n.t('projectPanel.BondCount', l));
     a.push(i18n.t('projectPanel.MolecularMass', l));
     a.push(i18n.t('projectPanel.ElectricalCharge', l));
     return a;
@@ -27,11 +29,13 @@ export class ProjectUtil {
     a.push('number');
     a.push('number');
     a.push('number');
+    a.push('number');
     return a;
   }
 
   static getDigits(): number[] {
     const a: number[] = [];
+    a.push(0);
     a.push(0);
     a.push(0);
     a.push(1);
@@ -43,11 +47,13 @@ export class ProjectUtil {
     a.push(false);
     a.push(false);
     a.push(false);
+    a.push(false);
     return a;
   }
 
   static getUnits(l: { lng: string }): string[] {
     const a: string[] = [];
+    a.push('');
     a.push('');
     a.push(' ' + i18n.t('projectPanel.GramPerMol', l));
     a.push('e');
@@ -56,6 +62,7 @@ export class ProjectUtil {
 
   static getUnit(variable: string, l: { lng: string }): string {
     if (variable === 'atomCount') return '';
+    if (variable === 'bondCount') return '';
     if (variable === 'molecularMass') return i18n.t('projectPanel.GramPerMol', l);
     if (variable === 'electricalCharge') return 'e';
     return '';
@@ -64,13 +71,13 @@ export class ProjectUtil {
   static setScatterData(name: string, axis: 'x' | 'y', datum: { x: number; y: number }, m: MoleculeData) {
     switch (name) {
       case 'atomCount':
-        // datum[axis] = design.rowsPerRack;
+        // datum[axis] =;
+        break;
+      case 'bondCount':
         break;
       case 'molecularMass':
-        // datum[axis] = design.rowsPerRack;
         break;
       case 'electricalCharge':
-        // datum[axis] = Util.toDegrees(design.tiltAngle);
         break;
     }
   }

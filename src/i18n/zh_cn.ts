@@ -84,6 +84,7 @@ export const i18n_zh_cn = {
       OneColorForEachMolecule: '每个分子一个颜色',
       SolutionSpaceScreenshot: '设计空间截图',
       AtomCount: '原子数目',
+      BondCount: '化学键数目',
       MolecularMass: '分子质量',
       ElectricalCharge: '电荷',
       GramPerMol: '克/摩尔',

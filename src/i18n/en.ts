@@ -85,6 +85,7 @@ export const i18n_en = {
       OneColorForEachMolecule: 'One color for each molecule',
       SolutionSpaceScreenshot: 'Take a screenshot of the solution space',
       AtomCount: 'Atom Count',
+      BondCount: 'Bond Count',
       MolecularMass: 'Molecular Mass',
       ElectricalCharge: 'Electrical Charge',
       GramPerMol: 'g/mol',

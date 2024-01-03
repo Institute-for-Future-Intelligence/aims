@@ -83,6 +83,7 @@ export const i18n_zh_tw = {
       OneColorForEachMolecule: '每個分子一個顏色',
       SolutionSpaceScreenshot: '設計空間截圖',
       AtomCount: '原子數目',
+      BondCount: '化學鍵數目',
       MolecularMass: '分子質量',
       ElectricalCharge: '電荷',
       GramPerMol: '克/摩爾',

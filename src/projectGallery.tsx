@@ -126,6 +126,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const viewerStyle = useStore(Selector.projectViewerStyle);
   const viewerBackground = useStore(Selector.projectViewerBackground);
   const projectInfo = useStore(Selector.projectInfo);
+  const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
 
   const [loading, setLoading] = useState(false);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -477,18 +478,22 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     if (collectedMolecules) {
       for (const m of collectedMolecules) {
         const d = {} as DatumEntry;
-        d['atomCount'] = Math.random();
-        d['molecularMass'] = Math.random();
-        d['electricalCharge'] = Math.random();
-        d['group'] = projectInfo.dataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
-        d['selected'] = selectedMolecule === m;
-        // d['hovered'] = hoveredMolecule === m;
-        d['invisible'] = false;
-        data.push(d);
+        const p = molecularPropertiesMap.get(m.name);
+        if (p) {
+          d['atomCount'] = p.atomCount;
+          d['bondCount'] = p.bondCount;
+          d['molecularMass'] = p.mass;
+          d['electricalCharge'] = p.charge;
+          d['group'] = projectInfo.dataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
+          d['selected'] = selectedMolecule === m;
+          // d['hovered'] = hoveredMolecule === m;
+          d['invisible'] = false;
+          data.push(d);
+        }
       }
     }
     return data;
-  }, [selectedMolecule, collectedMolecules, projectInfo.dataColoring, updateHiddenFlag]);
+  }, [molecularPropertiesMap, selectedMolecule, collectedMolecules, projectInfo.dataColoring, updateHiddenFlag]);
 
   const [variables, titles, units, digits, tickIntegers, types] = useMemo(
     () => [
@@ -507,12 +512,14 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     array.push(0);
     array.push(0);
     array.push(0);
+    array.push(0);
     return array;
   }, [updateHiddenFlag]);
 
   const maxima: number[] = useMemo(() => {
     const array: number[] = [];
-    array.push(1);
+    array.push(100);
+    array.push(100);
     array.push(1);
     array.push(1);
     return array;
@@ -520,6 +527,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
 
   const steps: number[] = useMemo(() => {
     const array: number[] = [];
+    array.push(0.1);
     array.push(0.1);
     array.push(0.1);
     array.push(0.1);
@@ -627,24 +635,26 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
               </Button>
             </span>
           </SolutionSpaceHeader>
-          <ParallelCoordinates
-            id={'solution-space'}
-            width={relativeWidth * window.innerWidth}
-            height={totalHeight / 2 - 120}
-            data={data}
-            types={types}
-            minima={minima}
-            maxima={maxima}
-            steps={steps}
-            variables={variables}
-            titles={titles}
-            units={units}
-            digits={digits}
-            tickIntegers={tickIntegers}
-            // hover={hover}
-            hoveredIndex={-1}
-            selectedIndex={collectedMolecules && selectedMolecule ? collectedMolecules.indexOf(selectedMolecule) : -1}
-          />
+          {data.length > 0 && (
+            <ParallelCoordinates
+              id={'solution-space'}
+              width={relativeWidth * window.innerWidth}
+              height={totalHeight / 2 - 120}
+              data={data}
+              types={types}
+              minima={minima}
+              maxima={maxima}
+              steps={steps}
+              variables={variables}
+              titles={titles}
+              units={units}
+              digits={digits}
+              tickIntegers={tickIntegers}
+              // hover={hover}
+              hoveredIndex={-1}
+              selectedIndex={collectedMolecules && selectedMolecule ? collectedMolecules.indexOf(selectedMolecule) : -1}
+            />
+          )}
         </CanvasContainer>
         <ImportMoleculeModal
           importByName={() => {

@@ -9,7 +9,16 @@ import { Util } from '../Util';
 import { VERSION } from '../programmaticConstants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, MolecularViewerStyle, MoleculeData, ProjectInfo, ProjectType, Range, User } from '../types';
+import {
+  ActionInfo,
+  MolecularProperties,
+  MolecularViewerStyle,
+  MoleculeData,
+  ProjectInfo,
+  ProjectType,
+  Range,
+  User,
+} from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -39,6 +48,9 @@ export interface CommonStoreState {
   collectedMolecules: MoleculeData[];
   addMolecule: (molecule: MoleculeData) => boolean;
   removeMolecule: (molecule: MoleculeData) => void;
+
+  molecularPropertiesMap: Map<string, MolecularProperties>;
+  setMolecularProperties: (name: string, properties: MolecularProperties) => void;
 
   chamberViewerPercentWidth: number;
   chamberViewerAxes: boolean;
@@ -127,6 +139,13 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                   break;
                 }
               }
+            });
+          },
+
+          molecularPropertiesMap: new Map<string, MolecularProperties>(),
+          setMolecularProperties(name: string, properties: MolecularProperties) {
+            immerSet((state: CommonStoreState) => {
+              state.molecularPropertiesMap.set(name, properties);
             });
           },
 

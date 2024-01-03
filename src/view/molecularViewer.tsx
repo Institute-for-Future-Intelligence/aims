@@ -17,13 +17,12 @@ import { Cylinder, Line, Sphere } from '@react-three/drei';
 import { HALF_PI } from '../programmaticConstants';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
-import { MolecularViewerStyle, MoleculeData } from '../types';
+import { MolecularProperties, MolecularViewerStyle, MoleculeData } from '../types';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
 import { AtomTS } from '../models/AtomTS';
 import { BondTS } from '../models/BondTS';
 import { Util } from '../Util';
-import BallsAndSticksMode from '../lib/gfx/modes/BallsAndSticksMode';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -35,6 +34,7 @@ export interface MolecularViewerProps {
 const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: MolecularViewerProps) => {
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
+  const setMolecularProperties = useStore(Selector.setMolecularProperties);
 
   const [molecule, setMolecule] = useState<MoleculeTS>();
 
@@ -60,7 +60,12 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
   }, [moleculeData, chemicalElements]);
 
   const processResult = (result: any) => {
-    new BallsAndSticksMode();
+    setMolecularProperties(moleculeData.name, {
+      atomCount: result._atoms.length,
+      bondCount: result._bonds.length,
+      mass: Math.random(),
+      charge: Math.random(),
+    } as MolecularProperties);
     const atoms: AtomTS[] = [];
     let cx = 0;
     let cy = 0;
