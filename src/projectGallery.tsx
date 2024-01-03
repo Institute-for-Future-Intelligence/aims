@@ -9,8 +9,11 @@ import { OrbitControls } from '@react-three/drei';
 import Lights from './lights';
 import MolecularViewer from './view/molecularViewer';
 import styled from 'styled-components';
-import { Button, Col, Collapse, CollapseProps, ColorPicker, List, Popover, Row, Select } from 'antd';
+import { Button, Checkbox, Col, Collapse, CollapseProps, ColorPicker, List, Popover, Radio, Row, Select } from 'antd';
 import {
+  BgColorsOutlined,
+  CameraOutlined,
+  CarryOutOutlined,
   CloseOutlined,
   DeleteOutlined,
   EditFilled,
@@ -23,13 +26,17 @@ import {
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { useTranslation } from 'react-i18next';
-import { MolecularViewerStyle, MoleculeData } from './types';
+import { DataColoring, DatumEntry, MolecularViewerStyle, MoleculeData } from './types';
 import TextArea from 'antd/lib/input/TextArea';
 import { UndoableChange } from './undo/UndoableChange';
 import { STYLE_LABELS } from './scientificConstants';
 import { getTestMolecule } from './App';
 import ImportMoleculeModal from './ImportMoleculeModal';
-import { showError } from './helpers';
+import { showError, showInfo } from './helpers';
+import ParallelCoordinates from './components/parallelCoordinates';
+//@ts-ignore
+import { saveSvgAsPng } from 'save-svg-as-png';
+import { ProjectUtil } from './ProjectUtil';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -69,7 +76,7 @@ const Container = styled.div`
 
 const ColumnWrapper = styled.div`
   background-color: #f8f8f8;
-  position: absolute;
+  position: relative;
   left: 0;
   top: 0;
   width: 100%;
@@ -99,10 +106,21 @@ const SubHeader = styled.div`
   align-items: center;
 `;
 
+const SolutionSpaceHeader = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  background: white;
+`;
+
 const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const selectedMolecule = useStore(Selector.selectedMolecule);
+  const collectedMolecules = useStore(Selector.collectedMolecules);
   const addMolecule = useStore(Selector.addMolecule);
   const removeMolecule = useStore(Selector.removeMolecule);
   const viewerStyle = useStore(Selector.projectViewerStyle);
@@ -111,6 +129,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
 
   const [loading, setLoading] = useState(false);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
+  const [updateHiddenFlag, setUpdateHiddenFlag] = useState<boolean>(false);
   const [moleculeName, setMoleculeName] = useState<string>('Aspirin');
   const [moleculeNameDialogVisible, setMoleculeNameDialogVisible] = useState(false);
 
@@ -126,6 +145,9 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const descriptionChangedRef = useRef<boolean>(false);
   const descriptionExpandedRef = useRef<boolean>(false);
 
+  const weightSelectionRef = useRef<boolean>(true);
+  const chargeSelectionRef = useRef<boolean>(true);
+
   useEffect(() => {
     const handleResize = () => {
       setUpdateFlag(!updateFlag);
@@ -137,6 +159,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateFlag]);
 
+  const totalHeight = window.innerHeight;
   const canvasColumns = 3;
   const gridGutter = 8;
   const totalWidth = Math.round(window.innerWidth * relativeWidth);
@@ -404,6 +427,105 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     },
   ];
 
+  const createChooseSolutionSolutionContent = () => {
+    return (
+      <div>
+        <Checkbox
+          onChange={(e) => {
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={weightSelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.MolecularMass', lang)}</span>
+        </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={chargeSelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.ElectricalCharge', lang)}</span>
+        </Checkbox>
+      </div>
+    );
+  };
+
+  const createChooseDataColoringContent = () => {
+    return (
+      <div>
+        <Radio.Group
+          onChange={(e) => {
+            // selectDataColoring(e.target.value);
+          }}
+          value={projectInfo.dataColoring ?? DataColoring.ALL}
+        >
+          <Radio style={{ fontSize: '12px' }} value={DataColoring.ALL}>
+            {t('projectPanel.SameColorForAllMolecules', lang)}
+          </Radio>
+          <br />
+          <Radio style={{ fontSize: '12px' }} value={DataColoring.INDIVIDUALS}>
+            {t('projectPanel.OneColorForEachMolecule', lang)}
+          </Radio>
+        </Radio.Group>
+      </div>
+    );
+  };
+
+  const data: DatumEntry[] = useMemo(() => {
+    const data: DatumEntry[] = [];
+    if (collectedMolecules) {
+      for (const m of collectedMolecules) {
+        const d = {} as DatumEntry;
+        d['atomCount'] = Math.random();
+        d['molecularMass'] = Math.random();
+        d['electricalCharge'] = Math.random();
+        d['group'] = projectInfo.dataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
+        d['selected'] = selectedMolecule === m;
+        // d['hovered'] = hoveredMolecule === m;
+        d['invisible'] = false;
+        data.push(d);
+      }
+    }
+    return data;
+  }, [selectedMolecule, collectedMolecules, projectInfo.dataColoring, updateHiddenFlag]);
+
+  const [variables, titles, units, digits, tickIntegers, types] = useMemo(
+    () => [
+      ProjectUtil.getVariables(),
+      ProjectUtil.getTitles(lang),
+      ProjectUtil.getUnits(lang),
+      ProjectUtil.getDigits(),
+      ProjectUtil.getTickIntegers(),
+      ProjectUtil.getTypes(),
+    ],
+    [updateHiddenFlag, lang],
+  );
+
+  const minima: number[] = useMemo(() => {
+    const array: number[] = [];
+    array.push(0);
+    array.push(0);
+    array.push(0);
+    return array;
+  }, [updateHiddenFlag]);
+
+  const maxima: number[] = useMemo(() => {
+    const array: number[] = [];
+    array.push(1);
+    array.push(1);
+    array.push(1);
+    return array;
+  }, [updateHiddenFlag]);
+
+  const steps: number[] = useMemo(() => {
+    const array: number[] = [];
+    array.push(0.1);
+    array.push(0.1);
+    array.push(0.1);
+    return array;
+  }, [updateHiddenFlag]);
+
   return (
     <Container
       onContextMenu={(e) => {
@@ -440,11 +562,9 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           <List
             style={{
               width: '100%',
-              height: '100%',
+              height: totalHeight / 2 - (descriptionExpandedRef.current ? 240 : 160),
               paddingTop: '8px',
-              paddingBottom: '0px',
               paddingLeft: '8px',
-              paddingRight: '0px',
               overflowX: 'hidden',
               overflowY: 'auto',
             }}
@@ -472,6 +592,59 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
               );
             }}
           ></List>
+          <SolutionSpaceHeader>
+            <span style={{ paddingLeft: '20px' }}>{t('projectPanel.DistributionInSolutionSpace', lang)}</span>
+            <span>
+              <Popover
+                title={t('projectPanel.ChooseSolutionSpace', lang)}
+                onOpenChange={(visible) => {}}
+                content={createChooseSolutionSolutionContent()}
+              >
+                <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                  <CarryOutOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                </Button>
+              </Popover>
+              <Popover title={t('projectPanel.ChooseDataColoring', lang)} content={createChooseDataColoringContent()}>
+                <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                  <BgColorsOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                </Button>
+              </Popover>
+              <Button
+                style={{ border: 'none', paddingRight: '20px', background: 'white' }}
+                onClick={() => {
+                  const d = document.getElementById('design-space');
+                  if (d) {
+                    saveSvgAsPng(d, 'design-space-' + projectInfo.title + '.png').then(() => {
+                      showInfo(t('message.ScreenshotSaved', lang));
+                    });
+                  }
+                }}
+              >
+                <CameraOutlined
+                  style={{ fontSize: '24px', color: 'gray' }}
+                  title={t('projectPanel.SolutionSpaceScreenshot', lang)}
+                />
+              </Button>
+            </span>
+          </SolutionSpaceHeader>
+          <ParallelCoordinates
+            id={'solution-space'}
+            width={relativeWidth * window.innerWidth}
+            height={totalHeight / 2 - 120}
+            data={data}
+            types={types}
+            minima={minima}
+            maxima={maxima}
+            steps={steps}
+            variables={variables}
+            titles={titles}
+            units={units}
+            digits={digits}
+            tickIntegers={tickIntegers}
+            // hover={hover}
+            hoveredIndex={-1}
+            selectedIndex={collectedMolecules && selectedMolecule ? collectedMolecules.indexOf(selectedMolecule) : -1}
+          />
         </CanvasContainer>
         <ImportMoleculeModal
           importByName={() => {

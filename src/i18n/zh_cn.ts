@@ -46,6 +46,10 @@ export const i18n_zh_cn = {
       Translators: '翻译',
     },
 
+    message: {
+      ScreenshotSaved: '截屏图片保存在下载文件夹里。',
+    },
+
     molecularViewer: {
       Axes: '显示坐标轴',
       Style: '风格',
@@ -73,6 +77,16 @@ export const i18n_zh_cn = {
       DoubleClickToMakeDescriptionEditable: '双击此描述激活编辑功能',
       ClickToFlipSortingOrder: '点击逆转排序方向',
       WriteABriefDescriptionAboutThisProject: '在此处写一个项目简要描述。',
+      DistributionInSolutionSpace: '方案在设计空间里的分布',
+      ChooseSolutionSpace: '选择设计空间',
+      ChooseDataColoring: '选择数据着色',
+      SameColorForAllMolecules: '所有分子一个颜色',
+      OneColorForEachMolecule: '每个分子一个颜色',
+      SolutionSpaceScreenshot: '设计空间截图',
+      AtomCount: '原子数目',
+      MolecularMass: '分子质量',
+      ElectricalCharge: '电荷',
+      GramPerMol: '克/摩尔',
     },
 
     menu: {

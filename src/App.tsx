@@ -18,7 +18,6 @@ import { visitHomepage, visitIFI } from './helpers';
 import MainMenu from './mainMenu';
 import { VERSION } from './programmaticConstants';
 import SplitPane from 'react-split-pane';
-import { throttle } from 'lodash';
 import MainToolBar from './mainToolBar';
 import ShareLinks from './shareLinks';
 import ProjectGallery from './projectGallery';
@@ -203,11 +202,11 @@ const App = () => {
           {/* @ts-ignore */}
           <SplitPane
             split={'vertical'}
-            onChange={throttle((size) => {
+            onChange={(size) => {
               setCommonStore((state) => {
                 state.chamberViewerPercentWidth = Math.round(100 - (size / window.innerWidth) * 100);
               });
-            }, 5)}
+            }}
             // must specify the height again for the split pane to resize correctly with the window
             style={{ height: 'calc(100vh - 82px)', display: 'flex' }}
             pane1Style={{

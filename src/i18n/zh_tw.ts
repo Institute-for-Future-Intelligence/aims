@@ -45,6 +45,10 @@ export const i18n_zh_tw = {
       Contact: '如您需要更多資訊，請聯繫 Charles Xie (charles@intofuture.org)。我們會盡快回复。',
     },
 
+    message: {
+      ScreenshotSaved: '截屏圖片保存在下載文檔夾裡。',
+    },
+
     molecularViewer: {
       Axes: '顯示坐標軸',
       Style: '風格',
@@ -72,6 +76,16 @@ export const i18n_zh_tw = {
       DoubleClickToMakeDescriptionEditable: '雙擊此描述激活編輯功能',
       ClickToFlipSortingOrder: '點擊逆轉排序方向',
       WriteABriefDescriptionAboutThisProject: '在此寫一個項目簡要描述。',
+      DistributionInSolutionSpace: '方案在設計空間裡的分佈',
+      ChooseSolutionSpace: '選擇設計空間',
+      ChooseDataColoring: '選擇數據著色',
+      SameColorForAllMolecules: '所有分子一個顏色',
+      OneColorForEachMolecule: '每個分子一個顏色',
+      SolutionSpaceScreenshot: '設計空間截圖',
+      AtomCount: '原子數目',
+      MolecularMass: '分子質量',
+      ElectricalCharge: '電荷',
+      GramPerMol: '克/摩爾',
     },
 
     menu: {

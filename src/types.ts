@@ -46,6 +46,7 @@ export interface ProjectInfo {
   title: string | null;
   description: string | null;
   selectedProperty: string | null;
+  dataColoring: DataColoring;
   sortDescending: boolean | null;
   ranges: Range[] | null;
 }

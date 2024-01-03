@@ -39,7 +39,7 @@ type ParallelCoordinatesProps = {
   units: string[];
   digits: number[];
   tickIntegers: boolean[];
-  hover: Function;
+  hover?: Function;
   hoveredIndex: number;
   selectedIndex: number;
 };
@@ -106,7 +106,7 @@ const ParallelCoordinates = ({
     return (
       <path
         onMouseOver={() => {
-          hover(i);
+          if (hover) hover(i);
         }}
         key={i}
         d={d}

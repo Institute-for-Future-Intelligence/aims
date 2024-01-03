@@ -23,6 +23,8 @@ export const i18n_en = {
     },
 
     word: {
+      Maximum: 'Maximum',
+      Minimum: 'Minimum',
       OK: 'OK',
       Cancel: 'Cancel',
       Close: 'Close',
@@ -43,6 +45,10 @@ export const i18n_en = {
       FundingInformation:
         'The National Institutes of Health (NIH) generously provided funding for the research and development of this product through grants R25GM150143. Any opinions, findings, and conclusions or recommendations expressed in this product, however, are those of the authors and do not necessarily reflect the views of NIH.',
       Contact: 'For more information, please contact Charles Xie (charles@intofuture.org).',
+    },
+
+    message: {
+      ScreenshotSaved: 'A screenshot was saved.',
     },
 
     molecularViewer: {
@@ -72,6 +78,16 @@ export const i18n_en = {
       DoubleClickToMakeDescriptionEditable: 'Double-click to make this description editable',
       ClickToFlipSortingOrder: 'Click to flip the sorting order',
       WriteABriefDescriptionAboutThisProject: 'Write a brief description about this project.',
+      DistributionInSolutionSpace: 'Distribution in the Solution Space',
+      ChooseSolutionSpace: 'Choose solution space',
+      ChooseDataColoring: 'Choose data coloring',
+      SameColorForAllMolecules: 'Same color for all molecules',
+      OneColorForEachMolecule: 'One color for each molecule',
+      SolutionSpaceScreenshot: 'Take a screenshot of the solution space',
+      AtomCount: 'Atom Count',
+      MolecularMass: 'Molecular Mass',
+      ElectricalCharge: 'Electrical Charge',
+      GramPerMol: 'g/mol',
     },
 
     menu: {
