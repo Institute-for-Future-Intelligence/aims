@@ -5,7 +5,7 @@
 import { Color, Vector3 } from 'three';
 
 export interface AtomTS {
-  elementName: string;
+  elementSymbol: string;
   position: Vector3;
   color: Color;
   radius: number;

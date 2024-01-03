@@ -74,16 +74,16 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
     const elementColorer = new ElementColorer(); // default to Jmol colors
     for (let i = 0; i < result._atoms.length; i++) {
       const atom = result._atoms[i] as AtomJS;
-      const elementName = atom.element.name;
+      const elementSymbol = atom.element.name;
       const color = Util.decimalColorToRgb(elementColorer.getAtomColor(atom)) ?? white;
       cx += atom.position.x;
       cy += atom.position.y;
       cz += atom.position.z;
       atoms.push({
-        elementName,
+        elementSymbol,
         position: atom.position.clone(),
         color: new Color(color.r / 255, color.g / 255, color.b / 255).convertSRGBToLinear(),
-        radius: (getChemicalElement(elementName)?.sigma ?? 1) / 5,
+        radius: (getChemicalElement(elementSymbol)?.atomicRadius ?? 1) / 5,
       } as AtomTS);
     }
     if (atoms.length > 0) {
@@ -101,23 +101,23 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
       const bond = result._bonds[i] as BondJS;
       const atom1 = bond._left;
       const atom2 = bond._right;
-      const elementName1 = atom1.element.name;
-      const elementName2 = atom2.element.name;
+      const elementSymbol1 = atom1.element.name;
+      const elementSymbol2 = atom2.element.name;
       const c1 = Util.decimalColorToRgb(elementColorer.getAtomColor(atom1)) ?? white;
       const c2 = Util.decimalColorToRgb(elementColorer.getAtomColor(atom2)) ?? white;
       bonds.push(
         new BondTS(
           {
-            elementName: elementName1,
+            elementSymbol: elementSymbol1,
             position: new Vector3(atom1.position.x - cx, atom1.position.y - cy, atom1.position.z - cz),
             color: new Color(c1.r / 255, c1.g / 255, c1.b / 255).convertSRGBToLinear(),
-            radius: getChemicalElement(elementName1)?.sigma / 5,
+            radius: getChemicalElement(elementSymbol1)?.atomicRadius / 5,
           } as AtomTS,
           {
-            elementName: elementName2,
+            elementSymbol: elementSymbol2,
             position: new Vector3(atom2.position.x - cx, atom2.position.y - cy, atom2.position.z - cz),
             color: new Color(c2.r / 255, c2.g / 255, c2.b / 255).convertSRGBToLinear(),
-            radius: getChemicalElement(elementName2)?.sigma / 5,
+            radius: getChemicalElement(elementSymbol2)?.atomicRadius / 5,
           } as AtomTS,
         ),
       );
@@ -138,7 +138,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
               position={e.position}
               args={[(spaceFilling ? 4 : 1) * (e.radius ?? 0.5), segments, segments]}
               key={'Atom' + index}
-              name={e.elementName}
+              name={e.elementSymbol}
               castShadow={false}
               receiveShadow={false}
               onPointerOver={(e) => {}}

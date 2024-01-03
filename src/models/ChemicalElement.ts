@@ -3,9 +3,14 @@
  */
 
 export interface ChemicalElement {
+  atomicNumber: number;
+  symbol: string;
   name: string;
-  index: number;
-  mass: number;
-  sigma: number;
-  epsilon: number;
+  atomicMmass: number;
+  cpkHexColor: string;
+  electronConfiguration: string;
+  electronegativity: number; // NaN if not defined
+  atomicRadius: number;
+  ionizationEnergy: number;
+  electronAffinity: number;
 }

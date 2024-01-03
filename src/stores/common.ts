@@ -198,18 +198,23 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                 for (const row of results.data) {
                   if (Array.isArray(row) && row.length > 1) {
                     const element = {
-                      name: row[0].trim(),
-                      index: parseInt(row[1].trim()),
-                      mass: parseFloat(row[2].trim()),
-                      sigma: parseFloat(row[3].trim()),
-                      epsilon: parseFloat(row[4].trim()),
+                      atomicNumber: parseInt(row[0].trim()),
+                      symbol: row[1].trim(),
+                      name: row[2].trim(),
+                      atomicMmass: parseFloat(row[3].trim()),
+                      cpkHexColor: row[4].trim(),
+                      electronConfiguration: row[5].trim(),
+                      electronegativity: parseFloat(row[6].trim()),
+                      atomicRadius: parseFloat(row[7].trim()) * 0.01, // angstrom (100 pm)
+                      ionizationEnergy: parseFloat(row[8].trim()),
+                      electronAffinity: parseFloat(row[9].trim()),
                     } as ChemicalElement;
                     chemicalElements.push(element);
                   }
                 }
                 immerSet((state: CommonStoreState) => {
                   for (const model of chemicalElements) {
-                    state.chemicalElements[model.name] = model;
+                    state.chemicalElements[model.symbol] = model;
                   }
                 });
               },
