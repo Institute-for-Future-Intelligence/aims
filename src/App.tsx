@@ -53,11 +53,13 @@ const App = () => {
   const loadedMolecule = useStore(Selector.loadedMolecule);
   const collectedMolecules = useStore(Selector.collectedMolecules);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
+  const loadProvidedMolecules = useStore(Selector.loadProvidedMolecules);
   const params = new URLSearchParams(window.location.search);
   const viewOnly = params.get('viewonly') === 'true';
 
   useEffect(() => {
     loadChemicalElements();
+    loadProvidedMolecules();
     setCommonStore((state) => {
       if (!state.collectedMolecules.length || state.collectedMolecules.length === 0) {
         state.collectedMolecules = testMolecules;

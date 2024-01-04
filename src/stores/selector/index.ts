@@ -77,4 +77,10 @@ export const getChemicalElement = (state: CommonStoreState) => state.getChemical
 
 export const loadChemicalElements = (state: CommonStoreState) => state.loadChemicalElements;
 
+export const providedMolecules = (state: CommonStoreState) => state.providedMolecules;
+
+export const getProvidedMolecule = (state: CommonStoreState) => state.getProvidedMolecule;
+
+export const loadProvidedMolecules = (state: CommonStoreState) => state.loadProvidedMolecules;
+
 export const contextMenuObjectType = (state: PrimitiveStoreState) => state.contextMenuObjectType;

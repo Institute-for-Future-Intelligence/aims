@@ -106,7 +106,7 @@ const SubHeader = styled.div`
   align-items: center;
 `;
 
-const SolutionSpaceHeader = styled.div`
+const PropertiesHeader = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -114,6 +114,7 @@ const SolutionSpaceHeader = styled.div`
   padding-top: 6px;
   padding-bottom: 6px;
   background: white;
+  font-size: 14px;
 `;
 
 const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) => {
@@ -431,7 +432,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     },
   ];
 
-  const createChooseSolutionSolutionContent = () => {
+  const createChoosePropertiesContent = () => {
     return (
       <div>
         <Checkbox
@@ -467,7 +468,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           }}
           checked={logPSelectionRef.current}
         >
-          <span style={{ fontSize: '12px' }}>logP</span>
+          <span style={{ fontSize: '12px' }}>log P</span>
         </Checkbox>
         <br />
         <Checkbox
@@ -633,13 +634,13 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
               );
             }}
           ></List>
-          <SolutionSpaceHeader>
-            <span style={{ paddingLeft: '20px' }}>{t('projectPanel.DistributionInSolutionSpace', lang)}</span>
+          <PropertiesHeader>
+            <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
             <span>
               <Popover
-                title={t('projectPanel.ChooseSolutionSpace', lang)}
+                title={t('projectPanel.ChooseProperties', lang)}
                 onOpenChange={(visible) => {}}
-                content={createChooseSolutionSolutionContent()}
+                content={createChoosePropertiesContent()}
               >
                 <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
                   <CarryOutOutlined style={{ fontSize: '24px', color: 'gray' }} />
@@ -663,14 +664,14 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
               >
                 <CameraOutlined
                   style={{ fontSize: '24px', color: 'gray' }}
-                  title={t('projectPanel.SolutionSpaceScreenshot', lang)}
+                  title={t('projectPanel.PropertiesScreenshot', lang)}
                 />
               </Button>
             </span>
-          </SolutionSpaceHeader>
+          </PropertiesHeader>
           {data.length > 0 && (
             <ParallelCoordinates
-              id={'solution-space'}
+              id={'properties-space'}
               width={relativeWidth * window.innerWidth}
               height={totalHeight / 2 - 120}
               data={data}

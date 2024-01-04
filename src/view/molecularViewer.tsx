@@ -24,7 +24,6 @@ import { AtomTS } from '../models/AtomTS';
 import { BondTS } from '../models/BondTS';
 import { Util } from '../Util';
 import { MolecularProperties } from '../models/MolecularProperties';
-import { ProjectUtil } from '../ProjectUtil';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -36,6 +35,7 @@ export interface MolecularViewerProps {
 const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: MolecularViewerProps) => {
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
+  const getProvidedMolecule = useStore(Selector.getProvidedMolecule);
   const setMolecularProperties = useStore(Selector.setMolecularProperties);
 
   const [molecule, setMolecule] = useState<MoleculeTS>();
@@ -122,12 +122,13 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
       );
     }
     setMolecule({ atoms, bonds } as MoleculeTS);
+    const providedMolecule = getProvidedMolecule(moleculeData.name);
     setMolecularProperties(moleculeData.name, {
       atomCount: result._atoms.length,
       bondCount: result._bonds.length,
       mass: totalMass,
-      logP: ProjectUtil.getLogP(moleculeData.name),
-      polarSurfaceArea: ProjectUtil.getPolarSurfaceArea(moleculeData.name),
+      logP: providedMolecule.logP,
+      polarSurfaceArea: providedMolecule.polarSurfaceArea,
     } as MolecularProperties);
   };
 

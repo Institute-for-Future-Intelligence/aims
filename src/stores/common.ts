@@ -13,6 +13,7 @@ import { ActionInfo, MolecularViewerStyle, MoleculeData, ProjectInfo, ProjectTyp
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
+import moleculesUrl from '../assets/molecules.csv';
 import { ChemicalElement } from '../models/ChemicalElement';
 import Papa from 'papaparse';
 import { AtomTS } from '../models/AtomTS';
@@ -71,6 +72,10 @@ export interface CommonStoreState {
   chemicalElements: { [key: string]: ChemicalElement };
   getChemicalElement: (name: string) => ChemicalElement;
   loadChemicalElements: () => void;
+
+  providedMolecules: { [key: string]: MolecularProperties };
+  getProvidedMolecule: (name: string) => MolecularProperties;
+  loadProvidedMolecules: () => void;
 }
 
 export const useStore = createWithEqualityFn<CommonStoreState>()(
@@ -141,7 +146,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             });
           },
 
-          chamberViewerPercentWidth: 70,
+          chamberViewerPercentWidth: 50,
           chamberViewerAxes: true,
           chamberViewerShininess: 1000,
           chamberViewerStyle: MolecularViewerStyle.BallAndStick,
@@ -183,32 +188,58 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             return get().chemicalElements[name];
           },
           loadChemicalElements() {
-            const chemicalElements: ChemicalElement[] = [];
             Papa.parse(elementsUrl, {
               download: true,
               complete: function (results) {
-                for (const row of results.data) {
-                  if (Array.isArray(row) && row.length > 1) {
-                    const element = {
-                      atomicNumber: parseInt(row[0].trim()),
-                      symbol: row[1].trim(),
-                      name: row[2].trim(),
-                      atomicMass: parseFloat(row[3].trim()),
-                      cpkHexColor: row[4].trim(),
-                      electronConfiguration: row[5].trim(),
-                      electronegativity: parseFloat(row[6].trim()),
-                      atomicRadius: parseFloat(row[7].trim()) * 0.01, // angstrom (100 pm)
-                      ionizationEnergy: parseFloat(row[8].trim()),
-                      electronAffinity: parseFloat(row[9].trim()),
-                    } as ChemicalElement;
-                    chemicalElements.push(element);
+                for (const token of results.data) {
+                  if (Array.isArray(token) && token.length > 1) {
+                    if (token[0] !== 'AtomicNumber') {
+                      const element = {
+                        atomicNumber: parseInt(token[0].trim()),
+                        symbol: token[1].trim(),
+                        name: token[2].trim(),
+                        atomicMass: parseFloat(token[3].trim()),
+                        cpkHexColor: token[4].trim(),
+                        electronConfiguration: token[5].trim(),
+                        electronegativity: parseFloat(token[6].trim()),
+                        atomicRadius: parseFloat(token[7].trim()) * 0.01, // angstrom (100 pm)
+                        ionizationEnergy: parseFloat(token[8].trim()),
+                        electronAffinity: parseFloat(token[9].trim()),
+                      } as ChemicalElement;
+                      immerSet((state: CommonStoreState) => {
+                        state.chemicalElements[element.symbol] = element;
+                      });
+                    }
                   }
                 }
-                immerSet((state: CommonStoreState) => {
-                  for (const model of chemicalElements) {
-                    state.chemicalElements[model.symbol] = model;
+              },
+            });
+          },
+
+          providedMolecules: {},
+          getProvidedMolecule(name: string) {
+            return get().providedMolecules[name];
+          },
+          loadProvidedMolecules() {
+            Papa.parse(moleculesUrl, {
+              download: true,
+              complete: function (results) {
+                for (const token of results.data) {
+                  if (Array.isArray(token) && token.length > 1) {
+                    if (token[0] !== 'Name') {
+                      const mol = {
+                        logP: parseFloat(token[1].trim()),
+                        hydrogenBondDonorCount: parseInt(token[2].trim()),
+                        hydrogenBondAcceptorCount: parseInt(token[3].trim()),
+                        rotatableBondCount: parseInt(token[4].trim()),
+                        polarSurfaceArea: parseFloat(token[5].trim()),
+                      } as MolecularProperties;
+                      immerSet((state: CommonStoreState) => {
+                        state.providedMolecules[token[0].trim()] = mol;
+                      });
+                    }
                   }
-                });
+                }
               },
             });
           },
