@@ -86,8 +86,15 @@ export const i18n_en = {
       PropertiesScreenshot: 'Take a screenshot of the properties',
       AtomCount: 'Atom Count',
       BondCount: 'Bond Count',
-      MolecularMass: 'Molecular Mass',
+      MolecularMass: 'Mass',
       PolarSurfaceArea: 'Polar Surface Area',
+      PolarSurfaceAreaShort: 'Polar Surface',
+      HydrogenBondDonorCount: 'Hydrogen Bond Donor Count',
+      HydrogenBondDonorCountShort: 'HB Donors',
+      HydrogenBondAcceptorCount: 'Hydrogen Bond Acceptor Count',
+      HydrogenBondAcceptorCountShort: 'HB Acceptors',
+      RotatableBondCount: 'Rotatable Bond Count',
+      RotatableBondCountShort: 'Rotatable Bonds',
     },
 
     menu: {

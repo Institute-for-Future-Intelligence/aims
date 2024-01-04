@@ -152,6 +152,9 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const massSelectionRef = useRef<boolean>(true);
   const logPSelectionRef = useRef<boolean>(true);
   const polarSurfaceAreaSelectionRef = useRef<boolean>(true);
+  const hBondDonorCountSelectionRef = useRef<boolean>(true);
+  const hBondAcceptorCountSelectionRef = useRef<boolean>(true);
+  const rotatableBondCountSelectionRef = useRef<boolean>(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -479,6 +482,33 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         >
           <span style={{ fontSize: '12px' }}>{t('projectPanel.PolarSurfaceArea', lang)}</span>
         </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={hBondDonorCountSelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.HydrogenBondDonorCount', lang)}</span>
+        </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={hBondAcceptorCountSelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.HydrogenBondAcceptorCount', lang)}</span>
+        </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={rotatableBondCountSelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.RotatableBondCount', lang)}</span>
+        </Checkbox>
       </div>
     );
   };
@@ -515,6 +545,9 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           d['bondCount'] = p.bondCount;
           d['molecularMass'] = p.mass;
           d['logP'] = p.logP;
+          d['hydrogenBondDonorCount'] = p.hydrogenBondDonorCount;
+          d['hydrogenBondAcceptorCount'] = p.hydrogenBondAcceptorCount;
+          d['rotatableBondCount'] = p.rotatableBondCount;
           d['polarSurfaceArea'] = p.polarSurfaceArea;
           d['group'] = projectInfo.dataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
           d['selected'] = selectedMolecule === m;
@@ -541,30 +574,40 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
 
   const minima: number[] = useMemo(() => {
     const array: number[] = [];
-    array.push(0);
-    array.push(0);
-    array.push(0);
-    array.push(-10);
-    array.push(0);
+    array.push(0); // atom count
+    array.push(0); // bond count
+    array.push(0); // mass
+    array.push(-10); // log P
+    array.push(0); // hydrogen bond donor count
+    array.push(0); // hydrogen bond acceptor count
+    array.push(0); // rotatable bond count
+    array.push(0); // polar surface area
     return array;
   }, [updateHiddenFlag]);
 
   const maxima: number[] = useMemo(() => {
     const array: number[] = [];
-    array.push(100);
-    array.push(100);
-    array.push(1000);
-    array.push(10);
-    array.push(500);
+    array.push(100); // atom count
+    array.push(100); // bond count
+    array.push(1000); // mass
+    array.push(10); // log P
+    array.push(10); // hydrogen bond donor count
+    array.push(10); // hydrogen bond acceptor count
+    array.push(10); // rotatable bond count
+    array.push(500); // polar surface area
     return array;
   }, [updateHiddenFlag]);
 
   const steps: number[] = useMemo(() => {
     const array: number[] = [];
-    array.push(1);
-    array.push(1);
-    array.push(0.1);
-    array.push(0.1);
+    array.push(1); // atom count
+    array.push(1); // bond count
+    array.push(0.1); // mass
+    array.push(0.1); // log P
+    array.push(1); // hydrogen bond donor count
+    array.push(1); // hydrogen bond acceptor count
+    array.push(1); // rotatable bond count
+    array.push(1); // polar surface area
     return array;
   }, [updateHiddenFlag]);
 

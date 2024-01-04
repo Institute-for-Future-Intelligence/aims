@@ -12,6 +12,7 @@ import testMoleculeUrl6 from './molecules/xyz/glucose.xyz';
 import React, { Suspense, useEffect, useMemo } from 'react';
 import './App.css';
 import ifiLogo from './assets/ifi-logo.png';
+import { throttle } from 'lodash';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { visitHomepage, visitIFI } from './helpers';
@@ -204,11 +205,11 @@ const App = () => {
           {/* @ts-ignore */}
           <SplitPane
             split={'vertical'}
-            onChange={(size) => {
+            onChange={throttle((size) => {
               setCommonStore((state) => {
                 state.chamberViewerPercentWidth = Math.round(100 - (size / window.innerWidth) * 100);
               });
-            }}
+            }, 5)}
             // must specify the height again for the split pane to resize correctly with the window
             style={{ height: 'calc(100vh - 82px)', display: 'flex' }}
             pane1Style={{

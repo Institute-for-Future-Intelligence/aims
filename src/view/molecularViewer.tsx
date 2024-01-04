@@ -128,6 +128,9 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
       bondCount: result._bonds.length,
       mass: totalMass,
       logP: providedMolecule.logP,
+      hydrogenBondDonorCount: providedMolecule.hydrogenBondDonorCount,
+      hydrogenBondAcceptorCount: providedMolecule.hydrogenBondAcceptorCount,
+      rotatableBondCount: providedMolecule.rotatableBondCount,
       polarSurfaceArea: providedMolecule.polarSurfaceArea,
     } as MolecularProperties);
   };

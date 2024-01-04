@@ -12,6 +12,9 @@ export class ProjectUtil {
     a.push('bondCount');
     a.push('molecularMass');
     a.push('logP');
+    a.push('hydrogenBondDonorCount');
+    a.push('hydrogenBondAcceptorCount');
+    a.push('rotatableBondCount');
     a.push('polarSurfaceArea');
     return a;
   }
@@ -22,12 +25,18 @@ export class ProjectUtil {
     a.push(i18n.t('projectPanel.BondCount', l));
     a.push(i18n.t('projectPanel.MolecularMass', l));
     a.push('log P');
-    a.push(i18n.t('projectPanel.PolarSurfaceArea', l));
+    a.push(i18n.t('projectPanel.HydrogenBondDonorCountShort', l));
+    a.push(i18n.t('projectPanel.HydrogenBondAcceptorCountShort', l));
+    a.push(i18n.t('projectPanel.RotatableBondCountShort', l));
+    a.push(i18n.t('projectPanel.PolarSurfaceAreaShort', l));
     return a;
   }
 
   static getTypes(): string[] {
     const a: string[] = [];
+    a.push('number');
+    a.push('number');
+    a.push('number');
     a.push('number');
     a.push('number');
     a.push('number');
@@ -42,16 +51,22 @@ export class ProjectUtil {
     a.push(0);
     a.push(2);
     a.push(2);
-    a.push(2);
+    a.push(0);
+    a.push(0);
+    a.push(0);
+    a.push(1);
     return a;
   }
 
   static getTickIntegers(): boolean[] {
     const a: boolean[] = [];
+    a.push(true);
+    a.push(true);
     a.push(false);
     a.push(false);
-    a.push(false);
-    a.push(false);
+    a.push(true);
+    a.push(true);
+    a.push(true);
     a.push(false);
     return a;
   }
@@ -62,15 +77,15 @@ export class ProjectUtil {
     a.push('');
     a.push('u');
     a.push('');
+    a.push('');
+    a.push('');
+    a.push('');
     a.push('Å²');
     return a;
   }
 
   static getUnit(variable: string, l: { lng: string }): string {
-    if (variable === 'atomCount') return '';
-    if (variable === 'bondCount') return '';
     if (variable === 'molecularMass') return 'u';
-    if (variable === 'logP') return '';
     if (variable === 'polarSurfaceArea') return 'Å²';
     return '';
   }
@@ -85,6 +100,14 @@ export class ProjectUtil {
       case 'molecularMass':
         break;
       case 'logP':
+        break;
+      case 'hydrogenBondDonorCount':
+        break;
+      case 'hydrogenBondAcceptorCount':
+        break;
+      case 'rotatableBondCount':
+        break;
+      case 'polarSurfaceArea':
         break;
     }
   }
