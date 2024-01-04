@@ -37,6 +37,8 @@ import ParallelCoordinates from './components/parallelCoordinates';
 //@ts-ignore
 import { saveSvgAsPng } from 'save-svg-as-png';
 import { ProjectUtil } from './ProjectUtil';
+import { usePrimitiveStore } from './stores/commonPrimitive';
+import { updateDataColoring } from './cloudProjectUtil';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -119,6 +121,7 @@ const PropertiesHeader = styled.div`
 
 const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) => {
   const setCommonStore = useStore(Selector.set);
+  const user = useStore(Selector.user);
   const language = useStore(Selector.language);
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const collectedMolecules = useStore(Selector.collectedMolecules);
@@ -140,6 +143,8 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     return { lng: language };
   }, [language]);
 
+  const isOwner = user.uid === projectInfo.owner;
+
   const descriptionTextAreaEditableRef = useRef<boolean>(false);
   const descriptionRef = useRef<string | null>(
     projectInfo.description ?? t('projectPanel.WriteABriefDescriptionAboutThisProject', lang),
@@ -147,6 +152,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const descriptionChangedRef = useRef<boolean>(false);
   const descriptionExpandedRef = useRef<boolean>(false);
 
+  const dataColoringSelectionRef = useRef<DataColoring>(projectInfo.dataColoring ?? DataColoring.ALL);
   const atomCountSelectionRef = useRef<boolean>(true);
   const bondCountSelectionRef = useRef<boolean>(true);
   const massSelectionRef = useRef<boolean>(true);
@@ -513,12 +519,35 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     );
   };
 
+  const localSelectDataColoring = () => {
+    setCommonStore((state) => {
+      state.projectInfo.dataColoring = dataColoringSelectionRef.current;
+    });
+    usePrimitiveStore.getState().set((state) => {
+      state.updateProjectsFlag = true;
+    });
+    setUpdateFlag(!updateFlag);
+  };
+
+  const selectDataColoring = (value: DataColoring) => {
+    dataColoringSelectionRef.current = value;
+    if (isOwner) {
+      if (user.uid && projectInfo.title) {
+        updateDataColoring(user.uid, projectInfo.title, dataColoringSelectionRef.current).then(() => {
+          localSelectDataColoring();
+        });
+      }
+    } else {
+      localSelectDataColoring();
+    }
+  };
+
   const createChooseDataColoringContent = () => {
     return (
       <div>
         <Radio.Group
           onChange={(e) => {
-            // selectDataColoring(e.target.value);
+            selectDataColoring(e.target.value);
           }}
           value={projectInfo.dataColoring ?? DataColoring.ALL}
         >

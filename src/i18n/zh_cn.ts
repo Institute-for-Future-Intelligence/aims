@@ -48,6 +48,17 @@ export const i18n_zh_cn = {
 
     message: {
       ScreenshotSaved: '截屏图片保存在下载文件夹里。',
+      CannotCreateNewProject: '无法创建新项目',
+      CannotCreateNewProjectWithoutTitle: '没有标题, 无法创建新项目',
+      CannotOpenYourProjects: '无法打开您的项目列表',
+      CannotOpenProject: '无法打开项目',
+      CannotDeleteProject: '无法删除项目',
+      CannotRenameProject: '无法给项目改名',
+      CannotAddMoleculeToProject: '无法把此分子加到项目里',
+      MoleculeRemovedFromProject: '分子被成功地从项目里删除',
+      CannotRemoveMoleculeFromProject: '无法把此分子从项目里删除',
+      CannotUpdateProject: '无法更新项目',
+      CannotFetchProjectData: '无法取得项目数据',
     },
 
     molecularViewer: {

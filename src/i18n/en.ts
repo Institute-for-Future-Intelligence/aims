@@ -49,6 +49,17 @@ export const i18n_en = {
 
     message: {
       ScreenshotSaved: 'A screenshot was saved.',
+      CannotCreateNewProject: 'Cannot create a new project',
+      CannotCreateNewProjectWithoutTitle: 'Cannot create a new project without a title',
+      CannotOpenYourProjects: 'Cannot open your projects',
+      CannotOpenProject: 'Cannot open the project',
+      CannotDeleteProject: 'Cannot delete the project',
+      CannotRenameProject: 'Cannot rename the project',
+      CannotAddMoleculeToProject: 'Cannot add this molecule to the project',
+      MoleculeRemovedFromProject: 'The molecule was successfully removed from the project',
+      CannotRemoveMoleculeFromProject: 'Cannot remove this molecule from the project',
+      CannotUpdateProject: 'Cannot update the project',
+      CannotFetchProjectData: 'Cannot fetch project data',
     },
 
     molecularViewer: {

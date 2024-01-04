@@ -36,6 +36,7 @@ export enum MolecularViewerStyle {
 export interface MoleculeData {
   name: string;
   url?: string;
+  invisible?: boolean;
 }
 
 // use null for undefined, as we need to persist this in Firebase
@@ -45,14 +46,22 @@ export interface ProjectInfo {
   type: ProjectType;
   title: string | null;
   description: string | null;
+  molecules: string[];
   selectedProperty: string | null;
   dataColoring: DataColoring;
   sortDescending: boolean | null;
   ranges: Range[] | null;
+  hiddenProperties: string[] | null;
+  counter: number;
+  xAxisNameScatteredPlot: string | null;
+  yAxisNameScatteredPlot: string | null;
+  dotSizeScatteredPlot: number | null;
+  thumbnailWidth: number | null;
 }
 
 export enum ProjectType {
   DEFAULT = 'Default',
+  DRUG_DISCOVERY = 'Drug Discovery',
 }
 
 export enum DataColoring {
