@@ -10,6 +10,7 @@ import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { InputNumber, Popover } from 'antd';
 import { Range } from '../types';
 import { useTranslation } from 'react-i18next';
+import { Filter, FilterType } from '../Filter';
 
 type VerticalAxisProps = {
   variable: string;
@@ -24,6 +25,7 @@ type VerticalAxisProps = {
   max: number;
   step: number;
   value?: number;
+  filter?: Filter;
 };
 
 const DEFAULT_TICK_LENGTH = 5;
@@ -41,6 +43,7 @@ const VerticalAxis = ({
   max,
   step,
   value,
+  filter,
 }: VerticalAxisProps) => {
   const setCommonStore = useStore(Selector.set);
   const user = useStore(Selector.user);
@@ -277,6 +280,17 @@ const VerticalAxis = ({
         strokeOpacity={projectInfo.selectedProperty === variable ? 0.5 : 0}
       />
       {/* Visible vertical line */}
+      {filter && filter.type !== FilterType.None && (
+        <rect
+          x={-5}
+          y={yScale((max - min) / 2)}
+          width={10}
+          height={yScale((min + max) / 2)}
+          fill={'lightgray'}
+          stroke="black"
+          strokeWidth={0}
+        />
+      )}
       <line x1={0} x2={0} y1={yScale(min)} y2={yScale(max)} stroke="black" strokeWidth={2} />
 
       {/* Ticks and labels */}

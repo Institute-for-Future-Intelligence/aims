@@ -39,6 +39,7 @@ import { saveSvgAsPng } from 'save-svg-as-png';
 import { ProjectUtil } from './ProjectUtil';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { updateDataColoring } from './cloudProjectUtil';
+import { Filter, FilterType } from './Filter';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -137,6 +138,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const [updateHiddenFlag, setUpdateHiddenFlag] = useState<boolean>(false);
   const [moleculeName, setMoleculeName] = useState<string>('Aspirin');
   const [moleculeNameDialogVisible, setMoleculeNameDialogVisible] = useState(false);
+  const [hoveredMolecule, setHoveredMolecule] = useState<MoleculeData | undefined>();
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -180,6 +182,14 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const canvasWidth = totalWidth / canvasColumns - gridGutter * (canvasColumns - 1);
   const canvasHeight = (canvasWidth * 2) / 3;
 
+  const hover = (i: number) => {
+    if (collectedMolecules) {
+      if (i >= 0 && i < collectedMolecules.length) {
+        setHoveredMolecule(collectedMolecules[i]);
+      }
+    }
+  };
+
   const createCanvas = (moleculeData: MoleculeData) => {
     return (
       <Canvas
@@ -187,9 +197,12 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
         frameloop={'demand'}
         style={{
+          transition: '.5s ease',
+          opacity: hoveredMolecule === moleculeData ? 0.5 : 1,
           height: canvasHeight + 'px',
           width: canvasWidth + 'px',
           backgroundColor: viewerBackground,
+          borderRadius: '10px',
           border: selectedMolecule === moleculeData ? '2px solid red' : '1px solid gray',
         }}
         camera={{
@@ -580,14 +593,21 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           d['polarSurfaceArea'] = p.polarSurfaceArea;
           d['group'] = projectInfo.dataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
           d['selected'] = selectedMolecule === m;
-          // d['hovered'] = hoveredMolecule === m;
+          d['hovered'] = hoveredMolecule === m;
           d['invisible'] = false;
           data.push(d);
         }
       }
     }
     return data;
-  }, [molecularPropertiesMap, selectedMolecule, collectedMolecules, projectInfo.dataColoring, updateHiddenFlag]);
+  }, [
+    molecularPropertiesMap,
+    hoveredMolecule,
+    selectedMolecule,
+    collectedMolecules,
+    projectInfo.dataColoring,
+    updateHiddenFlag,
+  ]);
 
   const [variables, titles, units, digits, tickIntegers, types] = useMemo(
     () => [
@@ -640,6 +660,19 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     return array;
   }, [updateHiddenFlag]);
 
+  const filters: Filter[] = useMemo(() => {
+    const array: Filter[] = [];
+    array.push({ type: FilterType.None } as Filter); // atom count
+    array.push({ type: FilterType.None } as Filter); // bond count
+    array.push({ type: FilterType.None } as Filter); // mass
+    array.push({ type: FilterType.None } as Filter); // log P
+    array.push({ type: FilterType.None } as Filter); // hydrogen bond donor count
+    array.push({ type: FilterType.None } as Filter); // hydrogen bond acceptor count
+    array.push({ type: FilterType.None } as Filter); // rotatable bond count
+    array.push({ type: FilterType.None } as Filter); // polar surface area
+    return array;
+  }, [updateHiddenFlag]);
+
   return (
     <Container
       onContextMenu={(e) => {
@@ -686,7 +719,15 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
             dataSource={moleculeData}
             renderItem={(data: MoleculeData) => {
               return (
-                <List.Item style={{ height: canvasHeight }} onMouseOver={() => {}} onMouseLeave={() => {}}>
+                <List.Item
+                  style={{ height: canvasHeight }}
+                  onMouseOver={() => {
+                    setHoveredMolecule(data);
+                  }}
+                  onMouseLeave={() => {
+                    setHoveredMolecule(undefined);
+                  }}
+                >
                   {createCanvas(data)}
                   <div
                     style={{
@@ -756,8 +797,9 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
               units={units}
               digits={digits}
               tickIntegers={tickIntegers}
-              // hover={hover}
-              hoveredIndex={-1}
+              filters={filters}
+              hover={hover}
+              hoveredIndex={collectedMolecules && hoveredMolecule ? collectedMolecules.indexOf(hoveredMolecule) : -1}
               selectedIndex={collectedMolecules && selectedMolecule ? collectedMolecules.indexOf(selectedMolecule) : -1}
             />
           )}

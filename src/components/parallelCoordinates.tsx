@@ -7,6 +7,7 @@ import * as d3Shape from 'd3-shape';
 import { DatumEntry } from '../types';
 import React from 'react';
 import VerticalAxis from './verticalAxis';
+import { Filter } from '../Filter';
 
 const MARGIN = { top: 30, right: 55, bottom: 36, left: 55 };
 
@@ -39,6 +40,7 @@ type ParallelCoordinatesProps = {
   units: string[];
   digits: number[];
   tickIntegers: boolean[];
+  filters: Filter[];
   hover?: Function;
   hoveredIndex: number;
   selectedIndex: number;
@@ -60,6 +62,7 @@ const ParallelCoordinates = ({
   units,
   digits,
   tickIntegers,
+  filters,
   hover,
   hoveredIndex,
   selectedIndex,
