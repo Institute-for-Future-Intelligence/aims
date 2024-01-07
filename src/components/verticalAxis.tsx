@@ -274,18 +274,18 @@ const VerticalAxis = ({
         y1={yScale(min)}
         y2={yScale(max)}
         stroke="gold"
-        strokeWidth={10}
+        strokeWidth={16}
         onClick={select}
         style={{ cursor: 'pointer' }}
-        strokeOpacity={projectInfo.selectedProperty === variable ? 0.5 : 0}
+        strokeOpacity={projectInfo.selectedProperty === variable ? 0.25 : 0}
       />
       {/* Visible vertical line */}
-      {filter && filter.type !== FilterType.None && (
+      {filter && filter.type === FilterType.LessThan && (
         <rect
           x={-5}
-          y={yScale((max - min) / 2)}
+          y={yScale(filter.upperBound ?? max)}
           width={10}
-          height={yScale((min + max) / 2)}
+          height={yScale(min) - yScale(filter?.upperBound ?? max)}
           fill={'lightgray'}
           stroke="black"
           strokeWidth={0}

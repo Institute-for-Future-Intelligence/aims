@@ -640,9 +640,9 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     array.push(100); // bond count
     array.push(1000); // mass
     array.push(10); // log P
-    array.push(10); // hydrogen bond donor count
-    array.push(10); // hydrogen bond acceptor count
-    array.push(10); // rotatable bond count
+    array.push(20); // hydrogen bond donor count
+    array.push(20); // hydrogen bond acceptor count
+    array.push(20); // rotatable bond count
     array.push(500); // polar surface area
     return array;
   }, [updateHiddenFlag]);
@@ -664,12 +664,12 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     const array: Filter[] = [];
     array.push({ type: FilterType.None } as Filter); // atom count
     array.push({ type: FilterType.None } as Filter); // bond count
-    array.push({ type: FilterType.None } as Filter); // mass
-    array.push({ type: FilterType.None } as Filter); // log P
-    array.push({ type: FilterType.None } as Filter); // hydrogen bond donor count
-    array.push({ type: FilterType.None } as Filter); // hydrogen bond acceptor count
-    array.push({ type: FilterType.None } as Filter); // rotatable bond count
-    array.push({ type: FilterType.None } as Filter); // polar surface area
+    array.push({ type: FilterType.LessThan, upperBound: 500 } as Filter); // mass
+    array.push({ type: FilterType.LessThan, upperBound: 5 } as Filter); // log P
+    array.push({ type: FilterType.LessThan, upperBound: 5 } as Filter); // hydrogen bond donor count
+    array.push({ type: FilterType.LessThan, upperBound: 10 } as Filter); // hydrogen bond acceptor count
+    array.push({ type: FilterType.LessThan, upperBound: 10 } as Filter); // rotatable bond count
+    array.push({ type: FilterType.LessThan, upperBound: 140 } as Filter); // polar surface area
     return array;
   }, [updateHiddenFlag]);
 
@@ -735,7 +735,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
                       left: '10px',
                       textAlign: 'left',
                       bottom: '18px',
-                      color: 'black',
+                      color: 'gray',
                       fontSize: '10px',
                       fontWeight: 'normal',
                       width: 'calc(100% - 14px)',
