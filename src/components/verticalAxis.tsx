@@ -17,7 +17,7 @@ type VerticalAxisProps = {
   name: string;
   unit: string;
   yScale: ScaleLinear<number, number>;
-  tickLength: number;
+  tickInterval: number;
   tickIntegers: boolean;
   type: string;
   digits: number;
@@ -28,11 +28,11 @@ type VerticalAxisProps = {
   filter?: Filter;
 };
 
-const DEFAULT_TICK_LENGTH = 5;
+const DEFAULT_TICK_LENGTH = 8;
 
 const VerticalAxis = ({
   yScale,
-  tickLength,
+  tickInterval,
   tickIntegers,
   variable,
   name,
@@ -66,6 +66,8 @@ const VerticalAxis = ({
   const lang = { lng: language };
   const isOwner = user.uid === projectInfo.owner;
   const range = yScale.range();
+  const knobWidth = 10;
+  const knobHeight = 6;
 
   // TODO
   const updateSelectedProperty = async (userid: string, projectTitle: string, selectedProperty: string | null) => {};
@@ -74,7 +76,7 @@ const VerticalAxis = ({
 
   const ticks = useMemo(() => {
     const height = range[0] - range[1];
-    const numberOfTicks = type === 'number' ? Math.floor(height / tickLength) : 1;
+    const numberOfTicks = type === 'number' ? Math.floor(height / tickInterval) : 1;
     const ticks = tickIntegers
       ? yScale.ticks(numberOfTicks).filter((tick) => Number.isInteger(tick))
       : yScale.ticks(numberOfTicks);
@@ -82,7 +84,7 @@ const VerticalAxis = ({
       value,
       yOffset: yScale(value),
     }));
-  }, [yScale, tickLength, type, tickIntegers]);
+  }, [yScale, tickInterval, type, tickIntegers]);
 
   const localSelect = () => {
     setCommonStore((state) => {
@@ -279,7 +281,8 @@ const VerticalAxis = ({
         style={{ cursor: 'pointer' }}
         strokeOpacity={projectInfo.selectedProperty === variable ? 0.25 : 0}
       />
-      {/* Visible vertical line */}
+
+      {/* filter track */}
       {filter && filter.type === FilterType.LessThan && (
         <rect
           x={-5}
@@ -291,6 +294,8 @@ const VerticalAxis = ({
           strokeWidth={0}
         />
       )}
+
+      {/* Visible vertical line */}
       <line x1={0} x2={0} y1={yScale(min)} y2={yScale(max)} stroke="black" strokeWidth={2} />
 
       {/* Ticks and labels */}
@@ -303,13 +308,39 @@ const VerticalAxis = ({
               fontSize: '10px',
               textAnchor: 'start',
               alignmentBaseline: 'central',
-              transform: 'translateX(-25px)',
+              transform: 'translateX(-30px)',
             }}
           >
             {variable === 'orientation' ? (value === 0 ? '▭' : '▯') : value}
           </text>
         </g>
       ))}
+
+      {/* filter knobs */}
+      {filter && filter.type === FilterType.LessThan && (
+        <>
+          <rect
+            x={-knobWidth / 2}
+            y={yScale(filter.upperBound ?? max) - knobHeight / 2}
+            width={knobWidth}
+            height={knobHeight}
+            fill={'white'}
+            stroke="black"
+            strokeWidth={1}
+            style={{ cursor: 'grab' }}
+          />
+          <rect
+            x={-knobWidth / 2}
+            y={yScale(min) - knobHeight / 2}
+            width={knobWidth}
+            height={knobHeight}
+            fill={'white'}
+            stroke="black"
+            strokeWidth={1}
+            style={{ cursor: 'grab' }}
+          />
+        </>
+      )}
     </>
   );
 };

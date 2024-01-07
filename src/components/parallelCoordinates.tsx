@@ -128,7 +128,7 @@ const ParallelCoordinates = ({
       <g key={i} transform={'translate(' + xScale(variable) + ',0)'}>
         <VerticalAxis
           yScale={yScale}
-          tickLength={40}
+          tickInterval={40}
           tickIntegers={tickIntegers[i]}
           type={types[i] ?? 'number'}
           variable={variables[i]}
