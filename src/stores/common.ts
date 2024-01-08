@@ -265,6 +265,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           chamberViewerBackground: state.chamberViewerBackground,
           projectViewerStyle: state.projectViewerStyle,
           projectViewerBackground: state.projectViewerBackground,
+          projectInfo: state.projectInfo,
           cameraPosition: state.cameraPosition,
           panCenter: state.panCenter,
         }),

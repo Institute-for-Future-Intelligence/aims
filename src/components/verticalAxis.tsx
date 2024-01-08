@@ -7,7 +7,7 @@ import { ScaleLinear } from 'd3-scale';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
-import { InputNumber, Popover } from 'antd';
+import { ConfigProvider, InputNumber, Popover, Slider } from 'antd';
 import { Range } from '../types';
 import { useTranslation } from 'react-i18next';
 import { Filter, FilterType } from '../Filter';
@@ -66,8 +66,8 @@ const VerticalAxis = ({
   const lang = { lng: language };
   const isOwner = user.uid === projectInfo.owner;
   const range = yScale.range();
-  const knobWidth = 10;
-  const knobHeight = 6;
+  const areaHeight = yScale(min) - yScale(max);
+  const areaWidth = 40;
 
   // TODO
   const updateSelectedProperty = async (userid: string, projectTitle: string, selectedProperty: string | null) => {};
@@ -133,7 +133,16 @@ const VerticalAxis = ({
   };
 
   const getMin = () => {
-    if (variable === 'mass') return 0;
+    if (
+      variable === 'molecularMass' ||
+      variable === 'atomCount' ||
+      variable === 'bondCount' ||
+      variable === 'hydrogenBondDonorCount' ||
+      variable === 'hydrogenBondAcceptorCount' ||
+      variable === 'rotatableBondCount' ||
+      variable === 'polarSurfaceArea'
+    )
+      return 0;
     return Number.MIN_SAFE_INTEGER;
   };
 
@@ -144,117 +153,113 @@ const VerticalAxis = ({
   return (
     <>
       {/* Title */}
-      {variable !== 'orientation' ? (
-        <Popover
-          content={
-            <div>
-              <InputNumber
-                style={{ width: '240px' }}
-                addonBefore={createLabel(t('word.Minimum', lang), 80)}
-                addonAfter={unit}
-                min={getMin()}
-                max={maxRef.current - step}
-                step={step}
-                value={minRef.current}
-                onChange={(value) => {
-                  if (value === null) return;
-                  setCommonStore((state) => {
-                    if (state.projectInfo.ranges) {
-                      let index = -1;
-                      let range = null;
-                      for (const [i, r] of state.projectInfo.ranges.entries()) {
-                        if (r.variable === variable) {
-                          index = i;
-                          range = r;
-                          break;
-                        }
+      <Popover
+        content={
+          <div>
+            <InputNumber
+              style={{ width: '240px' }}
+              addonBefore={createLabel(t('word.Minimum', lang), 80)}
+              addonAfter={unit}
+              min={getMin()}
+              max={maxRef.current - step}
+              step={step}
+              value={minRef.current}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  if (state.projectInfo.ranges) {
+                    let index = -1;
+                    let range = null;
+                    for (const [i, r] of state.projectInfo.ranges.entries()) {
+                      if (r.variable === variable) {
+                        index = i;
+                        range = r;
+                        break;
                       }
-                      if (index >= 0 && range) {
-                        state.projectInfo.ranges[index] = {
-                          variable: range.variable,
-                          minimum: value,
-                          maximum: range.maximum,
-                        } as Range;
-                        if (user.uid && projectInfo.title) {
-                          updateRanges(user.uid, projectInfo.title, state.projectInfo.ranges);
-                        }
-                      } else {
-                        const r = { variable, minimum: value, maximum: max } as Range;
-                        state.projectInfo.ranges.push(r);
-                        if (user.uid && projectInfo.title) {
-                          addRange(user.uid, projectInfo.title, r);
-                        }
+                    }
+                    if (index >= 0 && range) {
+                      state.projectInfo.ranges[index] = {
+                        variable: range.variable,
+                        minimum: value,
+                        maximum: range.maximum,
+                      } as Range;
+                      if (user.uid && projectInfo.title) {
+                        updateRanges(user.uid, projectInfo.title, state.projectInfo.ranges);
                       }
                     } else {
                       const r = { variable, minimum: value, maximum: max } as Range;
-                      state.projectInfo.ranges = [r];
+                      state.projectInfo.ranges.push(r);
                       if (user.uid && projectInfo.title) {
                         addRange(user.uid, projectInfo.title, r);
                       }
                     }
-                  });
-                  minRef.current = Number(value);
-                  setUpdateFlag(!updateFlag);
-                }}
-              />
-              <br />
-              <InputNumber
-                style={{ width: '240px' }}
-                addonBefore={createLabel(t('word.Maximum', lang), 80)}
-                addonAfter={unit}
-                min={minRef.current + step}
-                max={getMax()}
-                step={step}
-                value={maxRef.current}
-                onChange={(value) => {
-                  if (value === null) return;
-                  setCommonStore((state) => {
-                    if (state.projectInfo.ranges) {
-                      let index = -1;
-                      let range = null;
-                      for (const [i, r] of state.projectInfo.ranges.entries()) {
-                        if (r.variable === variable) {
-                          index = i;
-                          range = r;
-                          break;
-                        }
+                  } else {
+                    const r = { variable, minimum: value, maximum: max } as Range;
+                    state.projectInfo.ranges = [r];
+                    if (user.uid && projectInfo.title) {
+                      addRange(user.uid, projectInfo.title, r);
+                    }
+                  }
+                });
+                minRef.current = Number(value);
+                setUpdateFlag(!updateFlag);
+              }}
+            />
+            <br />
+            <InputNumber
+              style={{ width: '240px' }}
+              addonBefore={createLabel(t('word.Maximum', lang), 80)}
+              addonAfter={unit}
+              min={minRef.current + step}
+              max={getMax()}
+              step={step}
+              value={maxRef.current}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  if (state.projectInfo.ranges) {
+                    let index = -1;
+                    let range = null;
+                    for (const [i, r] of state.projectInfo.ranges.entries()) {
+                      if (r.variable === variable) {
+                        index = i;
+                        range = r;
+                        break;
                       }
-                      if (index >= 0 && range) {
-                        state.projectInfo.ranges[index] = {
-                          variable: range.variable,
-                          minimum: range.minimum,
-                          maximum: value,
-                        } as Range;
-                        if (user.uid && projectInfo.title) {
-                          updateRanges(user.uid, projectInfo.title, state.projectInfo.ranges);
-                        }
-                      } else {
-                        const r = { variable, minimum: min, maximum: value } as Range;
-                        state.projectInfo.ranges.push(r);
-                        if (user.uid && projectInfo.title) {
-                          addRange(user.uid, projectInfo.title, r);
-                        }
+                    }
+                    if (index >= 0 && range) {
+                      state.projectInfo.ranges[index] = {
+                        variable: range.variable,
+                        minimum: range.minimum,
+                        maximum: value,
+                      } as Range;
+                      if (user.uid && projectInfo.title) {
+                        updateRanges(user.uid, projectInfo.title, state.projectInfo.ranges);
                       }
                     } else {
                       const r = { variable, minimum: min, maximum: value } as Range;
-                      state.projectInfo.ranges = [r];
+                      state.projectInfo.ranges.push(r);
                       if (user.uid && projectInfo.title) {
                         addRange(user.uid, projectInfo.title, r);
                       }
                     }
-                  });
-                  maxRef.current = Number(value);
-                  setUpdateFlag(!updateFlag);
-                }}
-              />
-            </div>
-          }
-        >
-          {createTitle()}
-        </Popover>
-      ) : (
-        <>{createTitle()}</>
-      )}
+                  } else {
+                    const r = { variable, minimum: min, maximum: value } as Range;
+                    state.projectInfo.ranges = [r];
+                    if (user.uid && projectInfo.title) {
+                      addRange(user.uid, projectInfo.title, r);
+                    }
+                  }
+                });
+                maxRef.current = Number(value);
+                setUpdateFlag(!updateFlag);
+              }}
+            />
+          </div>
+        }
+      >
+        {createTitle()}
+      </Popover>
       {value !== undefined && (
         <text
           x={0}
@@ -269,34 +274,25 @@ const VerticalAxis = ({
         </text>
       )}
 
-      {/* Invisible vertical line for interactions */}
-      <line
-        x1={0}
-        x2={0}
-        y1={yScale(min)}
-        y2={yScale(max)}
-        stroke="gold"
-        strokeWidth={16}
-        onClick={select}
-        style={{ cursor: 'pointer' }}
-        strokeOpacity={projectInfo.selectedProperty === variable ? 0.25 : 0}
-      />
-
       {/* filter track */}
-      {filter && filter.type === FilterType.LessThan && (
+      {filter && filter.type === FilterType.Between && (
         <rect
           x={-5}
           y={yScale(filter.upperBound ?? max)}
           width={10}
-          height={yScale(min) - yScale(filter?.upperBound ?? max)}
+          height={yScale(filter?.lowerBound ?? min) - yScale(filter?.upperBound ?? max)}
           fill={'lightgray'}
-          stroke="black"
-          strokeWidth={0}
         />
       )}
 
-      {/* Visible vertical line */}
-      <line x1={0} x2={0} y1={yScale(min)} y2={yScale(max)} stroke="black" strokeWidth={2} />
+      <rect
+        x={-areaWidth / 2}
+        y={0}
+        width={areaWidth}
+        height={areaHeight}
+        fill="gold"
+        fillOpacity={projectInfo.selectedProperty === variable ? 0.25 : 0}
+      />
 
       {/* Ticks and labels */}
       {ticks.map(({ value, yOffset }) => (
@@ -311,35 +307,43 @@ const VerticalAxis = ({
               transform: 'translateX(-30px)',
             }}
           >
-            {variable === 'orientation' ? (value === 0 ? '▭' : '▯') : value}
+            {value}
           </text>
         </g>
       ))}
 
-      {/* filter knobs */}
-      {filter && filter.type === FilterType.LessThan && (
-        <>
-          <rect
-            x={-knobWidth / 2}
-            y={yScale(filter.upperBound ?? max) - knobHeight / 2}
-            width={knobWidth}
-            height={knobHeight}
-            fill={'white'}
-            stroke="black"
-            strokeWidth={1}
-            style={{ cursor: 'grab' }}
-          />
-          <rect
-            x={-knobWidth / 2}
-            y={yScale(min) - knobHeight / 2}
-            width={knobWidth}
-            height={knobHeight}
-            fill={'white'}
-            stroke="black"
-            strokeWidth={1}
-            style={{ cursor: 'grab' }}
-          />
-        </>
+      <line x1={0} x2={0} y1={yScale(min)} y2={yScale(max)} stroke="black" strokeWidth={2} />
+
+      {filter && filter.type === FilterType.Between && (
+        <foreignObject x={-areaWidth / 2} y={-5} width={areaWidth} height={areaHeight - 3}>
+          <ConfigProvider
+            theme={{
+              components: {
+                Slider: {
+                  railBg: 'black',
+                  railSize: 0,
+                  handleSize: 8,
+                },
+              },
+            }}
+          >
+            <Slider
+              style={{ marginLeft: areaWidth / 2 + 'px' }}
+              min={min}
+              max={max}
+              defaultValue={[filter.lowerBound ?? min, filter.upperBound ?? max]}
+              onChange={(values) => {
+                if (filter) {
+                  filter.lowerBound = values[0];
+                  filter.upperBound = values[1];
+                  setUpdateFlag(!updateFlag);
+                }
+              }}
+              range={true}
+              vertical
+            />
+          </ConfigProvider>
+        </foreignObject>
       )}
     </>
   );

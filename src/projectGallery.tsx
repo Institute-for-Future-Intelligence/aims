@@ -664,12 +664,12 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     const array: Filter[] = [];
     array.push({ type: FilterType.None } as Filter); // atom count
     array.push({ type: FilterType.None } as Filter); // bond count
-    array.push({ type: FilterType.LessThan, upperBound: 500 } as Filter); // mass
-    array.push({ type: FilterType.LessThan, upperBound: 5 } as Filter); // log P
-    array.push({ type: FilterType.LessThan, upperBound: 5 } as Filter); // hydrogen bond donor count
-    array.push({ type: FilterType.LessThan, upperBound: 10 } as Filter); // hydrogen bond acceptor count
-    array.push({ type: FilterType.LessThan, upperBound: 10 } as Filter); // rotatable bond count
-    array.push({ type: FilterType.LessThan, upperBound: 140 } as Filter); // polar surface area
+    array.push({ type: FilterType.Between, upperBound: 500, lowerBound: 0 } as Filter); // mass
+    array.push({ type: FilterType.Between, upperBound: 5, lowerBound: -5 } as Filter); // log P
+    array.push({ type: FilterType.Between, upperBound: 5, lowerBound: 0 } as Filter); // hydrogen bond donor count
+    array.push({ type: FilterType.Between, upperBound: 10, lowerBound: 0 } as Filter); // hydrogen bond acceptor count
+    array.push({ type: FilterType.Between, upperBound: 10, lowerBound: 0 } as Filter); // rotatable bond count
+    array.push({ type: FilterType.Between, upperBound: 140, lowerBound: 0 } as Filter); // polar surface area
     return array;
   }, [updateHiddenFlag]);
 
