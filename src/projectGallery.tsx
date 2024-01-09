@@ -206,7 +206,11 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           width: canvasWidth + 'px',
           backgroundColor: viewerBackground,
           borderRadius: '10px',
-          border: selectedMolecule === moleculeData ? '2px solid red' : '1px solid gray',
+          border: moleculeData.excluded
+            ? 'none'
+            : selectedMolecule === moleculeData
+              ? '2px solid red'
+              : '1px solid gray',
         }}
         camera={{
           fov: DEFAULT_FOV,
@@ -579,29 +583,6 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     );
   };
 
-  const outsideFilter = (p: MolecularProperties) => {
-    if (projectInfo.filters) {
-      for (const f of projectInfo.filters) {
-        if (f.type === FilterType.Between && f.upperBound !== undefined && f.lowerBound !== undefined) {
-          if (f.variable === 'molecularMass') {
-            if (p.mass > f.upperBound || p.mass < f.lowerBound) return true;
-          } else if (f.variable === 'logP') {
-            if (p.logP > f.upperBound || p.logP < f.lowerBound) return true;
-          } else if (f.variable === 'hydrogenBondDonorCount') {
-            if (p.hydrogenBondDonorCount > f.upperBound || p.hydrogenBondDonorCount < f.lowerBound) return true;
-          } else if (f.variable === 'hydrogenBondAcceptorCount') {
-            if (p.hydrogenBondAcceptorCount > f.upperBound || p.hydrogenBondAcceptorCount < f.lowerBound) return true;
-          } else if (f.variable === 'rotatableBondCount') {
-            if (p.rotatableBondCount > f.upperBound || p.rotatableBondCount < f.lowerBound) return true;
-          } else if (f.variable === 'polarSurfaceArea') {
-            if (p.polarSurfaceArea > f.upperBound || p.polarSurfaceArea < f.lowerBound) return true;
-          }
-        }
-      }
-    }
-    return false;
-  };
-
   const data: DatumEntry[] = useMemo(() => {
     const data: DatumEntry[] = [];
     if (collectedMolecules) {
@@ -620,7 +601,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           d['group'] = projectInfo.dataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
           d['selected'] = selectedMolecule === m;
           d['hovered'] = hoveredMolecule === m;
-          d['filtered'] = !outsideFilter(p);
+          d['excluded'] = projectInfo.filters ? ProjectUtil.isExcluded(projectInfo.filters, p) : false;
           d['invisible'] = false;
           data.push(d);
         }

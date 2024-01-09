@@ -11,6 +11,7 @@ import { ConfigProvider, InputNumber, Popover, Slider } from 'antd';
 import { Range } from '../types';
 import { useTranslation } from 'react-i18next';
 import { Filter, FilterType } from '../Filter';
+import { ProjectUtil } from '../ProjectUtil';
 
 type VerticalAxisProps = {
   variable: string;
@@ -369,6 +370,12 @@ const VerticalAxis = ({
                           upperBound: filter.upperBound,
                         } as Filter;
                         state.projectInfo.filters.push(f);
+                      }
+                      for (const m of state.collectedMolecules) {
+                        const p = state.molecularPropertiesMap.get(m.name);
+                        if (p) {
+                          m.excluded = ProjectUtil.isExcluded(state.projectInfo.filters, p);
+                        }
                       }
                     }
                   });

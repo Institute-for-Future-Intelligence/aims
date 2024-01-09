@@ -4,6 +4,8 @@
 
 import i18n from './i18n/i18n';
 import { MoleculeData } from './types';
+import { MolecularProperties } from './models/MolecularProperties';
+import { Filter, FilterType } from './Filter';
 
 export class ProjectUtil {
   static getVariables(): string[] {
@@ -88,6 +90,27 @@ export class ProjectUtil {
     if (variable === 'molecularMass') return 'u';
     if (variable === 'polarSurfaceArea') return 'Å²';
     return '';
+  }
+
+  static isExcluded(filters: Filter[], p: MolecularProperties): boolean {
+    for (const f of filters) {
+      if (f.type === FilterType.Between && f.upperBound !== undefined && f.lowerBound !== undefined) {
+        if (f.variable === 'molecularMass') {
+          if (p.mass > f.upperBound || p.mass < f.lowerBound) return true;
+        } else if (f.variable === 'logP') {
+          if (p.logP > f.upperBound || p.logP < f.lowerBound) return true;
+        } else if (f.variable === 'hydrogenBondDonorCount') {
+          if (p.hydrogenBondDonorCount > f.upperBound || p.hydrogenBondDonorCount < f.lowerBound) return true;
+        } else if (f.variable === 'hydrogenBondAcceptorCount') {
+          if (p.hydrogenBondAcceptorCount > f.upperBound || p.hydrogenBondAcceptorCount < f.lowerBound) return true;
+        } else if (f.variable === 'rotatableBondCount') {
+          if (p.rotatableBondCount > f.upperBound || p.rotatableBondCount < f.lowerBound) return true;
+        } else if (f.variable === 'polarSurfaceArea') {
+          if (p.polarSurfaceArea > f.upperBound || p.polarSurfaceArea < f.lowerBound) return true;
+        }
+      }
+    }
+    return false;
   }
 
   static setScatterData(name: string, axis: 'x' | 'y', datum: { x: number; y: number }, m: MoleculeData) {

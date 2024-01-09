@@ -39,6 +39,7 @@ export interface MoleculeData {
   name: string;
   url?: string;
   invisible?: boolean;
+  excluded?: boolean;
 }
 
 // use null for undefined, as we need to persist this in Firebase
