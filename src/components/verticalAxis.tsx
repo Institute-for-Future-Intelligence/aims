@@ -339,7 +339,7 @@ const VerticalAxis = ({
               style={{ marginLeft: areaWidth / 2 + 'px' }}
               min={min}
               max={max}
-              defaultValue={[filter.lowerBound ?? min, filter.upperBound ?? max]}
+              value={[filter.lowerBound ?? min, filter.upperBound ?? max]}
               onChange={(values) => {
                 if (filter) {
                   filter.lowerBound = values[0];

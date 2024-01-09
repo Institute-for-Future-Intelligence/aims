@@ -208,7 +208,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           opacity: hoveredMolecule === moleculeData ? 0.5 : 1,
           height: canvasHeight + 'px',
           width: canvasWidth + 'px',
-          backgroundColor: viewerBackground,
+          backgroundColor: hoveredMolecule === moleculeData ? 'rgba(200, 200, 200, 0.5)' : viewerBackground,
           borderRadius: '10px',
           border: moleculeData.excluded
             ? 'none'
