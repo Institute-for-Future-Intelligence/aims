@@ -31,6 +31,10 @@ export const i18n_zh_cn = {
       AllRightsReserved: '版权所有',
     },
 
+    term: {
+      DrugDiscovery: '药物发现',
+    },
+
     aboutUs: {
       ProductBroughtToYouBy: '未来智能研究所荣誉出品',
       TermsOfService: '服务条款',

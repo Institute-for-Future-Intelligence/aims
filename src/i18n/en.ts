@@ -33,6 +33,10 @@ export const i18n_en = {
       AllRightsReserved: 'All Rights Reserved',
     },
 
+    term: {
+      DrugDiscovery: 'Drug Discovery',
+    },
+
     aboutUs: {
       ProductBroughtToYouBy: 'This product is brought to you by',
       TermsOfService: 'Terms of Service',

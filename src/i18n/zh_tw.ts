@@ -31,6 +31,10 @@ export const i18n_zh_tw = {
       AllRightsReserved: '版權所有',
     },
 
+    term: {
+      DrugDiscovery: '藥物發現',
+    },
+
     aboutUs: {
       ProductBroughtToYouBy: '未來智能研究所榮譽出品',
       TermsOfService: '服務條款',
