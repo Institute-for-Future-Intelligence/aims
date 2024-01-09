@@ -118,7 +118,7 @@ const Team = ({ top, height, color }: TeamProps) => {
           left: '10%',
           marginRight: '10%',
           top: top200,
-          fontSize: 'smaller',
+          fontSize: '12px',
           textAlign: 'justify',
           color: color,
         }}

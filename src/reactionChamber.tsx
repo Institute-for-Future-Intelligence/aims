@@ -58,7 +58,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       }}
     >
       <OrbitControls enableDamping={false} onEnd={onControlEnd} />
-      <Lights />
+      <Lights highQuality />
       {viewerAxes && <Axes />}
       {moleculeData && (
         <MolecularViewer moleculeData={moleculeData} style={viewerStyle} shininess={shininess} highQuality={true} />

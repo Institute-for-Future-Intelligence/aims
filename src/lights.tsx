@@ -6,11 +6,11 @@ import React, { useRef } from 'react';
 import { DirectionalLight } from 'three';
 import { DEFAULT_SHADOW_CAMERA_FAR, DEFAULT_SHADOW_MAP_SIZE } from './programmaticConstants';
 
-const Lights = () => {
+const Lights = ({ highQuality }: { highQuality?: boolean }) => {
   const directLightIntensity = 5;
   const ambientLightIntensity = 1;
   const shadowCameraFar = DEFAULT_SHADOW_CAMERA_FAR;
-  const shadowMapSize = DEFAULT_SHADOW_MAP_SIZE;
+  const shadowMapSize = highQuality ? DEFAULT_SHADOW_MAP_SIZE : DEFAULT_SHADOW_MAP_SIZE / 16;
   const cameraExtent = 10;
 
   const ref = useRef<DirectionalLight>(null);

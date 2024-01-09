@@ -47,7 +47,7 @@ export const i18n_en = {
       Support: 'Support',
       Acknowledgment: 'Acknowledgment',
       FundingInformation:
-        'The National Institutes of Health (NIH) generously provided funding for the research and development of this product through grants R25GM150143. Any opinions, findings, and conclusions or recommendations expressed in this product, however, are those of the authors and do not necessarily reflect the views of NIH.',
+        'The National Institutes of Health (NIH) and the National Science Foundation (NSF) generously provide funding for the research and development of this product through grants R25GM150143 and 2300976. Any opinions, findings, and conclusions or recommendations expressed in this product, however, are those of the authors and do not necessarily reflect the views of NIH and NSF.',
       Contact: 'For more information, please contact Charles Xie (charles@intofuture.org).',
     },
 
