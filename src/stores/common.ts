@@ -39,7 +39,6 @@ export interface CommonStoreState {
 
   loadedMolecule: MoleculeData | null;
   selectedMolecule: MoleculeData | null;
-  hoveredMolecule: MoleculeData | null;
   collectedMolecules: MoleculeData[];
   addMolecule: (molecule: MoleculeData) => boolean;
   removeMolecule: (molecule: MoleculeData) => void;
@@ -116,7 +115,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
 
           loadedMolecule: null,
           selectedMolecule: null,
-          hoveredMolecule: null,
           collectedMolecules: [],
           addMolecule(molecule: MoleculeData) {
             let added = true;

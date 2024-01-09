@@ -125,7 +125,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
   const selectedMolecule = useStore(Selector.selectedMolecule);
-  const hoveredMolecule = useStore(Selector.hoveredMolecule);
+  const hoveredMolecule = usePrimitiveStore(Selector.hoveredMolecule);
   const collectedMolecules = useStore(Selector.collectedMolecules);
   const addMolecule = useStore(Selector.addMolecule);
   const removeMolecule = useStore(Selector.removeMolecule);
@@ -190,7 +190,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const hover = (i: number) => {
     if (collectedMolecules) {
       if (i >= 0 && i < collectedMolecules.length) {
-        setCommonStore((state) => {
+        usePrimitiveStore.getState().set((state) => {
           state.hoveredMolecule = collectedMolecules[i];
         });
       }
@@ -855,12 +855,12 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
                 <List.Item
                   style={{ height: canvasHeight }}
                   onMouseOver={() => {
-                    setCommonStore((state) => {
+                    usePrimitiveStore.getState().set((state) => {
                       state.hoveredMolecule = data;
                     });
                   }}
                   onMouseLeave={() => {
-                    setCommonStore((state) => {
+                    usePrimitiveStore.getState().set((state) => {
                       state.hoveredMolecule = null;
                     });
                   }}

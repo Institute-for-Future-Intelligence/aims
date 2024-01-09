@@ -4,12 +4,14 @@
 
 import { createWithEqualityFn } from 'zustand/traditional';
 import produce from 'immer';
-import { ObjectType } from '../types';
+import { MoleculeData, ObjectType } from '../types';
 
 // avoid using undefined value in the store for now.
 export interface PrimitiveStoreState {
   changed: boolean;
   setChanged: (b: boolean) => void;
+
+  hoveredMolecule: MoleculeData | null;
 
   waiting: boolean;
 
@@ -51,6 +53,8 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
         state.changed = b;
       });
     },
+
+    hoveredMolecule: null,
 
     waiting: false,
 
