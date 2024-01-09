@@ -38,9 +38,8 @@ import ParallelCoordinates from './components/parallelCoordinates';
 import { saveSvgAsPng } from 'save-svg-as-png';
 import { ProjectUtil } from './ProjectUtil';
 import { usePrimitiveStore } from './stores/commonPrimitive';
-import { updateDataColoring } from './cloudProjectUtil';
+import { updateDataColoring, updateHiddenProperties } from './cloudProjectUtil';
 import { Filter, FilterType } from './Filter';
-import { MolecularProperties } from './models/MolecularProperties';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -155,15 +154,20 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const descriptionChangedRef = useRef<boolean>(false);
   const descriptionExpandedRef = useRef<boolean>(false);
 
+  const propertySelectionChangedRef = useRef<boolean>(false);
   const dataColoringSelectionRef = useRef<DataColoring>(projectInfo.dataColoring ?? DataColoring.ALL);
-  const atomCountSelectionRef = useRef<boolean>(true);
-  const bondCountSelectionRef = useRef<boolean>(true);
-  const massSelectionRef = useRef<boolean>(true);
-  const logPSelectionRef = useRef<boolean>(true);
-  const polarSurfaceAreaSelectionRef = useRef<boolean>(true);
-  const hBondDonorCountSelectionRef = useRef<boolean>(true);
-  const hBondAcceptorCountSelectionRef = useRef<boolean>(true);
-  const rotatableBondCountSelectionRef = useRef<boolean>(true);
+  const atomCountSelectionRef = useRef<boolean>(!projectInfo.hiddenProperties?.includes('atomCount'));
+  const bondCountSelectionRef = useRef<boolean>(!projectInfo.hiddenProperties?.includes('bondCount'));
+  const massSelectionRef = useRef<boolean>(!projectInfo.hiddenProperties?.includes('molecularMass'));
+  const logPSelectionRef = useRef<boolean>(!projectInfo.hiddenProperties?.includes('logP'));
+  const hBondDonorCountSelectionRef = useRef<boolean>(
+    !projectInfo.hiddenProperties?.includes('hydrogenBondDonorCount'),
+  );
+  const hBondAcceptorCountSelectionRef = useRef<boolean>(
+    !projectInfo.hiddenProperties?.includes('hydrogenBondAcceptorCount'),
+  );
+  const rotatableBondCountSelectionRef = useRef<boolean>(!projectInfo.hiddenProperties?.includes('rotatableBondCount'));
+  const polarSurfaceAreaSelectionRef = useRef<boolean>(!projectInfo.hiddenProperties?.includes('polarSurfaceArea'));
 
   useEffect(() => {
     const handleResize = () => {
@@ -461,11 +465,42 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     },
   ];
 
+  const localSelectProperty = (selected: boolean, property: string) => {
+    setCommonStore((state) => {
+      if (state.projectInfo.hiddenProperties) {
+        if (selected) {
+          if (state.projectInfo.hiddenProperties.includes(property)) {
+            state.projectInfo.hiddenProperties.splice(state.projectInfo.hiddenProperties.indexOf(property), 1);
+          }
+        } else {
+          if (!state.projectInfo.hiddenProperties.includes(property)) {
+            state.projectInfo.hiddenProperties.push(property);
+          }
+        }
+      }
+    });
+  };
+
+  const selectProperty = (selected: boolean, property: string) => {
+    propertySelectionChangedRef.current = true;
+    if (isOwner) {
+      if (user.uid && projectInfo.title) {
+        updateHiddenProperties(user.uid, projectInfo.title, property, !selected).then(() => {
+          localSelectProperty(selected, property);
+        });
+      }
+    } else {
+      localSelectProperty(selected, property);
+    }
+  };
+
   const createChoosePropertiesContent = () => {
     return (
       <div>
         <Checkbox
           onChange={(e) => {
+            atomCountSelectionRef.current = e.target.checked;
+            selectProperty(atomCountSelectionRef.current, 'atomCount');
             setUpdateHiddenFlag(!updateHiddenFlag);
           }}
           checked={atomCountSelectionRef.current}
@@ -475,6 +510,8 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         <br />
         <Checkbox
           onChange={(e) => {
+            bondCountSelectionRef.current = e.target.checked;
+            selectProperty(bondCountSelectionRef.current, 'bondCount');
             setUpdateHiddenFlag(!updateHiddenFlag);
           }}
           checked={bondCountSelectionRef.current}
@@ -484,6 +521,8 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         <br />
         <Checkbox
           onChange={(e) => {
+            massSelectionRef.current = e.target.checked;
+            selectProperty(massSelectionRef.current, 'molecularMass');
             setUpdateHiddenFlag(!updateHiddenFlag);
           }}
           checked={massSelectionRef.current}
@@ -493,6 +532,8 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         <br />
         <Checkbox
           onChange={(e) => {
+            logPSelectionRef.current = e.target.checked;
+            selectProperty(logPSelectionRef.current, 'logP');
             setUpdateHiddenFlag(!updateHiddenFlag);
           }}
           checked={logPSelectionRef.current}
@@ -502,15 +543,8 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         <br />
         <Checkbox
           onChange={(e) => {
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={polarSurfaceAreaSelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.PolarSurfaceArea', lang)}</span>
-        </Checkbox>
-        <br />
-        <Checkbox
-          onChange={(e) => {
+            hBondDonorCountSelectionRef.current = e.target.checked;
+            selectProperty(hBondDonorCountSelectionRef.current, 'hydrogenBondDonorCount');
             setUpdateHiddenFlag(!updateHiddenFlag);
           }}
           checked={hBondDonorCountSelectionRef.current}
@@ -520,6 +554,8 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         <br />
         <Checkbox
           onChange={(e) => {
+            hBondAcceptorCountSelectionRef.current = e.target.checked;
+            selectProperty(hBondAcceptorCountSelectionRef.current, 'hydrogenBondAcceptorCount');
             setUpdateHiddenFlag(!updateHiddenFlag);
           }}
           checked={hBondAcceptorCountSelectionRef.current}
@@ -529,11 +565,24 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         <br />
         <Checkbox
           onChange={(e) => {
+            rotatableBondCountSelectionRef.current = e.target.checked;
+            selectProperty(rotatableBondCountSelectionRef.current, 'rotatableBondCount');
             setUpdateHiddenFlag(!updateHiddenFlag);
           }}
           checked={rotatableBondCountSelectionRef.current}
         >
           <span style={{ fontSize: '12px' }}>{t('projectPanel.RotatableBondCount', lang)}</span>
+        </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            polarSurfaceAreaSelectionRef.current = e.target.checked;
+            selectProperty(polarSurfaceAreaSelectionRef.current, 'polarSurfaceArea');
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={polarSurfaceAreaSelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.PolarSurfaceArea', lang)}</span>
         </Checkbox>
       </div>
     );
@@ -590,19 +639,22 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         const d = {} as DatumEntry;
         const p = molecularPropertiesMap.get(m.name);
         if (p) {
-          d['atomCount'] = p.atomCount;
-          d['bondCount'] = p.bondCount;
-          d['molecularMass'] = p.mass;
-          d['logP'] = p.logP;
-          d['hydrogenBondDonorCount'] = p.hydrogenBondDonorCount;
-          d['hydrogenBondAcceptorCount'] = p.hydrogenBondAcceptorCount;
-          d['rotatableBondCount'] = p.rotatableBondCount;
-          d['polarSurfaceArea'] = p.polarSurfaceArea;
+          if (!projectInfo.hiddenProperties?.includes('atomCount')) d['atomCount'] = p.atomCount;
+          if (!projectInfo.hiddenProperties?.includes('bondCount')) d['bondCount'] = p.bondCount;
+          if (!projectInfo.hiddenProperties?.includes('molecularMass')) d['molecularMass'] = p.mass;
+          if (!projectInfo.hiddenProperties?.includes('logP')) d['logP'] = p.logP;
+          if (!projectInfo.hiddenProperties?.includes('hydrogenBondDonorCount'))
+            d['hydrogenBondDonorCount'] = p.hydrogenBondDonorCount;
+          if (!projectInfo.hiddenProperties?.includes('hydrogenBondAcceptorCount'))
+            d['hydrogenBondAcceptorCount'] = p.hydrogenBondAcceptorCount;
+          if (!projectInfo.hiddenProperties?.includes('rotatableBondCount'))
+            d['rotatableBondCount'] = p.rotatableBondCount;
+          if (!projectInfo.hiddenProperties?.includes('polarSurfaceArea')) d['polarSurfaceArea'] = p.polarSurfaceArea;
           d['group'] = projectInfo.dataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
           d['selected'] = selectedMolecule === m;
           d['hovered'] = hoveredMolecule === m;
           d['excluded'] = projectInfo.filters ? ProjectUtil.isExcluded(projectInfo.filters, p) : false;
-          d['invisible'] = false;
+          d['invisible'] = !!m.invisible;
           data.push(d);
         }
       }
@@ -615,19 +667,20 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     collectedMolecules,
     projectInfo.dataColoring,
     projectInfo.filters,
+    projectInfo.hiddenProperties,
     updateHiddenFlag,
   ]);
 
   const [variables, titles, units, digits, tickIntegers, types] = useMemo(
     () => [
-      ProjectUtil.getVariables(),
-      ProjectUtil.getTitles(lang),
-      ProjectUtil.getUnits(lang),
-      ProjectUtil.getDigits(),
-      ProjectUtil.getTickIntegers(),
-      ProjectUtil.getTypes(),
+      ProjectUtil.getVariables(projectInfo.hiddenProperties ?? []),
+      ProjectUtil.getTitles(projectInfo.hiddenProperties ?? [], lang),
+      ProjectUtil.getUnits(projectInfo.hiddenProperties ?? [], lang),
+      ProjectUtil.getDigits(projectInfo.hiddenProperties ?? []),
+      ProjectUtil.getTickIntegers(projectInfo.hiddenProperties ?? []),
+      ProjectUtil.getTypes(projectInfo.hiddenProperties ?? []),
     ],
-    [updateHiddenFlag, lang],
+    [updateHiddenFlag, lang, projectInfo.hiddenProperties],
   );
 
   const getMin = (variable: string, defaultValue: number) => {
@@ -658,40 +711,44 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
 
   const minima: number[] = useMemo(() => {
     const array: number[] = [];
-    array.push(getMin('atomCount', 0));
-    array.push(getMin('bondCount', 0));
-    array.push(getMin('molecularMass', 0));
-    array.push(getMin('logP', -10));
-    array.push(getMin('hydrogenBondDonorCount', 0));
-    array.push(getMin('hydrogenBondAcceptorCount', 0));
-    array.push(getMin('rotatableBondCount', 0));
-    array.push(getMin('polarSurfaceArea', 0));
+    if (!projectInfo.hiddenProperties?.includes('atomCount')) array.push(getMin('atomCount', 0));
+    if (!projectInfo.hiddenProperties?.includes('bondCount')) array.push(getMin('bondCount', 0));
+    if (!projectInfo.hiddenProperties?.includes('molecularMass')) array.push(getMin('molecularMass', 0));
+    if (!projectInfo.hiddenProperties?.includes('logP')) array.push(getMin('logP', -10));
+    if (!projectInfo.hiddenProperties?.includes('hydrogenBondDonorCount'))
+      array.push(getMin('hydrogenBondDonorCount', 0));
+    if (!projectInfo.hiddenProperties?.includes('hydrogenBondAcceptorCount'))
+      array.push(getMin('hydrogenBondAcceptorCount', 0));
+    if (!projectInfo.hiddenProperties?.includes('rotatableBondCount')) array.push(getMin('rotatableBondCount', 0));
+    if (!projectInfo.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMin('polarSurfaceArea', 0));
     return array;
   }, [updateHiddenFlag, projectInfo.ranges]);
 
   const maxima: number[] = useMemo(() => {
     const array: number[] = [];
-    array.push(getMax('atomCount', 100));
-    array.push(getMax('bondCount', 100));
-    array.push(getMax('molecularMass', 1000));
-    array.push(getMax('logP', 10));
-    array.push(getMax('hydrogenBondDonorCount', 20));
-    array.push(getMax('hydrogenBondAcceptorCount', 20));
-    array.push(getMax('rotatableBondCount', 20));
-    array.push(getMax('polarSurfaceArea', 500));
+    if (!projectInfo.hiddenProperties?.includes('atomCount')) array.push(getMax('atomCount', 100));
+    if (!projectInfo.hiddenProperties?.includes('bondCount')) array.push(getMax('bondCount', 100));
+    if (!projectInfo.hiddenProperties?.includes('molecularMass')) array.push(getMax('molecularMass', 1000));
+    if (!projectInfo.hiddenProperties?.includes('logP')) array.push(getMax('logP', 10));
+    if (!projectInfo.hiddenProperties?.includes('hydrogenBondDonorCount'))
+      array.push(getMax('hydrogenBondDonorCount', 20));
+    if (!projectInfo.hiddenProperties?.includes('hydrogenBondAcceptorCount'))
+      array.push(getMax('hydrogenBondAcceptorCount', 20));
+    if (!projectInfo.hiddenProperties?.includes('rotatableBondCount')) array.push(getMax('rotatableBondCount', 20));
+    if (!projectInfo.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMax('polarSurfaceArea', 500));
     return array;
   }, [updateHiddenFlag, projectInfo.ranges]);
 
   const steps: number[] = useMemo(() => {
     const array: number[] = [];
-    array.push(1); // atom count
-    array.push(1); // bond count
-    array.push(0.1); // mass
-    array.push(0.1); // log P
-    array.push(1); // hydrogen bond donor count
-    array.push(1); // hydrogen bond acceptor count
-    array.push(1); // rotatable bond count
-    array.push(1); // polar surface area
+    if (!projectInfo.hiddenProperties?.includes('atomCount')) array.push(1);
+    if (!projectInfo.hiddenProperties?.includes('bondCount')) array.push(1);
+    if (!projectInfo.hiddenProperties?.includes('molecularMass')) array.push(0.1);
+    if (!projectInfo.hiddenProperties?.includes('logP')) array.push(0.1);
+    if (!projectInfo.hiddenProperties?.includes('hydrogenBondDonorCount')) array.push(1);
+    if (!projectInfo.hiddenProperties?.includes('hydrogenBondAcceptorCount')) array.push(1);
+    if (!projectInfo.hiddenProperties?.includes('rotatableBondCount')) array.push(1);
+    if (!projectInfo.hiddenProperties?.includes('polarSurfaceArea')) array.push(1);
     return array;
   }, [updateHiddenFlag]);
 
@@ -732,14 +789,20 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
 
   const filters: Filter[] = useMemo(() => {
     const array: Filter[] = [];
-    array.push({ variable: 'atomCount', type: FilterType.None } as Filter);
-    array.push({ variable: 'bondCount', type: FilterType.None } as Filter);
-    array.push(createFilter('molecularMass', 500, 0));
-    array.push(createFilter('logP', 5, -5));
-    array.push(createFilter('hydrogenBondDonorCount', 5, 0));
-    array.push(createFilter('hydrogenBondAcceptorCount', 10, 0));
-    array.push(createFilter('rotatableBondCount', 10, 0));
-    array.push(createFilter('polarSurfaceArea', 140, 0));
+    if (!projectInfo.hiddenProperties?.includes('atomCount'))
+      array.push({ variable: 'atomCount', type: FilterType.None } as Filter);
+    if (!projectInfo.hiddenProperties?.includes('bondCount'))
+      array.push({ variable: 'bondCount', type: FilterType.None } as Filter);
+    if (!projectInfo.hiddenProperties?.includes('molecularMass')) array.push(createFilter('molecularMass', 500, 0));
+    if (!projectInfo.hiddenProperties?.includes('logP')) array.push(createFilter('logP', 5, -5));
+    if (!projectInfo.hiddenProperties?.includes('hydrogenBondDonorCount'))
+      array.push(createFilter('hydrogenBondDonorCount', 5, 0));
+    if (!projectInfo.hiddenProperties?.includes('hydrogenBondAcceptorCount'))
+      array.push(createFilter('hydrogenBondAcceptorCount', 10, 0));
+    if (!projectInfo.hiddenProperties?.includes('rotatableBondCount'))
+      array.push(createFilter('rotatableBondCount', 10, 0));
+    if (!projectInfo.hiddenProperties?.includes('polarSurfaceArea'))
+      array.push(createFilter('polarSurfaceArea', 140, 0));
     return array;
   }, [updateHiddenFlag, projectInfo.filters]);
 
@@ -841,7 +904,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
               <Button
                 style={{ border: 'none', paddingRight: '20px', background: 'white' }}
                 onClick={() => {
-                  const d = document.getElementById('design-space');
+                  const d = document.getElementById('properties-space');
                   if (d) {
                     saveSvgAsPng(d, 'design-space-' + projectInfo.title + '.png').then(() => {
                       showInfo(t('message.ScreenshotSaved', lang));

@@ -8,81 +8,82 @@ import { MolecularProperties } from './models/MolecularProperties';
 import { Filter, FilterType } from './Filter';
 
 export class ProjectUtil {
-  static getVariables(): string[] {
+  static getVariables(hidden: string[]): string[] {
     const a: string[] = [];
-    a.push('atomCount');
-    a.push('bondCount');
-    a.push('molecularMass');
-    a.push('logP');
-    a.push('hydrogenBondDonorCount');
-    a.push('hydrogenBondAcceptorCount');
-    a.push('rotatableBondCount');
-    a.push('polarSurfaceArea');
+    if (!hidden?.includes('atomCount')) a.push('atomCount');
+    if (!hidden?.includes('bondCount')) a.push('bondCount');
+    if (!hidden?.includes('molecularMass')) a.push('molecularMass');
+    if (!hidden?.includes('logP')) a.push('logP');
+    if (!hidden?.includes('hydrogenBondDonorCount')) a.push('hydrogenBondDonorCount');
+    if (!hidden?.includes('hydrogenBondAcceptorCount')) a.push('hydrogenBondAcceptorCount');
+    if (!hidden?.includes('rotatableBondCount')) a.push('rotatableBondCount');
+    if (!hidden?.includes('polarSurfaceArea')) a.push('polarSurfaceArea');
     return a;
   }
 
-  static getTitles(l: { lng: string }): string[] {
+  static getTitles(hidden: string[], l: { lng: string }): string[] {
     const a: string[] = [];
-    a.push(i18n.t('projectPanel.AtomCount', l));
-    a.push(i18n.t('projectPanel.BondCount', l));
-    a.push(i18n.t('projectPanel.MolecularMass', l));
-    a.push('log P');
-    a.push(i18n.t('projectPanel.HydrogenBondDonorCountShort', l));
-    a.push(i18n.t('projectPanel.HydrogenBondAcceptorCountShort', l));
-    a.push(i18n.t('projectPanel.RotatableBondCountShort', l));
-    a.push(i18n.t('projectPanel.PolarSurfaceAreaShort', l));
+    if (!hidden?.includes('atomCount')) a.push(i18n.t('projectPanel.AtomCount', l));
+    if (!hidden?.includes('bondCount')) a.push(i18n.t('projectPanel.BondCount', l));
+    if (!hidden?.includes('molecularMass')) a.push(i18n.t('projectPanel.MolecularMass', l));
+    if (!hidden?.includes('logP')) a.push('log P');
+    if (!hidden?.includes('hydrogenBondDonorCount')) a.push(i18n.t('projectPanel.HydrogenBondDonorCountShort', l));
+    if (!hidden?.includes('hydrogenBondAcceptorCount'))
+      a.push(i18n.t('projectPanel.HydrogenBondAcceptorCountShort', l));
+    if (!hidden?.includes('rotatableBondCount')) a.push(i18n.t('projectPanel.RotatableBondCountShort', l));
+    if (!hidden?.includes('polarSurfaceArea')) a.push(i18n.t('projectPanel.PolarSurfaceAreaShort', l));
     return a;
   }
 
-  static getTypes(): string[] {
+  static getTypes(hidden: string[]): string[] {
     const a: string[] = [];
-    a.push('number');
-    a.push('number');
-    a.push('number');
-    a.push('number');
-    a.push('number');
-    a.push('number');
-    a.push('number');
-    a.push('number');
+    if (!hidden?.includes('atomCount')) a.push('number');
+    if (!hidden?.includes('bondCount')) a.push('number');
+    if (!hidden?.includes('molecularMass')) a.push('number');
+    if (!hidden?.includes('logP')) a.push('number');
+    if (!hidden?.includes('hydrogenBondDonorCount')) a.push('number');
+    if (!hidden?.includes('hydrogenBondAcceptorCount')) a.push('number');
+    if (!hidden?.includes('rotatableBondCount')) a.push('number');
+    if (!hidden?.includes('polarSurfaceArea')) a.push('number');
     return a;
   }
 
-  static getDigits(): number[] {
+  static getDigits(hidden: string[]): number[] {
     const a: number[] = [];
-    a.push(0);
-    a.push(0);
-    a.push(2);
-    a.push(2);
-    a.push(0);
-    a.push(0);
-    a.push(0);
-    a.push(1);
+    if (!hidden?.includes('atomCount')) a.push(0);
+    if (!hidden?.includes('bondCount')) a.push(0);
+    if (!hidden?.includes('molecularMass')) a.push(2);
+    if (!hidden?.includes('logP')) a.push(2);
+    if (!hidden?.includes('hydrogenBondDonorCount')) a.push(0);
+    if (!hidden?.includes('hydrogenBondAcceptorCount')) a.push(0);
+    if (!hidden?.includes('rotatableBondCount')) a.push(0);
+    if (!hidden?.includes('polarSurfaceArea')) a.push(1);
     return a;
   }
 
-  static getTickIntegers(): boolean[] {
+  static getTickIntegers(hidden: string[]): boolean[] {
     const a: boolean[] = [];
-    a.push(true);
-    a.push(true);
-    a.push(false);
-    a.push(false);
-    a.push(true);
-    a.push(true);
-    a.push(true);
-    a.push(false);
+    if (!hidden?.includes('atomCount')) a.push(true);
+    if (!hidden?.includes('bondCount')) a.push(true);
+    if (!hidden?.includes('molecularMass')) a.push(false);
+    if (!hidden?.includes('logP')) a.push(false);
+    if (!hidden?.includes('hydrogenBondDonorCount')) a.push(true);
+    if (!hidden?.includes('hydrogenBondAcceptorCount')) a.push(true);
+    if (!hidden?.includes('rotatableBondCount')) a.push(true);
+    if (!hidden?.includes('polarSurfaceArea')) a.push(false);
     return a;
   }
 
-  static getUnits(l: { lng: string }): string[] {
+  static getUnits(hidden: string[], l: { lng: string }): string[] {
     const a: string[] = [];
-    a.push('');
-    a.push('');
-    a.push('u');
-    a.push('');
-    a.push('');
-    a.push('');
-    a.push('');
-    a.push('Å²');
+    if (!hidden?.includes('atomCount')) a.push('');
+    if (!hidden?.includes('bondCount')) a.push('');
+    if (!hidden?.includes('molecularMass')) a.push('u');
+    if (!hidden?.includes('logP')) a.push('');
+    if (!hidden?.includes('hydrogenBondDonorCount')) a.push('');
+    if (!hidden?.includes('hydrogenBondAcceptorCount')) a.push('');
+    if (!hidden?.includes('rotatableBondCount')) a.push('');
+    if (!hidden?.includes('polarSurfaceArea')) a.push('Å²');
     return a;
   }
 

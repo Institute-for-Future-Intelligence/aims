@@ -108,6 +108,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             description: null,
             selectedProperty: null,
             sortDescending: false,
+            hiddenProperties: new Array<string>(),
             ranges: new Array<Range>(),
             filters: new Array<Filter>(),
           } as ProjectInfo,
