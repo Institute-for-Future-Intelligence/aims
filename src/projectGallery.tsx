@@ -40,6 +40,7 @@ import { ProjectUtil } from './ProjectUtil';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { updateDataColoring } from './cloudProjectUtil';
 import { Filter, FilterType } from './Filter';
+import { MolecularProperties } from './models/MolecularProperties';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -125,6 +126,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
   const selectedMolecule = useStore(Selector.selectedMolecule);
+  const hoveredMolecule = useStore(Selector.hoveredMolecule);
   const collectedMolecules = useStore(Selector.collectedMolecules);
   const addMolecule = useStore(Selector.addMolecule);
   const removeMolecule = useStore(Selector.removeMolecule);
@@ -138,7 +140,6 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const [updateHiddenFlag, setUpdateHiddenFlag] = useState<boolean>(false);
   const [moleculeName, setMoleculeName] = useState<string>('Aspirin');
   const [moleculeNameDialogVisible, setMoleculeNameDialogVisible] = useState(false);
-  const [hoveredMolecule, setHoveredMolecule] = useState<MoleculeData | undefined>();
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -185,7 +186,9 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const hover = (i: number) => {
     if (collectedMolecules) {
       if (i >= 0 && i < collectedMolecules.length) {
-        setHoveredMolecule(collectedMolecules[i]);
+        setCommonStore((state) => {
+          state.hoveredMolecule = collectedMolecules[i];
+        });
       }
     }
   };
@@ -576,6 +579,29 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     );
   };
 
+  const outsideFilter = (p: MolecularProperties) => {
+    if (projectInfo.filters) {
+      for (const f of projectInfo.filters) {
+        if (f.type === FilterType.Between && f.upperBound !== undefined && f.lowerBound !== undefined) {
+          if (f.variable === 'molecularMass') {
+            if (p.mass > f.upperBound || p.mass < f.lowerBound) return true;
+          } else if (f.variable === 'logP') {
+            if (p.logP > f.upperBound || p.logP < f.lowerBound) return true;
+          } else if (f.variable === 'hydrogenBondDonorCount') {
+            if (p.hydrogenBondDonorCount > f.upperBound || p.hydrogenBondDonorCount < f.lowerBound) return true;
+          } else if (f.variable === 'hydrogenBondAcceptorCount') {
+            if (p.hydrogenBondAcceptorCount > f.upperBound || p.hydrogenBondAcceptorCount < f.lowerBound) return true;
+          } else if (f.variable === 'rotatableBondCount') {
+            if (p.rotatableBondCount > f.upperBound || p.rotatableBondCount < f.lowerBound) return true;
+          } else if (f.variable === 'polarSurfaceArea') {
+            if (p.polarSurfaceArea > f.upperBound || p.polarSurfaceArea < f.lowerBound) return true;
+          }
+        }
+      }
+    }
+    return false;
+  };
+
   const data: DatumEntry[] = useMemo(() => {
     const data: DatumEntry[] = [];
     if (collectedMolecules) {
@@ -594,6 +620,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           d['group'] = projectInfo.dataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
           d['selected'] = selectedMolecule === m;
           d['hovered'] = hoveredMolecule === m;
+          d['filtered'] = !outsideFilter(p);
           d['invisible'] = false;
           data.push(d);
         }
@@ -606,6 +633,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     selectedMolecule,
     collectedMolecules,
     projectInfo.dataColoring,
+    projectInfo.filters,
     updateHiddenFlag,
   ]);
 
@@ -621,31 +649,57 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     [updateHiddenFlag, lang],
   );
 
+  const getMin = (variable: string, defaultValue: number) => {
+    let min = defaultValue;
+    if (projectInfo.ranges) {
+      for (const r of projectInfo.ranges) {
+        if (r.variable === variable) {
+          min = r.minimum ?? defaultValue;
+          break;
+        }
+      }
+    }
+    return min;
+  };
+
+  const getMax = (variable: string, defaultValue: number) => {
+    let max = defaultValue;
+    if (projectInfo.ranges) {
+      for (const r of projectInfo.ranges) {
+        if (r.variable === variable) {
+          max = r.maximum ?? defaultValue;
+          break;
+        }
+      }
+    }
+    return max;
+  };
+
   const minima: number[] = useMemo(() => {
     const array: number[] = [];
-    array.push(0); // atom count
-    array.push(0); // bond count
-    array.push(0); // mass
-    array.push(-10); // log P
-    array.push(0); // hydrogen bond donor count
-    array.push(0); // hydrogen bond acceptor count
-    array.push(0); // rotatable bond count
-    array.push(0); // polar surface area
+    array.push(getMin('atomCount', 0));
+    array.push(getMin('bondCount', 0));
+    array.push(getMin('molecularMass', 0));
+    array.push(getMin('logP', -10));
+    array.push(getMin('hydrogenBondDonorCount', 0));
+    array.push(getMin('hydrogenBondAcceptorCount', 0));
+    array.push(getMin('rotatableBondCount', 0));
+    array.push(getMin('polarSurfaceArea', 0));
     return array;
-  }, [updateHiddenFlag]);
+  }, [updateHiddenFlag, projectInfo.ranges]);
 
   const maxima: number[] = useMemo(() => {
     const array: number[] = [];
-    array.push(100); // atom count
-    array.push(100); // bond count
-    array.push(1000); // mass
-    array.push(10); // log P
-    array.push(20); // hydrogen bond donor count
-    array.push(20); // hydrogen bond acceptor count
-    array.push(20); // rotatable bond count
-    array.push(500); // polar surface area
+    array.push(getMax('atomCount', 100));
+    array.push(getMax('bondCount', 100));
+    array.push(getMax('molecularMass', 1000));
+    array.push(getMax('logP', 10));
+    array.push(getMax('hydrogenBondDonorCount', 20));
+    array.push(getMax('hydrogenBondAcceptorCount', 20));
+    array.push(getMax('rotatableBondCount', 20));
+    array.push(getMax('polarSurfaceArea', 500));
     return array;
-  }, [updateHiddenFlag]);
+  }, [updateHiddenFlag, projectInfo.ranges]);
 
   const steps: number[] = useMemo(() => {
     const array: number[] = [];
@@ -660,18 +714,53 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     return array;
   }, [updateHiddenFlag]);
 
+  const getFilterLowerBound = (variable: string, defaultValue: number) => {
+    let lowerBound = defaultValue;
+    if (projectInfo.filters) {
+      for (const f of projectInfo.filters) {
+        if (f.variable === variable) {
+          lowerBound = f.lowerBound ?? defaultValue;
+          break;
+        }
+      }
+    }
+    return lowerBound;
+  };
+
+  const getFilterUpperBound = (variable: string, defaultValue: number) => {
+    let upperBound = defaultValue;
+    if (projectInfo.filters) {
+      for (const f of projectInfo.filters) {
+        if (f.variable === variable) {
+          upperBound = f.upperBound ?? defaultValue;
+          break;
+        }
+      }
+    }
+    return upperBound;
+  };
+
+  const createFilter = (variable: string, defaultUpperBound: number, defaultLowerBound: number) => {
+    return {
+      variable,
+      type: FilterType.Between,
+      upperBound: getFilterUpperBound(variable, defaultUpperBound),
+      lowerBound: getFilterLowerBound(variable, defaultLowerBound),
+    } as Filter;
+  };
+
   const filters: Filter[] = useMemo(() => {
     const array: Filter[] = [];
-    array.push({ type: FilterType.None } as Filter); // atom count
-    array.push({ type: FilterType.None } as Filter); // bond count
-    array.push({ type: FilterType.Between, upperBound: 500, lowerBound: 0 } as Filter); // mass
-    array.push({ type: FilterType.Between, upperBound: 5, lowerBound: -5 } as Filter); // log P
-    array.push({ type: FilterType.Between, upperBound: 5, lowerBound: 0 } as Filter); // hydrogen bond donor count
-    array.push({ type: FilterType.Between, upperBound: 10, lowerBound: 0 } as Filter); // hydrogen bond acceptor count
-    array.push({ type: FilterType.Between, upperBound: 10, lowerBound: 0 } as Filter); // rotatable bond count
-    array.push({ type: FilterType.Between, upperBound: 140, lowerBound: 0 } as Filter); // polar surface area
+    array.push({ variable: 'atomCount', type: FilterType.None } as Filter);
+    array.push({ variable: 'bondCount', type: FilterType.None } as Filter);
+    array.push(createFilter('molecularMass', 500, 0));
+    array.push(createFilter('logP', 5, -5));
+    array.push(createFilter('hydrogenBondDonorCount', 5, 0));
+    array.push(createFilter('hydrogenBondAcceptorCount', 10, 0));
+    array.push(createFilter('rotatableBondCount', 10, 0));
+    array.push(createFilter('polarSurfaceArea', 140, 0));
     return array;
-  }, [updateHiddenFlag]);
+  }, [updateHiddenFlag, projectInfo.filters]);
 
   return (
     <Container
@@ -722,10 +811,14 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
                 <List.Item
                   style={{ height: canvasHeight }}
                   onMouseOver={() => {
-                    setHoveredMolecule(data);
+                    setCommonStore((state) => {
+                      state.hoveredMolecule = data;
+                    });
                   }}
                   onMouseLeave={() => {
-                    setHoveredMolecule(undefined);
+                    setCommonStore((state) => {
+                      state.hoveredMolecule = null;
+                    });
                   }}
                 >
                   {createCanvas(data)}

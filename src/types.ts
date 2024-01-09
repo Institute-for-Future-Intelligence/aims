@@ -2,6 +2,8 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
+import { Filter } from './Filter';
+
 export enum BondType {
   SINGLE_BOND = 0,
   DOUBLE_BOND = 1,
@@ -51,6 +53,7 @@ export interface ProjectInfo {
   dataColoring: DataColoring;
   sortDescending: boolean | null;
   ranges: Range[] | null;
+  filters: Filter[] | null;
   hiddenProperties: string[] | null;
   counter: number;
   xAxisNameScatteredPlot: string | null;

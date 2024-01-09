@@ -90,18 +90,17 @@ const ParallelCoordinates = ({
   // Compute lines
   const lineGenerator = d3Shape.line();
 
-  const allLines = data.map((series, i) => {
-    if (series.invisible) return null;
-    const allCoordinates = variables.map((variable) => {
-      const yScale = yScales[variable];
+  const allLines = data.map((e, i) => {
+    if (e.invisible) return null;
+    const allCoordinates = variables.map((v) => {
+      const yScale = yScales[v];
       // I don't understand the type of scalePoint. IMO x cannot be undefined since I'm passing it something of type Variable.
-      const x = xScale(variable) ?? 0;
-      const y = yScale(series[variable] as number);
+      const x = xScale(v) ?? 0;
+      const y = yScale(e[v] as number);
       return [x, y] as [number, number];
     });
 
     const d = lineGenerator(allCoordinates);
-
     if (!d) {
       return undefined;
     }
@@ -113,10 +112,10 @@ const ParallelCoordinates = ({
         }}
         key={i}
         d={d}
-        stroke={series.hovered ? 'red' : colorScale(series.group as string)}
+        stroke={e.hovered ? 'red' : colorScale(e.group as string)}
         fill="none"
-        strokeWidth={series.selected ? 3 : 1}
-        strokeDasharray={series.hovered ? '5,3' : 'none'}
+        strokeWidth={e.selected ? 3 : e.filtered ? 2 : 0.5}
+        strokeDasharray={e.hovered ? '5,3' : 'none'}
       />
     );
   });

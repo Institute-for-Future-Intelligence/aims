@@ -20,6 +20,7 @@ import { AtomTS } from '../models/AtomTS';
 import { BondTS } from '../models/BondTS';
 import { useRefStore } from './commonRef';
 import { MolecularProperties } from '../models/MolecularProperties';
+import { Filter } from '../Filter';
 
 enableMapSet();
 
@@ -38,6 +39,7 @@ export interface CommonStoreState {
 
   loadedMolecule: MoleculeData | null;
   selectedMolecule: MoleculeData | null;
+  hoveredMolecule: MoleculeData | null;
   collectedMolecules: MoleculeData[];
   addMolecule: (molecule: MoleculeData) => boolean;
   removeMolecule: (molecule: MoleculeData) => void;
@@ -107,11 +109,13 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             selectedProperty: null,
             sortDescending: false,
             ranges: new Array<Range>(),
+            filters: new Array<Filter>(),
           } as ProjectInfo,
           projectView: true,
 
           loadedMolecule: null,
           selectedMolecule: null,
+          hoveredMolecule: null,
           collectedMolecules: [],
           addMolecule(molecule: MoleculeData) {
             let added = true;

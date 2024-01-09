@@ -12,6 +12,7 @@ export enum FilterType {
 
 export interface Filter {
   type: FilterType;
+  variable: string;
   lowerBound?: number;
   upperBound?: number;
 }

@@ -23,6 +23,8 @@ export const loadedMolecule = (state: CommonStoreState) => state.loadedMolecule;
 
 export const selectedMolecule = (state: CommonStoreState) => state.selectedMolecule;
 
+export const hoveredMolecule = (state: CommonStoreState) => state.hoveredMolecule;
+
 export const collectedMolecules = (state: CommonStoreState) => state.collectedMolecules;
 
 export const addMolecule = (state: CommonStoreState) => state.addMolecule;

@@ -69,10 +69,17 @@ const VerticalAxis = ({
   const areaHeight = yScale(min) - yScale(max);
   const areaWidth = 40;
 
-  // TODO
-  const updateSelectedProperty = async (userid: string, projectTitle: string, selectedProperty: string | null) => {};
-  const addRange = async (userid: string, projectTitle: string, range: Range) => {};
-  const updateRanges = async (userid: string, projectTitle: string, ranges: Range[]) => {};
+  const updateSelectedProperty = async (userid: string, projectTitle: string, selectedProperty: string | null) => {
+    // TODO Firestore
+  };
+
+  const addRange = async (userid: string, projectTitle: string, range: Range) => {
+    // TODO Firestore
+  };
+
+  const updateRanges = async (userid: string, projectTitle: string, ranges: Range[]) => {
+    // TODO Firestore
+  };
 
   const ticks = useMemo(() => {
     const height = range[0] - range[1];
@@ -336,6 +343,35 @@ const VerticalAxis = ({
                 if (filter) {
                   filter.lowerBound = values[0];
                   filter.upperBound = values[1];
+                  setCommonStore((state) => {
+                    state.hoveredMolecule = null;
+                    state.selectedMolecule = null;
+                    if (state.projectInfo.filters) {
+                      let index = -1;
+                      for (const [i, f] of state.projectInfo.filters.entries()) {
+                        if (f.variable === variable) {
+                          index = i;
+                          break;
+                        }
+                      }
+                      if (index >= 0) {
+                        state.projectInfo.filters[index] = {
+                          variable: filter.variable,
+                          type: filter.type,
+                          lowerBound: filter.lowerBound,
+                          upperBound: filter.upperBound,
+                        } as Filter;
+                      } else {
+                        const f = {
+                          variable,
+                          type: filter.type,
+                          lowerBound: filter.lowerBound,
+                          upperBound: filter.upperBound,
+                        } as Filter;
+                        state.projectInfo.filters.push(f);
+                      }
+                    }
+                  });
                   setUpdateFlag(!updateFlag);
                 }
               }}
