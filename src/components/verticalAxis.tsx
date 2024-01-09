@@ -344,8 +344,10 @@ const VerticalAxis = ({
                 if (filter) {
                   filter.lowerBound = values[0];
                   filter.upperBound = values[1];
-                  setCommonStore((state) => {
+                  usePrimitiveStore.getState().set((state) => {
                     state.hoveredMolecule = null;
+                  });
+                  setCommonStore((state) => {
                     state.selectedMolecule = null;
                     if (state.projectInfo.filters) {
                       let index = -1;

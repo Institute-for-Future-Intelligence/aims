@@ -722,7 +722,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     if (!projectInfo.hiddenProperties?.includes('rotatableBondCount')) array.push(getMin('rotatableBondCount', 0));
     if (!projectInfo.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMin('polarSurfaceArea', 0));
     return array;
-  }, [updateHiddenFlag, projectInfo.ranges]);
+  }, [updateHiddenFlag, projectInfo.ranges, projectInfo.hiddenProperties]);
 
   const maxima: number[] = useMemo(() => {
     const array: number[] = [];
@@ -737,7 +737,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     if (!projectInfo.hiddenProperties?.includes('rotatableBondCount')) array.push(getMax('rotatableBondCount', 20));
     if (!projectInfo.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMax('polarSurfaceArea', 500));
     return array;
-  }, [updateHiddenFlag, projectInfo.ranges]);
+  }, [updateHiddenFlag, projectInfo.ranges, projectInfo.hiddenProperties]);
 
   const steps: number[] = useMemo(() => {
     const array: number[] = [];
@@ -750,7 +750,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     if (!projectInfo.hiddenProperties?.includes('rotatableBondCount')) array.push(1);
     if (!projectInfo.hiddenProperties?.includes('polarSurfaceArea')) array.push(1);
     return array;
-  }, [updateHiddenFlag]);
+  }, [updateHiddenFlag, projectInfo.hiddenProperties]);
 
   const getFilterLowerBound = (variable: string, defaultValue: number) => {
     let lowerBound = defaultValue;
@@ -804,7 +804,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
     if (!projectInfo.hiddenProperties?.includes('polarSurfaceArea'))
       array.push(createFilter('polarSurfaceArea', 140, 0));
     return array;
-  }, [updateHiddenFlag, projectInfo.filters]);
+  }, [updateHiddenFlag, projectInfo.filters, projectInfo.hiddenProperties]);
 
   return (
     <Container
