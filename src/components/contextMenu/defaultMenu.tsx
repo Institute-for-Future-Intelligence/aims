@@ -6,7 +6,14 @@ import { useStore } from '../../stores/common';
 import i18n from '../../i18n/i18n';
 import type { MenuProps } from 'antd';
 import { MenuItem } from '../menuItem';
-import { AutoRotateCheckBox, AxesCheckBox, BackgroundColor, ShininessInput, StyleRadioGroup } from './defaultMenuItems';
+import {
+  AutoRotateCheckBox,
+  AxesCheckBox,
+  BackgroundColor,
+  Screenshot,
+  ShininessInput,
+  StyleRadioGroup,
+} from './defaultMenuItems';
 
 export const createDefaultMenu = () => {
   const lang = { lng: useStore.getState().language };
@@ -47,6 +54,12 @@ export const createDefaultMenu = () => {
   items.push({
     key: 'molecular-viewer-background-color',
     label: <BackgroundColor />,
+  });
+
+  // screenshot
+  items.push({
+    key: 'molecular-viewer-screenshot',
+    label: <Screenshot />,
   });
 
   return { items } as MenuProps;

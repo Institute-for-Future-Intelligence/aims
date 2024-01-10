@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
 export const i18n_en = {
@@ -82,6 +82,7 @@ export const i18n_en = {
       SpaceFilling: 'Space-Filling',
       BackgroundColor: 'Background Color',
       Shininess: 'Shininess',
+      TakeScreenshot: 'Take Screenshot',
     },
 
     projectPanel: {
@@ -121,19 +122,17 @@ export const i18n_en = {
 
     menu: {
       mainMenu: 'Main Menu',
-      fileSubMenu: 'File',
-      file: {
-        CreateNewFile: 'Create New File',
-        OpenLocalFile: 'Open Local File',
-        SaveAsLocalFile: 'Save as Local File',
-        SavingAbortedMustHaveValidFileName: 'Saving aborted! You must have a valid file name',
-        OpenCloudFile: 'Open Cloud File',
-        SaveCloudFile: 'Save Cloud File',
-        SaveAsCloudFile: 'Save as Cloud File',
-        SavingAbortedMustHaveValidTitle: 'Saving aborted! You must have a valid title for a cloud file',
-        ToSaveYourWorkPleaseSignIn: 'To save your work, please sign in.',
-        TakeScreenshot: 'Take Screenshot',
-        UseCloudFileName: 'Use Cloud File Name',
+      projectSubMenu: 'Project',
+      project: {
+        CreateNewProject: 'Create New Project',
+        OpenLocalProject: 'Open Local Project',
+        SaveAsLocalProject: 'Save as Local Project',
+        SavingAbortedMustHaveValidProjectName: 'Saving aborted! You must have a valid project name',
+        OpenCloudProject: 'Open Cloud Project',
+        SaveCloudProject: 'Save Cloud Project',
+        SaveAsCloudProject: 'Save as Cloud Project',
+        SavingAbortedMustHaveValidTitle: 'Saving aborted! You must have a valid title for a cloud project',
+        ToSaveYourWorkOnCloudPleaseSignIn: 'To save your work on the cloud, please sign in.',
       },
       editSubMenu: 'Edit',
       edit: {

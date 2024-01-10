@@ -15,6 +15,7 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useTranslation } from 'react-i18next';
 import { STYLE_LABELS } from '../../scientificConstants';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
+import { saveImage } from '../../helpers';
 
 export const AutoRotateCheckBox = () => {
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
@@ -50,6 +51,33 @@ export const AutoRotateCheckBox = () => {
       >
         {t('menu.view.AutoRotate', lang)}
       </Checkbox>
+    </MenuItem>
+  );
+};
+
+export const Screenshot = () => {
+  const setCommonStore = useStore(Selector.set);
+  const loggable = useStore.getState().loggable;
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const takeScreenshot = () => {
+    // if (canvas) {
+    //   saveImage('screenshot.png', canvas.toDataURL('image/png'));
+    //   if (loggable) {
+    //     setCommonStore((state) => {
+    //       state.actionInfo = {
+    //         name: 'Take Screenshot',
+    //         timestamp: new Date().getTime(),
+    //       };
+    //     });
+    //   }
+    // }
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={true} onClick={takeScreenshot}>
+      {t('molecularViewer.TakeScreenshot', lang)}
     </MenuItem>
   );
 };

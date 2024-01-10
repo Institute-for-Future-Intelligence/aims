@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
 export const i18n_zh_cn = {
@@ -81,6 +81,7 @@ export const i18n_zh_cn = {
       SpaceFilling: '空间填满',
       BackgroundColor: '背景颜色',
       Shininess: '光泽度',
+      TakeScreenshot: '截屏',
     },
 
     projectPanel: {
@@ -120,19 +121,17 @@ export const i18n_zh_cn = {
 
     menu: {
       mainMenu: '主菜单',
-      fileSubMenu: '文件',
-      file: {
-        CreateNewFile: '创建新文件',
-        OpenLocalFile: '打开本地文件',
-        SaveAsLocalFile: '保存为本地文件',
-        SavingAbortedMustHaveValidFileName: '文件名无效，保存失败',
-        OpenCloudFile: '打开云端文件',
-        SaveCloudFile: '保存云端文件',
-        SaveAsCloudFile: '保存为云端文件',
-        SavingAbortedMustHaveValidTitle: '云端文件名无效，保存失败',
-        ToSaveYourWorkPleaseSignIn: '为了保存您的云端文件，请您先登录。',
-        TakeScreenshot: '截屏',
-        UseCloudFileName: '采用云端文件名',
+      projectSubMenu: '项目',
+      project: {
+        CreateNewProject: '创建新项目',
+        OpenLocalProject: '打开本地项目',
+        SaveAsLocalProject: '保存为本地项目',
+        SavingAbortedMustHaveValidProjectName: '项目名无效，保存失败',
+        OpenCloudProject: '打开云端项目',
+        SaveCloudProject: '保存云端项目',
+        SaveAsCloudProject: '保存为云端项目',
+        SavingAbortedMustHaveValidTitle: '云端项目名无效，保存失败',
+        ToSaveYourWorkOnCloudPleaseSignIn: '为了保存您的云端项目，请您先登录。',
       },
       editSubMenu: '编辑',
       edit: {

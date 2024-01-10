@@ -97,28 +97,14 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
 
   const isMac = useMemo(() => Util.isMac(), []);
 
-  const takeScreenshot = () => {
-    if (canvas) {
-      saveImage('screenshot.png', canvas.toDataURL('image/png'));
-      if (loggable) {
-        setCommonStore((state) => {
-          state.actionInfo = {
-            name: 'Take Screenshot',
-            timestamp: new Date().getTime(),
-          };
-        });
-      }
-    }
-  };
-
   const createItems = useMemo(() => {
     const items: MenuProps['items'] = [];
 
-    // file menu
-    const fileMenuItems: MenuProps['items'] = [];
-    items.push({ key: 'file-sub-menu', label: t('menu.fileSubMenu', lang), children: fileMenuItems });
-    fileMenuItems.push({
-      key: 'create-new-file',
+    // project menu
+    const projectMenuItems: MenuProps['items'] = [];
+    items.push({ key: 'project-sub-menu', label: t('menu.projectSubMenu', lang), children: projectMenuItems });
+    projectMenuItems.push({
+      key: 'create-new-project',
       label: (
         <MenuItem
           onClick={() => {
@@ -128,20 +114,20 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
               // window.history.pushState({}, document.title, HOME_URL);
               if (loggable) {
                 state.actionInfo = {
-                  name: 'Create New File',
+                  name: 'Create New Project',
                   timestamp: new Date().getTime(),
                 };
               }
             });
           }}
         >
-          {t('menu.file.CreateNewFile', lang)}
+          {t('menu.project.CreateNewProject', lang)}
           <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+F)</span>
         </MenuItem>
       ),
     });
-    fileMenuItems.push({
-      key: 'open-local-file',
+    projectMenuItems.push({
+      key: 'open-local-project',
       label: (
         <MenuItem
           onClick={() => {
@@ -152,20 +138,20 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
               // window.history.pushState({}, document.title, HOME_URL);
               if (loggable) {
                 state.actionInfo = {
-                  name: 'Open Local File',
+                  name: 'Open Local Project',
                   timestamp: new Date().getTime(),
                 };
               }
             });
           }}
         >
-          {t('menu.file.OpenLocalFile', lang)}
+          {t('menu.project.OpenLocalProject', lang)}
           <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+O)</span>...
         </MenuItem>
       ),
     });
-    fileMenuItems.push({
-      key: 'save-local-file',
+    projectMenuItems.push({
+      key: 'save-local-project',
       label: (
         <MenuItem
           onClick={() => {
@@ -175,20 +161,20 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
             if (loggable) {
               setCommonStore((state) => {
                 state.actionInfo = {
-                  name: 'Save as Local File',
+                  name: 'Save as Local Project',
                   timestamp: new Date().getTime(),
                 };
               });
             }
           }}
         >
-          {t('menu.file.SaveAsLocalFile', lang)}
+          {t('menu.project.SaveAsLocalProject', lang)}
           <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+S)</span>...
         </MenuItem>
       ),
     });
-    fileMenuItems.push({
-      key: 'open-cloud-file',
+    projectMenuItems.push({
+      key: 'open-cloud-project',
       label: (
         <MenuItem
           onClick={() => {
@@ -196,25 +182,25 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
               // state.listCloudFilesFlag = true;
             });
             setCommonStore((state) => {
-              // state.selectedFloatingWindow = 'cloudFilePanel';
+              state.selectedFloatingWindow = 'projectListPanel';
             });
             if (loggable) {
               setCommonStore((state) => {
                 state.actionInfo = {
-                  name: 'List Cloud Files',
+                  name: 'List Cloud Projects',
                   timestamp: new Date().getTime(),
                 };
               });
             }
           }}
         >
-          {t('menu.file.OpenCloudFile', lang)}
+          {t('menu.project.OpenCloudProject', lang)}
           <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Shift+O)</span>...
         </MenuItem>
       ),
     });
-    fileMenuItems.push({
-      key: 'save-cloud-file',
+    projectMenuItems.push({
+      key: 'save-cloud-project',
       label: (
         <MenuItem
           onClick={() => {
@@ -222,20 +208,20 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
             if (loggable) {
               setCommonStore((state) => {
                 state.actionInfo = {
-                  name: 'Save Cloud File',
+                  name: 'Save Cloud Project',
                   timestamp: new Date().getTime(),
                 };
               });
             }
           }}
         >
-          {t('menu.file.SaveCloudFile', lang)}
+          {t('menu.project.SaveCloudProject', lang)}
           <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Shift+S)</span>
         </MenuItem>
       ),
     });
-    fileMenuItems.push({
-      key: 'save-as-cloud-file',
+    projectMenuItems.push({
+      key: 'save-as-cloud-project',
       label: (
         <MenuItem
           onClick={() => {
@@ -244,22 +230,14 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
               // state.showCloudFileTitleDialog = true;
               if (loggable) {
                 state.actionInfo = {
-                  name: 'Save as Cloud File',
+                  name: 'Save as Cloud Project',
                   timestamp: new Date().getTime(),
                 };
               }
             });
           }}
         >
-          {t('menu.file.SaveAsCloudFile', lang)}...
-        </MenuItem>
-      ),
-    });
-    fileMenuItems.push({
-      key: 'screenshot',
-      label: (
-        <MenuItem key="screenshot" onClick={takeScreenshot}>
-          {t('menu.file.TakeScreenshot', lang)}
+          {t('menu.project.SaveAsCloudProject', lang)}...
         </MenuItem>
       ),
     });

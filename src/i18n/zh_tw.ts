@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
 export const i18n_zh_tw = {
@@ -57,17 +57,17 @@ export const i18n_zh_tw = {
       YourAccountSettingsWereSaved: '您的賬號設定已保存。',
       CannotSaveYourAccountSettings: '您的賬號設定無法保存',
       ScreenshotSaved: '截屏圖片保存在下載文檔夾裡。',
-      CannotCreateNewProject: '無法創建新項目',
-      CannotCreateNewProjectWithoutTitle: '沒有標題, 無法創建新項目',
-      CannotOpenYourProjects: '無法打開您的項目列表',
-      CannotOpenProject: '無法打開項目',
-      CannotDeleteProject: '無法刪除項目',
-      CannotRenameProject: '無法給項目改名',
-      CannotAddMoleculeToProject: '無法把此分子加到項目裡',
-      MoleculeRemovedFromProject: '分子被成功地從項目裡刪除',
-      CannotRemoveMoleculeFromProject: '無法把此分子從項目裡刪除',
-      CannotUpdateProject: '無法更新項目',
-      CannotFetchProjectData: '無法取得項目數據',
+      CannotCreateNewProject: '無法創建新專案',
+      CannotCreateNewProjectWithoutTitle: '沒有標題, 無法創建新專案',
+      CannotOpenYourProjects: '無法打開您的專案列表',
+      CannotOpenProject: '無法打開專案',
+      CannotDeleteProject: '無法刪除專案',
+      CannotRenameProject: '無法給專案改名',
+      CannotAddMoleculeToProject: '無法把此分子加到專案裡',
+      MoleculeRemovedFromProject: '分子被成功地從專案裡刪除',
+      CannotRemoveMoleculeFromProject: '無法把此分子從專案裡刪除',
+      CannotUpdateProject: '無法更新專案',
+      CannotFetchProjectData: '無法取得專案數據',
       TitleUsedChooseDifferentOne: '此標題已經被使用, 請採用不同的標題',
     },
 
@@ -80,13 +80,14 @@ export const i18n_zh_tw = {
       SpaceFilling: '空間填滿',
       BackgroundColor: '背景顏色',
       Shininess: '光澤度',
+      TakeScreenshot: '截屏',
     },
 
     projectPanel: {
-      Project: '項目',
+      Project: '專案',
       ProjectType: '類别',
       ProjectDescription: '描述',
-      ProjectSettings: '項目設定',
+      ProjectSettings: '專案設定',
       DisplayWindowSize: '展示視窗大小',
       ImportMolecule: '輸入分子',
       MoleculeName: '分子名稱',
@@ -97,7 +98,7 @@ export const i18n_zh_tw = {
       MakeDescriptionNonEditable: '不編輯描述',
       DoubleClickToMakeDescriptionEditable: '雙擊此描述激活編輯功能',
       ClickToFlipSortingOrder: '點擊逆轉排序方向',
-      WriteABriefDescriptionAboutThisProject: '在此寫一個項目簡要描述。',
+      WriteABriefDescriptionAboutThisProject: '在此寫一個專案簡要描述。',
       Properties: '性質',
       ChooseProperties: '選擇性質',
       ChooseDataColoring: '選擇數據著色',
@@ -119,19 +120,17 @@ export const i18n_zh_tw = {
 
     menu: {
       mainMenu: '主菜單',
-      fileSubMenu: '文檔',
-      file: {
-        CreateNewFile: '創建新文檔',
-        OpenLocalFile: '打開本地文檔',
-        SaveAsLocalFile: '保存為本地文檔',
-        SavingAbortedMustHaveValidFileName: '文檔名無效，保存失敗',
-        OpenCloudFile: '打開雲端文檔',
-        SaveCloudFile: '保存雲端文檔',
-        SaveAsCloudFile: '保存為雲端文檔',
-        SavingAbortedMustHaveValidTitle: '雲端文檔名無效，保存失敗',
-        ToSaveYourWorkPleaseSignIn: '為了保存您的雲端文檔，請您先登錄。',
-        TakeScreenshot: '截屏',
-        UseCloudFileName: '採用雲端文件名',
+      projectSubMenu: '專案',
+      project: {
+        CreateNewProject: '創建新專案',
+        OpenLocalProject: '打開本地專案',
+        SaveAsLocalProject: '保存為本地專案',
+        SavingAbortedMustHaveValidProjectName: '專案名無效，保存失敗',
+        OpenCloudProject: '打開雲端專案',
+        SaveCloudProject: '保存雲端專案',
+        SaveAsCloudProject: '保存為雲端專案',
+        SavingAbortedMustHaveValidTitle: '雲端專案名無效，保存失敗',
+        ToSaveYourWorkOnCloudPleaseSignIn: '為了保存您的雲端專案，請您先登錄。',
       },
       editSubMenu: '編輯',
       edit: {
