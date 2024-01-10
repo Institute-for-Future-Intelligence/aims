@@ -34,6 +34,8 @@ export interface CommonStoreState {
   user: User;
   cloudFile: string | undefined;
 
+  selectedFloatingWindow: string | null;
+
   projectInfo: ProjectInfo;
   projectView: boolean;
 
@@ -96,6 +98,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           locale: enUS,
           user: {} as User,
           cloudFile: undefined,
+
+          selectedFloatingWindow: null,
 
           projectInfo: {
             owner: null,
@@ -267,6 +271,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           projectInfo: state.projectInfo,
           cameraPosition: state.cameraPosition,
           panCenter: state.panCenter,
+          selectedFloatingWindow: state.selectedFloatingWindow,
         }),
       },
     ),

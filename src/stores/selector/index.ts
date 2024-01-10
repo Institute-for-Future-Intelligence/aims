@@ -15,6 +15,8 @@ export const language = (state: CommonStoreState) => state.language;
 
 export const locale = (state: CommonStoreState) => state.locale;
 
+export const changed = (state: PrimitiveStoreState) => state.changed;
+
 export const projectInfo = (state: CommonStoreState) => state.projectInfo;
 
 export const projectView = (state: CommonStoreState) => state.projectView;
@@ -86,3 +88,21 @@ export const getProvidedMolecule = (state: CommonStoreState) => state.getProvide
 export const loadProvidedMolecules = (state: CommonStoreState) => state.loadProvidedMolecules;
 
 export const contextMenuObjectType = (state: PrimitiveStoreState) => state.contextMenuObjectType;
+
+export const createProjectFlag = (state: PrimitiveStoreState) => state.createProjectFlag;
+
+export const saveProjectFlag = (state: PrimitiveStoreState) => state.saveProjectFlag;
+
+export const showProjectsFlag = (state: PrimitiveStoreState) => state.showProjectsFlag;
+
+export const updateProjectsFlag = (state: PrimitiveStoreState) => state.updateProjectsFlag;
+
+export const curateMoleculeToProjectFlag = (state: PrimitiveStoreState) => state.curateMoleculeToProjectFlag;
+
+export const showProjectListPanel = (state: PrimitiveStoreState) => state.showProjectListPanel;
+
+export const showAccountSettingsPanel = (state: PrimitiveStoreState) => state.showAccountSettingsPanel;
+
+export const userCount = (state: PrimitiveStoreState) => state.userCount;
+
+export const selectedFloatingWindow = (state: CommonStoreState) => state.selectedFloatingWindow;

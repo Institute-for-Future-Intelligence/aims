@@ -46,7 +46,7 @@ const MainToolBar = ({ signIn, signOut }: MainToolBarProps) => {
         <MenuItem
           onClick={() => {
             usePrimitiveStore.getState().set((state) => {
-              // state.showAccountSettingsPanel = true;
+              state.showAccountSettingsPanel = true;
             });
           }}
         >
@@ -80,7 +80,7 @@ const MainToolBar = ({ signIn, signOut }: MainToolBarProps) => {
               content={
                 <div style={{ width: '280px', fontSize: '12px' }}>
                   {t('avatarMenu.PrivacyStatement', lang)}
-                  <a target="_blank" rel="noopener noreferrer" href={'https://intofuture.org/aladdin-privacy.html'}>
+                  <a target="_blank" rel="noopener noreferrer" href={'https://intofuture.org/aims-privacy.html'}>
                     {t('aboutUs.PrivacyPolicy', lang)}
                   </a>
                   .

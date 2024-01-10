@@ -63,6 +63,11 @@ export interface ProjectInfo {
   thumbnailWidth: number | null;
 }
 
+export enum FirebaseName {
+  FILES = 'Files',
+  LOG_DATA = 'Log Data',
+}
+
 export enum ProjectType {
   DEFAULT = 'Default',
   DRUG_DISCOVERY = 'Drug Discovery',

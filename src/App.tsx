@@ -30,6 +30,8 @@ import { useTranslation } from 'react-i18next';
 import Loading from './loading';
 import KeyboardListener from './keyboardListener';
 import { usePrimitiveStore } from './stores/commonPrimitive';
+import AccountSettingsPanel from './accountSettingsPanel';
+import CloudManager from './cloudManager';
 
 export const testMolecules = [
   { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
@@ -58,6 +60,7 @@ const App = () => {
   const loadProvidedMolecules = useStore(Selector.loadProvidedMolecules);
   const params = new URLSearchParams(window.location.search);
   const viewOnly = params.get('viewonly') === 'true';
+  const showAccountSettingsPanel = usePrimitiveStore(Selector.showAccountSettingsPanel);
 
   useEffect(() => {
     loadChemicalElements();
@@ -200,7 +203,6 @@ const App = () => {
         <ShareLinks size={16} round={true} margin={'2px'} style={{ position: 'absolute', right: '0', top: '90px' }} />
       )}
 
-      {!viewOnly && <MainToolBar signIn={() => {}} signOut={() => {}} />}
       <MainMenu viewOnly={false} canvas={null} />
       <DropdownContextMenu>
         {/* must specify the height here for the floating window to have correct boundary check*/}
@@ -246,6 +248,8 @@ const App = () => {
           <KeyboardListener setNavigationView={setNavigationView} resetView={resetView} zoomView={zoomView} />
         </div>
       </DropdownContextMenu>
+      <CloudManager viewOnly={viewOnly} />
+      {showAccountSettingsPanel && <AccountSettingsPanel />}
       {!viewOnly && <AcceptCookie />}
     </div>
   );

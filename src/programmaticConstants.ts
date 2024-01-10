@@ -22,6 +22,8 @@ export const GRID_RATIO = 5;
 export const FINE_GRID_SCALE = 0.1;
 export const NORMAL_GRID_SCALE = GRID_RATIO * FINE_GRID_SCALE;
 
+export const Z_INDEX_FRONT_PANEL = 15;
+
 export const HALF_PI = Math.PI / 2;
 
 export const TWO_PI = Math.PI * 2;

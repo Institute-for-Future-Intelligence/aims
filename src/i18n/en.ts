@@ -52,6 +52,12 @@ export const i18n_en = {
     },
 
     message: {
+      CannotSignIn: 'Cannot sign in',
+      CannotSignOut: 'Cannot sign out',
+      YourAccountWasCreated: 'Your account was created.',
+      CannotCreateAccount: 'Cannot create an account',
+      YourAccountSettingsWereSaved: 'Your account settings were saved.',
+      CannotSaveYourAccountSettings: 'Cannot save your account settings',
       ScreenshotSaved: 'A screenshot was saved.',
       CannotCreateNewProject: 'Cannot create a new project',
       CannotCreateNewProjectWithoutTitle: 'Cannot create a new project without a title',
@@ -64,6 +70,7 @@ export const i18n_en = {
       CannotRemoveMoleculeFromProject: 'Cannot remove this molecule from the project',
       CannotUpdateProject: 'Cannot update the project',
       CannotFetchProjectData: 'Cannot fetch project data',
+      TitleUsedChooseDifferentOne: 'This title has been used. Choose a different one',
     },
 
     molecularViewer: {
@@ -141,6 +148,18 @@ export const i18n_en = {
       },
       languageSubMenu: 'Language',
       AboutUs: 'About Us',
+    },
+
+    accountSettingsPanel: {
+      MyAccountSettings: 'My Account Settings',
+      MyID: 'My 🆔',
+      ClickToCopyMyID: 'Click to copy my ID',
+      IDInClipBoard: 'Your ID was copied and is ready to paste.',
+      AllPublished: 'All Published',
+      PublishedUnderAliases: 'Aliases',
+      UserCount: 'User Count',
+      SchoolID: 'School ID',
+      ClassID: 'Class ID',
     },
 
     avatarMenu: {

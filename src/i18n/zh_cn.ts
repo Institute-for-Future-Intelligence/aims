@@ -51,6 +51,12 @@ export const i18n_zh_cn = {
     },
 
     message: {
+      CannotSignIn: '登录失败',
+      CannotSignOut: '退出失败',
+      YourAccountWasCreated: '成功建立您的账号。',
+      CannotCreateAccount: '无法创建账号',
+      YourAccountSettingsWereSaved: '您的账号设定已保存。',
+      CannotSaveYourAccountSettings: '您的账号设定无法保存',
       ScreenshotSaved: '截屏图片保存在下载文件夹里。',
       CannotCreateNewProject: '无法创建新项目',
       CannotCreateNewProjectWithoutTitle: '没有标题, 无法创建新项目',
@@ -63,6 +69,7 @@ export const i18n_zh_cn = {
       CannotRemoveMoleculeFromProject: '无法把此分子从项目里删除',
       CannotUpdateProject: '无法更新项目',
       CannotFetchProjectData: '无法取得项目数据',
+      TitleUsedChooseDifferentOne: '此标题已经被使用, 请采用不同的标题',
     },
 
     molecularViewer: {
@@ -140,6 +147,18 @@ export const i18n_zh_cn = {
       },
       languageSubMenu: '语言',
       AboutUs: '关于我们',
+    },
+
+    accountSettingsPanel: {
+      MyAccountSettings: '我的账户设定',
+      MyID: '我的🆔',
+      ClickToCopyMyID: '点击此处拷贝我的ID',
+      IDInClipBoard: '您现在可以粘贴ID了。',
+      AllPublished: '发布总数',
+      PublishedUnderAliases: '别名发布',
+      UserCount: '用户总数',
+      SchoolID: '学校编号',
+      ClassID: '班级编号',
     },
 
     avatarMenu: {
