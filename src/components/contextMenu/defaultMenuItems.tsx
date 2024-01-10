@@ -14,6 +14,45 @@ import { UndoableCheck } from '../../undo/UndoableCheck';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useTranslation } from 'react-i18next';
 import { STYLE_LABELS } from '../../scientificConstants';
+import { usePrimitiveStore } from '../../stores/commonPrimitive';
+
+export const AutoRotateCheckBox = () => {
+  const autoRotate = usePrimitiveStore(Selector.autoRotate);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const setAutoRotate = (checked: boolean) => {
+    usePrimitiveStore.getState().set((state) => {
+      state.autoRotate = checked;
+    });
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Checkbox
+        checked={autoRotate}
+        onChange={(e: CheckboxChangeEvent) => {
+          const checked = e.target.checked;
+          const undoableCheck = {
+            name: 'Auto Rotate',
+            timestamp: Date.now(),
+            checked: checked,
+            undo: () => {
+              setAutoRotate(!undoableCheck.checked);
+            },
+            redo: () => {
+              setAutoRotate(undoableCheck.checked);
+            },
+          } as UndoableCheck;
+          useStore.getState().addUndoable(undoableCheck);
+          setAutoRotate(checked);
+        }}
+      >
+        {t('menu.view.AutoRotate', lang)}
+      </Checkbox>
+    </MenuItem>
+  );
+};
 
 export const AxesCheckBox = () => {
   const axes = useStore(Selector.chamberViewerAxes);

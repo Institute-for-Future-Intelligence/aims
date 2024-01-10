@@ -54,9 +54,7 @@ export interface CommonStoreState {
   projectViewerStyle: MolecularViewerStyle;
   projectViewerBackground: string;
 
-  autoRotate: boolean;
   navigationView: boolean;
-  enableRotate: boolean;
   cameraPosition: number[];
   panCenter: number[];
 
@@ -157,9 +155,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           projectViewerStyle: MolecularViewerStyle.BallAndStick,
           projectViewerBackground: 'white',
 
-          autoRotate: false,
           navigationView: false,
-          enableRotate: true,
           cameraPosition: [5, 10, 20],
           panCenter: [0, 0, 0],
 

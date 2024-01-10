@@ -13,6 +13,9 @@ export interface PrimitiveStoreState {
 
   hoveredMolecule: MoleculeData | null;
 
+  enableRotate: boolean;
+  autoRotate: boolean;
+
   waiting: boolean;
 
   contextMenuObjectType: ObjectType | null;
@@ -55,6 +58,9 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     },
 
     hoveredMolecule: null,
+
+    enableRotate: true,
+    autoRotate: false,
 
     waiting: false,
 

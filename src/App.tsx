@@ -29,6 +29,7 @@ import DropdownContextMenu from './components/contextMenu';
 import { useTranslation } from 'react-i18next';
 import Loading from './loading';
 import KeyboardListener from './keyboardListener';
+import { usePrimitiveStore } from './stores/commonPrimitive';
 
 export const testMolecules = [
   { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
@@ -97,6 +98,8 @@ const App = () => {
   const setNavigationView = (selected: boolean) => {
     setCommonStore((state) => {
       state.navigationView = selected;
+    });
+    usePrimitiveStore.getState().set((state) => {
       state.enableRotate = !selected;
     });
   };

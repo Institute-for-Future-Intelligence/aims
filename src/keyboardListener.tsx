@@ -12,6 +12,7 @@ import i18n from './i18n/i18n';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { useRefStore } from './stores/commonRef';
 import { GRID_RATIO, HOME_URL, UNDO_SHOW_INFO_DURATION } from './programmaticConstants';
+import { usePrimitiveStore } from './stores/commonPrimitive';
 
 export interface KeyboardListenerProps {
   setNavigationView: (selected: boolean) => void;
@@ -105,7 +106,7 @@ const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardLi
     } as UndoableCheck;
     addUndoable(undoableCheck);
     setNavigationView(!useStore.getState().navigationView);
-    setCommonStore((state) => {
+    usePrimitiveStore.getState().set((state) => {
       state.autoRotate = false;
     });
   };
@@ -114,20 +115,20 @@ const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardLi
     const undoableCheck = {
       name: 'Auto Rotate',
       timestamp: Date.now(),
-      checked: !useStore.getState().autoRotate,
+      checked: !usePrimitiveStore.getState().autoRotate,
       undo: () => {
-        setCommonStore((state) => {
+        usePrimitiveStore.getState().set((state) => {
           state.autoRotate = !undoableCheck.checked;
         });
       },
       redo: () => {
-        setCommonStore((state) => {
+        usePrimitiveStore.getState().set((state) => {
           state.autoRotate = undoableCheck.checked;
         });
       },
     } as UndoableCheck;
     addUndoable(undoableCheck);
-    setCommonStore((state) => {
+    usePrimitiveStore.getState().set((state) => {
       state.autoRotate = !state.autoRotate;
     });
   };

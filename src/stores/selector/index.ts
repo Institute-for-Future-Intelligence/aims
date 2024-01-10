@@ -25,6 +25,10 @@ export const selectedMolecule = (state: CommonStoreState) => state.selectedMolec
 
 export const hoveredMolecule = (state: PrimitiveStoreState) => state.hoveredMolecule;
 
+export const enableRotate = (state: PrimitiveStoreState) => state.enableRotate;
+
+export const autoRotate = (state: PrimitiveStoreState) => state.autoRotate;
+
 export const collectedMolecules = (state: CommonStoreState) => state.collectedMolecules;
 
 export const addMolecule = (state: CommonStoreState) => state.addMolecule;
@@ -50,10 +54,6 @@ export const projectViewerStyle = (state: CommonStoreState) => state.projectView
 export const projectViewerBackground = (state: CommonStoreState) => state.projectViewerBackground;
 
 export const navigationView = (state: CommonStoreState) => state.navigationView;
-
-export const enableRotate = (state: CommonStoreState) => state.enableRotate;
-
-export const autoRotate = (state: CommonStoreState) => state.autoRotate;
 
 export const cameraPosition = (state: CommonStoreState) => state.cameraPosition;
 

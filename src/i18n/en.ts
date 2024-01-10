@@ -137,7 +137,7 @@ export const i18n_en = {
       view: {
         ZoomIn: 'Zoom In',
         ZoomOut: 'Zoom Out',
-        AutoRotate: 'Auto rotate',
+        AutoRotate: 'Auto Rotate',
       },
       languageSubMenu: 'Language',
       AboutUs: 'About Us',

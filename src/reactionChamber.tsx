@@ -13,6 +13,7 @@ import { MoleculeData } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { Vector3 } from 'three';
+import { usePrimitiveStore } from './stores/commonPrimitive';
 
 export interface ReactionChamberProps {
   moleculeData: MoleculeData | null;
@@ -25,6 +26,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const viewerAxes = useStore(Selector.chamberViewerAxes);
   const shininess = useStore(Selector.chamberViewerShininess) ?? 1000;
   const cameraPosition = useStore(Selector.cameraPosition);
+  const autoRotate = usePrimitiveStore(Selector.autoRotate);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -57,7 +59,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
         rotation: [HALF_PI / 2, 0, HALF_PI / 2],
       }}
     >
-      <OrbitControls enableDamping={false} onEnd={onControlEnd} />
+      <OrbitControls enableDamping={false} onEnd={onControlEnd} autoRotate={autoRotate} />
       <Lights highQuality />
       {viewerAxes && <Axes />}
       {moleculeData && (
