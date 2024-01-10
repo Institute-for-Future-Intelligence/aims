@@ -227,7 +227,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         }}
         onClick={() => {
           setCommonStore((state) => {
-            state.selectedMolecule = moleculeData;
+            state.selectedMolecule = moleculeData !== selectedMolecule ? moleculeData : null;
           });
         }}
         onDoubleClick={() => {

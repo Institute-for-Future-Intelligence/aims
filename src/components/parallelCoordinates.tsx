@@ -114,8 +114,8 @@ const ParallelCoordinates = ({
         d={d}
         stroke={e.hovered ? 'red' : colorScale(e.group as string)}
         fill="none"
-        strokeWidth={e.selected ? 3 : e.excluded ? 0.5 : 2}
-        strokeDasharray={e.hovered ? '5,3' : 'none'}
+        strokeWidth={e.selected && !e.excluded ? 3 : e.excluded ? 0.25 : 1.5}
+        strokeDasharray={e.hovered ? '3,3' : 'none'}
       />
     );
   });
