@@ -155,6 +155,9 @@ const ParallelCoordinates = ({
       id={id}
       width={width}
       height={height}
+      onMouseLeave={() => {
+        if (hover) hover(-1);
+      }}
       onContextMenu={(event) => {
         event.stopPropagation();
       }}

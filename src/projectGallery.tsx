@@ -189,11 +189,13 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
 
   const hover = (i: number) => {
     if (collectedMolecules) {
-      if (i >= 0 && i < collectedMolecules.length) {
-        usePrimitiveStore.getState().set((state) => {
+      usePrimitiveStore.getState().set((state) => {
+        if (i >= 0 && i < collectedMolecules.length) {
           state.hoveredMolecule = collectedMolecules[i];
-        });
-      }
+        } else {
+          state.hoveredMolecule = null;
+        }
+      });
     }
   };
 
