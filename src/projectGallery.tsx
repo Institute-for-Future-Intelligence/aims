@@ -724,16 +724,16 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
 
   const maxima: number[] = useMemo(() => {
     const array: number[] = [];
-    if (!projectInfo.hiddenProperties?.includes('atomCount')) array.push(getMax('atomCount', 100));
-    if (!projectInfo.hiddenProperties?.includes('bondCount')) array.push(getMax('bondCount', 100));
-    if (!projectInfo.hiddenProperties?.includes('molecularMass')) array.push(getMax('molecularMass', 1000));
+    if (!projectInfo.hiddenProperties?.includes('atomCount')) array.push(getMax('atomCount', 1200));
+    if (!projectInfo.hiddenProperties?.includes('bondCount')) array.push(getMax('bondCount', 1000));
+    if (!projectInfo.hiddenProperties?.includes('molecularMass')) array.push(getMax('molecularMass', 10000));
     if (!projectInfo.hiddenProperties?.includes('logP')) array.push(getMax('logP', 10));
     if (!projectInfo.hiddenProperties?.includes('hydrogenBondDonorCount'))
-      array.push(getMax('hydrogenBondDonorCount', 20));
+      array.push(getMax('hydrogenBondDonorCount', 100));
     if (!projectInfo.hiddenProperties?.includes('hydrogenBondAcceptorCount'))
-      array.push(getMax('hydrogenBondAcceptorCount', 20));
-    if (!projectInfo.hiddenProperties?.includes('rotatableBondCount')) array.push(getMax('rotatableBondCount', 20));
-    if (!projectInfo.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMax('polarSurfaceArea', 500));
+      array.push(getMax('hydrogenBondAcceptorCount', 100));
+    if (!projectInfo.hiddenProperties?.includes('rotatableBondCount')) array.push(getMax('rotatableBondCount', 100));
+    if (!projectInfo.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMax('polarSurfaceArea', 2500));
     return array;
   }, [updateHiddenFlag, projectInfo.ranges, projectInfo.hiddenProperties]);
 

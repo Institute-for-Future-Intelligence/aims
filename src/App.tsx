@@ -3,11 +3,11 @@
  */
 
 import testMoleculeUrl1 from './molecules/pdb/aspirin.pdb';
-import testMoleculeUrl2 from './molecules/sdf/ibuprofen.sdf';
-import testMoleculeUrl3 from './molecules/sdf/paxlovid.sdf';
-import testMoleculeUrl4 from './molecules/pcj/caffeine.pcj';
-import testMoleculeUrl5 from './molecules/mol2/benzene.mol2';
-import testMoleculeUrl6 from './molecules/xyz/glucose.xyz';
+import testMoleculeUrl2 from './molecules/sdf/paxlovid.sdf';
+import testMoleculeUrl3 from './molecules/pcj/caffeine.pcj';
+import testMoleculeUrl4 from './molecules/xyz/glucose.xyz';
+import testMoleculeUrl5 from './molecules/pcj/rna.pcj';
+import testMoleculeUrl6 from './molecules/pdb/3nir.pdb';
 
 import React, { Suspense, useEffect, useMemo } from 'react';
 import './App.css';
@@ -19,7 +19,6 @@ import { visitHomepage, visitIFI } from './helpers';
 import MainMenu from './mainMenu';
 import { VERSION } from './programmaticConstants';
 import SplitPane from 'react-split-pane';
-import MainToolBar from './mainToolBar';
 import ShareLinks from './shareLinks';
 import ProjectGallery from './projectGallery';
 import ReactionChamber from './reactionChamber';
@@ -35,11 +34,11 @@ import CloudManager from './cloudManager';
 
 export const testMolecules = [
   { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
-  { name: 'Ibuprofen', url: testMoleculeUrl2 } as MoleculeData,
-  { name: 'Paxlovid', url: testMoleculeUrl3 } as MoleculeData,
-  { name: 'Caffeine', url: testMoleculeUrl4 } as MoleculeData,
-  { name: 'Benzene', url: testMoleculeUrl5 } as MoleculeData,
-  { name: 'Glucose', url: testMoleculeUrl6 } as MoleculeData,
+  { name: 'Paxlovid', url: testMoleculeUrl2 } as MoleculeData,
+  { name: 'Caffeine', url: testMoleculeUrl3 } as MoleculeData,
+  { name: 'Glucose', url: testMoleculeUrl4 } as MoleculeData,
+  { name: 'RNA', url: testMoleculeUrl5 } as MoleculeData,
+  { name: 'Crambin', url: testMoleculeUrl6 } as MoleculeData,
 ];
 
 export const getTestMolecule = (name: string) => {
