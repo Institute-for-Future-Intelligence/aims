@@ -48,8 +48,13 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
   const { invalidate } = useThree();
 
   const mode = useMemo(() => {
+    if (style === MolecularViewerStyle.Cartoon) return 'CA';
+    if (style === MolecularViewerStyle.Trace) return 'TR';
     if (style === MolecularViewerStyle.Tube) return 'TU';
+    if (style === MolecularViewerStyle.QuickSurface) return 'QS';
     if (style === MolecularViewerStyle.ContactSurface) return 'CS';
+    if (style === MolecularViewerStyle.SolventAccessibleSurface) return 'SA';
+    if (style === MolecularViewerStyle.SolventExcludedSurface) return 'SE';
     return undefined;
   }, [style]);
 
@@ -331,7 +336,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
       CSGroup.current.position.copy(offset);
       invalidate();
     });
-  }, [style, complex]);
+  }, [mode, complex]);
 
   return (
     <>
