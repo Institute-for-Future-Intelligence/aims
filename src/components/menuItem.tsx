@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023. Institute for Future Intelligence, Inc.
+ * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
 import { usePrimitiveStore } from '../stores/commonPrimitive';
@@ -12,6 +12,14 @@ export interface MenuItemProps {
   children?: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
 }
+
+interface LabelMarkProps {
+  children?: React.ReactNode;
+}
+
+export const LabelMark = ({ children }: LabelMarkProps) => {
+  return <span style={{ paddingLeft: '2px', fontSize: 9 }}>{children}</span>;
+};
 
 export const MenuItem: React.FC<MenuItemProps> = ({
   stayAfterClick,

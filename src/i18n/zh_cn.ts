@@ -81,7 +81,7 @@ export const i18n_zh_cn = {
       SpaceFilling: '空间填满',
       BackgroundColor: '背景颜色',
       Shininess: '光泽度',
-      TakeScreenshot: '截屏',
+      TakeScreenshot: '截图',
     },
 
     projectPanel: {
@@ -140,6 +140,7 @@ export const i18n_zh_cn = {
       },
       viewSubMenu: '视界',
       view: {
+        ResetView: '重置视角',
         ZoomIn: '放大',
         ZoomOut: '缩小',
         AutoRotate: '自动旋转',

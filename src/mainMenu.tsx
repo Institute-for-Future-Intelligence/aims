@@ -12,14 +12,14 @@ import styled from 'styled-components';
 import { Dropdown, MenuProps, Radio } from 'antd';
 import logo from './assets/aims-logo-32.png';
 import About from './about';
-import { saveImage, showInfo } from './helpers';
 import * as Selector from './stores/selector';
 import { Util } from './Util';
 import { useTranslation } from 'react-i18next';
-import { usePrimitiveStore } from './stores/commonPrimitive';
-import { UNDO_SHOW_INFO_DURATION } from './programmaticConstants';
 import { Language } from './types';
 import { MenuItem } from './components/menuItem';
+import { createProjectMenu } from './components/mainMenu/projectMenu';
+import { createViewMenu } from './components/mainMenu/viewMenu';
+import { createEditMenu } from './components/mainMenu/editMenu';
 
 const radioStyle = {
   display: 'block',
@@ -61,20 +61,16 @@ const LabelContainer = styled.div`
 
 export interface MainMenuProps {
   viewOnly: boolean;
-  canvas?: HTMLCanvasElement | null;
+  resetView: () => void;
+  zoomView: (scale: number) => void;
 }
 
-const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
+const MainMenu = ({ viewOnly, resetView, zoomView }: MainMenuProps) => {
   const setCommonStore = useStore(Selector.set);
-  const setPrimitiveStore = usePrimitiveStore(Selector.setPrimitiveStore);
-  const addUndoable = useStore(Selector.addUndoable);
 
   const user = useStore.getState().user;
-  const loggable = useStore.getState().loggable;
   const language = useStore(Selector.language);
   const undoManager = useStore.getState().undoManager;
-  const cloudFile = useStore.getState().cloudFile;
-  const changed = usePrimitiveStore.getState().changed;
 
   const [aboutUs, setAboutUs] = useState(false);
 
@@ -97,237 +93,43 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
 
   const isMac = useMemo(() => Util.isMac(), []);
 
+  const keyHome = useMemo(() => {
+    const os = Util.getOS();
+    if (os) {
+      if (os.includes('OS X')) {
+        return 'Ctrl+Alt+H';
+      }
+      if (os.includes('Chrome')) {
+        return 'Ctrl+Alt+H';
+      }
+    }
+    return 'Ctrl+Home';
+  }, []);
+
   const createItems = useMemo(() => {
     const items: MenuProps['items'] = [];
 
     // project menu
-    const projectMenuItems: MenuProps['items'] = [];
-    items.push({ key: 'project-sub-menu', label: t('menu.projectSubMenu', lang), children: projectMenuItems });
-    projectMenuItems.push({
-      key: 'create-new-project',
-      label: (
-        <MenuItem
-          onClick={() => {
-            undoManager.clear();
-            setCommonStore((state) => {
-              // state.createNewFileFlag = true;
-              // window.history.pushState({}, document.title, HOME_URL);
-              if (loggable) {
-                state.actionInfo = {
-                  name: 'Create New Project',
-                  timestamp: new Date().getTime(),
-                };
-              }
-            });
-          }}
-        >
-          {t('menu.project.CreateNewProject', lang)}
-          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+F)</span>
-        </MenuItem>
-      ),
-    });
-    projectMenuItems.push({
-      key: 'open-local-project',
-      label: (
-        <MenuItem
-          onClick={() => {
-            undoManager.clear();
-            setCommonStore((state) => {
-              // state.openLocalFileFlag = true;
-              // state.cloudFile = undefined;
-              // window.history.pushState({}, document.title, HOME_URL);
-              if (loggable) {
-                state.actionInfo = {
-                  name: 'Open Local Project',
-                  timestamp: new Date().getTime(),
-                };
-              }
-            });
-          }}
-        >
-          {t('menu.project.OpenLocalProject', lang)}
-          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+O)</span>...
-        </MenuItem>
-      ),
-    });
-    projectMenuItems.push({
-      key: 'save-local-project',
-      label: (
-        <MenuItem
-          onClick={() => {
-            usePrimitiveStore.getState().set((state) => {
-              // state.saveLocalFileDialogVisible = true;
-            });
-            if (loggable) {
-              setCommonStore((state) => {
-                state.actionInfo = {
-                  name: 'Save as Local Project',
-                  timestamp: new Date().getTime(),
-                };
-              });
-            }
-          }}
-        >
-          {t('menu.project.SaveAsLocalProject', lang)}
-          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+S)</span>...
-        </MenuItem>
-      ),
-    });
-    projectMenuItems.push({
-      key: 'open-cloud-project',
-      label: (
-        <MenuItem
-          onClick={() => {
-            usePrimitiveStore.getState().set((state) => {
-              // state.listCloudFilesFlag = true;
-            });
-            setCommonStore((state) => {
-              state.selectedFloatingWindow = 'projectListPanel';
-            });
-            if (loggable) {
-              setCommonStore((state) => {
-                state.actionInfo = {
-                  name: 'List Cloud Projects',
-                  timestamp: new Date().getTime(),
-                };
-              });
-            }
-          }}
-        >
-          {t('menu.project.OpenCloudProject', lang)}
-          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Shift+O)</span>...
-        </MenuItem>
-      ),
-    });
-    projectMenuItems.push({
-      key: 'save-cloud-project',
-      label: (
-        <MenuItem
-          onClick={() => {
-            // usePrimitiveStore.getState().setSaveCloudFileFlag(true);
-            if (loggable) {
-              setCommonStore((state) => {
-                state.actionInfo = {
-                  name: 'Save Cloud Project',
-                  timestamp: new Date().getTime(),
-                };
-              });
-            }
-          }}
-        >
-          {t('menu.project.SaveCloudProject', lang)}
-          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Shift+S)</span>
-        </MenuItem>
-      ),
-    });
-    projectMenuItems.push({
-      key: 'save-as-cloud-project',
-      label: (
-        <MenuItem
-          onClick={() => {
-            setCommonStore((state) => {
-              // state.showCloudFileTitleDialogFlag = !state.showCloudFileTitleDialogFlag;
-              // state.showCloudFileTitleDialog = true;
-              if (loggable) {
-                state.actionInfo = {
-                  name: 'Save as Cloud Project',
-                  timestamp: new Date().getTime(),
-                };
-              }
-            });
-          }}
-        >
-          {t('menu.project.SaveAsCloudProject', lang)}...
-        </MenuItem>
-      ),
+    items.push({
+      key: 'project-sub-menu',
+      label: <MenuItem hasPadding={false}>{t('menu.projectSubMenu', lang)}</MenuItem>,
+      children: createProjectMenu(viewOnly),
     });
 
     // edit menu
     if (hasUndo || hasRedo) {
-      const editMenuItems: MenuProps['items'] = [];
-      items.push({ key: 'edit-sub-menu', label: t('menu.editSubMenu', lang), children: editMenuItems });
-      if (hasUndo) {
-        editMenuItems.push({
-          key: 'undo',
-          label: (
-            <MenuItem
-              onClick={() => {
-                if (undoManager.hasUndo()) {
-                  const commandName = undoManager.undo();
-                  if (commandName) showInfo(t('menu.edit.Undo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
-                  if (loggable) {
-                    setCommonStore((state) => {
-                      state.actionInfo = {
-                        name: 'Undo',
-                        timestamp: new Date().getTime(),
-                      };
-                    });
-                  }
-                }
-              }}
-            >
-              {t('menu.edit.Undo', lang) + ': ' + undoManager.getLastUndoName()}
-              <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Z)</span>
-            </MenuItem>
-          ),
-        });
-      }
-      if (hasRedo) {
-        editMenuItems.push({
-          key: 'redo',
-          label: (
-            <MenuItem
-              onClick={() => {
-                if (undoManager.hasRedo()) {
-                  const commandName = undoManager.redo();
-                  if (commandName) showInfo(t('menu.edit.Redo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
-                  if (loggable) {
-                    setCommonStore((state) => {
-                      state.actionInfo = {
-                        name: 'Redo',
-                        timestamp: new Date().getTime(),
-                      };
-                    });
-                  }
-                }
-              }}
-            >
-              {t('menu.edit.Redo', lang) + ': ' + undoManager.getLastRedoName()}
-              <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+Y)</span>
-            </MenuItem>
-          ),
-        });
-      }
+      items.push({
+        key: 'edit-sub-menu',
+        label: <MenuItem hasPadding={false}>{t('menu.editSubMenu', lang)}</MenuItem>,
+        children: createEditMenu(undoManager, isMac),
+      });
     }
 
     // view menu
-    const viewMenuItems: MenuProps['items'] = [];
-    items.push({ key: 'view-sub-menu', label: t('menu.viewSubMenu', lang), children: viewMenuItems });
-    viewMenuItems.push({
-      key: 'zoom-out-view',
-      label: (
-        <MenuItem
-          onClick={() => {
-            // zoomView(1.1);
-          }}
-        >
-          {t('menu.view.ZoomOut', lang)}
-          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+])</span>
-        </MenuItem>
-      ),
-    });
-    viewMenuItems.push({
-      key: 'zoom-in-view',
-      label: (
-        <MenuItem
-          onClick={() => {
-            // zoomView(0.9);
-          }}
-        >
-          {t('menu.view.ZoomIn', lang)}
-          <span style={{ paddingLeft: '2px', fontSize: 9 }}>({isMac ? '⌘' : 'Ctrl'}+[)</span>
-        </MenuItem>
-      ),
+    items.push({
+      key: 'view-sub-menu',
+      label: <MenuItem hasPadding={false}>{t('menu.viewSubMenu', lang)}</MenuItem>,
+      children: createViewMenu(keyHome, isMac, zoomView, resetView),
     });
 
     // language menu
@@ -388,7 +190,7 @@ const MainMenu = ({ viewOnly, canvas }: MainMenuProps) => {
     });
 
     return items;
-  }, [language, hasUndo, hasRedo]);
+  }, [language, hasUndo, hasRedo, user.uid]);
 
   return (
     <>

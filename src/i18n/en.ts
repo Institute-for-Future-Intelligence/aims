@@ -141,6 +141,7 @@ export const i18n_en = {
       },
       viewSubMenu: 'View',
       view: {
+        ResetView: 'Reset View',
         ZoomIn: 'Zoom In',
         ZoomOut: 'Zoom Out',
         AutoRotate: 'Auto Rotate',

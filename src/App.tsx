@@ -203,7 +203,7 @@ const App = () => {
         <ShareLinks size={16} round={true} margin={'2px'} style={{ position: 'absolute', right: '0', top: '90px' }} />
       )}
 
-      <MainMenu viewOnly={false} canvas={null} />
+      <MainMenu viewOnly={viewOnly} resetView={resetView} zoomView={zoomView} />
       <DropdownContextMenu>
         {/* must specify the height here for the floating window to have correct boundary check*/}
         <div style={{ height: 'calc(100vh - 72px)' }}>
