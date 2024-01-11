@@ -63,6 +63,9 @@ declare module '*.module.sass' {
   export default classes;
 }
 
+declare module '*.frag';
+declare module '*.vert';
+
 declare module '*.csv';
 declare module '*.pdb';
 declare module '*.sdf';

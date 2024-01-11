@@ -206,8 +206,11 @@ class ComplexVisual extends Visual {
         }
 
         // safety trick: lower resolution for surface modes
-        if (diff.mode && target.mode.isSurface
-          && (settings.now.resolution === 'ultra' || settings.now.resolution === 'high')) {
+        if (
+          diff.mode &&
+          target.mode.isSurface &&
+          (settings.now.resolution === 'ultra' || settings.now.resolution === 'high')
+        ) {
           logger.report('Surface resolution was changed to "medium" to avoid hang-ups.');
           settings.set('resolution', 'medium');
         }
@@ -265,14 +268,17 @@ class ComplexVisual extends Visual {
 
     // Fill in default values
     const def = settings.now.presets.default[0];
-    const desc = _.merge({
-      selector: def.selector,
-      mode: def.mode,
-      colorer: def.colorer,
-      material: def.material,
-    }, rep);
+    const desc = _.merge(
+      {
+        selector: def.selector,
+        mode: def.mode,
+        colorer: def.colorer,
+        material: def.material,
+      },
+      rep,
+    );
 
-    const selector = (typeof desc.selector === 'string') ? selectors.parse(desc.selector).selector : desc.selector;
+    const selector = typeof desc.selector === 'string' ? selectors.parse(desc.selector).selector : desc.selector;
     const target = new Representation(
       this._selectionBit,
       lookupAndCreate(modes, desc.mode),
@@ -305,7 +311,8 @@ class ComplexVisual extends Visual {
 
     // catch out of bounds case
     let count = this._reprList.length;
-    if (index < 0 || index >= count || count <= 1) { // do not allow to remove the single rep
+    if (index < 0 || index >= count || count <= 1) {
+      // do not allow to remove the single rep
       return;
     }
 
@@ -512,7 +519,7 @@ class ComplexVisual extends Visual {
 
     // mark hanging atoms
     this._complex.forEachAtom((atom) => {
-      if ((atom.mask & selectionMask) && (atom.bonds.length === 1)) {
+      if (atom.mask & selectionMask && atom.bonds.length === 1) {
         atom.mask |= tmpMask;
       }
     });
@@ -590,7 +597,7 @@ class ComplexVisual extends Visual {
     // Destroy current geometry
     gfxutils.clearTree(this);
 
-    return new Promise(((resolve) => {
+    return new Promise((resolve) => {
       // Nothing to do?
       const complex = self._complex;
       if (!complex) {
@@ -624,9 +631,9 @@ class ComplexVisual extends Visual {
               }
             }
 
-            if (DEBUG && !errorOccured) {
-              logger.debug(`Triangles count: ${meshutils.countTriangles(repr.geo)}`);
-            }
+            // if (DEBUG && !errorOccured) {
+            //   logger.debug(`Triangles count: ${meshutils.countTriangles(repr.geo)}`);
+            // }
           }
 
           hasGeometry = errorOccured || hasGeometry || gfxutils.groupHasGeometryToRender(repr.geo);
@@ -638,10 +645,10 @@ class ComplexVisual extends Visual {
 
         self._reprListChanged = false;
 
-        console.timeEnd('build');
+        // console.timeEnd('build');
         resolve();
       }, 10);
-    }));
+    });
   }
 
   setNeedsRebuild() {
@@ -715,15 +722,12 @@ class ComplexVisual extends Visual {
       let selector;
       if (chains.length > 0) {
         selector = selectors.chain(chains);
-        expression = expression ? selectors.or(expression, selector) : selector;// NOSONAR
+        expression = expression ? selectors.or(expression, selector) : selector; // NOSONAR
       }
       if (Object.keys(residues).length > 0) {
         for (const ch in residues) {
           if (residues.hasOwnProperty(ch)) {
-            selector = selectors.and(
-              selectors.chain(ch),
-              selectors.residx(optimizeList(residues[ch])),
-            );
+            selector = selectors.and(selectors.chain(ch), selectors.residx(optimizeList(residues[ch])));
             expression = expression ? selectors.or(expression, selector) : selector;
           }
         }

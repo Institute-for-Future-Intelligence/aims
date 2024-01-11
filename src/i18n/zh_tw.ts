@@ -78,6 +78,7 @@ export const i18n_zh_tw = {
       Wireframe: '線框架',
       Stick: '棍',
       SpaceFilling: '空間填滿',
+      ContactSurface: '接觸面',
       BackgroundColor: '背景顏色',
       Shininess: '光澤度',
       TakeScreenshot: '截圖',
