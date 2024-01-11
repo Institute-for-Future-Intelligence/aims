@@ -159,8 +159,13 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
     if (
       style === MolecularViewerStyle.Stick ||
       style === MolecularViewerStyle.Wireframe ||
+      style === MolecularViewerStyle.Cartoon ||
+      style === MolecularViewerStyle.Trace ||
       style === MolecularViewerStyle.Tube ||
-      style === MolecularViewerStyle.ContactSurface
+      style === MolecularViewerStyle.QuickSurface ||
+      style === MolecularViewerStyle.ContactSurface ||
+      style === MolecularViewerStyle.SolventAccessibleSurface ||
+      style === MolecularViewerStyle.SolventExcludedSurface
     )
       return null;
     return (
@@ -198,8 +203,13 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
     if (!molecule) return null;
     if (
       style === MolecularViewerStyle.SpaceFilling ||
+      style === MolecularViewerStyle.Cartoon ||
+      style === MolecularViewerStyle.Trace ||
       style === MolecularViewerStyle.Tube ||
-      style === MolecularViewerStyle.ContactSurface
+      style === MolecularViewerStyle.QuickSurface ||
+      style === MolecularViewerStyle.ContactSurface ||
+      style === MolecularViewerStyle.SolventAccessibleSurface ||
+      style === MolecularViewerStyle.SolventExcludedSurface
     )
       return null;
     return (
