@@ -46,6 +46,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
 
   return (
     <Canvas
+      id={'reaction-chamber'}
       ref={canvasRef}
       shadows={false}
       gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}

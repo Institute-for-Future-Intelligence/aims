@@ -2,6 +2,8 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
+//@ts-ignore
+import { saveSvgAsPng } from 'save-svg-as-png';
 import { message } from 'antd';
 import html2canvas from 'html2canvas';
 
@@ -113,15 +115,22 @@ export const saveImage = (fileName: string, imgUrl: string) => {
   a.click();
 };
 
-export const screenshot = async (elementId: string, name: string, options: {}) => {
+export const screenshot = async (elementId: string, name?: string, options?: {}) => {
   const source = window.document.getElementById(elementId);
   if (source) {
     const canvas = await html2canvas(source, { ...options, removeContainer: true });
     const a = document.createElement('a');
     a.href = canvas.toDataURL('image/png', 1.0);
-    a.download = `${name}.png`;
+    a.download = `${name ?? elementId}.png`;
     a.click();
   } else {
     throw new Error(`Cannot find element with ID ${elementId}`);
+  }
+};
+
+export const saveSvg = async (elementId: string, name?: string) => {
+  const d = document.getElementById(elementId);
+  if (d) {
+    saveSvgAsPng(d, (name ?? elementId) + '.png');
   }
 };

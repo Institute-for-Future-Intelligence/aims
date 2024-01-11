@@ -15,7 +15,7 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useTranslation } from 'react-i18next';
 import { STYLE_LABELS } from '../../scientificConstants';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
-import { saveImage } from '../../helpers';
+import { screenshot, showError } from '../../helpers';
 
 export const AutoRotateCheckBox = () => {
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
@@ -62,17 +62,20 @@ export const Screenshot = () => {
   const lang = useLanguage();
 
   const takeScreenshot = () => {
-    // if (canvas) {
-    //   saveImage('screenshot.png', canvas.toDataURL('image/png'));
-    //   if (loggable) {
-    //     setCommonStore((state) => {
-    //       state.actionInfo = {
-    //         name: 'Take Screenshot',
-    //         timestamp: new Date().getTime(),
-    //       };
-    //     });
-    //   }
-    // }
+    screenshot('reaction-chamber')
+      .then(() => {
+        if (loggable) {
+          setCommonStore((state) => {
+            state.actionInfo = {
+              name: 'Take Screenshot of Reaction Chamber',
+              timestamp: new Date().getTime(),
+            };
+          });
+        }
+      })
+      .catch((reason) => {
+        showError(reason);
+      });
   };
 
   return (

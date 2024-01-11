@@ -32,10 +32,8 @@ import { UndoableChange } from './undo/UndoableChange';
 import { STYLE_LABELS } from './scientificConstants';
 import { getTestMolecule } from './App';
 import ImportMoleculeModal from './ImportMoleculeModal';
-import { showError, showInfo } from './helpers';
+import { saveSvg, showError, showInfo } from './helpers';
 import ParallelCoordinates from './components/parallelCoordinates';
-//@ts-ignore
-import { saveSvgAsPng } from 'save-svg-as-png';
 import { ProjectUtil } from './ProjectUtil';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { updateDataColoring, updateHiddenProperties } from './cloudProjectUtil';
@@ -59,17 +57,14 @@ const CanvasContainer = styled.div`
 
 const Container = styled.div`
   position: relative;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: calc(100% - 30px);
-  margin: 0;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-self: center;
   align-content: center;
   align-items: center;
-  padding-bottom: 30px;
+  padding-bottom: 20px;
   opacity: 100%;
   user-select: none;
   tab-index: -1; // set to be not focusable
@@ -124,6 +119,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
   const setCommonStore = useStore(Selector.set);
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
+  const loggable = useStore.getState().loggable;
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const hoveredMolecule = usePrimitiveStore(Selector.hoveredMolecule);
   const collectedMolecules = useStore(Selector.collectedMolecules);
@@ -844,7 +840,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           <List
             style={{
               width: '100%',
-              height: totalHeight / 2 - (descriptionExpandedRef.current ? 240 : 160),
+              height: totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80),
               paddingTop: '8px',
               paddingLeft: '8px',
               overflowX: 'hidden',
@@ -906,12 +902,21 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
               <Button
                 style={{ border: 'none', paddingRight: '20px', background: 'white' }}
                 onClick={() => {
-                  const d = document.getElementById('properties-space');
-                  if (d) {
-                    saveSvgAsPng(d, 'design-space-' + projectInfo.title + '.png').then(() => {
+                  saveSvg('property-space')
+                    .then(() => {
                       showInfo(t('message.ScreenshotSaved', lang));
+                      if (loggable) {
+                        setCommonStore((state) => {
+                          state.actionInfo = {
+                            name: 'Take Screenshot of Property Space',
+                            timestamp: new Date().getTime(),
+                          };
+                        });
+                      }
+                    })
+                    .catch((reason) => {
+                      showError(reason);
                     });
-                  }
                 }}
               >
                 <CameraOutlined
@@ -923,9 +928,9 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           </PropertiesHeader>
           {data.length > 0 && (
             <ParallelCoordinates
-              id={'properties-space'}
+              id={'property-space'}
               width={relativeWidth * window.innerWidth}
-              height={totalHeight / 2 - 120}
+              height={totalHeight / 2 - 130}
               data={data}
               types={types}
               minima={minima}
