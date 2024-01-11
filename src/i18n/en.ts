@@ -80,6 +80,7 @@ export const i18n_en = {
       Wireframe: 'Wireframe',
       Stick: 'Stick',
       SpaceFilling: 'Space-Filling',
+      Tube: 'Tube',
       ContactSurface: 'Contact Surface',
       BackgroundColor: 'Background Color',
       Shininess: 'Shininess',

@@ -79,6 +79,7 @@ export const i18n_zh_tw = {
       Stick: '棍',
       SpaceFilling: '空間填滿',
       ContactSurface: '接觸表面',
+      Tube: '管狀圖',
       BackgroundColor: '背景顏色',
       Shininess: '光澤度',
       TakeScreenshot: '截圖',

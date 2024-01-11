@@ -33,6 +33,7 @@ export enum MolecularViewerStyle {
   Wireframe = 'Wireframe',
   Stick = 'Stick',
   SpaceFilling = 'Space-Filling',
+  Tube = 'Tube',
   ContactSurface = 'Contact Surface',
 }
 

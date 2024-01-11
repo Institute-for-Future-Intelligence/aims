@@ -10,7 +10,7 @@ import CIFParser from '../lib/io/parsers/CIFParser';
 import PubChemParser from '../lib/io/parsers/PubChemParser';
 import ElementColorer from '../lib/gfx/colorers/ElementColorer';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Color, Group, Vector3 } from 'three';
 import { MoleculeTS } from '../models/MoleculeTS';
 import { Cylinder, Line, Sphere } from '@react-three/drei';
@@ -46,6 +46,12 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
   const CSGroup = useRef<Group>(null);
 
   const { invalidate } = useThree();
+
+  const mode = useMemo(() => {
+    if (style === MolecularViewerStyle.Tube) return 'TU';
+    if (style === MolecularViewerStyle.ContactSurface) return 'CS';
+    return undefined;
+  }, [style]);
 
   useEffect(() => {
     if (moleculeData.url) {
@@ -148,6 +154,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
     if (
       style === MolecularViewerStyle.Stick ||
       style === MolecularViewerStyle.Wireframe ||
+      style === MolecularViewerStyle.Tube ||
       style === MolecularViewerStyle.ContactSurface
     )
       return null;
@@ -184,7 +191,12 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
 
   const showBonds = () => {
     if (!molecule) return null;
-    if (style === MolecularViewerStyle.SpaceFilling || style === MolecularViewerStyle.ContactSurface) return null;
+    if (
+      style === MolecularViewerStyle.SpaceFilling ||
+      style === MolecularViewerStyle.Tube ||
+      style === MolecularViewerStyle.ContactSurface
+    )
+      return null;
     return (
       <group name={'Bonds'}>
         {molecule.bonds.map((e, index) => {
@@ -278,10 +290,16 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
     );
   };
 
-  const showContactSurface = () => {
+  const showStructure = () => {
     if (!molecule) return null;
-    if (style !== MolecularViewerStyle.ContactSurface) return null;
-    return <group name={'Contact-Surface'} ref={CSGroup} />;
+    if (
+      style === MolecularViewerStyle.BallAndStick ||
+      style === MolecularViewerStyle.Stick ||
+      style === MolecularViewerStyle.Wireframe ||
+      style === MolecularViewerStyle.SpaceFilling
+    )
+      return null;
+    return <group name={'Structure'} ref={CSGroup} />;
   };
 
   const getVisualCenter = (visual: ComplexVisual) => {
@@ -289,7 +307,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
   };
 
   useEffect(() => {
-    if (!CSGroup.current || !complex || style !== MolecularViewerStyle.ContactSurface) return;
+    if (!CSGroup.current || !complex || !mode) return;
 
     CSGroup.current.children = [];
     CSGroup.current.position.set(0, 0, 0);
@@ -298,7 +316,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
 
     const reps = [
       {
-        mode: 'CS',
+        mode: mode,
         colorer: 'EL',
         selector: 'all',
         material: 'SF',
@@ -319,7 +337,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
     <>
       {showAtoms()}
       {showBonds()}
-      {showContactSurface()}
+      {mode && showStructure()}
     </>
   );
 };
