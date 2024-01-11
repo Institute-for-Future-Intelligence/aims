@@ -206,7 +206,7 @@ const App = () => {
       <MainMenu viewOnly={false} canvas={null} />
       <DropdownContextMenu>
         {/* must specify the height here for the floating window to have correct boundary check*/}
-        <div style={{ height: 'calc(100vh - 82px)' }}>
+        <div style={{ height: 'calc(100vh - 72px)' }}>
           {/* @ts-ignore */}
           <SplitPane
             split={'vertical'}
@@ -216,7 +216,7 @@ const App = () => {
               });
             }, 5)}
             // must specify the height again for the split pane to resize correctly with the window
-            style={{ height: 'calc(100vh - 82px)', display: 'flex' }}
+            style={{ height: 'calc(100vh - 72px)', display: 'flex' }}
             pane1Style={{
               width: projectView ? 100 - chamberViewerPercentWidth + '%' : '0',
               minWidth: projectView ? '25%' : 0,
