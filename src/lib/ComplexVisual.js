@@ -607,7 +607,7 @@ class ComplexVisual extends Visual {
 
       let errorOccured = false;
       setTimeout(() => {
-        console.time('build');
+        // console.time('build');
         const reprList = self._reprList;
         const palette = palettes.get(settings.now.palette) || palettes.first;
         let hasGeometry = false;

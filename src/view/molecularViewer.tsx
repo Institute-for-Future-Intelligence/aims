@@ -339,6 +339,8 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
     ];
 
     visual.resetReps(reps);
+    visual.setUberOptions({ shininess });
+
     visual.rebuild().then(() => {
       if (!CSGroup.current) return;
       CSGroup.current.add(visual);
@@ -346,7 +348,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
       CSGroup.current.position.copy(offset);
       invalidate();
     });
-  }, [mode, complex]);
+  }, [complex, shininess, mode]);
 
   return (
     <>
