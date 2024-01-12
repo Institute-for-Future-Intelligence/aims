@@ -23,6 +23,7 @@ export const i18n_en = {
     },
 
     word: {
+      Unknown: 'Unknown',
       Maximum: 'Maximum',
       Minimum: 'Minimum',
       OK: 'OK',

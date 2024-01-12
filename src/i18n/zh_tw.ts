@@ -23,6 +23,7 @@ export const i18n_zh_tw = {
     },
 
     word: {
+      Unknown: '未知',
       OK: '確定',
       Cancel: '取消',
       Close: '關閉',

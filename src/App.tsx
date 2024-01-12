@@ -23,7 +23,7 @@ import KeyboardListener from './keyboardListener';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import AccountSettingsPanel from './accountSettingsPanel';
 import CloudManager from './cloudManager';
-import { testMolecules } from './internalDatabase';
+import { testMolecules, testProteins } from './internalDatabase';
 
 export const getTestMolecule = (name: string) => {
   for (const m of testMolecules) {
@@ -37,19 +37,19 @@ const App = () => {
   const language = useStore(Selector.language);
   const projectView = useStore(Selector.projectView);
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
-  const loadedMolecule = useStore(Selector.loadedMolecule);
+  const targetProtein = useStore(Selector.targetProtein);
   const collectedMolecules = useStore(Selector.collectedMolecules);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
-  const loadProvidedMolecules = useStore(Selector.loadProvidedMolecules);
+  const loadProvidedMolecularProperties = useStore(Selector.loadProvidedMolecularProperties);
   const params = new URLSearchParams(window.location.search);
   const viewOnly = params.get('viewonly') === 'true';
   const showAccountSettingsPanel = usePrimitiveStore(Selector.showAccountSettingsPanel);
 
   useEffect(() => {
     loadChemicalElements();
-    loadProvidedMolecules();
+    loadProvidedMolecularProperties();
     setCommonStore((state) => {
-      if (!state.collectedMolecules.length || state.collectedMolecules.length === 0) {
+      if (!state.collectedMolecules || state.collectedMolecules.length === 0) {
         state.collectedMolecules = testMolecules;
       }
       if (state.selectedMolecule !== null) {
@@ -72,6 +72,7 @@ const App = () => {
       } else {
         state.loadedMolecule = state.collectedMolecules[0];
       }
+      state.targetProtein = testProteins[0];
     });
     // eslint-disable-next-line
   }, []);
@@ -186,6 +187,20 @@ const App = () => {
         <ShareLinks size={16} round={true} margin={'2px'} style={{ position: 'absolute', right: '0', top: '90px' }} />
       )}
 
+      <div
+        style={{
+          position: 'absolute',
+          top: '80px',
+          left: projectView ? 100 - chamberViewerPercentWidth + 1 + '%' : '6px',
+          zIndex: 999,
+          fontSize: '20px',
+          userSelect: 'none',
+          color: 'lightgray',
+        }}
+      >
+        {targetProtein?.name ?? t('word.Unknown', lang)}
+      </div>
+
       <MainMenu viewOnly={viewOnly} resetView={resetView} zoomView={zoomView} />
       <DropdownContextMenu>
         {/* must specify the height here for the floating window to have correct boundary check*/}
@@ -225,7 +240,7 @@ const App = () => {
               <></>
             )}
             <Suspense fallback={<Loading />}>
-              <ReactionChamber moleculeData={loadedMolecule} />
+              <ReactionChamber moleculeData={targetProtein} />
             </Suspense>
           </SplitPane>
           <KeyboardListener setNavigationView={setNavigationView} resetView={resetView} zoomView={zoomView} />

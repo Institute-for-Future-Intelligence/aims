@@ -11,7 +11,8 @@ import testMoleculeUrl4 from './molecules/pcj/caffeine.pcj';
 import testMoleculeUrl5 from './molecules/xyz/glucose.xyz';
 import testMoleculeUrl6 from './molecules/pdb/cholesterol.pdb';
 
-import testProteinUrl1 from './molecules/pdb/1crn.pdb';
+import testProteinUrl1 from './molecules/pdb/1a3n.pdb';
+import testProteinUrl2 from './molecules/pdb/1crn.pdb';
 
 export const testMolecules = [
   { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
@@ -22,4 +23,7 @@ export const testMolecules = [
   { name: 'Cholesterol', url: testMoleculeUrl6 } as MoleculeData,
 ];
 
-export const testProteins = [{ name: 'Crambin', url: testProteinUrl1 } as MoleculeData];
+export const testProteins = [
+  { name: 'Hemoglobin', url: testProteinUrl1 } as MoleculeData,
+  { name: 'Crambin', url: testProteinUrl2 } as MoleculeData,
+];

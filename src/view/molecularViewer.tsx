@@ -37,7 +37,7 @@ export interface MolecularViewerProps {
 const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: MolecularViewerProps) => {
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
-  const getProvidedMolecule = useStore(Selector.getProvidedMolecule);
+  const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
   const setMolecularProperties = useStore(Selector.setMolecularProperties);
 
   const [molecule, setMolecule] = useState<MoleculeTS>();
@@ -148,17 +148,19 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
       );
     }
     setMolecule({ atoms, bonds } as MoleculeTS);
-    const providedMolecule = getProvidedMolecule(moleculeData.name);
-    setMolecularProperties(moleculeData.name, {
-      atomCount: result._atoms.length,
-      bondCount: result._bonds.length,
-      mass: totalMass,
-      logP: providedMolecule.logP,
-      hydrogenBondDonorCount: providedMolecule.hydrogenBondDonorCount,
-      hydrogenBondAcceptorCount: providedMolecule.hydrogenBondAcceptorCount,
-      rotatableBondCount: providedMolecule.rotatableBondCount,
-      polarSurfaceArea: providedMolecule.polarSurfaceArea,
-    } as MolecularProperties);
+    const properties = getProvidedMolecularProperties(moleculeData.name);
+    if (properties) {
+      setMolecularProperties(moleculeData.name, {
+        atomCount: result._atoms.length,
+        bondCount: result._bonds.length,
+        mass: totalMass,
+        logP: properties.logP,
+        hydrogenBondDonorCount: properties.hydrogenBondDonorCount,
+        hydrogenBondAcceptorCount: properties.hydrogenBondAcceptorCount,
+        rotatableBondCount: properties.rotatableBondCount,
+        polarSurfaceArea: properties.polarSurfaceArea,
+      } as MolecularProperties);
+    }
   };
 
   const showAtoms = () => {

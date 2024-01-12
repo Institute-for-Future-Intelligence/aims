@@ -21,6 +21,8 @@ export const projectInfo = (state: CommonStoreState) => state.projectInfo;
 
 export const projectView = (state: CommonStoreState) => state.projectView;
 
+export const targetProtein = (state: CommonStoreState) => state.targetProtein;
+
 export const loadedMolecule = (state: CommonStoreState) => state.loadedMolecule;
 
 export const selectedMolecule = (state: CommonStoreState) => state.selectedMolecule;
@@ -81,11 +83,9 @@ export const getChemicalElement = (state: CommonStoreState) => state.getChemical
 
 export const loadChemicalElements = (state: CommonStoreState) => state.loadChemicalElements;
 
-export const providedMolecules = (state: CommonStoreState) => state.providedMolecules;
+export const getProvidedMolecularProperties = (state: CommonStoreState) => state.getProvidedMolecularProperties;
 
-export const getProvidedMolecule = (state: CommonStoreState) => state.getProvidedMolecule;
-
-export const loadProvidedMolecules = (state: CommonStoreState) => state.loadProvidedMolecules;
+export const loadProvidedMolecularProperties = (state: CommonStoreState) => state.loadProvidedMolecularProperties;
 
 export const contextMenuObjectType = (state: PrimitiveStoreState) => state.contextMenuObjectType;
 

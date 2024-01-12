@@ -45,6 +45,8 @@ export interface CommonStoreState {
   addMolecule: (molecule: MoleculeData) => boolean;
   removeMolecule: (molecule: MoleculeData) => void;
 
+  targetProtein: MoleculeData | null;
+
   molecularPropertiesMap: Map<string, MolecularProperties>;
   setMolecularProperties: (name: string, properties: MolecularProperties) => void;
 
@@ -74,9 +76,9 @@ export interface CommonStoreState {
   getChemicalElement: (name: string) => ChemicalElement;
   loadChemicalElements: () => void;
 
-  providedMolecules: { [key: string]: MolecularProperties };
-  getProvidedMolecule: (name: string) => MolecularProperties;
-  loadProvidedMolecules: () => void;
+  providedMolecularProperties: { [key: string]: MolecularProperties };
+  getProvidedMolecularProperties: (name: string) => MolecularProperties;
+  loadProvidedMolecularProperties: () => void;
 }
 
 export const useStore = createWithEqualityFn<CommonStoreState>()(
@@ -143,6 +145,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
               }
             });
           },
+
+          targetProtein: null,
 
           molecularPropertiesMap: new Map<string, MolecularProperties>(),
           setMolecularProperties(name: string, properties: MolecularProperties) {
@@ -219,11 +223,11 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             });
           },
 
-          providedMolecules: {},
-          getProvidedMolecule(name: string) {
-            return get().providedMolecules[name];
+          providedMolecularProperties: {},
+          getProvidedMolecularProperties(name: string) {
+            return get().providedMolecularProperties[name];
           },
-          loadProvidedMolecules() {
+          loadProvidedMolecularProperties() {
             Papa.parse(moleculesUrl, {
               download: true,
               complete: function (results) {
@@ -238,7 +242,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                         polarSurfaceArea: parseFloat(token[5].trim()),
                       } as MolecularProperties;
                       immerSet((state: CommonStoreState) => {
-                        state.providedMolecules[token[0].trim()] = mol;
+                        state.providedMolecularProperties[token[0].trim()] = mol;
                       });
                     }
                   }
@@ -260,7 +264,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           language: state.language,
           loadedMolecule: state.loadedMolecule,
           selectedMolecule: state.selectedMolecule,
-          collectedMolecules: state.collectedMolecules,
+          // collectedMolecules: state.collectedMolecules,
           chamberViewerPercentWidth: state.chamberViewerPercentWidth,
           chamberViewerAxes: state.chamberViewerAxes,
           chamberViewerShininess: state.chamberViewerShininess,
