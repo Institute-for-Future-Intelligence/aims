@@ -24,6 +24,6 @@ export const testMolecules = [
 ];
 
 export const testProteins = [
-  { name: 'Hemoglobin', url: testProteinUrl1 } as MoleculeData,
   { name: 'Crambin', url: testProteinUrl2 } as MoleculeData,
+  { name: 'Hemoglobin', url: testProteinUrl1 } as MoleculeData,
 ];

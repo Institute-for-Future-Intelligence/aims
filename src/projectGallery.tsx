@@ -4,9 +4,8 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './programmaticConstants';
+import { DEFAULT_FOV, DEFAULT_LIGHT_INTENSITY, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './programmaticConstants';
 import { OrbitControls } from '@react-three/drei';
-import Lights from './lights';
 import MolecularViewer from './view/molecularViewer';
 import styled from 'styled-components';
 import { Button, Checkbox, Col, Collapse, CollapseProps, ColorPicker, List, Popover, Radio, Row, Select } from 'antd';
@@ -234,7 +233,14 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
         }}
       >
         <OrbitControls />
-        <Lights />
+        <ambientLight intensity={1} name={'Ambient Light'} />
+        <directionalLight
+          name={'Directional Light'}
+          color="white"
+          position={[1, 1, 1]}
+          intensity={DEFAULT_LIGHT_INTENSITY}
+          castShadow={false}
+        />
         <MolecularViewer moleculeData={moleculeData} style={viewerStyle} />
       </Canvas>
     );

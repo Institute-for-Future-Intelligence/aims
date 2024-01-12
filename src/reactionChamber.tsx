@@ -4,15 +4,20 @@
 
 import React, { useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { DEFAULT_FOV, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './programmaticConstants';
+import {
+  DEFAULT_FOV,
+  DEFAULT_LIGHT_INTENSITY,
+  DEFAULT_SHADOW_CAMERA_FAR,
+  DEFAULT_SHADOW_MAP_SIZE,
+  HALF_PI,
+} from './programmaticConstants';
 import { GizmoHelper, GizmoViewport, OrbitControls } from '@react-three/drei';
-import Lights from './lights';
 import Axes from './view/axes';
 import MolecularViewer from './view/molecularViewer';
 import { MoleculeData } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import { Vector3 } from 'three';
+import { DirectionalLight, Vector3 } from 'three';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 
 export interface ReactionChamberProps {
@@ -44,6 +49,8 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
     });
   };
 
+  const lightRef = useRef<DirectionalLight>(null);
+
   return (
     <Canvas
       id={'reaction-chamber'}
@@ -60,8 +67,33 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
         rotation: [HALF_PI / 2, 0, HALF_PI / 2],
       }}
     >
-      <OrbitControls enableDamping={false} onEnd={onControlEnd} autoRotate={autoRotate} />
-      <Lights highQuality />
+      <OrbitControls
+        enableDamping={false}
+        onEnd={onControlEnd}
+        autoRotate={autoRotate}
+        onChange={(e) => {
+          if (!e) return;
+          const camera = e.target.object;
+          if (lightRef.current) {
+            // sets the point light to a location above the camera
+            lightRef.current.position.set(0, 1, 0);
+            lightRef.current.position.add(camera.position);
+          }
+        }}
+      />
+      <directionalLight
+        ref={lightRef}
+        name={'Directional Light'}
+        color="white"
+        position={new Vector3().fromArray(cameraPosition ?? [1, 1, 1])}
+        intensity={DEFAULT_LIGHT_INTENSITY}
+        castShadow={true}
+        shadow-bias={0} // may be used to reduce shadow artifacts
+        shadow-mapSize-height={DEFAULT_SHADOW_MAP_SIZE}
+        shadow-mapSize-width={DEFAULT_SHADOW_MAP_SIZE}
+        shadow-camera-near={1}
+        shadow-camera-far={DEFAULT_SHADOW_CAMERA_FAR}
+      />
       {viewerAxes && <Axes />}
       {moleculeData && (
         <MolecularViewer moleculeData={moleculeData} style={viewerStyle} shininess={shininess} highQuality={true} />

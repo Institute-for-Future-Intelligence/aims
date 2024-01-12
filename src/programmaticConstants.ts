@@ -15,6 +15,7 @@ export const HOME_URL: string = isProd
 export const DEFAULT_FOV = 30;
 export const DEFAULT_SHADOW_CAMERA_FAR = 10000;
 export const DEFAULT_SHADOW_MAP_SIZE = 4096;
+export const DEFAULT_LIGHT_INTENSITY = 5;
 
 export const UNDO_SHOW_INFO_DURATION = 0.5;
 
