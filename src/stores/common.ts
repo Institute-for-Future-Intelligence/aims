@@ -158,9 +158,9 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           chamberViewerPercentWidth: 50,
           chamberViewerAxes: true,
           chamberViewerShininess: 1000,
-          chamberViewerStyle: MolecularViewerStyle.BallAndStick,
+          chamberViewerStyle: MolecularViewerStyle.QuickSurface,
           chamberViewerBackground: 'black',
-          projectViewerStyle: MolecularViewerStyle.BallAndStick,
+          projectViewerStyle: MolecularViewerStyle.Stick,
           projectViewerBackground: 'white',
 
           navigationView: false,
@@ -262,6 +262,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
         skipHydration: Util.isOpenFromURL(),
         partialize: (state) => ({
           language: state.language,
+          targetProtein: state.targetProtein,
           loadedMolecule: state.loadedMolecule,
           selectedMolecule: state.selectedMolecule,
           // collectedMolecules: state.collectedMolecules,

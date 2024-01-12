@@ -72,7 +72,16 @@ const App = () => {
       } else {
         state.loadedMolecule = state.collectedMolecules[0];
       }
-      state.targetProtein = testProteins[0];
+      if (state.targetProtein !== null) {
+        for (const t of testProteins) {
+          if (t.name === state.targetProtein.name) {
+            state.targetProtein = t;
+            break;
+          }
+        }
+      } else {
+        state.targetProtein = testProteins[0];
+      }
     });
     // eslint-disable-next-line
   }, []);
