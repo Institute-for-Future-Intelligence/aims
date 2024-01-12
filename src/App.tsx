@@ -6,8 +6,8 @@ import testMoleculeUrl1 from './molecules/pdb/aspirin.pdb';
 import testMoleculeUrl2 from './molecules/sdf/paxlovid.sdf';
 import testMoleculeUrl3 from './molecules/pcj/caffeine.pcj';
 import testMoleculeUrl4 from './molecules/xyz/glucose.xyz';
-import testMoleculeUrl5 from './molecules/pcj/rna.pcj';
-import testMoleculeUrl6 from './molecules/pdb/3nir.pdb';
+import testMoleculeUrl5 from './molecules/pdb/dna.pdb';
+import testMoleculeUrl6 from './molecules/pdb/1crn.pdb';
 
 import React, { Suspense, useEffect, useMemo } from 'react';
 import './App.css';
@@ -37,7 +37,7 @@ export const testMolecules = [
   { name: 'Paxlovid', url: testMoleculeUrl2 } as MoleculeData,
   { name: 'Caffeine', url: testMoleculeUrl3 } as MoleculeData,
   { name: 'Glucose', url: testMoleculeUrl4 } as MoleculeData,
-  { name: 'RNA', url: testMoleculeUrl5 } as MoleculeData,
+  { name: 'DNA', url: testMoleculeUrl5 } as MoleculeData,
   { name: 'Crambin', url: testMoleculeUrl6 } as MoleculeData,
 ];
 

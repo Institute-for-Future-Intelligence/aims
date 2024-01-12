@@ -724,9 +724,9 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
 
   const maxima: number[] = useMemo(() => {
     const array: number[] = [];
-    if (!projectInfo.hiddenProperties?.includes('atomCount')) array.push(getMax('atomCount', 1200));
+    if (!projectInfo.hiddenProperties?.includes('atomCount')) array.push(getMax('atomCount', 1000));
     if (!projectInfo.hiddenProperties?.includes('bondCount')) array.push(getMax('bondCount', 1000));
-    if (!projectInfo.hiddenProperties?.includes('molecularMass')) array.push(getMax('molecularMass', 10000));
+    if (!projectInfo.hiddenProperties?.includes('molecularMass')) array.push(getMax('molecularMass', 8000));
     if (!projectInfo.hiddenProperties?.includes('logP')) array.push(getMax('logP', 10));
     if (!projectInfo.hiddenProperties?.includes('hydrogenBondDonorCount'))
       array.push(getMax('hydrogenBondDonorCount', 100));
