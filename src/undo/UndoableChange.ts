@@ -4,7 +4,8 @@
 
 import { Undoable } from './Undoable';
 import { Vector3 } from 'three';
-import { MolecularViewerStyle, MoleculeData } from '../types';
+import { MoleculeData } from '../types';
+import { MolecularViewerStyle } from '../view/displayOptions';
 
 export interface UndoableChange extends Undoable {
   oldValue: boolean | string | number | string[] | number[] | Vector3 | MolecularViewerStyle | MoleculeData;

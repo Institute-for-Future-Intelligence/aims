@@ -25,10 +25,9 @@ import {
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { useTranslation } from 'react-i18next';
-import { DataColoring, DatumEntry, MolecularViewerStyle, MoleculeData } from './types';
+import { DataColoring, DatumEntry, MoleculeData } from './types';
 import TextArea from 'antd/lib/input/TextArea';
 import { UndoableChange } from './undo/UndoableChange';
-import { GALLERY_STYLE_LABELS } from './scientificConstants';
 import { getTestMolecule } from './App';
 import ImportMoleculeModal from './ImportMoleculeModal';
 import { saveSvg, showError, showInfo } from './helpers';
@@ -37,6 +36,7 @@ import { ProjectUtil } from './ProjectUtil';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { updateDataColoring, updateHiddenProperties } from './cloudProjectUtil';
 import { Filter, FilterType } from './Filter';
+import { GALLERY_STYLE_LABELS, MolecularViewerStyle } from './view/displayOptions';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)

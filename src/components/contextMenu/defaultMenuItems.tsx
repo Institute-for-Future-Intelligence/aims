@@ -5,7 +5,6 @@
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { useLanguage } from '../../hooks';
-import { MolecularViewerStyle, MoleculeData } from '../../types';
 import { Checkbox, ColorPicker, InputNumber, RadioChangeEvent } from 'antd';
 import { UndoableChange } from '../../undo/UndoableChange';
 import { MenuItem } from '../menuItem';
@@ -13,10 +12,10 @@ import { Radio, Space } from 'antd';
 import { UndoableCheck } from '../../undo/UndoableCheck';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useTranslation } from 'react-i18next';
-import { CHAMBER_STYLE_LABELS } from '../../scientificConstants';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
 import { screenshot, showError } from '../../helpers';
 import { testProteins } from '../../internalDatabase';
+import { CHAMBER_STYLE_LABELS, MolecularViewerStyle } from '../../view/displayOptions';
 
 export const AutoRotateCheckBox = () => {
   const autoRotate = usePrimitiveStore(Selector.autoRotate);

@@ -28,20 +28,6 @@ export enum ObjectType {
   Surface = 'Surface',
 }
 
-export enum MolecularViewerStyle {
-  BallAndStick = 'Ball-and-Stick',
-  Wireframe = 'Wireframe',
-  Stick = 'Stick',
-  SpaceFilling = 'Space-Filling',
-  Cartoon = 'Cartoon',
-  Trace = 'Trace',
-  Tube = 'Tube',
-  QuickSurface = 'Quick Surface',
-  ContactSurface = 'Contact Surface',
-  SolventAccessibleSurface = 'Solvent Accessible Surface',
-  SolventExcludedSurface = 'Solvent Excluded Surface',
-}
-
 export interface MoleculeData {
   name: string;
   url?: string;

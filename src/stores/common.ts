@@ -9,7 +9,7 @@ import { Util } from '../Util';
 import { VERSION } from '../programmaticConstants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, MolecularViewerStyle, MoleculeData, ProjectInfo, ProjectType, Range, User } from '../types';
+import { ActionInfo, MoleculeData, ProjectInfo, ProjectType, Range, User } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -21,6 +21,7 @@ import { BondTS } from '../models/BondTS';
 import { useRefStore } from './commonRef';
 import { MolecularProperties } from '../models/MolecularProperties';
 import { Filter } from '../Filter';
+import { MolecularViewerStyle } from '../view/displayOptions';
 
 enableMapSet();
 

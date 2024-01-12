@@ -17,7 +17,7 @@ import { Cylinder, Line, Sphere } from '@react-three/drei';
 import { HALF_PI } from '../programmaticConstants';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
-import { MolecularViewerStyle, MoleculeData } from '../types';
+import { MoleculeData } from '../types';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
 import { AtomTS } from '../models/AtomTS';
@@ -26,6 +26,7 @@ import { Util } from '../Util';
 import { MolecularProperties } from '../models/MolecularProperties';
 import ComplexVisual from '../lib/ComplexVisual';
 import { useThree } from '@react-three/fiber';
+import { createStyleMap, MolecularViewerStyle } from './displayOptions';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -47,15 +48,12 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
 
   const { invalidate } = useThree();
 
+  const styleMap = useMemo(() => {
+    return createStyleMap();
+  }, []);
+
   const mode = useMemo(() => {
-    if (style === MolecularViewerStyle.Cartoon) return 'CA';
-    if (style === MolecularViewerStyle.Trace) return 'TR';
-    if (style === MolecularViewerStyle.Tube) return 'TU';
-    if (style === MolecularViewerStyle.QuickSurface) return 'QS';
-    if (style === MolecularViewerStyle.ContactSurface) return 'CS';
-    if (style === MolecularViewerStyle.SolventAccessibleSurface) return 'SA';
-    if (style === MolecularViewerStyle.SolventExcludedSurface) return 'SE';
-    return undefined;
+    return styleMap.get(style);
   }, [style]);
 
   const colorer = useMemo(() => {
