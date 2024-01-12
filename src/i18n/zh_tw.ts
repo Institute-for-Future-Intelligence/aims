@@ -73,6 +73,7 @@ export const i18n_zh_tw = {
     },
 
     molecularViewer: {
+      Target: '目標',
       Axes: '顯示坐標軸',
       Style: '風格',
       BallAndStick: '球和棍',

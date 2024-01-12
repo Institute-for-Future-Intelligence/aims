@@ -13,6 +13,7 @@ import {
   Screenshot,
   ShininessInput,
   StyleRadioGroup,
+  TargetRadioGroup,
 } from './defaultMenuItems';
 
 export const createDefaultMenu = () => {
@@ -30,6 +31,19 @@ export const createDefaultMenu = () => {
   items.push({
     key: 'molecular-viewer-axes',
     label: <AxesCheckBox />,
+  });
+
+  // target
+  items.push({
+    key: 'target-submenu',
+    label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Target', lang)}</MenuItem>,
+    children: [
+      {
+        key: 'target-radio-group',
+        label: <TargetRadioGroup />,
+        style: { backgroundColor: 'white' },
+      },
+    ],
   });
 
   // molecular viewer style

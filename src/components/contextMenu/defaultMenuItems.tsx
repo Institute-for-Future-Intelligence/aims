@@ -5,7 +5,7 @@
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { useLanguage } from '../../hooks';
-import { MolecularViewerStyle } from '../../types';
+import { MolecularViewerStyle, MoleculeData } from '../../types';
 import { Checkbox, ColorPicker, InputNumber, RadioChangeEvent } from 'antd';
 import { UndoableChange } from '../../undo/UndoableChange';
 import { MenuItem } from '../menuItem';
@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { CHAMBER_STYLE_LABELS } from '../../scientificConstants';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
 import { screenshot, showError } from '../../helpers';
+import { testProteins } from '../../internalDatabase';
 
 export const AutoRotateCheckBox = () => {
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
@@ -251,6 +252,55 @@ export const ShininessInput = () => {
           setShininess(newValue);
         }}
       />
+    </MenuItem>
+  );
+};
+
+export const TargetRadioGroup = () => {
+  const targetProtein = useStore(Selector.targetProtein);
+
+  const setTarget = (targetName: string) => {
+    useStore.getState().set((state) => {
+      for (const t of testProteins) {
+        if (t.name === targetName) {
+          state.targetProtein = t;
+          break;
+        }
+      }
+    });
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Radio.Group
+        value={targetProtein?.name}
+        onChange={(e: RadioChangeEvent) => {
+          const oldValue = targetProtein?.name;
+          const newValue = e.target.value;
+          const undoableChange = {
+            name: 'Select Target',
+            timestamp: Date.now(),
+            oldValue: oldValue,
+            newValue: newValue,
+            undo: () => {
+              setTarget(undoableChange.oldValue as string);
+            },
+            redo: () => {
+              setTarget(undoableChange.newValue as string);
+            },
+          } as UndoableChange;
+          useStore.getState().addUndoable(undoableChange);
+          setTarget(newValue);
+        }}
+      >
+        <Space direction="vertical">
+          {testProteins.map((radio, idx) => (
+            <Radio key={`${idx}-${radio.name}`} value={radio.name}>
+              {radio.name}
+            </Radio>
+          ))}
+        </Space>
+      </Radio.Group>
     </MenuItem>
   );
 };

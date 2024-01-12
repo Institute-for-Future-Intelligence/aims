@@ -75,6 +75,7 @@ export const i18n_en = {
     },
 
     molecularViewer: {
+      Target: 'Target',
       Axes: 'Axes',
       Style: 'Style',
       BallAndStick: 'Ball-and-Stick',
