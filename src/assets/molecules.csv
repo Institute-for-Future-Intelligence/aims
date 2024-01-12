@@ -1,9 +1,10 @@
 "Name",        "log P", "H-Bond Donors", "H-Bond Acceptors", "Rotatable Bonds", "Polar Surface Area"
-"Aspirin",     1.2,     1,               4,                  3,                 63.6
-"Benzene",     2.1,     0,               0,                  0,                 0
-"Caffeine",   -0.1,     0,               0,                  3,                 0
-"Glucose",    -2.6,     5,               6,                  1,                 110
-"Ibuprofen",   3.5,     1,               2,                  4,                 37.3
-"Paxlovid",    2.2,     3,               8,                  7,                 131
-"Crambin",   -10.9,    63,              73,                 65,                 2010
-"DNA",       -10.2,     7,              16,                 11,                 258
+"Aspirin",      1.2,     1,               4,                  3,                 63.6
+"Benzene",      2.1,     0,               0,                  0,                 0
+"Caffeine",    -0.1,     0,               0,                  3,                 0
+"Glucose",     -2.6,     5,               6,                  1,                 110
+"Ibuprofen",    3.5,     1,               2,                  4,                 37.3
+"Paxlovid",     2.2,     3,               8,                  7,                 131
+"Cholesterol",  8.7,     1,               1,                  5,                 20.2
+"Crambin",    -10.9,    63,              73,                 65,                 2010
+"DNA",       - 10.2,     7,              16,                 11,                 258

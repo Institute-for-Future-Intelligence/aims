@@ -58,6 +58,13 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
     return undefined;
   }, [style]);
 
+  const colorer = useMemo(() => {
+    if (style === MolecularViewerStyle.Cartoon) return 'SS';
+    if (style === MolecularViewerStyle.Trace) return 'SS';
+    if (style === MolecularViewerStyle.Tube) return 'SS';
+    return 'EL';
+  }, [style]);
+
   useEffect(() => {
     if (moleculeData.url) {
       fetch(moleculeData.url).then((response) => {
@@ -332,7 +339,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
     const reps = [
       {
         mode: mode,
-        colorer: 'EL',
+        colorer: colorer,
         selector: 'all',
         material: 'SF',
       },

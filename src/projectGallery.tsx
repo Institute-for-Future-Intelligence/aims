@@ -29,7 +29,7 @@ import { useTranslation } from 'react-i18next';
 import { DataColoring, DatumEntry, MolecularViewerStyle, MoleculeData } from './types';
 import TextArea from 'antd/lib/input/TextArea';
 import { UndoableChange } from './undo/UndoableChange';
-import { STYLE_LABELS } from './scientificConstants';
+import { GALLERY_STYLE_LABELS } from './scientificConstants';
 import { getTestMolecule } from './App';
 import ImportMoleculeModal from './ImportMoleculeModal';
 import { saveSvg, showError, showInfo } from './helpers';
@@ -288,7 +288,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
                 setStyle(newValue);
               }}
             >
-              {STYLE_LABELS.map((radio, idx) => (
+              {GALLERY_STYLE_LABELS.map((radio, idx) => (
                 <Option key={`${idx}-${radio.value}`} value={radio.value}>
                   {t(radio.label, lang)}
                 </Option>
@@ -724,16 +724,16 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
 
   const maxima: number[] = useMemo(() => {
     const array: number[] = [];
-    if (!projectInfo.hiddenProperties?.includes('atomCount')) array.push(getMax('atomCount', 1000));
-    if (!projectInfo.hiddenProperties?.includes('bondCount')) array.push(getMax('bondCount', 1000));
-    if (!projectInfo.hiddenProperties?.includes('molecularMass')) array.push(getMax('molecularMass', 8000));
+    if (!projectInfo.hiddenProperties?.includes('atomCount')) array.push(getMax('atomCount', 200));
+    if (!projectInfo.hiddenProperties?.includes('bondCount')) array.push(getMax('bondCount', 200));
+    if (!projectInfo.hiddenProperties?.includes('molecularMass')) array.push(getMax('molecularMass', 1000));
     if (!projectInfo.hiddenProperties?.includes('logP')) array.push(getMax('logP', 10));
     if (!projectInfo.hiddenProperties?.includes('hydrogenBondDonorCount'))
-      array.push(getMax('hydrogenBondDonorCount', 100));
+      array.push(getMax('hydrogenBondDonorCount', 20));
     if (!projectInfo.hiddenProperties?.includes('hydrogenBondAcceptorCount'))
-      array.push(getMax('hydrogenBondAcceptorCount', 100));
-    if (!projectInfo.hiddenProperties?.includes('rotatableBondCount')) array.push(getMax('rotatableBondCount', 100));
-    if (!projectInfo.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMax('polarSurfaceArea', 2500));
+      array.push(getMax('hydrogenBondAcceptorCount', 20));
+    if (!projectInfo.hiddenProperties?.includes('rotatableBondCount')) array.push(getMax('rotatableBondCount', 20));
+    if (!projectInfo.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMax('polarSurfaceArea', 200));
     return array;
   }, [updateHiddenFlag, projectInfo.ranges, projectInfo.hiddenProperties]);
 

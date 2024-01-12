@@ -2,13 +2,6 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import testMoleculeUrl1 from './molecules/pdb/aspirin.pdb';
-import testMoleculeUrl2 from './molecules/sdf/paxlovid.sdf';
-import testMoleculeUrl3 from './molecules/pcj/caffeine.pcj';
-import testMoleculeUrl4 from './molecules/xyz/glucose.xyz';
-import testMoleculeUrl5 from './molecules/pdb/dna.pdb';
-import testMoleculeUrl6 from './molecules/pdb/1crn.pdb';
-
 import React, { Suspense, useEffect, useMemo } from 'react';
 import './App.css';
 import ifiLogo from './assets/ifi-logo.png';
@@ -22,7 +15,6 @@ import SplitPane from 'react-split-pane';
 import ShareLinks from './shareLinks';
 import ProjectGallery from './projectGallery';
 import ReactionChamber from './reactionChamber';
-import { MoleculeData } from './types';
 import AcceptCookie from './acceptCookie';
 import DropdownContextMenu from './components/contextMenu';
 import { useTranslation } from 'react-i18next';
@@ -31,15 +23,7 @@ import KeyboardListener from './keyboardListener';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import AccountSettingsPanel from './accountSettingsPanel';
 import CloudManager from './cloudManager';
-
-export const testMolecules = [
-  { name: 'Aspirin', url: testMoleculeUrl1 } as MoleculeData,
-  { name: 'Paxlovid', url: testMoleculeUrl2 } as MoleculeData,
-  { name: 'Caffeine', url: testMoleculeUrl3 } as MoleculeData,
-  { name: 'Glucose', url: testMoleculeUrl4 } as MoleculeData,
-  { name: 'DNA', url: testMoleculeUrl5 } as MoleculeData,
-  { name: 'Crambin', url: testMoleculeUrl6 } as MoleculeData,
-];
+import { testMolecules } from './internalDatabase';
 
 export const getTestMolecule = (name: string) => {
   for (const m of testMolecules) {

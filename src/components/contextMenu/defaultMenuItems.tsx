@@ -13,7 +13,7 @@ import { Radio, Space } from 'antd';
 import { UndoableCheck } from '../../undo/UndoableCheck';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useTranslation } from 'react-i18next';
-import { STYLE_LABELS } from '../../scientificConstants';
+import { CHAMBER_STYLE_LABELS } from '../../scientificConstants';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
 import { screenshot, showError } from '../../helpers';
 
@@ -198,7 +198,7 @@ export const StyleRadioGroup = () => {
         }}
       >
         <Space direction="vertical">
-          {STYLE_LABELS.map((radio, idx) => (
+          {CHAMBER_STYLE_LABELS.map((radio, idx) => (
             <Radio key={`${idx}-${radio.value}`} value={radio.value}>
               {t(radio.label, lang)}
             </Radio>
