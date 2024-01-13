@@ -73,7 +73,6 @@ export const i18n_zh_tw = {
     },
 
     molecularViewer: {
-      Target: '目標',
       Axes: '顯示坐標軸',
       Style: '風格',
       Color: '顏色',
@@ -101,6 +100,11 @@ export const i18n_zh_tw = {
       Conformation: '構象',
       Molecule: '分子',
       TakeScreenshot: '截屏',
+    },
+
+    experiment: {
+      ExperimentSettings: '實驗設定',
+      Target: '目標',
     },
 
     projectPanel: {

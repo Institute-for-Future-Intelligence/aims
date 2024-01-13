@@ -74,7 +74,6 @@ export const i18n_zh_cn = {
     },
 
     molecularViewer: {
-      Target: '目标',
       Axes: '显示坐标轴',
       Style: '风格',
       Color: '颜色',
@@ -102,6 +101,11 @@ export const i18n_zh_cn = {
       Conformation: '构象',
       Molecule: '分子',
       TakeScreenshot: '截屏',
+    },
+
+    experiment: {
+      ExperimentSettings: '实验设定',
+      Target: '目标',
     },
 
     projectPanel: {

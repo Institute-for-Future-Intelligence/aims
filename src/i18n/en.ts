@@ -75,7 +75,6 @@ export const i18n_en = {
     },
 
     molecularViewer: {
-      Target: 'Target',
       Axes: 'Axes',
       Style: 'Style',
       Color: 'Color',
@@ -106,7 +105,7 @@ export const i18n_en = {
     },
 
     experiment: {
-      Chamber: 'Chamber',
+      ExperimentSettings: 'Experiment Settings',
       Target: 'Target',
     },
 
