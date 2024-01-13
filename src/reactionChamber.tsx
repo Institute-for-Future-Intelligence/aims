@@ -27,6 +27,7 @@ export interface ReactionChamberProps {
 const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const setCommonStore = useStore(Selector.set);
   const viewerStyle = useStore(Selector.chamberViewerStyle);
+  const viewerColoring = useStore(Selector.chamberViewerColoring);
   const viewerBackground = useStore(Selector.chamberViewerBackground);
   const viewerAxes = useStore(Selector.chamberViewerAxes);
   const shininess = useStore(Selector.chamberViewerShininess) ?? 1000;
@@ -96,7 +97,13 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       />
       {viewerAxes && <Axes />}
       {moleculeData && (
-        <MolecularViewer moleculeData={moleculeData} style={viewerStyle} shininess={shininess} highQuality={true} />
+        <MolecularViewer
+          moleculeData={moleculeData}
+          style={viewerStyle}
+          coloring={viewerColoring}
+          shininess={shininess}
+          highQuality={true}
+        />
       )}
       <GizmoHelper alignment="bottom-right" margin={[30, 30]}>
         <GizmoViewport

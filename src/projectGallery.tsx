@@ -36,7 +36,7 @@ import { ProjectUtil } from './ProjectUtil';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { updateDataColoring, updateHiddenProperties } from './cloudProjectUtil';
 import { Filter, FilterType } from './Filter';
-import { GALLERY_STYLE_LABELS, MolecularViewerStyle } from './view/displayOptions';
+import { GALLERY_STYLE_LABELS, MolecularViewerColoring, MolecularViewerStyle } from './view/displayOptions';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -241,7 +241,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
           intensity={DEFAULT_LIGHT_INTENSITY}
           castShadow={false}
         />
-        <MolecularViewer moleculeData={moleculeData} style={viewerStyle} />
+        <MolecularViewer moleculeData={moleculeData} style={viewerStyle} coloring={MolecularViewerColoring.Element} />
       </Canvas>
     );
   };

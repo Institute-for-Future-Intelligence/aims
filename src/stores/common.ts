@@ -21,7 +21,7 @@ import { BondTS } from '../models/BondTS';
 import { useRefStore } from './commonRef';
 import { MolecularProperties } from '../models/MolecularProperties';
 import { Filter } from '../Filter';
-import { MolecularViewerStyle } from '../view/displayOptions';
+import { MolecularViewerColoring, MolecularViewerStyle } from '../view/displayOptions';
 
 enableMapSet();
 
@@ -55,6 +55,7 @@ export interface CommonStoreState {
   chamberViewerAxes: boolean;
   chamberViewerShininess: number;
   chamberViewerStyle: MolecularViewerStyle;
+  chamberViewerColoring: MolecularViewerColoring;
   chamberViewerBackground: string;
   projectViewerStyle: MolecularViewerStyle;
   projectViewerBackground: string;
@@ -160,6 +161,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           chamberViewerAxes: true,
           chamberViewerShininess: 1000,
           chamberViewerStyle: MolecularViewerStyle.QuickSurface,
+          chamberViewerColoring: MolecularViewerColoring.SecondaryStructure,
           chamberViewerBackground: 'black',
           projectViewerStyle: MolecularViewerStyle.Stick,
           projectViewerBackground: 'white',
@@ -271,6 +273,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           chamberViewerAxes: state.chamberViewerAxes,
           chamberViewerShininess: state.chamberViewerShininess,
           chamberViewerStyle: state.chamberViewerStyle,
+          chamberViewerColoring: state.chamberViewerColoring,
           chamberViewerBackground: state.chamberViewerBackground,
           projectViewerStyle: state.projectViewerStyle,
           projectViewerBackground: state.projectViewerBackground,

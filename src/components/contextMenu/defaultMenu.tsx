@@ -10,6 +10,7 @@ import {
   AutoRotateCheckBox,
   AxesCheckBox,
   BackgroundColor,
+  ColoringRadioGroup,
   Screenshot,
   ShininessInput,
   StyleRadioGroup,
@@ -54,6 +55,19 @@ export const createDefaultMenu = () => {
       {
         key: 'molecular-viewer-style-radio-group',
         label: <StyleRadioGroup />,
+        style: { backgroundColor: 'white' },
+      },
+    ],
+  });
+
+  // molecular viewer coloring
+  items.push({
+    key: 'molecular-viewer-coloring-submenu',
+    label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Color', lang)}</MenuItem>,
+    children: [
+      {
+        key: 'molecular-viewer-coloring-radio-group',
+        label: <ColoringRadioGroup />,
         style: { backgroundColor: 'white' },
       },
       {

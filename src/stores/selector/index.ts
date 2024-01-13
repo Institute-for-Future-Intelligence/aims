@@ -51,6 +51,8 @@ export const chamberViewerShininess = (state: CommonStoreState) => state.chamber
 
 export const chamberViewerStyle = (state: CommonStoreState) => state.chamberViewerStyle;
 
+export const chamberViewerColoring = (state: CommonStoreState) => state.chamberViewerColoring;
+
 export const chamberViewerBackground = (state: CommonStoreState) => state.chamberViewerBackground;
 
 export const projectViewerStyle = (state: CommonStoreState) => state.projectViewerStyle;

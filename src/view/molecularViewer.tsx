@@ -26,16 +26,17 @@ import { Util } from '../Util';
 import { MolecularProperties } from '../models/MolecularProperties';
 import ComplexVisual from '../lib/ComplexVisual';
 import { useThree } from '@react-three/fiber';
-import { createStyleMap, MolecularViewerStyle } from './displayOptions';
+import { STYLE_MAP, MolecularViewerStyle, COLORING_MAP, MolecularViewerColoring } from './displayOptions';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
   style: MolecularViewerStyle;
+  coloring: MolecularViewerColoring;
   shininess?: number;
   highQuality?: boolean;
 }
 
-const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: MolecularViewerProps) => {
+const MolecularViewer = ({ moleculeData, style, coloring, shininess, highQuality }: MolecularViewerProps) => {
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
   const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
@@ -48,20 +49,13 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
 
   const { invalidate } = useThree();
 
-  const styleMap = useMemo(() => {
-    return createStyleMap();
-  }, []);
-
   const mode = useMemo(() => {
-    return styleMap.get(style);
+    return STYLE_MAP.get(style);
   }, [style]);
 
   const colorer = useMemo(() => {
-    if (style === MolecularViewerStyle.Cartoon) return 'SS';
-    if (style === MolecularViewerStyle.Trace) return 'SS';
-    if (style === MolecularViewerStyle.Tube) return 'SS';
-    return 'EL';
-  }, [style]);
+    return COLORING_MAP.get(coloring);
+  }, [coloring]);
 
   useEffect(() => {
     if (moleculeData.url) {
@@ -355,7 +349,7 @@ const MolecularViewer = ({ moleculeData, style, shininess, highQuality }: Molecu
       CSGroup.current.position.copy(offset);
       invalidate();
     });
-  }, [complex, shininess, mode]);
+  }, [complex, shininess, mode, colorer]);
 
   return (
     <>

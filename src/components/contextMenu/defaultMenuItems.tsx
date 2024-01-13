@@ -15,7 +15,12 @@ import { useTranslation } from 'react-i18next';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
 import { screenshot, showError } from '../../helpers';
 import { testProteins } from '../../internalDatabase';
-import { CHAMBER_STYLE_LABELS, MolecularViewerStyle } from '../../view/displayOptions';
+import {
+  CHAMBER_COLORING_LABELS,
+  CHAMBER_STYLE_LABELS,
+  MolecularViewerColoring,
+  MolecularViewerStyle,
+} from '../../view/displayOptions';
 
 export const AutoRotateCheckBox = () => {
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
@@ -199,6 +204,52 @@ export const StyleRadioGroup = () => {
       >
         <Space direction="vertical">
           {CHAMBER_STYLE_LABELS.map((radio, idx) => (
+            <Radio key={`${idx}-${radio.value}`} value={radio.value}>
+              {t(radio.label, lang)}
+            </Radio>
+          ))}
+        </Space>
+      </Radio.Group>
+    </MenuItem>
+  );
+};
+
+export const ColoringRadioGroup = () => {
+  const molecularViewerColoring = useStore(Selector.chamberViewerColoring);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const setColoring = (coloring: MolecularViewerColoring) => {
+    useStore.getState().set((state) => {
+      state.chamberViewerColoring = coloring;
+    });
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Radio.Group
+        value={molecularViewerColoring}
+        onChange={(e: RadioChangeEvent) => {
+          const oldValue = molecularViewerColoring;
+          const newValue = e.target.value;
+          const undoableChange = {
+            name: 'Select Molecular Viewer Coloring',
+            timestamp: Date.now(),
+            oldValue: oldValue,
+            newValue: newValue,
+            undo: () => {
+              setColoring(undoableChange.oldValue as MolecularViewerColoring);
+            },
+            redo: () => {
+              setColoring(undoableChange.newValue as MolecularViewerColoring);
+            },
+          } as UndoableChange;
+          useStore.getState().addUndoable(undoableChange);
+          setColoring(newValue);
+        }}
+      >
+        <Space direction="vertical">
+          {CHAMBER_COLORING_LABELS.map((radio, idx) => (
             <Radio key={`${idx}-${radio.value}`} value={radio.value}>
               {t(radio.label, lang)}
             </Radio>
