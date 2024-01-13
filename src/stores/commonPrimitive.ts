@@ -13,6 +13,8 @@ export interface PrimitiveStoreState {
 
   hoveredMolecule: MoleculeData | null;
 
+  boundingSphereRadius: number;
+
   enableRotate: boolean;
   autoRotate: boolean;
 
@@ -72,6 +74,8 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     },
 
     hoveredMolecule: null,
+
+    boundingSphereRadius: 10,
 
     enableRotate: true,
     autoRotate: false,

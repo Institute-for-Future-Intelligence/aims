@@ -21,15 +21,6 @@ export const createViewMenu = (
   resetView: () => void,
 ) => {
   const lang = { lng: useStore.getState().language };
-  const cameraPosition = useStore.getState().cameraPosition;
-  const panCenter = useStore.getState().panCenter;
-
-  const viewAlreadyReset =
-    cameraPosition[0] === cameraPosition[1] &&
-    cameraPosition[1] === cameraPosition[2] &&
-    panCenter[0] === 0 &&
-    panCenter[1] === 0 &&
-    panCenter[2] === 0;
 
   const handleResetView = () => {
     resetView();
@@ -46,17 +37,15 @@ export const createViewMenu = (
   const items: MenuProps['items'] = [];
 
   // reset-view
-  if (!viewAlreadyReset) {
-    items.push({
-      key: 'reset-view',
-      label: (
-        <MenuItem hasPadding={true} onClick={handleResetView}>
-          {i18n.t('menu.view.ResetView', lang)}
-          <LabelMark>({keyHome})</LabelMark>
-        </MenuItem>
-      ),
-    });
-  }
+  items.push({
+    key: 'reset-view',
+    label: (
+      <MenuItem hasPadding={true} onClick={handleResetView}>
+        {i18n.t('menu.view.ResetView', lang)}
+        <LabelMark>({keyHome})</LabelMark>
+      </MenuItem>
+    ),
+  });
 
   // zoom-out-view
   items.push({

@@ -27,6 +27,7 @@ import { MolecularProperties } from '../models/MolecularProperties';
 import ComplexVisual from '../lib/ComplexVisual';
 import { useThree } from '@react-three/fiber';
 import { STYLE_MAP, MolecularViewerStyle, COLORING_MAP, MolecularViewerColoring } from './displayOptions';
+import { usePrimitiveStore } from '../stores/commonPrimitive';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -318,10 +319,6 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess, highQuality
     return <group name={'Structure'} ref={CSGroup} />;
   };
 
-  const getVisualCenter = (visual: ComplexVisual) => {
-    return visual.getBoundaries().boundingSphere.center.clone() as Vector3;
-  };
-
   useEffect(() => {
     if (!CSGroup.current || !complex || !mode) return;
 
@@ -345,8 +342,12 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess, highQuality
     visual.rebuild().then(() => {
       if (!CSGroup.current) return;
       CSGroup.current.add(visual);
-      const offset = getVisualCenter(visual).multiplyScalar(-1);
+      const boundingSphere = visual.getBoundaries().boundingSphere;
+      const offset = boundingSphere.center.clone().multiplyScalar(-1);
       CSGroup.current.position.copy(offset);
+      usePrimitiveStore.getState().set((state) => {
+        state.boundingSphereRadius = boundingSphere.radius;
+      });
       invalidate();
     });
   }, [complex, shininess, mode, colorer]);

@@ -108,12 +108,12 @@ const App = () => {
     if (orbitControlsRef?.current) {
       // I don't know why the reset method results in a black screen.
       // So we are resetting it here to a predictable position.
-      const z = 100; // TODO: get bounding box
-      orbitControlsRef.current.object.position.set(z, z, z);
+      const r = 2 * usePrimitiveStore.getState().boundingSphereRadius;
+      orbitControlsRef.current.object.position.set(r, r, r);
       orbitControlsRef.current.target.set(0, 0, 0);
       orbitControlsRef.current.update();
       setCommonStore((state) => {
-        state.cameraPosition = [z, z, z];
+        state.cameraPosition = [r, r, r];
         state.panCenter = [0, 0, 0];
       });
     }
