@@ -24,6 +24,8 @@ import { usePrimitiveStore } from './stores/commonPrimitive';
 import AccountSettingsPanel from './accountSettingsPanel';
 import CloudManager from './cloudManager';
 import { testMolecules, testProteins } from './internalDatabase';
+import { useRefStore } from './stores/commonRef';
+import { UndoableCameraChange } from './undo/UndoableCameraChange';
 
 export const getTestMolecule = (name: string) => {
   for (const m of testMolecules) {
@@ -35,6 +37,7 @@ export const getTestMolecule = (name: string) => {
 const App = () => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
+  const addUndoable = useStore(Selector.addUndoable);
   const projectView = useStore(Selector.projectView);
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
   const targetProtein = useStore(Selector.targetProtein);
@@ -101,12 +104,64 @@ const App = () => {
   };
 
   const resetView = () => {
-    //TODO
+    const orbitControlsRef = useRefStore.getState().orbitControlsRef;
+    if (orbitControlsRef?.current) {
+      // I don't know why the reset method results in a black screen.
+      // So we are resetting it here to a predictable position.
+      const z = 100; // TODO: get bounding box
+      orbitControlsRef.current.object.position.set(z, z, z);
+      orbitControlsRef.current.target.set(0, 0, 0);
+      orbitControlsRef.current.update();
+      setCommonStore((state) => {
+        state.cameraPosition = [z, z, z];
+        state.panCenter = [0, 0, 0];
+      });
+    }
   };
 
   const zoomView = (scale: number) => {
-    //TODO
+    const orbitControlsRef = useRefStore.getState().orbitControlsRef;
+    if (orbitControlsRef?.current) {
+      const p = orbitControlsRef.current.object.position;
+      const x = p.x * scale;
+      const y = p.y * scale;
+      const z = p.z * scale;
+      const undoableCameraChange = {
+        name: 'Zoom',
+        timestamp: Date.now(),
+        oldCameraPosition: [p.x, p.y, p.z],
+        newCameraPosition: [x, y, z],
+        undo: () => {
+          const oldX = undoableCameraChange.oldCameraPosition[0];
+          const oldY = undoableCameraChange.oldCameraPosition[1];
+          const oldZ = undoableCameraChange.oldCameraPosition[2];
+          orbitControlsRef.current?.object.position.set(oldX, oldY, oldZ);
+          orbitControlsRef.current?.update();
+          setCommonStore((state) => {
+            state.cameraPosition = [oldX, oldY, oldZ];
+          });
+        },
+        redo: () => {
+          const newX = undoableCameraChange.newCameraPosition[0];
+          const newY = undoableCameraChange.newCameraPosition[1];
+          const newZ = undoableCameraChange.newCameraPosition[2];
+          orbitControlsRef.current?.object.position.set(newX, newY, newZ);
+          orbitControlsRef.current?.update();
+          setCommonStore((state) => {
+            state.cameraPosition = [newX, newY, newZ];
+          });
+        },
+      } as UndoableCameraChange;
+      addUndoable(undoableCameraChange);
+      orbitControlsRef.current.object.position.set(x, y, z);
+      orbitControlsRef.current.update();
+      setCommonStore((state) => {
+        state.cameraPosition = [x, y, z];
+      });
+    }
   };
+
+  const targetX = 'calc(' + (100 - chamberViewerPercentWidth) + '% + 16px)';
 
   return (
     <div className="App">
@@ -200,7 +255,7 @@ const App = () => {
         style={{
           position: 'absolute',
           top: '80px',
-          left: projectView ? 100 - chamberViewerPercentWidth + 1 + '%' : '6px',
+          left: projectView ? targetX : '6px',
           zIndex: 999,
           fontSize: '20px',
           userSelect: 'none',

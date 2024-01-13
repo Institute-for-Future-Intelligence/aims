@@ -6,7 +6,13 @@ import { MenuProps } from 'antd';
 import i18n from '../../i18n/i18n';
 import { useStore } from '../../stores/common';
 import { LabelMark, MenuItem } from '../menuItem';
-import { AutoRotateCheckBox, AxesCheckBox, ShininessInput, StyleRadioGroup } from '../contextMenu/defaultMenuItems';
+import {
+  AutoRotateCheckBox,
+  AxesCheckBox,
+  ColoringRadioGroup,
+  ShininessInput,
+  StyleRadioGroup,
+} from '../contextMenu/defaultMenuItems';
 
 export const createViewMenu = (
   keyHome: string,
@@ -94,6 +100,19 @@ export const createViewMenu = (
       {
         key: 'molecular-viewer-style-radio-group',
         label: <StyleRadioGroup />,
+        style: { backgroundColor: 'white' },
+      },
+    ],
+  });
+
+  // display coloring
+  items.push({
+    key: 'display-coloring',
+    label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Color', lang)}</MenuItem>,
+    children: [
+      {
+        key: 'molecular-viewer-coloring-radio-group',
+        label: <ColoringRadioGroup />,
         style: { backgroundColor: 'white' },
       },
       {

@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
   DEFAULT_FOV,
@@ -11,7 +11,7 @@ import {
   DEFAULT_SHADOW_MAP_SIZE,
   HALF_PI,
 } from './programmaticConstants';
-import { GizmoHelper, GizmoViewport, OrbitControls } from '@react-three/drei';
+import { GizmoHelper, GizmoViewport, OrbitControls, OrbitControlsProps } from '@react-three/drei';
 import Axes from './view/axes';
 import MolecularViewer from './view/molecularViewer';
 import { MoleculeData } from './types';
@@ -19,6 +19,7 @@ import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { DirectionalLight, Vector3 } from 'three';
 import { usePrimitiveStore } from './stores/commonPrimitive';
+import { useRefStore } from './stores/commonRef';
 
 export interface ReactionChamberProps {
   moleculeData: MoleculeData | null;
@@ -35,6 +36,17 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const orbitControlsRef = useRef<any>(null);
+  const lightRef = useRef<DirectionalLight>(null);
+
+  // save orbitControlRef to common ref store
+  useEffect(() => {
+    if (orbitControlsRef && orbitControlsRef.current) {
+      useRefStore.setState({
+        orbitControlsRef: orbitControlsRef,
+      });
+    }
+  }, [cameraPosition]);
 
   const onControlEnd = (e: any) => {
     const control = e.target;
@@ -49,8 +61,6 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       state.panCenter[2] = q.z;
     });
   };
-
-  const lightRef = useRef<DirectionalLight>(null);
 
   return (
     <Canvas
@@ -69,6 +79,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       }}
     >
       <OrbitControls
+        ref={orbitControlsRef}
         enableDamping={false}
         onEnd={onControlEnd}
         autoRotate={autoRotate}
