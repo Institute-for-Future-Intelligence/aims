@@ -101,7 +101,7 @@ export const i18n_zh_cn = {
       Sequence: '序列',
       Conformation: '构象',
       Molecule: '分子',
-      TakeScreenshot: '截图',
+      TakeScreenshot: '截屏',
     },
 
     projectPanel: {
@@ -125,7 +125,7 @@ export const i18n_zh_cn = {
       ChooseDataColoring: '选择数据着色',
       SameColorForAllMolecules: '所有分子一个颜色',
       OneColorForEachMolecule: '每个分子一个颜色',
-      PropertiesScreenshot: '性质截图',
+      PropertiesScreenshot: '性质截屏',
       AtomCount: '原子数量',
       BondCount: '化学键数量',
       MolecularMass: '质量',

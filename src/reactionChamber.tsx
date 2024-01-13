@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
   DEFAULT_FOV,
@@ -11,7 +11,7 @@ import {
   DEFAULT_SHADOW_MAP_SIZE,
   HALF_PI,
 } from './programmaticConstants';
-import { GizmoHelper, GizmoViewport, OrbitControls, OrbitControlsProps } from '@react-three/drei';
+import { GizmoHelper, GizmoViewport, OrbitControls } from '@react-three/drei';
 import Axes from './view/axes';
 import MolecularViewer from './view/molecularViewer';
 import { MoleculeData } from './types';
@@ -39,14 +39,16 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const orbitControlsRef = useRef<any>(null);
   const lightRef = useRef<DirectionalLight>(null);
 
+  const [refVisible, setRefVisible] = useState<boolean>(false);
+
   // save orbitControlRef to common ref store
   useEffect(() => {
-    if (orbitControlsRef && orbitControlsRef.current) {
+    if (refVisible) {
       useRefStore.setState({
         orbitControlsRef: orbitControlsRef,
       });
     }
-  }, [cameraPosition]);
+  }, [refVisible]);
 
   const onControlEnd = (e: any) => {
     const control = e.target;
@@ -79,7 +81,10 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       }}
     >
       <OrbitControls
-        ref={orbitControlsRef}
+        ref={(e) => {
+          orbitControlsRef.current = e;
+          setRefVisible(!!e);
+        }}
         enableDamping={false}
         onEnd={onControlEnd}
         autoRotate={autoRotate}
