@@ -161,8 +161,6 @@ const App = () => {
     }
   };
 
-  const targetX = 'calc(' + (100 - chamberViewerPercentWidth) + '% + 16px)';
-
   return (
     <div className="App">
       <div
@@ -250,20 +248,6 @@ const App = () => {
       {!viewOnly && (
         <ShareLinks size={16} round={true} margin={'2px'} style={{ position: 'absolute', right: '0', top: '90px' }} />
       )}
-
-      <div
-        style={{
-          position: 'absolute',
-          top: '80px',
-          left: projectView ? targetX : '6px',
-          zIndex: 999,
-          fontSize: '20px',
-          userSelect: 'none',
-          color: 'lightgray',
-        }}
-      >
-        {targetProtein?.name ?? t('word.Unknown', lang)}
-      </div>
 
       <MainMenu viewOnly={viewOnly} resetView={resetView} zoomView={zoomView} />
       <DropdownContextMenu>

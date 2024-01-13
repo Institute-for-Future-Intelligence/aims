@@ -105,6 +105,11 @@ export const i18n_en = {
       TakeScreenshot: 'Take Screenshot',
     },
 
+    experiment: {
+      Chamber: 'Chamber',
+      Target: 'Target',
+    },
+
     projectPanel: {
       Project: 'Project',
       ProjectType: 'Type',

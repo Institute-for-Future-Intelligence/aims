@@ -20,6 +20,7 @@ import * as Selector from './stores/selector';
 import { DirectionalLight, Vector3 } from 'three';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { useRefStore } from './stores/commonRef';
+import ExperimentSettings from './view/experimentSettings';
 
 export interface ReactionChamberProps {
   moleculeData: MoleculeData | null;
@@ -65,71 +66,74 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   };
 
   return (
-    <Canvas
-      id={'reaction-chamber'}
-      ref={canvasRef}
-      shadows={false}
-      gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
-      frameloop={'demand'}
-      style={{ height: '100%', width: '100%', backgroundColor: viewerBackground }}
-      camera={{
-        fov: DEFAULT_FOV,
-        far: DEFAULT_SHADOW_CAMERA_FAR,
-        up: [0, 0, 1],
-        position: new Vector3().fromArray(cameraPosition),
-        rotation: [HALF_PI / 2, 0, HALF_PI / 2],
-      }}
-    >
-      <OrbitControls
-        ref={(e) => {
-          orbitControlsRef.current = e;
-          setRefVisible(!!e);
+    <>
+      <Canvas
+        id={'reaction-chamber'}
+        ref={canvasRef}
+        shadows={false}
+        gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
+        frameloop={'demand'}
+        style={{ height: '100%', width: '100%', backgroundColor: viewerBackground }}
+        camera={{
+          fov: DEFAULT_FOV,
+          far: DEFAULT_SHADOW_CAMERA_FAR,
+          up: [0, 0, 1],
+          position: new Vector3().fromArray(cameraPosition),
+          rotation: [HALF_PI / 2, 0, HALF_PI / 2],
         }}
-        enableDamping={false}
-        onEnd={onControlEnd}
-        autoRotate={autoRotate}
-        onChange={(e) => {
-          if (!e) return;
-          const camera = e.target.object;
-          if (lightRef.current) {
-            // sets the point light to a location above the camera
-            lightRef.current.position.set(0, 1, 0);
-            lightRef.current.position.add(camera.position);
-          }
-        }}
-      />
-      <directionalLight
-        ref={lightRef}
-        name={'Directional Light'}
-        color="white"
-        position={new Vector3().fromArray(cameraPosition ?? [1, 1, 1])}
-        intensity={DEFAULT_LIGHT_INTENSITY}
-        castShadow={true}
-        shadow-bias={0} // may be used to reduce shadow artifacts
-        shadow-mapSize-height={DEFAULT_SHADOW_MAP_SIZE}
-        shadow-mapSize-width={DEFAULT_SHADOW_MAP_SIZE}
-        shadow-camera-near={1}
-        shadow-camera-far={DEFAULT_SHADOW_CAMERA_FAR}
-      />
-      {viewerAxes && <Axes />}
-      {moleculeData && (
-        <MolecularViewer
-          moleculeData={moleculeData}
-          style={viewerStyle}
-          coloring={viewerColoring}
-          shininess={shininess}
-          highQuality={true}
+      >
+        <OrbitControls
+          ref={(e) => {
+            orbitControlsRef.current = e;
+            setRefVisible(!!e);
+          }}
+          enableDamping={false}
+          onEnd={onControlEnd}
+          autoRotate={autoRotate}
+          onChange={(e) => {
+            if (!e) return;
+            const camera = e.target.object;
+            if (lightRef.current) {
+              // sets the point light to a location above the camera
+              lightRef.current.position.set(0, 1, 0);
+              lightRef.current.position.add(camera.position);
+            }
+          }}
         />
-      )}
-      <GizmoHelper alignment="bottom-right" margin={[30, 30]}>
-        <GizmoViewport
-          axisColors={['red', 'green', 'blue']}
-          labelColor="white"
-          hideAxisHeads={true}
-          hideNegativeAxes={true}
+        <directionalLight
+          ref={lightRef}
+          name={'Directional Light'}
+          color="white"
+          position={new Vector3().fromArray(cameraPosition ?? [1, 1, 1])}
+          intensity={DEFAULT_LIGHT_INTENSITY}
+          castShadow={true}
+          shadow-bias={0} // may be used to reduce shadow artifacts
+          shadow-mapSize-height={DEFAULT_SHADOW_MAP_SIZE}
+          shadow-mapSize-width={DEFAULT_SHADOW_MAP_SIZE}
+          shadow-camera-near={1}
+          shadow-camera-far={DEFAULT_SHADOW_CAMERA_FAR}
         />
-      </GizmoHelper>
-    </Canvas>
+        {viewerAxes && <Axes />}
+        {moleculeData && (
+          <MolecularViewer
+            moleculeData={moleculeData}
+            style={viewerStyle}
+            coloring={viewerColoring}
+            shininess={shininess}
+            highQuality={true}
+          />
+        )}
+        <GizmoHelper alignment="bottom-right" margin={[30, 30]}>
+          <GizmoViewport
+            axisColors={['red', 'green', 'blue']}
+            labelColor="white"
+            hideAxisHeads={true}
+            hideNegativeAxes={true}
+          />
+        </GizmoHelper>
+      </Canvas>
+      <ExperimentSettings />
+    </>
   );
 };
 
