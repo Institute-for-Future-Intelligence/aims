@@ -17,6 +17,12 @@ export const locale = (state: CommonStoreState) => state.locale;
 
 export const changed = (state: PrimitiveStoreState) => state.changed;
 
+export const showAccountSettingsPanel = (state: PrimitiveStoreState) => state.showAccountSettingsPanel;
+
+export const userCount = (state: PrimitiveStoreState) => state.userCount;
+
+export const selectedFloatingWindow = (state: CommonStoreState) => state.selectedFloatingWindow;
+
 export const projectInfo = (state: CommonStoreState) => state.projectInfo;
 
 export const projectView = (state: CommonStoreState) => state.projectView;
@@ -93,7 +99,11 @@ export const contextMenuObjectType = (state: PrimitiveStoreState) => state.conte
 
 export const createProjectFlag = (state: PrimitiveStoreState) => state.createProjectFlag;
 
+export const createProjectDialog = (state: PrimitiveStoreState) => state.createProjectDialog;
+
 export const saveProjectFlag = (state: PrimitiveStoreState) => state.saveProjectFlag;
+
+export const saveProjectDialog = (state: PrimitiveStoreState) => state.saveProjectDialog;
 
 export const showProjectsFlag = (state: PrimitiveStoreState) => state.showProjectsFlag;
 
@@ -102,17 +112,3 @@ export const updateProjectsFlag = (state: PrimitiveStoreState) => state.updatePr
 export const curateMoleculeToProjectFlag = (state: PrimitiveStoreState) => state.curateMoleculeToProjectFlag;
 
 export const showProjectListPanel = (state: PrimitiveStoreState) => state.showProjectListPanel;
-
-export const showAccountSettingsPanel = (state: PrimitiveStoreState) => state.showAccountSettingsPanel;
-
-export const userCount = (state: PrimitiveStoreState) => state.userCount;
-
-export const selectedFloatingWindow = (state: CommonStoreState) => state.selectedFloatingWindow;
-
-export const createNewProjectFlag = (state: PrimitiveStoreState) => state.createNewProjectFlag;
-
-export const importProject = (state: CommonStoreState) => state.importProject;
-
-export const exportProject = (state: CommonStoreState) => state.exportProject;
-
-export const createEmptyProject = (state: CommonStoreState) => state.createEmptyProject;

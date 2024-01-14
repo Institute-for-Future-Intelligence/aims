@@ -161,7 +161,7 @@ export const i18n_zh_cn = {
         SavingAbortedMustHaveValidProjectName: '项目名无效，保存失败',
         OpenCloudProject: '打开云端项目',
         SaveCloudProject: '保存云端项目',
-        SaveAsCloudProject: '保存为云端项目',
+        SaveProjectAs: '保存为云端项目',
         SavingAbortedMustHaveValidTitle: '云端项目名无效，保存失败',
         ToSaveYourWorkOnCloudPleaseSignIn: '为了保存您的云端项目，请您先登录。',
       },

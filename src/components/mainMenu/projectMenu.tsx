@@ -5,19 +5,19 @@
 import { MenuProps } from 'antd';
 import i18n from '../../i18n/i18n';
 import { useStore } from '../../stores/common';
+import * as Selector from '../../stores/selector';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
 import { useState } from 'react';
 import { useLanguage } from '../../hooks';
 import { LabelMark, MenuItem } from '../menuItem';
-import CreateNewProjectDialog from './createNewProjectDialog';
+import NewProjectDialog from './newProjectDialog';
 
 const CreateNewProjectItem = ({ isMac }: { isMac: boolean }) => {
-  const [dialogVisible, setDialogVisible] = useState(false);
-
+  const createProjectDialog = usePrimitiveStore(Selector.createProjectDialog);
   const lang = useLanguage();
 
   const handleClick = () => {
-    setDialogVisible(true);
+    usePrimitiveStore.getState().setCreateProjectDialog(true);
     if (useStore.getState().loggable) {
       useStore.getState().set((state) => {
         state.actionInfo = {
@@ -34,18 +34,17 @@ const CreateNewProjectItem = ({ isMac }: { isMac: boolean }) => {
         {i18n.t('menu.project.CreateNewProject', lang)}
         <LabelMark>({isMac ? '⌘' : 'Ctrl'}+F)</LabelMark>...
       </MenuItem>
-      {dialogVisible && <CreateNewProjectDialog saveAs={false} setDialogVisible={setDialogVisible} />}
+      {createProjectDialog && <NewProjectDialog saveAs={false} />}
     </>
   );
 };
 
-const SaveAsCloudProjectItem = ({ isMac }: { isMac: boolean }) => {
-  const [dialogVisible, setDialogVisible] = useState(false);
-
+const SaveProjectAsItem = ({ isMac }: { isMac: boolean }) => {
+  const saveProjectDialog = usePrimitiveStore(Selector.saveProjectDialog);
   const lang = useLanguage();
 
   const handleClick = () => {
-    setDialogVisible(true);
+    usePrimitiveStore.getState().setSaveProjectDialog(true);
     if (useStore.getState().loggable) {
       useStore.getState().set((state) => {
         state.actionInfo = {
@@ -59,12 +58,10 @@ const SaveAsCloudProjectItem = ({ isMac }: { isMac: boolean }) => {
   return (
     <>
       <MenuItem hasPadding={false} onClick={handleClick}>
-        {i18n.t('menu.project.SaveAsCloudProject', lang)}
+        {i18n.t('menu.project.SaveProjectAs', lang)}
         <LabelMark>({isMac ? '⌘' : 'Ctrl'}+Shift+S)</LabelMark>...
       </MenuItem>
-      {/*{saveProjectAsDialogVisible && (*/}
-      {/*    <CreateNewProjectDialog saveAs={true} setDialogVisible={setSaveProjectAsDialogVisible} />*/}
-      {/*)}*/}
+      {saveProjectDialog && <NewProjectDialog saveAs={true} />}
     </>
   );
 };
@@ -154,7 +151,7 @@ export const createProjectMenu = (viewOnly: boolean, isMac: boolean) => {
   // save-as-cloud-project
   items.push({
     key: 'save-as-cloud-project',
-    label: <SaveAsCloudProjectItem isMac={isMac} />,
+    label: <SaveProjectAsItem isMac={isMac} />,
   });
 
   return items;

@@ -11,9 +11,6 @@ export interface PrimitiveStoreState {
   changed: boolean;
   setChanged: (b: boolean) => void;
 
-  createNewProjectFlag: boolean;
-  setCreateNewProjectFlag: (b: boolean) => void;
-
   hoveredMolecule: MoleculeData | null;
 
   boundingSphereRadius: number;
@@ -27,14 +24,19 @@ export interface PrimitiveStoreState {
   contextMenuFlag: boolean;
   updateContextMenu: () => void;
 
-  // These stores the settings from createNewProjectDialog.tsx, because we don't want to overwrite
+  // These stores the settings from newProjectDialog.tsx, because we don't want to overwrite
   // the local state in the common store yet. Don't be confused with commonStore's projectInfo.
   projectType: ProjectType;
   projectTitle: string | null;
   projectDescription: string | null;
 
   createProjectFlag: boolean;
+  createProjectDialog: boolean;
+  setCreateProjectDialog: (b: boolean) => void;
   saveProjectFlag: boolean;
+  saveProjectDialog: boolean;
+  setSaveProjectDialog: (b: boolean) => void;
+
   curateMoleculeToProjectFlag: boolean;
   showProjectsFlag: boolean;
   updateProjectsFlag: boolean;
@@ -76,13 +78,6 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
       });
     },
 
-    createNewProjectFlag: false,
-    setCreateNewProjectFlag(b) {
-      immerSet((state) => {
-        state.createNewProjectFlag = b;
-      });
-    },
-
     hoveredMolecule: null,
 
     boundingSphereRadius: 10,
@@ -105,7 +100,20 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     projectDescription: null,
 
     createProjectFlag: false,
+    createProjectDialog: false,
+    setCreateProjectDialog(b) {
+      immerSet((state) => {
+        state.createProjectDialog = b;
+      });
+    },
     saveProjectFlag: false,
+    saveProjectDialog: false,
+    setSaveProjectDialog(b) {
+      immerSet((state) => {
+        state.saveProjectDialog = b;
+      });
+    },
+
     curateMoleculeToProjectFlag: false,
     showProjectsFlag: false,
     updateProjectsFlag: false,

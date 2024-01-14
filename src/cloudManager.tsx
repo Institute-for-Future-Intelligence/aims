@@ -539,7 +539,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
               molecules: [],
               ranges: [],
               filters: [],
-              hiddenParameters: [],
+              hiddenProperties: [],
             })
             .then(() => {
               setCommonStore((state) => {

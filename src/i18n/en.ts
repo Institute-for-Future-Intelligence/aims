@@ -160,7 +160,7 @@ export const i18n_en = {
         SavingAbortedMustHaveValidProjectName: 'Saving aborted! You must have a valid project name',
         OpenCloudProject: 'Open Cloud Project',
         SaveCloudProject: 'Save Cloud Project',
-        SaveAsCloudProject: 'Save as Cloud Project',
+        SaveProjectAs: 'Save Project As',
         SavingAbortedMustHaveValidTitle: 'Saving aborted! You must have a valid title for a cloud project',
         ToSaveYourWorkOnCloudPleaseSignIn: 'To save your work on the cloud, please sign in.',
       },

@@ -14,13 +14,7 @@ import { useTranslation } from 'react-i18next';
 
 const { Option } = Select;
 
-const CreateNewProjectDialog = ({
-  saveAs,
-  setDialogVisible,
-}: {
-  saveAs: boolean;
-  setDialogVisible: (b: boolean) => void;
-}) => {
+const NewProjectDialog = ({ saveAs }: { saveAs: boolean }) => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
   const language = useStore(Selector.language);
@@ -57,18 +51,22 @@ const CreateNewProjectDialog = ({
   };
 
   const onCancelClick = () => {
-    setDialogVisible(false);
+    if (saveAs) {
+      usePrimitiveStore.getState().setSaveProjectDialog(false);
+    } else {
+      usePrimitiveStore.getState().setCreateProjectDialog(false);
+    }
   };
 
   const onOkClick = () => {
     usePrimitiveStore.getState().set((state) => {
       if (saveAs) {
         state.saveProjectFlag = true;
+        state.saveProjectDialog = false;
       } else {
         state.createProjectFlag = true;
+        state.createProjectDialog = false;
       }
-    });
-    usePrimitiveStore.getState().set((state) => {
       state.projectType = projectType;
       state.projectTitle = projectTitle;
       state.projectDescription = projectDescription;
@@ -81,7 +79,6 @@ const CreateNewProjectDialog = ({
         };
       });
     }
-    setDialogVisible(false);
   };
 
   return (
@@ -107,7 +104,7 @@ const CreateNewProjectDialog = ({
       ]}
       // this must be specified for the x button in the upper-right corner to work
       onCancel={() => {
-        setDialogVisible(false);
+        usePrimitiveStore.getState().setCreateProjectDialog(false);
       }}
       maskClosable={false}
       destroyOnClose={false}
@@ -180,4 +177,4 @@ const CreateNewProjectDialog = ({
   );
 };
 
-export default React.memo(CreateNewProjectDialog);
+export default React.memo(NewProjectDialog);

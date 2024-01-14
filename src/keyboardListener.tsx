@@ -291,22 +291,22 @@ const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardLi
         break;
       case 'ctrl+f':
       case 'meta+f': // for Mac
-        setCommonStore((state) => {
-          window.history.pushState({}, document.title, HOME_URL);
-          if (loggable) {
+        usePrimitiveStore.getState().setCreateProjectDialog(true);
+        if (loggable) {
+          setCommonStore((state) => {
             state.actionInfo = {
-              name: 'Create New File',
+              name: 'Create New Project',
               timestamp: new Date().getTime(),
             };
-          }
-        });
+          });
+        }
         break;
       case 'ctrl+s':
       case 'meta+s': // for Mac
         if (loggable) {
           setCommonStore((state) => {
             state.actionInfo = {
-              name: 'Save Local File',
+              name: 'Save Project',
               timestamp: new Date().getTime(),
             };
           });
@@ -317,7 +317,7 @@ const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardLi
         if (loggable) {
           setCommonStore((state) => {
             state.actionInfo = {
-              name: 'List Cloud Files',
+              name: 'Open Cloud Files',
               timestamp: new Date().getTime(),
             };
           });
@@ -325,10 +325,11 @@ const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardLi
         break;
       case 'ctrl+shift+s':
       case 'meta+shift+s': // for Mac
+        usePrimitiveStore.getState().setSaveProjectDialog(true);
         if (loggable) {
           setCommonStore((state) => {
             state.actionInfo = {
-              name: 'Save Cloud File',
+              name: 'Save Project as',
               timestamp: new Date().getTime(),
             };
           });

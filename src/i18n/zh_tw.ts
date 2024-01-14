@@ -160,7 +160,7 @@ export const i18n_zh_tw = {
         SavingAbortedMustHaveValidProjectName: '專案名無效，保存失敗',
         OpenCloudProject: '打開雲端專案',
         SaveCloudProject: '保存雲端專案',
-        SaveAsCloudProject: '保存為雲端專案',
+        SaveProjectAs: '保存為雲端專案',
         SavingAbortedMustHaveValidTitle: '雲端專案名無效，保存失敗',
         ToSaveYourWorkOnCloudPleaseSignIn: '為了保存您的雲端專案，請您先登錄。',
       },
