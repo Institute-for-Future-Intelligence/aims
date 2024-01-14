@@ -9,6 +9,7 @@ import { LabelMark, MenuItem } from '../menuItem';
 import {
   AutoRotateCheckBox,
   AxesCheckBox,
+  BackgroundColor,
   ColoringRadioGroup,
   ShininessInput,
   StyleRadioGroup,
@@ -79,6 +80,12 @@ export const createViewMenu = (
   items.push({
     key: 'axes-check-box',
     label: <AxesCheckBox />,
+  });
+
+  // background
+  items.push({
+    key: 'background-color',
+    label: <BackgroundColor />,
   });
 
   // display style
