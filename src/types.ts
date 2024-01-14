@@ -62,7 +62,6 @@ export enum FirebaseName {
 }
 
 export enum ProjectType {
-  DEFAULT = 'Default',
   DRUG_DISCOVERY = 'Drug Discovery',
 }
 

@@ -8,9 +8,10 @@ import { useStore } from '../../stores/common';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
 import { useState } from 'react';
 import { useLanguage } from '../../hooks';
-import { MenuItem } from '../menuItem';
+import { LabelMark, MenuItem } from '../menuItem';
+import CreateNewProjectDialog from './createNewProjectDialog';
 
-const CreateNewProjectItem = () => {
+const CreateNewProjectItem = ({ isMac }: { isMac: boolean }) => {
   const [dialogVisible, setDialogVisible] = useState(false);
 
   const lang = useLanguage();
@@ -30,62 +31,15 @@ const CreateNewProjectItem = () => {
   return (
     <>
       <MenuItem hasPadding={false} onClick={handleClick}>
-        {i18n.t('menu.project.CreateNewProject', lang)}...
+        {i18n.t('menu.project.CreateNewProject', lang)}
+        <LabelMark>({isMac ? '⌘' : 'Ctrl'}+F)</LabelMark>...
       </MenuItem>
-      {/*{createNewProjectDialogVisible && (*/}
-      {/*    <CreateNewProjectDialog saveAs={false} setDialogVisible={setCreateNewProjectDialogVisible} />*/}
-      {/*)}*/}
+      {dialogVisible && <CreateNewProjectDialog saveAs={false} setDialogVisible={setDialogVisible} />}
     </>
   );
 };
 
-const OpenLocalProjectItem = () => {
-  const lang = useLanguage();
-
-  const handleClick = () => {
-    if (useStore.getState().loggable) {
-      useStore.getState().set((state) => {
-        state.actionInfo = {
-          name: 'Open Local Project',
-          timestamp: new Date().getTime(),
-        };
-      });
-    }
-  };
-
-  return (
-    <>
-      <MenuItem hasPadding={false} onClick={handleClick}>
-        {i18n.t('menu.project.OpenLocalProject', lang)}...
-      </MenuItem>
-    </>
-  );
-};
-
-const SaveAsLocalProjectItem = () => {
-  const lang = useLanguage();
-
-  const handleClick = () => {
-    if (useStore.getState().loggable) {
-      useStore.getState().set((state) => {
-        state.actionInfo = {
-          name: 'Save as Local Project',
-          timestamp: new Date().getTime(),
-        };
-      });
-    }
-  };
-
-  return (
-    <>
-      <MenuItem hasPadding={false} onClick={handleClick}>
-        {i18n.t('menu.project.SaveAsLocalProject', lang)}...
-      </MenuItem>
-    </>
-  );
-};
-
-const SaveAsCloudProjectItem = () => {
+const SaveAsCloudProjectItem = ({ isMac }: { isMac: boolean }) => {
   const [dialogVisible, setDialogVisible] = useState(false);
 
   const lang = useLanguage();
@@ -105,7 +59,8 @@ const SaveAsCloudProjectItem = () => {
   return (
     <>
       <MenuItem hasPadding={false} onClick={handleClick}>
-        {i18n.t('menu.project.SaveAsCloudProject', lang)}...
+        {i18n.t('menu.project.SaveAsCloudProject', lang)}
+        <LabelMark>({isMac ? '⌘' : 'Ctrl'}+Shift+S)</LabelMark>...
       </MenuItem>
       {/*{saveProjectAsDialogVisible && (*/}
       {/*    <CreateNewProjectDialog saveAs={true} setDialogVisible={setSaveProjectAsDialogVisible} />*/}
@@ -114,7 +69,7 @@ const SaveAsCloudProjectItem = () => {
   );
 };
 
-const SaveCloudProjectItem = () => {
+const SaveCloudProjectItem = ({ isMac }: { isMac: boolean }) => {
   const [dialogVisible, setDialogVisible] = useState(false);
 
   const lang = useLanguage();
@@ -134,7 +89,8 @@ const SaveCloudProjectItem = () => {
   return (
     <>
       <MenuItem hasPadding={false} onClick={handleClick}>
-        {i18n.t('menu.project.SaveCloudProject', lang)}...
+        {i18n.t('menu.project.SaveCloudProject', lang)}
+        <LabelMark>({isMac ? '⌘' : 'Ctrl'}+S)</LabelMark>...
       </MenuItem>
       {/*{dialogVisible && (*/}
       {/*    <CreateNewProjectDialog saveAs={true} setDialogVisible={dialogVisible} />*/}
@@ -143,7 +99,7 @@ const SaveCloudProjectItem = () => {
   );
 };
 
-const ListCloudProjectItem = () => {
+const ListCloudProjectItem = ({ isMac }: { isMac: boolean }) => {
   const setCommonStore = useStore.getState().set;
   const lang = useLanguage();
 
@@ -157,7 +113,7 @@ const ListCloudProjectItem = () => {
     if (useStore.getState().loggable) {
       setCommonStore((state) => {
         state.actionInfo = {
-          name: 'Open Project',
+          name: 'List Projects',
           timestamp: new Date().getTime(),
         };
       });
@@ -167,56 +123,39 @@ const ListCloudProjectItem = () => {
   return (
     <>
       <MenuItem hasPadding={false} onClick={handleClick}>
-        {i18n.t('menu.project.OpenCloudProject', lang)}...
+        {i18n.t('menu.project.OpenCloudProject', lang)}
+        <LabelMark>({isMac ? '⌘' : 'Ctrl'}+O)</LabelMark>...
       </MenuItem>
     </>
   );
 };
 
-export const createProjectMenu = (viewOnly: boolean) => {
-  const user = useStore.getState().user;
-  const projectInfo = useStore.getState().projectInfo;
-  const projectView = useStore.getState().projectView;
-
+export const createProjectMenu = (viewOnly: boolean, isMac: boolean) => {
   const items: MenuProps['items'] = [];
 
   // create-new-project
   items.push({
     key: 'create-new-project',
-    label: <CreateNewProjectItem />,
+    label: <CreateNewProjectItem isMac={isMac} />,
   });
 
-  // open-local-project
+  // list-cloud-project
   items.push({
-    key: 'open-local-project',
-    label: <OpenLocalProjectItem />,
+    key: 'list-cloud-project',
+    label: <ListCloudProjectItem isMac={isMac} />,
   });
 
-  // save-as-local-project
+  // save-cloud-project
   items.push({
-    key: 'save-as-local-project',
-    label: <SaveAsLocalProjectItem />,
+    key: 'save-cloud-project',
+    label: <SaveCloudProjectItem isMac={isMac} />,
   });
 
-  if (!viewOnly && user.uid) {
-    // list-cloud-project
-    items.push({
-      key: 'list-cloud-project',
-      label: <ListCloudProjectItem />,
-    });
-
-    // save-cloud-project
-    items.push({
-      key: 'save-cloud-project',
-      label: <SaveCloudProjectItem />,
-    });
-
-    // save-as-cloud-project
-    items.push({
-      key: 'save-as-cloud-project',
-      label: <SaveAsCloudProjectItem />,
-    });
-  }
+  // save-as-cloud-project
+  items.push({
+    key: 'save-as-cloud-project',
+    label: <SaveAsCloudProjectItem isMac={isMac} />,
+  });
 
   return items;
 };

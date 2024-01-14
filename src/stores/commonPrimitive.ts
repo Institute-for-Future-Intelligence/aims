@@ -11,6 +11,9 @@ export interface PrimitiveStoreState {
   changed: boolean;
   setChanged: (b: boolean) => void;
 
+  createNewProjectFlag: boolean;
+  setCreateNewProjectFlag: (b: boolean) => void;
+
   hoveredMolecule: MoleculeData | null;
 
   boundingSphereRadius: number;
@@ -73,6 +76,13 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
       });
     },
 
+    createNewProjectFlag: false,
+    setCreateNewProjectFlag(b) {
+      immerSet((state) => {
+        state.createNewProjectFlag = b;
+      });
+    },
+
     hoveredMolecule: null,
 
     boundingSphereRadius: 10,
@@ -90,7 +100,7 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
       });
     },
 
-    projectType: ProjectType.DEFAULT,
+    projectType: ProjectType.DRUG_DISCOVERY,
     projectTitle: null,
     projectDescription: null,
 

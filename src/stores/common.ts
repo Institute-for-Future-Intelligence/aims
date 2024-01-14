@@ -22,6 +22,9 @@ import { useRefStore } from './commonRef';
 import { MolecularProperties } from '../models/MolecularProperties';
 import { Filter } from '../Filter';
 import { MolecularViewerColoring, MolecularViewerStyle } from '../view/displayOptions';
+import { usePrimitiveStore } from './commonPrimitive';
+import dayjs from 'dayjs';
+import short from 'short-uuid';
 
 enableMapSet();
 
@@ -39,6 +42,10 @@ export interface CommonStoreState {
 
   projectInfo: ProjectInfo;
   projectView: boolean;
+
+  importProject: (input: any, title?: string) => void;
+  exportProject: () => {};
+  createEmptyProject: () => void;
 
   loadedMolecule: MoleculeData | null;
   selectedMolecule: MoleculeData | null;
@@ -108,7 +115,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           projectInfo: {
             owner: null,
             timestamp: -1,
-            type: ProjectType.DEFAULT,
+            type: ProjectType.DRUG_DISCOVERY,
             title: null,
             description: null,
             selectedProperty: null,
@@ -118,6 +125,44 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             filters: new Array<Filter>(),
           } as ProjectInfo,
           projectView: true,
+
+          importProject(content, title) {
+            immerSet((state: CommonStoreState) => {
+              state.version = content.version;
+              state.cloudFile = title;
+              state.currentUndoable = undefined;
+              state.actionInfo = undefined;
+              state.undoManager.clear();
+              state.selectedFloatingWindow = null;
+            });
+            usePrimitiveStore.getState().set((state) => {
+              state.changed = false;
+            });
+          },
+          exportProject() {
+            const state = get();
+            const date = new Date();
+            return {
+              docid: short.generate(),
+              time: dayjs(date).format('MM/DD/YYYY hh:mm A'),
+              timestamp: date.getTime(),
+              userid: state.user.uid,
+              version: VERSION,
+            };
+          },
+          createEmptyProject() {
+            immerSet((state: CommonStoreState) => {
+              state.version = VERSION;
+              state.cloudFile = undefined;
+              state.currentUndoable = undefined;
+              state.actionInfo = undefined;
+              state.undoManager.clear();
+              state.selectedFloatingWindow = null;
+            });
+            usePrimitiveStore.getState().set((state) => {
+              state.changed = false;
+            });
+          },
 
           loadedMolecule: null,
           selectedMolecule: null,

@@ -23,7 +23,14 @@ export const i18n_zh_cn = {
     },
 
     word: {
+      Title: '标题',
+      Description: '描述',
+      MaximumCharacters: '最多字符数',
       Unknown: '未知',
+      Maximum: '最大',
+      Minimum: '最小',
+      Yes: '是',
+      No: '不',
       OK: '确定',
       Cancel: '取消',
       Close: '关闭',
@@ -71,6 +78,7 @@ export const i18n_zh_cn = {
       CannotUpdateProject: '无法更新项目',
       CannotFetchProjectData: '无法取得项目数据',
       TitleUsedChooseDifferentOne: '此标题已经被使用, 请采用不同的标题',
+      DoYouWantToSaveChanges: '您要保存当前文件吗？',
     },
 
     molecularViewer: {

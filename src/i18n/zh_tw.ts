@@ -23,7 +23,14 @@ export const i18n_zh_tw = {
     },
 
     word: {
+      Title: '標題',
+      Description: '描述',
+      MaximumCharacters: '最多字符數',
       Unknown: '未知',
+      Maximum: '最大',
+      Minimum: '最小',
+      Yes: '是',
+      No: '不',
       OK: '確定',
       Cancel: '取消',
       Close: '關閉',
@@ -70,6 +77,7 @@ export const i18n_zh_tw = {
       CannotUpdateProject: '無法更新專案',
       CannotFetchProjectData: '無法取得專案數據',
       TitleUsedChooseDifferentOne: '此標題已經被使用, 請採用不同的標題',
+      DoYouWantToSaveChanges: '您要保存當前文檔嗎？',
     },
 
     molecularViewer: {

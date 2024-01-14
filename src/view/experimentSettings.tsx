@@ -4,7 +4,6 @@
 
 import React, { useMemo } from 'react';
 import { Col, FloatButton, Popover, Row, Select } from 'antd';
-import { DeploymentUnitOutlined } from '@ant-design/icons';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
@@ -90,7 +89,7 @@ const ExperimentSettings = () => {
             left: '6px',
             height: '20px',
           }}
-          description={<DeploymentUnitOutlined style={{ fontSize: '24px' }} />}
+          description={<label style={{ fontSize: '20px' }}>🧪</label>}
         />
       </Popover>
       <label

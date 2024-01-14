@@ -520,7 +520,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
         showInfo(i18n.t('message.TitleUsedChooseDifferentOne', lang) + ': ' + t);
       } else {
         if (user && user.uid) {
-          const type = usePrimitiveStore.getState().projectType ?? ProjectType.DEFAULT;
+          const type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
           const description = usePrimitiveStore.getState().projectDescription ?? null;
           const timestamp = new Date().getTime();
           const counter = 0;
@@ -621,7 +621,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       const projectTitle = useStore.getState().projectInfo.title;
       if (projectTitle) {
         setLoading(true);
-        const projectType = useStore.getState().projectInfo.type ?? ProjectType.DEFAULT;
+        const projectType = useStore.getState().projectInfo.type ?? ProjectType.DRUG_DISCOVERY;
         const thumbnailWidth = useStore.getState().projectInfo.thumbnailWidth ?? 200;
         const counter = useStore.getState().projectInfo.counter ?? 0;
         addMoleculeToProject(projectType, projectTitle, projectTitle + ' ' + counter, thumbnailWidth);

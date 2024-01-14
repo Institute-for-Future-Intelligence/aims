@@ -108,3 +108,11 @@ export const showAccountSettingsPanel = (state: PrimitiveStoreState) => state.sh
 export const userCount = (state: PrimitiveStoreState) => state.userCount;
 
 export const selectedFloatingWindow = (state: CommonStoreState) => state.selectedFloatingWindow;
+
+export const createNewProjectFlag = (state: PrimitiveStoreState) => state.createNewProjectFlag;
+
+export const importProject = (state: CommonStoreState) => state.importProject;
+
+export const exportProject = (state: CommonStoreState) => state.exportProject;
+
+export const createEmptyProject = (state: CommonStoreState) => state.createEmptyProject;

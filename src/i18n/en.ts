@@ -23,9 +23,14 @@ export const i18n_en = {
     },
 
     word: {
+      Title: 'Title',
+      Description: 'Description',
+      MaximumCharacters: 'Maximum characters',
       Unknown: 'Unknown',
       Maximum: 'Maximum',
       Minimum: 'Minimum',
+      Yes: 'Yes',
+      No: 'No',
       OK: 'OK',
       Cancel: 'Cancel',
       Close: 'Close',
@@ -72,6 +77,7 @@ export const i18n_en = {
       CannotUpdateProject: 'Cannot update the project',
       CannotFetchProjectData: 'Cannot fetch project data',
       TitleUsedChooseDifferentOne: 'This title has been used. Choose a different one',
+      DoYouWantToSaveChanges: 'Do you want to save changes?',
     },
 
     molecularViewer: {

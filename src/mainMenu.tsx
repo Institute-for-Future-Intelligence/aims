@@ -110,11 +110,13 @@ const MainMenu = ({ viewOnly, resetView, zoomView }: MainMenuProps) => {
     const items: MenuProps['items'] = [];
 
     // project menu
-    items.push({
-      key: 'project-sub-menu',
-      label: <MenuItem hasPadding={false}>{t('menu.projectSubMenu', lang)}</MenuItem>,
-      children: createProjectMenu(viewOnly),
-    });
+    if (!viewOnly && user.uid) {
+      items.push({
+        key: 'project-sub-menu',
+        label: <MenuItem hasPadding={false}>{t('menu.projectSubMenu', lang)}</MenuItem>,
+        children: createProjectMenu(viewOnly, isMac),
+      });
+    }
 
     // edit menu
     if (hasUndo || hasRedo) {
