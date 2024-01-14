@@ -181,20 +181,12 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     const params = new URLSearchParams(window.location.search);
     const userid = params.get('userid');
     if (userid) {
-      const title = params.get('title');
       const project = params.get('project');
       if (project) {
         setLoading(true);
         fetchProject(userid, project, setProjectState).finally(() => {
           setLoading(false);
         });
-        if (title) {
-          // openDesignFile(userid, title);
-        }
-      } else {
-        if (title) {
-          // openCloudFile(userid, title);
-        }
       }
     } else {
       setCommonStore((state) => {
@@ -223,7 +215,6 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
         });
       })
       .catch((error) => {
-        console.log(error);
         if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
           showError(i18n.t('message.CannotSignIn', lang) + ': ' + error);
         }
@@ -233,20 +224,32 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   const registerUser = async (user: User): Promise<any> => {
     const firestore = firebase.firestore();
     let noLogging = false;
-    let userCount = 0;
     let schoolID = SchoolID.UNKNOWN;
     let classID = ClassID.UNKNOWN;
     let likes: string[] = [];
     let published: string[] = [];
     let aliases: string[] = [];
-    const found = await firestore
-      .collection('users')
-      .get()
-      .then((querySnapshot) => {
-        userCount = querySnapshot.size;
-        for (const doc of querySnapshot.docs) {
-          if (doc.id === user.uid) {
-            const docData = doc.data();
+    let found = false;
+    let userCount = 0;
+    if (user.uid !== null) {
+      const superuser = user && user.email === 'charles@intofuture.org';
+      if (superuser) {
+        // This way of counting a collection is expensive. It is reserved for only superusers.
+        // It should be replaced by getCountFromServer in the latest version of Firestore;
+        await firestore
+          .collection('users')
+          .get()
+          .then((querySnapshot) => {
+            userCount = querySnapshot.size;
+          });
+      }
+      found = await firestore
+        .collection('users')
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          const docData = doc.data();
+          if (docData) {
             noLogging = !!docData.noLogging;
             schoolID = docData.schoolID ? (docData.schoolID as SchoolID) : SchoolID.UNKNOWN;
             classID = docData.classID ? (docData.classID as ClassID) : ClassID.UNKNOWN;
@@ -255,10 +258,11 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             if (docData.aliases) aliases = docData.aliases;
             return true;
           }
-        }
-        return false;
-      });
+          return false;
+        });
+    }
     if (found) {
+      // update common store state
       setCommonStore((state) => {
         state.user.noLogging = noLogging;
         state.user.schoolID = schoolID;
@@ -270,6 +274,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       usePrimitiveStore.getState().set((state) => {
         state.userCount = userCount;
       });
+      // update current user object
       user.noLogging = noLogging;
       user.schoolID = schoolID;
       user.classID = classID;
