@@ -22,9 +22,6 @@ import { useRefStore } from './commonRef';
 import { MolecularProperties } from '../models/MolecularProperties';
 import { Filter } from '../Filter';
 import { MolecularViewerColoring, MolecularViewerStyle } from '../view/displayOptions';
-import { usePrimitiveStore } from './commonPrimitive';
-import dayjs from 'dayjs';
-import short from 'short-uuid';
 
 enableMapSet();
 
@@ -268,6 +265,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
         skipHydration: Util.isOpenFromURL(),
         partialize: (state) => ({
           language: state.language,
+          user: state.user,
           targetProtein: state.targetProtein,
           loadedMolecule: state.loadedMolecule,
           selectedMolecule: state.selectedMolecule,

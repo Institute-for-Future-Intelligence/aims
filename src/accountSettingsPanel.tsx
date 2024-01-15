@@ -181,6 +181,9 @@ const AccountSettingsPanel = () => {
                     setCommonStore((state) => {
                       state.user.schoolID = value;
                     });
+                    usePrimitiveStore.getState().set((state) => {
+                      state.saveAccountSettingsFlag = true;
+                    });
                   }}
                 >
                   <Option key={SchoolID.UNKNOWN} value={SchoolID.UNKNOWN}>
@@ -217,6 +220,9 @@ const AccountSettingsPanel = () => {
                     classIdRef.current = value;
                     setCommonStore((state) => {
                       state.user.classID = value;
+                    });
+                    usePrimitiveStore.getState().set((state) => {
+                      state.saveAccountSettingsFlag = true;
                     });
                   }}
                 >

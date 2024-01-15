@@ -38,6 +38,8 @@ export interface PrimitiveStoreState {
   saveProjectAsDialog: boolean;
   setSaveProjectAsDialog: (b: boolean) => void;
 
+  saveAccountSettingsFlag: boolean;
+
   curateMoleculeToProjectFlag: boolean;
   showProjectsFlag: boolean;
   updateProjectsFlag: boolean;
@@ -115,6 +117,8 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
         state.saveProjectAsDialog = b;
       });
     },
+
+    saveAccountSettingsFlag: false,
 
     curateMoleculeToProjectFlag: false,
     showProjectsFlag: false,

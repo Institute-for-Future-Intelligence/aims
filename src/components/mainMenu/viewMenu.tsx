@@ -73,7 +73,7 @@ export const createViewMenu = (
   // auto-rotate-check-box
   items.push({
     key: 'auto-rotate-check-box',
-    label: <AutoRotateCheckBox />,
+    label: <AutoRotateCheckBox isMac={isMac} />,
   });
 
   // axes-check-box

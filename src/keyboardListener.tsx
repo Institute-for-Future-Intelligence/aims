@@ -381,9 +381,6 @@ const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardLi
         selectNone();
         break;
       }
-      case 'ctrl': {
-        break;
-      }
     }
   };
 

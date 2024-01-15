@@ -40,6 +40,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   const setPrimitiveStore = usePrimitiveStore(Selector.setPrimitiveStore);
   const language = useStore(Selector.language);
   const user = useStore(Selector.user);
+  const saveAccountSettingsFlag = usePrimitiveStore(Selector.saveAccountSettingsFlag);
   const showProjectListPanel = usePrimitiveStore(Selector.showProjectListPanel);
   const createProjectFlag = usePrimitiveStore(Selector.createProjectFlag);
   const saveProjectAsFlag = usePrimitiveStore(Selector.saveProjectAsFlag);
@@ -53,11 +54,26 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   const [projectArray, setProjectArray] = useState<any[]>([]);
   const [updateProjectArrayFlag, setUpdateProjectArrayFlag] = useState(false);
   const myProjects = useRef<ProjectInfo[] | void>(); // Not sure why I need to use ref to store this
-  const firstAccountSettings = useRef<boolean>(true);
 
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
+
+  useFlag(saveAccountSettingsFlag, saveAccountSettings, () => setPrimitiveStore('saveAccountSettingsFlag', false));
+
+  useFlag(createProjectFlag, createNewProject, () => setPrimitiveStore('createProjectFlag', false));
+
+  useFlag(saveProjectAsFlag, saveProjectAs, () => setPrimitiveStore('saveProjectAsFlag', false));
+
+  useFlag(saveProjectFlag, saveProject, () => setPrimitiveStore('saveProjectFlag', false));
+
+  useFlag(showProjectsFlag, showMyProjectsList, () => setPrimitiveStore('showProjectsFlag', false));
+
+  useFlag(updateProjectsFlag, hideMyProjectsList, () => setPrimitiveStore('updateProjectsFlag', false));
+
+  useFlag(curateMoleculeToProjectFlag, curateMoleculeToProject, () =>
+    setPrimitiveStore('curateMoleculeToProjectFlag', false),
+  );
 
   useEffect(() => {
     const config = {
@@ -156,29 +172,6 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myProjects.current, updateProjectArrayFlag]);
-
-  useFlag(createProjectFlag, createNewProject, () => setPrimitiveStore('createProjectFlag', false));
-
-  useFlag(saveProjectAsFlag, saveProjectAs, () => setPrimitiveStore('saveProjectAsFlag', false));
-
-  useFlag(saveProjectFlag, saveProject, () => setPrimitiveStore('saveProjectFlag', false));
-
-  useFlag(showProjectsFlag, showMyProjectsList, () => setPrimitiveStore('showProjectsFlag', false));
-
-  useFlag(updateProjectsFlag, hideMyProjectsList, () => setPrimitiveStore('updateProjectsFlag', false));
-
-  useFlag(curateMoleculeToProjectFlag, curateMoleculeToProject, () =>
-    setPrimitiveStore('curateMoleculeToProjectFlag', false),
-  );
-
-  useEffect(() => {
-    if (firstAccountSettings.current) {
-      firstAccountSettings.current = false;
-    } else {
-      saveAccountSettings(user);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.schoolID, user.classID]);
 
   const init = () => {
     const params = new URLSearchParams(window.location.search);
@@ -340,25 +333,6 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       .catch((error) => {
         showError(i18n.t('message.CannotSignOut', lang) + ': ' + error);
       });
-  };
-
-  const saveAccountSettings = (user: User) => {
-    if (user.uid) {
-      const firestore = firebase.firestore();
-      firestore
-        .collection('users')
-        .doc(user.uid)
-        .update({
-          schoolID: user.schoolID ?? SchoolID.UNKNOWN,
-          classID: user.classID ?? ClassID.UNKNOWN,
-        })
-        .then(() => {
-          showInfo(i18n.t('message.YourAccountSettingsWereSaved', lang));
-        })
-        .catch((error) => {
-          showError(i18n.t('message.CannotSaveYourAccountSettings', lang) + ': ' + error);
-        });
-    }
   };
 
   // fetch owner's projects from the cloud
@@ -618,6 +592,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       setProcessing(true);
       const pi = { ...useStore.getState().projectInfo };
       pi.timestamp = new Date().getTime();
+      console.log(pi);
       firebase
         .firestore()
         .collection('users')
@@ -752,6 +727,25 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   function hideMyProjectsList() {
     listMyProjects(false);
     setUpdateFlag(!updateFlag);
+  }
+
+  function saveAccountSettings() {
+    if (user.uid) {
+      const firestore = firebase.firestore();
+      firestore
+        .collection('users')
+        .doc(user.uid)
+        .update({
+          schoolID: user.schoolID ?? SchoolID.UNKNOWN,
+          classID: user.classID ?? ClassID.UNKNOWN,
+        })
+        .then(() => {
+          showInfo(i18n.t('message.YourAccountSettingsWereSaved', lang));
+        })
+        .catch((error) => {
+          showError(i18n.t('message.CannotSaveYourAccountSettings', lang) + ': ' + error);
+        });
+    }
   }
 
   return viewOnly ? (
