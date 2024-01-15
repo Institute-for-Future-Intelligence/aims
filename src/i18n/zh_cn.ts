@@ -23,6 +23,13 @@ export const i18n_zh_cn = {
     },
 
     word: {
+      Time: '时间',
+      Type: '类别',
+      Open: '打开',
+      Rename: '改名',
+      Delete: '删除',
+      Warning: '警告',
+      Caution: '小心',
       Title: '标题',
       Description: '描述',
       MaximumCharacters: '最多字符数',
@@ -73,12 +80,14 @@ export const i18n_zh_cn = {
       CannotDeleteProject: '无法删除项目',
       CannotRenameProject: '无法给项目改名',
       CannotAddMoleculeToProject: '无法把此分子加到项目里',
+      CannotAddMoleculeToProjectOwnedByOthers: '不能把此分子加到别人的项目里',
       MoleculeRemovedFromProject: '分子被成功地从项目里删除',
       CannotRemoveMoleculeFromProject: '无法把此分子从项目里删除',
       CannotUpdateProject: '无法更新项目',
       CannotFetchProjectData: '无法取得项目数据',
       TitleUsedChooseDifferentOne: '此标题已经被使用, 请采用不同的标题',
       DoYouWantToSaveChanges: '您要保存当前文件吗？',
+      ThisCannotBeUndone: '这个操作一旦执行就不能撤销。',
     },
 
     molecularViewer: {
@@ -114,6 +123,17 @@ export const i18n_zh_cn = {
     experiment: {
       ExperimentSettings: '实验设定',
       Target: '目标',
+    },
+
+    projectListPanel: {
+      CopyTitle: '拷贝标题',
+      TitleCopiedToClipBoard: '标题拷贝到剪贴板',
+      SearchByTitle: '按标题搜索',
+      MyProjects: '我的项目',
+      GenerateProjectLink: '生成项目链接',
+      ProjectLinkGeneratedInClipBoard: '项目链接生成到剪贴板',
+      DoYouReallyWantToDeleteProject: '您确定删除项目',
+      IfSharedOrPublishedRenamingProjectBreaksExistingLinks: '如果此项目已被分享或发布, 改名会使已有链接失效',
     },
 
     projectPanel: {

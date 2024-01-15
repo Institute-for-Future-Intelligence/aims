@@ -23,6 +23,13 @@ export const i18n_en = {
     },
 
     word: {
+      Time: 'Time',
+      Type: 'Type',
+      Open: 'Open',
+      Rename: 'Rename',
+      Delete: 'Delete',
+      Warning: 'Warning',
+      Caution: 'Caution',
       Title: 'Title',
       Description: 'Description',
       MaximumCharacters: 'Maximum characters',
@@ -72,12 +79,14 @@ export const i18n_en = {
       CannotDeleteProject: 'Cannot delete the project',
       CannotRenameProject: 'Cannot rename the project',
       CannotAddMoleculeToProject: 'Cannot add this molecule to the project',
+      CannotAddMoleculeToProjectOwnedByOthers: 'Cannot add this molecule to a project owned by others',
       MoleculeRemovedFromProject: 'The molecule was successfully removed from the project',
       CannotRemoveMoleculeFromProject: 'Cannot remove this molecule from the project',
       CannotUpdateProject: 'Cannot update the project',
       CannotFetchProjectData: 'Cannot fetch project data',
       TitleUsedChooseDifferentOne: 'This title has been used. Choose a different one',
       DoYouWantToSaveChanges: 'Do you want to save changes?',
+      ThisCannotBeUndone: 'This cannot be undone.',
     },
 
     molecularViewer: {
@@ -113,6 +122,18 @@ export const i18n_en = {
     experiment: {
       ExperimentSettings: 'Experiment Settings',
       Target: 'Target',
+    },
+
+    projectListPanel: {
+      CopyTitle: 'Copy Title',
+      TitleCopiedToClipBoard: 'The title was copied to the clip board',
+      SearchByTitle: 'Search by title',
+      MyProjects: 'My Projects',
+      GenerateProjectLink: 'Generate Project Link',
+      ProjectLinkGeneratedInClipBoard: 'A link to the project was generated in the clip board',
+      DoYouReallyWantToDeleteProject: 'Do you really want to delete Project',
+      IfSharedOrPublishedRenamingProjectBreaksExistingLinks:
+        'If this project has been shared or published, renaming it breaks existing links',
     },
 
     projectPanel: {

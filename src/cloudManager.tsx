@@ -434,12 +434,20 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             state.projectInfo.ranges = [];
             state.projectInfo.filters = [];
             state.projectInfo.hiddenProperties = [];
-            state.projectView = false;
+            // state.projectView = false;
           }
         });
       })
       .catch((error) => {
         showError(i18n.t('message.CannotDeleteProject', lang) + ': ' + error);
+      })
+      .finally(() => {
+        // if the project list panel is open, update it
+        if (showProjectListPanel) {
+          fetchMyProjects(false).then(() => {
+            setUpdateFlag(!updateFlag);
+          });
+        }
       });
   };
 
@@ -526,9 +534,16 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       } else {
         if (user && user.uid) {
           const type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
-          const description = usePrimitiveStore.getState().projectDescription ?? null;
           const timestamp = new Date().getTime();
+          const description = null;
           const counter = 0;
+          const dataColoring = DataColoring.ALL;
+          const selectedProperty = null;
+          const sortDescending = false;
+          const xAxisNameScatteredPlot = 'atomCount';
+          const yAxisNameScatteredPlot = 'atomCount';
+          const dotSizeScatteredPlot = 5;
+          const thumbnailWidth = 200;
           firebase
             .firestore()
             .collection('users')
@@ -537,22 +552,30 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             .doc(t)
             .set({
               owner: user.uid,
+              title: t,
               timestamp,
               type,
               description,
               counter,
+              dataColoring,
+              selectedProperty,
+              sortDescending,
+              xAxisNameScatteredPlot,
+              yAxisNameScatteredPlot,
+              dotSizeScatteredPlot,
+              thumbnailWidth,
               molecules: [],
               ranges: [],
               filters: [],
               hiddenProperties: [],
-            })
+            } as ProjectInfo)
             .then(() => {
               setCommonStore((state) => {
                 state.projectView = true;
                 // update the local copy as well
                 state.projectInfo.owner = user.uid;
                 state.projectInfo.type = type;
-                state.projectInfo.title = title;
+                state.projectInfo.title = t;
                 state.projectInfo.description = description;
                 state.projectInfo.counter = 0;
                 state.projectInfo.dataColoring = DataColoring.ALL;
@@ -612,7 +635,66 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
         showInfo(i18n.t('message.TitleUsedChooseDifferentOne', lang) + ': ' + t);
       } else {
         if (user && user.uid) {
-          // TODO
+          const molecules = useStore.getState().projectInfo.molecules;
+          if (molecules) {
+            const type = usePrimitiveStore.getState().projectType;
+            const description = usePrimitiveStore.getState().projectDescription;
+            const timestamp = new Date().getTime();
+            const counter = useStore.getState().projectInfo.counter;
+            const dataColoring = useStore.getState().projectInfo.dataColoring ?? null;
+            const selectedProperty = useStore.getState().projectInfo.selectedProperty ?? null;
+            const sortDescending = !!useStore.getState().projectInfo.sortDescending;
+            const xAxisNameScatteredPlot = useStore.getState().projectInfo.xAxisNameScatteredPlot ?? 'atomCount';
+            const yAxisNameScatteredPlot = useStore.getState().projectInfo.yAxisNameScatteredPlot ?? 'atomCount';
+            const dotSizeScatteredPlot = useStore.getState().projectInfo.dotSizeScatteredPlot ?? 5;
+            const thumbnailWidth = useStore.getState().projectInfo.thumbnailWidth ?? 200;
+            firebase
+              .firestore()
+              .collection('users')
+              .doc(user.uid)
+              .collection('projects')
+              .doc(t)
+              .set({
+                owner: user.uid,
+                title: t,
+                timestamp,
+                type,
+                description,
+                counter,
+                dataColoring,
+                selectedProperty,
+                sortDescending,
+                xAxisNameScatteredPlot,
+                yAxisNameScatteredPlot,
+                dotSizeScatteredPlot,
+                thumbnailWidth,
+                molecules: molecules,
+                ranges: useStore.getState().projectInfo.ranges,
+                filters: useStore.getState().projectInfo.filters,
+                hiddenProperties: useStore.getState().projectInfo.hiddenProperties,
+              } as ProjectInfo)
+              .then(() => {
+                setCommonStore((state) => {
+                  state.projectView = true;
+                  state.projectInfo.owner = user.uid;
+                  state.projectInfo.type = type;
+                  state.projectInfo.title = title;
+                  state.projectInfo.description = description;
+                  state.projectInfo.molecules = [...molecules];
+                });
+              })
+              .catch((error) => {
+                showError(i18n.t('message.CannotCreateNewProject', lang) + ': ' + error);
+              })
+              .finally(() => {
+                if (showProjectListPanel) {
+                  fetchMyProjects(false).then(() => {
+                    setUpdateFlag(!updateFlag);
+                  });
+                }
+                setLoading(false);
+              });
+          }
         }
       }
     });
@@ -621,7 +703,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   function curateMoleculeToProject() {
     const projectOwner = useStore.getState().projectInfo.owner;
     if (user.uid !== projectOwner) {
-      showInfo(i18n.t('message.CannotAddDesignToProjectOwnedByOthers', lang));
+      showInfo(i18n.t('message.CannotAddMoleculeToProjectOwnedByOthers', lang));
     } else {
       const projectTitle = useStore.getState().projectInfo.title;
       if (projectTitle) {
