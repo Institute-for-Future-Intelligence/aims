@@ -13,7 +13,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { showError, showInfo } from './helpers';
-import { ClassID, DataColoring, FirebaseName, ProjectInfo, ProjectType, SchoolID, User } from './types';
+import { ClassID, DataColoring, FirebaseName, ProjectData, ProjectType, SchoolID, User } from './types';
 import Spinner from './components/spinner';
 import i18n from './i18n/i18n';
 import { Util } from './Util';
@@ -53,7 +53,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   const [updateFlag, setUpdateFlag] = useState(false);
   const [projectArray, setProjectArray] = useState<any[]>([]);
   const [updateProjectArrayFlag, setUpdateProjectArrayFlag] = useState(false);
-  const myProjects = useRef<ProjectInfo[] | void>(); // Not sure why I need to use ref to store this
+  const myProjects = useRef<ProjectData[] | void>(); // Not sure why I need to use ref to store this
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -192,7 +192,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     }
   };
 
-  const setProjectState = (projectInfo: ProjectInfo) => {
+  const setProjectState = (projectInfo: ProjectData) => {
     setCommonStore((state) => {
       state.projectInfo = { ...projectInfo };
       state.projectView = true;
@@ -346,7 +346,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       .collection('projects')
       .get()
       .then((querySnapshot) => {
-        const a: ProjectInfo[] = [];
+        const a: ProjectData[] = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           a.push({
@@ -367,7 +367,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             filters: data.filters ?? [],
             hiddenProperties: data.hiddenProperties ?? [],
             counter: data.counter ?? 0,
-          } as ProjectInfo);
+          } as ProjectData);
         });
         return a;
       })
@@ -545,7 +545,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
               ranges: [],
               filters: [],
               hiddenProperties: [],
-            } as ProjectInfo)
+            } as ProjectData)
             .then(() => {
               setCommonStore((state) => {
                 state.projectView = true;
@@ -676,7 +676,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
                 ranges: useStore.getState().projectInfo.ranges,
                 filters: useStore.getState().projectInfo.filters,
                 hiddenProperties: useStore.getState().projectInfo.hiddenProperties,
-              } as ProjectInfo)
+              } as ProjectData)
               .then(() => {
                 setCommonStore((state) => {
                   state.projectView = true;

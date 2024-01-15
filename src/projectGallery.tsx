@@ -40,7 +40,7 @@ import { GALLERY_STYLE_LABELS, MolecularViewerColoring, MolecularViewerStyle } f
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
-  moleculeData: MoleculeData[];
+  collection: MoleculeData[];
 }
 
 const { Option } = Select;
@@ -114,7 +114,7 @@ const PropertiesHeader = styled.div`
   font-size: 14px;
 `;
 
-const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) => {
+const ProjectGallery = ({ relativeWidth, collection }: ProjectGalleryProps) => {
   const setCommonStore = useStore(Selector.set);
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
@@ -853,7 +853,7 @@ const ProjectGallery = ({ relativeWidth, moleculeData }: ProjectGalleryProps) =>
               overflowY: 'auto',
             }}
             grid={{ column: canvasColumns, gutter: 0 }}
-            dataSource={moleculeData}
+            dataSource={collection}
             renderItem={(data: MoleculeData) => {
               return (
                 <List.Item

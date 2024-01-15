@@ -8,7 +8,7 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import { showError, showInfo } from './helpers';
 import i18n from './i18n/i18n';
-import { DataColoring, MoleculeData, ProjectInfo, ProjectType, Range } from './types';
+import { DataColoring, MoleculeData, ProjectData, ProjectType, Range } from './types';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 
 export const fetchProject = async (userid: string, project: string, setProjectState: Function) => {
@@ -41,7 +41,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           yAxisNameScatteredPlot: data.yAxisNameScatteredPlot,
           dotSizeScatteredPlot: data.dotSizeScatteredPlot,
           thumbnailWidth: data.thumbnailWidth,
-        } as ProjectInfo);
+        } as ProjectData);
       } else {
         showError(i18n.t('message.CannotOpenProject', lang) + ': ' + project);
       }

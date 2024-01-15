@@ -9,7 +9,7 @@ import { Util } from '../Util';
 import { VERSION } from '../programmaticConstants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, MoleculeData, ProjectInfo, ProjectType, Range, User } from '../types';
+import { ActionInfo, MoleculeData, ProjectData, ProjectType, Range, User } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -37,7 +37,7 @@ export interface CommonStoreState {
 
   selectedFloatingWindow: string | null;
 
-  projectInfo: ProjectInfo;
+  projectInfo: ProjectData;
   projectView: boolean;
 
   loadedMolecule: MoleculeData | null;
@@ -116,7 +116,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             hiddenProperties: new Array<string>(),
             ranges: new Array<Range>(),
             filters: new Array<Filter>(),
-          } as ProjectInfo,
+          } as ProjectData,
           projectView: true,
 
           loadedMolecule: null,

@@ -13,7 +13,7 @@ import { HOME_URL, REGEX_ALLOWABLE_IN_NAME, Z_INDEX_FRONT_PANEL } from './progra
 import { copyTextToClipboard, showSuccess } from './helpers';
 import Draggable from 'react-draggable';
 import { usePrimitiveStore } from './stores/commonPrimitive';
-import { ProjectInfo } from './types';
+import { ProjectData } from './types';
 import { useTranslation } from 'react-i18next';
 import { MenuProps } from 'antd/lib';
 import { MenuItem } from './components/menuItem';
@@ -75,7 +75,7 @@ const Header = styled.div`
 
 export interface ProjectListPanelProps {
   projects: object[];
-  setProjectState: (projectInfo: ProjectInfo) => void;
+  setProjectState: (projectInfo: ProjectData) => void;
   deleteProject: (title: string) => void;
   renameProject: (oldTitle: string, newTitle: string) => void;
 }
@@ -340,7 +340,7 @@ const ProjectListPanel = ({ projects, setProjectState, deleteProject, renameProj
                     {
                       key: 'open-project',
                       label: (
-                        <MenuItem onClick={() => setProjectState(record as ProjectInfo)}>
+                        <MenuItem onClick={() => setProjectState(record as ProjectData)}>
                           {t('word.Open', lang)}
                         </MenuItem>
                       ),

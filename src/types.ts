@@ -36,13 +36,13 @@ export interface MoleculeData {
 }
 
 // use null for undefined, as we need to persist this in Firebase
-export interface ProjectInfo {
+export interface ProjectData {
   owner: string | null;
   timestamp: number;
   type: ProjectType;
   title: string | null;
   description: string | null;
-  molecules: string[];
+  molecules: MoleculeData[];
   selectedProperty: string | null;
   dataColoring: DataColoring;
   sortDescending: boolean | null;

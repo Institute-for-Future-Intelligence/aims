@@ -278,10 +278,7 @@ const App = () => {
           >
             {projectView ? (
               <Suspense fallback={<Loading />}>
-                <ProjectGallery
-                  relativeWidth={1 - chamberViewerPercentWidth * 0.01}
-                  moleculeData={collectedMolecules}
-                />
+                <ProjectGallery relativeWidth={1 - chamberViewerPercentWidth * 0.01} collection={collectedMolecules} />
               </Suspense>
             ) : (
               <></>
