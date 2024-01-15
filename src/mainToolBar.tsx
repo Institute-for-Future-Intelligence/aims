@@ -75,22 +75,27 @@ const MainToolBar = ({ signIn, signOut }: MainToolBarProps) => {
               </a>
             </Dropdown>
           ) : (
-            <Popover
-              title={<div onClick={(e) => e.stopPropagation()}>{t('avatarMenu.PrivacyStatementTitle', lang)}</div>}
-              content={
-                <div style={{ width: '280px', fontSize: '12px' }}>
-                  {t('avatarMenu.PrivacyStatement', lang)}
-                  <a target="_blank" rel="noopener noreferrer" href={'https://intofuture.org/aims-privacy.html'}>
-                    {t('aboutUs.PrivacyPolicy', lang)}
-                  </a>
-                  .
-                </div>
-              }
-            >
-              <Button type="primary" onClick={signIn}>
-                {t('avatarMenu.SignIn', lang)}
-              </Button>
-            </Popover>
+            <>
+              <span style={{ paddingRight: '10px', fontSize: '12px' }}>
+                {t('message.ToSaveYourWorkPleaseSignIn', lang)}
+              </span>
+              <Popover
+                title={<div onClick={(e) => e.stopPropagation()}>{t('avatarMenu.PrivacyStatementTitle', lang)}</div>}
+                content={
+                  <div style={{ width: '280px', fontSize: '12px' }}>
+                    {t('avatarMenu.PrivacyStatement', lang)}
+                    <a target="_blank" rel="noopener noreferrer" href={'https://intofuture.org/aims-privacy.html'}>
+                      {t('aboutUs.PrivacyPolicy', lang)}
+                    </a>
+                    .
+                  </div>
+                }
+              >
+                <Button type="primary" onClick={signIn}>
+                  {t('avatarMenu.SignIn', lang)}
+                </Button>
+              </Popover>
+            </>
           )}
         </div>
       </Space>

@@ -39,6 +39,67 @@ const CreateNewProjectItem = ({ isMac }: { isMac: boolean }) => {
   );
 };
 
+const OpenProjectItem = ({ isMac }: { isMac: boolean }) => {
+  const setCommonStore = useStore.getState().set;
+  const lang = useLanguage();
+
+  const handleClick = () => {
+    usePrimitiveStore.getState().set((state) => {
+      state.showProjectsFlag = true;
+    });
+    setCommonStore((state) => {
+      state.selectedFloatingWindow = 'projectListPanel';
+    });
+    if (useStore.getState().loggable) {
+      setCommonStore((state) => {
+        state.actionInfo = {
+          name: 'Open Project',
+          timestamp: new Date().getTime(),
+        };
+      });
+    }
+  };
+
+  return (
+    <>
+      <MenuItem hasPadding={false} onClick={handleClick}>
+        {i18n.t('menu.project.OpenProject', lang)}
+        <LabelMark>({isMac ? '⌘' : 'Ctrl'}+O)</LabelMark>...
+      </MenuItem>
+    </>
+  );
+};
+
+const SaveProjectItem = ({ isMac }: { isMac: boolean }) => {
+  const [dialogVisible, setDialogVisible] = useState(false);
+
+  const lang = useLanguage();
+
+  const handleClick = () => {
+    setDialogVisible(true);
+    if (useStore.getState().loggable) {
+      useStore.getState().set((state) => {
+        state.actionInfo = {
+          name: 'Save Project',
+          timestamp: new Date().getTime(),
+        };
+      });
+    }
+  };
+
+  return (
+    <>
+      <MenuItem hasPadding={false} onClick={handleClick}>
+        {i18n.t('menu.project.SaveProject', lang)}
+        <LabelMark>({isMac ? '⌘' : 'Ctrl'}+S)</LabelMark>
+      </MenuItem>
+      {/*{dialogVisible && (*/}
+      {/*    <CreateNewProjectDialog saveAs={true} setDialogVisible={dialogVisible} />*/}
+      {/*)}*/}
+    </>
+  );
+};
+
 const SaveProjectAsItem = ({ isMac }: { isMac: boolean }) => {
   const saveProjectDialog = usePrimitiveStore(Selector.saveProjectDialog);
   const lang = useLanguage();
@@ -66,91 +127,26 @@ const SaveProjectAsItem = ({ isMac }: { isMac: boolean }) => {
   );
 };
 
-const SaveCloudProjectItem = ({ isMac }: { isMac: boolean }) => {
-  const [dialogVisible, setDialogVisible] = useState(false);
-
-  const lang = useLanguage();
-
-  const handleClick = () => {
-    setDialogVisible(true);
-    if (useStore.getState().loggable) {
-      useStore.getState().set((state) => {
-        state.actionInfo = {
-          name: 'Save Cloud Project',
-          timestamp: new Date().getTime(),
-        };
-      });
-    }
-  };
-
-  return (
-    <>
-      <MenuItem hasPadding={false} onClick={handleClick}>
-        {i18n.t('menu.project.SaveCloudProject', lang)}
-        <LabelMark>({isMac ? '⌘' : 'Ctrl'}+S)</LabelMark>...
-      </MenuItem>
-      {/*{dialogVisible && (*/}
-      {/*    <CreateNewProjectDialog saveAs={true} setDialogVisible={dialogVisible} />*/}
-      {/*)}*/}
-    </>
-  );
-};
-
-const ListCloudProjectItem = ({ isMac }: { isMac: boolean }) => {
-  const setCommonStore = useStore.getState().set;
-  const lang = useLanguage();
-
-  const handleClick = () => {
-    usePrimitiveStore.getState().set((state) => {
-      state.showProjectsFlag = true;
-    });
-    setCommonStore((state) => {
-      state.selectedFloatingWindow = 'projectListPanel';
-    });
-    if (useStore.getState().loggable) {
-      setCommonStore((state) => {
-        state.actionInfo = {
-          name: 'List Projects',
-          timestamp: new Date().getTime(),
-        };
-      });
-    }
-  };
-
-  return (
-    <>
-      <MenuItem hasPadding={false} onClick={handleClick}>
-        {i18n.t('menu.project.OpenCloudProject', lang)}
-        <LabelMark>({isMac ? '⌘' : 'Ctrl'}+O)</LabelMark>...
-      </MenuItem>
-    </>
-  );
-};
-
 export const createProjectMenu = (viewOnly: boolean, isMac: boolean) => {
   const items: MenuProps['items'] = [];
 
-  // create-new-project
   items.push({
     key: 'create-new-project',
     label: <CreateNewProjectItem isMac={isMac} />,
   });
 
-  // list-cloud-project
   items.push({
-    key: 'list-cloud-project',
-    label: <ListCloudProjectItem isMac={isMac} />,
+    key: 'open-project',
+    label: <OpenProjectItem isMac={isMac} />,
   });
 
-  // save-cloud-project
   items.push({
-    key: 'save-cloud-project',
-    label: <SaveCloudProjectItem isMac={isMac} />,
+    key: 'save-project',
+    label: <SaveProjectItem isMac={isMac} />,
   });
 
-  // save-as-cloud-project
   items.push({
-    key: 'save-as-cloud-project',
+    key: 'save-project-as',
     label: <SaveProjectAsItem isMac={isMac} />,
   });
 

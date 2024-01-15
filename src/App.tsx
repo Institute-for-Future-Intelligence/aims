@@ -184,8 +184,7 @@ const App = () => {
           onClick={visitHomepage}
         >
           {`${t('name.AIMS', lang)}`}
-        </span>{' '}
-        🚧
+        </span>
       </div>
 
       {viewOnly ? (

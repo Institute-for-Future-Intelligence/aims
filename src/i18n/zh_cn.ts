@@ -88,6 +88,7 @@ export const i18n_zh_cn = {
       TitleUsedChooseDifferentOne: '此标题已经被使用, 请采用不同的标题',
       DoYouWantToSaveChanges: '您要保存当前文件吗？',
       ThisCannotBeUndone: '这个操作一旦执行就不能撤销。',
+      ToSaveYourWorkPleaseSignIn: '为了保存您的项目，请先登录。',
     },
 
     molecularViewer: {
@@ -176,14 +177,9 @@ export const i18n_zh_cn = {
       projectSubMenu: '项目',
       project: {
         CreateNewProject: '创建新项目',
-        OpenLocalProject: '打开本地项目',
-        SaveAsLocalProject: '保存为本地项目',
-        SavingAbortedMustHaveValidProjectName: '项目名无效，保存失败',
-        OpenCloudProject: '打开云端项目',
-        SaveCloudProject: '保存云端项目',
-        SaveProjectAs: '保存为云端项目',
-        SavingAbortedMustHaveValidTitle: '云端项目名无效，保存失败',
-        ToSaveYourWorkOnCloudPleaseSignIn: '为了保存您的云端项目，请您先登录。',
+        OpenProject: '打开项目',
+        SaveProject: '保存项目',
+        SaveProjectAs: '另存项目为',
       },
       editSubMenu: '编辑',
       edit: {

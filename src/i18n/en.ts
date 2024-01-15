@@ -87,6 +87,7 @@ export const i18n_en = {
       TitleUsedChooseDifferentOne: 'This title has been used. Choose a different one',
       DoYouWantToSaveChanges: 'Do you want to save changes?',
       ThisCannotBeUndone: 'This cannot be undone.',
+      ToSaveYourWorkPleaseSignIn: 'To save your work, please sign in.',
     },
 
     molecularViewer: {
@@ -176,14 +177,9 @@ export const i18n_en = {
       projectSubMenu: 'Project',
       project: {
         CreateNewProject: 'Create New Project',
-        OpenLocalProject: 'Open Local Project',
-        SaveAsLocalProject: 'Save as Local Project',
-        SavingAbortedMustHaveValidProjectName: 'Saving aborted! You must have a valid project name',
-        OpenCloudProject: 'Open Cloud Project',
-        SaveCloudProject: 'Save Cloud Project',
+        OpenProject: 'Open Project',
+        SaveProject: 'Save Project',
         SaveProjectAs: 'Save Project As',
-        SavingAbortedMustHaveValidTitle: 'Saving aborted! You must have a valid title for a cloud project',
-        ToSaveYourWorkOnCloudPleaseSignIn: 'To save your work on the cloud, please sign in.',
       },
       editSubMenu: 'Edit',
       edit: {

@@ -87,6 +87,7 @@ export const i18n_zh_tw = {
       TitleUsedChooseDifferentOne: '此標題已經被使用, 請採用不同的標題',
       DoYouWantToSaveChanges: '您要保存當前文檔嗎？',
       ThisCannotBeUndone: '這個操作一旦執行就不能撤銷。',
+      ToSaveYourWorkPleaseSignIn: '為了保存您的專案，請先登錄。',
     },
 
     molecularViewer: {
@@ -175,14 +176,9 @@ export const i18n_zh_tw = {
       projectSubMenu: '專案',
       project: {
         CreateNewProject: '創建新專案',
-        OpenLocalProject: '打開本地專案',
-        SaveAsLocalProject: '保存為本地專案',
-        SavingAbortedMustHaveValidProjectName: '專案名無效，保存失敗',
-        OpenCloudProject: '打開雲端專案',
-        SaveCloudProject: '保存雲端專案',
-        SaveProjectAs: '保存為雲端專案',
-        SavingAbortedMustHaveValidTitle: '雲端專案名無效，保存失敗',
-        ToSaveYourWorkOnCloudPleaseSignIn: '為了保存您的雲端專案，請您先登錄。',
+        OpenProject: '打開專案',
+        SaveProject: '保存專案',
+        SaveProjectAs: '另存專案為',
       },
       editSubMenu: '編輯',
       edit: {
