@@ -180,7 +180,7 @@ const App = () => {
             cursor: 'pointer',
             userSelect: 'none',
           }}
-          title={t('tooltip.visitAIMSHomePage', lang)}
+          title={'Artificial Intelligence for Molecular Sciences (AIMS)'}
           onClick={visitHomepage}
         >
           {`${t('name.AIMS', lang)}`}

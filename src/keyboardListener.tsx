@@ -11,7 +11,7 @@ import { showInfo } from './helpers';
 import i18n from './i18n/i18n';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { useRefStore } from './stores/commonRef';
-import { GRID_RATIO, HOME_URL, UNDO_SHOW_INFO_DURATION } from './programmaticConstants';
+import { GRID_RATIO, UNDO_SHOW_INFO_DURATION } from './programmaticConstants';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { UndoableResetView } from './undo/UndoableResetView';
 
@@ -68,8 +68,6 @@ const handleKeys = [
   'esc',
   'ctrl+home',
   'ctrl+alt+h',
-  'ctrl+shift+o',
-  'meta+shift+o',
   'ctrl+shift+s',
   'meta+shift+s',
   'delete',
@@ -301,8 +299,26 @@ const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardLi
           });
         }
         break;
+      case 'ctrl+o':
+      case 'meta+o': // for Mac
+        usePrimitiveStore.getState().set((state) => {
+          state.showProjectsFlag = true;
+        });
+        setCommonStore((state) => {
+          state.selectedFloatingWindow = 'projectListPanel';
+          if (loggable) {
+            state.actionInfo = {
+              name: 'Open Project',
+              timestamp: new Date().getTime(),
+            };
+          }
+        });
+        break;
       case 'ctrl+s':
       case 'meta+s': // for Mac
+        usePrimitiveStore.getState().set((state) => {
+          state.saveProjectFlag = true;
+        });
         if (loggable) {
           setCommonStore((state) => {
             state.actionInfo = {
@@ -312,20 +328,9 @@ const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardLi
           });
         }
         break;
-      case 'ctrl+shift+o':
-      case 'meta+shift+o': // for Mac
-        if (loggable) {
-          setCommonStore((state) => {
-            state.actionInfo = {
-              name: 'Open Cloud Files',
-              timestamp: new Date().getTime(),
-            };
-          });
-        }
-        break;
       case 'ctrl+shift+s':
       case 'meta+shift+s': // for Mac
-        usePrimitiveStore.getState().setSaveProjectDialog(true);
+        usePrimitiveStore.getState().setSaveProjectAsDialog(true);
         if (loggable) {
           setCommonStore((state) => {
             state.actionInfo = {
@@ -382,29 +387,6 @@ const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardLi
     }
   };
 
-  const handleKeyUp = (key: string) => {
-    switch (key) {
-      case 'shift':
-        break;
-      case 'ctrl+o':
-      case 'meta+o': // for Mac
-        // this must be handled as a key-up event because it brings up a native file dialog
-        // when the key is down and the corresponding key-up event would never be processed as the focus is lost
-        setCommonStore((state) => {
-          if (loggable) {
-            state.actionInfo = {
-              name: 'Open Local File',
-              timestamp: new Date().getTime(),
-            };
-          }
-        });
-        break;
-      case 'ctrl': {
-        break;
-      }
-    }
-  };
-
   useEffect(
     () => () => {
       keyNameRef.current = null;
@@ -432,7 +414,6 @@ const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardLi
         onKeyEvent={(key, e) => {
           e.preventDefault();
           keyNameRef.current = null;
-          handleKeyUp(key);
         }}
       />
     </>

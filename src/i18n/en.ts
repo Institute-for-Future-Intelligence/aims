@@ -17,7 +17,6 @@ export const i18n_en = {
 
     tooltip: {
       gotoIFI: 'Go to Institute for Future Intelligence',
-      visitAIMSHomePage: 'Visit AIMS Homepage',
       clickToOpenMenu: 'Click to open main menu',
       clickToAccessAccountSettings: 'Click to access account settings',
     },
@@ -76,6 +75,7 @@ export const i18n_en = {
       CannotCreateNewProjectWithoutTitle: 'Cannot create a new project without a title',
       CannotOpenYourProjects: 'Cannot open your projects',
       CannotOpenProject: 'Cannot open the project',
+      CannotSaveProject: 'Cannot save the project',
       CannotDeleteProject: 'Cannot delete the project',
       CannotRenameProject: 'Cannot rename the project',
       CannotAddMoleculeToProject: 'Cannot add this molecule to the project',

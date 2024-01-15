@@ -17,7 +17,6 @@ export const i18n_zh_cn = {
 
     tooltip: {
       gotoIFI: '访问未来智能研究所',
-      visitAIMSHomePage: '访问AIMS主页',
       clickToOpenMenu: '点击打开主菜单',
       clickToAccessAccountSettings: '点击打开账号设定',
     },
@@ -77,6 +76,7 @@ export const i18n_zh_cn = {
       CannotCreateNewProjectWithoutTitle: '没有标题, 无法创建新项目',
       CannotOpenYourProjects: '无法打开您的项目列表',
       CannotOpenProject: '无法打开项目',
+      CannotSaveProject: '无法保存项目',
       CannotDeleteProject: '无法删除项目',
       CannotRenameProject: '无法给项目改名',
       CannotAddMoleculeToProject: '无法把此分子加到项目里',
@@ -86,7 +86,7 @@ export const i18n_zh_cn = {
       CannotUpdateProject: '无法更新项目',
       CannotFetchProjectData: '无法取得项目数据',
       TitleUsedChooseDifferentOne: '此标题已经被使用, 请采用不同的标题',
-      DoYouWantToSaveChanges: '您要保存当前文件吗？',
+      DoYouWantToSaveChanges: '您要保存当前项目吗？',
       ThisCannotBeUndone: '这个操作一旦执行就不能撤销。',
       ToSaveYourWorkPleaseSignIn: '为了保存您的项目，请先登录。',
     },

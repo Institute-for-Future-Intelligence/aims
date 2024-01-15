@@ -17,7 +17,6 @@ export const i18n_zh_tw = {
 
     tooltip: {
       gotoIFI: '訪問未來智能研究所',
-      visitAIMSHomePage: '訪問AIMS主頁',
       clickToOpenMenu: '點擊打開主菜單',
       clickToAccessAccountSettings: '點擊打開賬號設定',
     },
@@ -76,6 +75,7 @@ export const i18n_zh_tw = {
       CannotCreateNewProjectWithoutTitle: '沒有標題, 無法創建新專案',
       CannotOpenYourProjects: '無法打開您的專案列表',
       CannotOpenProject: '無法打開專案',
+      CannotSaveProject: '無法保存專案',
       CannotDeleteProject: '無法刪除專案',
       CannotRenameProject: '無法給專案改名',
       CannotAddMoleculeToProject: '無法把此分子加到專案裡',
@@ -85,7 +85,7 @@ export const i18n_zh_tw = {
       CannotUpdateProject: '無法更新專案',
       CannotFetchProjectData: '無法取得專案數據',
       TitleUsedChooseDifferentOne: '此標題已經被使用, 請採用不同的標題',
-      DoYouWantToSaveChanges: '您要保存當前文檔嗎？',
+      DoYouWantToSaveChanges: '您要保存當前專案嗎？',
       ThisCannotBeUndone: '這個操作一旦執行就不能撤銷。',
       ToSaveYourWorkPleaseSignIn: '為了保存您的專案，請先登錄。',
     },

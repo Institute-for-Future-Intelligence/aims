@@ -52,7 +52,7 @@ const NewProjectDialog = ({ saveAs }: { saveAs: boolean }) => {
 
   const onCancelClick = () => {
     if (saveAs) {
-      usePrimitiveStore.getState().setSaveProjectDialog(false);
+      usePrimitiveStore.getState().setSaveProjectAsDialog(false);
     } else {
       usePrimitiveStore.getState().setCreateProjectDialog(false);
     }
@@ -61,8 +61,8 @@ const NewProjectDialog = ({ saveAs }: { saveAs: boolean }) => {
   const onOkClick = () => {
     usePrimitiveStore.getState().set((state) => {
       if (saveAs) {
-        state.saveProjectFlag = true;
-        state.saveProjectDialog = false;
+        state.saveProjectAsFlag = true;
+        state.saveProjectAsDialog = false;
       } else {
         state.createProjectFlag = true;
         state.createProjectDialog = false;
@@ -91,7 +91,7 @@ const NewProjectDialog = ({ saveAs }: { saveAs: boolean }) => {
           onMouseOver={() => setDragEnabled(true)}
           onMouseOut={() => setDragEnabled(false)}
         >
-          {`${t(saveAs ? 'menu.project.SaveAsLocalProject' : 'menu.project.CreateNewProject', lang)}`}
+          {`${t(saveAs ? 'menu.project.SaveProjectAs' : 'menu.project.CreateNewProject', lang)}`}
         </div>
       }
       footer={[
@@ -104,7 +104,11 @@ const NewProjectDialog = ({ saveAs }: { saveAs: boolean }) => {
       ]}
       // this must be specified for the x button in the upper-right corner to work
       onCancel={() => {
-        usePrimitiveStore.getState().setCreateProjectDialog(false);
+        if (saveAs) {
+          usePrimitiveStore.getState().setSaveProjectAsDialog(false);
+        } else {
+          usePrimitiveStore.getState().setCreateProjectDialog(false);
+        }
       }}
       maskClosable={false}
       destroyOnClose={false}

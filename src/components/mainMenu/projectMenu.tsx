@@ -7,7 +7,6 @@ import i18n from '../../i18n/i18n';
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
-import { useState } from 'react';
 import { useLanguage } from '../../hooks';
 import { LabelMark, MenuItem } from '../menuItem';
 import NewProjectDialog from './newProjectDialog';
@@ -71,12 +70,12 @@ const OpenProjectItem = ({ isMac }: { isMac: boolean }) => {
 };
 
 const SaveProjectItem = ({ isMac }: { isMac: boolean }) => {
-  const [dialogVisible, setDialogVisible] = useState(false);
-
   const lang = useLanguage();
 
   const handleClick = () => {
-    setDialogVisible(true);
+    usePrimitiveStore.getState().set((state) => {
+      state.saveProjectFlag = true;
+    });
     if (useStore.getState().loggable) {
       useStore.getState().set((state) => {
         state.actionInfo = {
@@ -93,19 +92,16 @@ const SaveProjectItem = ({ isMac }: { isMac: boolean }) => {
         {i18n.t('menu.project.SaveProject', lang)}
         <LabelMark>({isMac ? '⌘' : 'Ctrl'}+S)</LabelMark>
       </MenuItem>
-      {/*{dialogVisible && (*/}
-      {/*    <CreateNewProjectDialog saveAs={true} setDialogVisible={dialogVisible} />*/}
-      {/*)}*/}
     </>
   );
 };
 
 const SaveProjectAsItem = ({ isMac }: { isMac: boolean }) => {
-  const saveProjectDialog = usePrimitiveStore(Selector.saveProjectDialog);
+  const saveProjectDialog = usePrimitiveStore(Selector.saveProjectAsDialog);
   const lang = useLanguage();
 
   const handleClick = () => {
-    usePrimitiveStore.getState().setSaveProjectDialog(true);
+    usePrimitiveStore.getState().setSaveProjectAsDialog(true);
     if (useStore.getState().loggable) {
       useStore.getState().set((state) => {
         state.actionInfo = {

@@ -42,12 +42,13 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   const user = useStore(Selector.user);
   const showProjectListPanel = usePrimitiveStore(Selector.showProjectListPanel);
   const createProjectFlag = usePrimitiveStore(Selector.createProjectFlag);
+  const saveProjectAsFlag = usePrimitiveStore(Selector.saveProjectAsFlag);
   const saveProjectFlag = usePrimitiveStore(Selector.saveProjectFlag);
   const curateMoleculeToProjectFlag = usePrimitiveStore(Selector.curateMoleculeToProjectFlag);
   const showProjectsFlag = usePrimitiveStore(Selector.showProjectsFlag);
   const updateProjectsFlag = usePrimitiveStore(Selector.updateProjectsFlag);
 
-  const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [updateFlag, setUpdateFlag] = useState(false);
   const [projectArray, setProjectArray] = useState<any[]>([]);
   const [updateProjectArrayFlag, setUpdateProjectArrayFlag] = useState(false);
@@ -158,7 +159,9 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
 
   useFlag(createProjectFlag, createNewProject, () => setPrimitiveStore('createProjectFlag', false));
 
-  useFlag(saveProjectFlag, saveProjectAs, () => setPrimitiveStore('saveProjectFlag', false));
+  useFlag(saveProjectAsFlag, saveProjectAs, () => setPrimitiveStore('saveProjectAsFlag', false));
+
+  useFlag(saveProjectFlag, saveProject, () => setPrimitiveStore('saveProjectFlag', false));
 
   useFlag(showProjectsFlag, showMyProjectsList, () => setPrimitiveStore('showProjectsFlag', false));
 
@@ -183,9 +186,9 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     if (userid) {
       const project = params.get('project');
       if (project) {
-        setLoading(true);
+        setProcessing(true);
         fetchProject(userid, project, setProjectState).finally(() => {
-          setLoading(false);
+          setProcessing(false);
         });
       }
     } else {
@@ -194,6 +197,16 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
         // state.cloudFile = undefined;
       });
     }
+  };
+
+  const setProjectState = (projectInfo: ProjectInfo) => {
+    setCommonStore((state) => {
+      state.projectInfo = { ...projectInfo };
+      state.projectView = true;
+    });
+    usePrimitiveStore.getState().set((state) => {
+      state.updateProjectsFlag = true;
+    });
   };
 
   const signIn = () => {
@@ -351,7 +364,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   // fetch owner's projects from the cloud
   const fetchMyProjects = async (silent: boolean) => {
     if (!user.uid) return;
-    if (!silent) setLoading(true);
+    if (!silent) setProcessing(true);
     myProjects.current = await firebase
       .firestore()
       .collection('users')
@@ -388,7 +401,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
         showError(i18n.t('message.CannotOpenYourProjects', lang) + ': ' + error);
       })
       .finally(() => {
-        if (!silent) setLoading(false);
+        if (!silent) setProcessing(false);
       });
   };
 
@@ -483,16 +496,6 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             showError(i18n.t('message.CannotRenameProject', lang) + ': ' + error);
           });
       }
-    });
-  };
-
-  const setProjectState = (projectInfo: ProjectInfo) => {
-    setCommonStore((state) => {
-      state.projectInfo = { ...projectInfo };
-      state.projectView = true;
-    });
-    usePrimitiveStore.getState().set((state) => {
-      state.updateProjectsFlag = true;
     });
   };
 
@@ -601,11 +604,37 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
                   setUpdateFlag(!updateFlag);
                 });
               }
-              setLoading(false);
+              setProcessing(false);
             });
         }
       }
     });
+  }
+
+  function saveProject() {
+    if (!user || !user.uid) return;
+    const title = useStore.getState().projectInfo.title;
+    if (title) {
+      setProcessing(true);
+      const pi = { ...useStore.getState().projectInfo };
+      pi.timestamp = new Date().getTime();
+      firebase
+        .firestore()
+        .collection('users')
+        .doc(user.uid)
+        .collection('projects')
+        .doc(title)
+        .set(pi)
+        .then(() => {
+          // ignore
+        })
+        .catch((error) => {
+          showError(i18n.t('message.CannotSaveProject', lang) + ': ' + error);
+        })
+        .finally(() => {
+          setProcessing(false);
+        });
+    }
   }
 
   function saveProjectAs() {
@@ -692,7 +721,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
                     setUpdateFlag(!updateFlag);
                   });
                 }
-                setLoading(false);
+                setProcessing(false);
               });
           }
         }
@@ -707,7 +736,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     } else {
       const projectTitle = useStore.getState().projectInfo.title;
       if (projectTitle) {
-        setLoading(true);
+        setProcessing(true);
         const projectType = useStore.getState().projectInfo.type ?? ProjectType.DRUG_DISCOVERY;
         const thumbnailWidth = useStore.getState().projectInfo.thumbnailWidth ?? 200;
         const counter = useStore.getState().projectInfo.counter ?? 0;
@@ -729,7 +758,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     <></>
   ) : (
     <>
-      {loading && <Spinner />}
+      {processing && <Spinner />}
       <MainToolBar signIn={signIn} signOut={signOut} />
       {showProjectListPanel && myProjects.current && (
         <ProjectListPanel
