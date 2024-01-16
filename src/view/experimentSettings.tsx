@@ -8,7 +8,7 @@ import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { UndoableChange } from '../undo/UndoableChange';
-import { testProteins } from '../internalDatabase';
+import { sampleProteins } from '../internalDatabase';
 
 const { Option } = Select;
 
@@ -24,7 +24,7 @@ const ExperimentSettings = () => {
   const createContent = useMemo(() => {
     const setTargetProtein = (targetName: string) => {
       useStore.getState().set((state) => {
-        for (const t of testProteins) {
+        for (const t of sampleProteins) {
           if (t.name === targetName) {
             state.targetProtein = t;
             break;
@@ -42,7 +42,7 @@ const ExperimentSettings = () => {
           <Col span={18}>
             <Select
               style={{ width: '100%' }}
-              value={targetProtein?.name ?? testProteins[0].name}
+              value={targetProtein?.name ?? sampleProteins[0].name}
               onChange={(value: string) => {
                 const oldValue = targetProtein?.name;
                 const newValue = value;
@@ -62,7 +62,7 @@ const ExperimentSettings = () => {
                 setTargetProtein(newValue);
               }}
             >
-              {testProteins.map((d, i) => (
+              {sampleProteins.map((d, i) => (
                 <Option key={`${i}-${d.name}`} value={d.name}>
                   {d.name}
                 </Option>

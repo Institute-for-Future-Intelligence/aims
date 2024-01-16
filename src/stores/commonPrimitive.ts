@@ -25,7 +25,8 @@ export interface PrimitiveStoreState {
   updateContextMenu: () => void;
 
   // These stores the settings from newProjectDialog.tsx, because we don't want to overwrite
-  // the local state in the common store yet. Don't be confused with commonStore's projectInfo.
+  // the local state in the common store yet. Don't be confused with commonStore's projectState,
+  // which holds the state of a project.
   projectType: ProjectType;
   projectTitle: string | null;
   projectDescription: string | null;

@@ -9,7 +9,7 @@ import { Util } from '../Util';
 import { VERSION } from '../programmaticConstants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, MoleculeData, ProjectData, ProjectType, Range, User } from '../types';
+import { ActionInfo, DataColoring, MoleculeData, ProjectState, ProjectType, Range, User } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -37,12 +37,11 @@ export interface CommonStoreState {
 
   selectedFloatingWindow: string | null;
 
-  projectInfo: ProjectData;
+  projectState: ProjectState;
   projectView: boolean;
 
   loadedMolecule: MoleculeData | null;
   selectedMolecule: MoleculeData | null;
-  collectedMolecules: MoleculeData[];
   addMolecule: (molecule: MoleculeData) => boolean;
   removeMolecule: (molecule: MoleculeData) => void;
 
@@ -105,43 +104,49 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
 
           selectedFloatingWindow: null,
 
-          projectInfo: {
+          projectState: {
             owner: null,
             timestamp: -1,
             type: ProjectType.DRUG_DISCOVERY,
             title: null,
             description: null,
+            molecules: new Array<MoleculeData>(),
             selectedProperty: null,
+            dataColoring: DataColoring.ALL,
             sortDescending: false,
-            hiddenProperties: new Array<string>(),
             ranges: new Array<Range>(),
             filters: new Array<Filter>(),
-          } as ProjectData,
+            hiddenProperties: new Array<string>(),
+            counter: 0,
+            xAxisNameScatteredPlot: 'atomCount',
+            yAxisNameScatteredPlot: 'atomCount',
+            dotSizeScatteredPlot: 5,
+            thumbnailWidth: 200,
+          } as ProjectState,
           projectView: true,
 
           loadedMolecule: null,
           selectedMolecule: null,
-          collectedMolecules: [],
           addMolecule(molecule: MoleculeData) {
             let added = true;
             immerSet((state: CommonStoreState) => {
-              for (const m of state.collectedMolecules) {
+              for (const m of state.projectState.molecules) {
                 if (m.name === molecule.name) {
                   added = false;
                   break;
                 }
               }
               if (added) {
-                state.collectedMolecules.push(molecule);
+                state.projectState.molecules.push(molecule);
               }
             });
             return added;
           },
           removeMolecule(molecule: MoleculeData) {
             immerSet((state: CommonStoreState) => {
-              for (const [i, m] of state.collectedMolecules.entries()) {
+              for (const [i, m] of state.projectState.molecules.entries()) {
                 if (m.name === molecule.name) {
-                  state.collectedMolecules.splice(i, 1);
+                  state.projectState.molecules.splice(i, 1);
                   break;
                 }
               }
@@ -269,7 +274,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           targetProtein: state.targetProtein,
           loadedMolecule: state.loadedMolecule,
           selectedMolecule: state.selectedMolecule,
-          // collectedMolecules: state.collectedMolecules,
           chamberViewerPercentWidth: state.chamberViewerPercentWidth,
           chamberViewerAxes: state.chamberViewerAxes,
           chamberViewerShininess: state.chamberViewerShininess,
@@ -278,7 +282,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           chamberViewerBackground: state.chamberViewerBackground,
           projectViewerStyle: state.projectViewerStyle,
           projectViewerBackground: state.projectViewerBackground,
-          projectInfo: state.projectInfo,
+          projectState: state.projectState,
           cameraPosition: state.cameraPosition,
           panCenter: state.panCenter,
           selectedFloatingWindow: state.selectedFloatingWindow,

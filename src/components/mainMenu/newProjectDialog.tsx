@@ -20,11 +20,11 @@ const NewProjectDialog = ({ saveAs }: { saveAs: boolean }) => {
   const language = useStore(Selector.language);
 
   const [projectType, setProjectType] = useState<ProjectType>(
-    useStore.getState().projectInfo.type ?? ProjectType.DRUG_DISCOVERY,
+    useStore.getState().projectState.type ?? ProjectType.DRUG_DISCOVERY,
   );
-  const [projectTitle, setProjectTitle] = useState<string | null>(useStore.getState().projectInfo.title);
+  const [projectTitle, setProjectTitle] = useState<string | null>(useStore.getState().projectState.title);
   const [projectDescription, setProjectDescription] = useState<string | null>(
-    useStore.getState().projectInfo.description,
+    useStore.getState().projectState.description,
   );
   const [dragEnabled, setDragEnabled] = useState<boolean>(false);
   const [bounds, setBounds] = useState<DraggableBounds>({ left: 0, top: 0, bottom: 0, right: 0 } as DraggableBounds);

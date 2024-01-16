@@ -36,7 +36,7 @@ export interface MoleculeData {
 }
 
 // use null for undefined, as we need to persist this in Firebase
-export interface ProjectData {
+export interface ProjectState {
   owner: string | null;
   timestamp: number;
   type: ProjectType;

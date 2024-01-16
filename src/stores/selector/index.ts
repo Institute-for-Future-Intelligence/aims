@@ -23,7 +23,7 @@ export const userCount = (state: PrimitiveStoreState) => state.userCount;
 
 export const selectedFloatingWindow = (state: CommonStoreState) => state.selectedFloatingWindow;
 
-export const projectInfo = (state: CommonStoreState) => state.projectInfo;
+export const projectState = (state: CommonStoreState) => state.projectState;
 
 export const projectView = (state: CommonStoreState) => state.projectView;
 
@@ -38,8 +38,6 @@ export const hoveredMolecule = (state: PrimitiveStoreState) => state.hoveredMole
 export const enableRotate = (state: PrimitiveStoreState) => state.enableRotate;
 
 export const autoRotate = (state: PrimitiveStoreState) => state.autoRotate;
-
-export const collectedMolecules = (state: CommonStoreState) => state.collectedMolecules;
 
 export const addMolecule = (state: CommonStoreState) => state.addMolecule;
 

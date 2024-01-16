@@ -49,7 +49,7 @@ const VerticalAxis = ({
   const setCommonStore = useStore(Selector.set);
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
-  const projectInfo = useStore(Selector.projectInfo);
+  const projectState = useStore(Selector.projectState);
 
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const minRef = useRef<number>(min);
@@ -65,7 +65,7 @@ const VerticalAxis = ({
 
   const { t } = useTranslation();
   const lang = { lng: language };
-  const isOwner = user.uid === projectInfo.owner;
+  const isOwner = user.uid === projectState.owner;
   const range = yScale.range();
   const areaHeight = yScale(min) - yScale(max);
   const areaWidth = 40;
@@ -96,7 +96,7 @@ const VerticalAxis = ({
 
   const localSelect = () => {
     setCommonStore((state) => {
-      state.projectInfo.selectedProperty = state.projectInfo.selectedProperty !== variable ? variable : null;
+      state.projectState.selectedProperty = state.projectState.selectedProperty !== variable ? variable : null;
     });
     usePrimitiveStore.getState().set((state) => {
       state.updateProjectsFlag = true;
@@ -104,11 +104,11 @@ const VerticalAxis = ({
   };
 
   const select = () => {
-    if (isOwner && projectInfo.owner && projectInfo.title) {
+    if (isOwner && projectState.owner && projectState.title) {
       updateSelectedProperty(
-        projectInfo.owner,
-        projectInfo.title,
-        projectInfo.selectedProperty !== variable ? variable : null,
+        projectState.owner,
+        projectState.title,
+        projectState.selectedProperty !== variable ? variable : null,
       ).then(() => {
         localSelect();
       });
@@ -132,7 +132,7 @@ const VerticalAxis = ({
           textAnchor: 'middle',
           fill: 'dimgray',
           cursor: 'pointer',
-          fontWeight: projectInfo.selectedProperty === variable ? 'bold' : 'normal',
+          fontWeight: projectState.selectedProperty === variable ? 'bold' : 'normal',
         }}
       >
         {name}
@@ -175,10 +175,10 @@ const VerticalAxis = ({
               onChange={(value) => {
                 if (value === null) return;
                 setCommonStore((state) => {
-                  if (state.projectInfo.ranges) {
+                  if (state.projectState.ranges) {
                     let index = -1;
                     let range = null;
-                    for (const [i, r] of state.projectInfo.ranges.entries()) {
+                    for (const [i, r] of state.projectState.ranges.entries()) {
                       if (r.variable === variable) {
                         index = i;
                         range = r;
@@ -186,26 +186,26 @@ const VerticalAxis = ({
                       }
                     }
                     if (index >= 0 && range) {
-                      state.projectInfo.ranges[index] = {
+                      state.projectState.ranges[index] = {
                         variable: range.variable,
                         minimum: value,
                         maximum: range.maximum,
                       } as Range;
-                      if (user.uid && projectInfo.title) {
-                        updateRanges(user.uid, projectInfo.title, state.projectInfo.ranges);
+                      if (user.uid && projectState.title) {
+                        updateRanges(user.uid, projectState.title, state.projectState.ranges);
                       }
                     } else {
                       const r = { variable, minimum: value, maximum: max } as Range;
-                      state.projectInfo.ranges.push(r);
-                      if (user.uid && projectInfo.title) {
-                        addRange(user.uid, projectInfo.title, r);
+                      state.projectState.ranges.push(r);
+                      if (user.uid && projectState.title) {
+                        addRange(user.uid, projectState.title, r);
                       }
                     }
                   } else {
                     const r = { variable, minimum: value, maximum: max } as Range;
-                    state.projectInfo.ranges = [r];
-                    if (user.uid && projectInfo.title) {
-                      addRange(user.uid, projectInfo.title, r);
+                    state.projectState.ranges = [r];
+                    if (user.uid && projectState.title) {
+                      addRange(user.uid, projectState.title, r);
                     }
                   }
                 });
@@ -225,10 +225,10 @@ const VerticalAxis = ({
               onChange={(value) => {
                 if (value === null) return;
                 setCommonStore((state) => {
-                  if (state.projectInfo.ranges) {
+                  if (state.projectState.ranges) {
                     let index = -1;
                     let range = null;
-                    for (const [i, r] of state.projectInfo.ranges.entries()) {
+                    for (const [i, r] of state.projectState.ranges.entries()) {
                       if (r.variable === variable) {
                         index = i;
                         range = r;
@@ -236,26 +236,26 @@ const VerticalAxis = ({
                       }
                     }
                     if (index >= 0 && range) {
-                      state.projectInfo.ranges[index] = {
+                      state.projectState.ranges[index] = {
                         variable: range.variable,
                         minimum: range.minimum,
                         maximum: value,
                       } as Range;
-                      if (user.uid && projectInfo.title) {
-                        updateRanges(user.uid, projectInfo.title, state.projectInfo.ranges);
+                      if (user.uid && projectState.title) {
+                        updateRanges(user.uid, projectState.title, state.projectState.ranges);
                       }
                     } else {
                       const r = { variable, minimum: min, maximum: value } as Range;
-                      state.projectInfo.ranges.push(r);
-                      if (user.uid && projectInfo.title) {
-                        addRange(user.uid, projectInfo.title, r);
+                      state.projectState.ranges.push(r);
+                      if (user.uid && projectState.title) {
+                        addRange(user.uid, projectState.title, r);
                       }
                     }
                   } else {
                     const r = { variable, minimum: min, maximum: value } as Range;
-                    state.projectInfo.ranges = [r];
-                    if (user.uid && projectInfo.title) {
-                      addRange(user.uid, projectInfo.title, r);
+                    state.projectState.ranges = [r];
+                    if (user.uid && projectState.title) {
+                      addRange(user.uid, projectState.title, r);
                     }
                   }
                 });
@@ -299,7 +299,7 @@ const VerticalAxis = ({
         width={areaWidth}
         height={areaHeight}
         fill="gold"
-        fillOpacity={projectInfo.selectedProperty === variable ? 0.25 : 0}
+        fillOpacity={projectState.selectedProperty === variable ? 0.25 : 0}
       />
 
       {/* Ticks and labels */}
@@ -349,16 +349,16 @@ const VerticalAxis = ({
                   });
                   setCommonStore((state) => {
                     state.selectedMolecule = null;
-                    if (state.projectInfo.filters) {
+                    if (state.projectState.filters) {
                       let index = -1;
-                      for (const [i, f] of state.projectInfo.filters.entries()) {
+                      for (const [i, f] of state.projectState.filters.entries()) {
                         if (f.variable === variable) {
                           index = i;
                           break;
                         }
                       }
                       if (index >= 0) {
-                        state.projectInfo.filters[index] = {
+                        state.projectState.filters[index] = {
                           variable: filter.variable,
                           type: filter.type,
                           lowerBound: filter.lowerBound,
@@ -371,12 +371,12 @@ const VerticalAxis = ({
                           lowerBound: filter.lowerBound,
                           upperBound: filter.upperBound,
                         } as Filter;
-                        state.projectInfo.filters.push(f);
+                        state.projectState.filters.push(f);
                       }
-                      for (const m of state.collectedMolecules) {
+                      for (const m of state.projectState.molecules) {
                         const p = state.molecularPropertiesMap.get(m.name);
                         if (p) {
-                          m.excluded = ProjectUtil.isExcluded(state.projectInfo.filters, p);
+                          m.excluded = ProjectUtil.isExcluded(state.projectState.filters, p);
                         }
                       }
                     }
