@@ -22,6 +22,7 @@ import { useRefStore } from './commonRef';
 import { MolecularProperties } from '../models/MolecularProperties';
 import { Filter } from '../Filter';
 import { MolecularViewerColoring, MolecularViewerStyle } from '../view/displayOptions';
+import { getSampleMolecule, getSampleProtein } from '../internalDatabase';
 
 enableMapSet();
 
@@ -43,8 +44,6 @@ export interface CommonStoreState {
   selectedMolecule: MoleculeData | null;
   addMolecule: (molecule: MoleculeData) => boolean;
   removeMolecule: (molecule: MoleculeData) => void;
-
-  targetProtein: MoleculeData | null;
 
   molecularPropertiesMap: Map<string, MolecularProperties>;
   setMolecularProperties: (name: string, properties: MolecularProperties) => void;
@@ -108,7 +107,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             type: ProjectType.DRUG_DISCOVERY,
             title: null,
             description: null,
-            molecules: new Array<MoleculeData>(),
+            molecules: [getSampleMolecule('Aspirin'), getSampleMolecule('Ibuprofen'), getSampleMolecule('Paxlovid')],
+            targetProtein: getSampleProtein('Crambin'),
             selectedProperty: null,
             dataColoring: DataColoring.ALL,
             sortDescending: false,
@@ -269,7 +269,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
         partialize: (state) => ({
           language: state.language,
           user: state.user,
-          targetProtein: state.targetProtein,
           loadedMolecule: state.loadedMolecule,
           selectedMolecule: state.selectedMolecule,
           chamberViewerPercentWidth: state.chamberViewerPercentWidth,

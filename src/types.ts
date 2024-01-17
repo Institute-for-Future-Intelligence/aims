@@ -44,6 +44,7 @@ export interface ProjectState {
   title: string | null;
   description: string | null;
   molecules: MoleculeData[];
+  targetProtein: MoleculeData | null;
   selectedProperty: string | null;
   dataColoring: DataColoring;
   sortDescending: boolean | null;

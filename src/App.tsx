@@ -23,7 +23,6 @@ import KeyboardListener from './keyboardListener';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import AccountSettingsPanel from './accountSettingsPanel';
 import CloudManager from './cloudManager';
-import { sampleMolecules, sampleProteins } from './internalDatabase';
 import { useRefStore } from './stores/commonRef';
 import { UndoableCameraChange } from './undo/UndoableCameraChange';
 import { CloudTwoTone } from '@ant-design/icons';
@@ -36,7 +35,6 @@ const App = () => {
   const projectView = useStore(Selector.projectView);
   const projectState = useStore(Selector.projectState);
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
-  const targetProtein = useStore(Selector.targetProtein);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
   const loadProvidedMolecularProperties = useStore(Selector.loadProvidedMolecularProperties);
   const params = new URLSearchParams(window.location.search);
@@ -47,9 +45,7 @@ const App = () => {
     loadChemicalElements();
     loadProvidedMolecularProperties();
     setCommonStore((state) => {
-      if (!state.projectState.molecules || state.projectState.molecules.length === 0) {
-        state.projectState.molecules = [...sampleMolecules];
-      }
+      // make sure the selected molecule is in the same array of molecules
       if (state.selectedMolecule !== null) {
         for (const m of state.projectState.molecules) {
           if (m.name === state.selectedMolecule.name) {
@@ -57,9 +53,8 @@ const App = () => {
             break;
           }
         }
-      } else {
-        state.selectedMolecule = state.projectState.molecules[0];
       }
+      // make sure the loaded molecule is in the same array of molecules
       if (state.loadedMolecule !== null) {
         for (const m of state.projectState.molecules) {
           if (m.name === state.loadedMolecule.name) {
@@ -67,18 +62,6 @@ const App = () => {
             break;
           }
         }
-      } else {
-        state.loadedMolecule = state.projectState.molecules[0];
-      }
-      if (state.targetProtein !== null) {
-        for (const t of sampleProteins) {
-          if (t.name === state.targetProtein.name) {
-            state.targetProtein = t;
-            break;
-          }
-        }
-      } else {
-        state.targetProtein = sampleProteins[0];
       }
     });
     // eslint-disable-next-line
@@ -302,7 +285,7 @@ const App = () => {
               <></>
             )}
             <Suspense fallback={<Loading />}>
-              <ReactionChamber moleculeData={targetProtein} />
+              <ReactionChamber moleculeData={projectState.targetProtein} />
             </Suspense>
           </SplitPane>
           <KeyboardListener setNavigationView={setNavigationView} resetView={resetView} zoomView={zoomView} />

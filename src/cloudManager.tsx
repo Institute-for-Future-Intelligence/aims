@@ -157,6 +157,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
           thumbnailWidth: f.thumbnailWidth,
           type: f.type,
           molecules: f.molecules,
+          targetProtein: f.targetProtein,
           ranges: f.ranges ?? [],
           filters: f.filters ?? [],
           hiddenProperties: f.hiddenProperties ?? [],
@@ -356,6 +357,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             thumbnailWidth: data.thumbnailWidth ?? 200,
             type: data.type ?? ProjectType.DRUG_DISCOVERY,
             molecules: data.molecules ?? [],
+            targetProtein: data.targetProtein ?? null,
             ranges: data.ranges ?? [],
             filters: data.filters ?? [],
             hiddenProperties: data.hiddenProperties ?? [],
@@ -411,6 +413,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             state.projectState.thumbnailWidth = 200;
             state.projectState.counter = 0;
             state.projectState.molecules = [];
+            state.projectState.targetProtein = null;
             state.projectState.ranges = [];
             state.projectState.filters = [];
             state.projectState.hiddenProperties = [];
@@ -535,6 +538,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
               dotSizeScatteredPlot,
               thumbnailWidth,
               molecules: [],
+              targetProtein: null,
               ranges: [],
               filters: [],
               hiddenProperties: [],
@@ -556,6 +560,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
                 state.projectState.dotSizeScatteredPlot = 5;
                 state.projectState.thumbnailWidth = 200;
                 state.projectState.molecules = [];
+                state.projectState.targetProtein = null;
                 state.projectState.ranges = [];
                 state.projectState.filters = [];
                 state.projectState.hiddenProperties = [];
@@ -644,6 +649,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             const yAxisNameScatteredPlot = useStore.getState().projectState.yAxisNameScatteredPlot ?? 'atomCount';
             const dotSizeScatteredPlot = useStore.getState().projectState.dotSizeScatteredPlot ?? 5;
             const thumbnailWidth = useStore.getState().projectState.thumbnailWidth ?? 200;
+            const targetProtein = useStore.getState().projectState.targetProtein;
             firebase
               .firestore()
               .collection('users')
@@ -665,6 +671,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
                 dotSizeScatteredPlot,
                 thumbnailWidth,
                 molecules: molecules,
+                targetProtein: targetProtein,
                 ranges: useStore.getState().projectState.ranges,
                 filters: useStore.getState().projectState.filters,
                 hiddenProperties: useStore.getState().projectState.hiddenProperties,

@@ -14,7 +14,7 @@ const { Option } = Select;
 
 const ExperimentSettings = () => {
   const language = useStore(Selector.language);
-  const targetProtein = useStore(Selector.targetProtein);
+  const targetProtein = useStore(Selector.projectState).targetProtein;
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -26,7 +26,7 @@ const ExperimentSettings = () => {
       useStore.getState().set((state) => {
         for (const t of sampleProteins) {
           if (t.name === targetName) {
-            state.targetProtein = t;
+            state.projectState.targetProtein = t;
             break;
           }
         }
