@@ -36,9 +36,11 @@ export const getTestMolecule = (name: string) => {
 
 const App = () => {
   const setCommonStore = useStore(Selector.set);
+  const user = useStore(Selector.user);
   const language = useStore(Selector.language);
   const addUndoable = useStore(Selector.addUndoable);
   const projectView = useStore(Selector.projectView);
+  const projectState = useStore(Selector.projectState);
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
   const targetProtein = useStore(Selector.targetProtein);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
@@ -169,7 +171,6 @@ const App = () => {
           paddingTop: '10px',
           textAlign: 'start',
           userSelect: 'none',
-          fontSize: '30px',
         }}
       >
         <span
@@ -178,12 +179,26 @@ const App = () => {
             verticalAlign: 'middle',
             cursor: 'pointer',
             userSelect: 'none',
+            fontSize: '30px',
           }}
           title={'Artificial Intelligence for Molecular Sciences (AIMS)'}
           onClick={visitHomepage}
         >
           {`${t('name.AIMS', lang)}`}
         </span>
+        {user.uid && user.uid === projectState.owner && (
+          <span
+            style={{
+              paddingLeft: '10px',
+              fontSize: '16px',
+              verticalAlign: 'bottom',
+              userSelect: 'none',
+            }}
+            title={t('projectPanel.ProjectTitle', lang)}
+          >
+            {projectState.title ?? ''}
+          </span>
+        )}
       </div>
 
       {viewOnly ? (

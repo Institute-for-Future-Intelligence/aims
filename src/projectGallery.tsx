@@ -821,7 +821,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
       <ColumnWrapper>
         <Header>
           <span>
-            {t('projectPanel.Project', lang)} : {projectState.title ?? t('term.DrugDiscovery', lang)}
+            {t('projectPanel.Project', lang)} : {t('term.DrugDiscovery', lang)}
           </span>
           <span
             style={{ cursor: 'pointer' }}

@@ -82,7 +82,7 @@ export const removeMoleculeFromProject = (userid: string, projectTitle: string, 
         });
     })
     .catch((error) => {
-      showError(i18n.t('message.CannotRemoveDesignFromProject', lang) + ': ' + error);
+      showError(i18n.t('message.CannotRemoveMoleculeFromProject', lang) + ': ' + error);
     });
 };
 

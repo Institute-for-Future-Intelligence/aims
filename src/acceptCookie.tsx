@@ -16,7 +16,7 @@ const AcceptCookie = () => {
     <CookieConsent
       location="bottom"
       buttonText={t('cookie.Accept', lang)}
-      cookieName="AladdinCookieName"
+      cookieName="AIMSCookieName"
       style={{ background: '#2B373B', textAlign: 'center', zIndex: 99999 }}
       buttonStyle={{ color: '#4e503b', fontSize: '12px' }}
       expires={150}

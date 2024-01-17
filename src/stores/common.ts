@@ -33,7 +33,6 @@ export interface CommonStoreState {
   language: string;
   locale: Locale;
   user: User;
-  cloudFile: string | undefined;
 
   selectedFloatingWindow: string | null;
 
@@ -100,7 +99,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           language: 'en',
           locale: enUS,
           user: {} as User,
-          cloudFile: undefined,
 
           selectedFloatingWindow: null,
 

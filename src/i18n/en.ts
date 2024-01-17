@@ -140,6 +140,7 @@ export const i18n_en = {
     projectPanel: {
       Project: 'Project',
       ProjectType: 'Type',
+      ProjectTitle: 'Project Title',
       ProjectDescription: 'Description',
       ProjectSettings: 'Project Settings',
       DisplayWindowSize: 'Display Window Size',

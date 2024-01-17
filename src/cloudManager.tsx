@@ -108,8 +108,6 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     // do not use firebase.auth().currentUser - currentUser might be null because the auth object has not finished initializing.
     // If you use an observer to keep track of the user's sign-in status, you don't need to handle this case.
     firebase.auth().onAuthStateChanged((u) => {
-      const params = new URLSearchParams(window.location.search);
-      const title = params.get('title');
       if (u) {
         setCommonStore((state) => {
           if (state.user) {
@@ -118,7 +116,6 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             state.user.email = u.email;
             state.user.photoURL = u.photoURL;
           }
-          state.cloudFile = title ?? undefined;
         });
       }
     });
@@ -184,11 +181,6 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
           setProcessing(false);
         });
       }
-    } else {
-      setCommonStore((state) => {
-        // make sure that the cloud file state is consistent with the URL
-        // state.cloudFile = undefined;
-      });
     }
   };
 
@@ -323,7 +315,6 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
           state.user.likes = [];
           state.user.published = [];
           state.user.aliases = [];
-          state.cloudFile = undefined; // if there is a current cloud file
         });
         usePrimitiveStore.getState().set((state) => {
           state.showAccountSettingsPanel = false;

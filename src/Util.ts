@@ -8,9 +8,8 @@ export class Util {
   static isOpenFromURL() {
     const params = new URLSearchParams(window.location.search);
     const userid = params.get('userid');
-    const title = params.get('title');
     const project = params.get('project');
-    return !!(userid && title && !project);
+    return !!(userid && project);
   }
 
   static getOS(): string | undefined {

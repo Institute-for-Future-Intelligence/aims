@@ -44,23 +44,23 @@ export interface ShareLinkProps {
 const ShareLinks = ({ style, size, margin, round, handleShareWindowClose }: ShareLinkProps) => {
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
-  const cloudFile = 'test';
+  const currentTitle = useStore(Selector.projectState).title;
 
   const { t } = useTranslation();
   const params = new URLSearchParams(window.location.search);
   const userid = params.get('userid');
   const lang = { lng: language };
-  const title = cloudFile ?? t('name.Tagline', lang);
-  const via = 'aladdinIFI ' + (cloudFile ? t('name.Tagline', lang) : '');
+  const title = currentTitle ?? t('name.Tagline', lang);
+  const via = 'aimsIFI ' + (currentTitle ? t('name.Tagline', lang) : '');
   let url = HOME_URL;
-  if (cloudFile) {
+  if (currentTitle) {
     // only a cloud file is sharable
     if (userid) {
       // since this may be other people's document, keep its original user id
-      url += '?client=web&userid=' + userid + '&title=' + encodeURIComponent(cloudFile);
+      url += '?userid=' + userid + '&title=' + encodeURIComponent(currentTitle);
     } else if (user.uid) {
       // otherwise, this is the current user's document
-      url += '?client=web&userid=' + user.uid + '&title=' + encodeURIComponent(cloudFile);
+      url += '?userid=' + user.uid + '&title=' + encodeURIComponent(currentTitle);
     }
   }
 

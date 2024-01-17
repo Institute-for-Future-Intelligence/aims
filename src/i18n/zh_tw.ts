@@ -139,6 +139,7 @@ export const i18n_zh_tw = {
     projectPanel: {
       Project: '專案',
       ProjectType: '類别',
+      ProjectTitle: '專案按標',
       ProjectDescription: '描述',
       ProjectSettings: '專案設定',
       DisplayWindowSize: '展示視窗大小',
