@@ -8,9 +8,9 @@ import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
-import { ProjectType } from '../../types';
 import { REGEX_ALLOWABLE_IN_NAME } from '../../programmaticConstants';
 import { useTranslation } from 'react-i18next';
+import { ProjectType } from '../../types';
 
 const { Option } = Select;
 

@@ -234,8 +234,8 @@ const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardLi
         break;
       case 'ctrl+alt+h': // for Mac and Chrome OS
       case 'ctrl+home':
-        const cameraPosition = useStore.getState().cameraPosition;
-        const panCenter = useStore.getState().panCenter;
+        const cameraPosition = useStore.getState().projectState.cameraPosition;
+        const panCenter = useStore.getState().projectState.panCenter;
         // if not already reset
         if (
           cameraPosition[0] !== cameraPosition[1] ||
@@ -265,8 +265,8 @@ const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardLi
                 );
                 orbitControlsRef.current.update();
                 setCommonStore((state) => {
-                  state.cameraPosition = [...undoableResetView.oldCameraPosition];
-                  state.panCenter = [...undoableResetView.oldPanCenter];
+                  state.projectState.cameraPosition = [...undoableResetView.oldCameraPosition];
+                  state.projectState.panCenter = [...undoableResetView.oldPanCenter];
                 });
               }
             },

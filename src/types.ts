@@ -4,6 +4,34 @@
 
 import { Filter } from './Filter';
 
+export enum ProjectType {
+  DRUG_DISCOVERY = 'Drug Discovery',
+}
+
+// use null for undefined, as we need to persist this in Firebase
+export interface ProjectState {
+  owner: string | null;
+  timestamp: number;
+  type: ProjectType;
+  title: string | null;
+  description: string | null;
+  molecules: MoleculeData[];
+  targetProtein: MoleculeData | null;
+  selectedProperty: string | null;
+  dataColoring: DataColoring;
+  sortDescending: boolean | null;
+  ranges: Range[] | null;
+  filters: Filter[] | null;
+  hiddenProperties: string[] | null;
+  counter: number;
+  xAxisNameScatteredPlot: string | null;
+  yAxisNameScatteredPlot: string | null;
+  dotSizeScatteredPlot: number | null;
+  thumbnailWidth: number | null;
+  cameraPosition: number[];
+  panCenter: number[];
+}
+
 export enum BondType {
   SINGLE_BOND = 0,
   DOUBLE_BOND = 1,
@@ -36,35 +64,9 @@ export interface MoleculeData {
   excluded?: boolean;
 }
 
-// use null for undefined, as we need to persist this in Firebase
-export interface ProjectState {
-  owner: string | null;
-  timestamp: number;
-  type: ProjectType;
-  title: string | null;
-  description: string | null;
-  molecules: MoleculeData[];
-  targetProtein: MoleculeData | null;
-  selectedProperty: string | null;
-  dataColoring: DataColoring;
-  sortDescending: boolean | null;
-  ranges: Range[] | null;
-  filters: Filter[] | null;
-  hiddenProperties: string[] | null;
-  counter: number;
-  xAxisNameScatteredPlot: string | null;
-  yAxisNameScatteredPlot: string | null;
-  dotSizeScatteredPlot: number | null;
-  thumbnailWidth: number | null;
-}
-
 export enum FirebaseName {
   FILES = 'Files',
   LOG_DATA = 'Log Data',
-}
-
-export enum ProjectType {
-  DRUG_DISCOVERY = 'Drug Discovery',
 }
 
 export enum DataColoring {

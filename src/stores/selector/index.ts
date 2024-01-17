@@ -63,10 +63,6 @@ export const projectViewerBackground = (state: CommonStoreState) => state.projec
 
 export const navigationView = (state: CommonStoreState) => state.navigationView;
 
-export const cameraPosition = (state: CommonStoreState) => state.cameraPosition;
-
-export const panCenter = (state: CommonStoreState) => state.panCenter;
-
 export const selectedObject = (state: CommonStoreState) => state.selectedObject;
 
 export const selectNone = (state: CommonStoreState) => state.selectNone;

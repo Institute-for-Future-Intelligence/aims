@@ -13,10 +13,10 @@ import { HOME_URL, REGEX_ALLOWABLE_IN_NAME, Z_INDEX_FRONT_PANEL } from './progra
 import { copyTextToClipboard, showSuccess } from './helpers';
 import Draggable from 'react-draggable';
 import { usePrimitiveStore } from './stores/commonPrimitive';
-import { ProjectState } from './types';
 import { useTranslation } from 'react-i18next';
 import { MenuProps } from 'antd/lib';
 import { MenuItem } from './components/menuItem';
+import { ProjectState } from './types';
 
 const { Column } = Table;
 

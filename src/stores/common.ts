@@ -58,8 +58,6 @@ export interface CommonStoreState {
   projectViewerBackground: string;
 
   navigationView: boolean;
-  cameraPosition: number[];
-  panCenter: number[];
 
   selectedObject: AtomTS | BondTS | null;
   selectedObjectIdSet: Set<string>;
@@ -120,6 +118,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             yAxisNameScatteredPlot: 'atomCount',
             dotSizeScatteredPlot: 5,
             thumbnailWidth: 200,
+            cameraPosition: [5, 10, 20],
+            panCenter: [0, 0, 0],
           } as ProjectState,
           projectView: true,
 
@@ -170,8 +170,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           projectViewerBackground: 'white',
 
           navigationView: false,
-          cameraPosition: [5, 10, 20],
-          panCenter: [0, 0, 0],
 
           selectedObject: null,
           selectedObjectIdSet: new Set<string>(),
@@ -280,8 +278,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           projectViewerStyle: state.projectViewerStyle,
           projectViewerBackground: state.projectViewerBackground,
           projectState: state.projectState,
-          cameraPosition: state.cameraPosition,
-          panCenter: state.panCenter,
           selectedFloatingWindow: state.selectedFloatingWindow,
         }),
       },

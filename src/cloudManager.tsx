@@ -162,7 +162,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
           filters: f.filters ?? [],
           hiddenProperties: f.hiddenProperties ?? [],
           counter: f.counter,
-          action: '',
+          cameraPosition: f.cameraPosition,
+          panCenter: f.panCenter,
         });
       });
       arr.sort((a, b) => b.timestamp - a.timestamp);
@@ -362,6 +363,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             filters: data.filters ?? [],
             hiddenProperties: data.hiddenProperties ?? [],
             counter: data.counter ?? 0,
+            cameraPosition: data.cameraPosition ?? [5, 10, 20],
+            panCenter: data.panCenter ?? [0, 0, 0],
           } as ProjectState);
         });
         return a;
@@ -542,6 +545,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
               ranges: [],
               filters: [],
               hiddenProperties: [],
+              cameraPosition: [5, 10, 20],
+              panCenter: [0, 0, 0],
             } as ProjectState)
             .then(() => {
               setCommonStore((state) => {
