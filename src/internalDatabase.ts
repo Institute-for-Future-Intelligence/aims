@@ -4,16 +4,16 @@
 
 import { MoleculeData } from './types';
 
-import moleculeUrl1 from './molecules/pdb/aspirin.pdb';
-import moleculeUrl2 from './molecules/sdf/ibuprofen.sdf';
-import moleculeUrl3 from './molecules/sdf/paxlovid.sdf';
-import moleculeUrl4 from './molecules/pcj/caffeine.pcj';
-import moleculeUrl5 from './molecules/xyz/glucose.xyz';
-import moleculeUrl6 from './molecules/pdb/cholesterol.pdb';
+import moleculeUrl1 from './molecules/pdb/aspirin.pdb?url';
+import moleculeUrl2 from './molecules/sdf/ibuprofen.sdf?url';
+import moleculeUrl3 from './molecules/sdf/paxlovid.sdf?url';
+import moleculeUrl4 from './molecules/pcj/caffeine.pcj?url';
+import moleculeUrl5 from './molecules/xyz/glucose.xyz?url';
+import moleculeUrl6 from './molecules/pdb/cholesterol.pdb?url';
 
-import proteinUrl1 from './proteins/1a3n.pdb';
-import proteinUrl2 from './proteins/1crn.pdb';
-import proteinUrl3 from './proteins/7qo7.pdb';
+import proteinUrl1 from './proteins/1a3n.pdb?url';
+import proteinUrl2 from './proteins/1crn.pdb?url';
+import proteinUrl3 from './proteins/7qo7.pdb?url';
 
 export const sampleMolecules = [
   { name: 'Aspirin', url: moleculeUrl1 } as MoleculeData,
@@ -30,6 +30,8 @@ export const sampleProteins = [
   { name: 'SARS-CoV-2 Omicron Spike', url: proteinUrl3 } as MoleculeData,
 ];
 
+console.log('sampleMolecules', sampleMolecules);
+
 export const getSampleMolecule = (name: string) => {
   for (const m of sampleMolecules) {
     if (name === m.name) return m;
@@ -37,15 +39,15 @@ export const getSampleMolecule = (name: string) => {
   return null;
 };
 
-export const getSampleProtein = (name: string) => {
-  for (const m of sampleProteins) {
-    if (name === m.name) return m;
-  }
-  return null;
-};
+// export const getSampleProtein = (name: string) => {
+//   for (const m of sampleProteins) {
+//     if (name === m.name) return m;
+//   }
+//   return null;
+// };
 
-export const getSample = (name: string) => {
-  const mol = getSampleMolecule(name);
-  if (mol) return mol;
-  return getSampleProtein(name);
-};
+// export const getSample = (name: string) => {
+//   const mol = getSampleMolecule(name);
+//   if (mol) return mol;
+//   return getSampleProtein(name);
+// };
