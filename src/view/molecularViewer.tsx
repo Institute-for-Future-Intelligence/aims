@@ -28,6 +28,7 @@ import ComplexVisual from '../lib/ComplexVisual';
 import { useThree } from '@react-three/fiber';
 import { STYLE_MAP, MolecularViewerStyle, COLORING_MAP, MolecularViewerColoring } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
+import { getSample } from '../internalDatabase';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -59,10 +60,11 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess, highQuality
   }, [coloring]);
 
   useEffect(() => {
-    if (moleculeData.url) {
-      fetch(moleculeData.url).then((response) => {
+    const mol = getSample(moleculeData.name);
+    if (mol?.url) {
+      fetch(mol.url).then((response) => {
         response.text().then((text) => {
-          const url = moleculeData.url;
+          const url = mol.url;
           if (url) {
             let parser = null;
             const options = {};

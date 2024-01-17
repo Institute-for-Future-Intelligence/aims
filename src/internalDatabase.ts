@@ -36,3 +36,16 @@ export const getSampleMolecule = (name: string) => {
   }
   return null;
 };
+
+export const getSampleProtein = (name: string) => {
+  for (const m of sampleProteins) {
+    if (name === m.name) return m;
+  }
+  return null;
+};
+
+export const getSample = (name: string) => {
+  const mol = getSampleMolecule(name);
+  if (mol) return mol;
+  return getSampleProtein(name);
+};
