@@ -29,3 +29,10 @@ export const sampleProteins = [
   { name: 'Hemoglobin', url: proteinUrl1 } as MoleculeData,
   { name: 'SARS-CoV-2 Omicron Spike', url: proteinUrl3 } as MoleculeData,
 ];
+
+export const getSampleMolecule = (name: string) => {
+  for (const m of sampleMolecules) {
+    if (name === m.name) return m;
+  }
+  return null;
+};

@@ -26,13 +26,7 @@ import CloudManager from './cloudManager';
 import { sampleMolecules, sampleProteins } from './internalDatabase';
 import { useRefStore } from './stores/commonRef';
 import { UndoableCameraChange } from './undo/UndoableCameraChange';
-
-export const getTestMolecule = (name: string) => {
-  for (const m of sampleMolecules) {
-    if (name === m.name) return m;
-  }
-  return null;
-};
+import { CloudTwoTone } from '@ant-design/icons';
 
 const App = () => {
   const setCommonStore = useStore(Selector.set);
@@ -162,6 +156,8 @@ const App = () => {
     }
   };
 
+  const isOwner = user.uid && user.uid === projectState.owner;
+
   return (
     <div className="App">
       <div
@@ -186,19 +182,25 @@ const App = () => {
         >
           {`${t('name.AIMS', lang)}`}
         </span>
-        {user.uid && user.uid === projectState.owner && (
-          <span
-            style={{
-              paddingLeft: '10px',
-              fontSize: '16px',
-              verticalAlign: 'bottom',
-              userSelect: 'none',
-            }}
-            title={t('projectPanel.ProjectTitle', lang)}
-          >
-            {projectState.title ?? ''}
-          </span>
-        )}
+        <CloudTwoTone
+          twoToneColor={isOwner ? 'blue' : 'gray'}
+          style={{
+            paddingLeft: '10px',
+            verticalAlign: 'bottom',
+          }}
+        />
+        <span
+          style={{
+            paddingLeft: '2px',
+            fontSize: '16px',
+            verticalAlign: 'bottom',
+            userSelect: 'none',
+            color: isOwner ? 'black' : 'gray',
+          }}
+          title={t('projectPanel.ProjectTitle', lang)}
+        >
+          {projectState.title ?? ''}
+        </span>
       </div>
 
       {viewOnly ? (

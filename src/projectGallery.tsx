@@ -28,7 +28,6 @@ import { useTranslation } from 'react-i18next';
 import { DataColoring, DatumEntry, MoleculeData } from './types';
 import TextArea from 'antd/lib/input/TextArea';
 import { UndoableChange } from './undo/UndoableChange';
-import { getTestMolecule } from './App';
 import ImportMoleculeModal from './ImportMoleculeModal';
 import { saveSvg, showError, showInfo } from './helpers';
 import ParallelCoordinates from './components/parallelCoordinates';
@@ -37,6 +36,7 @@ import { usePrimitiveStore } from './stores/commonPrimitive';
 import { updateDataColoring, updateHiddenProperties } from './cloudProjectUtil';
 import { Filter, FilterType } from './Filter';
 import { GALLERY_STYLE_LABELS, MolecularViewerColoring, MolecularViewerStyle } from './view/displayOptions';
+import { getSampleMolecule } from './internalDatabase';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -957,7 +957,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
         </CanvasContainer>
         <ImportMoleculeModal
           importByName={() => {
-            const m = getTestMolecule(moleculeName);
+            const m = getSampleMolecule(moleculeName);
             if (m) {
               const added = addMolecule(m);
               if (added) {
