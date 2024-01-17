@@ -30,6 +30,7 @@ export enum ObjectType {
 
 export interface MoleculeData {
   name: string;
+  internal?: boolean;
   url?: string;
   invisible?: boolean;
   excluded?: boolean;

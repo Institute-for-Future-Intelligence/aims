@@ -182,13 +182,15 @@ const App = () => {
         >
           {`${t('name.AIMS', lang)}`}
         </span>
-        <CloudTwoTone
-          twoToneColor={isOwner ? 'blue' : 'gray'}
-          style={{
-            paddingLeft: '10px',
-            verticalAlign: 'bottom',
-          }}
-        />
+        {projectState.title && (
+          <CloudTwoTone
+            twoToneColor={isOwner ? 'blue' : 'gray'}
+            style={{
+              paddingLeft: '10px',
+              verticalAlign: 'bottom',
+            }}
+          />
+        )}
         <span
           style={{
             paddingLeft: '2px',
