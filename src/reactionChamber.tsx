@@ -34,7 +34,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const viewerAxes = useStore(Selector.chamberViewerAxes);
   const shininess = useStore(Selector.chamberViewerShininess) ?? 1000;
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
-  const projectState = useStore(Selector.projectState);
+  const cameraPosition = useStore(Selector.cameraPosition);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const orbitControlsRef = useRef<any>(null);
@@ -55,15 +55,15 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
     const control = e.target;
     setCommonStore((state) => {
       const p = control.object.position as Vector3;
-      if (!state.projectState.cameraPosition) state.projectState.cameraPosition = [5, 10, 20];
-      if (!state.projectState.panCenter) state.projectState.panCenter = [0, 0, 0];
-      state.projectState.cameraPosition[0] = p.x;
-      state.projectState.cameraPosition[1] = p.y;
-      state.projectState.cameraPosition[2] = p.z;
+      if (!state.cameraPosition) state.cameraPosition = [5, 10, 20];
+      if (!state.panCenter) state.panCenter = [0, 0, 0];
+      state.cameraPosition[0] = p.x;
+      state.cameraPosition[1] = p.y;
+      state.cameraPosition[2] = p.z;
       const q = control.target as Vector3;
-      state.projectState.panCenter[0] = q.x;
-      state.projectState.panCenter[1] = q.y;
-      state.projectState.panCenter[2] = q.z;
+      state.panCenter[0] = q.x;
+      state.panCenter[1] = q.y;
+      state.panCenter[2] = q.z;
     });
   };
 
@@ -80,7 +80,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
           fov: DEFAULT_FOV,
           far: DEFAULT_SHADOW_CAMERA_FAR,
           up: [0, 0, 1],
-          position: new Vector3().fromArray(projectState.cameraPosition ?? [5, 10, 20]),
+          position: new Vector3().fromArray(cameraPosition ?? [5, 10, 20]),
           rotation: [HALF_PI / 2, 0, HALF_PI / 2],
         }}
       >
@@ -106,7 +106,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
           ref={lightRef}
           name={'Directional Light'}
           color="white"
-          position={new Vector3().fromArray(projectState.cameraPosition ?? [5, 10, 20])}
+          position={new Vector3().fromArray(cameraPosition ?? [5, 10, 20])}
           intensity={DEFAULT_LIGHT_INTENSITY}
           castShadow={true}
           shadow-bias={0} // may be used to reduce shadow artifacts

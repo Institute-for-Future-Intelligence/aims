@@ -16,7 +16,7 @@ import { usePrimitiveStore } from './stores/commonPrimitive';
 import { useTranslation } from 'react-i18next';
 import { MenuProps } from 'antd/lib';
 import { MenuItem } from './components/menuItem';
-import { ProjectState } from './types';
+import { ExtendedProjectState } from './cloudManager';
 
 const { Column } = Table;
 
@@ -75,7 +75,7 @@ const Header = styled.div`
 
 export interface ProjectListPanelProps {
   projects: object[];
-  setProjectState: (projectState: ProjectState) => void;
+  setProjectState: (projectState: ExtendedProjectState) => void;
   deleteProject: (title: string) => void;
   renameProject: (oldTitle: string, newTitle: string) => void;
 }
@@ -340,7 +340,7 @@ const ProjectListPanel = ({ projects, setProjectState, deleteProject, renameProj
                     {
                       key: 'open-project',
                       label: (
-                        <MenuItem onClick={() => setProjectState(record as ProjectState)}>
+                        <MenuItem onClick={() => setProjectState(record as ExtendedProjectState)}>
                           {t('word.Open', lang)}
                         </MenuItem>
                       ),

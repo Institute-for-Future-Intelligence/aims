@@ -28,8 +28,6 @@ export interface ProjectState {
   yAxisNameScatteredPlot: string | null;
   dotSizeScatteredPlot: number | null;
   thumbnailWidth: number | null;
-  cameraPosition: number[];
-  panCenter: number[];
 }
 
 export enum BondType {

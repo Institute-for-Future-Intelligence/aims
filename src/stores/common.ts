@@ -40,6 +40,11 @@ export interface CommonStoreState {
   projectState: ProjectState;
   projectView: boolean;
 
+  // store camera position and pan center outside projectState to reduce rendering frequency
+  // because these properties change very often when the user is interacting with the viewer
+  cameraPosition: number[];
+  panCenter: number[];
+
   loadedMolecule: MoleculeData | null;
   selectedMolecule: MoleculeData | null;
   addMolecule: (molecule: MoleculeData) => boolean;
@@ -118,10 +123,11 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             yAxisNameScatteredPlot: 'atomCount',
             dotSizeScatteredPlot: 5,
             thumbnailWidth: 200,
-            cameraPosition: [5, 10, 20],
-            panCenter: [0, 0, 0],
           } as ProjectState,
           projectView: true,
+
+          cameraPosition: [5, 10, 20],
+          panCenter: [0, 0, 0],
 
           loadedMolecule: null,
           selectedMolecule: null,
@@ -278,6 +284,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           projectViewerStyle: state.projectViewerStyle,
           projectViewerBackground: state.projectViewerBackground,
           projectState: state.projectState,
+          cameraPosition: state.cameraPosition,
+          panCenter: state.panCenter,
           selectedFloatingWindow: state.selectedFloatingWindow,
         }),
       },

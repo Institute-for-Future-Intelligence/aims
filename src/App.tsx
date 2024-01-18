@@ -91,8 +91,8 @@ const App = () => {
       orbitControlsRef.current.target.set(0, 0, 0);
       orbitControlsRef.current.update();
       setCommonStore((state) => {
-        state.projectState.cameraPosition = [r, r, r];
-        state.projectState.panCenter = [0, 0, 0];
+        state.cameraPosition = [r, r, r];
+        state.panCenter = [0, 0, 0];
       });
     }
   };
@@ -116,7 +116,7 @@ const App = () => {
           orbitControlsRef.current?.object.position.set(oldX, oldY, oldZ);
           orbitControlsRef.current?.update();
           setCommonStore((state) => {
-            state.projectState.cameraPosition = [oldX, oldY, oldZ];
+            state.cameraPosition = [oldX, oldY, oldZ];
           });
         },
         redo: () => {
@@ -126,7 +126,7 @@ const App = () => {
           orbitControlsRef.current?.object.position.set(newX, newY, newZ);
           orbitControlsRef.current?.update();
           setCommonStore((state) => {
-            state.projectState.cameraPosition = [newX, newY, newZ];
+            state.cameraPosition = [newX, newY, newZ];
           });
         },
       } as UndoableCameraChange;
@@ -134,12 +134,14 @@ const App = () => {
       orbitControlsRef.current.object.position.set(x, y, z);
       orbitControlsRef.current.update();
       setCommonStore((state) => {
-        state.projectState.cameraPosition = [x, y, z];
+        state.cameraPosition = [x, y, z];
       });
     }
   };
 
   const isOwner = user.uid && user.uid === projectState.owner;
+
+  console.log('x');
 
   return (
     <div className="App">

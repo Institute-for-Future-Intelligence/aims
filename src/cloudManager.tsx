@@ -25,6 +25,11 @@ export interface CloudManagerProps {
   viewOnly: boolean;
 }
 
+export interface ExtendedProjectState extends ProjectState {
+  cameraPosition: number[];
+  panCenter: number[];
+}
+
 const useFlag = (flag: boolean, fn: Function, setFlag: () => void) => {
   useEffect(() => {
     if (flag) {
@@ -53,7 +58,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   const [updateFlag, setUpdateFlag] = useState(false);
   const [projectArray, setProjectArray] = useState<any[]>([]);
   const [updateProjectArrayFlag, setUpdateProjectArrayFlag] = useState(false);
-  const myProjects = useRef<ProjectState[] | void>(); // Not sure why I need to use ref to store this
+  const myProjects = useRef<ExtendedProjectState[] | void>(); // Not sure why I need to use ref to store this
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -186,9 +191,11 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     }
   };
 
-  const setProjectState = (projectState: ProjectState) => {
+  const setProjectState = (extendedProjectState: ExtendedProjectState) => {
     setCommonStore((state) => {
-      state.projectState = { ...projectState };
+      state.projectState = { ...extendedProjectState } as ProjectState;
+      state.cameraPosition = extendedProjectState.cameraPosition;
+      state.panCenter = extendedProjectState.panCenter;
       state.projectView = true;
     });
     usePrimitiveStore.getState().set((state) => {
@@ -339,7 +346,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       .collection('projects')
       .get()
       .then((querySnapshot) => {
-        const a: ProjectState[] = [];
+        const a: ExtendedProjectState[] = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           // Assign default values below as an attribute may not be defined by the time the data was created
@@ -365,7 +372,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             counter: data.counter ?? 0,
             cameraPosition: data.cameraPosition ?? [5, 10, 20],
             panCenter: data.panCenter ?? [0, 0, 0],
-          } as ProjectState);
+          } as ExtendedProjectState);
         });
         return a;
       })
@@ -547,7 +554,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
               hiddenProperties: [],
               cameraPosition: [5, 10, 20],
               panCenter: [0, 0, 0],
-            } as ProjectState)
+            } as ExtendedProjectState)
             .then(() => {
               setCommonStore((state) => {
                 state.projectView = true;
@@ -569,6 +576,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
                 state.projectState.ranges = [];
                 state.projectState.filters = [];
                 state.projectState.hiddenProperties = [];
+                state.cameraPosition = [5, 10, 20];
+                state.panCenter = [0, 0, 0];
               });
             })
             .catch((error) => {
@@ -593,7 +602,9 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     const title = useStore.getState().projectState.title;
     if (title) {
       setProcessing(true);
-      const pi = { ...useStore.getState().projectState };
+      const pi = { ...useStore.getState().projectState } as ExtendedProjectState;
+      pi.cameraPosition = useStore.getState().cameraPosition;
+      pi.panCenter = useStore.getState().panCenter;
       pi.timestamp = new Date().getTime();
       firebase
         .firestore()
@@ -680,7 +691,9 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
                 ranges: useStore.getState().projectState.ranges,
                 filters: useStore.getState().projectState.filters,
                 hiddenProperties: useStore.getState().projectState.hiddenProperties,
-              } as ProjectState)
+                cameraPosition: useStore.getState().cameraPosition,
+                panCenter: useStore.getState().panCenter,
+              } as ExtendedProjectState)
               .then(() => {
                 setCommonStore((state) => {
                   state.projectView = true;
