@@ -37,10 +37,15 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const cameraPosition = useStore(Selector.cameraPosition);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const cameraRef = useRef<any>(null);
   const orbitControlsRef = useRef<any>(null);
   const lightRef = useRef<DirectionalLight>(null);
 
   const [refVisible, setRefVisible] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (cameraRef.current) cameraRef.current.position.fromArray(cameraPosition);
+  }, [cameraPosition]);
 
   // save orbitControlRef to common ref store
   useEffect(() => {
@@ -88,6 +93,9 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
           ref={(e) => {
             orbitControlsRef.current = e;
             setRefVisible(!!e);
+            if (e) {
+              cameraRef.current = e.object;
+            }
           }}
           enableDamping={false}
           onEnd={onControlEnd}
