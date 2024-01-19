@@ -5,10 +5,10 @@
 import React, { useRef } from 'react';
 import { Dropdown } from 'antd';
 import * as Selector from '../../stores/selector';
-import { ObjectType } from '../../types';
 import './style.css';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
 import { createDefaultMenu } from './defaultMenu';
+import { ObjectType } from '../../constants';
 
 export interface ContextMenuProps {
   [key: string]: any;

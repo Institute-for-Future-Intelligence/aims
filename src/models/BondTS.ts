@@ -3,7 +3,7 @@
  */
 
 import { AtomTS } from './AtomTS';
-import { BondType } from '../types';
+import { BondType } from '../constants';
 
 export class BondTS {
   startAtom: AtomTS;

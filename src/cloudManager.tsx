@@ -13,21 +13,18 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { showError, showInfo } from './helpers';
-import { ClassID, DataColoring, FirebaseName, ProjectState, ProjectType, SchoolID, User } from './types';
+import { ExtendedProjectState, ProjectState } from './types';
 import Spinner from './components/spinner';
 import i18n from './i18n/i18n';
 import { Util } from './Util';
 import MainToolBar from './mainToolBar';
 import ProjectListPanel from './projectListPanel';
 import { fetchProject } from './cloudProjectUtil';
+import { ClassID, SchoolID, User } from './User';
+import { DataColoring, FirebaseName, ProjectType } from './constants';
 
 export interface CloudManagerProps {
   viewOnly: boolean;
-}
-
-export interface ExtendedProjectState extends ProjectState {
-  cameraPosition: number[];
-  panCenter: number[];
 }
 
 const useFlag = (flag: boolean, fn: Function, setFlag: () => void) => {
@@ -191,11 +188,11 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     }
   };
 
-  const setProjectState = (extendedProjectState: ExtendedProjectState) => {
+  const setProjectState = (cloudProjectState: ExtendedProjectState) => {
     setCommonStore((state) => {
-      state.projectState = { ...extendedProjectState } as ProjectState;
-      state.cameraPosition = extendedProjectState.cameraPosition;
-      state.panCenter = extendedProjectState.panCenter;
+      state.projectState = { ...cloudProjectState } as ProjectState;
+      state.cameraPosition = cloudProjectState.cameraPosition;
+      state.panCenter = cloudProjectState.panCenter;
       state.projectView = true;
     });
     usePrimitiveStore.getState().set((state) => {

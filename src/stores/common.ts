@@ -6,10 +6,10 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import produce, { enableMapSet } from 'immer';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { Util } from '../Util';
-import { VERSION } from '../programmaticConstants';
+import { DataColoring, ProjectType, VERSION } from '../constants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, DataColoring, MoleculeData, ProjectState, ProjectType, Range, User } from '../types';
+import { ActionInfo, MoleculeData, ProjectState, Range } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -23,6 +23,7 @@ import { MolecularProperties } from '../models/MolecularProperties';
 import { Filter } from '../Filter';
 import { MolecularViewerColoring, MolecularViewerStyle } from '../view/displayOptions';
 import { getSampleMolecule, getSampleProtein } from '../internalDatabase';
+import { User } from '../User';
 
 enableMapSet();
 

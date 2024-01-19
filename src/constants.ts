@@ -54,3 +54,45 @@ export const ORIGIN_VECTOR3 = new Vector3(0, 0, 0);
 export const HALF_PI_Z_EULER = new Euler(0, 0, HALF_PI);
 
 export const REGEX_ALLOWABLE_IN_NAME = /^[A-Za-z0-9\s-_()!?%&,]*$/;
+
+export enum FirebaseName {
+  FILES = 'Files',
+  LOG_DATA = 'Log Data',
+}
+
+export enum MoveDirection {
+  Left = 'Left',
+  Right = 'Right',
+  Up = 'Up',
+  Down = 'Down',
+}
+
+export enum Language {
+  English = 'English',
+  ChineseSimplified = '简体中文',
+  ChineseTraditional = '繁体中文',
+}
+
+export enum ProjectType {
+  DRUG_DISCOVERY = 'Drug Discovery',
+}
+
+export enum BondType {
+  SINGLE_BOND = 0,
+  DOUBLE_BOND = 1,
+  TRIPLE_BOND = 2,
+  HYDROGEN_BOND = 3,
+  VAN_DER_WAALS_BOND = 4,
+}
+
+export enum ObjectType {
+  Atom = 'Atom',
+  Bond = 'Bond',
+  Surface = 'Surface',
+}
+
+export enum DataColoring {
+  ALL = 0,
+  INDIVIDUALS = 1,
+  GROUPS = 2,
+}

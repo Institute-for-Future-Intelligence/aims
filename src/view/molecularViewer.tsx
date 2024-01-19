@@ -14,7 +14,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Color, Group, Vector3 } from 'three';
 import { MoleculeTS } from '../models/MoleculeTS';
 import { Cylinder, Line, Sphere } from '@react-three/drei';
-import { HALF_PI } from '../programmaticConstants';
+import { HALF_PI } from '../constants';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { MoleculeData } from '../types';

@@ -4,7 +4,8 @@
 
 import { createWithEqualityFn } from 'zustand/traditional';
 import produce from 'immer';
-import { MoleculeData, ObjectType, ProjectType } from '../types';
+import { MoleculeData } from '../types';
+import { ObjectType, ProjectType } from '../constants';
 
 // avoid using undefined value in the store for now.
 export interface PrimitiveStoreState {

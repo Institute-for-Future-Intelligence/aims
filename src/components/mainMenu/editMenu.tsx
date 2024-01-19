@@ -7,7 +7,7 @@ import i18n from '../../i18n/i18n';
 import { useStore } from '../../stores/common';
 import { LabelMark, MenuItem } from '../menuItem';
 import { UndoManager } from '../../undo/UndoManager';
-import { UNDO_SHOW_INFO_DURATION } from '../../programmaticConstants';
+import { UNDO_SHOW_INFO_DURATION } from '../../constants';
 import { showInfo } from '../../helpers';
 
 export const createEditMenu = (undoManager: UndoManager, isMac: boolean) => {

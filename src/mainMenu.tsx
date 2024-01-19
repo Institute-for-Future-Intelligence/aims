@@ -15,11 +15,11 @@ import About from './about';
 import * as Selector from './stores/selector';
 import { Util } from './Util';
 import { useTranslation } from 'react-i18next';
-import { Language } from './types';
 import { MenuItem } from './components/menuItem';
 import { createProjectMenu } from './components/mainMenu/projectMenu';
 import { createViewMenu } from './components/mainMenu/viewMenu';
 import { createEditMenu } from './components/mainMenu/editMenu';
+import { Language } from './constants';
 
 const radioStyle = {
   display: 'block',

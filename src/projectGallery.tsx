@@ -4,7 +4,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { DEFAULT_FOV, DEFAULT_LIGHT_INTENSITY, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './programmaticConstants';
+import { DataColoring, DEFAULT_FOV, DEFAULT_LIGHT_INTENSITY, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './constants';
 import { OrbitControls } from '@react-three/drei';
 import MolecularViewer from './view/molecularViewer';
 import styled from 'styled-components';
@@ -25,7 +25,7 @@ import {
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { useTranslation } from 'react-i18next';
-import { DataColoring, DatumEntry, MoleculeData } from './types';
+import { DatumEntry, MoleculeData } from './types';
 import TextArea from 'antd/lib/input/TextArea';
 import { UndoableChange } from './undo/UndoableChange';
 import ImportMoleculeModal from './ImportMoleculeModal';

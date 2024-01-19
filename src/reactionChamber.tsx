@@ -10,7 +10,7 @@ import {
   DEFAULT_SHADOW_CAMERA_FAR,
   DEFAULT_SHADOW_MAP_SIZE,
   HALF_PI,
-} from './programmaticConstants';
+} from './constants';
 import { GizmoHelper, GizmoViewport, OrbitControls } from '@react-three/drei';
 import Axes from './view/axes';
 import MolecularViewer from './view/molecularViewer';

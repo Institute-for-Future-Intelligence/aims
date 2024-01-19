@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef } from 'react';
-import { ActionInfo, MoveDirection } from './types';
+import { ActionInfo } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { UndoableCheck } from './undo/UndoableCheck';
@@ -11,7 +11,7 @@ import { showInfo } from './helpers';
 import i18n from './i18n/i18n';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { useRefStore } from './stores/commonRef';
-import { GRID_RATIO, UNDO_SHOW_INFO_DURATION } from './programmaticConstants';
+import { GRID_RATIO, MoveDirection, UNDO_SHOW_INFO_DURATION } from './constants';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { UndoableResetView } from './undo/UndoableResetView';
 

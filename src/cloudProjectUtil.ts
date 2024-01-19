@@ -8,8 +8,9 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import { showError, showInfo } from './helpers';
 import i18n from './i18n/i18n';
-import { DataColoring, MoleculeData, Range, ProjectState, ProjectType } from './types';
+import { MoleculeData, Range, ProjectState } from './types';
 import { usePrimitiveStore } from './stores/commonPrimitive';
+import { DataColoring, ProjectType } from './constants';
 
 export const fetchProject = async (userid: string, project: string, setProjectState: Function) => {
   const lang = { lng: useStore.getState().language };

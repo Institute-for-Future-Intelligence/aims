@@ -10,7 +10,7 @@ import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { visitHomepage, visitIFI } from './helpers';
 import MainMenu from './mainMenu';
-import { VERSION } from './programmaticConstants';
+import { VERSION } from './constants';
 import SplitPane from 'react-split-pane';
 import ShareLinks from './shareLinks';
 import ProjectGallery from './projectGallery';

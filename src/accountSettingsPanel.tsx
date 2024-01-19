@@ -9,10 +9,9 @@ import * as Selector from './stores/selector';
 import ReactDraggable, { DraggableEventHandler } from 'react-draggable';
 import { Button, Col, Row, Select } from 'antd';
 import { copyTextToClipboard, showSuccess } from './helpers';
-import { SchoolID } from './types';
-import { ClassID } from './types';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { useTranslation } from 'react-i18next';
+import { ClassID, SchoolID } from './User';
 
 const { Option } = Select;
 

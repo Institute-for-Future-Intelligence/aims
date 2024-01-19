@@ -3,7 +3,7 @@
  */
 
 import { Undoable } from './Undoable';
-import { MoveDirection } from '../types';
+import { MoveDirection } from '../constants';
 
 export interface UndoableMove extends Undoable {
   oldCx: number;

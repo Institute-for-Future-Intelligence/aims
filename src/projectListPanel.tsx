@@ -9,14 +9,14 @@ import * as Selector from './stores/selector';
 import ReactDraggable, { DraggableBounds, DraggableData, DraggableEvent, DraggableEventHandler } from 'react-draggable';
 import { Dropdown, Input, Modal, Space, Table, Typography } from 'antd';
 import { CaretDownOutlined, QuestionCircleOutlined, WarningOutlined } from '@ant-design/icons';
-import { HOME_URL, REGEX_ALLOWABLE_IN_NAME, Z_INDEX_FRONT_PANEL } from './programmaticConstants';
+import { HOME_URL, REGEX_ALLOWABLE_IN_NAME, Z_INDEX_FRONT_PANEL } from './constants';
 import { copyTextToClipboard, showSuccess } from './helpers';
 import Draggable from 'react-draggable';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { useTranslation } from 'react-i18next';
 import { MenuProps } from 'antd/lib';
 import { MenuItem } from './components/menuItem';
-import { ExtendedProjectState } from './cloudManager';
+import { ExtendedProjectState } from './types';
 
 const { Column } = Table;
 
