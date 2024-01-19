@@ -12,6 +12,7 @@ import { MoleculeData, Range, ProjectState } from './types';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { DataColoring, ProjectType } from './constants';
 import { MolecularViewerColoring, MolecularViewerStyle } from './view/displayOptions';
+import dayjs from 'dayjs';
 
 export const fetchProject = async (userid: string, project: string, setProjectState: Function) => {
   const lang = { lng: useStore.getState().language };
@@ -28,7 +29,9 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
         setProjectState({
           owner: userid,
           title: doc.id,
+          key: data.key ?? data.timestamp,
           timestamp: data.timestamp,
+          time: data.time ?? dayjs(new Date(data.timestamp)).format('MM/DD/YYYY hh:mm A'),
           description: data.description,
           dataColoring: data.dataColoring ?? DataColoring.ALL,
           type: data.type,

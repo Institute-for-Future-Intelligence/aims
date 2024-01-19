@@ -78,9 +78,16 @@ export interface ProjectListPanelProps {
   setProjectState: (projectState: ExtendedProjectState) => void;
   deleteProject: (title: string) => void;
   renameProject: (oldTitle: string, newTitle: string) => void;
+  updateFlag: boolean;
 }
 
-const ProjectListPanel = ({ projects, setProjectState, deleteProject, renameProject }: ProjectListPanelProps) => {
+const ProjectListPanel = ({
+  projects,
+  setProjectState,
+  deleteProject,
+  renameProject,
+  updateFlag,
+}: ProjectListPanelProps) => {
   const language = useStore(Selector.language);
   const user = useStore(Selector.user);
   const setCommonStore = useStore(Selector.set);
@@ -132,7 +139,7 @@ const ProjectListPanel = ({ projects, setProjectState, deleteProject, renameProj
       projectsRef.current = [...projects];
       setRecountFlag(!recountFlag);
     }
-  }, [projects]);
+  }, [projects, updateFlag]);
 
   const onDrag: DraggableEventHandler = (e, ui) => {
     setCurPosition({

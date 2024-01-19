@@ -54,8 +54,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
 
   const [processing, setProcessing] = useState(false);
   const [updateFlag, setUpdateFlag] = useState(false);
-  const [projectArray, setProjectArray] = useState<any[]>([]);
-  const [updateProjectArrayFlag, setUpdateProjectArrayFlag] = useState(false);
+  const [updateMyProjectsFlag, setUpdateMyProjectsFlag] = useState(false);
   const myProjects = useRef<ExtendedProjectState[] | void>(); // Not sure why I need to use ref to store this
 
   const lang = useMemo(() => {
@@ -134,57 +133,17 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     if (viewOnly) return;
     const p = new URLSearchParams(window.location.search);
     const userid = p.get('userid');
-    const title = p.get('title');
-    if (userid && title) {
-      // TODO
+    const project = p.get('project');
+    if (userid && project) {
+      // TODO: Not sure if we should change the browser's URL address
     }
   };
 
   useEffect(() => {
     if (myProjects.current) {
-      const arr: any[] = [];
-      myProjects.current.forEach((f, i) => {
-        arr.push({
-          key: i.toString(),
-          owner: f.owner,
-          title: f.title,
-          time: dayjs(new Date(f.timestamp)).format('MM/DD/YYYY hh:mm A'),
-          timestamp: f.timestamp,
-          description: f.description,
-          dataColoring: f.dataColoring,
-          selectedProperty: f.selectedProperty,
-          sortDescending: f.sortDescending,
-          xAxisNameScatteredPlot: f.xAxisNameScatteredPlot,
-          yAxisNameScatteredPlot: f.yAxisNameScatteredPlot,
-          dotSizeScatteredPlot: f.dotSizeScatteredPlot,
-          thumbnailWidth: f.thumbnailWidth,
-          type: f.type,
-          molecules: f.molecules,
-          targetProtein: f.targetProtein,
-          ranges: f.ranges ?? [],
-          filters: f.filters ?? [],
-          hiddenProperties: f.hiddenProperties ?? [],
-          counter: f.counter,
-
-          chamberViewerPercentWidth: f.chamberViewerPercentWidth,
-          chamberViewerAxes: f.chamberViewerAxes,
-          chamberViewerShininess: f.chamberViewerShininess,
-          chamberViewerStyle: f.chamberViewerStyle,
-          chamberViewerColoring: f.chamberViewerColoring,
-          chamberViewerBackground: f.chamberViewerBackground,
-
-          projectViewerStyle: f.projectViewerStyle,
-          projectViewerBackground: f.projectViewerBackground,
-
-          cameraPosition: f.cameraPosition,
-          panCenter: f.panCenter,
-        });
-      });
-      arr.sort((a, b) => b.timestamp - a.timestamp);
-      setProjectArray(arr);
+      myProjects.current.sort((a, b) => b.timestamp - a.timestamp);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [myProjects.current, updateProjectArrayFlag]);
+  }, [updateMyProjectsFlag]);
 
   const init = () => {
     const params = new URLSearchParams(window.location.search);
@@ -200,11 +159,11 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     }
   };
 
-  const setProjectState = (cloudProjectState: ExtendedProjectState) => {
+  const setProjectState = (extendedProjectState: ExtendedProjectState) => {
     setCommonStore((state) => {
-      state.projectState = { ...cloudProjectState } as ProjectState;
-      state.cameraPosition = cloudProjectState.cameraPosition;
-      state.panCenter = cloudProjectState.panCenter;
+      state.projectState = { ...extendedProjectState } as ProjectState;
+      state.cameraPosition = extendedProjectState.cameraPosition;
+      state.panCenter = extendedProjectState.panCenter;
       state.projectView = true;
     });
     usePrimitiveStore.getState().set((state) => {
@@ -364,6 +323,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             owner: user.uid,
             title: doc.id,
             timestamp: data.timestamp ?? -1,
+            key: data.key ?? data.timestamp,
+            time: data.time,
             description: data.description ?? '',
             dataColoring: data.dataColoring ?? DataColoring.ALL,
             selectedProperty: data.selectedProperty ?? null,
@@ -412,7 +373,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             state.showProjectListPanel = true;
           });
         }
-        setUpdateProjectArrayFlag(!updateProjectArrayFlag);
+        setUpdateMyProjectsFlag(!updateMyProjectsFlag);
       });
     }
   };
@@ -536,6 +497,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
         showInfo(i18n.t('message.TitleUsedChooseDifferentOne', lang) + ': ' + t);
       } else {
         if (user && user.uid) {
+          const timestamp = new Date().getTime();
           firebase
             .firestore()
             .collection('users')
@@ -545,7 +507,9 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             .set({
               owner: user.uid,
               title: t,
-              timestamp: new Date().getTime(),
+              timestamp,
+              key: timestamp.toString(),
+              time: dayjs(new Date(timestamp)).format('MM/DD/YYYY hh:mm A'),
               type: usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY,
               description: null,
               counter: 0,
@@ -633,19 +597,30 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     const title = useStore.getState().projectState.title;
     if (title) {
       setProcessing(true);
-      const pi = { ...useStore.getState().projectState } as ExtendedProjectState;
-      pi.cameraPosition = useStore.getState().cameraPosition;
-      pi.panCenter = useStore.getState().panCenter;
-      pi.timestamp = new Date().getTime();
+      const eps = { ...useStore.getState().projectState } as ExtendedProjectState;
+      eps.cameraPosition = useStore.getState().cameraPosition;
+      eps.panCenter = useStore.getState().panCenter;
+      eps.timestamp = new Date().getTime();
+      eps.time = dayjs(new Date(eps.timestamp)).format('MM/DD/YYYY hh:mm A');
+      if (myProjects.current) {
+        for (const p of myProjects.current) {
+          if (p.title === eps.title) {
+            p.timestamp = eps.timestamp;
+            p.time = eps.time;
+            p.key = eps.timestamp.toString();
+            break;
+          }
+        }
+      }
       firebase
         .firestore()
         .collection('users')
         .doc(user.uid)
         .collection('projects')
         .doc(title)
-        .set(pi)
+        .set(eps)
         .then(() => {
-          // ignore
+          setUpdateMyProjectsFlag(!updateMyProjectsFlag);
         })
         .catch((error) => {
           showError(i18n.t('message.CannotSaveProject', lang) + ': ' + error);
@@ -807,10 +782,11 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       <MainToolBar signIn={signIn} signOut={signOut} />
       {showProjectListPanel && myProjects.current && (
         <ProjectListPanel
-          projects={projectArray}
+          projects={myProjects.current}
           setProjectState={setProjectState}
           deleteProject={deleteProject}
           renameProject={renameProject}
+          updateFlag={updateMyProjectsFlag}
         />
       )}
     </>

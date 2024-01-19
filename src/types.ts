@@ -8,7 +8,9 @@ import { MolecularViewerColoring, MolecularViewerStyle } from './view/displayOpt
 
 // use null for undefined, as we need to persist this in Firebase
 export interface ProjectState {
+  key: string;
   owner: string | null;
+  time: string;
   timestamp: number;
   type: ProjectType;
   title: string | null;
