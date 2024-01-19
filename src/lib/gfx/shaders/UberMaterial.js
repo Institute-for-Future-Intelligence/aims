@@ -17,7 +17,6 @@ const _samplesKernel = [
 ];
 
 const defaultUniforms = THREE.UniformsUtils.merge([
-
   THREE.UniformsLib.fog,
   THREE.UniformsLib.lights,
 
@@ -47,7 +46,6 @@ const defaultUniforms = THREE.UniformsUtils.merge([
     noiseTexelSize: { type: 'v2', value: null },
     srcTexelSize: { type: 'v2', value: null },
   },
-
 ]);
 
 const uberOptionNames = [
@@ -182,6 +180,7 @@ class UberMaterial extends THREE.RawShaderMaterial {
       lights: true,
       fog: true,
       side: THREE.DoubleSide,
+      glslVersion: THREE.GLSL3,
     });
 
     this.setValues(params);
@@ -189,8 +188,7 @@ class UberMaterial extends THREE.RawShaderMaterial {
 
   precisionString() {
     const { precision } = capabilities;
-    const str = `precision ${precision} float;\n`
-      + `precision ${precision} int;\n\n`;
+    const str = `precision ${precision} float;\n` + `precision ${precision} int;\n\n`;
     return str;
   }
 
@@ -367,8 +365,7 @@ class UberMaterial extends THREE.RawShaderMaterial {
 
     uberOptionNames.forEach((p) => {
       if (self.uniforms.hasOwnProperty(p)) {
-        if (self.uberOptions[p] instanceof THREE.Color
-              || self.uberOptions[p] instanceof THREE.Matrix4) {
+        if (self.uberOptions[p] instanceof THREE.Color || self.uberOptions[p] instanceof THREE.Matrix4) {
           self.uniforms[p].value = self.uberOptions[p].clone();
         } else {
           self.uniforms[p].value = self.uberOptions[p];

@@ -1,4 +1,6 @@
 **/*.md
 **/*.svg
 **/*.html
+**/*.vert
+**/*.frag
 package.json

@@ -59,6 +59,7 @@ export enum MolecularViewerStyle {
 
 export const STYLE_MAP = new Map(
   [
+    { key: MolecularViewerStyle.BallAndStick, value: 'BS' },
     { key: MolecularViewerStyle.Cartoon, value: 'CA' },
     { key: MolecularViewerStyle.Trace, value: 'TR' },
     { key: MolecularViewerStyle.Tube, value: 'TU' },

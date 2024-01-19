@@ -161,6 +161,7 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess, highQuality
   const showAtoms = () => {
     if (!molecule) return null;
     if (
+      style === MolecularViewerStyle.BallAndStick ||
       style === MolecularViewerStyle.Stick ||
       style === MolecularViewerStyle.Wireframe ||
       style === MolecularViewerStyle.Cartoon ||
@@ -206,6 +207,7 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess, highQuality
   const showBonds = () => {
     if (!molecule) return null;
     if (
+      style === MolecularViewerStyle.BallAndStick ||
       style === MolecularViewerStyle.SpaceFilling ||
       style === MolecularViewerStyle.Cartoon ||
       style === MolecularViewerStyle.Trace ||
@@ -227,7 +229,7 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess, highQuality
           const endLength = e.endAtom.position.distanceTo(midPosition);
           const radius = 0.1;
           const segments = highQuality ? 16 : 4;
-          return style === MolecularViewerStyle.BallAndStick || style === MolecularViewerStyle.Stick ? (
+          return style === MolecularViewerStyle.Stick ? (
             <React.Fragment key={'Bond' + index}>
               <group
                 position={e.startAtom.position.clone().lerp(midPosition, 0.5)}
@@ -312,7 +314,6 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess, highQuality
   const showStructure = () => {
     if (!molecule) return null;
     if (
-      style === MolecularViewerStyle.BallAndStick ||
       style === MolecularViewerStyle.Stick ||
       style === MolecularViewerStyle.Wireframe ||
       style === MolecularViewerStyle.SpaceFilling
