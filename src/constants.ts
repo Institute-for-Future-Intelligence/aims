@@ -55,6 +55,10 @@ export const HALF_PI_Z_EULER = new Euler(0, 0, HALF_PI);
 
 export const REGEX_ALLOWABLE_IN_NAME = /^[A-Za-z0-9\s-_()!?%&,]*$/;
 
+export const DEFAULT_CAMERA_POSITION = [5, 10, 20];
+
+export const DEFAULT_PAN_CENTER = [0, 0, 0];
+
 export enum FirebaseName {
   FILES = 'Files',
   LOG_DATA = 'Log Data',

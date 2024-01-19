@@ -5,8 +5,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
+  DEFAULT_CAMERA_POSITION,
   DEFAULT_FOV,
   DEFAULT_LIGHT_INTENSITY,
+  DEFAULT_PAN_CENTER,
   DEFAULT_SHADOW_CAMERA_FAR,
   DEFAULT_SHADOW_MAP_SIZE,
   HALF_PI,
@@ -60,8 +62,8 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
     const control = e.target;
     setCommonStore((state) => {
       const p = control.object.position as Vector3;
-      if (!state.cameraPosition) state.cameraPosition = [5, 10, 20];
-      if (!state.panCenter) state.panCenter = [0, 0, 0];
+      if (!state.cameraPosition) state.cameraPosition = DEFAULT_CAMERA_POSITION;
+      if (!state.panCenter) state.panCenter = DEFAULT_PAN_CENTER;
       state.cameraPosition[0] = p.x;
       state.cameraPosition[1] = p.y;
       state.cameraPosition[2] = p.z;
@@ -85,7 +87,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
           fov: DEFAULT_FOV,
           far: DEFAULT_SHADOW_CAMERA_FAR,
           up: [0, 0, 1],
-          position: new Vector3().fromArray(cameraPosition ?? [5, 10, 20]),
+          position: new Vector3().fromArray(cameraPosition ?? DEFAULT_CAMERA_POSITION),
           rotation: [HALF_PI / 2, 0, HALF_PI / 2],
         }}
       >
@@ -114,7 +116,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
           ref={lightRef}
           name={'Directional Light'}
           color="white"
-          position={new Vector3().fromArray(cameraPosition ?? [5, 10, 20])}
+          position={new Vector3().fromArray(cameraPosition ?? DEFAULT_CAMERA_POSITION)}
           intensity={DEFAULT_LIGHT_INTENSITY}
           castShadow={true}
           shadow-bias={0} // may be used to reduce shadow artifacts

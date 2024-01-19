@@ -6,7 +6,7 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import produce, { enableMapSet } from 'immer';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { Util } from '../Util';
-import { VERSION } from '../constants';
+import { DEFAULT_CAMERA_POSITION, DEFAULT_PAN_CENTER, VERSION } from '../constants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
 import { ActionInfo, MoleculeData, ProjectState } from '../types';
@@ -96,8 +96,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
 
           projectState: ProjectUtil.createDefaultProjectState(),
           projectView: true,
-          cameraPosition: [5, 10, 20],
-          panCenter: [0, 0, 0],
+          cameraPosition: DEFAULT_CAMERA_POSITION,
+          panCenter: DEFAULT_PAN_CENTER,
 
           loadedMolecule: null,
           selectedMolecule: null,

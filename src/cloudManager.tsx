@@ -21,8 +21,9 @@ import MainToolBar from './mainToolBar';
 import ProjectListPanel from './projectListPanel';
 import { fetchProject } from './cloudProjectUtil';
 import { ClassID, SchoolID, User } from './User';
-import { DataColoring, FirebaseName, ProjectType } from './constants';
+import { DataColoring, DEFAULT_CAMERA_POSITION, DEFAULT_PAN_CENTER, FirebaseName, ProjectType } from './constants';
 import { MolecularViewerColoring, MolecularViewerStyle } from './view/displayOptions';
+import { ProjectUtil } from './ProjectUtil';
 
 export interface CloudManagerProps {
   viewOnly: boolean;
@@ -351,8 +352,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             projectViewerStyle: data.projectViewerStyle ?? MolecularViewerStyle.Stick,
             projectViewerBackground: data.projectViewerBackground ?? 'white',
 
-            cameraPosition: data.cameraPosition ?? [5, 10, 20],
-            panCenter: data.panCenter ?? [0, 0, 0],
+            cameraPosition: data.cameraPosition ?? DEFAULT_CAMERA_POSITION,
+            panCenter: data.panCenter ?? DEFAULT_PAN_CENTER,
           } as ExtendedProjectState);
         });
         return a;
@@ -393,24 +394,10 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
         }
         setCommonStore((state) => {
           if (title === state.projectState.title) {
-            state.projectState.title = null;
-            state.projectState.description = null;
-            state.projectState.dataColoring = DataColoring.ALL;
-            state.projectState.selectedProperty = null;
-            state.projectState.sortDescending = false;
-            state.projectState.xAxisNameScatteredPlot = null;
-            state.projectState.yAxisNameScatteredPlot = null;
-            state.projectState.dotSizeScatteredPlot = 5;
-            state.projectState.thumbnailWidth = 200;
-            state.projectState.counter = 0;
-            state.projectState.molecules = [];
-            state.projectState.targetProtein = null;
-            state.projectState.ranges = [];
-            state.projectState.filters = [];
-            state.projectState.hiddenProperties = [];
-            // state.projectView = false;
+            state.projectState = ProjectUtil.createDefaultProjectState();
           }
         });
+        setUpdateMyProjectsFlag(!updateMyProjectsFlag);
       })
       .catch((error) => {
         showError(i18n.t('message.CannotDeleteProject', lang) + ': ' + error);
@@ -498,82 +485,31 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       } else {
         if (user && user.uid) {
           const timestamp = new Date().getTime();
+          const eps = ProjectUtil.createDefaultProjectState() as ExtendedProjectState;
+          eps.timestamp = timestamp;
+          eps.key = timestamp.toString();
+          eps.time = dayjs(new Date(timestamp)).format('MM/DD/YYYY hh:mm A');
+          eps.title = t;
+          eps.owner = user.uid;
+          eps.type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
+          eps.description = usePrimitiveStore.getState().projectDescription;
+          eps.cameraPosition = DEFAULT_CAMERA_POSITION;
+          eps.panCenter = DEFAULT_PAN_CENTER;
           firebase
             .firestore()
             .collection('users')
             .doc(user.uid)
             .collection('projects')
             .doc(t)
-            .set({
-              owner: user.uid,
-              title: t,
-              timestamp,
-              key: timestamp.toString(),
-              time: dayjs(new Date(timestamp)).format('MM/DD/YYYY hh:mm A'),
-              type: usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY,
-              description: null,
-              counter: 0,
-              dataColoring: DataColoring.ALL,
-              selectedProperty: null,
-              sortDescending: false,
-              xAxisNameScatteredPlot: 'atomCount',
-              yAxisNameScatteredPlot: 'atomCount',
-              dotSizeScatteredPlot: 5,
-              thumbnailWidth: 200,
-              molecules: [],
-              targetProtein: null,
-              ranges: [],
-              filters: [],
-              hiddenProperties: [],
-
-              chamberViewerPercentWidth: 50,
-              chamberViewerAxes: true,
-              chamberViewerShininess: 1000,
-              chamberViewerStyle: MolecularViewerStyle.QuickSurface,
-              chamberViewerColoring: MolecularViewerColoring.SecondaryStructure,
-              chamberViewerBackground: 'black',
-
-              projectViewerStyle: MolecularViewerStyle.Stick,
-              projectViewerBackground: 'white',
-
-              cameraPosition: [5, 10, 20],
-              panCenter: [0, 0, 0],
-            } as ExtendedProjectState)
+            .set(eps)
             .then(() => {
               setCommonStore((state) => {
                 state.projectView = true;
-                // update the local copy as well
-                state.projectState.owner = user.uid;
-                state.projectState.type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
-                state.projectState.title = t;
-                state.projectState.description = null;
-                state.projectState.counter = 0;
-                state.projectState.dataColoring = DataColoring.ALL;
-                state.projectState.selectedProperty = null;
-                state.projectState.sortDescending = false;
-                state.projectState.xAxisNameScatteredPlot = null;
-                state.projectState.yAxisNameScatteredPlot = null;
-                state.projectState.dotSizeScatteredPlot = 5;
-                state.projectState.thumbnailWidth = 200;
-                state.projectState.molecules = [];
-                state.projectState.targetProtein = null;
-                state.projectState.ranges = [];
-                state.projectState.filters = [];
-                state.projectState.hiddenProperties = [];
-
-                state.projectState.chamberViewerPercentWidth = 50;
-                state.projectState.chamberViewerAxes = true;
-                state.projectState.chamberViewerShininess = 1000;
-                state.projectState.chamberViewerStyle = MolecularViewerStyle.QuickSurface;
-                state.projectState.chamberViewerColoring = MolecularViewerColoring.SecondaryStructure;
-                state.projectState.chamberViewerBackground = 'black';
-
-                state.projectState.projectViewerStyle = MolecularViewerStyle.Stick;
-                state.projectState.projectViewerBackground = 'white';
-
-                state.cameraPosition = [5, 10, 20];
-                state.panCenter = [0, 0, 0];
+                state.projectState = eps as ProjectState;
+                state.cameraPosition = DEFAULT_CAMERA_POSITION;
+                state.panCenter = DEFAULT_PAN_CENTER;
               });
+              setUpdateMyProjectsFlag(!updateMyProjectsFlag);
             })
             .catch((error) => {
               showError(i18n.t('message.CannotCreateNewProject', lang) + ': ' + error);
@@ -638,8 +574,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       showError(i18n.t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
       return;
     }
-    const t = title.trim();
-    if (t.length === 0) {
+    const newTitle = title.trim();
+    if (newTitle.length === 0) {
       showError(i18n.t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
       return;
     }
@@ -648,83 +584,56 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       let exist = false;
       if (myProjects.current) {
         for (const p of myProjects.current) {
-          if (p.title === t) {
+          if (p.title === newTitle) {
             exist = true;
             break;
           }
         }
       }
       if (exist) {
-        showInfo(i18n.t('message.TitleUsedChooseDifferentOne', lang) + ': ' + t);
+        showInfo(i18n.t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
       } else {
         if (user && user.uid) {
           const state = useStore.getState();
           const ps = state.projectState;
-          const molecules = ps.molecules;
-          if (molecules) {
-            const type = usePrimitiveStore.getState().projectType;
-            const description = usePrimitiveStore.getState().projectDescription ?? '';
-            firebase
-              .firestore()
-              .collection('users')
-              .doc(user.uid)
-              .collection('projects')
-              .doc(t)
-              .set({
-                owner: user.uid,
-                title: t,
-                timestamp: new Date().getTime(),
-                type,
-                description,
-                counter: ps.counter ?? 0,
-                dataColoring: ps.dataColoring ?? null,
-                selectedProperty: ps.selectedProperty ?? null,
-                sortDescending: !!ps.sortDescending,
-                xAxisNameScatteredPlot: ps.xAxisNameScatteredPlot ?? 'atomCount',
-                yAxisNameScatteredPlot: ps.yAxisNameScatteredPlot ?? 'atomCount',
-                dotSizeScatteredPlot: ps.dotSizeScatteredPlot ?? 5,
-                thumbnailWidth: ps.thumbnailWidth ?? 200,
-                molecules: molecules,
-                targetProtein: ps.targetProtein,
-                ranges: ps.ranges,
-                filters: ps.filters,
-                hiddenProperties: ps.hiddenProperties,
-
-                chamberViewerPercentWidth: ps.chamberViewerPercentWidth,
-                chamberViewerAxes: ps.chamberViewerAxes,
-                chamberViewerShininess: ps.chamberViewerShininess,
-                chamberViewerStyle: ps.chamberViewerStyle,
-                chamberViewerColoring: ps.chamberViewerColoring,
-                chamberViewerBackground: ps.chamberViewerBackground,
-
-                projectViewerStyle: ps.projectViewerStyle,
-                projectViewerBackground: ps.projectViewerBackground,
-
-                cameraPosition: state.cameraPosition,
-                panCenter: state.panCenter,
-              } as ExtendedProjectState)
-              .then(() => {
-                setCommonStore((state) => {
-                  state.projectView = true;
-                  state.projectState.owner = user.uid;
-                  state.projectState.type = type;
-                  state.projectState.title = title;
-                  state.projectState.description = description;
-                  state.projectState.molecules = [...molecules];
-                });
-              })
-              .catch((error) => {
-                showError(i18n.t('message.CannotCreateNewProject', lang) + ': ' + error);
-              })
-              .finally(() => {
-                if (showProjectListPanel) {
-                  fetchMyProjects(false).then(() => {
-                    setUpdateFlag(!updateFlag);
-                  });
-                }
-                setProcessing(false);
+          const eps = JSON.parse(JSON.stringify(ps)) as ExtendedProjectState;
+          eps.cameraPosition = state.cameraPosition;
+          eps.panCenter = state.panCenter;
+          eps.timestamp = new Date().getTime();
+          eps.key = eps.timestamp.toString();
+          eps.time = dayjs(new Date(eps.timestamp)).format('MM/DD/YYYY hh:mm A');
+          eps.title = newTitle;
+          eps.owner = user.uid; // make sure the current user becomes the owner
+          eps.type = usePrimitiveStore.getState().projectType;
+          eps.description = usePrimitiveStore.getState().projectDescription ?? '';
+          firebase
+            .firestore()
+            .collection('users')
+            .doc(user.uid)
+            .collection('projects')
+            .doc(newTitle)
+            .set(eps)
+            .then(() => {
+              setUpdateMyProjectsFlag(!updateMyProjectsFlag);
+              setCommonStore((state) => {
+                state.projectView = true;
+                state.projectState.type = eps.type;
+                state.projectState.title = eps.title;
+                state.projectState.description = eps.description;
               });
-          }
+            })
+            .catch((error) => {
+              showError(i18n.t('message.CannotCreateNewProject', lang) + ': ' + error);
+            })
+            .finally(() => {
+              // if the project list panel is open, update it
+              if (showProjectListPanel) {
+                fetchMyProjects(false).then(() => {
+                  setUpdateFlag(!updateFlag);
+                });
+              }
+              setProcessing(false);
+            });
         }
       }
     });
