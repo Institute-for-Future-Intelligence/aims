@@ -11,6 +11,7 @@ import i18n from './i18n/i18n';
 import { MoleculeData, Range, ProjectState } from './types';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { DataColoring, ProjectType } from './constants';
+import { MolecularViewerColoring, MolecularViewerStyle } from './view/displayOptions';
 
 export const fetchProject = async (userid: string, project: string, setProjectState: Function) => {
   const lang = { lng: useStore.getState().language };
@@ -43,6 +44,17 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           yAxisNameScatteredPlot: data.yAxisNameScatteredPlot,
           dotSizeScatteredPlot: data.dotSizeScatteredPlot,
           thumbnailWidth: data.thumbnailWidth,
+
+          chamberViewerPercentWidth: data.chamberViewerPercentWidth ?? 50,
+          chamberViewerAxes: data.chamberViewerAxes ?? true,
+          chamberViewerShininess: data.chamberViewerShininess ?? 1000,
+          chamberViewerStyle: data.chamberViewerStyle ?? MolecularViewerStyle.QuickSurface,
+          chamberViewerColoring: data.chamberViewerColoring ?? MolecularViewerColoring.SecondaryStructure,
+          chamberViewerBackground: data.chamberViewerBackground ?? 'black',
+
+          projectViewerStyle: data.projectViewerStyle ?? MolecularViewerStyle.Stick,
+          projectViewerBackground: data.projectViewerBackground ?? 'white',
+
           cameraPosition: data.cameraPosition,
           panCenter: data.panCenter,
         } as ProjectState);

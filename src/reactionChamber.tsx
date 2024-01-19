@@ -28,11 +28,11 @@ export interface ReactionChamberProps {
 
 const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const setCommonStore = useStore(Selector.set);
-  const viewerStyle = useStore(Selector.chamberViewerStyle);
-  const viewerColoring = useStore(Selector.chamberViewerColoring);
-  const viewerBackground = useStore(Selector.chamberViewerBackground);
-  const viewerAxes = useStore(Selector.chamberViewerAxes);
-  const shininess = useStore(Selector.chamberViewerShininess) ?? 1000;
+  const viewerStyle = useStore(Selector.projectState).chamberViewerStyle;
+  const viewerColoring = useStore(Selector.projectState).chamberViewerColoring;
+  const viewerBackground = useStore(Selector.projectState).chamberViewerBackground;
+  const viewerAxes = useStore(Selector.projectState).chamberViewerAxes;
+  const shininess = useStore(Selector.projectState).chamberViewerShininess ?? 1000;
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
   const cameraPosition = useStore(Selector.cameraPosition);
 

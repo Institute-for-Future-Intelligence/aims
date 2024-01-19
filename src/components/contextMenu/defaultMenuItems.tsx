@@ -91,13 +91,13 @@ export const Screenshot = () => {
 };
 
 export const AxesCheckBox = () => {
-  const axes = useStore(Selector.chamberViewerAxes);
+  const axes = useStore(Selector.projectState).chamberViewerAxes;
   const { t } = useTranslation();
   const lang = useLanguage();
 
   const setAxes = (checked: boolean) => {
     useStore.getState().set((state) => {
-      state.chamberViewerAxes = checked;
+      state.projectState.chamberViewerAxes = checked;
     });
   };
 
@@ -129,13 +129,13 @@ export const AxesCheckBox = () => {
 };
 
 export const BackgroundColor = () => {
-  const color = useStore(Selector.chamberViewerBackground);
+  const color = useStore(Selector.projectState).chamberViewerBackground;
   const { t } = useTranslation();
   const lang = useLanguage();
 
   const setColor = (color: string) => {
     useStore.getState().set((state) => {
-      state.chamberViewerBackground = color;
+      state.projectState.chamberViewerBackground = color;
     });
   };
 
@@ -169,13 +169,13 @@ export const BackgroundColor = () => {
 };
 
 export const StyleRadioGroup = () => {
-  const molecularViewerStyle = useStore(Selector.chamberViewerStyle);
+  const molecularViewerStyle = useStore(Selector.projectState).chamberViewerStyle;
   const { t } = useTranslation();
   const lang = useLanguage();
 
   const setStyle = (style: MolecularViewerStyle) => {
     useStore.getState().set((state) => {
-      state.chamberViewerStyle = style;
+      state.projectState.chamberViewerStyle = style;
     });
   };
 
@@ -215,13 +215,13 @@ export const StyleRadioGroup = () => {
 };
 
 export const ColoringRadioGroup = () => {
-  const molecularViewerColoring = useStore(Selector.chamberViewerColoring);
+  const molecularViewerColoring = useStore(Selector.projectState).chamberViewerColoring;
   const { t } = useTranslation();
   const lang = useLanguage();
 
   const setColoring = (coloring: MolecularViewerColoring) => {
     useStore.getState().set((state) => {
-      state.chamberViewerColoring = coloring;
+      state.projectState.chamberViewerColoring = coloring;
     });
   };
 
@@ -261,13 +261,13 @@ export const ColoringRadioGroup = () => {
 };
 
 export const ShininessInput = () => {
-  const shininess = useStore(Selector.chamberViewerShininess) ?? 1000;
+  const shininess = useStore(Selector.projectState).chamberViewerShininess ?? 1000;
   const { t } = useTranslation();
   const lang = useLanguage();
 
   const setShininess = (value: number) => {
     useStore.getState().set((state) => {
-      state.chamberViewerShininess = value;
+      state.projectState.chamberViewerShininess = value;
     });
   };
 

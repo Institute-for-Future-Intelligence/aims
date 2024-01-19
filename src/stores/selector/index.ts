@@ -49,22 +49,6 @@ export const molecularPropertiesMap = (state: CommonStoreState) => state.molecul
 
 export const setMolecularProperties = (state: CommonStoreState) => state.setMolecularProperties;
 
-export const chamberViewerPercentWidth = (state: CommonStoreState) => state.chamberViewerPercentWidth;
-
-export const chamberViewerAxes = (state: CommonStoreState) => state.chamberViewerAxes;
-
-export const chamberViewerShininess = (state: CommonStoreState) => state.chamberViewerShininess;
-
-export const chamberViewerStyle = (state: CommonStoreState) => state.chamberViewerStyle;
-
-export const chamberViewerColoring = (state: CommonStoreState) => state.chamberViewerColoring;
-
-export const chamberViewerBackground = (state: CommonStoreState) => state.chamberViewerBackground;
-
-export const projectViewerStyle = (state: CommonStoreState) => state.projectViewerStyle;
-
-export const projectViewerBackground = (state: CommonStoreState) => state.projectViewerBackground;
-
 export const navigationView = (state: CommonStoreState) => state.navigationView;
 
 export const selectedObject = (state: CommonStoreState) => state.selectedObject;

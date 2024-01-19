@@ -34,7 +34,7 @@ const App = () => {
   const addUndoable = useStore(Selector.addUndoable);
   const projectView = useStore(Selector.projectView);
   const projectState = useStore(Selector.projectState);
-  const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
+  const chamberViewerPercentWidth = useStore(Selector.projectState).chamberViewerPercentWidth;
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
   const loadProvidedMolecularProperties = useStore(Selector.loadProvidedMolecularProperties);
   const params = new URLSearchParams(window.location.search);
@@ -260,7 +260,7 @@ const App = () => {
             split={'vertical'}
             onChange={throttle((size) => {
               setCommonStore((state) => {
-                state.chamberViewerPercentWidth = Math.round(100 - (size / window.innerWidth) * 100);
+                state.projectState.chamberViewerPercentWidth = Math.round(100 - (size / window.innerWidth) * 100);
               });
             }, 5)}
             // must specify the height again for the split pane to resize correctly with the window

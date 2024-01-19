@@ -54,15 +54,6 @@ export interface CommonStoreState {
   molecularPropertiesMap: Map<string, MolecularProperties>;
   setMolecularProperties: (name: string, properties: MolecularProperties) => void;
 
-  chamberViewerPercentWidth: number;
-  chamberViewerAxes: boolean;
-  chamberViewerShininess: number;
-  chamberViewerStyle: MolecularViewerStyle;
-  chamberViewerColoring: MolecularViewerColoring;
-  chamberViewerBackground: string;
-  projectViewerStyle: MolecularViewerStyle;
-  projectViewerBackground: string;
-
   navigationView: boolean;
 
   selectedObject: AtomTS | BondTS | null;
@@ -124,6 +115,16 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             yAxisNameScatteredPlot: 'atomCount',
             dotSizeScatteredPlot: 5,
             thumbnailWidth: 200,
+
+            chamberViewerPercentWidth: 50,
+            chamberViewerAxes: true,
+            chamberViewerShininess: 1000,
+            chamberViewerStyle: MolecularViewerStyle.QuickSurface,
+            chamberViewerColoring: MolecularViewerColoring.SecondaryStructure,
+            chamberViewerBackground: 'black',
+
+            projectViewerStyle: MolecularViewerStyle.Stick,
+            projectViewerBackground: 'white',
           } as ProjectState,
           projectView: true,
 
@@ -166,15 +167,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
               state.molecularPropertiesMap.set(name, properties);
             });
           },
-
-          chamberViewerPercentWidth: 50,
-          chamberViewerAxes: true,
-          chamberViewerShininess: 1000,
-          chamberViewerStyle: MolecularViewerStyle.QuickSurface,
-          chamberViewerColoring: MolecularViewerColoring.SecondaryStructure,
-          chamberViewerBackground: 'black',
-          projectViewerStyle: MolecularViewerStyle.Stick,
-          projectViewerBackground: 'white',
 
           navigationView: false,
 
@@ -276,14 +268,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           user: state.user,
           loadedMolecule: state.loadedMolecule,
           selectedMolecule: state.selectedMolecule,
-          chamberViewerPercentWidth: state.chamberViewerPercentWidth,
-          chamberViewerAxes: state.chamberViewerAxes,
-          chamberViewerShininess: state.chamberViewerShininess,
-          chamberViewerStyle: state.chamberViewerStyle,
-          chamberViewerColoring: state.chamberViewerColoring,
-          chamberViewerBackground: state.chamberViewerBackground,
-          projectViewerStyle: state.projectViewerStyle,
-          projectViewerBackground: state.projectViewerBackground,
           projectState: state.projectState,
           cameraPosition: state.cameraPosition,
           panCenter: state.panCenter,

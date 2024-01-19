@@ -22,6 +22,7 @@ import ProjectListPanel from './projectListPanel';
 import { fetchProject } from './cloudProjectUtil';
 import { ClassID, SchoolID, User } from './User';
 import { DataColoring, FirebaseName, ProjectType } from './constants';
+import { MolecularViewerColoring, MolecularViewerStyle } from './view/displayOptions';
 
 export interface CloudManagerProps {
   viewOnly: boolean;
@@ -164,6 +165,17 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
           filters: f.filters ?? [],
           hiddenProperties: f.hiddenProperties ?? [],
           counter: f.counter,
+
+          chamberViewerPercentWidth: f.chamberViewerPercentWidth,
+          chamberViewerAxes: f.chamberViewerAxes,
+          chamberViewerShininess: f.chamberViewerShininess,
+          chamberViewerStyle: f.chamberViewerStyle,
+          chamberViewerColoring: f.chamberViewerColoring,
+          chamberViewerBackground: f.chamberViewerBackground,
+
+          projectViewerStyle: f.projectViewerStyle,
+          projectViewerBackground: f.projectViewerBackground,
+
           cameraPosition: f.cameraPosition,
           panCenter: f.panCenter,
         });
@@ -367,6 +379,17 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             filters: data.filters ?? [],
             hiddenProperties: data.hiddenProperties ?? [],
             counter: data.counter ?? 0,
+
+            chamberViewerPercentWidth: data.chamberViewerPercentWidth ?? 50,
+            chamberViewerAxes: data.chamberViewerAxes ?? true,
+            chamberViewerShininess: data.chamberViewerShininess ?? 1000,
+            chamberViewerStyle: data.chamberViewerStyle ?? MolecularViewerStyle.QuickSurface,
+            chamberViewerColoring: data.chamberViewerColoring ?? MolecularViewerColoring.SecondaryStructure,
+            chamberViewerBackground: data.chamberViewerBackground ?? 'black',
+
+            projectViewerStyle: data.projectViewerStyle ?? MolecularViewerStyle.Stick,
+            projectViewerBackground: data.projectViewerBackground ?? 'white',
+
             cameraPosition: data.cameraPosition ?? [5, 10, 20],
             panCenter: data.panCenter ?? [0, 0, 0],
           } as ExtendedProjectState);
@@ -513,17 +536,6 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
         showInfo(i18n.t('message.TitleUsedChooseDifferentOne', lang) + ': ' + t);
       } else {
         if (user && user.uid) {
-          const type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
-          const timestamp = new Date().getTime();
-          const description = null;
-          const counter = 0;
-          const dataColoring = DataColoring.ALL;
-          const selectedProperty = null;
-          const sortDescending = false;
-          const xAxisNameScatteredPlot = 'atomCount';
-          const yAxisNameScatteredPlot = 'atomCount';
-          const dotSizeScatteredPlot = 5;
-          const thumbnailWidth = 200;
           firebase
             .firestore()
             .collection('users')
@@ -533,22 +545,33 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             .set({
               owner: user.uid,
               title: t,
-              timestamp,
-              type,
-              description,
-              counter,
-              dataColoring,
-              selectedProperty,
-              sortDescending,
-              xAxisNameScatteredPlot,
-              yAxisNameScatteredPlot,
-              dotSizeScatteredPlot,
-              thumbnailWidth,
+              timestamp: new Date().getTime(),
+              type: usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY,
+              description: null,
+              counter: 0,
+              dataColoring: DataColoring.ALL,
+              selectedProperty: null,
+              sortDescending: false,
+              xAxisNameScatteredPlot: 'atomCount',
+              yAxisNameScatteredPlot: 'atomCount',
+              dotSizeScatteredPlot: 5,
+              thumbnailWidth: 200,
               molecules: [],
               targetProtein: null,
               ranges: [],
               filters: [],
               hiddenProperties: [],
+
+              chamberViewerPercentWidth: 50,
+              chamberViewerAxes: true,
+              chamberViewerShininess: 1000,
+              chamberViewerStyle: MolecularViewerStyle.QuickSurface,
+              chamberViewerColoring: MolecularViewerColoring.SecondaryStructure,
+              chamberViewerBackground: 'black',
+
+              projectViewerStyle: MolecularViewerStyle.Stick,
+              projectViewerBackground: 'white',
+
               cameraPosition: [5, 10, 20],
               panCenter: [0, 0, 0],
             } as ExtendedProjectState)
@@ -557,9 +580,9 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
                 state.projectView = true;
                 // update the local copy as well
                 state.projectState.owner = user.uid;
-                state.projectState.type = type;
+                state.projectState.type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
                 state.projectState.title = t;
-                state.projectState.description = description;
+                state.projectState.description = null;
                 state.projectState.counter = 0;
                 state.projectState.dataColoring = DataColoring.ALL;
                 state.projectState.selectedProperty = null;
@@ -573,6 +596,17 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
                 state.projectState.ranges = [];
                 state.projectState.filters = [];
                 state.projectState.hiddenProperties = [];
+
+                state.projectState.chamberViewerPercentWidth = 50;
+                state.projectState.chamberViewerAxes = true;
+                state.projectState.chamberViewerShininess = 1000;
+                state.projectState.chamberViewerStyle = MolecularViewerStyle.QuickSurface;
+                state.projectState.chamberViewerColoring = MolecularViewerColoring.SecondaryStructure;
+                state.projectState.chamberViewerBackground = 'black';
+
+                state.projectState.projectViewerStyle = MolecularViewerStyle.Stick;
+                state.projectState.projectViewerBackground = 'white';
+
                 state.cameraPosition = [5, 10, 20];
                 state.panCenter = [0, 0, 0];
               });
@@ -649,20 +683,12 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
         showInfo(i18n.t('message.TitleUsedChooseDifferentOne', lang) + ': ' + t);
       } else {
         if (user && user.uid) {
-          const molecules = useStore.getState().projectState.molecules;
+          const state = useStore.getState();
+          const ps = state.projectState;
+          const molecules = ps.molecules;
           if (molecules) {
             const type = usePrimitiveStore.getState().projectType;
             const description = usePrimitiveStore.getState().projectDescription ?? '';
-            const timestamp = new Date().getTime();
-            const counter = useStore.getState().projectState.counter ?? 0;
-            const dataColoring = useStore.getState().projectState.dataColoring ?? null;
-            const selectedProperty = useStore.getState().projectState.selectedProperty ?? null;
-            const sortDescending = !!useStore.getState().projectState.sortDescending;
-            const xAxisNameScatteredPlot = useStore.getState().projectState.xAxisNameScatteredPlot ?? 'atomCount';
-            const yAxisNameScatteredPlot = useStore.getState().projectState.yAxisNameScatteredPlot ?? 'atomCount';
-            const dotSizeScatteredPlot = useStore.getState().projectState.dotSizeScatteredPlot ?? 5;
-            const thumbnailWidth = useStore.getState().projectState.thumbnailWidth ?? 200;
-            const targetProtein = useStore.getState().projectState.targetProtein;
             firebase
               .firestore()
               .collection('users')
@@ -672,24 +698,35 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
               .set({
                 owner: user.uid,
                 title: t,
-                timestamp,
+                timestamp: new Date().getTime(),
                 type,
                 description,
-                counter,
-                dataColoring,
-                selectedProperty,
-                sortDescending,
-                xAxisNameScatteredPlot,
-                yAxisNameScatteredPlot,
-                dotSizeScatteredPlot,
-                thumbnailWidth,
+                counter: ps.counter ?? 0,
+                dataColoring: ps.dataColoring ?? null,
+                selectedProperty: ps.selectedProperty ?? null,
+                sortDescending: !!ps.sortDescending,
+                xAxisNameScatteredPlot: ps.xAxisNameScatteredPlot ?? 'atomCount',
+                yAxisNameScatteredPlot: ps.yAxisNameScatteredPlot ?? 'atomCount',
+                dotSizeScatteredPlot: ps.dotSizeScatteredPlot ?? 5,
+                thumbnailWidth: ps.thumbnailWidth ?? 200,
                 molecules: molecules,
-                targetProtein: targetProtein,
-                ranges: useStore.getState().projectState.ranges,
-                filters: useStore.getState().projectState.filters,
-                hiddenProperties: useStore.getState().projectState.hiddenProperties,
-                cameraPosition: useStore.getState().cameraPosition,
-                panCenter: useStore.getState().panCenter,
+                targetProtein: ps.targetProtein,
+                ranges: ps.ranges,
+                filters: ps.filters,
+                hiddenProperties: ps.hiddenProperties,
+
+                chamberViewerPercentWidth: ps.chamberViewerPercentWidth,
+                chamberViewerAxes: ps.chamberViewerAxes,
+                chamberViewerShininess: ps.chamberViewerShininess,
+                chamberViewerStyle: ps.chamberViewerStyle,
+                chamberViewerColoring: ps.chamberViewerColoring,
+                chamberViewerBackground: ps.chamberViewerBackground,
+
+                projectViewerStyle: ps.projectViewerStyle,
+                projectViewerBackground: ps.projectViewerBackground,
+
+                cameraPosition: state.cameraPosition,
+                panCenter: state.panCenter,
               } as ExtendedProjectState)
               .then(() => {
                 setCommonStore((state) => {

@@ -122,8 +122,8 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
   const hoveredMolecule = usePrimitiveStore(Selector.hoveredMolecule);
   const addMolecule = useStore(Selector.addMolecule);
   const removeMolecule = useStore(Selector.removeMolecule);
-  const viewerStyle = useStore(Selector.projectViewerStyle);
-  const viewerBackground = useStore(Selector.projectViewerBackground);
+  const viewerStyle = useStore(Selector.projectState).projectViewerStyle;
+  const viewerBackground = useStore(Selector.projectState).projectViewerBackground;
   const projectState = useStore(Selector.projectState);
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
 
@@ -256,13 +256,13 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
   const createProjectSettingsContent = useMemo(() => {
     const setStyle = (style: MolecularViewerStyle) => {
       useStore.getState().set((state) => {
-        state.projectViewerStyle = style;
+        state.projectState.projectViewerStyle = style;
       });
     };
 
     const setBackground = (color: string) => {
       useStore.getState().set((state) => {
-        state.projectViewerBackground = color;
+        state.projectState.projectViewerBackground = color;
       });
     };
 
