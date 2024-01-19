@@ -60,6 +60,9 @@ export enum MolecularViewerStyle {
 export const STYLE_MAP = new Map(
   [
     { key: MolecularViewerStyle.BallAndStick, value: 'BS' },
+    { key: MolecularViewerStyle.Wireframe, value: 'LN' },
+    { key: MolecularViewerStyle.Stick, value: 'LC' },
+    { key: MolecularViewerStyle.SpaceFilling, value: 'VW' },
     { key: MolecularViewerStyle.Cartoon, value: 'CA' },
     { key: MolecularViewerStyle.Trace, value: 'TR' },
     { key: MolecularViewerStyle.Tube, value: 'TU' },
