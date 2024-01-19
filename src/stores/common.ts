@@ -6,10 +6,10 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import produce, { enableMapSet } from 'immer';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { Util } from '../Util';
-import { DataColoring, ProjectType, VERSION } from '../constants';
+import { VERSION } from '../constants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, MoleculeData, ProjectState, Range } from '../types';
+import { ActionInfo, MoleculeData, ProjectState } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -20,10 +20,8 @@ import { AtomTS } from '../models/AtomTS';
 import { BondTS } from '../models/BondTS';
 import { useRefStore } from './commonRef';
 import { MolecularProperties } from '../models/MolecularProperties';
-import { Filter } from '../Filter';
-import { MolecularViewerColoring, MolecularViewerStyle } from '../view/displayOptions';
-import { getSampleMolecule, getSampleProtein } from '../internalDatabase';
 import { User } from '../User';
+import { ProjectUtil } from '../ProjectUtil';
 
 enableMapSet();
 
@@ -96,38 +94,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
 
           selectedFloatingWindow: null,
 
-          projectState: {
-            owner: null,
-            timestamp: -1,
-            type: ProjectType.DRUG_DISCOVERY,
-            title: null,
-            description: null,
-            molecules: [getSampleMolecule('Aspirin'), getSampleMolecule('Ibuprofen'), getSampleMolecule('Paxlovid')],
-            targetProtein: getSampleProtein('Crambin'),
-            selectedProperty: null,
-            dataColoring: DataColoring.ALL,
-            sortDescending: false,
-            ranges: new Array<Range>(),
-            filters: new Array<Filter>(),
-            hiddenProperties: new Array<string>(),
-            counter: 0,
-            xAxisNameScatteredPlot: 'atomCount',
-            yAxisNameScatteredPlot: 'atomCount',
-            dotSizeScatteredPlot: 5,
-            thumbnailWidth: 200,
-
-            chamberViewerPercentWidth: 50,
-            chamberViewerAxes: true,
-            chamberViewerShininess: 1000,
-            chamberViewerStyle: MolecularViewerStyle.QuickSurface,
-            chamberViewerColoring: MolecularViewerColoring.SecondaryStructure,
-            chamberViewerBackground: 'black',
-
-            projectViewerStyle: MolecularViewerStyle.Stick,
-            projectViewerBackground: 'white',
-          } as ProjectState,
+          projectState: ProjectUtil.createDefaultProjectState(),
           projectView: true,
-
           cameraPosition: [5, 10, 20],
           panCenter: [0, 0, 0],
 

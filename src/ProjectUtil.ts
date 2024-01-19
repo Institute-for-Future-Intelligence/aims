@@ -3,11 +3,47 @@
  */
 
 import i18n from './i18n/i18n';
-import { MoleculeData } from './types';
+import { MoleculeData, ProjectState, Range } from './types';
 import { MolecularProperties } from './models/MolecularProperties';
 import { Filter, FilterType } from './Filter';
+import { DataColoring, ProjectType } from './constants';
+import { getSampleMolecule, getSampleProtein } from './internalDatabase';
+import { MolecularViewerColoring, MolecularViewerStyle } from './view/displayOptions';
 
 export class ProjectUtil {
+  static createDefaultProjectState() {
+    return {
+      owner: null,
+      timestamp: -1,
+      type: ProjectType.DRUG_DISCOVERY,
+      title: null,
+      description: null,
+      molecules: [getSampleMolecule('Aspirin'), getSampleMolecule('Ibuprofen'), getSampleMolecule('Paxlovid')],
+      targetProtein: getSampleProtein('Crambin'),
+      selectedProperty: null,
+      dataColoring: DataColoring.ALL,
+      sortDescending: false,
+      ranges: new Array<Range>(),
+      filters: new Array<Filter>(),
+      hiddenProperties: new Array<string>(),
+      counter: 0,
+      xAxisNameScatteredPlot: 'atomCount',
+      yAxisNameScatteredPlot: 'atomCount',
+      dotSizeScatteredPlot: 5,
+      thumbnailWidth: 200,
+
+      chamberViewerPercentWidth: 50,
+      chamberViewerAxes: true,
+      chamberViewerShininess: 1000,
+      chamberViewerStyle: MolecularViewerStyle.QuickSurface,
+      chamberViewerColoring: MolecularViewerColoring.SecondaryStructure,
+      chamberViewerBackground: 'black',
+
+      projectViewerStyle: MolecularViewerStyle.Stick,
+      projectViewerBackground: 'white',
+    } as ProjectState;
+  }
+
   static getVariables(hidden: string[]): string[] {
     const a: string[] = [];
     if (!hidden?.includes('atomCount')) a.push('atomCount');
