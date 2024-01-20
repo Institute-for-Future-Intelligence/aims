@@ -75,7 +75,7 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
         }}
       >
         <OrbitControls
-          enableDamping={false}
+          enableDamping={true}
           onEnd={onControlEnd}
           onChange={(e) => {
             if (!e) return;

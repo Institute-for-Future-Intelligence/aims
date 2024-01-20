@@ -15,7 +15,7 @@ import proteinUrl1 from './proteins/1a3n.pdb';
 import proteinUrl2 from './proteins/1crn.pdb';
 import proteinUrl3 from './proteins/7qo7.pdb';
 
-const sampleMolecules = [
+export const sampleMolecules = [
   { name: 'Aspirin', url: moleculeUrl1, internal: true } as MoleculeData,
   { name: 'Ibuprofen', url: moleculeUrl2, internal: true } as MoleculeData,
   { name: 'Paxlovid', url: moleculeUrl3, internal: true } as MoleculeData,

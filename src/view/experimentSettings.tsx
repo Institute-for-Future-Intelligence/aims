@@ -43,6 +43,7 @@ const ExperimentSettings = () => {
             <Select
               style={{ width: '100%' }}
               value={targetProtein?.name ?? sampleProteins[0].name}
+              showSearch
               onChange={(value: string) => {
                 const oldValue = targetProtein?.name;
                 const newValue = value;

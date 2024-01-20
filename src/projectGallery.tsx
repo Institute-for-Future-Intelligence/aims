@@ -140,9 +140,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
   const isOwner = user.uid === projectState.owner;
 
   const descriptionTextAreaEditableRef = useRef<boolean>(false);
-  const descriptionRef = useRef<string | null>(
-    projectState.description ?? t('projectPanel.WriteABriefDescriptionAboutThisProject', lang),
-  );
+  const descriptionRef = useRef<string | null>(null);
   const descriptionChangedRef = useRef<boolean>(false);
   const descriptionExpandedRef = useRef<boolean>(false);
 
@@ -164,6 +162,18 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
   const polarSurfaceAreaSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('polarSurfaceArea'));
 
   useEffect(() => {
+    atomCountSelectionRef.current = !projectState.hiddenProperties?.includes('atomCount');
+    bondCountSelectionRef.current = !projectState.hiddenProperties?.includes('bondCount');
+    massSelectionRef.current = !projectState.hiddenProperties?.includes('molecularMass');
+    logPSelectionRef.current = !projectState.hiddenProperties?.includes('logP');
+    hBondDonorCountSelectionRef.current = !projectState.hiddenProperties?.includes('hydrogenBondDonorCount');
+    hBondAcceptorCountSelectionRef.current = !projectState.hiddenProperties?.includes('hydrogenBondAcceptorCount');
+    rotatableBondCountSelectionRef.current = !projectState.hiddenProperties?.includes('rotatableBondCount');
+    polarSurfaceAreaSelectionRef.current = !projectState.hiddenProperties?.includes('polarSurfaceArea');
+    setUpdateFlag(!updateFlag);
+  }, [projectState.hiddenProperties]);
+
+  useEffect(() => {
     const handleResize = () => {
       setUpdateFlag(!updateFlag);
     };
@@ -173,6 +183,10 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateFlag]);
+
+  useEffect(() => {
+    descriptionRef.current = projectState.description ?? t('projectPanel.WriteABriefDescriptionAboutThisProject', lang);
+  }, [projectState.description]);
 
   const totalHeight = window.innerHeight;
   const canvasColumns = 3;

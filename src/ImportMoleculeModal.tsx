@@ -3,12 +3,15 @@
  */
 
 import React, { useMemo, useRef, useState } from 'react';
-import { Button, Input, Modal, Space } from 'antd';
+import { Button, Modal, Select, Space } from 'antd';
 import i18n from './i18n/i18n';
 import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react-draggable';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { useTranslation } from 'react-i18next';
+import { sampleMolecules } from './internalDatabase';
+
+const { Option } = Select;
 
 export interface ImportMoleculeModalProps {
   importByName: (name: string) => void;
@@ -96,15 +99,20 @@ const ImportMoleculeModal = ({
         <Space direction={'horizontal'} style={{ width: '150px' }}>
           {i18n.t('projectPanel.MoleculeName', lang)}:
         </Space>
-        <Input
+        <Select
           style={{ width: '240px' }}
-          placeholder="Title"
           value={getName()}
-          onPressEnter={onOk}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setName(e.target.value);
+          showSearch
+          onChange={(value: string) => {
+            setName(value);
           }}
-        />
+        >
+          {sampleMolecules.map((d, i) => (
+            <Option key={`${i}-${d.name}`} value={d.name}>
+              {d.name}
+            </Option>
+          ))}
+        </Select>
       </Space>
     </Modal>
   );
