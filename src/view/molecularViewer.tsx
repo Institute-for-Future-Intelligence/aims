@@ -35,10 +35,9 @@ export interface MolecularViewerProps {
   style: MolecularViewerStyle;
   coloring: MolecularViewerColoring;
   shininess?: number;
-  highQuality?: boolean;
 }
 
-const MolecularViewer = ({ moleculeData, style, coloring, shininess, highQuality }: MolecularViewerProps) => {
+const MolecularViewer = ({ moleculeData, style, coloring, shininess }: MolecularViewerProps) => {
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
   const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);

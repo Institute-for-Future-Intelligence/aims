@@ -132,7 +132,6 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
             style={viewerStyle}
             coloring={viewerColoring}
             shininess={shininess}
-            highQuality={true}
           />
         )}
         <GizmoHelper alignment="bottom-right" margin={[30, 30]}>

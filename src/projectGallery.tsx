@@ -3,10 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { DataColoring, DEFAULT_FOV, DEFAULT_LIGHT_INTENSITY, DEFAULT_SHADOW_CAMERA_FAR, HALF_PI } from './constants';
-import { OrbitControls } from '@react-three/drei';
-import MolecularViewer from './view/molecularViewer';
+import { DataColoring } from './constants';
 import styled from 'styled-components';
 import { Button, Checkbox, Col, Collapse, CollapseProps, ColorPicker, List, Popover, Radio, Row, Select } from 'antd';
 import {
@@ -35,8 +32,9 @@ import { ProjectUtil } from './ProjectUtil';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { updateDataColoring, updateHiddenProperties } from './cloudProjectUtil';
 import { Filter, FilterType } from './Filter';
-import { GALLERY_STYLE_LABELS, MolecularViewerColoring, MolecularViewerStyle } from './view/displayOptions';
+import { GALLERY_STYLE_LABELS, MolecularViewerStyle } from './view/displayOptions';
 import { getSampleMolecule } from './internalDatabase';
+import MoleculeContainer from './moleculeContainer';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -193,58 +191,6 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
         }
       });
     }
-  };
-
-  const createCanvas = (moleculeData: MoleculeData) => {
-    return (
-      <Canvas
-        shadows={false}
-        gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
-        frameloop={'demand'}
-        style={{
-          transition: '.5s ease',
-          opacity: hoveredMolecule === moleculeData ? 0.5 : 1,
-          height: canvasHeight + 'px',
-          width: canvasWidth + 'px',
-          backgroundColor: hoveredMolecule === moleculeData ? 'rgba(225, 225, 225, 0.5)' : viewerBackground,
-          borderRadius: '10px',
-          border: moleculeData.excluded
-            ? 'none'
-            : selectedMolecule === moleculeData
-              ? '2px solid red'
-              : '1px solid gray',
-        }}
-        camera={{
-          fov: DEFAULT_FOV,
-          far: DEFAULT_SHADOW_CAMERA_FAR,
-          up: [0, 0, 1],
-          position: [0, 0, 20],
-          rotation: [HALF_PI / 2, 0, HALF_PI / 2],
-        }}
-        onClick={() => {
-          setCommonStore((state) => {
-            state.selectedMolecule = moleculeData !== selectedMolecule ? moleculeData : null;
-          });
-        }}
-        onDoubleClick={() => {
-          setCommonStore((state) => {
-            state.selectedMolecule = moleculeData;
-            state.loadedMolecule = moleculeData;
-          });
-        }}
-      >
-        <OrbitControls />
-        <ambientLight intensity={1} name={'Ambient Light'} />
-        <directionalLight
-          name={'Directional Light'}
-          color="white"
-          position={[1, 1, 1]}
-          intensity={DEFAULT_LIGHT_INTENSITY}
-          castShadow={false}
-        />
-        <MolecularViewer moleculeData={moleculeData} style={viewerStyle} coloring={MolecularViewerColoring.Element} />
-      </Canvas>
-    );
   };
 
   const closeProject = () => {
@@ -870,7 +816,13 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
                     });
                   }}
                 >
-                  {createCanvas(data)}
+                  <MoleculeContainer
+                    width={canvasWidth}
+                    height={canvasHeight}
+                    moleculeData={data}
+                    hovered={hoveredMolecule === data}
+                    selected={selectedMolecule === data}
+                  />
                   <div
                     style={{
                       position: 'relative',
