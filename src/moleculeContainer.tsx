@@ -2,7 +2,7 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
   DEFAULT_CAMERA_POSITION,
@@ -16,8 +16,8 @@ import MolecularViewer from './view/molecularViewer';
 import { MoleculeData } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import { DirectionalLight, Vector3 } from 'three';
 import { MolecularViewerColoring } from './view/displayOptions';
+import { Vector3 } from 'three';
 
 export interface MoleculeContainerProps {
   width: number;
@@ -33,32 +33,25 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
   const viewerStyle = useStore(Selector.projectState).projectViewerStyle;
   const viewerBackground = useStore(Selector.projectState).projectViewerBackground;
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const cameraRef = useRef<any>(null);
-  const orbitControlsRef = useRef<any>(null);
-  const lightRef = useRef<DirectionalLight>(null);
-
   const [cameraPosition, setCameraPosition] = useState<number[]>(DEFAULT_CAMERA_POSITION);
 
   const onControlEnd = (e: any) => {
-    const control = e.target;
-    const p = control.object.position as Vector3;
+    const camera = e.target.object;
+    const p = camera.position as Vector3;
     setCameraPosition([p.x, p.y, p.z]);
   };
 
   return (
     <>
       <Canvas
-        ref={canvasRef}
         shadows={false}
         gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
         frameloop={'demand'}
         style={{
-          transition: '.5s ease',
-          opacity: hovered ? 0.5 : 1,
+          // transition: '.5s ease',
           height: height + 'px',
           width: width + 'px',
-          backgroundColor: hovered ? 'rgba(225, 225, 225, 0.5)' : viewerBackground,
+          backgroundColor: viewerBackground,
           borderRadius: '10px',
           border: moleculeData?.excluded ? 'none' : selected ? '2px solid red' : '1px solid gray',
         }}
@@ -66,10 +59,10 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
           fov: DEFAULT_FOV,
           far: DEFAULT_SHADOW_CAMERA_FAR,
           up: [0, 0, 1],
-          position: new Vector3().fromArray(DEFAULT_CAMERA_POSITION),
+          position: new Vector3().fromArray(cameraPosition),
           rotation: [HALF_PI / 2, 0, HALF_PI / 2],
         }}
-        onClick={() => {
+        onMouseDown={() => {
           setCommonStore((state) => {
             state.selectedMolecule = moleculeData !== state.selectedMolecule ? moleculeData : null;
           });
@@ -82,26 +75,15 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
         }}
       >
         <OrbitControls
-          ref={(e) => {
-            orbitControlsRef.current = e;
-            if (e) {
-              cameraRef.current = e.object;
-            }
-          }}
-          enableDamping={true}
+          enableDamping={false}
           onEnd={onControlEnd}
           onChange={(e) => {
             if (!e) return;
             const camera = e.target.object;
-            if (lightRef.current) {
-              // sets the point light to a location above the camera
-              lightRef.current.position.set(0, 1, 0);
-              lightRef.current.position.add(camera.position);
-            }
+            setCameraPosition([camera.position.x, camera.position.y, camera.position.z]);
           }}
         />
         <directionalLight
-          ref={lightRef}
           name={'Directional Light'}
           color="white"
           position={new Vector3().fromArray(cameraPosition ?? DEFAULT_CAMERA_POSITION)}

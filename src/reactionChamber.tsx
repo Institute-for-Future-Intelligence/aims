@@ -116,7 +116,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
           ref={lightRef}
           name={'Directional Light'}
           color="white"
-          position={new Vector3().fromArray(cameraPosition ?? DEFAULT_CAMERA_POSITION)}
+          position={new Vector3().fromArray(cameraPosition ?? DEFAULT_CAMERA_POSITION).add(new Vector3(0, 1, 0))}
           intensity={DEFAULT_LIGHT_INTENSITY}
           castShadow={true}
           shadow-bias={0} // may be used to reduce shadow artifacts
