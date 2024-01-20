@@ -25,9 +25,10 @@ export interface MoleculeContainerProps {
   moleculeData: MoleculeData | null;
   hovered: boolean;
   selected: boolean;
+  shininess: number;
 }
 
-const MoleculeContainer = ({ width, height, moleculeData, hovered, selected }: MoleculeContainerProps) => {
+const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shininess }: MoleculeContainerProps) => {
   const setCommonStore = useStore(Selector.set);
   const viewerStyle = useStore(Selector.projectState).projectViewerStyle;
   const viewerBackground = useStore(Selector.projectState).projectViewerBackground;
@@ -108,7 +109,12 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected }: M
           castShadow={false}
         />
         {moleculeData && (
-          <MolecularViewer moleculeData={moleculeData} style={viewerStyle} coloring={MolecularViewerColoring.Element} />
+          <MolecularViewer
+            moleculeData={moleculeData}
+            style={viewerStyle}
+            coloring={MolecularViewerColoring.Element}
+            shininess={shininess}
+          />
         )}
       </Canvas>
     </>

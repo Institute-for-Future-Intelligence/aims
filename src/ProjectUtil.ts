@@ -7,7 +7,6 @@ import { MoleculeData, ProjectState, Range } from './types';
 import { MolecularProperties } from './models/MolecularProperties';
 import { Filter, FilterType } from './Filter';
 import { DataColoring, ProjectType } from './constants';
-import { getSampleMolecule, getSampleProtein } from './internalDatabase';
 import { MolecularViewerColoring, MolecularViewerStyle } from './view/displayOptions';
 
 export class ProjectUtil {
@@ -18,8 +17,8 @@ export class ProjectUtil {
       type: ProjectType.DRUG_DISCOVERY,
       title: null,
       description: null,
-      molecules: [getSampleMolecule('Aspirin'), getSampleMolecule('Ibuprofen'), getSampleMolecule('Paxlovid')],
-      targetProtein: getSampleProtein('Crambin'),
+      molecules: new Array<MoleculeData>(),
+      targetProtein: null,
       selectedProperty: null,
       dataColoring: DataColoring.ALL,
       sortDescending: false,

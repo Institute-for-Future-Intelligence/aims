@@ -822,6 +822,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
                     moleculeData={data}
                     hovered={hoveredMolecule === data}
                     selected={selectedMolecule === data}
+                    shininess={100}
                   />
                   <div
                     style={{
