@@ -138,6 +138,7 @@ export const i18n_zh_cn = {
     },
 
     projectPanel: {
+      NoMolecule: '还没有添加分子',
       Project: '项目',
       ProjectType: '类别',
       ProjectTitle: '项目标题',

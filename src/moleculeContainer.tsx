@@ -48,12 +48,13 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
         gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
         frameloop={'demand'}
         style={{
-          // transition: '.5s ease',
+          transition: '.5s ease',
           height: height + 'px',
           width: width + 'px',
           backgroundColor: viewerBackground,
           borderRadius: '10px',
-          border: moleculeData?.excluded ? 'none' : selected ? '2px solid red' : '1px solid gray',
+          border: selected ? '2px solid red' : '1px solid gray',
+          opacity: moleculeData?.excluded ? 0.25 : 1,
         }}
         camera={{
           fov: DEFAULT_FOV,

@@ -813,6 +813,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
               overflowX: 'hidden',
               overflowY: 'auto',
             }}
+            locale={{ emptyText: t('projectPanel.NoMolecule', lang) }}
             grid={{ column: canvasColumns, gutter: 0 }}
             dataSource={collectedMolecules}
             renderItem={(data: MoleculeData) => {

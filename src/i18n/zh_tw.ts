@@ -137,6 +137,7 @@ export const i18n_zh_tw = {
     },
 
     projectPanel: {
+      NoMolecule: '還沒有添加分子',
       Project: '專案',
       ProjectType: '類别',
       ProjectTitle: '專案按標',

@@ -138,6 +138,7 @@ export const i18n_en = {
     },
 
     projectPanel: {
+      NoMolecule: 'No molecule',
       Project: 'Project',
       ProjectType: 'Type',
       ProjectTitle: 'Project Title',
