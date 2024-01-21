@@ -1,0 +1,21 @@
+"Name",           "log P", "H-Bond Donors", "H-Bond Acceptors", "Rotatable Bonds", "Polar Surface Area"
+"Aspirin",        1.2,     1,               4,                  3,                 63.6
+"Benzene",        2.1,     0,               0,                  0,                 0
+"Caffeine",      -0.1,     0,               0,                  3,                 0
+"Cholesterol",    8.7,     1,               1,                  5,                 20.2
+"Claritin",       5.2,     0,               3,                  2,                 42.4
+"Darunavir",      2.9,     3,               9,                 12,                 149
+"Ether",          0.9,     0,               1,                  2,                 9.2
+"Glucose",       -2.6,     5,               6,                  1,                 110
+"Ibuprofen",      3.5,     1,               2,                  4,                 37.3
+"Lipitor",        5.39,    6,              12,                 22,                 229
+"Metformin",     -1.3,     3,               1,                  2,                 91.5
+"Morphine",       0.8,     2,               4,                  0,                 52.9
+"Nitroglycerin",  1.6,     0,               9,                  5,                 165
+"Paxlovid",       2.2,     3,               8,                  7,                 131
+"Penicillin G",   1.8,     2,               5,                  4,                 112
+"Thorazine",      5.2,     0,               3,                  4,                 31.8
+"Viagra",         1.8,     5,              15,                 12,                 250
+"Voxelotor",      2.7,     1,               5,                  6,                 77.2
+"Zidovudine",     0.05,    2,               6,                  3,                 93.2
+"Zyrtec",         0.86,    3,               5,                  8,                 53
