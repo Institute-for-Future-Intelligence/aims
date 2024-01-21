@@ -11,8 +11,8 @@ import {
   AxesCheckBox,
   BackgroundColor,
   ColoringRadioGroup,
+  MaterialRadioGroup,
   Screenshot,
-  ShininessInput,
   StyleRadioGroup,
 } from './defaultMenuItems';
 
@@ -21,19 +21,16 @@ export const createDefaultMenu = () => {
 
   const items: MenuProps['items'] = [];
 
-  // auto rotate
   items.push({
     key: 'molecular-viewer-auto-rotate',
     label: <AutoRotateCheckBox />,
   });
 
-  // axes
   items.push({
     key: 'molecular-viewer-axes',
     label: <AxesCheckBox />,
   });
 
-  // molecular viewer style
   items.push({
     key: 'molecular-viewer-style-submenu',
     label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Style', lang)}</MenuItem>,
@@ -46,7 +43,18 @@ export const createDefaultMenu = () => {
     ],
   });
 
-  // molecular viewer coloring
+  items.push({
+    key: 'molecular-viewer-material-submenu',
+    label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Material', lang)}</MenuItem>,
+    children: [
+      {
+        key: 'molecular-viewer-material-radio-group',
+        label: <MaterialRadioGroup />,
+        style: { backgroundColor: 'white' },
+      },
+    ],
+  });
+
   items.push({
     key: 'molecular-viewer-coloring-submenu',
     label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Color', lang)}</MenuItem>,
@@ -56,21 +64,14 @@ export const createDefaultMenu = () => {
         label: <ColoringRadioGroup />,
         style: { backgroundColor: 'white' },
       },
-      {
-        key: 'molecular-viewer-shininess',
-        label: <ShininessInput />,
-        style: { backgroundColor: 'white' },
-      },
     ],
   });
 
-  // background color
   items.push({
     key: 'molecular-viewer-background-color',
     label: <BackgroundColor />,
   });
 
-  // screenshot
   items.push({
     key: 'molecular-viewer-screenshot',
     label: <Screenshot />,

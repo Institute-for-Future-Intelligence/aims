@@ -40,11 +40,10 @@ export interface MolecularViewerProps {
   style: MolecularViewerStyle;
   material: MolecularViewerMaterial;
   coloring: MolecularViewerColoring;
-  shininess?: number;
   target?: boolean;
 }
 
-const MolecularViewer = ({ moleculeData, style, material, coloring, shininess, target }: MolecularViewerProps) => {
+const MolecularViewer = ({ moleculeData, style, material, coloring, target }: MolecularViewerProps) => {
   const setCommonStore = useStore(Selector.set);
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
@@ -350,7 +349,7 @@ const MolecularViewer = ({ moleculeData, style, material, coloring, shininess, t
     ];
 
     visual.resetReps(reps);
-    visual.setUberOptions({ shininess });
+    // visual.setUberOptions({ shininess });
 
     visual.rebuild().then(() => {
       if (!CSGroup.current) return;
@@ -363,7 +362,7 @@ const MolecularViewer = ({ moleculeData, style, material, coloring, shininess, t
       });
       invalidate();
     });
-  }, [complex, material, shininess, mode, colorer]);
+  }, [complex, material, mode, colorer]);
 
   return showStructure();
 };

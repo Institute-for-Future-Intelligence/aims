@@ -33,8 +33,8 @@ export class ProjectUtil {
 
       chamberViewerPercentWidth: 50,
       chamberViewerAxes: true,
-      chamberViewerShininess: 1000,
       chamberViewerStyle: MolecularViewerStyle.QuickSurface,
+      chamberViewerMaterial: MolecularViewerMaterial.Soft,
       chamberViewerColoring: MolecularViewerColoring.SecondaryStructure,
       chamberViewerBackground: 'black',
 

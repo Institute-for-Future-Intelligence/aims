@@ -44,7 +44,7 @@ const ExperimentSettings = () => {
           <Col span={18}>
             <Select
               style={{ width: '100%' }}
-              value={targetProtein?.name ?? sampleProteins[0].name}
+              value={targetProtein?.name}
               showSearch
               onChange={(value: string) => {
                 const oldValue = targetProtein?.name;

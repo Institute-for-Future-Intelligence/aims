@@ -98,7 +98,6 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
             style={viewerStyle}
             material={viewerMaterial}
             coloring={MolecularViewerColoring.Element}
-            shininess={shininess}
           />
         )}
       </Canvas>

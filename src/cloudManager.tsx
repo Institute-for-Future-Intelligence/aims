@@ -22,7 +22,7 @@ import ProjectListPanel from './projectListPanel';
 import { fetchProject } from './cloudProjectUtil';
 import { ClassID, SchoolID, User } from './User';
 import { DataColoring, DEFAULT_CAMERA_POSITION, DEFAULT_PAN_CENTER, FirebaseName, ProjectType } from './constants';
-import { MolecularViewerColoring, MolecularViewerStyle } from './view/displayOptions';
+import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import { ProjectUtil } from './ProjectUtil';
 
 export interface CloudManagerProps {
@@ -344,12 +344,13 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
 
             chamberViewerPercentWidth: data.chamberViewerPercentWidth ?? 50,
             chamberViewerAxes: data.chamberViewerAxes ?? true,
-            chamberViewerShininess: data.chamberViewerShininess ?? 1000,
             chamberViewerStyle: data.chamberViewerStyle ?? MolecularViewerStyle.QuickSurface,
+            chamberViewerMaterial: data.chamberViewerMaterial ?? MolecularViewerMaterial.Soft,
             chamberViewerColoring: data.chamberViewerColoring ?? MolecularViewerColoring.SecondaryStructure,
             chamberViewerBackground: data.chamberViewerBackground ?? 'black',
 
             projectViewerStyle: data.projectViewerStyle ?? MolecularViewerStyle.Stick,
+            projectViewerMaterial: data.projectViewerMaterial ?? MolecularViewerMaterial.Soft,
             projectViewerBackground: data.projectViewerBackground ?? 'white',
 
             cameraPosition: data.cameraPosition ?? DEFAULT_CAMERA_POSITION,

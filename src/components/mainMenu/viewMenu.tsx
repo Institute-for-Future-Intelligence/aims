@@ -11,7 +11,7 @@ import {
   AxesCheckBox,
   BackgroundColor,
   ColoringRadioGroup,
-  ShininessInput,
+  MaterialRadioGroup,
   StyleRadioGroup,
 } from '../contextMenu/defaultMenuItems';
 
@@ -37,7 +37,6 @@ export const createViewMenu = (
 
   const items: MenuProps['items'] = [];
 
-  // reset-view
   items.push({
     key: 'reset-view',
     label: (
@@ -48,7 +47,6 @@ export const createViewMenu = (
     ),
   });
 
-  // zoom-out-view
   items.push({
     key: 'zoom-out-view',
     label: (
@@ -59,7 +57,6 @@ export const createViewMenu = (
     ),
   });
 
-  // zoom-in-view
   items.push({
     key: 'zoom-in-view',
     label: (
@@ -70,25 +67,21 @@ export const createViewMenu = (
     ),
   });
 
-  // auto-rotate-check-box
   items.push({
     key: 'auto-rotate-check-box',
     label: <AutoRotateCheckBox isMac={isMac} />,
   });
 
-  // axes-check-box
   items.push({
     key: 'axes-check-box',
     label: <AxesCheckBox />,
   });
 
-  // background
   items.push({
     key: 'background-color',
     label: <BackgroundColor />,
   });
 
-  // display style
   items.push({
     key: 'display-style',
     label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Style', lang)}</MenuItem>,
@@ -101,7 +94,18 @@ export const createViewMenu = (
     ],
   });
 
-  // display coloring
+  items.push({
+    key: 'display-material',
+    label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Material', lang)}</MenuItem>,
+    children: [
+      {
+        key: 'molecular-viewer-material-radio-group',
+        label: <MaterialRadioGroup />,
+        style: { backgroundColor: 'white' },
+      },
+    ],
+  });
+
   items.push({
     key: 'display-coloring',
     label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Color', lang)}</MenuItem>,
@@ -109,11 +113,6 @@ export const createViewMenu = (
       {
         key: 'molecular-viewer-coloring-radio-group',
         label: <ColoringRadioGroup />,
-        style: { backgroundColor: 'white' },
-      },
-      {
-        key: 'molecular-viewer-shininess',
-        label: <ShininessInput />,
         style: { backgroundColor: 'white' },
       },
     ],

@@ -5,7 +5,7 @@
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { useLanguage } from '../../hooks';
-import { Checkbox, ColorPicker, InputNumber, RadioChangeEvent } from 'antd';
+import { Checkbox, ColorPicker, RadioChangeEvent } from 'antd';
 import { UndoableChange } from '../../undo/UndoableChange';
 import { LabelMark, MenuItem } from '../menuItem';
 import { Radio, Space } from 'antd';
@@ -17,7 +17,9 @@ import { screenshot, showError } from '../../helpers';
 import {
   CHAMBER_COLORING_LABELS,
   CHAMBER_STYLE_LABELS,
+  MATERIAL_LABELS,
   MolecularViewerColoring,
+  MolecularViewerMaterial,
   MolecularViewerStyle,
 } from '../../view/displayOptions';
 
@@ -214,6 +216,52 @@ export const StyleRadioGroup = () => {
   );
 };
 
+export const MaterialRadioGroup = () => {
+  const molecularViewerMaterial = useStore(Selector.projectState).chamberViewerMaterial;
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const setMaterial = (material: MolecularViewerMaterial) => {
+    useStore.getState().set((state) => {
+      state.projectState.chamberViewerMaterial = material;
+    });
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Radio.Group
+        value={molecularViewerMaterial}
+        onChange={(e: RadioChangeEvent) => {
+          const oldValue = molecularViewerMaterial;
+          const newValue = e.target.value;
+          const undoableChange = {
+            name: 'Select Molecular Viewer Material',
+            timestamp: Date.now(),
+            oldValue: oldValue,
+            newValue: newValue,
+            undo: () => {
+              setMaterial(undoableChange.oldValue as MolecularViewerMaterial);
+            },
+            redo: () => {
+              setMaterial(undoableChange.newValue as MolecularViewerMaterial);
+            },
+          } as UndoableChange;
+          useStore.getState().addUndoable(undoableChange);
+          setMaterial(newValue);
+        }}
+      >
+        <Space direction="vertical">
+          {MATERIAL_LABELS.map((radio, idx) => (
+            <Radio key={`${idx}-${radio.value}`} value={radio.value}>
+              {t(radio.label, lang)}
+            </Radio>
+          ))}
+        </Space>
+      </Radio.Group>
+    </MenuItem>
+  );
+};
+
 export const ColoringRadioGroup = () => {
   const molecularViewerColoring = useStore(Selector.projectState).chamberViewerColoring;
   const { t } = useTranslation();
@@ -256,52 +304,6 @@ export const ColoringRadioGroup = () => {
           ))}
         </Space>
       </Radio.Group>
-    </MenuItem>
-  );
-};
-
-export const ShininessInput = () => {
-  const shininess = useStore(Selector.projectState).chamberViewerShininess ?? 1000;
-  const { t } = useTranslation();
-  const lang = useLanguage();
-
-  const setShininess = (value: number) => {
-    useStore.getState().set((state) => {
-      state.projectState.chamberViewerShininess = value;
-    });
-  };
-
-  return (
-    <MenuItem stayAfterClick hasPadding={true}>
-      <Space style={{ paddingRight: '50px' }} title={'[0, 1000]'}>
-        {t('molecularViewer.Shininess', lang) + ':'}
-      </Space>
-      <InputNumber
-        min={0}
-        max={1000}
-        step={1}
-        precision={0}
-        value={shininess}
-        onChange={(value: number | null) => {
-          if (value === null) return;
-          const oldValue = shininess;
-          const newValue = value;
-          const undoableChange = {
-            name: 'Set Shininess',
-            timestamp: Date.now(),
-            oldValue: oldValue,
-            newValue: newValue,
-            undo: () => {
-              setShininess(undoableChange.oldValue as number);
-            },
-            redo: () => {
-              setShininess(undoableChange.newValue as number);
-            },
-          } as UndoableChange;
-          useStore.getState().addUndoable(undoableChange);
-          setShininess(newValue);
-        }}
-      />
     </MenuItem>
   );
 };

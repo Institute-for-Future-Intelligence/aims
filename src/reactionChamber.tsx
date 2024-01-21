@@ -35,7 +35,6 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const viewerColoring = useStore(Selector.projectState).chamberViewerColoring;
   const viewerBackground = useStore(Selector.projectState).chamberViewerBackground;
   const viewerAxes = useStore(Selector.projectState).chamberViewerAxes;
-  const shininess = useStore(Selector.projectState).chamberViewerShininess ?? 1000;
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
   const cameraPosition = useStore(Selector.cameraPosition);
 
@@ -133,7 +132,6 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
             style={viewerStyle}
             material={viewerMaterial}
             coloring={viewerColoring}
-            shininess={shininess}
             target={true}
           />
         )}

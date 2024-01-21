@@ -31,7 +31,6 @@ export interface ProjectState {
 
   chamberViewerPercentWidth: number;
   chamberViewerAxes: boolean;
-  chamberViewerShininess: number;
   chamberViewerStyle: MolecularViewerStyle;
   chamberViewerMaterial: MolecularViewerMaterial;
   chamberViewerColoring: MolecularViewerColoring;
