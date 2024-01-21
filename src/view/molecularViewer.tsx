@@ -147,7 +147,7 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess }: Molecular
       setMolecularProperties(moleculeData.name, {
         atomCount: result._atoms.length,
         bondCount: result._bonds.length,
-        mass: totalMass,
+        molecularMass: totalMass,
         logP: properties.logP,
         hydrogenBondDonorCount: properties.hydrogenBondDonorCount,
         hydrogenBondAcceptorCount: properties.hydrogenBondAcceptorCount,

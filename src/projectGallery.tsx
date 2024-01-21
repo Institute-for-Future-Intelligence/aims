@@ -136,13 +136,41 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
     return { lng: language };
   }, [language]);
 
-  const collectedMolecules = projectState.molecules;
   const isOwner = user.uid === projectState.owner;
 
   const descriptionTextAreaEditableRef = useRef<boolean>(false);
   const descriptionRef = useRef<string | null>(null);
   const descriptionChangedRef = useRef<boolean>(false);
   const descriptionExpandedRef = useRef<boolean>(false);
+  const sortedMolecules = useRef<MoleculeData[]>([]); // store a sorted copy of molecules
+
+  useEffect(() => {
+    sortedMolecules.current = [];
+    if (projectState.molecules) {
+      for (const m of projectState.molecules) {
+        sortedMolecules.current.push(m);
+      }
+      const p = projectState.selectedProperty;
+      if (p) {
+        const prefix = projectState.sortDescending ? 1 : -1;
+        sortedMolecules.current.sort((a, b) => {
+          const propertiesA = molecularPropertiesMap.get(a.name);
+          const propertiesB = molecularPropertiesMap.get(b.name);
+          if (propertiesA && propertiesB) {
+            if (p) {
+              if (p in propertiesA && p in propertiesB) {
+                // @ts-ignore
+                return prefix * (propertiesA[p] - propertiesB[p]);
+              }
+            }
+            return 0;
+          }
+          return 0;
+        });
+      }
+      setUpdateFlag(!updateFlag);
+    }
+  }, [projectState.molecules, projectState.sortDescending, projectState.selectedProperty]);
 
   const propertySelectionChangedRef = useRef<boolean>(false);
   const dataColoringSelectionRef = useRef<DataColoring>(projectState.dataColoring ?? DataColoring.ALL);
@@ -196,10 +224,10 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
   const canvasHeight = (canvasWidth * 2) / 3;
 
   const hover = (i: number) => {
-    if (collectedMolecules) {
+    if (projectState.molecules) {
       usePrimitiveStore.getState().set((state) => {
-        if (i >= 0 && i < collectedMolecules.length) {
-          state.hoveredMolecule = collectedMolecules[i];
+        if (i >= 0 && i < projectState.molecules.length) {
+          state.hoveredMolecule = projectState.molecules[i];
         } else {
           state.hoveredMolecule = null;
         }
@@ -599,14 +627,14 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
 
   const data: DatumEntry[] = useMemo(() => {
     const data: DatumEntry[] = [];
-    if (collectedMolecules) {
-      for (const m of collectedMolecules) {
+    if (projectState.molecules) {
+      for (const m of projectState.molecules) {
         const d = {} as DatumEntry;
         const p = molecularPropertiesMap.get(m.name);
         if (p) {
           if (!projectState.hiddenProperties?.includes('atomCount')) d['atomCount'] = p.atomCount;
           if (!projectState.hiddenProperties?.includes('bondCount')) d['bondCount'] = p.bondCount;
-          if (!projectState.hiddenProperties?.includes('molecularMass')) d['molecularMass'] = p.mass;
+          if (!projectState.hiddenProperties?.includes('molecularMass')) d['molecularMass'] = p.molecularMass;
           if (!projectState.hiddenProperties?.includes('logP')) d['logP'] = p.logP;
           if (!projectState.hiddenProperties?.includes('hydrogenBondDonorCount'))
             d['hydrogenBondDonorCount'] = p.hydrogenBondDonorCount;
@@ -629,7 +657,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
     molecularPropertiesMap,
     hoveredMolecule,
     selectedMolecule,
-    collectedMolecules,
+    projectState.molecules,
     projectState.dataColoring,
     projectState.filters,
     projectState.hiddenProperties,
@@ -815,7 +843,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
             }}
             locale={{ emptyText: t('projectPanel.NoMolecule', lang) }}
             grid={{ column: canvasColumns, gutter: 0 }}
-            dataSource={collectedMolecules}
+            dataSource={sortedMolecules.current}
             renderItem={(data: MoleculeData) => {
               return (
                 <List.Item
@@ -918,8 +946,12 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
               tickIntegers={tickIntegers}
               filters={filters}
               hover={hover}
-              hoveredIndex={collectedMolecules && hoveredMolecule ? collectedMolecules.indexOf(hoveredMolecule) : -1}
-              selectedIndex={collectedMolecules && selectedMolecule ? collectedMolecules.indexOf(selectedMolecule) : -1}
+              hoveredIndex={
+                projectState.molecules && hoveredMolecule ? projectState.molecules.indexOf(hoveredMolecule) : -1
+              }
+              selectedIndex={
+                projectState.molecules && selectedMolecule ? projectState.molecules.indexOf(selectedMolecule) : -1
+              }
             />
           )}
         </CanvasContainer>

@@ -5,7 +5,7 @@
 export interface MolecularProperties {
   atomCount: number;
   bondCount: number;
-  mass: number;
+  molecularMass: number;
   logP: number; // how hydrophilic or hydrophobic a molecule is
   polarSurfaceArea: number; // the surface sum over all polar atoms
   hydrogenBondDonorCount: number;

@@ -132,7 +132,7 @@ export class ProjectUtil {
     for (const f of filters) {
       if (f.type === FilterType.Between && f.upperBound !== undefined && f.lowerBound !== undefined) {
         if (f.variable === 'molecularMass') {
-          if (p.mass > f.upperBound || p.mass < f.lowerBound) return true;
+          if (p.molecularMass > f.upperBound || p.molecularMass < f.lowerBound) return true;
         } else if (f.variable === 'logP') {
           if (p.logP > f.upperBound || p.logP < f.lowerBound) return true;
         } else if (f.variable === 'hydrogenBondDonorCount') {
