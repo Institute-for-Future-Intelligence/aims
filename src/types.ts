@@ -35,6 +35,7 @@ export interface ProjectState {
   chamberViewerMaterial: MolecularViewerMaterial;
   chamberViewerColoring: MolecularViewerColoring;
   chamberViewerBackground: string;
+  chamberViewerSelector: string;
 
   projectViewerStyle: MolecularViewerStyle;
   projectViewerMaterial: MolecularViewerMaterial;

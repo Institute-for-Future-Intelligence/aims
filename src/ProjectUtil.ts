@@ -37,6 +37,7 @@ export class ProjectUtil {
       chamberViewerMaterial: MolecularViewerMaterial.Soft,
       chamberViewerColoring: MolecularViewerColoring.SecondaryStructure,
       chamberViewerBackground: 'black',
+      chamberViewerSelector: 'all',
 
       projectViewerStyle: MolecularViewerStyle.Stick,
       projectViewerMaterial: MolecularViewerMaterial.Soft,

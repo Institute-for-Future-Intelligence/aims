@@ -136,6 +136,7 @@ export const i18n_zh_cn = {
     experiment: {
       ExperimentSettings: '实验设定',
       Target: '目标',
+      SelectorCommands: '选择指令',
       Information: '信息',
     },
 

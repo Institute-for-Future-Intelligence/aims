@@ -34,6 +34,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const viewerMaterial = useStore(Selector.projectState).chamberViewerMaterial;
   const viewerColoring = useStore(Selector.projectState).chamberViewerColoring;
   const viewerBackground = useStore(Selector.projectState).chamberViewerBackground;
+  const viewerSelector = useStore(Selector.projectState).chamberViewerSelector;
   const viewerAxes = useStore(Selector.projectState).chamberViewerAxes;
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
   const cameraPosition = useStore(Selector.cameraPosition);
@@ -132,7 +133,8 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
             style={viewerStyle}
             material={viewerMaterial}
             coloring={viewerColoring}
-            target={true}
+            chamber={true}
+            selector={viewerSelector}
           />
         )}
         <GizmoHelper alignment="bottom-right" margin={[30, 30]}>

@@ -40,10 +40,11 @@ export interface MolecularViewerProps {
   style: MolecularViewerStyle;
   material: MolecularViewerMaterial;
   coloring: MolecularViewerColoring;
-  target?: boolean;
+  chamber?: boolean;
+  selector?: string;
 }
 
-const MolecularViewer = ({ moleculeData, style, material, coloring, target }: MolecularViewerProps) => {
+const MolecularViewer = ({ moleculeData, style, material, coloring, chamber, selector }: MolecularViewerProps) => {
   const setCommonStore = useStore(Selector.set);
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
@@ -149,7 +150,7 @@ const MolecularViewer = ({ moleculeData, style, material, coloring, target }: Mo
         ),
       );
     }
-    if (target) {
+    if (chamber) {
       const residues = result._residues;
       const chains = result._chains;
       const structures = result.structures;
@@ -173,164 +174,6 @@ const MolecularViewer = ({ moleculeData, style, material, coloring, target }: Mo
     }
   };
 
-  // const showAtoms = () => {
-  //   if (!molecule) return null;
-  //   if (
-  //     style === MolecularViewerStyle.BallAndStick ||
-  //     style === MolecularViewerStyle.Stick ||
-  //     style === MolecularViewerStyle.Wireframe ||
-  //     style === MolecularViewerStyle.Cartoon ||
-  //     style === MolecularViewerStyle.Trace ||
-  //     style === MolecularViewerStyle.Tube ||
-  //     style === MolecularViewerStyle.QuickSurface ||
-  //     style === MolecularViewerStyle.ContactSurface ||
-  //     style === MolecularViewerStyle.SolventAccessibleSurface ||
-  //     style === MolecularViewerStyle.SolventExcludedSurface
-  //   )
-  //     return null;
-  //   return (
-  //     <group name={'Atoms'}>
-  //       {molecule.atoms.map((e, index) => {
-  //         const spaceFilling = style === MolecularViewerStyle.SpaceFilling;
-  //         const segments = highQuality ? (spaceFilling ? 32 : 16) : 8;
-  //         return (
-  //           <Sphere
-  //             position={e.position}
-  //             args={[(spaceFilling ? 4 : 1) * (e.radius ?? 0.5), segments, segments]}
-  //             key={'Atom' + index}
-  //             name={e.elementSymbol}
-  //             castShadow={false}
-  //             receiveShadow={false}
-  //             onPointerOver={(e) => {}}
-  //             onPointerOut={(e) => {}}
-  //             onPointerDown={(e) => {
-  //               if (e.button === 2) return;
-  //             }}
-  //           >
-  //             {shininess ? (
-  //               <meshPhongMaterial attach="material" color={e.color} specular={'white'} shininess={shininess} />
-  //             ) : (
-  //               <meshStandardMaterial attach="material" color={e.color} />
-  //             )}
-  //           </Sphere>
-  //         );
-  //       })}
-  //     </group>
-  //   );
-  // };
-
-  // const showBonds = () => {
-  //   if (!molecule) return null;
-  //   if (
-  //     style === MolecularViewerStyle.BallAndStick ||
-  //     style === MolecularViewerStyle.SpaceFilling ||
-  //     style === MolecularViewerStyle.Cartoon ||
-  //     style === MolecularViewerStyle.Trace ||
-  //     style === MolecularViewerStyle.Tube ||
-  //     style === MolecularViewerStyle.QuickSurface ||
-  //     style === MolecularViewerStyle.ContactSurface ||
-  //     style === MolecularViewerStyle.SolventAccessibleSurface ||
-  //     style === MolecularViewerStyle.SolventExcludedSurface
-  //   )
-  //     return null;
-  //   return (
-  //     <group name={'Bonds'}>
-  //       {molecule.bonds.map((e, index) => {
-  //         const fullLength = e.getLength();
-  //         const halfVisibleLength = (fullLength - e.startAtom.radius - e.endAtom.radius) / 2;
-  //         const alpha = (e.startAtom.radius + halfVisibleLength) / fullLength;
-  //         const midPosition = e.startAtom.position.clone().lerp(e.endAtom.position, alpha);
-  //         const startLength = e.startAtom.position.distanceTo(midPosition);
-  //         const endLength = e.endAtom.position.distanceTo(midPosition);
-  //         const radius = 0.1;
-  //         const segments = highQuality ? 16 : 4;
-  //         return style === MolecularViewerStyle.Stick ? (
-  //           <React.Fragment key={'Bond' + index}>
-  //             <group
-  //               position={e.startAtom.position.clone().lerp(midPosition, 0.5)}
-  //               onUpdate={(self) => {
-  //                 self.lookAt(e.endAtom.position);
-  //               }}
-  //             >
-  //               <Cylinder
-  //                 userData={{ unintersectable: true }}
-  //                 name={'Bond1' + index}
-  //                 castShadow={false}
-  //                 receiveShadow={false}
-  //                 args={[radius, radius, startLength, segments, 1]}
-  //                 rotation={[HALF_PI, 0, 0]}
-  //               >
-  //                 {shininess ? (
-  //                   <meshPhongMaterial
-  //                     attach="material"
-  //                     color={e.startAtom.color}
-  //                     specular={'white'}
-  //                     shininess={shininess}
-  //                   />
-  //                 ) : (
-  //                   <meshStandardMaterial attach="material" color={e.startAtom.color} />
-  //                 )}
-  //               </Cylinder>
-  //             </group>
-  //             <group
-  //               position={midPosition.clone().lerp(e.endAtom.position, 0.5)}
-  //               onUpdate={(self) => {
-  //                 self.lookAt(e.endAtom.position);
-  //               }}
-  //             >
-  //               <Cylinder
-  //                 userData={{ unintersectable: true }}
-  //                 name={'Bond2' + index}
-  //                 castShadow={false}
-  //                 receiveShadow={false}
-  //                 args={[radius, radius, endLength, segments, 1]}
-  //                 rotation={[HALF_PI, 0, 0]}
-  //               >
-  //                 {shininess ? (
-  //                   <meshPhongMaterial
-  //                     attach="material"
-  //                     color={e.endAtom.color}
-  //                     specular={'white'}
-  //                     shininess={shininess}
-  //                   />
-  //                 ) : (
-  //                   <meshStandardMaterial attach="material" color={e.endAtom.color} />
-  //                 )}
-  //               </Cylinder>
-  //             </group>
-  //           </React.Fragment>
-  //         ) : (
-  //           <React.Fragment key={'Bond' + index}>
-  //             <Line
-  //               userData={{ unintersectable: true }}
-  //               name={'Bond1' + index}
-  //               castShadow={false}
-  //               receiveShadow={false}
-  //               points={[e.startAtom.position, midPosition]}
-  //               color={e.startAtom.color}
-  //               lineWidth={highQuality ? 2 : 1}
-  //             />
-  //             <Line
-  //               userData={{ unintersectable: true }}
-  //               name={'Bond2' + index}
-  //               castShadow={false}
-  //               receiveShadow={false}
-  //               points={[midPosition, e.endAtom.position]}
-  //               color={e.endAtom.color}
-  //               lineWidth={highQuality ? 2 : 1}
-  //             />
-  //           </React.Fragment>
-  //         );
-  //       })}
-  //     </group>
-  //   );
-  // };
-
-  const showStructure = () => {
-    if (!mode) return null;
-    return <group name={'Structure'} ref={CSGroup} />;
-  };
-
   useEffect(() => {
     if (!CSGroup.current || !complex || !mode) return;
 
@@ -343,13 +186,11 @@ const MolecularViewer = ({ moleculeData, style, material, coloring, target }: Mo
       {
         mode: mode,
         colorer: colorer,
-        selector: 'all',
+        selector: selector ?? 'all',
         material: MATERIAL_MAP.get(material),
       },
     ];
-
     visual.resetReps(reps);
-    // visual.setUberOptions({ shininess });
 
     visual.rebuild().then(() => {
       if (!CSGroup.current) return;
@@ -362,9 +203,10 @@ const MolecularViewer = ({ moleculeData, style, material, coloring, target }: Mo
       });
       invalidate();
     });
-  }, [complex, material, mode, colorer]);
+  }, [complex, material, mode, colorer, selector]);
 
-  return showStructure();
+  if (!mode) return null;
+  return <group name={'Structure'} ref={CSGroup} />;
 };
 
 export default React.memo(MolecularViewer);

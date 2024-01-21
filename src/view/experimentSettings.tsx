@@ -2,8 +2,8 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useMemo } from 'react';
-import { Col, Descriptions, DescriptionsProps, FloatButton, Popover, Row, Select } from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Input, Col, Descriptions, DescriptionsProps, FloatButton, Popover, Row, Select } from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
@@ -12,11 +12,20 @@ import { sampleProteins } from '../internalDatabase';
 import { AimOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
+const { TextArea } = Input;
 
 const ExperimentSettings = () => {
+  const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
-  const targetProtein = useStore(Selector.projectState).targetProtein;
+  const addUndoable = useStore(Selector.addUndoable);
+  const projectState = useStore(Selector.projectState);
   const targetData = useStore(Selector.targetData);
+
+  const [selector, setSelector] = useState<string | undefined>();
+
+  useEffect(() => {
+    setSelector(projectState.chamberViewerSelector);
+  }, [projectState.chamberViewerSelector]);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -25,7 +34,7 @@ const ExperimentSettings = () => {
 
   const createContent = useMemo(() => {
     const setTargetProtein = (targetName: string) => {
-      useStore.getState().set((state) => {
+      setCommonStore((state) => {
         for (const t of sampleProteins) {
           if (t.name === targetName) {
             state.projectState.targetProtein = t;
@@ -36,18 +45,18 @@ const ExperimentSettings = () => {
     };
 
     return (
-      <div style={{ width: '300px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
-        <Row gutter={6} style={{ paddingBottom: '4px' }}>
-          <Col span={6} style={{ paddingTop: '5px' }}>
+      <div style={{ width: '420px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={8} style={{ paddingTop: '5px' }}>
             <span>{t('experiment.Target', lang)}: </span>
           </Col>
-          <Col span={18}>
+          <Col span={16}>
             <Select
               style={{ width: '100%' }}
-              value={targetProtein?.name}
+              value={projectState.targetProtein?.name}
               showSearch
               onChange={(value: string) => {
-                const oldValue = targetProtein?.name;
+                const oldValue = projectState.targetProtein?.name;
                 const newValue = value;
                 const undoableChange = {
                   name: 'Select Target Protein',
@@ -61,7 +70,7 @@ const ExperimentSettings = () => {
                     setTargetProtein(undoableChange.newValue as string);
                   },
                 } as UndoableChange;
-                useStore.getState().addUndoable(undoableChange);
+                addUndoable(undoableChange);
                 setTargetProtein(newValue);
               }}
             >
@@ -73,9 +82,33 @@ const ExperimentSettings = () => {
             </Select>
           </Col>
         </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.SelectorCommands', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <TextArea
+              rows={4}
+              value={selector}
+              onChange={(e) => {
+                setSelector(e.target.value);
+              }}
+              onBlur={() => {
+                setCommonStore((state) => {
+                  state.projectState.chamberViewerSelector = selector ?? 'all';
+                });
+              }}
+              onPointerOut={() => {
+                setCommonStore((state) => {
+                  state.projectState.chamberViewerSelector = selector ?? 'all';
+                });
+              }}
+            />
+          </Col>
+        </Row>
       </div>
     );
-  }, [lang, targetProtein]);
+  }, [lang, projectState.targetProtein, projectState.chamberViewerSelector, selector]);
 
   const createInfo = useMemo(() => {
     const items: DescriptionsProps['items'] = [
@@ -157,7 +190,7 @@ const ExperimentSettings = () => {
           description={<label style={{ fontSize: '20px' }}>🧪</label>}
         />
       </Popover>
-      {targetProtein?.name ? (
+      {projectState.targetProtein?.name ? (
         <Popover
           title={
             <div onClick={(e) => e.stopPropagation()}>
@@ -177,7 +210,7 @@ const ExperimentSettings = () => {
               color: 'lightgray',
             }}
           >
-            {targetProtein.name}
+            {projectState.targetProtein.name}
           </label>
         </Popover>
       ) : (

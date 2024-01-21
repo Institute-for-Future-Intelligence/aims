@@ -348,6 +348,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             chamberViewerMaterial: data.chamberViewerMaterial ?? MolecularViewerMaterial.Soft,
             chamberViewerColoring: data.chamberViewerColoring ?? MolecularViewerColoring.SecondaryStructure,
             chamberViewerBackground: data.chamberViewerBackground ?? 'black',
+            chamberViewerSelector: data.chamberViewerSelector ?? 'all',
 
             projectViewerStyle: data.projectViewerStyle ?? MolecularViewerStyle.Stick,
             projectViewerMaterial: data.projectViewerMaterial ?? MolecularViewerMaterial.Soft,

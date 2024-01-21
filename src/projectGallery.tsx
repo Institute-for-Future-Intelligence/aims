@@ -496,8 +496,6 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
           }}
           onBlur={() => {
             descriptionTextAreaEditableRef.current = false;
-            if (descriptionChangedRef.current) {
-            }
           }}
           style={{
             paddingLeft: '10px',

@@ -137,6 +137,7 @@ export const i18n_en = {
     experiment: {
       ExperimentSettings: 'Experiment Settings',
       Target: 'Target',
+      SelectorCommands: 'Selector Commands',
       Information: 'Information',
     },
 

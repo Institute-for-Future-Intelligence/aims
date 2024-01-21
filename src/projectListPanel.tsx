@@ -391,8 +391,7 @@ const ProjectListPanel = ({
                       label: (
                         <MenuItem
                           onClick={() => {
-                            const url =
-                              HOME_URL + '?client=web&userid=' + user.uid + '&project=' + encodeURIComponent(title);
+                            const url = HOME_URL + '?userid=' + user.uid + '&project=' + encodeURIComponent(title);
                             copyTextToClipboard(url);
                             showSuccess(t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.');
                           }}

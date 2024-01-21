@@ -135,6 +135,7 @@ export const i18n_zh_tw = {
     experiment: {
       ExperimentSettings: '實驗設定',
       Target: '目標',
+      SelectorCommands: '選擇指令',
       Information: '資訊',
     },
 
