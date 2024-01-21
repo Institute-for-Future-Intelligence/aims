@@ -31,6 +31,8 @@ export const cameraPosition = (state: CommonStoreState) => state.cameraPosition;
 
 export const panCenter = (state: CommonStoreState) => state.panCenter;
 
+export const targetData = (state: CommonStoreState) => state.targetData;
+
 export const loadedMolecule = (state: CommonStoreState) => state.loadedMolecule;
 
 export const selectedMolecule = (state: CommonStoreState) => state.selectedMolecule;

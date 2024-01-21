@@ -22,6 +22,8 @@ export const i18n_zh_cn = {
     },
 
     word: {
+      Name: '名字',
+      Codename: '代号',
       Time: '时间',
       Type: '类别',
       Open: '打开',
@@ -124,6 +126,7 @@ export const i18n_zh_cn = {
     experiment: {
       ExperimentSettings: '实验设定',
       Target: '目标',
+      Information: '信息',
     },
 
     projectListPanel: {
@@ -163,6 +166,10 @@ export const i18n_zh_cn = {
       PropertiesScreenshot: '性质截屏',
       AtomCount: '原子数量',
       BondCount: '化学键数量',
+      ResidueCount: '残基数量',
+      ChainCount: '链数量',
+      StructureCount: '结构数量',
+      MoleculeCount: '分子数量',
       MolecularMass: '质量',
       PolarSurfaceArea: '极性表面积',
       PolarSurfaceAreaShort: '极性表面积',

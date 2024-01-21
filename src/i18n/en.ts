@@ -22,6 +22,8 @@ export const i18n_en = {
     },
 
     word: {
+      Name: 'Name',
+      Codename: 'Codename',
       Time: 'Time',
       Type: 'Type',
       Open: 'Open',
@@ -123,6 +125,7 @@ export const i18n_en = {
     experiment: {
       ExperimentSettings: 'Experiment Settings',
       Target: 'Target',
+      Information: 'Information',
     },
 
     projectListPanel: {
@@ -163,6 +166,10 @@ export const i18n_en = {
       PropertiesScreenshot: 'Take a screenshot of the properties',
       AtomCount: 'Atom Count',
       BondCount: 'Bond Count',
+      ResidueCount: 'Residue Count',
+      ChainCount: 'Chain Count',
+      StructureCount: 'Structure Count',
+      MoleculeCount: 'Molecule Count',
       MolecularMass: 'Mass',
       PolarSurfaceArea: 'Polar Surface Area',
       PolarSurfaceAreaShort: 'Polar Surface',

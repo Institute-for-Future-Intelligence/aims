@@ -22,6 +22,7 @@ import { useRefStore } from './commonRef';
 import { MolecularProperties } from '../models/MolecularProperties';
 import { User } from '../User';
 import { ProjectUtil } from '../ProjectUtil';
+import { MoleculeTS } from '../models/MoleculeTS';
 
 enableMapSet();
 
@@ -43,6 +44,8 @@ export interface CommonStoreState {
   // because these properties change very often when the user is interacting with the viewer
   cameraPosition: number[];
   panCenter: number[];
+
+  targetData: MoleculeTS | undefined;
 
   loadedMolecule: MoleculeData | null;
   selectedMolecule: MoleculeData | null;
@@ -99,6 +102,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           cameraPosition: DEFAULT_CAMERA_POSITION,
           panCenter: DEFAULT_PAN_CENTER,
 
+          targetData: undefined,
+
           loadedMolecule: null,
           selectedMolecule: null,
           addMolecule(molecule: MoleculeData) {
@@ -126,8 +131,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
               }
             });
           },
-
-          targetProtein: null,
 
           molecularPropertiesMap: new Map<string, MolecularProperties>(),
           setMolecularProperties(name: string, properties: MolecularProperties) {

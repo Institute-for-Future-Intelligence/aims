@@ -10,6 +10,7 @@ import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { useTranslation } from 'react-i18next';
 import { sampleMolecules } from './internalDatabase';
+import { ImportOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -75,7 +76,7 @@ const ImportMoleculeModal = ({
           onMouseOver={() => setDragEnabled(true)}
           onMouseOut={() => setDragEnabled(false)}
         >
-          {t('projectPanel.ImportMolecule', lang)}
+          <ImportOutlined /> {t('projectPanel.ImportMolecule', lang)}
         </div>
       }
       open={isDialogVisible()}

@@ -411,7 +411,11 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
               </Button>
             )}
             <Popover
-              title={<div onClick={(e) => e.stopPropagation()}>{t('projectPanel.ProjectSettings', lang)}</div>}
+              title={
+                <div onClick={(e) => e.stopPropagation()}>
+                  <SettingOutlined /> {t('projectPanel.ProjectSettings', lang)}
+                </div>
+              }
               content={createProjectSettingsContent}
             >
               <Button style={{ border: 'none', padding: '4px' }} onClick={(e) => e.stopPropagation()}>
@@ -889,7 +893,11 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
             <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
             <span>
               <Popover
-                title={t('projectPanel.ChooseProperties', lang)}
+                title={
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <CarryOutOutlined /> {t('projectPanel.ChooseProperties', lang)}
+                  </div>
+                }
                 onOpenChange={(visible) => {}}
                 content={createChoosePropertiesContent()}
               >
@@ -897,7 +905,14 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
                   <CarryOutOutlined style={{ fontSize: '24px', color: 'gray' }} />
                 </Button>
               </Popover>
-              <Popover title={t('projectPanel.ChooseDataColoring', lang)} content={createChooseDataColoringContent()}>
+              <Popover
+                title={
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <BgColorsOutlined /> {t('projectPanel.ChooseDataColoring', lang)}
+                  </div>
+                }
+                content={createChooseDataColoringContent()}
+              >
                 <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
                   <BgColorsOutlined style={{ fontSize: '24px', color: 'gray' }} />
                 </Button>

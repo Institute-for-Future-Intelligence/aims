@@ -13,8 +13,6 @@ import ElementColorer from '../lib/gfx/colorers/ElementColorer';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Color, Group, Vector3 } from 'three';
 import { MoleculeTS } from '../models/MoleculeTS';
-import { Cylinder, Line, Sphere } from '@react-three/drei';
-import { HALF_PI } from '../constants';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { MoleculeData } from '../types';
@@ -38,12 +36,12 @@ export interface MolecularViewerProps {
 }
 
 const MolecularViewer = ({ moleculeData, style, coloring, shininess }: MolecularViewerProps) => {
+  const setCommonStore = useStore(Selector.set);
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
   const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
   const setMolecularProperties = useStore(Selector.setMolecularProperties);
 
-  const [molecule, setMolecule] = useState<MoleculeTS>();
   const [complex, setComplex] = useState<any>();
 
   const CSGroup = useRef<Group>(null);
@@ -82,6 +80,8 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess }: Molecular
 
   const processResult = (result: any) => {
     setComplex(result);
+    const name = result.name;
+    const metadata = result.metadata;
     const atoms: AtomTS[] = [];
     let cx = 0;
     let cy = 0;
@@ -141,7 +141,13 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess }: Molecular
         ),
       );
     }
-    setMolecule({ atoms, bonds } as MoleculeTS);
+    const residues = result._residues;
+    const chains = result._chains;
+    const structures = result.structures;
+    const molecules = result._molecules;
+    setCommonStore((state) => {
+      state.targetData = { name, metadata, atoms, bonds, residues, chains, structures, molecules } as MoleculeTS;
+    });
     const properties = getProvidedMolecularProperties(moleculeData.name);
     if (properties) {
       setMolecularProperties(moleculeData.name, {
@@ -311,7 +317,7 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess }: Molecular
   // };
 
   const showStructure = () => {
-    if (!molecule || !mode) return null;
+    if (!mode) return null;
     return <group name={'Structure'} ref={CSGroup} />;
   };
 
