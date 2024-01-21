@@ -31,6 +31,7 @@ export interface ReactionChamberProps {
 const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const setCommonStore = useStore(Selector.set);
   const viewerStyle = useStore(Selector.projectState).chamberViewerStyle;
+  const viewerMaterial = useStore(Selector.projectState).chamberViewerMaterial;
   const viewerColoring = useStore(Selector.projectState).chamberViewerColoring;
   const viewerBackground = useStore(Selector.projectState).chamberViewerBackground;
   const viewerAxes = useStore(Selector.projectState).chamberViewerAxes;
@@ -130,6 +131,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
           <MolecularViewer
             moleculeData={moleculeData}
             style={viewerStyle}
+            material={viewerMaterial}
             coloring={viewerColoring}
             shininess={shininess}
             target={true}

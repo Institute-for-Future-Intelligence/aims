@@ -4,7 +4,7 @@
 
 import { Filter } from './Filter';
 import { DataColoring, ProjectType } from './constants';
-import { MolecularViewerColoring, MolecularViewerStyle } from './view/displayOptions';
+import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 
 // use null for undefined, as we need to persist this in Firebase
 export interface ProjectState {
@@ -33,10 +33,12 @@ export interface ProjectState {
   chamberViewerAxes: boolean;
   chamberViewerShininess: number;
   chamberViewerStyle: MolecularViewerStyle;
+  chamberViewerMaterial: MolecularViewerMaterial;
   chamberViewerColoring: MolecularViewerColoring;
   chamberViewerBackground: string;
 
   projectViewerStyle: MolecularViewerStyle;
+  projectViewerMaterial: MolecularViewerMaterial;
   projectViewerBackground: string;
 }
 

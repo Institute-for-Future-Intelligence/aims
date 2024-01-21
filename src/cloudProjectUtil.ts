@@ -11,7 +11,7 @@ import i18n from './i18n/i18n';
 import { MoleculeData, Range, ProjectState } from './types';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { DataColoring, ProjectType } from './constants';
-import { MolecularViewerColoring, MolecularViewerStyle } from './view/displayOptions';
+import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import dayjs from 'dayjs';
 
 export const fetchProject = async (userid: string, project: string, setProjectState: Function) => {
@@ -52,10 +52,12 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           chamberViewerAxes: data.chamberViewerAxes ?? true,
           chamberViewerShininess: data.chamberViewerShininess ?? 1000,
           chamberViewerStyle: data.chamberViewerStyle ?? MolecularViewerStyle.QuickSurface,
+          chamberViewerMaterial: data.chamberViewerMaterial ?? MolecularViewerMaterial.Glossy,
           chamberViewerColoring: data.chamberViewerColoring ?? MolecularViewerColoring.SecondaryStructure,
           chamberViewerBackground: data.chamberViewerBackground ?? 'black',
 
           projectViewerStyle: data.projectViewerStyle ?? MolecularViewerStyle.Stick,
+          projectViewerMaterial: data.projectViewerMaterial ?? MolecularViewerMaterial.Soft,
           projectViewerBackground: data.projectViewerBackground ?? 'white',
 
           cameraPosition: data.cameraPosition,

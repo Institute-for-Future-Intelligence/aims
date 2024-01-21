@@ -57,6 +57,44 @@ export enum MolecularViewerStyle {
   SolventExcludedSurface = 'Solvent Excluded Surface',
 }
 
+export enum MolecularViewerMaterial {
+  Diffuse = 'Diffuse',
+  Soft = 'Soft',
+  Glossy = 'Glossy',
+  Metal = 'Metal',
+  Transparent = 'Transparent',
+  Glass = 'Glass',
+  Backdrop = 'Backdrop',
+  Toon = 'Toon',
+  Flat = 'Flat',
+}
+
+export const MATERIAL_MAP = new Map(
+  [
+    { key: MolecularViewerMaterial.Diffuse, value: 'DF' },
+    { key: MolecularViewerMaterial.Soft, value: 'SF' },
+    { key: MolecularViewerMaterial.Glossy, value: 'PL' },
+    { key: MolecularViewerMaterial.Metal, value: 'ML' },
+    { key: MolecularViewerMaterial.Transparent, value: 'TR' },
+    { key: MolecularViewerMaterial.Glass, value: 'GL' },
+    { key: MolecularViewerMaterial.Backdrop, value: 'BA' },
+    { key: MolecularViewerMaterial.Toon, value: 'TN' },
+    { key: MolecularViewerMaterial.Flat, value: 'FL' },
+  ].map((obj) => [obj.key, obj.value]),
+);
+
+export const MATERIAL_LABELS = [
+  { value: MolecularViewerMaterial.Diffuse, label: 'molecularViewer.DiffuseMaterial' },
+  { value: MolecularViewerMaterial.Soft, label: 'molecularViewer.SoftMaterial' },
+  { value: MolecularViewerMaterial.Glossy, label: 'molecularViewer.GlossyMaterial' },
+  { value: MolecularViewerMaterial.Metal, label: 'molecularViewer.MetalMaterial' },
+  // { value: MolecularViewerMaterial.Transparent, label: 'molecularViewer.TransparentMaterial' },
+  // { value: MolecularViewerMaterial.Glass, label: 'molecularViewer.GlassMaterial' },
+  { value: MolecularViewerMaterial.Backdrop, label: 'molecularViewer.BackdropMaterial' },
+  { value: MolecularViewerMaterial.Toon, label: 'molecularViewer.ToonMaterial' },
+  { value: MolecularViewerMaterial.Flat, label: 'molecularViewer.FlatMaterial' },
+];
+
 export const STYLE_MAP = new Map(
   [
     { key: MolecularViewerStyle.BallAndStick, value: 'BS' },

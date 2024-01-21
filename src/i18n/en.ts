@@ -2,6 +2,8 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
+import { MolecularViewerMaterial } from '../view/displayOptions';
+
 export const i18n_en = {
   translation: {
     name: {
@@ -107,6 +109,16 @@ export const i18n_en = {
       ContactSurface: 'Contact Surface',
       SolventAccessibleSurface: 'Solvent Accessible Surface',
       SolventExcludedSurface: 'Solvent Excluded Surface',
+      Material: 'Material',
+      DiffuseMaterial: 'Diffuse',
+      SoftMaterial: 'Soft',
+      GlossyMaterial: 'Glossy',
+      MetalMaterial: 'Metal',
+      TransparentMaterial: 'Transparent',
+      GlassMaterial: 'Glass',
+      BackdropMaterial: 'Backdrop',
+      ToonMaterial: 'Toon',
+      FlatMaterial: 'Flat',
       BackgroundColor: 'Background Color',
       Shininess: 'Shininess',
       Element: 'Element',

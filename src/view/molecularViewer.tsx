@@ -24,19 +24,27 @@ import { Util } from '../Util';
 import { MolecularProperties } from '../models/MolecularProperties';
 import ComplexVisual from '../lib/ComplexVisual';
 import { useThree } from '@react-three/fiber';
-import { STYLE_MAP, MolecularViewerStyle, COLORING_MAP, MolecularViewerColoring } from './displayOptions';
+import {
+  STYLE_MAP,
+  MolecularViewerStyle,
+  COLORING_MAP,
+  MolecularViewerColoring,
+  MolecularViewerMaterial,
+  MATERIAL_MAP,
+} from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { getSample } from '../internalDatabase';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
   style: MolecularViewerStyle;
+  material: MolecularViewerMaterial;
   coloring: MolecularViewerColoring;
   shininess?: number;
   target?: boolean;
 }
 
-const MolecularViewer = ({ moleculeData, style, coloring, shininess, target }: MolecularViewerProps) => {
+const MolecularViewer = ({ moleculeData, style, material, coloring, shininess, target }: MolecularViewerProps) => {
   const setCommonStore = useStore(Selector.set);
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
@@ -337,7 +345,7 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess, target }: M
         mode: mode,
         colorer: colorer,
         selector: 'all',
-        material: 'SF',
+        material: MATERIAL_MAP.get(material),
       },
     ];
 
@@ -355,7 +363,7 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess, target }: M
       });
       invalidate();
     });
-  }, [complex, shininess, mode, colorer]);
+  }, [complex, material, shininess, mode, colorer]);
 
   return showStructure();
 };

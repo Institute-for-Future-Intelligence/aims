@@ -7,7 +7,7 @@ import { MoleculeData, ProjectState, Range } from './types';
 import { MolecularProperties } from './models/MolecularProperties';
 import { Filter, FilterType } from './Filter';
 import { DataColoring, ProjectType } from './constants';
-import { MolecularViewerColoring, MolecularViewerStyle } from './view/displayOptions';
+import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 
 export class ProjectUtil {
   static createDefaultProjectState() {
@@ -39,6 +39,7 @@ export class ProjectUtil {
       chamberViewerBackground: 'black',
 
       projectViewerStyle: MolecularViewerStyle.Stick,
+      projectViewerMaterial: MolecularViewerMaterial.Soft,
       projectViewerBackground: 'white',
     } as ProjectState;
   }

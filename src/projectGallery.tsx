@@ -32,7 +32,12 @@ import { ProjectUtil } from './ProjectUtil';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { updateDataColoring, updateHiddenProperties } from './cloudProjectUtil';
 import { Filter, FilterType } from './Filter';
-import { GALLERY_STYLE_LABELS, MolecularViewerStyle } from './view/displayOptions';
+import {
+  GALLERY_STYLE_LABELS,
+  MATERIAL_LABELS,
+  MolecularViewerMaterial,
+  MolecularViewerStyle,
+} from './view/displayOptions';
 import { getSampleMolecule } from './internalDatabase';
 import MoleculeContainer from './moleculeContainer';
 
@@ -121,6 +126,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
   const addMolecule = useStore(Selector.addMolecule);
   const removeMolecule = useStore(Selector.removeMolecule);
   const viewerStyle = useStore(Selector.projectState).projectViewerStyle;
+  const viewerMaterial = useStore(Selector.projectState).projectViewerMaterial;
   const viewerBackground = useStore(Selector.projectState).projectViewerBackground;
   const projectState = useStore(Selector.projectState);
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
@@ -248,6 +254,12 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
       });
     };
 
+    const setMaterial = (material: MolecularViewerMaterial) => {
+      useStore.getState().set((state) => {
+        state.projectState.projectViewerMaterial = material;
+      });
+    };
+
     const setBackground = (color: string) => {
       useStore.getState().set((state) => {
         state.projectState.projectViewerBackground = color;
@@ -293,6 +305,41 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
         </Row>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
           <Col span={12} style={{ paddingTop: '5px' }}>
+            <span>{t('molecularViewer.Material', lang)}: </span>
+          </Col>
+          <Col span={12}>
+            <Select
+              style={{ width: '100%' }}
+              value={viewerMaterial}
+              onChange={(value: MolecularViewerMaterial) => {
+                const oldValue = viewerMaterial;
+                const newValue = value;
+                const undoableChange = {
+                  name: 'Select Molecular Viewer Material for Project',
+                  timestamp: Date.now(),
+                  oldValue: oldValue,
+                  newValue: newValue,
+                  undo: () => {
+                    setMaterial(undoableChange.oldValue as MolecularViewerMaterial);
+                  },
+                  redo: () => {
+                    setMaterial(undoableChange.newValue as MolecularViewerMaterial);
+                  },
+                } as UndoableChange;
+                useStore.getState().addUndoable(undoableChange);
+                setMaterial(newValue);
+              }}
+            >
+              {MATERIAL_LABELS.map((radio, idx) => (
+                <Option key={`${idx}-${radio.value}`} value={radio.value}>
+                  {t(radio.label, lang)}
+                </Option>
+              ))}
+            </Select>
+          </Col>
+        </Row>
+        <Row gutter={6} style={{ paddingBottom: '4px' }}>
+          <Col span={12} style={{ paddingTop: '5px' }}>
             <span>{t('molecularViewer.BackgroundColor', lang)}: </span>
           </Col>
           <Col span={12}>
@@ -322,7 +369,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
         </Row>
       </div>
     );
-  }, [lang, viewerStyle, viewerBackground]);
+  }, [lang, viewerStyle, viewerMaterial, viewerBackground]);
 
   const descriptionItems: CollapseProps['items'] = [
     {
