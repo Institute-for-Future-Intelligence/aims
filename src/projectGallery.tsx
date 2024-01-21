@@ -170,7 +170,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
       }
       setUpdateFlag(!updateFlag);
     }
-  }, [projectState.molecules, projectState.sortDescending, projectState.selectedProperty]);
+  }, [projectState.molecules, projectState.sortDescending, projectState.selectedProperty, molecularPropertiesMap]);
 
   const propertySelectionChangedRef = useRef<boolean>(false);
   const dataColoringSelectionRef = useRef<DataColoring>(projectState.dataColoring ?? DataColoring.ALL);
