@@ -33,9 +33,10 @@ export interface MolecularViewerProps {
   style: MolecularViewerStyle;
   coloring: MolecularViewerColoring;
   shininess?: number;
+  target?: boolean;
 }
 
-const MolecularViewer = ({ moleculeData, style, coloring, shininess }: MolecularViewerProps) => {
+const MolecularViewer = ({ moleculeData, style, coloring, shininess, target }: MolecularViewerProps) => {
   const setCommonStore = useStore(Selector.set);
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
@@ -141,13 +142,15 @@ const MolecularViewer = ({ moleculeData, style, coloring, shininess }: Molecular
         ),
       );
     }
-    const residues = result._residues;
-    const chains = result._chains;
-    const structures = result.structures;
-    const molecules = result._molecules;
-    setCommonStore((state) => {
-      state.targetData = { name, metadata, atoms, bonds, residues, chains, structures, molecules } as MoleculeTS;
-    });
+    if (target) {
+      const residues = result._residues;
+      const chains = result._chains;
+      const structures = result.structures;
+      const molecules = result._molecules;
+      setCommonStore((state) => {
+        state.targetData = { name, metadata, atoms, bonds, residues, chains, structures, molecules } as MoleculeTS;
+      });
+    }
     const properties = getProvidedMolecularProperties(moleculeData.name);
     if (properties) {
       setMolecularProperties(moleculeData.name, {

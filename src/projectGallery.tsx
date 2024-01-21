@@ -142,18 +142,18 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
   const descriptionRef = useRef<string | null>(null);
   const descriptionChangedRef = useRef<boolean>(false);
   const descriptionExpandedRef = useRef<boolean>(false);
-  const sortedMolecules = useRef<MoleculeData[]>([]); // store a sorted copy of molecules
+  const sortedMoleculesRef = useRef<MoleculeData[]>([]); // store a sorted copy of molecules
 
   useEffect(() => {
-    sortedMolecules.current = [];
+    sortedMoleculesRef.current = [];
     if (projectState.molecules) {
       for (const m of projectState.molecules) {
-        sortedMolecules.current.push(m);
+        sortedMoleculesRef.current.push(m);
       }
       const p = projectState.selectedProperty;
       if (p) {
         const prefix = projectState.sortDescending ? 1 : -1;
-        sortedMolecules.current.sort((a, b) => {
+        sortedMoleculesRef.current.sort((a, b) => {
           const propertiesA = molecularPropertiesMap.get(a.name);
           const propertiesB = molecularPropertiesMap.get(b.name);
           if (propertiesA && propertiesB) {
@@ -847,7 +847,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
             }}
             locale={{ emptyText: t('projectPanel.NoMolecule', lang) }}
             grid={{ column: canvasColumns, gutter: 0 }}
-            dataSource={sortedMolecules.current}
+            dataSource={sortedMoleculesRef.current}
             renderItem={(data: MoleculeData) => {
               return (
                 <List.Item

@@ -25,9 +25,10 @@ import moleculeUrl018 from './molecules/sdf/zidovudine.sdf';
 import moleculeUrl019 from './molecules/sdf/lipitor.sdf';
 import moleculeUrl020 from './molecules/sdf/metformin.sdf';
 
-import proteinUrl001 from './proteins/1a3n.pdb';
-import proteinUrl002 from './proteins/1crn.pdb';
-import proteinUrl003 from './proteins/7qo7.pdb';
+import proteinUrl001 from './proteins/1crn.pdb';
+import proteinUrl002 from './proteins/1a3n.pdb';
+import proteinUrl003 from './proteins/1aid.pdb';
+import proteinUrl004 from './proteins/7qo7.pdb';
 
 export const sampleMolecules = [
   { url: moleculeUrl001, internal: true, name: 'Aspirin' } as MoleculeData,
@@ -53,9 +54,10 @@ export const sampleMolecules = [
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const sampleProteins = [
-  { url: proteinUrl002, internal: true, name: 'Crambin' } as MoleculeData,
-  { url: proteinUrl001, internal: true, name: 'Hemoglobin' } as MoleculeData,
-  { url: proteinUrl003, internal: true, name: 'SARS-CoV-2 Omicron Spike' } as MoleculeData,
+  { url: proteinUrl001, internal: true, name: 'Crambin' } as MoleculeData,
+  { url: proteinUrl002, internal: true, name: 'Hemoglobin' } as MoleculeData,
+  { url: proteinUrl003, internal: true, name: 'HIV-1 Protease' } as MoleculeData,
+  { url: proteinUrl004, internal: true, name: 'SARS-CoV-2 Omicron Spike' } as MoleculeData,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const getSampleMolecule = (name: string) => {
