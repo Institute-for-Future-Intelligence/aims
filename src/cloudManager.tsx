@@ -56,7 +56,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   const [processing, setProcessing] = useState(false);
   const [updateFlag, setUpdateFlag] = useState(false);
   const [updateMyProjectsFlag, setUpdateMyProjectsFlag] = useState(false);
-  const myProjects = useRef<ExtendedProjectState[] | void>(); // Not sure why I need to use ref to store this
+  const myProjectsRef = useRef<ExtendedProjectState[] | void>(); // Not sure why I need to use ref to store this
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -141,8 +141,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   };
 
   useEffect(() => {
-    if (myProjects.current) {
-      myProjects.current.sort((a, b) => b.timestamp - a.timestamp);
+    if (myProjectsRef.current) {
+      myProjectsRef.current.sort((a, b) => b.timestamp - a.timestamp);
     }
   }, [updateMyProjectsFlag]);
 
@@ -308,7 +308,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   const fetchMyProjects = async (silent: boolean) => {
     if (!user.uid) return;
     if (!silent) setProcessing(true);
-    myProjects.current = await firebase
+    myProjectsRef.current = await firebase
       .firestore()
       .collection('users')
       .doc(user.uid)
@@ -391,7 +391,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       .doc(title)
       .delete()
       .then(() => {
-        if (myProjects.current && user.uid) {
+        if (myProjectsRef.current && user.uid) {
           setUpdateFlag(!updateFlag);
         }
         setCommonStore((state) => {
@@ -418,8 +418,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     // check if the new project title is already taken
     fetchMyProjects(false).then(() => {
       let exist = false;
-      if (myProjects.current) {
-        for (const p of myProjects.current) {
+      if (myProjectsRef.current) {
+        for (const p of myProjectsRef.current) {
           if (p.title === newTitle) {
             exist = true;
             break;
@@ -437,8 +437,33 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
           .then((doc) => {
             if (doc && doc.exists) {
               const data = doc.data();
-              if (data && user.uid) {
-                // TODO
+              if (data) {
+                const newData = JSON.parse(JSON.stringify(data));
+                newData.title = newTitle;
+                files
+                  .doc(newTitle)
+                  .set(newData)
+                  .then(() => {
+                    files
+                      .doc(oldTitle)
+                      .delete()
+                      .then(() => {
+                        // ignore
+                      });
+                    if (myProjectsRef.current) {
+                      for (const p of myProjectsRef.current) {
+                        if (p.title === oldTitle) {
+                          p.title = newTitle;
+                        }
+                      }
+                      setUpdateFlag(!updateFlag);
+                    }
+                    setCommonStore((state) => {
+                      if (state.projectState.title === oldTitle) {
+                        state.projectState.title = newTitle;
+                      }
+                    });
+                  });
               }
             }
           })
@@ -474,8 +499,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     // check if the project title is already used
     fetchMyProjects(false).then(() => {
       let exist = false;
-      if (myProjects.current) {
-        for (const p of myProjects.current) {
+      if (myProjectsRef.current) {
+        for (const p of myProjectsRef.current) {
           if (p.title === t) {
             exist = true;
             break;
@@ -540,8 +565,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       eps.panCenter = useStore.getState().panCenter;
       eps.timestamp = new Date().getTime();
       eps.time = dayjs(new Date(eps.timestamp)).format('MM/DD/YYYY hh:mm A');
-      if (myProjects.current) {
-        for (const p of myProjects.current) {
+      if (myProjectsRef.current) {
+        for (const p of myProjectsRef.current) {
           if (p.title === eps.title) {
             p.timestamp = eps.timestamp;
             p.time = eps.time;
@@ -584,8 +609,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     // check if the project title is already taken
     fetchMyProjects(false).then(() => {
       let exist = false;
-      if (myProjects.current) {
-        for (const p of myProjects.current) {
+      if (myProjectsRef.current) {
+        for (const p of myProjectsRef.current) {
           if (p.title === newTitle) {
             exist = true;
             break;
@@ -691,9 +716,9 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     <>
       {processing && <Spinner />}
       <MainToolBar signIn={signIn} signOut={signOut} />
-      {showProjectListPanel && myProjects.current && (
+      {showProjectListPanel && myProjectsRef.current && (
         <ProjectListPanel
-          projects={myProjects.current}
+          projects={myProjectsRef.current}
           setProjectState={setProjectState}
           deleteProject={deleteProject}
           renameProject={renameProject}
