@@ -14,13 +14,69 @@ import {
   MaterialRadioGroup,
   StyleRadioGroup,
 } from '../contextMenu/defaultMenuItems';
+import { useRefStore } from '../../stores/commonRef';
+import { usePrimitiveStore } from '../../stores/commonPrimitive';
+import { UndoableCameraChange } from '../../undo/UndoableCameraChange';
 
-export const createViewMenu = (
-  keyHome: string,
-  isMac: boolean,
-  zoomView: (scale: number) => void,
-  resetView: () => void,
-) => {
+export const resetView = () => {
+  const orbitControlsRef = useRefStore.getState().orbitControlsRef;
+  if (orbitControlsRef?.current) {
+    // I don't know why the reset method results in a black screen.
+    // So we are resetting it here to a predictable position.
+    const r = 2 * usePrimitiveStore.getState().boundingSphereRadius;
+    orbitControlsRef.current.object.position.set(r, r, r);
+    orbitControlsRef.current.target.set(0, 0, 0);
+    orbitControlsRef.current.update();
+    useStore.getState().set((state) => {
+      state.cameraPosition = [r, r, r];
+      state.panCenter = [0, 0, 0];
+    });
+  }
+};
+
+export const zoomView = (scale: number) => {
+  const orbitControlsRef = useRefStore.getState().orbitControlsRef;
+  if (orbitControlsRef?.current) {
+    const p = orbitControlsRef.current.object.position;
+    const x = p.x * scale;
+    const y = p.y * scale;
+    const z = p.z * scale;
+    const undoableCameraChange = {
+      name: 'Zoom',
+      timestamp: Date.now(),
+      oldCameraPosition: [p.x, p.y, p.z],
+      newCameraPosition: [x, y, z],
+      undo: () => {
+        const oldX = undoableCameraChange.oldCameraPosition[0];
+        const oldY = undoableCameraChange.oldCameraPosition[1];
+        const oldZ = undoableCameraChange.oldCameraPosition[2];
+        orbitControlsRef.current?.object.position.set(oldX, oldY, oldZ);
+        orbitControlsRef.current?.update();
+        useStore.getState().set((state) => {
+          state.cameraPosition = [oldX, oldY, oldZ];
+        });
+      },
+      redo: () => {
+        const newX = undoableCameraChange.newCameraPosition[0];
+        const newY = undoableCameraChange.newCameraPosition[1];
+        const newZ = undoableCameraChange.newCameraPosition[2];
+        orbitControlsRef.current?.object.position.set(newX, newY, newZ);
+        orbitControlsRef.current?.update();
+        useStore.getState().set((state) => {
+          state.cameraPosition = [newX, newY, newZ];
+        });
+      },
+    } as UndoableCameraChange;
+    useStore.getState().addUndoable(undoableCameraChange);
+    orbitControlsRef.current.object.position.set(x, y, z);
+    orbitControlsRef.current.update();
+    useStore.getState().set((state) => {
+      state.cameraPosition = [x, y, z];
+    });
+  }
+};
+
+export const createViewMenu = (keyHome: string, isMac: boolean) => {
   const lang = { lng: useStore.getState().language };
 
   const handleResetView = () => {

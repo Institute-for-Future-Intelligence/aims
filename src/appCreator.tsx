@@ -23,15 +23,12 @@ import KeyboardListener from './keyboardListener';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import AccountSettingsPanel from './accountSettingsPanel';
 import CloudManager from './cloudManager';
-import { useRefStore } from './stores/commonRef';
-import { UndoableCameraChange } from './undo/UndoableCameraChange';
 import { CloudTwoTone } from '@ant-design/icons';
 
 const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
-  const addUndoable = useStore(Selector.addUndoable);
   const projectView = useStore(Selector.projectView);
   const projectState = useStore(Selector.projectState);
   const chamberViewerPercentWidth = useStore(Selector.projectState).chamberViewerPercentWidth;
@@ -90,64 +87,6 @@ const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
     usePrimitiveStore.getState().set((state) => {
       state.enableRotate = !selected;
     });
-  };
-
-  const resetView = () => {
-    const orbitControlsRef = useRefStore.getState().orbitControlsRef;
-    if (orbitControlsRef?.current) {
-      // I don't know why the reset method results in a black screen.
-      // So we are resetting it here to a predictable position.
-      const r = 2 * usePrimitiveStore.getState().boundingSphereRadius;
-      orbitControlsRef.current.object.position.set(r, r, r);
-      orbitControlsRef.current.target.set(0, 0, 0);
-      orbitControlsRef.current.update();
-      setCommonStore((state) => {
-        state.cameraPosition = [r, r, r];
-        state.panCenter = [0, 0, 0];
-      });
-    }
-  };
-
-  const zoomView = (scale: number) => {
-    const orbitControlsRef = useRefStore.getState().orbitControlsRef;
-    if (orbitControlsRef?.current) {
-      const p = orbitControlsRef.current.object.position;
-      const x = p.x * scale;
-      const y = p.y * scale;
-      const z = p.z * scale;
-      const undoableCameraChange = {
-        name: 'Zoom',
-        timestamp: Date.now(),
-        oldCameraPosition: [p.x, p.y, p.z],
-        newCameraPosition: [x, y, z],
-        undo: () => {
-          const oldX = undoableCameraChange.oldCameraPosition[0];
-          const oldY = undoableCameraChange.oldCameraPosition[1];
-          const oldZ = undoableCameraChange.oldCameraPosition[2];
-          orbitControlsRef.current?.object.position.set(oldX, oldY, oldZ);
-          orbitControlsRef.current?.update();
-          setCommonStore((state) => {
-            state.cameraPosition = [oldX, oldY, oldZ];
-          });
-        },
-        redo: () => {
-          const newX = undoableCameraChange.newCameraPosition[0];
-          const newY = undoableCameraChange.newCameraPosition[1];
-          const newZ = undoableCameraChange.newCameraPosition[2];
-          orbitControlsRef.current?.object.position.set(newX, newY, newZ);
-          orbitControlsRef.current?.update();
-          setCommonStore((state) => {
-            state.cameraPosition = [newX, newY, newZ];
-          });
-        },
-      } as UndoableCameraChange;
-      addUndoable(undoableCameraChange);
-      orbitControlsRef.current.object.position.set(x, y, z);
-      orbitControlsRef.current.update();
-      setCommonStore((state) => {
-        state.cameraPosition = [x, y, z];
-      });
-    }
   };
 
   const isOwner = user.uid && user.uid === projectState.owner;
@@ -262,7 +201,7 @@ const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
         <ShareLinks size={16} round={true} margin={'2px'} style={{ position: 'absolute', right: '0', top: '90px' }} />
       )}
 
-      <MainMenu viewOnly={viewOnly} resetView={resetView} zoomView={zoomView} />
+      <MainMenu viewOnly={viewOnly} />
       <DropdownContextMenu>
         {/* must specify the height here for the floating window to have correct boundary check*/}
         <div style={{ height: 'calc(100vh - 72px)' }}>
@@ -301,7 +240,7 @@ const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
               <ReactionChamber moleculeData={projectState.targetProtein} />
             </Suspense>
           </SplitPane>
-          <KeyboardListener setNavigationView={setNavigationView} resetView={resetView} zoomView={zoomView} />
+          <KeyboardListener setNavigationView={setNavigationView} />
         </div>
       </DropdownContextMenu>
       <CloudManager viewOnly={viewOnly} />

@@ -59,13 +59,7 @@ const LabelContainer = styled.div`
   z-index: 9;
 `;
 
-export interface MainMenuProps {
-  viewOnly: boolean;
-  resetView: () => void;
-  zoomView: (scale: number) => void;
-}
-
-const MainMenu = ({ viewOnly, resetView, zoomView }: MainMenuProps) => {
+const MainMenu = ({ viewOnly }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
 
   const user = useStore.getState().user;
@@ -131,7 +125,7 @@ const MainMenu = ({ viewOnly, resetView, zoomView }: MainMenuProps) => {
     items.push({
       key: 'view-sub-menu',
       label: <MenuItem hasPadding={false}>{t('menu.viewSubMenu', lang)}</MenuItem>,
-      children: createViewMenu(keyHome, isMac, zoomView, resetView),
+      children: createViewMenu(keyHome, isMac),
     });
 
     // language menu

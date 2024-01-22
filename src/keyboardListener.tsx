@@ -15,11 +15,10 @@ import { GRID_RATIO, MoveDirection, UNDO_SHOW_INFO_DURATION } from './constants'
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { UndoableResetView } from './undo/UndoableResetView';
 import { askToCreateProject, askToOpenProject, saveProject, saveProjectAs } from './components/mainMenu/projectMenu';
+import { resetView, zoomView } from './components/mainMenu/viewMenu';
 
 export interface KeyboardListenerProps {
   setNavigationView: (selected: boolean) => void;
-  resetView: () => void;
-  zoomView: (scale: number) => void;
 }
 
 const handleKeys = [
@@ -79,7 +78,7 @@ const handleKeys = [
   'ctrl',
 ];
 
-const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardListenerProps) => {
+const KeyboardListener = ({ setNavigationView }: KeyboardListenerProps) => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
   const selectNone = useStore(Selector.selectNone);
