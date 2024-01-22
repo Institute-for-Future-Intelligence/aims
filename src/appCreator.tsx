@@ -39,6 +39,19 @@ const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
   const loadProvidedMolecularProperties = useStore(Selector.loadProvidedMolecularProperties);
   const showAccountSettingsPanel = usePrimitiveStore(Selector.showAccountSettingsPanel);
 
+  // const setChanged = usePrimitiveStore(Selector.setChanged);
+  // const setSkipChange = usePrimitiveStore(Selector.setSkipChange);
+  // const cameraPosition = useStore(Selector.cameraPosition);
+  // const panCenter = useStore(Selector.panCenter);
+  // useEffect(() => {
+  //   if (usePrimitiveStore.getState().skipChange) {
+  //     setSkipChange(false);
+  //   } else if (!usePrimitiveStore.getState().changed) {
+  //     setChanged(true);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [cameraPosition, panCenter]);
+
   useEffect(() => {
     loadChemicalElements();
     loadProvidedMolecularProperties();

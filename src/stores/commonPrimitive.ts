@@ -11,6 +11,8 @@ import { ObjectType, ProjectType } from '../constants';
 export interface PrimitiveStoreState {
   changed: boolean;
   setChanged: (b: boolean) => void;
+  skipChange: boolean;
+  setSkipChange: (b: boolean) => void;
 
   hoveredMolecule: MoleculeData | null;
 
@@ -81,6 +83,12 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     setChanged(b) {
       immerSet((state: PrimitiveStoreState) => {
         state.changed = b;
+      });
+    },
+    skipChange: true,
+    setSkipChange(b) {
+      immerSet((state: PrimitiveStoreState) => {
+        state.skipChange = b;
       });
     },
 

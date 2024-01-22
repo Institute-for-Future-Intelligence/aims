@@ -53,6 +53,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   const curateMoleculeToProjectFlag = usePrimitiveStore(Selector.curateMoleculeToProjectFlag);
   const showProjectsFlag = usePrimitiveStore(Selector.showProjectsFlag);
   const updateProjectsFlag = usePrimitiveStore(Selector.updateProjectsFlag);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
 
   const [processing, setProcessing] = useState(false);
   const [updateFlag, setUpdateFlag] = useState(false);
@@ -597,9 +598,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             setProjectState(useStore.getState().projectStateToOpen);
           }
           setProcessing(false);
-          usePrimitiveStore.getState().set((state) => {
-            state.changed = false;
-          });
+          setChanged(false);
         });
     }
   }
@@ -670,9 +669,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
                 });
               }
               setProcessing(false);
-              usePrimitiveStore.getState().set((state) => {
-                state.changed = false;
-              });
+              setChanged(false);
             });
         }
       }

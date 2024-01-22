@@ -14,6 +14,7 @@ import { useRefStore } from './stores/commonRef';
 import { GRID_RATIO, MoveDirection, UNDO_SHOW_INFO_DURATION } from './constants';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { UndoableResetView } from './undo/UndoableResetView';
+import { askToCreateProject, askToOpenProject, saveProject, saveProjectAs } from './components/mainMenu/projectMenu';
 
 export interface KeyboardListenerProps {
   setNavigationView: (selected: boolean) => void;
@@ -289,56 +290,19 @@ const KeyboardListener = ({ setNavigationView, resetView, zoomView }: KeyboardLi
         break;
       case 'ctrl+f':
       case 'meta+f': // for Mac
-        usePrimitiveStore.getState().setCreateProjectDialog(true);
-        if (loggable) {
-          setCommonStore((state) => {
-            state.actionInfo = {
-              name: 'Create New Project',
-              timestamp: new Date().getTime(),
-            };
-          });
-        }
+        askToCreateProject();
         break;
       case 'ctrl+o':
       case 'meta+o': // for Mac
-        usePrimitiveStore.getState().set((state) => {
-          state.showProjectsFlag = true;
-        });
-        setCommonStore((state) => {
-          state.selectedFloatingWindow = 'projectListPanel';
-          if (loggable) {
-            state.actionInfo = {
-              name: 'Open Project',
-              timestamp: new Date().getTime(),
-            };
-          }
-        });
+        askToOpenProject();
         break;
       case 'ctrl+s':
       case 'meta+s': // for Mac
-        usePrimitiveStore.getState().set((state) => {
-          state.saveProjectFlag = true;
-        });
-        if (loggable) {
-          setCommonStore((state) => {
-            state.actionInfo = {
-              name: 'Save Project',
-              timestamp: new Date().getTime(),
-            };
-          });
-        }
+        saveProject();
         break;
       case 'ctrl+shift+s':
       case 'meta+shift+s': // for Mac
-        usePrimitiveStore.getState().setSaveProjectAsDialog(true);
-        if (loggable) {
-          setCommonStore((state) => {
-            state.actionInfo = {
-              name: 'Save Project as',
-              timestamp: new Date().getTime(),
-            };
-          });
-        }
+        saveProjectAs();
         break;
       case 'alt+backspace':
       case 'backspace':

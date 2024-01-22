@@ -10,6 +10,7 @@ import ReactDraggable, { DraggableBounds, DraggableData, DraggableEvent, Draggab
 import { Dropdown, Input, Modal, Space, Table, Typography } from 'antd';
 import {
   CaretDownOutlined,
+  CloudOutlined,
   ExclamationCircleOutlined,
   QuestionCircleOutlined,
   WarningOutlined,
@@ -375,6 +376,16 @@ const ProjectListPanel = ({
                   let selection: string | undefined = undefined;
 
                   const items: MenuProps['items'] = [
+                    {
+                      key: 'project-title',
+                      label: (
+                        <>
+                          <CloudOutlined style={{ paddingRight: '6px' }} />
+                          <MenuItem>{title}</MenuItem>
+                          <hr />
+                        </>
+                      ),
+                    },
                     {
                       key: 'open-project',
                       label: (

@@ -19,6 +19,8 @@ export const changed = (state: PrimitiveStoreState) => state.changed;
 
 export const setChanged = (state: PrimitiveStoreState) => state.setChanged;
 
+export const setSkipChange = (state: PrimitiveStoreState) => state.setSkipChange;
+
 export const showAccountSettingsPanel = (state: PrimitiveStoreState) => state.showAccountSettingsPanel;
 
 export const userCount = (state: PrimitiveStoreState) => state.userCount;
