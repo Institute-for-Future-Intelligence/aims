@@ -18,6 +18,7 @@ import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { MolecularViewerColoring } from './view/displayOptions';
 import { Vector3 } from 'three';
+import { usePrimitiveStore } from './stores/commonPrimitive';
 
 export interface MoleculeContainerProps {
   width: number;
@@ -33,6 +34,7 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
   const viewerStyle = useStore(Selector.projectState).projectViewerStyle;
   const viewerMaterial = useStore(Selector.projectState).projectViewerMaterial;
   const viewerBackground = useStore(Selector.projectState).projectViewerBackground;
+  const setChanged = usePrimitiveStore(Selector.setChanged);
 
   const [cameraPosition, setCameraPosition] = useState<number[]>(DEFAULT_CAMERA_POSITION);
 
@@ -68,6 +70,7 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
           setCommonStore((state) => {
             state.selectedMolecule = moleculeData !== state.selectedMolecule ? moleculeData : null;
           });
+          setChanged(true);
         }}
         onDoubleClick={() => {
           setCommonStore((state) => {

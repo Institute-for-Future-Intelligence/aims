@@ -50,6 +50,7 @@ const VerticalAxis = ({
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
   const projectState = useStore(Selector.projectState);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
 
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const minRef = useRef<number>(min);
@@ -115,6 +116,7 @@ const VerticalAxis = ({
     } else {
       localSelect();
     }
+    setChanged(true);
   };
 
   const createLabel = (text: string, width: number) => {
@@ -211,6 +213,7 @@ const VerticalAxis = ({
                 });
                 minRef.current = Number(value);
                 setUpdateFlag(!updateFlag);
+                setChanged(true);
               }}
             />
             <br />
@@ -261,6 +264,7 @@ const VerticalAxis = ({
                 });
                 maxRef.current = Number(value);
                 setUpdateFlag(!updateFlag);
+                setChanged(true);
               }}
             />
           </div>
@@ -382,6 +386,7 @@ const VerticalAxis = ({
                     }
                   });
                   setUpdateFlag(!updateFlag);
+                  setChanged(true);
                 }
               }}
               range={true}

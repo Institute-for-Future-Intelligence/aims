@@ -95,6 +95,7 @@ export const Screenshot = () => {
 
 export const AxesCheckBox = () => {
   const axes = useStore(Selector.projectState).chamberViewerAxes;
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();
 
@@ -102,9 +103,7 @@ export const AxesCheckBox = () => {
     useStore.getState().set((state) => {
       state.projectState.chamberViewerAxes = checked;
     });
-    usePrimitiveStore.getState().set((state) => {
-      state.changed = true;
-    });
+    setChanged(true);
   };
 
   return (
@@ -136,6 +135,7 @@ export const AxesCheckBox = () => {
 
 export const BackgroundColor = () => {
   const color = useStore(Selector.projectState).chamberViewerBackground;
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();
 
@@ -143,9 +143,7 @@ export const BackgroundColor = () => {
     useStore.getState().set((state) => {
       state.projectState.chamberViewerBackground = color;
     });
-    usePrimitiveStore.getState().set((state) => {
-      state.changed = true;
-    });
+    setChanged(true);
   };
 
   return (
@@ -179,6 +177,7 @@ export const BackgroundColor = () => {
 
 export const StyleRadioGroup = () => {
   const molecularViewerStyle = useStore(Selector.projectState).chamberViewerStyle;
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();
 
@@ -186,9 +185,7 @@ export const StyleRadioGroup = () => {
     useStore.getState().set((state) => {
       state.projectState.chamberViewerStyle = style;
     });
-    usePrimitiveStore.getState().set((state) => {
-      state.changed = true;
-    });
+    setChanged(true);
   };
 
   return (
@@ -228,6 +225,7 @@ export const StyleRadioGroup = () => {
 
 export const MaterialRadioGroup = () => {
   const molecularViewerMaterial = useStore(Selector.projectState).chamberViewerMaterial;
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();
 
@@ -235,9 +233,7 @@ export const MaterialRadioGroup = () => {
     useStore.getState().set((state) => {
       state.projectState.chamberViewerMaterial = material;
     });
-    usePrimitiveStore.getState().set((state) => {
-      state.changed = true;
-    });
+    setChanged(true);
   };
 
   return (
@@ -277,6 +273,7 @@ export const MaterialRadioGroup = () => {
 
 export const ColoringRadioGroup = () => {
   const molecularViewerColoring = useStore(Selector.projectState).chamberViewerColoring;
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();
 
@@ -284,9 +281,7 @@ export const ColoringRadioGroup = () => {
     useStore.getState().set((state) => {
       state.projectState.chamberViewerColoring = coloring;
     });
-    usePrimitiveStore.getState().set((state) => {
-      state.changed = true;
-    });
+    setChanged(true);
   };
 
   return (

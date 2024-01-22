@@ -37,6 +37,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const viewerSelector = useStore(Selector.projectState).chamberViewerSelector;
   const viewerAxes = useStore(Selector.projectState).chamberViewerAxes;
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const cameraPosition = useStore(Selector.cameraPosition);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -73,9 +74,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       state.panCenter[1] = q.y;
       state.panCenter[2] = q.z;
     });
-    usePrimitiveStore.getState().set((state) => {
-      state.changed = true;
-    });
+    setChanged(true);
   };
 
   return (

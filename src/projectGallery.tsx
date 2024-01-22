@@ -130,6 +130,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
   const viewerBackground = useStore(Selector.projectState).projectViewerBackground;
   const projectState = useStore(Selector.projectState);
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
 
   const [loading, setLoading] = useState(false);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -252,18 +253,21 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
       useStore.getState().set((state) => {
         state.projectState.projectViewerStyle = style;
       });
+      setChanged(true);
     };
 
     const setMaterial = (material: MolecularViewerMaterial) => {
       useStore.getState().set((state) => {
         state.projectState.projectViewerMaterial = material;
       });
+      setChanged(true);
     };
 
     const setBackground = (color: string) => {
       useStore.getState().set((state) => {
         state.projectState.projectViewerBackground = color;
       });
+      setChanged(true);
     };
 
     return (
@@ -424,6 +428,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
                         state.selectedMolecule = null;
                       });
                       setUpdateFlag(!updateFlag);
+                      setChanged(true);
                     }}
                   >
                     <DeleteOutlined
@@ -493,6 +498,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
               state.projectState.description = e.target.value;
             });
             setUpdateFlag(!updateFlag);
+            setChanged(true);
           }}
           onBlur={() => {
             descriptionTextAreaEditableRef.current = false;
@@ -534,6 +540,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
     } else {
       localSelectProperty(selected, property);
     }
+    setChanged(true);
   };
 
   const createChoosePropertiesContent = () => {
@@ -651,6 +658,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
     } else {
       localSelectDataColoring();
     }
+    setChanged(true);
   };
 
   const createChooseDataColoringContent = () => {
@@ -1022,6 +1030,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
               const added = addMolecule(m);
               if (added) {
                 setUpdateFlag(!updateFlag);
+                setChanged(true);
               } else {
                 showError(t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + moleculeName, 3);
               }

@@ -21,6 +21,7 @@ const ExperimentSettings = () => {
   const addUndoable = useStore(Selector.addUndoable);
   const projectState = useStore(Selector.projectState);
   const targetData = useStore(Selector.targetData);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
 
   const [selector, setSelector] = useState<string | undefined>();
 
@@ -43,9 +44,7 @@ const ExperimentSettings = () => {
           }
         }
       });
-      usePrimitiveStore.getState().set((state) => {
-        state.changed = true;
-      });
+      setChanged(true);
     };
 
     return (

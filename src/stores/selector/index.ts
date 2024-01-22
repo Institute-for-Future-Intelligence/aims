@@ -17,6 +17,8 @@ export const locale = (state: CommonStoreState) => state.locale;
 
 export const changed = (state: PrimitiveStoreState) => state.changed;
 
+export const setChanged = (state: PrimitiveStoreState) => state.setChanged;
+
 export const showAccountSettingsPanel = (state: PrimitiveStoreState) => state.showAccountSettingsPanel;
 
 export const userCount = (state: PrimitiveStoreState) => state.userCount;
