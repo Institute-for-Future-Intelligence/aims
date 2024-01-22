@@ -85,6 +85,8 @@ export const createProjectDialog = (state: PrimitiveStoreState) => state.createP
 
 export const saveProjectFlag = (state: PrimitiveStoreState) => state.saveProjectFlag;
 
+export const saveAndThenOpenProjectFlag = (state: PrimitiveStoreState) => state.saveAndThenOpenProjectFlag;
+
 export const saveProjectAsFlag = (state: PrimitiveStoreState) => state.saveProjectAsFlag;
 
 export const saveProjectAsDialog = (state: PrimitiveStoreState) => state.saveProjectAsDialog;

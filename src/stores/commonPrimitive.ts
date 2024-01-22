@@ -39,6 +39,7 @@ export interface PrimitiveStoreState {
   saveProjectAsFlag: boolean;
   saveProjectAsDialog: boolean;
   setSaveProjectAsDialog: (b: boolean) => void;
+  saveAndThenOpenProjectFlag: boolean;
 
   saveAccountSettingsFlag: boolean;
 
@@ -126,6 +127,7 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     showProjectsFlag: false,
     updateProjectsFlag: false,
     showProjectListPanel: false,
+    saveAndThenOpenProjectFlag: false,
 
     showAccountSettingsPanel: false,
     userCount: 0,

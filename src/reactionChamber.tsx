@@ -73,6 +73,9 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       state.panCenter[1] = q.y;
       state.panCenter[2] = q.z;
     });
+    usePrimitiveStore.getState().set((state) => {
+      state.changed = true;
+    });
   };
 
   return (

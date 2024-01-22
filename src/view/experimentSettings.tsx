@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { UndoableChange } from '../undo/UndoableChange';
 import { sampleProteins } from '../internalDatabase';
 import { AimOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { usePrimitiveStore } from '../stores/commonPrimitive';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -41,6 +42,9 @@ const ExperimentSettings = () => {
             break;
           }
         }
+      });
+      usePrimitiveStore.getState().set((state) => {
+        state.changed = true;
       });
     };
 

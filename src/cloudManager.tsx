@@ -49,6 +49,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   const createProjectFlag = usePrimitiveStore(Selector.createProjectFlag);
   const saveProjectAsFlag = usePrimitiveStore(Selector.saveProjectAsFlag);
   const saveProjectFlag = usePrimitiveStore(Selector.saveProjectFlag);
+  const saveAndThenOpenProjectFlag = usePrimitiveStore(Selector.saveAndThenOpenProjectFlag);
   const curateMoleculeToProjectFlag = usePrimitiveStore(Selector.curateMoleculeToProjectFlag);
   const showProjectsFlag = usePrimitiveStore(Selector.showProjectsFlag);
   const updateProjectsFlag = usePrimitiveStore(Selector.updateProjectsFlag);
@@ -69,6 +70,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   useFlag(saveProjectAsFlag, saveProjectAs, () => setPrimitiveStore('saveProjectAsFlag', false));
 
   useFlag(saveProjectFlag, saveProject, () => setPrimitiveStore('saveProjectFlag', false));
+
+  useFlag(saveAndThenOpenProjectFlag, saveProject, () => setPrimitiveStore('saveAndThenOpenProjectFlag', false));
 
   useFlag(showProjectsFlag, showMyProjectsList, () => setPrimitiveStore('showProjectsFlag', false));
 
@@ -160,7 +163,8 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     }
   };
 
-  const setProjectState = (extendedProjectState: ExtendedProjectState) => {
+  const setProjectState = (extendedProjectState: ExtendedProjectState | null) => {
+    if (!extendedProjectState) return;
     setCommonStore((state) => {
       state.projectState = { ...extendedProjectState } as ProjectState;
       state.cameraPosition = extendedProjectState.cameraPosition;
@@ -589,7 +593,13 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
           showError(i18n.t('message.CannotSaveProject', lang) + ': ' + error);
         })
         .finally(() => {
+          if (saveAndThenOpenProjectFlag) {
+            setProjectState(useStore.getState().projectStateToOpen);
+          }
           setProcessing(false);
+          usePrimitiveStore.getState().set((state) => {
+            state.changed = false;
+          });
         });
     }
   }
@@ -660,6 +670,9 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
                 });
               }
               setProcessing(false);
+              usePrimitiveStore.getState().set((state) => {
+                state.changed = false;
+              });
             });
         }
       }

@@ -8,9 +8,14 @@ import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import ReactDraggable, { DraggableBounds, DraggableData, DraggableEvent, DraggableEventHandler } from 'react-draggable';
 import { Dropdown, Input, Modal, Space, Table, Typography } from 'antd';
-import { CaretDownOutlined, QuestionCircleOutlined, WarningOutlined } from '@ant-design/icons';
+import {
+  CaretDownOutlined,
+  ExclamationCircleOutlined,
+  QuestionCircleOutlined,
+  WarningOutlined,
+} from '@ant-design/icons';
 import { HOME_URL, REGEX_ALLOWABLE_IN_NAME, Z_INDEX_FRONT_PANEL } from './constants';
-import { copyTextToClipboard, showSuccess } from './helpers';
+import { copyTextToClipboard, showInfo, showSuccess } from './helpers';
 import Draggable from 'react-draggable';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { useTranslation } from 'react-i18next';
@@ -196,6 +201,32 @@ const ProjectListPanel = ({
     }
   };
 
+  const openProject = (record: ExtendedProjectState) => {
+    if (usePrimitiveStore.getState().changed) {
+      Modal.confirm({
+        title: t('message.DoYouWantToSaveChanges', lang),
+        icon: <ExclamationCircleOutlined />,
+        onOk: () => {
+          if (user.uid) {
+            setCommonStore((state) => {
+              state.projectStateToOpen = record;
+            });
+            usePrimitiveStore.getState().set((state) => {
+              state.saveAndThenOpenProjectFlag = true;
+            });
+          } else {
+            showInfo(t('menu.file.ToSaveYourWorkPleaseSignIn', lang));
+          }
+        },
+        onCancel: () => setProjectState(record),
+        okText: t('word.Yes', lang),
+        cancelText: t('word.No', lang),
+      });
+    } else {
+      setProjectState(record);
+    }
+  };
+
   return (
     <>
       <Modal
@@ -347,7 +378,7 @@ const ProjectListPanel = ({
                     {
                       key: 'open-project',
                       label: (
-                        <MenuItem onClick={() => setProjectState(record as ExtendedProjectState)}>
+                        <MenuItem onClick={() => openProject(record as ExtendedProjectState)}>
                           {t('word.Open', lang)}
                         </MenuItem>
                       ),

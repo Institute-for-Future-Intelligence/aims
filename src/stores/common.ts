@@ -9,7 +9,7 @@ import { Util } from '../Util';
 import { DEFAULT_CAMERA_POSITION, DEFAULT_PAN_CENTER, VERSION } from '../constants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, MoleculeData, ProjectState } from '../types';
+import { ActionInfo, ExtendedProjectState, MoleculeData, ProjectState } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -46,6 +46,8 @@ export interface CommonStoreState {
   panCenter: number[];
 
   targetData: MoleculeTS | undefined;
+
+  projectStateToOpen: ExtendedProjectState | null;
 
   loadedMolecule: MoleculeData | null;
   selectedMolecule: MoleculeData | null;
@@ -103,6 +105,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           panCenter: DEFAULT_PAN_CENTER,
 
           targetData: undefined,
+
+          projectStateToOpen: null,
 
           loadedMolecule: null,
           selectedMolecule: null,

@@ -31,6 +31,7 @@ export const AutoRotateCheckBox = ({ isMac }: { isMac?: boolean }) => {
   const setAutoRotate = (checked: boolean) => {
     usePrimitiveStore.getState().set((state) => {
       state.autoRotate = checked;
+      state.changed = true;
     });
   };
 
@@ -101,6 +102,9 @@ export const AxesCheckBox = () => {
     useStore.getState().set((state) => {
       state.projectState.chamberViewerAxes = checked;
     });
+    usePrimitiveStore.getState().set((state) => {
+      state.changed = true;
+    });
   };
 
   return (
@@ -138,6 +142,9 @@ export const BackgroundColor = () => {
   const setColor = (color: string) => {
     useStore.getState().set((state) => {
       state.projectState.chamberViewerBackground = color;
+    });
+    usePrimitiveStore.getState().set((state) => {
+      state.changed = true;
     });
   };
 
@@ -178,6 +185,9 @@ export const StyleRadioGroup = () => {
   const setStyle = (style: MolecularViewerStyle) => {
     useStore.getState().set((state) => {
       state.projectState.chamberViewerStyle = style;
+    });
+    usePrimitiveStore.getState().set((state) => {
+      state.changed = true;
     });
   };
 
@@ -225,6 +235,9 @@ export const MaterialRadioGroup = () => {
     useStore.getState().set((state) => {
       state.projectState.chamberViewerMaterial = material;
     });
+    usePrimitiveStore.getState().set((state) => {
+      state.changed = true;
+    });
   };
 
   return (
@@ -270,6 +283,9 @@ export const ColoringRadioGroup = () => {
   const setColoring = (coloring: MolecularViewerColoring) => {
     useStore.getState().set((state) => {
       state.projectState.chamberViewerColoring = coloring;
+    });
+    usePrimitiveStore.getState().set((state) => {
+      state.changed = true;
     });
   };
 
