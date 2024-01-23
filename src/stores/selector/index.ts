@@ -47,6 +47,10 @@ export const enableRotate = (state: PrimitiveStoreState) => state.enableRotate;
 
 export const autoRotate = (state: PrimitiveStoreState) => state.autoRotate;
 
+export const resetViewFlag = (state: PrimitiveStoreState) => state.resetViewFlag;
+
+export const zoomViewFlag = (state: PrimitiveStoreState) => state.zoomViewFlag;
+
 export const addMolecule = (state: CommonStoreState) => state.addMolecule;
 
 export const removeMolecule = (state: CommonStoreState) => state.removeMolecule;

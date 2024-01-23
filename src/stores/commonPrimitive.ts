@@ -6,6 +6,7 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import produce from 'immer';
 import { MoleculeData } from '../types';
 import { ObjectType, ProjectType } from '../constants';
+import { useThree } from '@react-three/fiber';
 
 // avoid using undefined value in the store for now.
 export interface PrimitiveStoreState {
@@ -20,6 +21,13 @@ export interface PrimitiveStoreState {
 
   enableRotate: boolean;
   autoRotate: boolean;
+
+  resetViewFlag: boolean;
+  resetView: () => void;
+
+  zoomViewFlag: boolean;
+  zoomScale: number;
+  zoomView: (scale: number) => void;
 
   waiting: boolean;
 
@@ -98,6 +106,22 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
 
     enableRotate: true,
     autoRotate: false,
+
+    resetViewFlag: true,
+    resetView() {
+      immerSet((state) => {
+        state.resetViewFlag = !state.resetViewFlag;
+      });
+    },
+
+    zoomViewFlag: true,
+    zoomScale: 1,
+    zoomView(scale) {
+      immerSet((state) => {
+        state.zoomViewFlag = !state.zoomViewFlag;
+        state.zoomScale = scale;
+      });
+    },
 
     waiting: false,
 

@@ -2,7 +2,7 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
   DEFAULT_CAMERA_POSITION,
@@ -11,14 +11,14 @@ import {
   DEFAULT_SHADOW_CAMERA_FAR,
   HALF_PI,
 } from './constants';
-import { OrbitControls } from '@react-three/drei';
 import MolecularViewer from './view/molecularViewer';
 import { MoleculeData } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { MolecularViewerColoring } from './view/displayOptions';
-import { Sphere, Vector3 } from 'three';
+import { DirectionalLight, Vector3 } from 'three';
 import { usePrimitiveStore } from './stores/commonPrimitive';
+import { ProjectGalleryControls } from './controls';
 
 export interface MoleculeContainerProps {
   width: number;
@@ -36,23 +36,9 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
   const viewerBackground = useStore(Selector.projectViewerBackground);
   const setChanged = usePrimitiveStore(Selector.setChanged);
 
-  const [cameraPosition, setCameraPosition] = useState<number[]>(DEFAULT_CAMERA_POSITION);
-  const orbitControlsRef = useRef<any>(null);
+  const lightRef = useRef<DirectionalLight>(null);
 
-  const onControlEnd = (e: any) => {
-    const camera = e.target.object;
-    const p = camera.position as Vector3;
-    setCameraPosition([p.x, p.y, p.z]);
-  };
-
-  const onLoaded = (boundingSphere: Sphere) => {
-    if (orbitControlsRef?.current) {
-      const r = 3 * boundingSphere.radius;
-      orbitControlsRef.current.object.position.set(r, r, r);
-      orbitControlsRef.current.target.set(0, 0, 0);
-      orbitControlsRef.current.update();
-    }
-  };
+  const cameraPositionVector = useMemo(() => new Vector3().fromArray(DEFAULT_CAMERA_POSITION), []);
 
   return (
     <>
@@ -73,7 +59,7 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
           fov: DEFAULT_FOV,
           far: DEFAULT_SHADOW_CAMERA_FAR,
           up: [0, 0, 1],
-          position: new Vector3().fromArray(cameraPosition),
+          position: cameraPositionVector,
           rotation: [HALF_PI / 2, 0, HALF_PI / 2],
         }}
         onMouseDown={() => {
@@ -89,20 +75,12 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
           });
         }}
       >
-        <OrbitControls
-          ref={orbitControlsRef}
-          enableDamping={true}
-          onEnd={onControlEnd}
-          onChange={(e) => {
-            if (!e) return;
-            const camera = e.target.object;
-            setCameraPosition([camera.position.x, camera.position.y, camera.position.z]);
-          }}
-        />
+        <ProjectGalleryControls lightRef={lightRef} />
         <directionalLight
           name={'Directional Light'}
+          ref={lightRef}
           color="white"
-          position={new Vector3().fromArray(cameraPosition ?? DEFAULT_CAMERA_POSITION)}
+          position={cameraPositionVector}
           intensity={DEFAULT_LIGHT_INTENSITY}
           castShadow={false}
         />
@@ -112,7 +90,7 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
             style={viewerStyle}
             material={viewerMaterial}
             coloring={MolecularViewerColoring.Element}
-            onLoaded={onLoaded}
+            isGalleryView
           />
         )}
       </Canvas>

@@ -43,7 +43,7 @@ export interface MolecularViewerProps {
   coloring: MolecularViewerColoring;
   chamber?: boolean;
   selector?: string;
-  onLoaded?: (boundingSphere: Sphere) => void;
+  isGalleryView?: boolean;
 }
 
 const MolecularViewer = ({
@@ -53,7 +53,7 @@ const MolecularViewer = ({
   coloring,
   chamber,
   selector,
-  onLoaded,
+  isGalleryView,
 }: MolecularViewerProps) => {
   const setCommonStore = useStore(Selector.set);
   const chemicalElements = useStore(Selector.chemicalElements);
@@ -65,7 +65,15 @@ const MolecularViewer = ({
 
   const CSGroup = useRef<Group>(null);
 
-  const { invalidate } = useThree();
+  const { invalidate, get } = useThree();
+
+  const onLoaded = (boundingSphere: Sphere) => {
+    const r = 3 * boundingSphere.radius;
+    const camera = get().camera;
+    camera.position.set(r, r, r);
+    camera.lookAt(0, 0, 0);
+    camera.up.set(0, 0, 1);
+  };
 
   const mode = useMemo(() => {
     return STYLE_MAP.get(style);
@@ -211,7 +219,7 @@ const MolecularViewer = ({
       usePrimitiveStore.getState().set((state) => {
         state.boundingSphereRadius = boundingSphere.radius;
       });
-      if (onLoaded) onLoaded(boundingSphere);
+      if (isGalleryView) onLoaded(boundingSphere);
       invalidate();
     });
   }, [complex, material, mode, colorer, selector]);
