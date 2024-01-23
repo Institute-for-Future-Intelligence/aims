@@ -2,7 +2,7 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
   DEFAULT_CAMERA_POSITION,
@@ -17,7 +17,7 @@ import { MoleculeData } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { MolecularViewerColoring } from './view/displayOptions';
-import { Vector3 } from 'three';
+import { Sphere, Vector3 } from 'three';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 
 export interface MoleculeContainerProps {
@@ -37,11 +37,21 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
   const setChanged = usePrimitiveStore(Selector.setChanged);
 
   const [cameraPosition, setCameraPosition] = useState<number[]>(DEFAULT_CAMERA_POSITION);
+  const orbitControlsRef = useRef<any>(null);
 
   const onControlEnd = (e: any) => {
     const camera = e.target.object;
     const p = camera.position as Vector3;
     setCameraPosition([p.x, p.y, p.z]);
+  };
+
+  const onLoaded = (boundingSphere: Sphere) => {
+    if (orbitControlsRef?.current) {
+      const r = 3 * boundingSphere.radius;
+      orbitControlsRef.current.object.position.set(r, r, r);
+      orbitControlsRef.current.target.set(0, 0, 0);
+      orbitControlsRef.current.update();
+    }
   };
 
   return (
@@ -80,6 +90,7 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
         }}
       >
         <OrbitControls
+          ref={orbitControlsRef}
           enableDamping={true}
           onEnd={onControlEnd}
           onChange={(e) => {
@@ -101,6 +112,7 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
             style={viewerStyle}
             material={viewerMaterial}
             coloring={MolecularViewerColoring.Element}
+            onLoaded={onLoaded}
           />
         )}
       </Canvas>

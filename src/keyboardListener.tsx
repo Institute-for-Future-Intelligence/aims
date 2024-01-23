@@ -234,49 +234,7 @@ const KeyboardListener = ({ setNavigationView }: KeyboardListenerProps) => {
         break;
       case 'ctrl+alt+h': // for Mac and Chrome OS
       case 'ctrl+home':
-        const cameraPosition = useStore.getState().cameraPosition;
-        const panCenter = useStore.getState().panCenter;
-        // if not already reset
-        if (
-          cameraPosition[0] !== cameraPosition[1] ||
-          cameraPosition[1] !== cameraPosition[2] ||
-          cameraPosition[0] !== cameraPosition[2] ||
-          panCenter[0] !== 0 ||
-          panCenter[1] !== 0 ||
-          panCenter[2] !== 0
-        ) {
-          const undoableResetView = {
-            name: 'Reset View',
-            timestamp: Date.now(),
-            oldCameraPosition: [...cameraPosition],
-            oldPanCenter: [...panCenter],
-            undo: () => {
-              const orbitControlsRef = useRefStore.getState().orbitControlsRef;
-              if (orbitControlsRef?.current) {
-                orbitControlsRef.current.object.position.set(
-                  undoableResetView.oldCameraPosition[0],
-                  undoableResetView.oldCameraPosition[1],
-                  undoableResetView.oldCameraPosition[2],
-                );
-                orbitControlsRef.current.target.set(
-                  undoableResetView.oldPanCenter[0],
-                  undoableResetView.oldPanCenter[1],
-                  undoableResetView.oldPanCenter[2],
-                );
-                orbitControlsRef.current.update();
-                setCommonStore((state) => {
-                  state.cameraPosition = [...undoableResetView.oldCameraPosition];
-                  state.panCenter = [...undoableResetView.oldPanCenter];
-                });
-              }
-            },
-            redo: () => {
-              resetView();
-            },
-          } as UndoableResetView;
-          addUndoable(undoableResetView);
-          resetView();
-        }
+        resetView();
         break;
       case 'ctrl+u':
       case 'meta+u':

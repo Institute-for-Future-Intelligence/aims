@@ -11,7 +11,7 @@ import PubChemParser from '../lib/io/parsers/PubChemParser';
 import ElementColorer from '../lib/gfx/colorers/ElementColorer';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Color, Group, Vector3 } from 'three';
+import { Color, Group, Sphere, Vector3 } from 'three';
 import { MoleculeTS } from '../models/MoleculeTS';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
@@ -42,9 +42,18 @@ export interface MolecularViewerProps {
   coloring: MolecularViewerColoring;
   chamber?: boolean;
   selector?: string;
+  onLoaded?: (boundingSphere: Sphere) => void;
 }
 
-const MolecularViewer = ({ moleculeData, style, material, coloring, chamber, selector }: MolecularViewerProps) => {
+const MolecularViewer = ({
+  moleculeData,
+  style,
+  material,
+  coloring,
+  chamber,
+  selector,
+  onLoaded,
+}: MolecularViewerProps) => {
   const setCommonStore = useStore(Selector.set);
   const chemicalElements = useStore(Selector.chemicalElements);
   const getChemicalElement = useStore(Selector.getChemicalElement);
@@ -201,6 +210,7 @@ const MolecularViewer = ({ moleculeData, style, material, coloring, chamber, sel
       usePrimitiveStore.getState().set((state) => {
         state.boundingSphereRadius = boundingSphere.radius;
       });
+      if (onLoaded) onLoaded(boundingSphere);
       invalidate();
     });
   }, [complex, material, mode, colorer, selector]);
