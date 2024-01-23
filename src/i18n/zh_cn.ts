@@ -94,6 +94,7 @@ export const i18n_zh_cn = {
     },
 
     molecularViewer: {
+      Fog: '有雾',
       Axes: '显示坐标轴',
       Style: '风格',
       Color: '颜色',

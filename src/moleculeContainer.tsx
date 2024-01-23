@@ -58,7 +58,7 @@ const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shi
     <>
       <Canvas
         shadows={false}
-        gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
+        gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true, antialias: true }}
         frameloop={'demand'}
         style={{
           transition: '.5s ease',

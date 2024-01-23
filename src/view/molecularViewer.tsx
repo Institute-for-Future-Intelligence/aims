@@ -34,6 +34,7 @@ import {
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { getSample } from '../internalDatabase';
+import { Box } from '@react-three/drei';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -216,7 +217,28 @@ const MolecularViewer = ({
   }, [complex, material, mode, colorer, selector]);
 
   if (!mode) return null;
-  return <group name={'Structure'} ref={CSGroup} />;
+  return (
+    <group>
+      <group name={'Structure'} ref={CSGroup} />
+      {chamber && (
+        <Box
+          position={[0, 0, 0]}
+          args={[1, 1, 1]}
+          key={'Box'}
+          name={'Box'}
+          castShadow={false}
+          receiveShadow={false}
+          onPointerOver={(e) => {}}
+          onPointerOut={(e) => {}}
+          onPointerDown={(e) => {
+            if (e.button === 2) return;
+          }}
+        >
+          <meshStandardMaterial attach="material" color={'red'} />
+        </Box>
+      )}
+    </group>
+  );
 };
 
 export default React.memo(MolecularViewer);

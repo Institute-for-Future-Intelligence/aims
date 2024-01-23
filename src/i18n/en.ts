@@ -95,6 +95,7 @@ export const i18n_en = {
     },
 
     molecularViewer: {
+      Fog: 'Fog',
       Axes: 'Axes',
       Style: 'Style',
       Color: 'Color',

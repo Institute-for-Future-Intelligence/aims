@@ -53,6 +53,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           chamberViewerStyle: data.chamberViewerStyle ?? MolecularViewerStyle.QuickSurface,
           chamberViewerMaterial: data.chamberViewerMaterial ?? MolecularViewerMaterial.Soft,
           chamberViewerColoring: data.chamberViewerColoring ?? MolecularViewerColoring.SecondaryStructure,
+          chamberViewerFoggy: !!data.chamberViewerFoggy,
           chamberViewerBackground: data.chamberViewerBackground ?? 'black',
           chamberViewerSelector: data.chamberViewerSelector ?? 'all',
 

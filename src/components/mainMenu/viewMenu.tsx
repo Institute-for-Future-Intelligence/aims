@@ -11,6 +11,7 @@ import {
   AxesCheckBox,
   BackgroundColor,
   ColoringRadioGroup,
+  FogCheckBox,
   MaterialRadioGroup,
   StyleRadioGroup,
 } from '../contextMenu/defaultMenuItems';
@@ -178,6 +179,11 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
   items.push({
     key: 'axes-check-box',
     label: <AxesCheckBox />,
+  });
+
+  items.push({
+    key: 'foggy-check-box',
+    label: <FogCheckBox />,
   });
 
   items.push({

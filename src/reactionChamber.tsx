@@ -36,6 +36,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const viewerBackground = useStore(Selector.projectState).chamberViewerBackground;
   const viewerSelector = useStore(Selector.projectState).chamberViewerSelector;
   const viewerAxes = useStore(Selector.projectState).chamberViewerAxes;
+  const viewerFoggy = useStore(Selector.projectState).chamberViewerFoggy;
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
   const cameraPosition = useStore(Selector.cameraPosition);
 
@@ -113,6 +114,8 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
             }
           }}
         />
+        {viewerFoggy && <fog attach="fog" args={['#000000', 50, 200]} />}
+        {viewerFoggy && <ambientLight intensity={0.5} />}
         <directionalLight
           ref={lightRef}
           name={'Directional Light'}

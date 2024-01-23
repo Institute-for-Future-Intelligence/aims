@@ -93,6 +93,7 @@ export const i18n_zh_tw = {
     },
 
     molecularViewer: {
+      Fog: '有霧',
       Axes: '顯示坐標軸',
       Style: '風格',
       Color: '顏色',

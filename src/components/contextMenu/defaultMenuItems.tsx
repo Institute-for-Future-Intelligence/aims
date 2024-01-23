@@ -133,6 +133,46 @@ export const AxesCheckBox = () => {
   );
 };
 
+export const FogCheckBox = () => {
+  const foggy = useStore(Selector.projectState).chamberViewerFoggy;
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const setFoggy = (checked: boolean) => {
+    useStore.getState().set((state) => {
+      state.projectState.chamberViewerFoggy = checked;
+    });
+    setChanged(true);
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Checkbox
+        checked={foggy}
+        onChange={(e: CheckboxChangeEvent) => {
+          const checked = e.target.checked;
+          const undoableCheck = {
+            name: 'Show Fog',
+            timestamp: Date.now(),
+            checked: checked,
+            undo: () => {
+              setFoggy(!undoableCheck.checked);
+            },
+            redo: () => {
+              setFoggy(undoableCheck.checked);
+            },
+          } as UndoableCheck;
+          useStore.getState().addUndoable(undoableCheck);
+          setFoggy(checked);
+        }}
+      >
+        {t('molecularViewer.Fog', lang)}
+      </Checkbox>
+    </MenuItem>
+  );
+};
+
 export const BackgroundColor = () => {
   const color = useStore(Selector.projectState).chamberViewerBackground;
   const setChanged = usePrimitiveStore(Selector.setChanged);

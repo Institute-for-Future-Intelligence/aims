@@ -11,6 +11,7 @@ import {
   AxesCheckBox,
   BackgroundColor,
   ColoringRadioGroup,
+  FogCheckBox,
   MaterialRadioGroup,
   Screenshot,
   StyleRadioGroup,
@@ -29,6 +30,11 @@ export const createDefaultMenu = () => {
   items.push({
     key: 'molecular-viewer-axes',
     label: <AxesCheckBox />,
+  });
+
+  items.push({
+    key: 'molecular-viewer-foggy',
+    label: <FogCheckBox />,
   });
 
   items.push({
