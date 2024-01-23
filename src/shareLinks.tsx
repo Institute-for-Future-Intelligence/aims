@@ -44,7 +44,7 @@ export interface ShareLinkProps {
 const ShareLinks = ({ style, size, margin, round, handleShareWindowClose }: ShareLinkProps) => {
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
-  const currentTitle = useStore(Selector.projectState).title;
+  const currentTitle = useStore(Selector.projectTitle);
 
   const { t } = useTranslation();
   const params = new URLSearchParams(window.location.search);

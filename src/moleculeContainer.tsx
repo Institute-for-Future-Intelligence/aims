@@ -31,9 +31,9 @@ export interface MoleculeContainerProps {
 
 const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shininess }: MoleculeContainerProps) => {
   const setCommonStore = useStore(Selector.set);
-  const viewerStyle = useStore(Selector.projectState).projectViewerStyle;
-  const viewerMaterial = useStore(Selector.projectState).projectViewerMaterial;
-  const viewerBackground = useStore(Selector.projectState).projectViewerBackground;
+  const viewerStyle = useStore(Selector.projectViewerStyle);
+  const viewerMaterial = useStore(Selector.projectViewerMaterial);
+  const viewerBackground = useStore(Selector.projectViewerBackground);
   const setChanged = usePrimitiveStore(Selector.setChanged);
 
   const [cameraPosition, setCameraPosition] = useState<number[]>(DEFAULT_CAMERA_POSITION);

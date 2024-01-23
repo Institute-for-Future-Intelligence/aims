@@ -31,7 +31,7 @@ const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
   const language = useStore(Selector.language);
   const projectView = useStore(Selector.projectView);
   const projectState = useStore(Selector.projectState);
-  const chamberViewerPercentWidth = useStore(Selector.projectState).chamberViewerPercentWidth;
+  const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
   const loadProvidedMolecularProperties = useStore(Selector.loadProvidedMolecularProperties);
   const showAccountSettingsPanel = usePrimitiveStore(Selector.showAccountSettingsPanel);

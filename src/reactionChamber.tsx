@@ -19,7 +19,7 @@ import MolecularViewer from './view/molecularViewer';
 import { MoleculeData } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import { DirectionalLight, Vector3 } from 'three';
+import { DirectionalLight, Sphere, Vector3 } from 'three';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { useRefStore } from './stores/commonRef';
 import ExperimentSettings from './view/experimentSettings';
@@ -30,13 +30,13 @@ export interface ReactionChamberProps {
 
 const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const setCommonStore = useStore(Selector.set);
-  const viewerStyle = useStore(Selector.projectState).chamberViewerStyle;
-  const viewerMaterial = useStore(Selector.projectState).chamberViewerMaterial;
-  const viewerColoring = useStore(Selector.projectState).chamberViewerColoring;
-  const viewerBackground = useStore(Selector.projectState).chamberViewerBackground;
-  const viewerSelector = useStore(Selector.projectState).chamberViewerSelector;
-  const viewerAxes = useStore(Selector.projectState).chamberViewerAxes;
-  const viewerFoggy = useStore(Selector.projectState).chamberViewerFoggy;
+  const viewerStyle = useStore(Selector.chamberViewerStyle);
+  const viewerMaterial = useStore(Selector.chamberViewerMaterial);
+  const viewerColoring = useStore(Selector.chamberViewerColoring);
+  const viewerBackground = useStore(Selector.chamberViewerBackground);
+  const viewerSelector = useStore(Selector.chamberViewerSelector);
+  const viewerAxes = useStore(Selector.chamberViewerAxes);
+  const viewerFoggy = useStore(Selector.chamberViewerFoggy);
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
   const cameraPosition = useStore(Selector.cameraPosition);
 
@@ -46,6 +46,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const lightRef = useRef<DirectionalLight>(null);
 
   const [refVisible, setRefVisible] = useState<boolean>(false);
+  const [boundingSphere, setBoundingSphere] = useState<Sphere>(new Sphere());
 
   useEffect(() => {
     if (cameraRef.current) cameraRef.current.position.fromArray(cameraPosition);
@@ -74,6 +75,10 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       state.panCenter[1] = q.y;
       state.panCenter[2] = q.z;
     });
+  };
+
+  const onLoaded = (sphere: Sphere) => {
+    if (viewerFoggy) boundingSphere.set(sphere.center, sphere.radius);
   };
 
   return (
@@ -114,7 +119,16 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
             }
           }}
         />
-        {viewerFoggy && <fog attach="fog" args={['#000000', 50, 200]} />}
+        {viewerFoggy && (
+          <fog
+            attach="fog"
+            args={[
+              '#000000',
+              boundingSphere.radius < 0 ? 50 : boundingSphere.radius * 2,
+              boundingSphere.radius < 0 ? 200 : boundingSphere.radius * 8,
+            ]}
+          />
+        )}
         {viewerFoggy && <ambientLight intensity={0.5} />}
         <directionalLight
           ref={lightRef}
@@ -138,6 +152,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
             coloring={viewerColoring}
             chamber={true}
             selector={viewerSelector}
+            onLoaded={onLoaded}
           />
         )}
         <GizmoHelper alignment="bottom-right" margin={[30, 30]}>

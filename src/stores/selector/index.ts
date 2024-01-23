@@ -104,3 +104,27 @@ export const curateMoleculeToProjectFlag = (state: PrimitiveStoreState) => state
 export const showProjectListPanel = (state: PrimitiveStoreState) => state.showProjectListPanel;
 
 export const saveAccountSettingsFlag = (state: PrimitiveStoreState) => state.saveAccountSettingsFlag;
+
+export const projectTitle = (state: CommonStoreState) => state.projectState.title;
+
+export const chamberViewerPercentWidth = (state: CommonStoreState) => state.projectState.chamberViewerPercentWidth;
+
+export const chamberViewerBackground = (state: CommonStoreState) => state.projectState.chamberViewerBackground;
+
+export const chamberViewerAxes = (state: CommonStoreState) => state.projectState.chamberViewerAxes;
+
+export const chamberViewerFoggy = (state: CommonStoreState) => state.projectState.chamberViewerFoggy;
+
+export const chamberViewerSelector = (state: CommonStoreState) => state.projectState.chamberViewerSelector;
+
+export const chamberViewerColoring = (state: CommonStoreState) => state.projectState.chamberViewerColoring;
+
+export const chamberViewerMaterial = (state: CommonStoreState) => state.projectState.chamberViewerMaterial;
+
+export const chamberViewerStyle = (state: CommonStoreState) => state.projectState.chamberViewerStyle;
+
+export const projectViewerStyle = (state: CommonStoreState) => state.projectState.projectViewerStyle;
+
+export const projectViewerMaterial = (state: CommonStoreState) => state.projectState.projectViewerMaterial;
+
+export const projectViewerBackground = (state: CommonStoreState) => state.projectState.projectViewerBackground;

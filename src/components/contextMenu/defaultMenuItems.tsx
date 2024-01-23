@@ -94,7 +94,7 @@ export const Screenshot = () => {
 };
 
 export const AxesCheckBox = () => {
-  const axes = useStore(Selector.projectState).chamberViewerAxes;
+  const axes = useStore(Selector.chamberViewerAxes);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();
@@ -134,7 +134,7 @@ export const AxesCheckBox = () => {
 };
 
 export const FogCheckBox = () => {
-  const foggy = useStore(Selector.projectState).chamberViewerFoggy;
+  const foggy = useStore(Selector.chamberViewerFoggy);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();
@@ -174,7 +174,7 @@ export const FogCheckBox = () => {
 };
 
 export const BackgroundColor = () => {
-  const color = useStore(Selector.projectState).chamberViewerBackground;
+  const color = useStore(Selector.chamberViewerBackground);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();
@@ -216,7 +216,7 @@ export const BackgroundColor = () => {
 };
 
 export const StyleRadioGroup = () => {
-  const molecularViewerStyle = useStore(Selector.projectState).chamberViewerStyle;
+  const molecularViewerStyle = useStore(Selector.chamberViewerStyle);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();
@@ -264,7 +264,7 @@ export const StyleRadioGroup = () => {
 };
 
 export const MaterialRadioGroup = () => {
-  const molecularViewerMaterial = useStore(Selector.projectState).chamberViewerMaterial;
+  const molecularViewerMaterial = useStore(Selector.chamberViewerMaterial);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();
@@ -312,7 +312,7 @@ export const MaterialRadioGroup = () => {
 };
 
 export const ColoringRadioGroup = () => {
-  const molecularViewerColoring = useStore(Selector.projectState).chamberViewerColoring;
+  const molecularViewerColoring = useStore(Selector.chamberViewerColoring);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();
