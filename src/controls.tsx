@@ -41,6 +41,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
   const resetViewFlag = usePrimitiveStore(Selector.resetViewFlag);
   const zoomViewFlag = usePrimitiveStore(Selector.zoomViewFlag);
+  const cameraPosition = useStore(Selector.cameraPosition);
 
   const { gl, camera, get, set } = useThree();
 
@@ -177,6 +178,11 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
     setFrameLoop('demand');
     saveCameraState();
   };
+
+  useEffect(() => {
+    if (isFirstRender) return;
+    camera.position.fromArray(cameraPosition);
+  }, [cameraPosition]);
 
   useEffect(() => {
     if (isFirstRender) return;
