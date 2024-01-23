@@ -226,8 +226,6 @@ const MolecularViewer = ({
           args={[1, 1, 1]}
           key={'Box'}
           name={'Box'}
-          castShadow={false}
-          receiveShadow={false}
           onPointerOver={(e) => {}}
           onPointerOut={(e) => {}}
           onPointerDown={(e) => {

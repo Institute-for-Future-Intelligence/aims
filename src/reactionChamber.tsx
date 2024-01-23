@@ -46,7 +46,6 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const lightRef = useRef<DirectionalLight>(null);
 
   const [refVisible, setRefVisible] = useState<boolean>(false);
-  const [boundingSphere, setBoundingSphere] = useState<Sphere>(new Sphere());
 
   useEffect(() => {
     if (cameraRef.current) cameraRef.current.position.fromArray(cameraPosition);
@@ -75,10 +74,6 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       state.panCenter[1] = q.y;
       state.panCenter[2] = q.z;
     });
-  };
-
-  const onLoaded = (sphere: Sphere) => {
-    if (viewerFoggy) boundingSphere.set(sphere.center, sphere.radius);
   };
 
   return (
@@ -119,16 +114,7 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
             }
           }}
         />
-        {viewerFoggy && (
-          <fog
-            attach="fog"
-            args={[
-              '#000000',
-              boundingSphere.radius < 0 ? 50 : boundingSphere.radius * 2,
-              boundingSphere.radius < 0 ? 200 : boundingSphere.radius * 8,
-            ]}
-          />
-        )}
+        {viewerFoggy && <fog attach="fog" args={['#000000', 50, 150]} />}
         {viewerFoggy && <ambientLight intensity={0.5} />}
         <directionalLight
           ref={lightRef}
@@ -152,7 +138,6 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
             coloring={viewerColoring}
             chamber={true}
             selector={viewerSelector}
-            onLoaded={onLoaded}
           />
         )}
         <GizmoHelper alignment="bottom-right" margin={[30, 30]}>
