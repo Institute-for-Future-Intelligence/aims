@@ -114,7 +114,7 @@ export const i18n_en = {
       SoftMaterial: 'Soft',
       GlossyMaterial: 'Glossy',
       MetalMaterial: 'Metal',
-      TransparentMaterial: 'Transparent',
+      TranslucentMaterial: 'Translucent',
       GlassMaterial: 'Glass',
       BackdropMaterial: 'Backdrop',
       ToonMaterial: 'Toon',
