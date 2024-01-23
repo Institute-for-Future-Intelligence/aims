@@ -205,10 +205,10 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
     <myTrackballControls
       ref={controlsRef}
       args={[camera, gl.domElement]}
-      staticMoving
+      staticMoving={true}
       enabled={enableRotate}
-      rotateSpeed={5}
-      zoomSpeed={5}
+      rotateSpeed={10}
+      zoomSpeed={2}
       target={target}
       autoRotate={autoRotate}
       onStart={onControlStart}
