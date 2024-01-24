@@ -35,6 +35,8 @@ export const cameraPosition = (state: CommonStoreState) => state.cameraPosition;
 
 export const cameraRotation = (state: CommonStoreState) => state.cameraRotation;
 
+export const cameraUp = (state: CommonStoreState) => state.cameraUp;
+
 export const panCenter = (state: CommonStoreState) => state.panCenter;
 
 export const targetData = (state: CommonStoreState) => state.targetData;

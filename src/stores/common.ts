@@ -6,7 +6,13 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import produce, { enableMapSet } from 'immer';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { Util } from '../Util';
-import { DEFAULT_CAMERA_POSITION, DEFAULT_CAMERA_ROTATION, DEFAULT_PAN_CENTER, VERSION } from '../constants';
+import {
+  DEFAULT_CAMERA_POSITION,
+  DEFAULT_CAMERA_ROTATION,
+  DEFAULT_CAMERA_UP,
+  DEFAULT_PAN_CENTER,
+  VERSION,
+} from '../constants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
 import { ActionInfo, ExtendedProjectState, MoleculeData, ProjectState } from '../types';
@@ -44,6 +50,7 @@ export interface CommonStoreState {
   // because these properties change very often when the user is interacting with the viewer
   cameraPosition: number[];
   cameraRotation: number[];
+  cameraUp: number[];
   panCenter: number[];
 
   targetData: MoleculeTS | undefined;
@@ -104,6 +111,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           projectView: true,
           cameraPosition: DEFAULT_CAMERA_POSITION,
           cameraRotation: DEFAULT_CAMERA_ROTATION,
+          cameraUp: DEFAULT_CAMERA_UP,
           panCenter: DEFAULT_PAN_CENTER,
 
           targetData: undefined,
@@ -248,6 +256,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           projectState: state.projectState,
           cameraPosition: state.cameraPosition,
           cameraRotation: state.cameraRotation,
+          cameraUp: state.cameraUp,
           panCenter: state.panCenter,
           selectedFloatingWindow: state.selectedFloatingWindow,
         }),

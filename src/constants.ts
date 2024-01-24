@@ -59,6 +59,8 @@ export const DEFAULT_CAMERA_POSITION = [5, 10, 20];
 
 export const DEFAULT_CAMERA_ROTATION = [0, 0, 0];
 
+export const DEFAULT_CAMERA_UP = [0, 0, 1];
+
 export const DEFAULT_PAN_CENTER = [0, 0, 0];
 
 export enum FirebaseName {

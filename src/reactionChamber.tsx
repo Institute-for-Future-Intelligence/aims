@@ -6,6 +6,7 @@ import React, { useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
   DEFAULT_CAMERA_POSITION,
+  DEFAULT_CAMERA_UP,
   DEFAULT_FOV,
   DEFAULT_LIGHT_INTENSITY,
   DEFAULT_SHADOW_CAMERA_FAR,
@@ -18,7 +19,7 @@ import MolecularViewer from './view/molecularViewer';
 import { MoleculeData } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import { DirectionalLight, Vector3 } from 'three';
+import { DirectionalLight, Euler, Vector3 } from 'three';
 import ExperimentSettings from './view/experimentSettings';
 import { ReactionChamberControls } from './controls';
 
@@ -35,6 +36,8 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
   const viewerAxes = useStore(Selector.chamberViewerAxes);
   const viewerFoggy = useStore(Selector.chamberViewerFoggy);
   const cameraPosition = useStore(Selector.cameraPosition);
+  const cameraRotation = useStore(Selector.cameraRotation);
+  const cameraUp = useStore(Selector.cameraUp);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lightRef = useRef<DirectionalLight>(null);
@@ -51,9 +54,13 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
         camera={{
           fov: DEFAULT_FOV,
           far: DEFAULT_SHADOW_CAMERA_FAR,
-          up: [0, 0, 1],
+          up: new Vector3().fromArray(cameraUp ?? DEFAULT_CAMERA_UP),
           position: new Vector3().fromArray(cameraPosition ?? DEFAULT_CAMERA_POSITION),
-          rotation: [HALF_PI / 2, 0, HALF_PI / 2],
+          rotation: new Euler().fromArray(
+            cameraRotation
+              ? [cameraRotation[0], cameraRotation[1], cameraRotation[2], Euler.DEFAULT_ORDER]
+              : [HALF_PI / 2, 0, HALF_PI / 2, Euler.DEFAULT_ORDER],
+          ),
         }}
       >
         <ReactionChamberControls lightRef={lightRef} />

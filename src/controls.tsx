@@ -3,7 +3,7 @@
  */
 
 import { useFrame, useThree } from '@react-three/fiber';
-import { DirectionalLight, Vector3 } from 'three';
+import { DirectionalLight, Euler, Vector3 } from 'three';
 import { useStore } from './stores/common';
 import { DEFAULT_CAMERA_POSITION, DEFAULT_CAMERA_ROTATION, DEFAULT_PAN_CENTER } from './constants';
 import { useEffect, useMemo, useRef } from 'react';
@@ -43,8 +43,9 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   const zoomViewFlag = usePrimitiveStore(Selector.zoomViewFlag);
   const cameraPosition = useStore(Selector.cameraPosition);
   const cameraRotation = useStore(Selector.cameraRotation);
+  const cameraUp = useStore(Selector.cameraUp);
 
-  const { gl, camera, get, set } = useThree();
+  const { gl, camera, set } = useThree();
 
   const controlsRef = useRef<MyTrackballControls>(null);
   const isFirstRender = useFirstRender();
@@ -59,10 +60,13 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
     if (controlsRef.current) {
       const r = 2 * usePrimitiveStore.getState().boundingSphereRadius;
       camera.position.set(r, r, r);
-      camera.lookAt(0, 0, 0);
+      camera.rotation.set(0, 0, 0, Euler.DEFAULT_ORDER);
       camera.up.set(0, 0, 1);
+      controlsRef.current.target.fromArray([0, 0, 0]);
       useStore.getState().set((state) => {
         state.cameraPosition = [r, r, r];
+        state.cameraRotation = [camera.rotation.x, camera.rotation.y, camera.rotation.z];
+        state.cameraUp = [0, 0, 1];
         state.panCenter = [0, 0, 0];
       });
     }
@@ -70,12 +74,18 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
 
   const resetView = () => {
     if (!controlsRef.current) return;
-    const cameraPosition = get().camera.position.toArray();
+    const cameraPosition = camera.position.toArray();
     const panCenter = controlsRef.current.target.toArray();
     if (
       cameraPosition[0] !== cameraPosition[1] ||
       cameraPosition[1] !== cameraPosition[2] ||
       cameraPosition[0] !== cameraPosition[2] ||
+      cameraRotation[0] !== 0 ||
+      cameraRotation[1] !== 0 ||
+      cameraRotation[2] !== 0 ||
+      cameraUp[0] !== 0 ||
+      cameraUp[1] !== 0 ||
+      cameraUp[2] !== 1 ||
       panCenter[0] !== 0 ||
       panCenter[1] !== 0 ||
       panCenter[2] !== 0
@@ -84,14 +94,24 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
         name: 'Reset View',
         timestamp: Date.now(),
         oldCameraPosition: [...cameraPosition],
+        oldCameraRotation: [...cameraRotation],
+        oldCameraUp: [...cameraUp],
         oldPanCenter: [...panCenter],
         undo: () => {
           if (controlsRef.current) {
-            const camera = get().camera;
             camera.position.fromArray(undoableResetView.oldCameraPosition);
+            camera.rotation.fromArray([
+              undoableResetView.oldCameraRotation[0],
+              undoableResetView.oldCameraRotation[1],
+              undoableResetView.oldCameraRotation[2],
+              Euler.DEFAULT_ORDER,
+            ]);
+            camera.up.fromArray(undoableResetView.oldCameraUp);
             controlsRef.current.target.fromArray(undoableResetView.oldPanCenter);
             useStore.getState().set((state) => {
               state.cameraPosition = [...undoableResetView.oldCameraPosition];
+              state.cameraRotation = [...undoableResetView.oldCameraRotation];
+              state.cameraUp = [...undoableResetView.oldCameraUp];
               state.panCenter = [...undoableResetView.oldPanCenter];
             });
           }
@@ -106,42 +126,40 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   };
 
   const zoomView = () => {
-    if (controlsRef.current) {
-      const scale = usePrimitiveStore.getState().zoomScale;
-      const p = camera.position;
-      const x = p.x * scale;
-      const y = p.y * scale;
-      const z = p.z * scale;
-      const undoableCameraChange = {
-        name: 'Zoom',
-        timestamp: Date.now(),
-        oldCameraPosition: [p.x, p.y, p.z],
-        newCameraPosition: [x, y, z],
-        undo: () => {
-          const oldX = undoableCameraChange.oldCameraPosition[0];
-          const oldY = undoableCameraChange.oldCameraPosition[1];
-          const oldZ = undoableCameraChange.oldCameraPosition[2];
-          camera.position.set(oldX, oldY, oldZ);
-          useStore.getState().set((state) => {
-            state.cameraPosition = [oldX, oldY, oldZ];
-          });
-        },
-        redo: () => {
-          const newX = undoableCameraChange.newCameraPosition[0];
-          const newY = undoableCameraChange.newCameraPosition[1];
-          const newZ = undoableCameraChange.newCameraPosition[2];
-          camera.position.set(newX, newY, newZ);
-          useStore.getState().set((state) => {
-            state.cameraPosition = [newX, newY, newZ];
-          });
-        },
-      } as UndoableCameraChange;
-      useStore.getState().addUndoable(undoableCameraChange);
-      camera.position.set(x, y, z);
-      useStore.getState().set((state) => {
-        state.cameraPosition = [x, y, z];
-      });
-    }
+    const scale = usePrimitiveStore.getState().zoomScale;
+    const p = camera.position;
+    const x = p.x * scale;
+    const y = p.y * scale;
+    const z = p.z * scale;
+    const undoableCameraChange = {
+      name: 'Zoom',
+      timestamp: Date.now(),
+      oldCameraPosition: [p.x, p.y, p.z],
+      newCameraPosition: [x, y, z],
+      undo: () => {
+        const oldX = undoableCameraChange.oldCameraPosition[0];
+        const oldY = undoableCameraChange.oldCameraPosition[1];
+        const oldZ = undoableCameraChange.oldCameraPosition[2];
+        camera.position.set(oldX, oldY, oldZ);
+        useStore.getState().set((state) => {
+          state.cameraPosition = [oldX, oldY, oldZ];
+        });
+      },
+      redo: () => {
+        const newX = undoableCameraChange.newCameraPosition[0];
+        const newY = undoableCameraChange.newCameraPosition[1];
+        const newZ = undoableCameraChange.newCameraPosition[2];
+        camera.position.set(newX, newY, newZ);
+        useStore.getState().set((state) => {
+          state.cameraPosition = [newX, newY, newZ];
+        });
+      },
+    } as UndoableCameraChange;
+    useStore.getState().addUndoable(undoableCameraChange);
+    camera.position.set(x, y, z);
+    useStore.getState().set((state) => {
+      state.cameraPosition = [x, y, z];
+    });
   };
 
   const saveCameraState = () => {
@@ -149,13 +167,15 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
       if (!state.cameraPosition) state.cameraPosition = DEFAULT_CAMERA_POSITION;
       if (!state.cameraRotation) state.cameraRotation = DEFAULT_CAMERA_ROTATION;
       if (!state.panCenter) state.panCenter = DEFAULT_PAN_CENTER;
-      const camera = get().camera;
       state.cameraPosition[0] = camera.position.x;
       state.cameraPosition[1] = camera.position.y;
       state.cameraPosition[2] = camera.position.z;
       state.cameraRotation[0] = camera.rotation.x;
       state.cameraRotation[1] = camera.rotation.y;
       state.cameraRotation[2] = camera.rotation.z;
+      state.cameraUp[0] = camera.up.x;
+      state.cameraUp[1] = camera.up.y;
+      state.cameraUp[2] = camera.up.z;
       if (controlsRef.current) {
         const t = controlsRef.current.target;
         state.panCenter[0] = t.x;
@@ -170,7 +190,6 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   };
 
   const onControlChange = () => {
-    const camera = get().camera;
     if (lightRef.current) {
       // sets the point light to a location above the camera
       lightRef.current.position.set(0, 1, 0);
@@ -187,8 +206,9 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   useEffect(() => {
     if (isFirstRender) return;
     camera.position.fromArray(cameraPosition);
-    camera.rotation.set(cameraRotation[0], cameraRotation[1], cameraRotation[2], 'XYZ');
-  }, [cameraPosition, cameraRotation]);
+    camera.up.fromArray(cameraUp);
+    camera.rotation.set(cameraRotation[0], cameraRotation[1], cameraRotation[2], Euler.DEFAULT_ORDER);
+  }, [cameraPosition, cameraRotation, cameraUp]);
 
   useEffect(() => {
     if (isFirstRender) return;
@@ -271,7 +291,6 @@ export const ProjectGalleryControls = React.memo(({ lightRef }: ControlsProps) =
   };
 
   const onControlChange = () => {
-    const camera = get().camera;
     if (lightRef.current) {
       // sets the point light to a location above the camera
       lightRef.current.position.set(0, 1, 0);

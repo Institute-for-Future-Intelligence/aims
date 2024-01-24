@@ -63,7 +63,7 @@ const MolecularViewer = ({
 
   const [complex, setComplex] = useState<any>();
 
-  const CSGroup = useRef<Group>(null);
+  const MainGroup = useRef<Group>(null);
 
   const { invalidate, get } = useThree();
 
@@ -193,10 +193,10 @@ const MolecularViewer = ({
   };
 
   useEffect(() => {
-    if (!CSGroup.current || !complex || !mode) return;
+    if (!MainGroup.current || !complex || !mode) return;
 
-    CSGroup.current.children = [];
-    CSGroup.current.position.set(0, 0, 0);
+    MainGroup.current.children = [];
+    MainGroup.current.position.set(0, 0, 0);
 
     const visual = new ComplexVisual(complex.name, complex);
 
@@ -211,15 +211,18 @@ const MolecularViewer = ({
     visual.resetReps(reps);
 
     visual.rebuild().then(() => {
-      if (!CSGroup.current) return;
-      CSGroup.current.add(visual);
+      if (!MainGroup.current) return;
+      MainGroup.current.add(visual);
       const boundingSphere = visual.getBoundaries().boundingSphere;
       const offset = boundingSphere.center.clone().multiplyScalar(-1);
-      CSGroup.current.position.copy(offset);
-      usePrimitiveStore.getState().set((state) => {
-        state.boundingSphereRadius = boundingSphere.radius;
-      });
-      if (isGalleryView) onLoaded(boundingSphere);
+      MainGroup.current.position.copy(offset);
+      if (isGalleryView) {
+        onLoaded(boundingSphere);
+      } else {
+        usePrimitiveStore.getState().set((state) => {
+          state.boundingSphereRadius = boundingSphere.radius;
+        });
+      }
       invalidate();
     });
   }, [complex, material, mode, colorer, selector]);
@@ -227,7 +230,7 @@ const MolecularViewer = ({
   if (!mode) return null;
   return (
     <group>
-      <group name={'Structure'} ref={CSGroup} />
+      <group name={'Main'} ref={MainGroup} />
       {chamber && (
         <Box
           position={[0, 0, 0]}
