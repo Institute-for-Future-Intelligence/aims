@@ -49,6 +49,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
 
   const controlsRef = useRef<MyTrackballControls>(null);
   const isFirstRender = useFirstRender();
+  const controlEndCalledRef = useRef<boolean>(false);
 
   const target = useMemo(() => new Vector3().fromArray(panCenter), [panCenter]);
 
@@ -202,14 +203,27 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
     if (usePrimitiveStore.getState().autoRotate) return;
     setFrameLoop('demand');
     saveCameraState();
+    controlEndCalledRef.current = true;
   };
 
   useEffect(() => {
     if (isFirstRender) return;
+    if (controlEndCalledRef.current) {
+      controlEndCalledRef.current = false;
+      return;
+    }
     camera.position.fromArray(cameraPosition);
+  }, [cameraPosition]);
+
+  useEffect(() => {
+    if (isFirstRender) return;
     camera.up.fromArray(cameraUp);
+  }, [cameraUp]);
+
+  useEffect(() => {
+    if (isFirstRender) return;
     camera.rotation.set(cameraRotation[0], cameraRotation[1], cameraRotation[2], Euler.DEFAULT_ORDER);
-  }, [cameraPosition, cameraRotation, cameraUp]);
+  }, [cameraRotation]);
 
   useEffect(() => {
     if (isFirstRender) return;
@@ -241,7 +255,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
       staticMoving={true}
       enabled={enableRotate}
       rotateSpeed={10}
-      zoomSpeed={2}
+      zoomSpeed={3}
       target={target}
       autoRotate={autoRotate}
       onStart={onControlStart}
@@ -252,7 +266,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
 });
 
 export const ProjectGalleryControls = React.memo(({ lightRef }: ControlsProps) => {
-  const { gl, camera, get, scene } = useThree();
+  const { gl, camera, scene } = useThree();
   const controlsRef = useRef<MyTrackballControls>(null);
 
   const timerIdRef = useRef<NodeJS.Timeout | null>(null);
