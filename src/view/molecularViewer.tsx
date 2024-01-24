@@ -11,7 +11,7 @@ import PubChemParser from '../lib/io/parsers/PubChemParser';
 import ElementColorer from '../lib/gfx/colorers/ElementColorer';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Color, Group, Sphere, Vector3 } from 'three';
+import { Color, DirectionalLight, Group, Sphere, Vector3 } from 'three';
 import { MoleculeTS } from '../models/MoleculeTS';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
@@ -44,6 +44,7 @@ export interface MolecularViewerProps {
   chamber?: boolean;
   selector?: string;
   isGalleryView?: boolean;
+  lightRef?: React.RefObject<DirectionalLight>;
 }
 
 const MolecularViewer = ({
@@ -54,6 +55,7 @@ const MolecularViewer = ({
   chamber,
   selector,
   isGalleryView,
+  lightRef,
 }: MolecularViewerProps) => {
   const setCommonStore = useStore(Selector.set);
   const chemicalElements = useStore(Selector.chemicalElements);
@@ -71,8 +73,12 @@ const MolecularViewer = ({
     const r = 3 * boundingSphere.radius;
     const camera = get().camera;
     camera.position.set(r, r, r);
-    camera.lookAt(0, 0, 0);
+    camera.rotation.set(0, 0, 0);
     camera.up.set(0, 0, 1);
+    camera.lookAt(0, 0, 0);
+    if (lightRef?.current) {
+      lightRef.current.position.set(r, r + 1, r);
+    }
   };
 
   const mode = useMemo(() => {
