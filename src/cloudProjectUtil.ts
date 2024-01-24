@@ -62,6 +62,8 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           projectViewerBackground: data.projectViewerBackground ?? 'white',
 
           cameraPosition: data.cameraPosition,
+          cameraRotation: data.cameraRotation,
+          cameraUp: data.cameraUp,
           panCenter: data.panCenter,
         } as ProjectState);
       } else {
