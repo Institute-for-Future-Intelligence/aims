@@ -5,7 +5,7 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { DirectionalLight, Vector3 } from 'three';
 import { useStore } from './stores/common';
-import { DEFAULT_CAMERA_POSITION, DEFAULT_PAN_CENTER } from './constants';
+import { DEFAULT_CAMERA_POSITION, DEFAULT_CAMERA_ROTATION, DEFAULT_PAN_CENTER } from './constants';
 import { useEffect, useMemo, useRef } from 'react';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import * as Selector from './stores/selector';
@@ -42,6 +42,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   const resetViewFlag = usePrimitiveStore(Selector.resetViewFlag);
   const zoomViewFlag = usePrimitiveStore(Selector.zoomViewFlag);
   const cameraPosition = useStore(Selector.cameraPosition);
+  const cameraRotation = useStore(Selector.cameraRotation);
 
   const { gl, camera, get, set } = useThree();
 
@@ -146,11 +147,15 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   const saveCameraState = () => {
     useStore.getState().set((state) => {
       if (!state.cameraPosition) state.cameraPosition = DEFAULT_CAMERA_POSITION;
+      if (!state.cameraRotation) state.cameraRotation = DEFAULT_CAMERA_ROTATION;
       if (!state.panCenter) state.panCenter = DEFAULT_PAN_CENTER;
       const camera = get().camera;
       state.cameraPosition[0] = camera.position.x;
       state.cameraPosition[1] = camera.position.y;
       state.cameraPosition[2] = camera.position.z;
+      state.cameraRotation[0] = camera.rotation.x;
+      state.cameraRotation[1] = camera.rotation.y;
+      state.cameraRotation[2] = camera.rotation.z;
       if (controlsRef.current) {
         const t = controlsRef.current.target;
         state.panCenter[0] = t.x;
@@ -182,7 +187,8 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   useEffect(() => {
     if (isFirstRender) return;
     camera.position.fromArray(cameraPosition);
-  }, [cameraPosition]);
+    camera.rotation.set(cameraRotation[0], cameraRotation[1], cameraRotation[2], 'XYZ');
+  }, [cameraPosition, cameraRotation]);
 
   useEffect(() => {
     if (isFirstRender) return;

@@ -33,6 +33,8 @@ export const projectView = (state: CommonStoreState) => state.projectView;
 
 export const cameraPosition = (state: CommonStoreState) => state.cameraPosition;
 
+export const cameraRotation = (state: CommonStoreState) => state.cameraRotation;
+
 export const panCenter = (state: CommonStoreState) => state.panCenter;
 
 export const targetData = (state: CommonStoreState) => state.targetData;
