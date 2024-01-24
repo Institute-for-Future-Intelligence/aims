@@ -13,7 +13,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { showError, showInfo } from './helpers';
-import { ExtendedProjectState, ProjectState } from './types';
+import { ProjectState } from './types';
 import Spinner from './components/spinner';
 import i18n from './i18n/i18n';
 import { Util } from './Util';
@@ -21,7 +21,15 @@ import MainToolBar from './mainToolBar';
 import ProjectListPanel from './projectListPanel';
 import { fetchProject } from './cloudProjectUtil';
 import { ClassID, SchoolID, User } from './User';
-import { DataColoring, DEFAULT_CAMERA_POSITION, DEFAULT_PAN_CENTER, FirebaseName, ProjectType } from './constants';
+import {
+  DataColoring,
+  DEFAULT_CAMERA_POSITION,
+  DEFAULT_CAMERA_ROTATION,
+  DEFAULT_CAMERA_UP,
+  DEFAULT_PAN_CENTER,
+  FirebaseName,
+  ProjectType,
+} from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import { ProjectUtil } from './ProjectUtil';
 
@@ -58,7 +66,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
   const [processing, setProcessing] = useState(false);
   const [updateFlag, setUpdateFlag] = useState(false);
   const [updateMyProjectsFlag, setUpdateMyProjectsFlag] = useState(false);
-  const myProjectsRef = useRef<ExtendedProjectState[] | void>(); // Not sure why I need to use ref to store this
+  const myProjectsRef = useRef<ProjectState[] | void>(); // Not sure why I need to use ref to store this
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -164,12 +172,10 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     }
   };
 
-  const setProjectState = (extendedProjectState: ExtendedProjectState | null) => {
-    if (!extendedProjectState) return;
+  const setProjectState = (projectState: ProjectState | null) => {
+    if (!projectState) return;
     setCommonStore((state) => {
-      state.projectState = { ...extendedProjectState } as ProjectState;
-      state.cameraPosition = extendedProjectState.cameraPosition;
-      state.panCenter = extendedProjectState.panCenter;
+      state.projectState = { ...projectState };
       state.projectView = true;
     });
     usePrimitiveStore.getState().set((state) => {
@@ -320,7 +326,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       .collection('projects')
       .get()
       .then((querySnapshot) => {
-        const a: ExtendedProjectState[] = [];
+        const a: ProjectState[] = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           // Assign default values below as an attribute may not be defined by the time the data was created
@@ -361,8 +367,10 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
             projectViewerBackground: data.projectViewerBackground ?? 'white',
 
             cameraPosition: data.cameraPosition ?? DEFAULT_CAMERA_POSITION,
+            cameraRotation: data.cameraRotation ?? DEFAULT_CAMERA_ROTATION,
+            cameraUp: data.cameraUp ?? DEFAULT_CAMERA_UP,
             panCenter: data.panCenter ?? DEFAULT_PAN_CENTER,
-          } as ExtendedProjectState);
+          } as ProjectState);
         });
         return a;
       })
@@ -518,29 +526,29 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       } else {
         if (user && user.uid) {
           const timestamp = new Date().getTime();
-          const eps = ProjectUtil.createDefaultProjectState() as ExtendedProjectState;
-          eps.timestamp = timestamp;
-          eps.key = timestamp.toString();
-          eps.time = dayjs(new Date(timestamp)).format('MM/DD/YYYY hh:mm A');
-          eps.title = t;
-          eps.owner = user.uid;
-          eps.type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
-          eps.description = usePrimitiveStore.getState().projectDescription;
-          eps.cameraPosition = DEFAULT_CAMERA_POSITION;
-          eps.panCenter = DEFAULT_PAN_CENTER;
+          const ps = ProjectUtil.createDefaultProjectState();
+          ps.timestamp = timestamp;
+          ps.key = timestamp.toString();
+          ps.time = dayjs(new Date(timestamp)).format('MM/DD/YYYY hh:mm A');
+          ps.title = t;
+          ps.owner = user.uid;
+          ps.type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
+          ps.description = usePrimitiveStore.getState().projectDescription;
+          ps.cameraPosition = DEFAULT_CAMERA_POSITION;
+          ps.cameraRotation = DEFAULT_CAMERA_ROTATION;
+          ps.cameraUp = DEFAULT_CAMERA_UP;
+          ps.panCenter = DEFAULT_PAN_CENTER;
           firebase
             .firestore()
             .collection('users')
             .doc(user.uid)
             .collection('projects')
             .doc(t)
-            .set(eps)
+            .set(ps)
             .then(() => {
               setCommonStore((state) => {
                 state.projectView = true;
-                state.projectState = eps as ProjectState;
-                state.cameraPosition = DEFAULT_CAMERA_POSITION;
-                state.panCenter = DEFAULT_PAN_CENTER;
+                state.projectState = ps;
               });
               setUpdateMyProjectsFlag(!updateMyProjectsFlag);
             })
@@ -566,17 +574,16 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
     const title = useStore.getState().projectState.title;
     if (title) {
       setProcessing(true);
-      const eps = { ...useStore.getState().projectState } as ExtendedProjectState;
-      eps.cameraPosition = useStore.getState().cameraPosition;
-      eps.panCenter = useStore.getState().panCenter;
-      eps.timestamp = new Date().getTime();
-      eps.time = dayjs(new Date(eps.timestamp)).format('MM/DD/YYYY hh:mm A');
+      const ps = JSON.parse(JSON.stringify(useStore.getState().projectState)) as ProjectState;
+      ps.timestamp = new Date().getTime();
+      ps.time = dayjs(new Date(ps.timestamp)).format('MM/DD/YYYY hh:mm A');
+      ps.key = ps.timestamp.toString();
       if (myProjectsRef.current) {
         for (const p of myProjectsRef.current) {
-          if (p.title === eps.title) {
-            p.timestamp = eps.timestamp;
-            p.time = eps.time;
-            p.key = eps.timestamp.toString();
+          if (p.title === ps.title) {
+            p.timestamp = ps.timestamp;
+            p.time = ps.time;
+            p.key = ps.key;
             break;
           }
         }
@@ -587,7 +594,7 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
         .doc(user.uid)
         .collection('projects')
         .doc(title)
-        .set(eps)
+        .set(ps)
         .then(() => {
           setUpdateMyProjectsFlag(!updateMyProjectsFlag);
         })
@@ -632,31 +639,28 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       } else {
         if (user && user.uid) {
           const state = useStore.getState();
-          const ps = state.projectState;
-          const eps = JSON.parse(JSON.stringify(ps)) as ExtendedProjectState;
-          eps.cameraPosition = state.cameraPosition;
-          eps.panCenter = state.panCenter;
-          eps.timestamp = new Date().getTime();
-          eps.key = eps.timestamp.toString();
-          eps.time = dayjs(new Date(eps.timestamp)).format('MM/DD/YYYY hh:mm A');
-          eps.title = newTitle;
-          eps.owner = user.uid; // make sure the current user becomes the owner
-          eps.type = usePrimitiveStore.getState().projectType;
-          eps.description = usePrimitiveStore.getState().projectDescription ?? '';
+          const ps = JSON.parse(JSON.stringify(state.projectState)) as ProjectState;
+          ps.timestamp = new Date().getTime();
+          ps.key = ps.timestamp.toString();
+          ps.time = dayjs(new Date(ps.timestamp)).format('MM/DD/YYYY hh:mm A');
+          ps.title = newTitle;
+          ps.owner = user.uid; // make sure the current user becomes the owner
+          ps.type = usePrimitiveStore.getState().projectType;
+          ps.description = usePrimitiveStore.getState().projectDescription ?? '';
           firebase
             .firestore()
             .collection('users')
             .doc(user.uid)
             .collection('projects')
             .doc(newTitle)
-            .set(eps)
+            .set(ps)
             .then(() => {
               setUpdateMyProjectsFlag(!updateMyProjectsFlag);
               setCommonStore((state) => {
                 state.projectView = true;
-                state.projectState.type = eps.type;
-                state.projectState.title = eps.title;
-                state.projectState.description = eps.description;
+                state.projectState.type = ps.type;
+                state.projectState.title = ps.title;
+                state.projectState.description = ps.description;
               });
             })
             .catch((error) => {

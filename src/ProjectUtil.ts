@@ -6,7 +6,14 @@ import i18n from './i18n/i18n';
 import { MoleculeData, ProjectState, Range } from './types';
 import { MolecularProperties } from './models/MolecularProperties';
 import { Filter, FilterType } from './Filter';
-import { DataColoring, ProjectType } from './constants';
+import {
+  DataColoring,
+  DEFAULT_CAMERA_POSITION,
+  DEFAULT_CAMERA_ROTATION,
+  DEFAULT_CAMERA_UP,
+  DEFAULT_PAN_CENTER,
+  ProjectType,
+} from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 
 export class ProjectUtil {
@@ -30,6 +37,11 @@ export class ProjectUtil {
       yAxisNameScatteredPlot: 'atomCount',
       dotSizeScatteredPlot: 5,
       thumbnailWidth: 200,
+
+      cameraPosition: DEFAULT_CAMERA_POSITION,
+      cameraRotation: DEFAULT_CAMERA_ROTATION,
+      cameraUp: DEFAULT_CAMERA_UP,
+      panCenter: DEFAULT_PAN_CENTER,
 
       chamberViewerPercentWidth: 50,
       chamberViewerAxes: true,

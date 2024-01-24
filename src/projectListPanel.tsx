@@ -22,7 +22,7 @@ import { usePrimitiveStore } from './stores/commonPrimitive';
 import { useTranslation } from 'react-i18next';
 import { MenuProps } from 'antd/lib';
 import { MenuItem } from './components/menuItem';
-import { ExtendedProjectState } from './types';
+import { ProjectState } from './types';
 
 const { Column } = Table;
 
@@ -81,7 +81,7 @@ const Header = styled.div`
 
 export interface ProjectListPanelProps {
   projects: object[];
-  setProjectState: (projectState: ExtendedProjectState) => void;
+  setProjectState: (projectState: ProjectState) => void;
   deleteProject: (title: string) => void;
   renameProject: (oldTitle: string, newTitle: string) => void;
   updateFlag: boolean;
@@ -202,7 +202,7 @@ const ProjectListPanel = ({
     }
   };
 
-  const openProject = (record: ExtendedProjectState) => {
+  const openProject = (record: ProjectState) => {
     if (usePrimitiveStore.getState().changed) {
       Modal.confirm({
         title: t('message.DoYouWantToSaveChanges', lang),
@@ -381,7 +381,7 @@ const ProjectListPanel = ({
                       label: (
                         <>
                           <CloudOutlined style={{ paddingRight: '6px' }} />
-                          <MenuItem>{title}</MenuItem>
+                          <MenuItem fontWeight={'bold'}>{title}</MenuItem>
                           <hr />
                         </>
                       ),
@@ -389,9 +389,7 @@ const ProjectListPanel = ({
                     {
                       key: 'open-project',
                       label: (
-                        <MenuItem onClick={() => openProject(record as ExtendedProjectState)}>
-                          {t('word.Open', lang)}
-                        </MenuItem>
+                        <MenuItem onClick={() => openProject(record as ProjectState)}>{t('word.Open', lang)}</MenuItem>
                       ),
                     },
                     {

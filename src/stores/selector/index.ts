@@ -31,13 +31,13 @@ export const projectState = (state: CommonStoreState) => state.projectState;
 
 export const projectView = (state: CommonStoreState) => state.projectView;
 
-export const cameraPosition = (state: CommonStoreState) => state.cameraPosition;
+export const cameraPosition = (state: CommonStoreState) => state.projectState.cameraPosition;
 
-export const cameraRotation = (state: CommonStoreState) => state.cameraRotation;
+export const cameraRotation = (state: CommonStoreState) => state.projectState.cameraRotation;
 
-export const cameraUp = (state: CommonStoreState) => state.cameraUp;
+export const cameraUp = (state: CommonStoreState) => state.projectState.cameraUp;
 
-export const panCenter = (state: CommonStoreState) => state.panCenter;
+export const panCenter = (state: CommonStoreState) => state.projectState.panCenter;
 
 export const targetData = (state: CommonStoreState) => state.targetData;
 
@@ -115,6 +115,8 @@ export const saveAccountSettingsFlag = (state: PrimitiveStoreState) => state.sav
 
 export const projectTitle = (state: CommonStoreState) => state.projectState.title;
 
+export const projectOwner = (state: CommonStoreState) => state.projectState.owner;
+
 export const chamberViewerPercentWidth = (state: CommonStoreState) => state.projectState.chamberViewerPercentWidth;
 
 export const chamberViewerBackground = (state: CommonStoreState) => state.projectState.chamberViewerBackground;
@@ -136,3 +138,5 @@ export const projectViewerStyle = (state: CommonStoreState) => state.projectStat
 export const projectViewerMaterial = (state: CommonStoreState) => state.projectState.projectViewerMaterial;
 
 export const projectViewerBackground = (state: CommonStoreState) => state.projectState.projectViewerBackground;
+
+export const targetProtein = (state: CommonStoreState) => state.projectState.targetProtein;

@@ -5,7 +5,7 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { DirectionalLight, Euler, Vector3 } from 'three';
 import { useStore } from './stores/common';
-import { DEFAULT_CAMERA_POSITION, DEFAULT_CAMERA_ROTATION, DEFAULT_PAN_CENTER } from './constants';
+import { DEFAULT_CAMERA_POSITION, DEFAULT_CAMERA_ROTATION, DEFAULT_CAMERA_UP, DEFAULT_PAN_CENTER } from './constants';
 import { useEffect, useMemo, useRef } from 'react';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import * as Selector from './stores/selector';
@@ -64,10 +64,10 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
       camera.up.set(0, 0, 1);
       controlsRef.current.target.fromArray([0, 0, 0]);
       useStore.getState().set((state) => {
-        state.cameraPosition = [r, r, r];
-        state.cameraRotation = [camera.rotation.x, camera.rotation.y, camera.rotation.z];
-        state.cameraUp = [0, 0, 1];
-        state.panCenter = [0, 0, 0];
+        state.projectState.cameraPosition = [r, r, r];
+        state.projectState.cameraRotation = [camera.rotation.x, camera.rotation.y, camera.rotation.z];
+        state.projectState.cameraUp = [0, 0, 1];
+        state.projectState.panCenter = [0, 0, 0];
       });
     }
   };
@@ -109,10 +109,10 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
             camera.up.fromArray(undoableResetView.oldCameraUp);
             controlsRef.current.target.fromArray(undoableResetView.oldPanCenter);
             useStore.getState().set((state) => {
-              state.cameraPosition = [...undoableResetView.oldCameraPosition];
-              state.cameraRotation = [...undoableResetView.oldCameraRotation];
-              state.cameraUp = [...undoableResetView.oldCameraUp];
-              state.panCenter = [...undoableResetView.oldPanCenter];
+              state.projectState.cameraPosition = [...undoableResetView.oldCameraPosition];
+              state.projectState.cameraRotation = [...undoableResetView.oldCameraRotation];
+              state.projectState.cameraUp = [...undoableResetView.oldCameraUp];
+              state.projectState.panCenter = [...undoableResetView.oldPanCenter];
             });
           }
         },
@@ -142,7 +142,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
         const oldZ = undoableCameraChange.oldCameraPosition[2];
         camera.position.set(oldX, oldY, oldZ);
         useStore.getState().set((state) => {
-          state.cameraPosition = [oldX, oldY, oldZ];
+          state.projectState.cameraPosition = [oldX, oldY, oldZ];
         });
       },
       redo: () => {
@@ -151,36 +151,37 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
         const newZ = undoableCameraChange.newCameraPosition[2];
         camera.position.set(newX, newY, newZ);
         useStore.getState().set((state) => {
-          state.cameraPosition = [newX, newY, newZ];
+          state.projectState.cameraPosition = [newX, newY, newZ];
         });
       },
     } as UndoableCameraChange;
     useStore.getState().addUndoable(undoableCameraChange);
     camera.position.set(x, y, z);
     useStore.getState().set((state) => {
-      state.cameraPosition = [x, y, z];
+      state.projectState.cameraPosition = [x, y, z];
     });
   };
 
   const saveCameraState = () => {
     useStore.getState().set((state) => {
-      if (!state.cameraPosition) state.cameraPosition = DEFAULT_CAMERA_POSITION;
-      if (!state.cameraRotation) state.cameraRotation = DEFAULT_CAMERA_ROTATION;
-      if (!state.panCenter) state.panCenter = DEFAULT_PAN_CENTER;
-      state.cameraPosition[0] = camera.position.x;
-      state.cameraPosition[1] = camera.position.y;
-      state.cameraPosition[2] = camera.position.z;
-      state.cameraRotation[0] = camera.rotation.x;
-      state.cameraRotation[1] = camera.rotation.y;
-      state.cameraRotation[2] = camera.rotation.z;
-      state.cameraUp[0] = camera.up.x;
-      state.cameraUp[1] = camera.up.y;
-      state.cameraUp[2] = camera.up.z;
+      if (!state.projectState.cameraPosition) state.projectState.cameraPosition = DEFAULT_CAMERA_POSITION;
+      if (!state.projectState.cameraRotation) state.projectState.cameraRotation = DEFAULT_CAMERA_ROTATION;
+      if (!state.projectState.cameraUp) state.projectState.cameraUp = DEFAULT_CAMERA_UP;
+      if (!state.projectState.panCenter) state.projectState.panCenter = DEFAULT_PAN_CENTER;
+      state.projectState.cameraPosition[0] = camera.position.x;
+      state.projectState.cameraPosition[1] = camera.position.y;
+      state.projectState.cameraPosition[2] = camera.position.z;
+      state.projectState.cameraRotation[0] = camera.rotation.x;
+      state.projectState.cameraRotation[1] = camera.rotation.y;
+      state.projectState.cameraRotation[2] = camera.rotation.z;
+      state.projectState.cameraUp[0] = camera.up.x;
+      state.projectState.cameraUp[1] = camera.up.y;
+      state.projectState.cameraUp[2] = camera.up.z;
       if (controlsRef.current) {
         const t = controlsRef.current.target;
-        state.panCenter[0] = t.x;
-        state.panCenter[1] = t.y;
-        state.panCenter[2] = t.z;
+        state.projectState.panCenter[0] = t.x;
+        state.projectState.panCenter[1] = t.y;
+        state.projectState.panCenter[2] = t.z;
       }
     });
   };

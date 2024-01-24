@@ -29,6 +29,11 @@ export interface ProjectState {
   dotSizeScatteredPlot: number | null;
   thumbnailWidth: number | null;
 
+  cameraPosition: number[];
+  cameraRotation: number[];
+  cameraUp: number[];
+  panCenter: number[];
+
   chamberViewerPercentWidth: number;
   chamberViewerAxes: boolean;
   chamberViewerStyle: MolecularViewerStyle;
@@ -41,12 +46,6 @@ export interface ProjectState {
   projectViewerStyle: MolecularViewerStyle;
   projectViewerMaterial: MolecularViewerMaterial;
   projectViewerBackground: string;
-}
-
-// frequently-updated variables must be stored here
-export interface ExtendedProjectState extends ProjectState {
-  cameraPosition: number[];
-  panCenter: number[];
 }
 
 export interface DatumEntry {

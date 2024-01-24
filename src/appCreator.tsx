@@ -30,8 +30,10 @@ const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
   const projectView = useStore(Selector.projectView);
-  const projectState = useStore(Selector.projectState);
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
+  const projectOwner = useStore(Selector.projectOwner);
+  const projectTitle = useStore(Selector.projectTitle);
+  const targetProtein = useStore(Selector.targetProtein);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
   const loadProvidedMolecularProperties = useStore(Selector.loadProvidedMolecularProperties);
   const showAccountSettingsPanel = usePrimitiveStore(Selector.showAccountSettingsPanel);
@@ -89,7 +91,7 @@ const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
     });
   };
 
-  const isOwner = user.uid && user.uid === projectState.owner;
+  const isOwner = user.uid && user.uid === projectOwner;
 
   console.log('x');
 
@@ -117,7 +119,7 @@ const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
         >
           {`${t('name.AIMS', lang)}`}
         </span>
-        {projectState.title && (
+        {projectTitle && (
           <CloudTwoTone
             twoToneColor={isOwner ? 'blue' : 'gray'}
             style={{
@@ -136,7 +138,7 @@ const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
           }}
           title={t('projectPanel.ProjectTitle', lang)}
         >
-          {projectState.title ?? ''}
+          {projectTitle ?? ''}
         </span>
       </div>
 
@@ -237,7 +239,7 @@ const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
               <></>
             )}
             <Suspense fallback={<Loading />}>
-              <ReactionChamber moleculeData={projectState.targetProtein} />
+              <ReactionChamber moleculeData={targetProtein} />
             </Suspense>
           </SplitPane>
           <KeyboardListener setNavigationView={setNavigationView} />

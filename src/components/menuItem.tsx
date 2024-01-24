@@ -6,6 +6,7 @@ import { usePrimitiveStore } from '../stores/commonPrimitive';
 
 export interface MenuItemProps {
   hasPadding?: boolean;
+  fontWeight?: string;
   stayAfterClick?: boolean;
   textSelectable?: boolean;
   update?: boolean;
@@ -23,6 +24,7 @@ export const LabelMark = ({ children }: LabelMarkProps) => {
 
 export const MenuItem: React.FC<MenuItemProps> = ({
   stayAfterClick,
+  fontWeight,
   hasPadding,
   textSelectable = true,
   update,
@@ -47,6 +49,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
       style={{
         userSelect: textSelectable ? 'auto' : 'none',
         // display: 'inline-block',
+        fontWeight: fontWeight,
         width: '100%',
         paddingLeft: hasPadding ? '24px' : '0px',
       }}

@@ -6,16 +6,10 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import produce, { enableMapSet } from 'immer';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { Util } from '../Util';
-import {
-  DEFAULT_CAMERA_POSITION,
-  DEFAULT_CAMERA_ROTATION,
-  DEFAULT_CAMERA_UP,
-  DEFAULT_PAN_CENTER,
-  VERSION,
-} from '../constants';
+import { VERSION } from '../constants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, ExtendedProjectState, MoleculeData, ProjectState } from '../types';
+import { ActionInfo, MoleculeData, ProjectState } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -46,16 +40,9 @@ export interface CommonStoreState {
   projectState: ProjectState;
   projectView: boolean;
 
-  // store camera position and pan center outside projectState to reduce rendering frequency
-  // because these properties change very often when the user is interacting with the viewer
-  cameraPosition: number[];
-  cameraRotation: number[];
-  cameraUp: number[];
-  panCenter: number[];
-
   targetData: MoleculeTS | undefined;
 
-  projectStateToOpen: ExtendedProjectState | null;
+  projectStateToOpen: ProjectState | null;
 
   loadedMolecule: MoleculeData | null;
   selectedMolecule: MoleculeData | null;
@@ -109,10 +96,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
 
           projectState: ProjectUtil.createDefaultProjectState(),
           projectView: true,
-          cameraPosition: DEFAULT_CAMERA_POSITION,
-          cameraRotation: DEFAULT_CAMERA_ROTATION,
-          cameraUp: DEFAULT_CAMERA_UP,
-          panCenter: DEFAULT_PAN_CENTER,
 
           targetData: undefined,
 
@@ -254,10 +237,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           loadedMolecule: state.loadedMolecule,
           selectedMolecule: state.selectedMolecule,
           projectState: state.projectState,
-          cameraPosition: state.cameraPosition,
-          cameraRotation: state.cameraRotation,
-          cameraUp: state.cameraUp,
-          panCenter: state.panCenter,
           selectedFloatingWindow: state.selectedFloatingWindow,
         }),
       },
