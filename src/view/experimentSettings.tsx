@@ -154,10 +154,10 @@ const ExperimentSettings = () => {
     return (
       <div style={{ width: '300px' }}>
         {targetData && (
-          <label style={{ paddingTop: '10px', fontSize: '10px' }}>
+          <span style={{ paddingTop: '10px', fontSize: '10px' }}>
             {targetData?.metadata['classification']}
             <br /> {targetData?.metadata['title']}
-          </label>
+          </span>
         )}
         <Descriptions
           style={{ paddingTop: '30px' }}
@@ -190,7 +190,7 @@ const ExperimentSettings = () => {
             left: '6px',
             height: '20px',
           }}
-          description={<label style={{ fontSize: '20px' }}>🧪</label>}
+          description={<span style={{ fontSize: '20px' }}>🧪</span>}
         />
       </Popover>
       {projectState.targetProtein?.name ? (
@@ -202,7 +202,7 @@ const ExperimentSettings = () => {
           }
           content={createInfo}
         >
-          <label
+          <span
             style={{
               position: 'absolute',
               top: '14px',
@@ -214,10 +214,10 @@ const ExperimentSettings = () => {
             }}
           >
             {projectState.targetProtein.name}
-          </label>
+          </span>
         </Popover>
       ) : (
-        <label
+        <span
           style={{
             position: 'absolute',
             top: '14px',
@@ -229,7 +229,7 @@ const ExperimentSettings = () => {
           }}
         >
           {t('word.Unknown', lang)}
-        </label>
+        </span>
       )}
     </>
   );
