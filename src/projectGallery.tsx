@@ -166,7 +166,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
           if (propertiesA && propertiesB) {
             if (p) {
               if (p in propertiesA && p in propertiesB) {
-                // @ts-ignore
+                // @ts-expect-error: Explain what?
                 return prefix * (propertiesA[p] - propertiesB[p]);
               }
             }

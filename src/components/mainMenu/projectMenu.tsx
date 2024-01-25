@@ -63,7 +63,7 @@ const createProject = () => {
   }
 };
 
-const OpenProjectItem = ({ isMac, askToOpenProject }: { isMac: boolean; askToOpenProject: Function }) => {
+const OpenProjectItem = ({ isMac, askToOpenProject }: { isMac: boolean; askToOpenProject: () => void }) => {
   const lang = useLanguage();
   const { t } = useTranslation();
 
@@ -113,7 +113,7 @@ const openProject = () => {
   });
 };
 
-const SaveProjectItem = ({ isMac, saveProject }: { isMac: boolean; saveProject: Function }) => {
+const SaveProjectItem = ({ isMac, saveProject }: { isMac: boolean; saveProject: () => void }) => {
   const lang = useLanguage();
 
   return (
@@ -140,7 +140,7 @@ export const saveProject = () => {
   }
 };
 
-const SaveProjectAsItem = ({ isMac, saveProjectAs }: { isMac: boolean; saveProjectAs: Function }) => {
+const SaveProjectAsItem = ({ isMac, saveProjectAs }: { isMac: boolean; saveProjectAs: () => void }) => {
   const saveProjectDialog = usePrimitiveStore(Selector.saveProjectAsDialog);
   const lang = useLanguage();
 

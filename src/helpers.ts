@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-//@ts-ignore
+// @ts-expect-error: Explain what?
 import { saveSvgAsPng } from 'save-svg-as-png';
 import { message } from 'antd';
 import html2canvas from 'html2canvas';
@@ -109,13 +109,13 @@ export const copyTextToClipboard = (text: string) => {
 };
 
 export const saveImage = (fileName: string, imgUrl: string) => {
-  let a = document.createElement('a') as HTMLAnchorElement;
+  const a = document.createElement('a') as HTMLAnchorElement;
   a.download = fileName;
   a.href = imgUrl;
   a.click();
 };
 
-export const screenshot = async (elementId: string, name?: string, options?: {}) => {
+export const screenshot = async (elementId: string, name?: string, options?: any) => {
   const source = window.document.getElementById(elementId);
   if (source) {
     const canvas = await html2canvas(source, { ...options, removeContainer: true });

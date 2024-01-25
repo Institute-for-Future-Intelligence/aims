@@ -41,7 +41,7 @@ type ParallelCoordinatesProps = {
   digits: number[];
   tickIntegers: boolean[];
   filters: Filter[];
-  hover?: Function;
+  hover?: (i: number) => void;
   hoveredIndex: number;
   selectedIndex: number;
 };

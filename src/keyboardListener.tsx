@@ -298,7 +298,6 @@ const KeyboardListener = ({ setNavigationView }: KeyboardListenerProps) => {
         }
         break;
       case 'esc': {
-        useRefStore.getState().setEnableOrbitController(true);
         selectNone();
         break;
       }

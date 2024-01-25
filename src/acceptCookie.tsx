@@ -2,7 +2,6 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React from 'react';
 import CookieConsent from 'react-cookie-consent';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';

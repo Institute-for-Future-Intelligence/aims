@@ -321,7 +321,7 @@ const ProjectListPanel = ({
                   // must create a new array for ant table to update (don't just set length to 0)
                   projectsRef.current = [];
                   for (const f of projects) {
-                    // @ts-ignore
+                    // @ts-expect-error: Explain what?
                     if (f['title']?.toLowerCase().includes(s.toLowerCase())) {
                       projectsRef.current.push(f);
                     }
@@ -488,7 +488,7 @@ const ProjectListPanel = ({
                 defaultSortOrder={'descend'}
                 sortDirections={['ascend', 'descend', 'ascend']}
                 sorter={(a, b) => {
-                  // @ts-ignore
+                  // @ts-expect-error: Explain what?
                   return a['timestamp'] - b['timestamp'];
                 }}
                 render={(time) => {

@@ -37,7 +37,7 @@ export interface CloudManagerProps {
   viewOnly: boolean;
 }
 
-const useFlag = (flag: boolean, fn: Function, setFlag: () => void) => {
+const useFlag = (flag: boolean, fn: () => void, setFlag: () => void) => {
   useEffect(() => {
     if (flag) {
       fn();

@@ -207,7 +207,7 @@ const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
       <DropdownContextMenu>
         {/* must specify the height here for the floating window to have correct boundary check*/}
         <div style={{ height: 'calc(100vh - 72px)' }}>
-          {/* @ts-ignore */}
+          {/* @ts-expect-error: Explain what? */}
           <SplitPane
             split={'vertical'}
             onChange={throttle((size) => {

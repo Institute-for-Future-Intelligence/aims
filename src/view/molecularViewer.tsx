@@ -240,7 +240,7 @@ const MolecularViewer = ({
       {chamber && (
         <Box
           position={[0, 0, 0]}
-          args={[1, 1, 1]}
+          args={[5, 5, 5]}
           key={'Box'}
           name={'Box'}
           onPointerOver={(e) => {}}

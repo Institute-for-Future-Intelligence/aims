@@ -43,7 +43,7 @@ class ErrorPage extends React.Component<{}, { hasError: boolean }> {
         </div>
       );
     }
-    // @ts-ignore
+    // @ts-expect-error: Explain what?
     return this.props.children;
   }
 }

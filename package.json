@@ -74,6 +74,12 @@
     "build": "vite build",
     "prepare": "husky install"
   },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
   }

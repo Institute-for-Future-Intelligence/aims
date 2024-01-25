@@ -14,7 +14,7 @@ import { DataColoring, ProjectType } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import dayjs from 'dayjs';
 
-export const fetchProject = async (userid: string, project: string, setProjectState: Function) => {
+export const fetchProject = async (userid: string, project: string, setProjectState: (ps: ProjectState) => void) => {
   const lang = { lng: useStore.getState().language };
   await firebase
     .firestore()
