@@ -3,7 +3,7 @@
  */
 
 import { createWithEqualityFn } from 'zustand/traditional';
-import produce from 'immer';
+import { produce } from 'immer';
 import { MoleculeData } from '../types';
 import { ObjectType, ProjectType } from '../constants';
 import { useThree } from '@react-three/fiber';

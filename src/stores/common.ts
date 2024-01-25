@@ -3,7 +3,7 @@
  */
 
 import { createWithEqualityFn } from 'zustand/traditional';
-import produce, { enableMapSet } from 'immer';
+import { enableMapSet, produce } from 'immer';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { Util } from '../Util';
 import { VERSION } from '../constants';
