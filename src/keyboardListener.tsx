@@ -10,10 +10,8 @@ import { UndoableCheck } from './undo/UndoableCheck';
 import { showInfo } from './helpers';
 import i18n from './i18n/i18n';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { useRefStore } from './stores/commonRef';
 import { GRID_RATIO, MoveDirection, UNDO_SHOW_INFO_DURATION } from './constants';
 import { usePrimitiveStore } from './stores/commonPrimitive';
-import { UndoableResetView } from './undo/UndoableResetView';
 import { askToCreateProject, askToOpenProject, saveProject, saveProjectAs } from './components/mainMenu/projectMenu';
 import { resetView, zoomView } from './components/mainMenu/viewMenu';
 

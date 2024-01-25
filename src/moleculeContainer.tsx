@@ -24,12 +24,10 @@ export interface MoleculeContainerProps {
   width: number;
   height: number;
   moleculeData: MoleculeData | null;
-  hovered: boolean;
   selected: boolean;
-  shininess: number;
 }
 
-const MoleculeContainer = ({ width, height, moleculeData, hovered, selected, shininess }: MoleculeContainerProps) => {
+const MoleculeContainer = ({ width, height, moleculeData, selected }: MoleculeContainerProps) => {
   const setCommonStore = useStore(Selector.set);
   const viewerStyle = useStore(Selector.projectViewerStyle);
   const viewerMaterial = useStore(Selector.projectViewerMaterial);

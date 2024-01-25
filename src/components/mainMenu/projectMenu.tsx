@@ -167,7 +167,7 @@ export const saveProjectAs = () => {
   }
 };
 
-export const createProjectMenu = (viewOnly: boolean, isMac: boolean) => {
+export const createProjectMenu = (isMac: boolean) => {
   const items: MenuProps['items'] = [];
 
   items.push({

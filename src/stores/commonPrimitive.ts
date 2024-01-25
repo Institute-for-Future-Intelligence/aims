@@ -6,7 +6,6 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { produce } from 'immer';
 import { MoleculeData } from '../types';
 import { ObjectType, ProjectType } from '../constants';
-import { useThree } from '@react-three/fiber';
 
 // avoid using undefined value in the store for now.
 export interface PrimitiveStoreState {

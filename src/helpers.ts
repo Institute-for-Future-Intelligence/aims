@@ -115,10 +115,10 @@ export const saveImage = (fileName: string, imgUrl: string) => {
   a.click();
 };
 
-export const screenshot = async (elementId: string, name?: string, options?: any) => {
+export const screenshot = async (elementId: string, name?: string) => {
   const source = window.document.getElementById(elementId);
   if (source) {
-    const canvas = await html2canvas(source, { ...options, removeContainer: true });
+    const canvas = await html2canvas(source, { removeContainer: true });
     const a = document.createElement('a');
     a.href = canvas.toDataURL('image/png', 1.0);
     a.download = `${name ?? elementId}.png`;

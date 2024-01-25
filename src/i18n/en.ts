@@ -2,8 +2,6 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import { MolecularViewerMaterial } from '../view/displayOptions';
-
 export const i18n_en = {
   translation: {
     name: {

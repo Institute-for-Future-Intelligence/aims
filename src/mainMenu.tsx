@@ -108,7 +108,7 @@ const MainMenu = ({ viewOnly }: { viewOnly: boolean }) => {
       items.push({
         key: 'project-sub-menu',
         label: <MenuItem hasPadding={false}>{t('menu.projectSubMenu', lang)}</MenuItem>,
-        children: createProjectMenu(viewOnly, isMac),
+        children: createProjectMenu(isMac),
       });
     }
 
