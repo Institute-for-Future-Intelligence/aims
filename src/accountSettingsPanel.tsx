@@ -8,7 +8,7 @@ import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import ReactDraggable, { DraggableEventHandler } from 'react-draggable';
 import { Button, Col, Row, Select } from 'antd';
-import { copyTextToClipboard, showSuccess } from './helpers';
+import { showSuccess } from './helpers';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { useTranslation } from 'react-i18next';
 import { ClassID, SchoolID } from './User';
@@ -150,8 +150,9 @@ const AccountSettingsPanel = React.memo(() => {
                 span={6}
                 onClick={() => {
                   if (user.uid) {
-                    copyTextToClipboard(user.uid);
-                    showSuccess(t('accountSettingsPanel.IDInClipBoard', lang));
+                    navigator.clipboard
+                      .writeText(user.uid)
+                      .then(() => showSuccess(t('accountSettingsPanel.IDInClipBoard', lang)));
                   }
                 }}
               >

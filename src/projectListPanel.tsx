@@ -16,7 +16,7 @@ import {
   WarningOutlined,
 } from '@ant-design/icons';
 import { HOME_URL, REGEX_ALLOWABLE_IN_NAME, Z_INDEX_FRONT_PANEL } from './constants';
-import { copyTextToClipboard, showInfo, showSuccess } from './helpers';
+import { showInfo, showSuccess } from './helpers';
 import Draggable from 'react-draggable';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { useTranslation } from 'react-i18next';
@@ -368,8 +368,6 @@ const ProjectListPanel = React.memo(
                     return (a as any)['title'].localeCompare((b as any)['title']);
                   }}
                   render={(title, record, index) => {
-                    let selection: string | undefined = undefined;
-
                     const items: MenuProps['items'] = [
                       {
                         key: 'project-title',
@@ -394,12 +392,9 @@ const ProjectListPanel = React.memo(
                         label: (
                           <MenuItem
                             onClick={() => {
-                              if (selection && selection.length > 0) {
-                                copyTextToClipboard(selection);
-                              } else {
-                                copyTextToClipboard(title);
-                              }
-                              showSuccess(t('projectListPanel.TitleCopiedToClipBoard', lang) + '.');
+                              navigator.clipboard
+                                .writeText(title)
+                                .then(() => showSuccess(t('projectListPanel.TitleCopiedToClipBoard', lang) + '.'));
                             }}
                           >
                             {t('projectListPanel.CopyTitle', lang)}
@@ -431,8 +426,11 @@ const ProjectListPanel = React.memo(
                           <MenuItem
                             onClick={() => {
                               const url = HOME_URL + '?userid=' + user.uid + '&project=' + encodeURIComponent(title);
-                              copyTextToClipboard(url);
-                              showSuccess(t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.');
+                              navigator.clipboard
+                                .writeText(url)
+                                .then(() =>
+                                  showSuccess(t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.'),
+                                );
                             }}
                           >
                             {t('projectListPanel.GenerateProjectLink', lang)}

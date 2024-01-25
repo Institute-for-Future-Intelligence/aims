@@ -88,26 +88,6 @@ export const containedInDOMRect = (rect: DOMRect, x: number, y: number, margin: 
   );
 };
 
-export const copyTextToClipboard = (text: string) => {
-  const textArea = document.createElement('textarea');
-  textArea.value = text;
-  textArea.setAttribute('readonly', '');
-  textArea.style.position = 'absolute';
-  textArea.style.left = '-9999px'; // Move outside the screen to make it invisible
-  document.body.appendChild(textArea);
-  const selection = document.getSelection();
-  if (selection) {
-    const selected = selection.rangeCount > 0 ? selection.getRangeAt(0) : false;
-    textArea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textArea);
-    if (selected) {
-      selection.removeAllRanges();
-      selection.addRange(selected);
-    }
-  }
-};
-
 export const saveImage = (fileName: string, imgUrl: string) => {
   const a = document.createElement('a') as HTMLAnchorElement;
   a.download = fileName;
