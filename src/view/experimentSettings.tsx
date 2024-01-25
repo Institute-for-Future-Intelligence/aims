@@ -15,7 +15,7 @@ import { usePrimitiveStore } from '../stores/commonPrimitive';
 const { Option } = Select;
 const { TextArea } = Input;
 
-const ExperimentSettings = () => {
+const ExperimentSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const addUndoable = useStore(Selector.addUndoable);
@@ -233,6 +233,6 @@ const ExperimentSettings = () => {
       )}
     </>
   );
-};
+});
 
-export default React.memo(ExperimentSettings);
+export default ExperimentSettings;

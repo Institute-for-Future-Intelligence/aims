@@ -47,7 +47,7 @@ const useFlag = (flag: boolean, fn: () => void, setFlag: () => void) => {
   }, [flag]);
 };
 
-const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
+const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   const setCommonStore = useStore(Selector.set);
   const setPrimitiveStore = usePrimitiveStore(Selector.setPrimitiveStore);
   const language = useStore(Selector.language);
@@ -742,6 +742,6 @@ const CloudManager = ({ viewOnly = false }: CloudManagerProps) => {
       )}
     </>
   );
-};
+});
 
-export default React.memo(CloudManager);
+export default CloudManager;

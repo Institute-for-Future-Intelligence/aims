@@ -25,7 +25,7 @@ import AccountSettingsPanel from './accountSettingsPanel';
 import CloudManager from './cloudManager';
 import { CloudTwoTone } from '@ant-design/icons';
 
-const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
+const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
@@ -250,6 +250,6 @@ const AppCreator = ({ viewOnly = false }: { viewOnly: boolean }) => {
       {!viewOnly && <AcceptCookie />}
     </div>
   );
-};
+});
 
-export default React.memo(AppCreator);
+export default AppCreator;

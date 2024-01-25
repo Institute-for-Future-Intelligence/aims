@@ -11,7 +11,7 @@ import ErrorPage from './ErrorPage';
 import AppCreator from './appCreator';
 import { Beforeunload } from 'react-beforeunload';
 
-const App = () => {
+const App = React.memo(() => {
   const locale = useStore(Selector.locale);
   const params = new URLSearchParams(window.location.search);
   const viewOnly = params.get('viewonly') === 'true';
@@ -29,6 +29,6 @@ const App = () => {
       </ErrorPage>
     </ConfigProvider>
   );
-};
+});
 
-export default React.memo(App);
+export default App;

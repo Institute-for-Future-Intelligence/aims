@@ -27,7 +27,7 @@ export interface ReactionChamberProps {
   moleculeData: MoleculeData | null;
 }
 
-const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
+const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
   const viewerStyle = useStore(Selector.chamberViewerStyle);
   const viewerMaterial = useStore(Selector.chamberViewerMaterial);
   const viewerColoring = useStore(Selector.chamberViewerColoring);
@@ -102,6 +102,6 @@ const ReactionChamber = ({ moleculeData }: ReactionChamberProps) => {
       <ExperimentSettings />
     </>
   );
-};
+});
 
-export default React.memo(ReactionChamber);
+export default ReactionChamber;

@@ -62,7 +62,7 @@ const Header = styled.div`
   cursor: move;
 `;
 
-const AccountSettingsPanel = () => {
+const AccountSettingsPanel = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const user = useStore(Selector.user);
@@ -304,6 +304,6 @@ const AccountSettingsPanel = () => {
       </ReactDraggable>
     </>
   );
-};
+});
 
-export default React.memo(AccountSettingsPanel);
+export default AccountSettingsPanel;

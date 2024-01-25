@@ -1,7 +1,7 @@
 .ant-dropdown-menu-item,
 .ant-dropdown-menu-submenu {
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 .ant-dropdown-menu-title-content,

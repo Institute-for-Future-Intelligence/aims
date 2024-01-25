@@ -24,7 +24,7 @@ const Container = styled.div`
   box-shadow: 3px 3px 3px 3px black;
 `;
 
-const About = ({ close }: { close: () => void }) => {
+const About = React.memo(({ close }: { close: () => void }) => {
   const language = useStore(Selector.language);
   const { t } = useTranslation();
   return (
@@ -46,6 +46,6 @@ const About = ({ close }: { close: () => void }) => {
       </div>
     </Container>
   );
-};
+});
 
-export default React.memo(About);
+export default About;

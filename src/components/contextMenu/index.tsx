@@ -35,7 +35,7 @@ const useContextMenu = () => {
   return [ctxRef.current, objRef.current] as [ObjectType | null, any | null];
 };
 
-const DropdownContextMenu: React.FC<ContextMenuProps> = ({ children }) => {
+const DropdownContextMenu: React.FC<ContextMenuProps> = React.memo(({ children }) => {
   usePrimitiveStore((state) => state.contextMenuFlag);
 
   const [contextMenuObjectType, selectedElement] = useContextMenu();
@@ -62,6 +62,6 @@ const DropdownContextMenu: React.FC<ContextMenuProps> = ({ children }) => {
       {children}
     </Dropdown>
   );
-};
+});
 
-export default React.memo(DropdownContextMenu);
+export default DropdownContextMenu;

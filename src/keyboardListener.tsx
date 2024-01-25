@@ -76,7 +76,7 @@ const handleKeys = [
   'ctrl',
 ];
 
-const KeyboardListener = ({ setNavigationView }: KeyboardListenerProps) => {
+const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProps) => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
   const selectNone = useStore(Selector.selectNone);
@@ -333,6 +333,6 @@ const KeyboardListener = ({ setNavigationView }: KeyboardListenerProps) => {
       />
     </>
   );
-};
+});
 
-export default React.memo(KeyboardListener);
+export default KeyboardListener;

@@ -13,7 +13,7 @@ export interface TeamProps {
   color?: string;
 }
 
-const Team = ({ top, height, color }: TeamProps) => {
+const Team = React.memo(({ top, height, color }: TeamProps) => {
   const language = useStore(Selector.language);
 
   const { t } = useTranslation();
@@ -127,6 +127,6 @@ const Team = ({ top, height, color }: TeamProps) => {
       </div>
     </div>
   );
-};
+});
 
-export default React.memo(Team);
+export default Team;

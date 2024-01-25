@@ -2,33 +2,15 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import { MenuProps } from 'antd';
+import { MenuProps, Modal } from 'antd';
 import i18n from '../../i18n/i18n';
 import { useStore } from '../../stores/common';
-import * as Selector from '../../stores/selector';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
-import { useLanguage } from '../../hooks';
-import { LabelMark, MenuItem } from '../menuItem';
-import NewProjectDialog from './newProjectDialog';
-import { Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { useTranslation } from 'react-i18next';
-
-const CreateNewProjectItem = ({ isMac }: { isMac: boolean }) => {
-  const createProjectDialog = usePrimitiveStore(Selector.createProjectDialog);
-  const lang = useLanguage();
-  const { t } = useTranslation();
-
-  return (
-    <>
-      <MenuItem hasPadding={false} onClick={() => askToCreateProject()}>
-        {t('menu.project.CreateNewProject', lang)}
-        <LabelMark>({isMac ? '⌘' : 'Ctrl'}+F)</LabelMark>...
-      </MenuItem>
-      {createProjectDialog && <NewProjectDialog saveAs={false} />}
-    </>
-  );
-};
+import { CreateNewProjectItem } from './createNewProjectItem.tsx';
+import { OpenProjectItem } from './openProjectItem.tsx';
+import { SaveProjectItem } from './saveProjectItem.tsx';
+import { SaveProjectAsItem } from './saveProjectAsItem.tsx';
 
 export const askToCreateProject = () => {
   const lang = { lng: useStore.getState().language };
@@ -61,20 +43,6 @@ const createProject = () => {
       };
     });
   }
-};
-
-const OpenProjectItem = ({ isMac, askToOpenProject }: { isMac: boolean; askToOpenProject: () => void }) => {
-  const lang = useLanguage();
-  const { t } = useTranslation();
-
-  return (
-    <>
-      <MenuItem hasPadding={false} onClick={() => askToOpenProject()}>
-        {t('menu.project.OpenProject', lang)}
-        <LabelMark>({isMac ? '⌘' : 'Ctrl'}+O)</LabelMark>...
-      </MenuItem>
-    </>
-  );
 };
 
 export const askToOpenProject = () => {
@@ -113,19 +81,6 @@ const openProject = () => {
   });
 };
 
-const SaveProjectItem = ({ isMac, saveProject }: { isMac: boolean; saveProject: () => void }) => {
-  const lang = useLanguage();
-
-  return (
-    <>
-      <MenuItem hasPadding={false} onClick={() => saveProject()}>
-        {i18n.t('menu.project.SaveProject', lang)}
-        <LabelMark>({isMac ? '⌘' : 'Ctrl'}+S)</LabelMark>
-      </MenuItem>
-    </>
-  );
-};
-
 export const saveProject = () => {
   usePrimitiveStore.getState().set((state) => {
     state.saveProjectFlag = true;
@@ -138,21 +93,6 @@ export const saveProject = () => {
       };
     });
   }
-};
-
-const SaveProjectAsItem = ({ isMac, saveProjectAs }: { isMac: boolean; saveProjectAs: () => void }) => {
-  const saveProjectDialog = usePrimitiveStore(Selector.saveProjectAsDialog);
-  const lang = useLanguage();
-
-  return (
-    <>
-      <MenuItem hasPadding={false} onClick={() => saveProjectAs()}>
-        {i18n.t('menu.project.SaveProjectAs', lang)}
-        <LabelMark>({isMac ? '⌘' : 'Ctrl'}+Shift+S)</LabelMark>...
-      </MenuItem>
-      {saveProjectDialog && <NewProjectDialog saveAs={true} />}
-    </>
-  );
 };
 
 export const saveProjectAs = () => {

@@ -300,7 +300,7 @@ export const updateThumbnailWidth = (userid: string, projectTitle: string, thumb
 };
 
 export const createMolecule = (type: ProjectType, name: string, url?: string): MoleculeData => {
-  let molecule = { name, url } as MoleculeData;
+  const molecule = { name, url } as MoleculeData;
   switch (type) {
     case ProjectType.DRUG_DISCOVERY:
       break;

@@ -41,7 +41,7 @@ export interface ShareLinkProps {
   handleShareWindowClose?: () => void;
 }
 
-const ShareLinks = ({ style, size, margin, round, handleShareWindowClose }: ShareLinkProps) => {
+const ShareLinks = React.memo(({ style, size, margin, round, handleShareWindowClose }: ShareLinkProps) => {
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
   const currentTitle = useStore(Selector.projectTitle);
@@ -120,6 +120,6 @@ const ShareLinks = ({ style, size, margin, round, handleShareWindowClose }: Shar
       </WhatsappShareButton>
     </ShareLinkContainer>
   );
-};
+});
 
-export default React.memo(ShareLinks);
+export default ShareLinks;

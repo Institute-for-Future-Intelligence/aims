@@ -30,7 +30,7 @@ export interface MainToolBarProps {
   signOut: () => void;
 }
 
-const MainToolBar = ({ signIn, signOut }: MainToolBarProps) => {
+const MainToolBar = React.memo(({ signIn, signOut }: MainToolBarProps) => {
   const language = useStore(Selector.language);
   const user = useStore(Selector.user);
 
@@ -101,6 +101,6 @@ const MainToolBar = ({ signIn, signOut }: MainToolBarProps) => {
       </Space>
     </ButtonsContainer>
   );
-};
+});
 
-export default React.memo(MainToolBar);
+export default MainToolBar;

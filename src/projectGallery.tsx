@@ -116,7 +116,7 @@ const PropertiesHeader = styled.div`
   font-size: 14px;
 `;
 
-const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
+const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const setCommonStore = useStore(Selector.set);
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
@@ -484,7 +484,6 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
               ? undefined
               : t('projectPanel.DoubleClickToMakeDescriptionEditable', lang)
           }
-          bordered={descriptionTextAreaEditableRef.current}
           readOnly={!descriptionTextAreaEditableRef.current}
           value={descriptionRef.current ?? undefined}
           onDoubleClick={() => {
@@ -504,6 +503,7 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
             descriptionTextAreaEditableRef.current = false;
           }}
           style={{
+            border: descriptionTextAreaEditableRef.current ? '1px solid gray' : 'none',
             paddingLeft: '10px',
             textAlign: 'left',
             resize: descriptionTextAreaEditableRef.current ? 'vertical' : 'none',
@@ -1045,6 +1045,6 @@ const ProjectGallery = ({ relativeWidth }: ProjectGalleryProps) => {
       </ColumnWrapper>
     </Container>
   );
-};
+});
 
-export default React.memo(ProjectGallery);
+export default ProjectGallery;

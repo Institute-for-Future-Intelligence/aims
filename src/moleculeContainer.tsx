@@ -27,7 +27,7 @@ export interface MoleculeContainerProps {
   selected: boolean;
 }
 
-const MoleculeContainer = ({ width, height, moleculeData, selected }: MoleculeContainerProps) => {
+const MoleculeContainer = React.memo(({ width, height, moleculeData, selected }: MoleculeContainerProps) => {
   const setCommonStore = useStore(Selector.set);
   const viewerStyle = useStore(Selector.projectViewerStyle);
   const viewerMaterial = useStore(Selector.projectViewerMaterial);
@@ -95,6 +95,6 @@ const MoleculeContainer = ({ width, height, moleculeData, selected }: MoleculeCo
       </Canvas>
     </>
   );
-};
+});
 
-export default React.memo(MoleculeContainer);
+export default MoleculeContainer;

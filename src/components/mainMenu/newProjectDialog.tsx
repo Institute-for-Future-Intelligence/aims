@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 
 const { Option } = Select;
 
-const NewProjectDialog = ({ saveAs }: { saveAs: boolean }) => {
+const NewProjectDialog = React.memo(({ saveAs }: { saveAs: boolean }) => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
   const language = useStore(Selector.language);
@@ -178,6 +178,6 @@ const NewProjectDialog = ({ saveAs }: { saveAs: boolean }) => {
       </Row>
     </Modal>
   );
-};
+});
 
-export default React.memo(NewProjectDialog);
+export default NewProjectDialog;

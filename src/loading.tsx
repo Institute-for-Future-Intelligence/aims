@@ -5,8 +5,8 @@
 import React from 'react';
 
 // TODO
-const Loading = () => {
+const Loading = React.memo(() => {
   return <div>Loading...</div>;
-};
+});
 
-export default React.memo(Loading);
+export default Loading;

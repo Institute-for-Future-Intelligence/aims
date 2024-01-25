@@ -59,7 +59,7 @@ const LabelContainer = styled.div`
   z-index: 9;
 `;
 
-const MainMenu = ({ viewOnly }: { viewOnly: boolean }) => {
+const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
 
   const user = useStore.getState().user;
@@ -203,6 +203,6 @@ const MainMenu = ({ viewOnly }: { viewOnly: boolean }) => {
       {aboutUs && <About close={() => setAboutUs(false)} />}
     </>
   );
-};
+});
 
-export default React.memo(MainMenu);
+export default MainMenu;
