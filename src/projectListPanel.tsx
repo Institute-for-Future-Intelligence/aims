@@ -338,27 +338,6 @@ const ProjectListPanel = React.memo(
                 }}
               >
                 <Column
-                  title={`${t('word.Type', lang)}`}
-                  dataIndex="type"
-                  key="type"
-                  width={'25%'}
-                  render={(type) => {
-                    return <Typography.Text style={{ fontSize: '12px', verticalAlign: 'top' }}>{type}</Typography.Text>;
-                  }}
-                  onCell={(data, index) => {
-                    return {
-                      style: {
-                        background:
-                          selectedIndex === index
-                            ? 'lightskyblue'
-                            : index !== undefined && index % 2 === 0
-                              ? 'beige'
-                              : 'gainsboro',
-                      },
-                    };
-                  }}
-                />
-                <Column
                   title={`${t('word.Title', lang)}`}
                   dataIndex="title"
                   key="title"
@@ -468,12 +447,32 @@ const ProjectListPanel = React.memo(
                               ? 'beige'
                               : 'gainsboro',
                       },
-                      // onClick: () => {
-                      //   const selection = window.getSelection();
-                      //   if (selection && selection.toString().length > 0) return;
-                      //   // only proceed when no text is selected
-                      //   setProjectState(data as ProjectState);
-                      // },
+                    };
+                  }}
+                />
+                <Column
+                  title={`${t('word.Type', lang)}`}
+                  dataIndex="type"
+                  key="type"
+                  width={'25%'}
+                  defaultSortOrder={'descend'}
+                  sortDirections={['ascend', 'descend', 'ascend']}
+                  sorter={(a, b) => {
+                    return (a as any)['type'].localeCompare((b as any)['type']);
+                  }}
+                  render={(type) => {
+                    return <Typography.Text style={{ fontSize: '12px', verticalAlign: 'top' }}>{type}</Typography.Text>;
+                  }}
+                  onCell={(data, index) => {
+                    return {
+                      style: {
+                        background:
+                          selectedIndex === index
+                            ? 'lightskyblue'
+                            : index !== undefined && index % 2 === 0
+                              ? 'beige'
+                              : 'gainsboro',
+                      },
                     };
                   }}
                 />

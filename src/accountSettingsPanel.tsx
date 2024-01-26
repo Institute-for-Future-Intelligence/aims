@@ -146,7 +146,6 @@ const AccountSettingsPanel = React.memo(() => {
 
             <Row gutter={20} style={{ paddingTop: '20px', paddingLeft: '20px', direction: 'ltr' }}>
               <Col
-                className="gutter-row"
                 span={6}
                 onClick={() => {
                   if (user.uid) {
@@ -163,16 +162,16 @@ const AccountSettingsPanel = React.memo(() => {
                   {t('accountSettingsPanel.MyID', lang)}
                 </Button>
               </Col>
-              <Col className="gutter-row" span={18}>
+              <Col span={18} style={{ paddingTop: '8px' }}>
                 {user.uid}
               </Col>
             </Row>
 
             <Row gutter={20} style={{ paddingTop: '20px', paddingLeft: '20px', direction: 'ltr' }}>
-              <Col className="gutter-row" span={6}>
+              <Col span={6} style={{ paddingTop: '8px' }}>
                 {t('accountSettingsPanel.SchoolID', lang)}
               </Col>
-              <Col className="gutter-row" span={18}>
+              <Col span={18}>
                 <Select
                   style={{ width: '90%' }}
                   value={schoolIdRef.current}
@@ -209,10 +208,10 @@ const AccountSettingsPanel = React.memo(() => {
             </Row>
 
             <Row gutter={20} style={{ paddingTop: '20px', paddingLeft: '20px', direction: 'ltr' }}>
-              <Col className="gutter-row" span={6}>
+              <Col style={{ paddingTop: '8px' }} span={6}>
                 {t('accountSettingsPanel.ClassID', lang)}
               </Col>
-              <Col className="gutter-row" span={18}>
+              <Col span={18}>
                 <Select
                   style={{ width: '90%' }}
                   value={classIdRef.current}
@@ -261,10 +260,8 @@ const AccountSettingsPanel = React.memo(() => {
             </Row>
 
             <Row gutter={6} style={{ paddingTop: '20px', paddingLeft: '20px', direction: 'ltr' }}>
-              <Col className="gutter-row" span={6}>
-                {t('accountSettingsPanel.AllPublished', lang)}
-              </Col>
-              <Col className="gutter-row" span={18}>
+              <Col span={6}>{t('accountSettingsPanel.AllPublished', lang)}</Col>
+              <Col span={18}>
                 <span
                   style={{ cursor: 'pointer' }}
                   onClick={() => {
@@ -277,10 +274,8 @@ const AccountSettingsPanel = React.memo(() => {
             </Row>
 
             <Row gutter={6} style={{ paddingTop: '20px', paddingLeft: '20px', direction: 'ltr' }}>
-              <Col className="gutter-row" span={6}>
-                {t('accountSettingsPanel.PublishedUnderAliases', lang)}
-              </Col>
-              <Col className="gutter-row" span={18}>
+              <Col span={6}>{t('accountSettingsPanel.PublishedUnderAliases', lang)}</Col>
+              <Col span={18}>
                 <span style={{ fontSize: '10px' }}>
                   {user.aliases?.map((value, index) => {
                     if (!user.aliases) return null;
@@ -292,12 +287,8 @@ const AccountSettingsPanel = React.memo(() => {
 
             {superuser && (
               <Row gutter={6} style={{ paddingTop: '20px', paddingLeft: '20px', direction: 'ltr' }}>
-                <Col className="gutter-row" span={6}>
-                  {t('accountSettingsPanel.UserCount', lang)}
-                </Col>
-                <Col className="gutter-row" span={18}>
-                  {userCount}
-                </Col>
+                <Col span={6}>{t('accountSettingsPanel.UserCount', lang)}</Col>
+                <Col span={18}>{userCount}</Col>
               </Row>
             )}
           </ColumnWrapper>
