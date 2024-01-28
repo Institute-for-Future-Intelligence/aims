@@ -4,7 +4,7 @@ import rawPlugin from 'vite-raw-plugin';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  assetsInclude: ['**/*.csv', '**/*.pdb', '**/*.sdf', '**/*.cif', '**/*.pcj', '**/*.xyz', '**/*.mol2'],
+  assetsInclude: ['**/*.csv', '**/*.pdb', '**/*.sdf', '**/*.cif', '**/*.pcj', '**/*.xyz', '**/*.mol2', '**/*.gltf'],
   plugins: [
     react(),
     rawPlugin({

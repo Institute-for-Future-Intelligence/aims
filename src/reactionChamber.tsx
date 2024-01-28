@@ -22,7 +22,7 @@ import * as Selector from './stores/selector';
 import { DirectionalLight, Euler, Vector3 } from 'three';
 import ExperimentSettings from './view/experimentSettings';
 import { ReactionChamberControls } from './controls';
-import Cockpit from './view/cockpit.tsx';
+import Spaceship from './view/spaceship.tsx';
 
 export interface ReactionChamberProps {
   moleculeData: MoleculeData | null;
@@ -91,7 +91,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
             selector={viewerSelector}
           />
         )}
-        <Cockpit />
+        <Spaceship />
         <GizmoHelper alignment="bottom-right" margin={[30, 30]}>
           <GizmoViewport
             axisColors={['red', 'green', 'blue']}
