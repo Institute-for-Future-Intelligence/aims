@@ -9,51 +9,23 @@ import './style.css';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
 import { createDefaultMenu } from './defaultMenu';
 import { ObjectType } from '../../constants';
+import { createSpaceshipMenu } from './spaceshipMenu.tsx';
 
 export interface ContextMenuProps {
   [key: string]: any;
 }
 
-const useContextMenu = () => {
-  const contextMenuObjectType = usePrimitiveStore(Selector.contextMenuObjectType);
-  const selectedObject = null;
-
-  const ctxRef = useRef(contextMenuObjectType);
-  const objRef = useRef(selectedObject);
-
-  // dropdown menu fades out about 0.2s, so we have to preserve the state util the menu is fully disappeared.
-  if (contextMenuObjectType !== null) {
-    ctxRef.current = contextMenuObjectType;
-    objRef.current = selectedObject;
-  } else {
-    setTimeout(() => {
-      ctxRef.current = contextMenuObjectType;
-      objRef.current = contextMenuObjectType === null ? null : selectedObject;
-    }, 200);
-  }
-
-  return [ctxRef.current, objRef.current] as [ObjectType | null, any | null];
-};
-
-const DropdownContextMenu: React.FC<ContextMenuProps> = React.memo(({ children }) => {
+const DropdownContextMenu: React.FC<ContextMenuProps> = ({ children }) => {
   usePrimitiveStore((state) => state.contextMenuFlag);
-
-  const [contextMenuObjectType, selectedElement] = useContextMenu();
+  const contextMenuObjectType = usePrimitiveStore(Selector.contextMenuObjectType);
 
   const createMenu = () => {
-    if (!selectedElement) {
-      if (!contextMenuObjectType) return createDefaultMenu();
-      return { items: [] };
-    }
+    if (!contextMenuObjectType) return createDefaultMenu();
     switch (contextMenuObjectType) {
-      case ObjectType.Atom:
-        return { items: [] };
-      case ObjectType.Bond:
-        return { items: [] };
-      case ObjectType.Surface:
-        return { items: [] };
+      case ObjectType.Spaceship:
+        return createSpaceshipMenu();
       default:
-        return { items: [] };
+        return createDefaultMenu();
     }
   };
 
@@ -62,6 +34,6 @@ const DropdownContextMenu: React.FC<ContextMenuProps> = React.memo(({ children }
       {children}
     </Dropdown>
   );
-});
+};
 
 export default DropdownContextMenu;

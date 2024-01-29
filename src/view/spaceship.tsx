@@ -9,7 +9,8 @@ import React, { useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Group, MeshBasicMaterial, Vector3 } from 'three';
 import { useGLTF } from '@react-three/drei';
-import { HALF_PI } from '../constants.ts';
+import { HALF_PI, ObjectType } from '../constants.ts';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 export interface SpaceshipProps {
   scale?: number;
@@ -44,7 +45,6 @@ const Spaceship = React.memo(({ scale = 1 }: SpaceshipProps) => {
       onPointerDown={(e) => {
         if (e.button === 2) return;
       }}
-      onContextMenu={(e) => {}}
     >
       {drawTarget && (
         <group position={[0, 0, -50]} name="cross" rotation={[HALF_PI * 0.25, 0, 0]}>
@@ -72,7 +72,15 @@ const Spaceship = React.memo(({ scale = 1 }: SpaceshipProps) => {
           </mesh>
         </group>
       )}
-      <group rotation={[HALF_PI * 1.25, Math.PI, 0]}>
+      <group
+        rotation={[HALF_PI * 1.25, Math.PI, 0]}
+        onContextMenu={(e) => {
+          e.stopPropagation();
+          usePrimitiveStore.getState().set((state) => {
+            state.contextMenuObjectType = ObjectType.Spaceship;
+          });
+        }}
+      >
         <mesh name="Renault_(S,_T1)_0" geometry={model.nodes['Renault_(S,_T1)_0'].geometry}>
           <meshStandardMaterial color="#a7a7a7" />
         </mesh>

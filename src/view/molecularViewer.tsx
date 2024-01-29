@@ -25,15 +25,16 @@ import { MolecularProperties } from '../models/MolecularProperties';
 import ComplexVisual from '../lib/ComplexVisual';
 import { useThree } from '@react-three/fiber';
 import {
-  STYLE_MAP,
-  MolecularViewerStyle,
   COLORING_MAP,
+  MATERIAL_MAP,
   MolecularViewerColoring,
   MolecularViewerMaterial,
-  MATERIAL_MAP,
+  MolecularViewerStyle,
+  STYLE_MAP,
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { getSample } from '../internalDatabase';
+import { ObjectType } from '../constants.ts';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -56,7 +57,7 @@ const MolecularViewer = React.memo(
 
     const [complex, setComplex] = useState<any>();
 
-    const MainGroup = useRef<Group>(null);
+    const mainGroupRef = useRef<Group>(null);
 
     const { invalidate, get } = useThree();
 
@@ -188,10 +189,10 @@ const MolecularViewer = React.memo(
     };
 
     useEffect(() => {
-      if (!MainGroup.current || !complex || !mode) return;
+      if (!mainGroupRef.current || !complex || !mode) return;
 
-      MainGroup.current.children = [];
-      MainGroup.current.position.set(0, 0, 0);
+      mainGroupRef.current.children = [];
+      mainGroupRef.current.position.set(0, 0, 0);
 
       const visual = new ComplexVisual(complex.name, complex);
 
@@ -206,11 +207,11 @@ const MolecularViewer = React.memo(
       visual.resetReps(reps);
 
       visual.rebuild().then(() => {
-        if (!MainGroup.current) return;
-        MainGroup.current.add(visual);
+        if (!mainGroupRef.current) return;
+        mainGroupRef.current.add(visual);
         const boundingSphere = visual.getBoundaries().boundingSphere;
         const offset = boundingSphere.center.clone().multiplyScalar(-1);
-        MainGroup.current.position.copy(offset);
+        mainGroupRef.current.position.copy(offset);
         if (isGalleryView) {
           onLoaded(boundingSphere);
         } else {
@@ -223,7 +224,18 @@ const MolecularViewer = React.memo(
     }, [complex, material, mode, colorer, selector]);
 
     if (!mode) return null;
-    return <group name={'Main'} ref={MainGroup} />;
+    return (
+      <group
+        name={'Main'}
+        ref={mainGroupRef}
+        onContextMenu={(e) => {
+          e.stopPropagation();
+          usePrimitiveStore.getState().set((state) => {
+            state.contextMenuObjectType = ObjectType.Molecule;
+          });
+        }}
+      />
+    );
   },
 );
 

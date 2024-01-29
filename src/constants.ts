@@ -96,7 +96,8 @@ export enum BondType {
 export enum ObjectType {
   Atom = 'Atom',
   Bond = 'Bond',
-  Surface = 'Surface',
+  Molecule = 'Molecule',
+  Spaceship = 'Spaceship',
 }
 
 export enum DataColoring {
