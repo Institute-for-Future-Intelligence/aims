@@ -3,8 +3,10 @@
  */
 
 import { useStore } from '../../stores/common';
-import type { MenuProps } from 'antd';
-import { AxesCheckBox } from './defaultMenuItems';
+import { MenuProps } from 'antd';
+import { MenuItem } from '../menuItem.tsx';
+import i18n from '../../i18n/i18n.ts';
+import { SizeRadioGroup } from './spaceshipMenuItems.tsx';
 
 export const createSpaceshipMenu = () => {
   const lang = { lng: useStore.getState().language };
@@ -12,8 +14,15 @@ export const createSpaceshipMenu = () => {
   const items: MenuProps['items'] = [];
 
   items.push({
-    key: 'molecular-viewer-axes',
-    label: <AxesCheckBox />,
+    key: 'spaceship-size-submenu',
+    label: <MenuItem hasPadding={false}>{i18n.t('word.Size', lang)}</MenuItem>,
+    children: [
+      {
+        key: 'size-radio-group',
+        label: <SizeRadioGroup />,
+        style: { backgroundColor: 'white' },
+      },
+    ],
   });
 
   return { items } as MenuProps;

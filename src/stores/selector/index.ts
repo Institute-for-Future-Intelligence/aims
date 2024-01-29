@@ -140,3 +140,5 @@ export const projectViewerMaterial = (state: CommonStoreState) => state.projectS
 export const projectViewerBackground = (state: CommonStoreState) => state.projectState.projectViewerBackground;
 
 export const targetProtein = (state: CommonStoreState) => state.projectState.targetProtein;
+
+export const spaceshipSize = (state: CommonStoreState) => state.projectState.spaceshipSize;

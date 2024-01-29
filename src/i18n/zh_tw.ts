@@ -22,6 +22,9 @@ export const i18n_zh_tw = {
     },
 
     word: {
+      Size: '大小',
+      Small: '小',
+      Large: '大',
       Name: '名字',
       Codename: '代號',
       Time: '時間',

@@ -52,6 +52,8 @@ export class ProjectUtil {
       chamberViewerBackground: 'black',
       chamberViewerSelector: 'all',
 
+      spaceshipSize: 1,
+
       projectViewerStyle: MolecularViewerStyle.Stick,
       projectViewerMaterial: MolecularViewerMaterial.Soft,
       projectViewerBackground: 'white',

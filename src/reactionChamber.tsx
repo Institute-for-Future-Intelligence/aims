@@ -23,6 +23,7 @@ import { DirectionalLight, Euler, Vector3 } from 'three';
 import ExperimentSettings from './view/experimentSettings';
 import { ReactionChamberControls } from './controls';
 import Spaceship from './view/spaceship.tsx';
+import Background from './view/background.tsx';
 
 export interface ReactionChamberProps {
   moleculeData: MoleculeData | null;
@@ -80,6 +81,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
           shadow-camera-near={1}
           shadow-camera-far={DEFAULT_SHADOW_CAMERA_FAR}
         />
+        <Background />
         {viewerAxes && <Axes />}
         {moleculeData && (
           <MolecularViewer

@@ -43,6 +43,8 @@ export interface ProjectState {
   chamberViewerBackground: string;
   chamberViewerSelector: string;
 
+  spaceshipSize: number;
+
   projectViewerStyle: MolecularViewerStyle;
   projectViewerMaterial: MolecularViewerMaterial;
   projectViewerBackground: string;

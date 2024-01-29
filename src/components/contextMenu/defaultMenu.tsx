@@ -16,26 +16,30 @@ import {
   Screenshot,
   StyleRadioGroup,
 } from './defaultMenuItems';
+import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
 
 export const createDefaultMenu = () => {
   const lang = { lng: useStore.getState().language };
+  const contextMenuObjectType = usePrimitiveStore.getState().contextMenuObjectType;
 
   const items: MenuProps['items'] = [];
 
-  items.push({
-    key: 'molecular-viewer-auto-rotate',
-    label: <AutoRotateCheckBox />,
-  });
+  if (contextMenuObjectType === null) {
+    items.push({
+      key: 'molecular-viewer-auto-rotate',
+      label: <AutoRotateCheckBox />,
+    });
 
-  items.push({
-    key: 'molecular-viewer-axes',
-    label: <AxesCheckBox />,
-  });
+    items.push({
+      key: 'molecular-viewer-axes',
+      label: <AxesCheckBox />,
+    });
 
-  items.push({
-    key: 'molecular-viewer-foggy',
-    label: <FogCheckBox />,
-  });
+    items.push({
+      key: 'molecular-viewer-foggy',
+      label: <FogCheckBox />,
+    });
+  }
 
   items.push({
     key: 'molecular-viewer-style-submenu',
@@ -73,15 +77,17 @@ export const createDefaultMenu = () => {
     ],
   });
 
-  items.push({
-    key: 'molecular-viewer-background-color',
-    label: <BackgroundColor />,
-  });
+  if (contextMenuObjectType === null) {
+    items.push({
+      key: 'molecular-viewer-background-color',
+      label: <BackgroundColor />,
+    });
 
-  items.push({
-    key: 'molecular-viewer-screenshot',
-    label: <Screenshot />,
-  });
+    items.push({
+      key: 'molecular-viewer-screenshot',
+      label: <Screenshot />,
+    });
+  }
 
   return { items } as MenuProps;
 };

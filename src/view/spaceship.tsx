@@ -11,14 +11,13 @@ import { Group, MeshBasicMaterial, Vector3 } from 'three';
 import { useGLTF } from '@react-three/drei';
 import { HALF_PI, ObjectType } from '../constants.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
+import { useStore } from '../stores/common.ts';
+import * as Selector from '../stores/selector';
 
-export interface SpaceshipProps {
-  scale?: number;
-}
-
-const Spaceship = React.memo(({ scale = 1 }: SpaceshipProps) => {
+const Spaceship = React.memo(() => {
   const { camera } = useThree();
   const groupRef = useRef<Group>(null);
+  const spaceshipSize = useStore(Selector.spaceshipSize);
 
   useFrame(() => {
     if (groupRef.current) {
@@ -39,7 +38,7 @@ const Spaceship = React.memo(({ scale = 1 }: SpaceshipProps) => {
   return (
     <group
       ref={groupRef}
-      scale={scale}
+      scale={spaceshipSize}
       onPointerOver={(e) => {}}
       onPointerOut={(e) => {}}
       onPointerDown={(e) => {

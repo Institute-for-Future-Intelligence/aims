@@ -22,6 +22,9 @@ export const i18n_en = {
     },
 
     word: {
+      Size: 'Size',
+      Small: 'Small',
+      Large: 'Large',
       Name: 'Name',
       Codename: 'Codename',
       Time: 'Time',
