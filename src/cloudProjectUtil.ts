@@ -10,7 +10,7 @@ import { showError, showInfo } from './helpers';
 import i18n from './i18n/i18n';
 import { MoleculeData, Range, ProjectState } from './types';
 import { usePrimitiveStore } from './stores/commonPrimitive';
-import { DataColoring, ProjectType } from './constants';
+import { DataColoring, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import dayjs from 'dayjs';
 
@@ -57,6 +57,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           chamberViewerBackground: data.chamberViewerBackground ?? 'black',
           chamberViewerSelector: data.chamberViewerSelector ?? 'all',
 
+          spaceshipDisplayMode: data.spaceshipDisplayMode ?? SpaceshipDisplayMode.NONE,
           spaceshipSize: data.spaceshipSize ?? 1,
 
           projectViewerStyle: data.projectViewerStyle ?? MolecularViewerStyle.Stick,

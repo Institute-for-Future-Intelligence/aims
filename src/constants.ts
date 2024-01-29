@@ -105,3 +105,9 @@ export enum DataColoring {
   INDIVIDUALS = 1,
   GROUPS = 2,
 }
+
+export enum SpaceshipDisplayMode {
+  NONE = 0,
+  OUTSIDE_VIEW = 1,
+  INSIDE_VIEW = 2,
+}

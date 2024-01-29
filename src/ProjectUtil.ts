@@ -13,6 +13,7 @@ import {
   DEFAULT_CAMERA_UP,
   DEFAULT_PAN_CENTER,
   ProjectType,
+  SpaceshipDisplayMode,
 } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 
@@ -52,6 +53,7 @@ export class ProjectUtil {
       chamberViewerBackground: 'black',
       chamberViewerSelector: 'all',
 
+      spaceshipDisplayMode: SpaceshipDisplayMode.NONE,
       spaceshipSize: 1,
 
       projectViewerStyle: MolecularViewerStyle.Stick,

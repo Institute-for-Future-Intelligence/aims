@@ -12,6 +12,7 @@ import {
   DEFAULT_SHADOW_CAMERA_FAR,
   DEFAULT_SHADOW_MAP_SIZE,
   HALF_PI,
+  SpaceshipDisplayMode,
 } from './constants';
 import { GizmoHelper, GizmoViewport } from '@react-three/drei';
 import Axes from './view/axes';
@@ -24,6 +25,7 @@ import ExperimentSettings from './view/experimentSettings';
 import { ReactionChamberControls } from './controls';
 import Spaceship from './view/spaceship.tsx';
 import Background from './view/background.tsx';
+import Cockpit from './view/cockpit.tsx';
 
 export interface ReactionChamberProps {
   moleculeData: MoleculeData | null;
@@ -40,6 +42,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
   const cameraPosition = useStore(Selector.cameraPosition);
   const cameraRotation = useStore(Selector.cameraRotation);
   const cameraUp = useStore(Selector.cameraUp);
+  const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lightRef = useRef<DirectionalLight>(null);
@@ -93,7 +96,8 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
             selector={viewerSelector}
           />
         )}
-        <Spaceship />
+        {spaceshipDisplayMode === SpaceshipDisplayMode.INSIDE_VIEW && <Cockpit />}
+        {spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW && <Spaceship />}
         <GizmoHelper alignment="bottom-right" margin={[30, 30]}>
           <GizmoViewport
             axisColors={['red', 'green', 'blue']}

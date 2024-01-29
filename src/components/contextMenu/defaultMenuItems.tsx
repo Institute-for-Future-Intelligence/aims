@@ -5,10 +5,9 @@
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { useLanguage } from '../../hooks';
-import { Checkbox, ColorPicker, RadioChangeEvent } from 'antd';
+import { Checkbox, ColorPicker, Radio, RadioChangeEvent, Space } from 'antd';
 import { UndoableChange } from '../../undo/UndoableChange';
 import { LabelMark, MenuItem } from '../menuItem';
-import { Radio, Space } from 'antd';
 import { UndoableCheck } from '../../undo/UndoableCheck';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +21,7 @@ import {
   MolecularViewerMaterial,
   MolecularViewerStyle,
 } from '../../view/displayOptions';
+import { SpaceshipDisplayMode } from '../../constants.ts';
 
 export const AutoRotateCheckBox = ({ isMac }: { isMac?: boolean }) => {
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
@@ -353,6 +353,58 @@ export const ColoringRadioGroup = () => {
               {t(radio.label, lang)}
             </Radio>
           ))}
+        </Space>
+      </Radio.Group>
+    </MenuItem>
+  );
+};
+
+export const SpaceshipDisplayModeRadioGroup = () => {
+  const mode = useStore(Selector.spaceshipDisplayMode) ?? SpaceshipDisplayMode.NONE;
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const setMode = (mode: SpaceshipDisplayMode) => {
+    useStore.getState().set((state) => {
+      state.projectState.spaceshipDisplayMode = mode;
+    });
+    setChanged(true);
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Radio.Group
+        value={mode}
+        onChange={(e: RadioChangeEvent) => {
+          const oldValue = mode;
+          const newValue = e.target.value;
+          const undoableChange = {
+            name: 'Select Spaceship Mode',
+            timestamp: Date.now(),
+            oldValue: oldValue,
+            newValue: newValue,
+            undo: () => {
+              setMode(undoableChange.oldValue as SpaceshipDisplayMode);
+            },
+            redo: () => {
+              setMode(undoableChange.newValue as SpaceshipDisplayMode);
+            },
+          } as UndoableChange;
+          useStore.getState().addUndoable(undoableChange);
+          setMode(newValue);
+        }}
+      >
+        <Space direction="vertical">
+          <Radio key={SpaceshipDisplayMode.NONE} value={SpaceshipDisplayMode.NONE}>
+            {t('word.None', lang)}
+          </Radio>
+          <Radio key={SpaceshipDisplayMode.OUTSIDE_VIEW} value={SpaceshipDisplayMode.OUTSIDE_VIEW}>
+            {t('spaceship.OutsideView', lang)}
+          </Radio>
+          <Radio key={SpaceshipDisplayMode.INSIDE_VIEW} value={SpaceshipDisplayMode.INSIDE_VIEW}>
+            {t('spaceship.InsideView', lang)}
+          </Radio>
         </Space>
       </Radio.Group>
     </MenuItem>

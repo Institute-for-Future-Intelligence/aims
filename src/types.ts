@@ -3,7 +3,7 @@
  */
 
 import { Filter } from './Filter';
-import { DataColoring, ProjectType } from './constants';
+import { DataColoring, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 
 // use null for undefined, as we need to persist this in Firebase
@@ -43,6 +43,7 @@ export interface ProjectState {
   chamberViewerBackground: string;
   chamberViewerSelector: string;
 
+  spaceshipDisplayMode: SpaceshipDisplayMode;
   spaceshipSize: number;
 
   projectViewerStyle: MolecularViewerStyle;

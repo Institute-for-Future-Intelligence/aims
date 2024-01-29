@@ -14,6 +14,7 @@ import {
   FogCheckBox,
   MaterialRadioGroup,
   Screenshot,
+  SpaceshipDisplayModeRadioGroup,
   StyleRadioGroup,
 } from './defaultMenuItems';
 import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
@@ -40,6 +41,18 @@ export const createDefaultMenu = () => {
       label: <FogCheckBox />,
     });
   }
+
+  items.push({
+    key: 'spaceship-display-mode-submenu',
+    label: <MenuItem hasPadding={true}>{i18n.t('spaceship.SpaceshipDisplay', lang)}</MenuItem>,
+    children: [
+      {
+        key: 'spaceship-display-mode-radio-group',
+        label: <SpaceshipDisplayModeRadioGroup />,
+        style: { backgroundColor: 'white' },
+      },
+    ],
+  });
 
   items.push({
     key: 'molecular-viewer-style-submenu',

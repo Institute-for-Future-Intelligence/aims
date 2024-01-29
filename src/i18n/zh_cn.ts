@@ -22,6 +22,7 @@ export const i18n_zh_cn = {
     },
 
     word: {
+      None: '无',
       Size: '大小',
       Small: '小',
       Large: '大',
@@ -135,6 +136,12 @@ export const i18n_zh_cn = {
       Conformation: '构象',
       Molecule: '分子',
       TakeScreenshot: '截屏',
+    },
+
+    spaceship: {
+      SpaceshipDisplay: '飞船显示',
+      OutsideView: '外景',
+      InsideView: '内景',
     },
 
     experiment: {

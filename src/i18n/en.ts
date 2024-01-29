@@ -22,6 +22,7 @@ export const i18n_en = {
     },
 
     word: {
+      None: 'None',
       Size: 'Size',
       Small: 'Small',
       Large: 'Large',
@@ -134,6 +135,12 @@ export const i18n_en = {
       Conformation: 'Conformation',
       Molecule: 'Molecule',
       TakeScreenshot: 'Take Screenshot',
+    },
+
+    spaceship: {
+      SpaceshipDisplay: 'Spaceship Display',
+      OutsideView: 'Outside View',
+      InsideView: 'Inside View',
     },
 
     experiment: {

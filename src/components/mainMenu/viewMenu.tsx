@@ -13,6 +13,7 @@ import {
   ColoringRadioGroup,
   FogCheckBox,
   MaterialRadioGroup,
+  SpaceshipDisplayModeRadioGroup,
   StyleRadioGroup,
 } from '../contextMenu/defaultMenuItems';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
@@ -90,6 +91,18 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
   items.push({
     key: 'background-color',
     label: <BackgroundColor />,
+  });
+
+  items.push({
+    key: 'spaceship-display-mode',
+    label: <MenuItem hasPadding={true}>{i18n.t('spaceship.SpaceshipDisplay', lang)}</MenuItem>,
+    children: [
+      {
+        key: 'spaceship-display-mode-radio-group',
+        label: <SpaceshipDisplayModeRadioGroup />,
+        style: { backgroundColor: 'white' },
+      },
+    ],
   });
 
   items.push({

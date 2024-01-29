@@ -3,7 +3,7 @@
  */
 
 import React, { useRef } from 'react';
-import { DoubleSide, Mesh, Vector3 } from 'three';
+import { Mesh, Vector3 } from 'three';
 import { Plane } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
@@ -35,9 +35,7 @@ const Background = React.memo(() => {
           state.contextMenuObjectType = null;
         });
       }}
-    >
-      <meshStandardMaterial side={DoubleSide} opacity={0.5} transparent />
-    </Plane>
+    />
   );
 });
 

@@ -29,6 +29,7 @@ import {
   DEFAULT_PAN_CENTER,
   FirebaseName,
   ProjectType,
+  SpaceshipDisplayMode,
 } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import { ProjectUtil } from './ProjectUtil';
@@ -362,6 +363,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             chamberViewerBackground: data.chamberViewerBackground ?? 'black',
             chamberViewerSelector: data.chamberViewerSelector ?? 'all',
 
+            spaceshipDisplayMode: data.spaceshipDisplayMode ?? SpaceshipDisplayMode.NONE,
             spaceshipSize: data.spaceshipSize ?? 1,
 
             projectViewerStyle: data.projectViewerStyle ?? MolecularViewerStyle.Stick,
