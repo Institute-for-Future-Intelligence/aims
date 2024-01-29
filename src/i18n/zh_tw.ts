@@ -141,6 +141,7 @@ export const i18n_zh_tw = {
       SpaceshipDisplay: '飛船顯示',
       OutsideView: '外景',
       InsideView: '内景',
+      ResetOrientation: '重置方向',
     },
 
     experiment: {

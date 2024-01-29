@@ -15,16 +15,21 @@ import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 
 const Spaceship = React.memo(() => {
-  const { camera } = useThree();
-  const groupRef = useRef<Group>(null);
   const spaceshipSize = useStore(Selector.spaceshipSize);
+  const spaceshipRoll = useStore(Selector.spaceshipRoll) ?? 0;
+  const spaceshipPitch = useStore(Selector.spaceshipPitch) ?? 0;
+  const spaceshipYaw = useStore(Selector.spaceshipYaw) ?? 0;
+  const spaceshipZ = useStore(Selector.spaceshipZ) ?? 0;
+  const { camera, gl } = useThree();
+
+  const groupRef = useRef<Group>(null);
 
   useFrame(() => {
     if (groupRef.current) {
       const v = new Vector3();
       camera.getWorldDirection(v);
       groupRef.current.position.copy(camera.position);
-      groupRef.current.position.addScaledVector(v, 50);
+      groupRef.current.position.addScaledVector(v, 50 + spaceshipZ);
       groupRef.current.up.copy(camera.up);
       groupRef.current.rotation.copy(camera.rotation);
     }
@@ -72,7 +77,13 @@ const Spaceship = React.memo(() => {
         </group>
       )}
       <group
-        rotation={[HALF_PI * 1.25, Math.PI, 0]}
+        rotation={[HALF_PI + spaceshipPitch, Math.PI + spaceshipRoll, spaceshipYaw]}
+        onPointerOver={() => {
+          gl.domElement.style.cursor = 'pointer';
+        }}
+        onPointerOut={() => {
+          gl.domElement.style.cursor = 'default';
+        }}
         onContextMenu={(e) => {
           e.stopPropagation();
           usePrimitiveStore.getState().set((state) => {

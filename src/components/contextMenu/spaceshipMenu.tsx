@@ -6,12 +6,17 @@ import { useStore } from '../../stores/common';
 import { MenuProps } from 'antd';
 import { MenuItem } from '../menuItem.tsx';
 import i18n from '../../i18n/i18n.ts';
-import { SizeRadioGroup } from './spaceshipMenuItems.tsx';
+import { ResetOrientation, SizeRadioGroup } from './spaceshipMenuItems.tsx';
 
 export const createSpaceshipMenu = () => {
   const lang = { lng: useStore.getState().language };
 
   const items: MenuProps['items'] = [];
+
+  items.push({
+    key: 'spaceship-reset-orientation',
+    label: <ResetOrientation />,
+  });
 
   items.push({
     key: 'spaceship-size-submenu',

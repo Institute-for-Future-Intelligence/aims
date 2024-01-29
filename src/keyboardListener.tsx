@@ -10,7 +10,7 @@ import { UndoableCheck } from './undo/UndoableCheck';
 import { showInfo } from './helpers';
 import i18n from './i18n/i18n';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { GRID_RATIO, MoveDirection, UNDO_SHOW_INFO_DURATION } from './constants';
+import { FlightControl, SpaceshipDisplayMode, UNDO_SHOW_INFO_DURATION } from './constants';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { askToCreateProject, askToOpenProject, saveProject, saveProjectAs } from './components/mainMenu/projectMenu';
 import { resetView, zoomView } from './components/mainMenu/viewMenu';
@@ -20,6 +20,14 @@ export interface KeyboardListenerProps {
 }
 
 const handleKeys = [
+  'a',
+  'd',
+  'w',
+  's',
+  'q',
+  'e',
+  'z',
+  'x',
   'left',
   'up',
   'right',
@@ -84,6 +92,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const undoManager = useStore(Selector.undoManager);
   const addUndoable = useStore(Selector.addUndoable);
   const selectedObject = useStore(Selector.selectedObject);
+  const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -130,81 +139,72 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     });
   };
 
-  const getObjectNewPosition = (oldCx: number, oldCy: number, displacement: number, direction: MoveDirection) => {
-    switch (direction) {
-      case MoveDirection.Left:
-        return [oldCx - displacement, oldCy];
-      case MoveDirection.Right:
-        return [oldCx + displacement, oldCy];
-      case MoveDirection.Up:
-        return [oldCx, oldCy + displacement];
-      case MoveDirection.Down:
-        return [oldCx, oldCy - displacement];
+  const flyByKey = (control: FlightControl, scale: number) => {
+    if (spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW) {
+      setCommonStore((state) => {
+        if (state.projectState.spaceshipRoll === undefined) state.projectState.spaceshipRoll = 0;
+        if (state.projectState.spaceshipPitch === undefined) state.projectState.spaceshipPitch = 0;
+        if (state.projectState.spaceshipYaw === undefined) state.projectState.spaceshipYaw = 0;
+        switch (control) {
+          case FlightControl.RollLeft:
+            state.projectState.spaceshipRoll += 0.1;
+            break;
+          case FlightControl.RollRight:
+            state.projectState.spaceshipRoll -= 0.1;
+            break;
+          case FlightControl.PitchUp:
+            state.projectState.spaceshipPitch += 0.1;
+            break;
+          case FlightControl.PitchDown:
+            state.projectState.spaceshipPitch -= 0.1;
+            break;
+          case FlightControl.YawLeft:
+            state.projectState.spaceshipYaw += 0.1;
+            break;
+          case FlightControl.YawRight:
+            state.projectState.spaceshipYaw -= 0.1;
+            break;
+          case FlightControl.MoveForward:
+            state.projectState.spaceshipZ -= 1;
+            break;
+          case FlightControl.MoveBackward:
+            state.projectState.spaceshipZ += 1;
+            break;
+        }
+      });
     }
-  };
-
-  const updateMoveInMap = (displacementMap: Map<string, number>, direction: MoveDirection) => {
-    // TODO
-  };
-
-  const updateMovementForAll = (displacement: number, direction: MoveDirection) => {
-    // TODO
-  };
-
-  const getOppositeDirection = (dir: MoveDirection) => {
-    if (dir === MoveDirection.Left) return MoveDirection.Right;
-    if (dir === MoveDirection.Right) return MoveDirection.Left;
-    if (dir === MoveDirection.Up) return MoveDirection.Down;
-    if (dir === MoveDirection.Down) return MoveDirection.Up;
-    return dir;
-  };
-
-  const moveByKey = (direction: MoveDirection, scale: number) => {
-    //TODO
   };
 
   const handleKeyDown = (key: string) => {
     const step = 1;
     switch (key) {
+      case 'z':
+        flyByKey(FlightControl.MoveForward, step);
+        break;
+      case 'x':
+        flyByKey(FlightControl.MoveBackward, step);
+        break;
+      case 'q':
+        flyByKey(FlightControl.YawLeft, step);
+        break;
+      case 'e':
+        flyByKey(FlightControl.YawRight, step);
+        break;
+      case 'a':
       case 'left':
-        moveByKey(MoveDirection.Left, step);
+        flyByKey(FlightControl.RollLeft, step);
         break;
-      case 'shift+left':
-        moveByKey(MoveDirection.Left, step / GRID_RATIO);
-        break;
-      case 'ctrl+shift+left':
-      case 'meta+shift+left':
-        moveByKey(MoveDirection.Left, step * GRID_RATIO);
-        break;
+      case 'd':
       case 'right':
-        moveByKey(MoveDirection.Right, step);
+        flyByKey(FlightControl.RollRight, step);
         break;
-      case 'shift+right':
-        moveByKey(MoveDirection.Right, step / GRID_RATIO);
-        break;
-      case 'ctrl+shift+right':
-      case 'meta+shift+right':
-        moveByKey(MoveDirection.Right, step * GRID_RATIO);
-        break;
+      case 'w':
       case 'down':
-        moveByKey(MoveDirection.Down, step);
+        flyByKey(FlightControl.PitchDown, step);
         break;
-      case 'shift+down':
-        moveByKey(MoveDirection.Down, step / GRID_RATIO);
-        break;
-      case 'ctrl+shift+down':
-      case 'meta+shift+down':
-        moveByKey(MoveDirection.Down, step * GRID_RATIO);
-        break;
+      case 's':
       case 'up':
-        moveByKey(MoveDirection.Up, step);
-        break;
-      case 'shift+up':
-        moveByKey(MoveDirection.Up, step / GRID_RATIO);
-        break;
-      case 'ctrl+shift+up':
-      case 'meta+shift+up':
-        moveByKey(MoveDirection.Up, step * GRID_RATIO);
+        flyByKey(FlightControl.PitchUp, step);
         break;
       case 'ctrl+[':
       case 'meta+[': // for Mac

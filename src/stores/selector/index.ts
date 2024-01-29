@@ -144,3 +144,15 @@ export const targetProtein = (state: CommonStoreState) => state.projectState.tar
 export const spaceshipDisplayMode = (state: CommonStoreState) => state.projectState.spaceshipDisplayMode;
 
 export const spaceshipSize = (state: CommonStoreState) => state.projectState.spaceshipSize;
+
+export const spaceshipRoll = (state: CommonStoreState) => state.projectState.spaceshipRoll;
+
+export const spaceshipPitch = (state: CommonStoreState) => state.projectState.spaceshipPitch;
+
+export const spaceshipYaw = (state: CommonStoreState) => state.projectState.spaceshipYaw;
+
+export const spaceshipX = (state: CommonStoreState) => state.projectState.spaceshipX;
+
+export const spaceshipY = (state: CommonStoreState) => state.projectState.spaceshipY;
+
+export const spaceshipZ = (state: CommonStoreState) => state.projectState.spaceshipZ;

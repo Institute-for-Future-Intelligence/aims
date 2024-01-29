@@ -365,6 +365,12 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
 
             spaceshipDisplayMode: data.spaceshipDisplayMode ?? SpaceshipDisplayMode.NONE,
             spaceshipSize: data.spaceshipSize ?? 1,
+            spaceshipRoll: data.spaceshipRoll ?? 0,
+            spaceshipPitch: data.spaceshipPitch ?? 0,
+            spaceshipYaw: data.spaceshipYaw ?? 0,
+            spaceshipX: data.spaceshipX ?? 0,
+            spaceshipY: data.spaceshipY ?? 0,
+            spaceshipZ: data.spaceshipZ ?? 0,
 
             projectViewerStyle: data.projectViewerStyle ?? MolecularViewerStyle.Stick,
             projectViewerMaterial: data.projectViewerMaterial ?? MolecularViewerMaterial.Soft,

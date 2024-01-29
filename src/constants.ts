@@ -75,6 +75,17 @@ export enum MoveDirection {
   Down = 'Down',
 }
 
+export enum FlightControl {
+  RollLeft = 'Roll Left',
+  RollRight = 'Roll Right',
+  PitchUp = 'Pitch Up',
+  PitchDown = 'Pitch Down',
+  YawLeft = 'Yaw Left',
+  YawRight = 'Yaw Right',
+  MoveForward = 'Move Forward',
+  MoveBackward = 'Move Backward',
+}
+
 export enum Language {
   English = 'English',
   ChineseSimplified = '简体中文',

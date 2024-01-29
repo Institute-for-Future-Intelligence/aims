@@ -44,6 +44,12 @@ export interface ProjectState {
   chamberViewerSelector: string;
 
   spaceshipDisplayMode: SpaceshipDisplayMode;
+  spaceshipRoll: number;
+  spaceshipPitch: number;
+  spaceshipYaw: number;
+  spaceshipX: number;
+  spaceshipY: number;
+  spaceshipZ: number;
   spaceshipSize: number;
 
   projectViewerStyle: MolecularViewerStyle;

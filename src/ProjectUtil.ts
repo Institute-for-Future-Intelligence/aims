@@ -55,6 +55,12 @@ export class ProjectUtil {
 
       spaceshipDisplayMode: SpaceshipDisplayMode.NONE,
       spaceshipSize: 1,
+      spaceshipRoll: 0,
+      spaceshipPitch: 0,
+      spaceshipYaw: 0,
+      spaceshipX: 0,
+      spaceshipY: 0,
+      spaceshipZ: 0,
 
       projectViewerStyle: MolecularViewerStyle.Stick,
       projectViewerMaterial: MolecularViewerMaterial.Soft,

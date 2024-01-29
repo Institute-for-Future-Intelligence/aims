@@ -141,6 +141,7 @@ export const i18n_en = {
       SpaceshipDisplay: 'Spaceship Display',
       OutsideView: 'Outside View',
       InsideView: 'Inside View',
+      ResetOrientation: 'Reset Orientation',
     },
 
     experiment: {
