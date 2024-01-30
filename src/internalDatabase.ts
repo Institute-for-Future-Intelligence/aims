@@ -24,6 +24,7 @@ import moleculeUrl017 from './molecules/sdf/thorazine.sdf';
 import moleculeUrl018 from './molecules/sdf/zidovudine.sdf';
 import moleculeUrl019 from './molecules/sdf/lipitor.sdf';
 import moleculeUrl020 from './molecules/sdf/metformin.sdf';
+import moleculeUrl021 from './molecules/sdf/haloperidol.sdf';
 
 import proteinUrl001 from './proteins/1crn.pdb';
 import proteinUrl002 from './proteins/1a3n.pdb';
@@ -51,6 +52,7 @@ export const sampleMolecules = [
   { url: moleculeUrl018, internal: true, name: 'Zidovudine' } as MoleculeData,
   { url: moleculeUrl019, internal: true, name: 'Lipitor' } as MoleculeData,
   { url: moleculeUrl020, internal: true, name: 'Metformin' } as MoleculeData,
+  { url: moleculeUrl021, internal: true, name: 'Haloperidol' } as MoleculeData,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const sampleProteins = [

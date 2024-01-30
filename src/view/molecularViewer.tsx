@@ -228,12 +228,13 @@ const MolecularViewer = React.memo(
       <group
         name={'Main'}
         ref={mainGroupRef}
-        onContextMenu={(e) => {
-          e.stopPropagation();
-          usePrimitiveStore.getState().set((state) => {
-            state.contextMenuObjectType = ObjectType.Molecule;
-          });
-        }}
+        // FIXME: adding this would slow down the viewer significantly
+        // onContextMenu={(e) => {
+        //   e.stopPropagation();
+        //   usePrimitiveStore.getState().set((state) => {
+        //     state.contextMenuObjectType = ObjectType.Molecule;
+        //   });
+        // }}
       />
     );
   },
