@@ -98,6 +98,8 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     return { lng: language };
   }, [language]);
 
+  const flightControlScale = 1;
+
   const toggleNavigationView = () => {
     const undoableCheck = {
       name: 'Set Navigation View',
@@ -139,7 +141,20 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     });
   };
 
-  const flyByKey = (control: FlightControl, scale: number) => {
+  let flyTimeout = -1;
+
+  const startFlying = (control: FlightControl) => {
+    if (flyTimeout === -1) {
+      loop(control);
+    }
+  };
+
+  const stopFlying = () => {
+    clearTimeout(flyTimeout);
+    flyTimeout = -1;
+  };
+
+  const loop = (control: FlightControl) => {
     if (spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW) {
       setCommonStore((state) => {
         if (state.projectState.spaceshipRoll === undefined) state.projectState.spaceshipRoll = 0;
@@ -147,64 +162,64 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         if (state.projectState.spaceshipYaw === undefined) state.projectState.spaceshipYaw = 0;
         switch (control) {
           case FlightControl.RollLeft:
-            state.projectState.spaceshipRoll += 0.1;
+            state.projectState.spaceshipRoll += 0.1 * flightControlScale;
             break;
           case FlightControl.RollRight:
-            state.projectState.spaceshipRoll -= 0.1;
+            state.projectState.spaceshipRoll -= 0.1 * flightControlScale;
             break;
           case FlightControl.PitchUp:
-            state.projectState.spaceshipPitch += 0.1;
+            state.projectState.spaceshipPitch += 0.1 * flightControlScale;
             break;
           case FlightControl.PitchDown:
-            state.projectState.spaceshipPitch -= 0.1;
+            state.projectState.spaceshipPitch -= 0.1 * flightControlScale;
             break;
           case FlightControl.YawLeft:
-            state.projectState.spaceshipYaw += 0.1;
+            state.projectState.spaceshipYaw += 0.1 * flightControlScale;
             break;
           case FlightControl.YawRight:
-            state.projectState.spaceshipYaw -= 0.1;
+            state.projectState.spaceshipYaw -= 0.1 * flightControlScale;
             break;
           case FlightControl.MoveForward:
-            state.projectState.spaceshipZ -= 1;
+            state.projectState.spaceshipZ -= flightControlScale;
             break;
           case FlightControl.MoveBackward:
-            state.projectState.spaceshipZ += 1;
+            state.projectState.spaceshipZ += flightControlScale;
             break;
         }
       });
     }
+    flyTimeout = window.setTimeout(loop, 50, control);
   };
 
   const handleKeyDown = (key: string) => {
-    const step = 1;
     switch (key) {
       case 'z':
-        flyByKey(FlightControl.MoveForward, step);
+        startFlying(FlightControl.MoveForward);
         break;
       case 'x':
-        flyByKey(FlightControl.MoveBackward, step);
+        startFlying(FlightControl.MoveBackward);
         break;
       case 'q':
-        flyByKey(FlightControl.YawLeft, step);
+        startFlying(FlightControl.YawLeft);
         break;
       case 'e':
-        flyByKey(FlightControl.YawRight, step);
+        startFlying(FlightControl.YawRight);
         break;
       case 'a':
       case 'left':
-        flyByKey(FlightControl.RollLeft, step);
+        startFlying(FlightControl.RollLeft);
         break;
       case 'd':
       case 'right':
-        flyByKey(FlightControl.RollRight, step);
+        startFlying(FlightControl.RollRight);
         break;
       case 'w':
       case 'down':
-        flyByKey(FlightControl.PitchDown, step);
+        startFlying(FlightControl.PitchDown);
         break;
       case 's':
       case 'up':
-        flyByKey(FlightControl.PitchUp, step);
+        startFlying(FlightControl.PitchUp);
         break;
       case 'ctrl+[':
       case 'meta+[': // for Mac
@@ -302,6 +317,25 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     }
   };
 
+  const handleKeyUp = (key: string) => {
+    switch (key) {
+      case 'z':
+      case 'x':
+      case 'q':
+      case 'e':
+      case 'a':
+      case 'left':
+      case 'd':
+      case 'right':
+      case 'w':
+      case 'down':
+      case 's':
+      case 'up':
+        stopFlying();
+        break;
+    }
+  };
+
   useEffect(
     () => () => {
       keyNameRef.current = null;
@@ -329,6 +363,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         onKeyEvent={(key, e) => {
           e.preventDefault();
           keyNameRef.current = null;
+          handleKeyUp(key);
         }}
       />
     </>
