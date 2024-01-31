@@ -63,6 +63,10 @@ export const molecularPropertiesMap = (state: CommonStoreState) => state.molecul
 
 export const setMolecularProperties = (state: CommonStoreState) => state.setMolecularProperties;
 
+export const parsedResultsMap = (state: CommonStoreState) => state.parsedResultsMap;
+
+export const setParsedResult = (state: CommonStoreState) => state.setParsedResult;
+
 export const navigationView = (state: CommonStoreState) => state.navigationView;
 
 export const selectedObject = (state: CommonStoreState) => state.selectedObject;

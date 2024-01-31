@@ -34,7 +34,6 @@ import {
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { getSample } from '../internalDatabase';
-import { ObjectType } from '../constants.ts';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -54,6 +53,9 @@ const MolecularViewer = React.memo(
     const getChemicalElement = useStore(Selector.getChemicalElement);
     const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
     const setMolecularProperties = useStore(Selector.setMolecularProperties);
+    const parsedResultsMap = useStore(Selector.parsedResultsMap);
+    const setParsedResult = useStore(Selector.setParsedResult);
+    const loadedMolecule = useStore(Selector.loadedMolecule);
 
     const [complex, setComplex] = useState<any>();
 
@@ -94,7 +96,13 @@ const MolecularViewer = React.memo(
               else if (url.endsWith('.pcj')) parser = new PubChemParser(text, options);
               else if (url.endsWith('.xyz')) parser = new XYZParser(text, options);
               else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
-              if (parser) parser.parse().then(processResult);
+              if (parser)
+                parser.parse().then((result) => {
+                  if (!chamber) {
+                    setParsedResult(moleculeData.name, result);
+                  }
+                  processResult(result);
+                });
             }
           });
         });
@@ -195,7 +203,6 @@ const MolecularViewer = React.memo(
       mainGroupRef.current.position.set(0, 0, 0);
 
       const visual = new ComplexVisual(complex.name, complex);
-
       const reps = [
         {
           mode: mode,
@@ -205,7 +212,6 @@ const MolecularViewer = React.memo(
         },
       ];
       visual.resetReps(reps);
-
       visual.rebuild().then(() => {
         if (!mainGroupRef.current) return;
         mainGroupRef.current.add(visual);
@@ -221,9 +227,28 @@ const MolecularViewer = React.memo(
         }
         invalidate();
       });
-    }, [complex, material, mode, colorer, selector]);
 
-    if (!mode) return null;
+      if (loadedMolecule && chamber) {
+        const complexLoaded = parsedResultsMap.get(loadedMolecule.name);
+        if (complexLoaded) {
+          const visualLoaded = new ComplexVisual(loadedMolecule.name, complexLoaded);
+          visualLoaded.resetReps([
+            {
+              mode: STYLE_MAP.get(MolecularViewerStyle.BallAndStick),
+              colorer: colorer,
+              selector: 'all',
+              material: MATERIAL_MAP.get(material),
+            },
+          ]);
+          visualLoaded.rebuild().then(() => {
+            if (!mainGroupRef.current) return;
+            mainGroupRef.current.add(visualLoaded);
+            invalidate();
+          });
+        }
+      }
+    }, [complex, material, mode, colorer, selector, loadedMolecule, parsedResultsMap]);
+
     return (
       <group
         name={'Main'}

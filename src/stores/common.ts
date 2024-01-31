@@ -23,6 +23,7 @@ import { MolecularProperties } from '../models/MolecularProperties';
 import { User } from '../User';
 import { ProjectUtil } from '../ProjectUtil';
 import { MoleculeTS } from '../models/MoleculeTS';
+import Complex from '../lib/chem/Complex';
 
 enableMapSet();
 
@@ -43,6 +44,10 @@ export interface CommonStoreState {
   targetData: MoleculeTS | undefined;
 
   projectStateToOpen: ProjectState | null;
+
+  // cache parsed molecules to accelerate loading speed
+  parsedResultsMap: Map<string, Complex>;
+  setParsedResult: (name: string, result: Complex) => void;
 
   loadedMolecule: MoleculeData | null;
   selectedMolecule: MoleculeData | null;
@@ -100,6 +105,13 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           targetData: undefined,
 
           projectStateToOpen: null,
+
+          parsedResultsMap: new Map<string, Complex>(),
+          setParsedResult(name: string, result: Complex) {
+            immerSet((state: CommonStoreState) => {
+              state.parsedResultsMap.set(name, result);
+            });
+          },
 
           loadedMolecule: null,
           selectedMolecule: null,
