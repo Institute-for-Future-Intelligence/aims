@@ -49,7 +49,6 @@ export interface CommonStoreState {
   parsedResultsMap: Map<string, Complex>;
   setParsedResult: (name: string, result: Complex) => void;
 
-  loadedMolecule: MoleculeData | null;
   selectedMolecule: MoleculeData | null;
   addMolecule: (molecule: MoleculeData) => boolean;
   removeMolecule: (molecule: MoleculeData) => void;
@@ -113,7 +112,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             });
           },
 
-          loadedMolecule: null,
           selectedMolecule: null,
           addMolecule(molecule: MoleculeData) {
             let added = true;
@@ -246,7 +244,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
         partialize: (state) => ({
           language: state.language,
           user: state.user,
-          loadedMolecule: state.loadedMolecule,
           selectedMolecule: state.selectedMolecule,
           projectState: state.projectState,
           selectedFloatingWindow: state.selectedFloatingWindow,

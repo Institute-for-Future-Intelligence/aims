@@ -16,6 +16,7 @@ export interface ProjectState {
   title: string | null;
   description: string | null;
   molecules: MoleculeData[];
+  loadedMolecule: MoleculeData | null;
   targetProtein: MoleculeData | null;
   selectedProperty: string | null;
   dataColoring: DataColoring;

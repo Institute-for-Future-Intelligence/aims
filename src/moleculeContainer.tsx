@@ -69,7 +69,7 @@ const MoleculeContainer = React.memo(({ width, height, moleculeData, selected }:
         onDoubleClick={() => {
           setCommonStore((state) => {
             state.selectedMolecule = moleculeData;
-            state.loadedMolecule = moleculeData;
+            state.projectState.loadedMolecule = moleculeData;
           });
         }}
       >

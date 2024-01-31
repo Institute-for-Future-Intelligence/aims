@@ -348,6 +348,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             thumbnailWidth: data.thumbnailWidth ?? 200,
             type: data.type ?? ProjectType.DRUG_DISCOVERY,
             molecules: data.molecules ?? [],
+            loadedMolecule: data.loadedMolecule ?? null,
             targetProtein: data.targetProtein ?? null,
             ranges: data.ranges ?? [],
             filters: data.filters ?? [],
