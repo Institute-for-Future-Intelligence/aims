@@ -34,6 +34,7 @@ import {
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { getSample } from '../internalDatabase';
+import { useRefStore } from '../stores/commonRef';
 
 export interface MolecularViewerProps {
   moleculeData: MoleculeData;
@@ -253,8 +254,12 @@ const MolecularViewer = React.memo(
         }
         invalidate();
       });
+    }, [complex, material, mode, colorer, selector]);
 
-      if (loadedMolecule && chamber) {
+    const loadedRef = useRef<Group>(null);
+    useEffect(() => {
+      if (loadedMolecule && chamber && loadedRef.current) {
+        loadedRef.current.children = [];
         const complexLoaded = parsedResultsMap.get(loadedMolecule.name);
         if (
           complexLoaded &&
@@ -262,9 +267,9 @@ const MolecularViewer = React.memo(
           originalPositions.current.length === complexLoaded.getAtomCount()
         ) {
           for (const [i, a] of complexLoaded._atoms.entries()) {
-            a.position.x = originalPositions.current[i].x + drugMoleculeX;
-            a.position.y = originalPositions.current[i].y + drugMoleculeY;
-            a.position.z = originalPositions.current[i].z + drugMoleculeZ;
+            a.position.x = originalPositions.current[i].x;
+            a.position.y = originalPositions.current[i].y;
+            a.position.z = originalPositions.current[i].z;
           }
           const visualLoaded = new ComplexVisual(loadedMolecule.name, complexLoaded);
           visualLoaded.resetReps([
@@ -276,39 +281,30 @@ const MolecularViewer = React.memo(
             },
           ]);
           visualLoaded.rebuild().then(() => {
-            if (!mainGroupRef.current) return;
-            mainGroupRef.current.add(visualLoaded);
+            if (!loadedRef.current) return;
+            loadedRef.current.add(visualLoaded);
             invalidate();
           });
         }
+        useRefStore.setState((state) => ({ loadedRef: loadedRef }));
       }
-    }, [
-      complex,
-      material,
-      mode,
-      colorer,
-      selector,
-      loadedMolecule,
-      parsedResultsMap,
-      drugMoleculeX,
-      drugMoleculeY,
-      drugMoleculeZ,
-      projectViewerMaterial,
-      projectViewerStyle,
-    ]);
+    }, [loadedMolecule, parsedResultsMap]);
 
     return (
-      <group
-        name={'Main'}
-        ref={mainGroupRef}
-        // FIXME: adding this would slow down the viewer significantly
-        // onContextMenu={(e) => {
-        //   e.stopPropagation();
-        //   usePrimitiveStore.getState().set((state) => {
-        //     state.contextMenuObjectType = ObjectType.Molecule;
-        //   });
-        // }}
-      />
+      <>
+        <group
+          name={'Main'}
+          ref={mainGroupRef}
+          // FIXME: adding this would slow down the viewer significantly
+          // onContextMenu={(e) => {
+          //   e.stopPropagation();
+          //   usePrimitiveStore.getState().set((state) => {
+          //     state.contextMenuObjectType = ObjectType.Molecule;
+          //   });
+          // }}
+        ></group>
+        <group ref={loadedRef}></group>
+      </>
     );
   },
 );

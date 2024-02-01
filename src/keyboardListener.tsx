@@ -14,6 +14,8 @@ import { FlightControl, SpaceshipDisplayMode, UNDO_SHOW_INFO_DURATION } from './
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { askToCreateProject, askToOpenProject, saveProject, saveProjectAs } from './components/mainMenu/projectMenu';
 import { resetView, zoomView } from './components/mainMenu/viewMenu';
+import { useRefStore } from './stores/commonRef';
+import { invalidate } from '@react-three/fiber';
 
 export interface KeyboardListenerProps {
   setNavigationView: (selected: boolean) => void;
@@ -219,24 +221,73 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
           case FlightControl.YawRight:
             state.projectState.drugMoleculeYaw -= flightControlScale;
             break;
-          case FlightControl.MoveInPositiveX:
-            state.projectState.drugMoleculeX += flightControlScale;
+          case FlightControl.MoveInPositiveX: {
+            const ref = useRefStore.getState().loadedRef;
+            if (ref && ref.current) {
+              ref.current.position.x += flightControlScale;
+              invalidate();
+            }
             break;
-          case FlightControl.MoveInNegativeX:
-            state.projectState.drugMoleculeX -= flightControlScale;
+          }
+          case FlightControl.MoveInNegativeX: {
+            const ref = useRefStore.getState().loadedRef;
+            if (ref && ref.current) {
+              ref.current.position.x -= flightControlScale;
+              invalidate();
+            }
             break;
-          case FlightControl.MoveInPositiveY:
-            state.projectState.drugMoleculeY += flightControlScale;
+          }
+          case FlightControl.MoveInPositiveY: {
+            const ref = useRefStore.getState().loadedRef;
+            if (ref && ref.current) {
+              ref.current.position.y += flightControlScale;
+              invalidate();
+            }
             break;
-          case FlightControl.MoveInNegativeY:
-            state.projectState.drugMoleculeY -= flightControlScale;
+          }
+          case FlightControl.MoveInNegativeY: {
+            const ref = useRefStore.getState().loadedRef;
+            if (ref && ref.current) {
+              ref.current.position.y -= flightControlScale;
+              invalidate();
+            }
             break;
-          case FlightControl.MoveInPositiveZ:
-            state.projectState.drugMoleculeZ += flightControlScale;
+          }
+          case FlightControl.MoveInPositiveZ: {
+            const ref = useRefStore.getState().loadedRef;
+            if (ref && ref.current) {
+              ref.current.position.z += flightControlScale;
+              invalidate();
+            }
             break;
-          case FlightControl.MoveInNegativeZ:
-            state.projectState.drugMoleculeZ -= flightControlScale;
+          }
+          case FlightControl.MoveInNegativeZ: {
+            const ref = useRefStore.getState().loadedRef;
+            if (ref && ref.current) {
+              ref.current.position.z -= flightControlScale;
+              invalidate();
+            }
             break;
+          }
+
+          // case FlightControl.MoveInPositiveX:
+          //   state.projectState.drugMoleculeX += flightControlScale;
+          //   break;
+          // case FlightControl.MoveInNegativeX:
+          //   state.projectState.drugMoleculeX -= flightControlScale;
+          //   break;
+          // case FlightControl.MoveInPositiveY:
+          //   state.projectState.drugMoleculeY += flightControlScale;
+          //   break;
+          // case FlightControl.MoveInNegativeY:
+          //   state.projectState.drugMoleculeY -= flightControlScale;
+          //   break;
+          // case FlightControl.MoveInPositiveZ:
+          //   state.projectState.drugMoleculeZ += flightControlScale;
+          //   break;
+          // case FlightControl.MoveInNegativeZ:
+          //   state.projectState.drugMoleculeZ -= flightControlScale;
+          //   break;
         }
       });
     }
