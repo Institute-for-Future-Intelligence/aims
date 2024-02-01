@@ -53,6 +53,8 @@ const MolecularViewer = React.memo(
     const getChemicalElement = useStore(Selector.getChemicalElement);
     const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
     const setMolecularProperties = useStore(Selector.setMolecularProperties);
+    const projectViewerMaterial = useStore(Selector.projectViewerMaterial);
+    const projectViewerStyle = useStore(Selector.projectViewerStyle);
     const parsedResultsMap = useStore(Selector.parsedResultsMap);
     const setParsedResult = useStore(Selector.setParsedResult);
     const loadedMolecule = useStore(Selector.loadedMolecule);
@@ -121,6 +123,7 @@ const MolecularViewer = React.memo(
                 });
                 if (!chamber) {
                   // have to parse again to create a distinct copy for common store
+                  // because deep copy using JSON does not work (circular references)
                   parser.parse().then((result) => {
                     setParsedResult(moleculeData.name, result);
                   });
@@ -253,7 +256,11 @@ const MolecularViewer = React.memo(
 
       if (loadedMolecule && chamber) {
         const complexLoaded = parsedResultsMap.get(loadedMolecule.name);
-        if (complexLoaded && originalPositions) {
+        if (
+          complexLoaded &&
+          originalPositions.current &&
+          originalPositions.current.length === complexLoaded.getAtomCount()
+        ) {
           for (const [i, a] of complexLoaded._atoms.entries()) {
             a.position.x = originalPositions.current[i].x + drugMoleculeX;
             a.position.y = originalPositions.current[i].y + drugMoleculeY;
@@ -262,10 +269,10 @@ const MolecularViewer = React.memo(
           const visualLoaded = new ComplexVisual(loadedMolecule.name, complexLoaded);
           visualLoaded.resetReps([
             {
-              mode: STYLE_MAP.get(MolecularViewerStyle.BallAndStick),
+              mode: STYLE_MAP.get(projectViewerStyle),
               colorer: COLORING_MAP.get(MolecularViewerColoring.Element),
               selector: 'all',
-              material: MATERIAL_MAP.get(material),
+              material: MATERIAL_MAP.get(projectViewerMaterial),
             },
           ]);
           visualLoaded.rebuild().then(() => {
@@ -286,6 +293,8 @@ const MolecularViewer = React.memo(
       drugMoleculeX,
       drugMoleculeY,
       drugMoleculeZ,
+      projectViewerMaterial,
+      projectViewerStyle,
     ]);
 
     return (
