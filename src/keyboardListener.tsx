@@ -208,39 +208,39 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
             state.projectState.drugMoleculeRoll -= 0.1 * flightControlScale;
             break;
           case FlightControl.PitchUp:
-            state.projectState.drugMoleculePitch += 0.1 * flightControlScale;
+            state.projectState.drugMoleculePitch += flightControlScale;
             break;
           case FlightControl.PitchDown:
-            state.projectState.drugMoleculePitch -= 0.1 * flightControlScale;
+            state.projectState.drugMoleculePitch -= flightControlScale;
             break;
           case FlightControl.YawLeft:
-            state.projectState.drugMoleculeYaw += 0.1 * flightControlScale;
+            state.projectState.drugMoleculeYaw += flightControlScale;
             break;
           case FlightControl.YawRight:
-            state.projectState.drugMoleculeYaw -= 0.1 * flightControlScale;
+            state.projectState.drugMoleculeYaw -= flightControlScale;
             break;
           case FlightControl.MoveInPositiveX:
-            state.projectState.drugMoleculeX += 0.1 * flightControlScale;
+            state.projectState.drugMoleculeX += flightControlScale;
             break;
           case FlightControl.MoveInNegativeX:
-            state.projectState.drugMoleculeX -= 0.1 * flightControlScale;
+            state.projectState.drugMoleculeX -= flightControlScale;
             break;
           case FlightControl.MoveInPositiveY:
-            state.projectState.drugMoleculeY += 0.1 * flightControlScale;
+            state.projectState.drugMoleculeY += flightControlScale;
             break;
           case FlightControl.MoveInNegativeY:
-            state.projectState.drugMoleculeY -= 0.1 * flightControlScale;
+            state.projectState.drugMoleculeY -= flightControlScale;
             break;
           case FlightControl.MoveInPositiveZ:
-            state.projectState.drugMoleculeZ += 0.1 * flightControlScale;
+            state.projectState.drugMoleculeZ += flightControlScale;
             break;
           case FlightControl.MoveInNegativeZ:
-            state.projectState.drugMoleculeZ -= 0.1 * flightControlScale;
+            state.projectState.drugMoleculeZ -= flightControlScale;
             break;
         }
       });
     }
-    flyTimeout = window.setTimeout(loop, 50, control);
+    flyTimeout = window.setTimeout(loop, 100, control);
   };
 
   const handleKeyDown = (key: string) => {
