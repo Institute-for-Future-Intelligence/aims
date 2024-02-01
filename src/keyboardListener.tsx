@@ -28,6 +28,10 @@ const handleKeys = [
   'e',
   'z',
   'x',
+  'y',
+  'shift+z',
+  'shift+x',
+  'shift+y',
   'left',
   'up',
   'right',
@@ -160,6 +164,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         if (state.projectState.spaceshipRoll === undefined) state.projectState.spaceshipRoll = 0;
         if (state.projectState.spaceshipPitch === undefined) state.projectState.spaceshipPitch = 0;
         if (state.projectState.spaceshipYaw === undefined) state.projectState.spaceshipYaw = 0;
+        if (state.projectState.spaceshipZ === undefined) state.projectState.spaceshipZ = 0;
         switch (control) {
           case FlightControl.RollLeft:
             state.projectState.spaceshipRoll += 0.1 * flightControlScale;
@@ -187,16 +192,63 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
             break;
         }
       });
+    } else {
+      setCommonStore((state) => {
+        if (state.projectState.drugMoleculeRoll === undefined) state.projectState.drugMoleculeRoll = 0;
+        if (state.projectState.drugMoleculePitch === undefined) state.projectState.drugMoleculePitch = 0;
+        if (state.projectState.drugMoleculeYaw === undefined) state.projectState.drugMoleculeYaw = 0;
+        if (state.projectState.drugMoleculeX === undefined) state.projectState.drugMoleculeX = 0;
+        if (state.projectState.drugMoleculeY === undefined) state.projectState.drugMoleculeY = 0;
+        if (state.projectState.drugMoleculeZ === undefined) state.projectState.drugMoleculeZ = 0;
+        switch (control) {
+          case FlightControl.RollLeft:
+            state.projectState.drugMoleculeRoll += 0.1 * flightControlScale;
+            break;
+          case FlightControl.RollRight:
+            state.projectState.drugMoleculeRoll -= 0.1 * flightControlScale;
+            break;
+          case FlightControl.PitchUp:
+            state.projectState.drugMoleculePitch += 0.1 * flightControlScale;
+            break;
+          case FlightControl.PitchDown:
+            state.projectState.drugMoleculePitch -= 0.1 * flightControlScale;
+            break;
+          case FlightControl.YawLeft:
+            state.projectState.drugMoleculeYaw += 0.1 * flightControlScale;
+            break;
+          case FlightControl.YawRight:
+            state.projectState.drugMoleculeYaw -= 0.1 * flightControlScale;
+            break;
+          case FlightControl.MoveInPositiveX:
+            state.projectState.drugMoleculeX += 0.1 * flightControlScale;
+            break;
+          case FlightControl.MoveInNegativeX:
+            state.projectState.drugMoleculeX -= 0.1 * flightControlScale;
+            break;
+          case FlightControl.MoveInPositiveY:
+            state.projectState.drugMoleculeY += 0.1 * flightControlScale;
+            break;
+          case FlightControl.MoveInNegativeY:
+            state.projectState.drugMoleculeY -= 0.1 * flightControlScale;
+            break;
+          case FlightControl.MoveInPositiveZ:
+            state.projectState.drugMoleculeZ += 0.1 * flightControlScale;
+            break;
+          case FlightControl.MoveInNegativeZ:
+            state.projectState.drugMoleculeZ -= 0.1 * flightControlScale;
+            break;
+        }
+      });
     }
     flyTimeout = window.setTimeout(loop, 50, control);
   };
 
   const handleKeyDown = (key: string) => {
     switch (key) {
-      case 'z':
+      case 'up':
         startFlying(FlightControl.MoveForward);
         break;
-      case 'x':
+      case 'down':
         startFlying(FlightControl.MoveBackward);
         break;
       case 'q':
@@ -206,20 +258,34 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         startFlying(FlightControl.YawRight);
         break;
       case 'a':
-      case 'left':
         startFlying(FlightControl.RollLeft);
         break;
       case 'd':
-      case 'right':
         startFlying(FlightControl.RollRight);
         break;
       case 'w':
-      case 'down':
         startFlying(FlightControl.PitchDown);
         break;
       case 's':
-      case 'up':
         startFlying(FlightControl.PitchUp);
+        break;
+      case 'x':
+        startFlying(FlightControl.MoveInPositiveX);
+        break;
+      case 'shift+x':
+        startFlying(FlightControl.MoveInNegativeX);
+        break;
+      case 'y':
+        startFlying(FlightControl.MoveInPositiveY);
+        break;
+      case 'shift+y':
+        startFlying(FlightControl.MoveInNegativeY);
+        break;
+      case 'z':
+        startFlying(FlightControl.MoveInPositiveZ);
+        break;
+      case 'shift+z':
+        startFlying(FlightControl.MoveInNegativeZ);
         break;
       case 'ctrl+[':
       case 'meta+[': // for Mac
@@ -320,7 +386,11 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const handleKeyUp = (key: string) => {
     switch (key) {
       case 'z':
+      case 'y':
       case 'x':
+      case 'shift+z':
+      case 'shift+y':
+      case 'shift+x':
       case 'q':
       case 'e':
       case 'a':

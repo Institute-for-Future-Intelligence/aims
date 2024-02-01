@@ -56,10 +56,17 @@ const MolecularViewer = React.memo(
     const parsedResultsMap = useStore(Selector.parsedResultsMap);
     const setParsedResult = useStore(Selector.setParsedResult);
     const loadedMolecule = useStore(Selector.loadedMolecule);
+    const drugMoleculeRoll = useStore(Selector.drugMoleculeRoll) ?? 0;
+    const drugMoleculePitch = useStore(Selector.drugMoleculePitch) ?? 0;
+    const drugMoleculeYaw = useStore(Selector.drugMoleculeYaw) ?? 0;
+    const drugMoleculeX = useStore(Selector.drugMoleculeX) ?? 0;
+    const drugMoleculeY = useStore(Selector.drugMoleculeY) ?? 0;
+    const drugMoleculeZ = useStore(Selector.drugMoleculeZ) ?? 0;
 
     const [complex, setComplex] = useState<any>();
 
     const mainGroupRef = useRef<Group>(null);
+    const originalPositions = useRef<Vector3[]>([]);
 
     const { invalidate, get } = useThree();
 
@@ -82,6 +89,18 @@ const MolecularViewer = React.memo(
     }, [coloring]);
 
     useEffect(() => {
+      if (loadedMolecule && chamber) {
+        originalPositions.current.length = 0;
+        const complex = parsedResultsMap.get(loadedMolecule.name);
+        if (complex) {
+          for (const a of complex._atoms) {
+            originalPositions.current.push(a.position.clone());
+          }
+        }
+      }
+    }, [loadedMolecule, parsedResultsMap]);
+
+    useEffect(() => {
       const mol = getSample(moleculeData.name);
       if (mol?.url) {
         fetch(mol.url).then((response) => {
@@ -96,13 +115,17 @@ const MolecularViewer = React.memo(
               else if (url.endsWith('.pcj')) parser = new PubChemParser(text, options);
               else if (url.endsWith('.xyz')) parser = new XYZParser(text, options);
               else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
-              if (parser)
+              if (parser) {
                 parser.parse().then((result) => {
-                  if (!chamber) {
-                    setParsedResult(moleculeData.name, result);
-                  }
                   processResult(result);
                 });
+                if (!chamber) {
+                  // have to parse again to create a distinct copy for common store
+                  parser.parse().then((result) => {
+                    setParsedResult(moleculeData.name, result);
+                  });
+                }
+              }
             }
           });
         });
@@ -230,12 +253,17 @@ const MolecularViewer = React.memo(
 
       if (loadedMolecule && chamber) {
         const complexLoaded = parsedResultsMap.get(loadedMolecule.name);
-        if (complexLoaded) {
+        if (complexLoaded && originalPositions) {
+          for (const [i, a] of complexLoaded._atoms.entries()) {
+            a.position.x = originalPositions.current[i].x + drugMoleculeX;
+            a.position.y = originalPositions.current[i].y + drugMoleculeY;
+            a.position.z = originalPositions.current[i].z + drugMoleculeZ;
+          }
           const visualLoaded = new ComplexVisual(loadedMolecule.name, complexLoaded);
           visualLoaded.resetReps([
             {
               mode: STYLE_MAP.get(MolecularViewerStyle.BallAndStick),
-              colorer: colorer,
+              colorer: COLORING_MAP.get(MolecularViewerColoring.Element),
               selector: 'all',
               material: MATERIAL_MAP.get(material),
             },
@@ -247,7 +275,18 @@ const MolecularViewer = React.memo(
           });
         }
       }
-    }, [complex, material, mode, colorer, selector, loadedMolecule, parsedResultsMap]);
+    }, [
+      complex,
+      material,
+      mode,
+      colorer,
+      selector,
+      loadedMolecule,
+      parsedResultsMap,
+      drugMoleculeX,
+      drugMoleculeY,
+      drugMoleculeZ,
+    ]);
 
     return (
       <group

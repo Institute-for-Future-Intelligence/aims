@@ -160,3 +160,15 @@ export const spaceshipX = (state: CommonStoreState) => state.projectState.spaces
 export const spaceshipY = (state: CommonStoreState) => state.projectState.spaceshipY;
 
 export const spaceshipZ = (state: CommonStoreState) => state.projectState.spaceshipZ;
+
+export const drugMoleculeRoll = (state: CommonStoreState) => state.projectState.drugMoleculeRoll;
+
+export const drugMoleculePitch = (state: CommonStoreState) => state.projectState.drugMoleculePitch;
+
+export const drugMoleculeYaw = (state: CommonStoreState) => state.projectState.drugMoleculeYaw;
+
+export const drugMoleculeX = (state: CommonStoreState) => state.projectState.drugMoleculeX;
+
+export const drugMoleculeY = (state: CommonStoreState) => state.projectState.drugMoleculeY;
+
+export const drugMoleculeZ = (state: CommonStoreState) => state.projectState.drugMoleculeZ;

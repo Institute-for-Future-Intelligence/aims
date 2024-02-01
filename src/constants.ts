@@ -84,6 +84,12 @@ export enum FlightControl {
   YawRight = 'Yaw Right',
   MoveForward = 'Move Forward',
   MoveBackward = 'Move Backward',
+  MoveInPositiveX = 'Move in Positive X',
+  MoveInNegativeX = 'Move in Negative X',
+  MoveInPositiveY = 'Move in Positive Y',
+  MoveInNegativeY = 'Move in Negative Y',
+  MoveInPositiveZ = 'Move in Positive Z',
+  MoveInNegativeZ = 'Move in Negative Z',
 }
 
 export enum Language {

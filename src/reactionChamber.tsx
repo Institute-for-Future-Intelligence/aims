@@ -69,7 +69,8 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
         }}
       >
         <ReactionChamberControls lightRef={lightRef} />
-        {viewerFoggy && <fog attach="fog" args={['#000000', 50, 150]} />}
+        {/* FIXME: temporary solution to turn on/off fog without updating materials */}
+        <fog attach="fog" args={viewerFoggy ? ['#000000', 50, 150] : ['#000000', 0.1, 0]} />
         {viewerFoggy && <ambientLight intensity={0.5} />}
         <directionalLight
           ref={lightRef}
