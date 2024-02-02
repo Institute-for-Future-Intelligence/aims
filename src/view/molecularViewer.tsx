@@ -59,7 +59,7 @@ const MolecularViewer = React.memo(
     const parsedResultsMap = useStore(Selector.parsedResultsMap);
     const setParsedResult = useStore(Selector.setParsedResult);
     const loadedMolecule = useStore(Selector.loadedMolecule);
-    const drugMoleculeRollPitchYaw = useStore(Selector.drugMoleculeRollPitchYaw) ?? [0, 0, 0];
+    const drugMoleculePitchRollYaw = useStore(Selector.drugMoleculePitchRollYaw) ?? [0, 0, 0];
     const drugMoleculePosition = useStore(Selector.drugMoleculePosition) ?? [0, 0, 0];
 
     const [complex, setComplex] = useState<any>();
@@ -252,10 +252,10 @@ const MolecularViewer = React.memo(
       });
     }, [complex, material, mode, colorer, selector]);
 
-    const loadedRef = useRef<Group>(null);
+    const loadedMoleculeRef = useRef<Group>(null);
     useEffect(() => {
-      if (loadedMolecule && chamber && loadedRef.current) {
-        loadedRef.current.children = [];
+      if (loadedMolecule && chamber && loadedMoleculeRef.current) {
+        loadedMoleculeRef.current.children = [];
         const complexLoaded = parsedResultsMap.get(loadedMolecule.name);
         if (
           complexLoaded &&
@@ -277,14 +277,14 @@ const MolecularViewer = React.memo(
             },
           ]);
           visualLoaded.rebuild().then(() => {
-            if (!loadedRef.current) return;
-            loadedRef.current.add(visualLoaded);
+            if (!loadedMoleculeRef.current) return;
+            loadedMoleculeRef.current.add(visualLoaded);
             invalidate();
           });
         }
-        useRefStore.setState((state) => ({ loadedRef: loadedRef }));
+        useRefStore.setState((state) => ({ loadedMoleculeRef: loadedMoleculeRef }));
       }
-    }, [loadedMolecule, parsedResultsMap]);
+    }, [loadedMolecule, parsedResultsMap, projectViewerStyle, projectViewerMaterial]);
 
     return (
       <>
@@ -299,7 +299,7 @@ const MolecularViewer = React.memo(
           //   });
           // }}
         ></group>
-        <group ref={loadedRef}></group>
+        <group ref={loadedMoleculeRef}></group>
       </>
     );
   },

@@ -58,7 +58,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           chamberViewerBackground: data.chamberViewerBackground ?? 'black',
           chamberViewerSelector: data.chamberViewerSelector ?? 'all',
 
-          drugMoleculeRollPitchYaw: data.drugMoleculeRollPitchYaw ?? [0, 0, 0],
+          drugMoleculePitchRollYaw: data.drugMoleculeRollPitchYaw ?? [0, 0, 0],
           drugMoleculePosition: data.drugMoleculePosition ?? [0, 0, 0],
 
           spaceshipDisplayMode: data.spaceshipDisplayMode ?? SpaceshipDisplayMode.NONE,

@@ -161,6 +161,6 @@ export const spaceshipY = (state: CommonStoreState) => state.projectState.spaces
 
 export const spaceshipZ = (state: CommonStoreState) => state.projectState.spaceshipZ;
 
-export const drugMoleculeRollPitchYaw = (state: CommonStoreState) => state.projectState.drugMoleculeRollPitchYaw;
+export const drugMoleculePitchRollYaw = (state: CommonStoreState) => state.projectState.drugMoleculePitchRollYaw;
 
 export const drugMoleculePosition = (state: CommonStoreState) => state.projectState.drugMoleculePosition;

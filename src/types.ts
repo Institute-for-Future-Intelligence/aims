@@ -44,7 +44,7 @@ export interface ProjectState {
   chamberViewerBackground: string;
   chamberViewerSelector: string;
 
-  drugMoleculeRollPitchYaw: number[];
+  drugMoleculePitchRollYaw: number[];
   drugMoleculePosition: number[];
 
   spaceshipDisplayMode: SpaceshipDisplayMode;

@@ -196,30 +196,30 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       });
     } else {
       setCommonStore((state) => {
-        if (state.projectState.drugMoleculeRollPitchYaw === undefined)
-          state.projectState.drugMoleculeRollPitchYaw = [0, 0, 0];
+        if (state.projectState.drugMoleculePitchRollYaw === undefined)
+          state.projectState.drugMoleculePitchRollYaw = [0, 0, 0];
         if (state.projectState.drugMoleculePosition === undefined) state.projectState.drugMoleculePosition = [0, 0, 0];
         switch (control) {
-          case FlightControl.RollLeft:
-            state.projectState.drugMoleculeRollPitchYaw[0] += 0.1 * flightControlScale;
-            break;
-          case FlightControl.RollRight:
-            state.projectState.drugMoleculeRollPitchYaw[0] -= 0.1 * flightControlScale;
-            break;
           case FlightControl.PitchUp:
-            state.projectState.drugMoleculeRollPitchYaw[1] += flightControlScale;
+            state.projectState.drugMoleculePitchRollYaw[0] += flightControlScale;
             break;
           case FlightControl.PitchDown:
-            state.projectState.drugMoleculeRollPitchYaw[1] -= flightControlScale;
+            state.projectState.drugMoleculePitchRollYaw[0] -= flightControlScale;
+            break;
+          case FlightControl.RollLeft:
+            state.projectState.drugMoleculePitchRollYaw[1] += 0.1 * flightControlScale;
+            break;
+          case FlightControl.RollRight:
+            state.projectState.drugMoleculePitchRollYaw[1] -= 0.1 * flightControlScale;
             break;
           case FlightControl.YawLeft:
-            state.projectState.drugMoleculeRollPitchYaw[2] += flightControlScale;
+            state.projectState.drugMoleculePitchRollYaw[2] += flightControlScale;
             break;
           case FlightControl.YawRight:
-            state.projectState.drugMoleculeRollPitchYaw[2] -= flightControlScale;
+            state.projectState.drugMoleculePitchRollYaw[2] -= flightControlScale;
             break;
           case FlightControl.MoveInPositiveX: {
-            const ref = useRefStore.getState().loadedRef;
+            const ref = useRefStore.getState().loadedMoleculeRef;
             if (ref && ref.current) {
               ref.current.position.x += flightControlScale;
               invalidate();
@@ -228,7 +228,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
             break;
           }
           case FlightControl.MoveInNegativeX: {
-            const ref = useRefStore.getState().loadedRef;
+            const ref = useRefStore.getState().loadedMoleculeRef;
             if (ref && ref.current) {
               ref.current.position.x -= flightControlScale;
               invalidate();
@@ -237,7 +237,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
             break;
           }
           case FlightControl.MoveInPositiveY: {
-            const ref = useRefStore.getState().loadedRef;
+            const ref = useRefStore.getState().loadedMoleculeRef;
             if (ref && ref.current) {
               ref.current.position.y += flightControlScale;
               invalidate();
@@ -246,7 +246,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
             break;
           }
           case FlightControl.MoveInNegativeY: {
-            const ref = useRefStore.getState().loadedRef;
+            const ref = useRefStore.getState().loadedMoleculeRef;
             if (ref && ref.current) {
               ref.current.position.y -= flightControlScale;
               invalidate();
@@ -255,7 +255,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
             break;
           }
           case FlightControl.MoveInPositiveZ: {
-            const ref = useRefStore.getState().loadedRef;
+            const ref = useRefStore.getState().loadedMoleculeRef;
             if (ref && ref.current) {
               ref.current.position.z += flightControlScale;
               invalidate();
@@ -264,7 +264,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
             break;
           }
           case FlightControl.MoveInNegativeZ: {
-            const ref = useRefStore.getState().loadedRef;
+            const ref = useRefStore.getState().loadedMoleculeRef;
             if (ref && ref.current) {
               ref.current.position.z -= flightControlScale;
               invalidate();
