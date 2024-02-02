@@ -12,7 +12,7 @@ import moleculeUrl005 from './molecules/xyz/glucose.xyz';
 import moleculeUrl006 from './molecules/pdb/cholesterol.pdb';
 import moleculeUrl007 from './molecules/sdf/claritin.sdf';
 import moleculeUrl008 from './molecules/sdf/zyrtec.sdf';
-import moleculeUrl009 from './molecules/mol2/benzene.mol2';
+import moleculeUrl009 from './molecules/xyz/benzene.xyz';
 import moleculeUrl010 from './molecules/sdf/penicillin g.sdf';
 import moleculeUrl011 from './molecules/sdf/voxelotor.sdf';
 import moleculeUrl012 from './molecules/sdf/morphine.sdf';

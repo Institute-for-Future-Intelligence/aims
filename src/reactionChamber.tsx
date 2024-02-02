@@ -26,6 +26,7 @@ import { ReactionChamberControls } from './controls';
 import Spaceship from './view/spaceship.tsx';
 import Background from './view/background.tsx';
 import Cockpit from './view/cockpit.tsx';
+import MoveMoleculeButtons from './view/moveMoleculeButtons.tsx';
 
 export interface ReactionChamberProps {
   moleculeData: MoleculeData | null;
@@ -43,6 +44,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
   const cameraRotation = useStore(Selector.cameraRotation);
   const cameraUp = useStore(Selector.cameraUp);
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
+  const loadedMolecule = useStore(Selector.loadedMolecule);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lightRef = useRef<DirectionalLight>(null);
@@ -109,6 +111,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
         </GizmoHelper>
       </Canvas>
       <ExperimentSettings />
+      {loadedMolecule && <MoveMoleculeButtons />}
     </>
   );
 });

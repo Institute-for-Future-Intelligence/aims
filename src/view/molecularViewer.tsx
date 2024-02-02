@@ -58,8 +58,8 @@ const MolecularViewer = React.memo(
     const parsedResultsMap = useStore(Selector.parsedResultsMap);
     const setParsedResult = useStore(Selector.setParsedResult);
     const loadedMolecule = useStore(Selector.loadedMolecule);
-    const drugMoleculeEuler = useStore(Selector.drugMolecueEuler) ?? [0, 0, 0];
-    const drugMoleculePosition = useStore(Selector.drugMoleculePosition) ?? [0, 0, 0];
+    const drugMoleculeEuler = useStore.getState().projectState.drugMoleculeEuler ?? [0, 0, 0];
+    const drugMoleculePosition = useStore.getState().projectState.drugMoleculePosition ?? [0, 0, 0];
 
     const [complex, setComplex] = useState<any>();
 
@@ -299,12 +299,12 @@ const MolecularViewer = React.memo(
           //     state.contextMenuObjectType = ObjectType.Molecule;
           //   });
           // }}
-        ></group>
+        />
         <group
           position={[drugMoleculePosition[0], drugMoleculePosition[1], drugMoleculePosition[2]]}
           rotation={[drugMoleculeEuler[0], drugMoleculeEuler[1], drugMoleculeEuler[2]]}
           ref={loadedMoleculeRef}
-        ></group>
+        />
       </>
     );
   },
