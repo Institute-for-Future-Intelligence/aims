@@ -59,12 +59,8 @@ const MolecularViewer = React.memo(
     const parsedResultsMap = useStore(Selector.parsedResultsMap);
     const setParsedResult = useStore(Selector.setParsedResult);
     const loadedMolecule = useStore(Selector.loadedMolecule);
-    const drugMoleculeRoll = useStore(Selector.drugMoleculeRoll) ?? 0;
-    const drugMoleculePitch = useStore(Selector.drugMoleculePitch) ?? 0;
-    const drugMoleculeYaw = useStore(Selector.drugMoleculeYaw) ?? 0;
-    const drugMoleculeX = useStore(Selector.drugMoleculeX) ?? 0;
-    const drugMoleculeY = useStore(Selector.drugMoleculeY) ?? 0;
-    const drugMoleculeZ = useStore(Selector.drugMoleculeZ) ?? 0;
+    const drugMoleculeRollPitchYaw = useStore(Selector.drugMoleculeRollPitchYaw) ?? [0, 0, 0];
+    const drugMoleculePosition = useStore(Selector.drugMoleculePosition) ?? [0, 0, 0];
 
     const [complex, setComplex] = useState<any>();
 
@@ -267,9 +263,9 @@ const MolecularViewer = React.memo(
           originalPositions.current.length === complexLoaded.getAtomCount()
         ) {
           for (const [i, a] of complexLoaded._atoms.entries()) {
-            a.position.x = originalPositions.current[i].x;
-            a.position.y = originalPositions.current[i].y;
-            a.position.z = originalPositions.current[i].z;
+            a.position.x = originalPositions.current[i].x + drugMoleculePosition[0];
+            a.position.y = originalPositions.current[i].y + drugMoleculePosition[1];
+            a.position.z = originalPositions.current[i].z + drugMoleculePosition[2];
           }
           const visualLoaded = new ComplexVisual(loadedMolecule.name, complexLoaded);
           visualLoaded.resetReps([

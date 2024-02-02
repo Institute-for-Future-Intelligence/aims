@@ -196,30 +196,27 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       });
     } else {
       setCommonStore((state) => {
-        if (state.projectState.drugMoleculeRoll === undefined) state.projectState.drugMoleculeRoll = 0;
-        if (state.projectState.drugMoleculePitch === undefined) state.projectState.drugMoleculePitch = 0;
-        if (state.projectState.drugMoleculeYaw === undefined) state.projectState.drugMoleculeYaw = 0;
-        if (state.projectState.drugMoleculeX === undefined) state.projectState.drugMoleculeX = 0;
-        if (state.projectState.drugMoleculeY === undefined) state.projectState.drugMoleculeY = 0;
-        if (state.projectState.drugMoleculeZ === undefined) state.projectState.drugMoleculeZ = 0;
+        if (state.projectState.drugMoleculeRollPitchYaw === undefined)
+          state.projectState.drugMoleculeRollPitchYaw = [0, 0, 0];
+        if (state.projectState.drugMoleculePosition === undefined) state.projectState.drugMoleculePosition = [0, 0, 0];
         switch (control) {
           case FlightControl.RollLeft:
-            state.projectState.drugMoleculeRoll += 0.1 * flightControlScale;
+            state.projectState.drugMoleculeRollPitchYaw[0] += 0.1 * flightControlScale;
             break;
           case FlightControl.RollRight:
-            state.projectState.drugMoleculeRoll -= 0.1 * flightControlScale;
+            state.projectState.drugMoleculeRollPitchYaw[0] -= 0.1 * flightControlScale;
             break;
           case FlightControl.PitchUp:
-            state.projectState.drugMoleculePitch += flightControlScale;
+            state.projectState.drugMoleculeRollPitchYaw[1] += flightControlScale;
             break;
           case FlightControl.PitchDown:
-            state.projectState.drugMoleculePitch -= flightControlScale;
+            state.projectState.drugMoleculeRollPitchYaw[1] -= flightControlScale;
             break;
           case FlightControl.YawLeft:
-            state.projectState.drugMoleculeYaw += flightControlScale;
+            state.projectState.drugMoleculeRollPitchYaw[2] += flightControlScale;
             break;
           case FlightControl.YawRight:
-            state.projectState.drugMoleculeYaw -= flightControlScale;
+            state.projectState.drugMoleculeRollPitchYaw[2] -= flightControlScale;
             break;
           case FlightControl.MoveInPositiveX: {
             const ref = useRefStore.getState().loadedRef;
@@ -227,6 +224,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
               ref.current.position.x += flightControlScale;
               invalidate();
             }
+            state.projectState.drugMoleculePosition[0] += flightControlScale;
             break;
           }
           case FlightControl.MoveInNegativeX: {
@@ -235,6 +233,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
               ref.current.position.x -= flightControlScale;
               invalidate();
             }
+            state.projectState.drugMoleculePosition[0] -= flightControlScale;
             break;
           }
           case FlightControl.MoveInPositiveY: {
@@ -243,6 +242,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
               ref.current.position.y += flightControlScale;
               invalidate();
             }
+            state.projectState.drugMoleculePosition[1] += flightControlScale;
             break;
           }
           case FlightControl.MoveInNegativeY: {
@@ -251,6 +251,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
               ref.current.position.y -= flightControlScale;
               invalidate();
             }
+            state.projectState.drugMoleculePosition[1] -= flightControlScale;
             break;
           }
           case FlightControl.MoveInPositiveZ: {
@@ -259,6 +260,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
               ref.current.position.z += flightControlScale;
               invalidate();
             }
+            state.projectState.drugMoleculePosition[2] += flightControlScale;
             break;
           }
           case FlightControl.MoveInNegativeZ: {
@@ -267,27 +269,9 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
               ref.current.position.z -= flightControlScale;
               invalidate();
             }
+            state.projectState.drugMoleculePosition[2] -= flightControlScale;
             break;
           }
-
-          // case FlightControl.MoveInPositiveX:
-          //   state.projectState.drugMoleculeX += flightControlScale;
-          //   break;
-          // case FlightControl.MoveInNegativeX:
-          //   state.projectState.drugMoleculeX -= flightControlScale;
-          //   break;
-          // case FlightControl.MoveInPositiveY:
-          //   state.projectState.drugMoleculeY += flightControlScale;
-          //   break;
-          // case FlightControl.MoveInNegativeY:
-          //   state.projectState.drugMoleculeY -= flightControlScale;
-          //   break;
-          // case FlightControl.MoveInPositiveZ:
-          //   state.projectState.drugMoleculeZ += flightControlScale;
-          //   break;
-          // case FlightControl.MoveInNegativeZ:
-          //   state.projectState.drugMoleculeZ -= flightControlScale;
-          //   break;
         }
       });
     }
