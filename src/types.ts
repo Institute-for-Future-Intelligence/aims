@@ -44,7 +44,10 @@ export interface ProjectState {
   chamberViewerBackground: string;
   chamberViewerSelector: string;
 
-  drugMoleculePitchRollYaw: number[];
+  rotationStep: number;
+  translationStep: number;
+
+  drugMoleculeEuler: number[]; // [pitch, roll, yaw] (Euler.DEFAULT_ORDER assumed)
   drugMoleculePosition: number[];
 
   spaceshipDisplayMode: SpaceshipDisplayMode;

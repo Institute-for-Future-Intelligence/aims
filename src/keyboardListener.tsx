@@ -99,12 +99,12 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const addUndoable = useStore(Selector.addUndoable);
   const selectedObject = useStore(Selector.selectedObject);
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
+  const rotationStep = useStore(Selector.rotationStep) ?? 0.1;
+  const translationStep = useStore(Selector.translationStep) ?? 1.0;
 
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
-
-  const flightControlScale = 1;
 
   const toggleNavigationView = () => {
     const undoableCheck = {
@@ -169,107 +169,142 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         if (state.projectState.spaceshipZ === undefined) state.projectState.spaceshipZ = 0;
         switch (control) {
           case FlightControl.RollLeft:
-            state.projectState.spaceshipRoll += 0.1 * flightControlScale;
+            state.projectState.spaceshipRoll += rotationStep;
             break;
           case FlightControl.RollRight:
-            state.projectState.spaceshipRoll -= 0.1 * flightControlScale;
+            state.projectState.spaceshipRoll -= rotationStep;
             break;
           case FlightControl.PitchUp:
-            state.projectState.spaceshipPitch += 0.1 * flightControlScale;
+            state.projectState.spaceshipPitch += rotationStep;
             break;
           case FlightControl.PitchDown:
-            state.projectState.spaceshipPitch -= 0.1 * flightControlScale;
+            state.projectState.spaceshipPitch -= rotationStep;
             break;
           case FlightControl.YawLeft:
-            state.projectState.spaceshipYaw += 0.1 * flightControlScale;
+            state.projectState.spaceshipYaw += rotationStep;
             break;
           case FlightControl.YawRight:
-            state.projectState.spaceshipYaw -= 0.1 * flightControlScale;
+            state.projectState.spaceshipYaw -= rotationStep;
             break;
           case FlightControl.MoveForward:
-            state.projectState.spaceshipZ -= flightControlScale;
+            state.projectState.spaceshipZ -= translationStep;
             break;
           case FlightControl.MoveBackward:
-            state.projectState.spaceshipZ += flightControlScale;
+            state.projectState.spaceshipZ += translationStep;
             break;
         }
       });
     } else {
       setCommonStore((state) => {
-        if (state.projectState.drugMoleculePitchRollYaw === undefined)
-          state.projectState.drugMoleculePitchRollYaw = [0, 0, 0];
+        if (state.projectState.drugMoleculeEuler === undefined) state.projectState.drugMoleculeEuler = [0, 0, 0];
         if (state.projectState.drugMoleculePosition === undefined) state.projectState.drugMoleculePosition = [0, 0, 0];
         switch (control) {
-          case FlightControl.PitchUp:
-            state.projectState.drugMoleculePitchRollYaw[0] += flightControlScale;
+          case FlightControl.PitchUp: {
+            const ref = useRefStore.getState().loadedMoleculeRef;
+            if (ref && ref.current) {
+              ref.current.rotation.x += rotationStep;
+              invalidate();
+            }
+            state.projectState.drugMoleculeEuler[0] += rotationStep;
             break;
-          case FlightControl.PitchDown:
-            state.projectState.drugMoleculePitchRollYaw[0] -= flightControlScale;
+          }
+          case FlightControl.PitchDown: {
+            const ref = useRefStore.getState().loadedMoleculeRef;
+            if (ref && ref.current) {
+              ref.current.rotation.x -= rotationStep;
+              invalidate();
+            }
+            state.projectState.drugMoleculeEuler[0] -= rotationStep;
             break;
-          case FlightControl.RollLeft:
-            state.projectState.drugMoleculePitchRollYaw[1] += 0.1 * flightControlScale;
+          }
+          case FlightControl.RollLeft: {
+            const ref = useRefStore.getState().loadedMoleculeRef;
+            if (ref && ref.current) {
+              ref.current.rotation.y += rotationStep;
+              invalidate();
+            }
+            state.projectState.drugMoleculeEuler[1] += rotationStep;
             break;
-          case FlightControl.RollRight:
-            state.projectState.drugMoleculePitchRollYaw[1] -= 0.1 * flightControlScale;
+          }
+          case FlightControl.RollRight: {
+            const ref = useRefStore.getState().loadedMoleculeRef;
+            if (ref && ref.current) {
+              ref.current.rotation.y -= rotationStep;
+              invalidate();
+            }
+            state.projectState.drugMoleculeEuler[1] -= rotationStep;
             break;
-          case FlightControl.YawLeft:
-            state.projectState.drugMoleculePitchRollYaw[2] += flightControlScale;
+          }
+          case FlightControl.YawLeft: {
+            const ref = useRefStore.getState().loadedMoleculeRef;
+            if (ref && ref.current) {
+              ref.current.rotation.z += rotationStep;
+              invalidate();
+            }
+            state.projectState.drugMoleculeEuler[2] += rotationStep;
             break;
-          case FlightControl.YawRight:
-            state.projectState.drugMoleculePitchRollYaw[2] -= flightControlScale;
+          }
+          case FlightControl.YawRight: {
+            const ref = useRefStore.getState().loadedMoleculeRef;
+            if (ref && ref.current) {
+              ref.current.rotation.z -= rotationStep;
+              invalidate();
+            }
+            state.projectState.drugMoleculeEuler[2] -= rotationStep;
             break;
+          }
           case FlightControl.MoveInPositiveX: {
             const ref = useRefStore.getState().loadedMoleculeRef;
             if (ref && ref.current) {
-              ref.current.position.x += flightControlScale;
+              ref.current.position.x += translationStep;
               invalidate();
             }
-            state.projectState.drugMoleculePosition[0] += flightControlScale;
+            state.projectState.drugMoleculePosition[0] += translationStep;
             break;
           }
           case FlightControl.MoveInNegativeX: {
             const ref = useRefStore.getState().loadedMoleculeRef;
             if (ref && ref.current) {
-              ref.current.position.x -= flightControlScale;
+              ref.current.position.x -= translationStep;
               invalidate();
             }
-            state.projectState.drugMoleculePosition[0] -= flightControlScale;
+            state.projectState.drugMoleculePosition[0] -= translationStep;
             break;
           }
           case FlightControl.MoveInPositiveY: {
             const ref = useRefStore.getState().loadedMoleculeRef;
             if (ref && ref.current) {
-              ref.current.position.y += flightControlScale;
+              ref.current.position.y += translationStep;
               invalidate();
             }
-            state.projectState.drugMoleculePosition[1] += flightControlScale;
+            state.projectState.drugMoleculePosition[1] += translationStep;
             break;
           }
           case FlightControl.MoveInNegativeY: {
             const ref = useRefStore.getState().loadedMoleculeRef;
             if (ref && ref.current) {
-              ref.current.position.y -= flightControlScale;
+              ref.current.position.y -= translationStep;
               invalidate();
             }
-            state.projectState.drugMoleculePosition[1] -= flightControlScale;
+            state.projectState.drugMoleculePosition[1] -= translationStep;
             break;
           }
           case FlightControl.MoveInPositiveZ: {
             const ref = useRefStore.getState().loadedMoleculeRef;
             if (ref && ref.current) {
-              ref.current.position.z += flightControlScale;
+              ref.current.position.z += translationStep;
               invalidate();
             }
-            state.projectState.drugMoleculePosition[2] += flightControlScale;
+            state.projectState.drugMoleculePosition[2] += translationStep;
             break;
           }
           case FlightControl.MoveInNegativeZ: {
             const ref = useRefStore.getState().loadedMoleculeRef;
             if (ref && ref.current) {
-              ref.current.position.z -= flightControlScale;
+              ref.current.position.z -= translationStep;
               invalidate();
             }
-            state.projectState.drugMoleculePosition[2] -= flightControlScale;
+            state.projectState.drugMoleculePosition[2] -= translationStep;
             break;
           }
         }

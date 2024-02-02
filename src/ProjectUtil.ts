@@ -54,7 +54,10 @@ export class ProjectUtil {
       chamberViewerBackground: 'black',
       chamberViewerSelector: 'all',
 
-      drugMoleculePitchRollYaw: [0, 0, 0],
+      rotationStep: 0.1,
+      translationStep: 1,
+
+      drugMoleculeEuler: [0, 0, 0],
       drugMoleculePosition: [0, 0, 0],
 
       spaceshipDisplayMode: SpaceshipDisplayMode.NONE,
