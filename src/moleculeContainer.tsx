@@ -88,7 +88,7 @@ const MoleculeContainer = React.memo(({ width, height, moleculeData, selected }:
             style={viewerStyle}
             material={viewerMaterial}
             coloring={MolecularViewerColoring.Element}
-            isGalleryView={true}
+            chamber={false}
             lightRef={lightRef}
           />
         )}

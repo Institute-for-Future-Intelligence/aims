@@ -43,12 +43,11 @@ export interface MolecularViewerProps {
   coloring: MolecularViewerColoring;
   chamber?: boolean;
   selector?: string;
-  isGalleryView?: boolean;
   lightRef?: React.RefObject<DirectionalLight>;
 }
 
 const MolecularViewer = React.memo(
-  ({ moleculeData, style, material, coloring, chamber, selector, isGalleryView, lightRef }: MolecularViewerProps) => {
+  ({ moleculeData, style, material, coloring, chamber, selector, lightRef }: MolecularViewerProps) => {
     const setCommonStore = useStore(Selector.set);
     const chemicalElements = useStore(Selector.chemicalElements);
     const getChemicalElement = useStore(Selector.getChemicalElement);
@@ -67,11 +66,22 @@ const MolecularViewer = React.memo(
     const mainGroupRef = useRef<Group>(null);
     const originalPositions = useRef<Vector3[]>([]);
 
-    const { invalidate, get } = useThree();
+    const { invalidate, camera } = useThree();
 
     const onLoaded = (boundingSphere: Sphere) => {
-      const r = 3 * boundingSphere.radius;
-      const camera = get().camera;
+      let ratio = 3;
+      switch (projectViewerStyle) {
+        case MolecularViewerStyle.SpaceFilling:
+        case MolecularViewerStyle.ContactSurface:
+        case MolecularViewerStyle.SolventExcludedSurface:
+          ratio = 4;
+          break;
+        case MolecularViewerStyle.QuickSurface:
+        case MolecularViewerStyle.SolventAccessibleSurface:
+          ratio = 5;
+          break;
+      }
+      const r = ratio * boundingSphere.radius;
       camera.position.set(r, r, r);
       camera.rotation.set(0, 0, 0);
       camera.up.set(0, 0, 1);
@@ -241,12 +251,12 @@ const MolecularViewer = React.memo(
         const boundingSphere = visual.getBoundaries().boundingSphere;
         const offset = boundingSphere.center.clone().multiplyScalar(-1);
         mainGroupRef.current.position.copy(offset);
-        if (isGalleryView) {
-          onLoaded(boundingSphere);
-        } else {
+        if (chamber) {
           usePrimitiveStore.getState().set((state) => {
             state.boundingSphereRadius = boundingSphere.radius;
           });
+        } else {
+          onLoaded(boundingSphere);
         }
         invalidate();
       });
