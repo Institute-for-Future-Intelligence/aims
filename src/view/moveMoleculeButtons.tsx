@@ -35,82 +35,164 @@ const MoveMoleculeButtons = React.memo(() => {
   }, [language]);
 
   return (
-    <FloatButton.Group
-      shape="square"
-      style={{
-        position: 'absolute',
-        bottom: '8px',
-        left: '6px',
-        userSelect: 'none',
-      }}
-    >
-      <FloatButton
-        tooltip={
-          <>
-            {t('experiment.RotateAroundZClockwise', lang)}
-            <LabelMark>(Q {t('word.KeyboardKey', lang)})</LabelMark>
-          </>
-        }
-        icon={<img width="20px" alt={'rotate z cw'} src={RotateZCW} />}
-        onMouseDown={() => startFlying(FlightControl.YawLeft)}
-        onMouseUp={() => stopFlying()}
-      />
-      <FloatButton
-        tooltip={
-          <>
-            {t('experiment.RotateAroundZCounterclockwise', lang)}
-            <LabelMark>(E {t('word.KeyboardKey', lang)})</LabelMark>
-          </>
-        }
-        icon={<img width="20px" alt={'rotate z ccw'} src={RotateZCCW} />}
-        onMouseDown={() => startFlying(FlightControl.YawRight)}
-        onMouseUp={() => stopFlying()}
-      />
-      <FloatButton
-        tooltip={
-          <>
-            {t('experiment.RotateAroundYClockwise', lang)}
-            <LabelMark>(W {t('word.KeyboardKey', lang)})</LabelMark>
-          </>
-        }
-        icon={<img width="20px" alt={'rotate y cw'} src={RotateYCW} />}
-        onMouseDown={() => startFlying(FlightControl.PitchDown)}
-        onMouseUp={() => stopFlying()}
-      />
-      <FloatButton
-        tooltip={
-          <>
-            {t('experiment.RotateAroundYCounterclockwise', lang)}
-            <LabelMark>(S {t('word.KeyboardKey', lang)})</LabelMark>
-          </>
-        }
-        icon={<img width="20px" alt={'rotate y ccw'} src={RotateYCCW} />}
-        onMouseDown={() => startFlying(FlightControl.PitchUp)}
-        onMouseUp={() => stopFlying()}
-      />
-      <FloatButton
-        tooltip={
-          <>
-            {t('experiment.RotateAroundXClockwise', lang)}
-            <LabelMark>(D {t('word.KeyboardKey', lang)})</LabelMark>
-          </>
-        }
-        icon={<img width="20px" alt={'rotate x cw'} src={RotateXCW} />}
-        onMouseDown={() => startFlying(FlightControl.RollRight)}
-        onMouseUp={() => stopFlying()}
-      />
-      <FloatButton
-        tooltip={
-          <>
-            {t('experiment.RotateAroundXCounterclockwise', lang)}
-            <LabelMark>(A {t('word.KeyboardKey', lang)})</LabelMark>
-          </>
-        }
-        icon={<img width="20px" alt={'rotate x ccw'} src={RotateXCCW} />}
-        onMouseDown={() => startFlying(FlightControl.RollLeft)}
-        onMouseUp={() => stopFlying()}
-      />
-    </FloatButton.Group>
+    <>
+      <FloatButton.Group
+        shape="square"
+        style={{
+          position: 'absolute',
+          bottom: '8px',
+          left: '47px',
+          userSelect: 'none',
+        }}
+      >
+        <FloatButton
+          style={{ borderRadius: 0 }}
+          tooltip={
+            <>
+              {t('experiment.MoveInPositiveZDirection', lang)}
+              <LabelMark>(Z {t('word.KeyboardKey', lang)})</LabelMark>
+            </>
+          }
+          description={'+Z'}
+          onMouseDown={() => startFlying(FlightControl.MoveInPositiveZ)}
+          onMouseUp={() => stopFlying()}
+        />
+        <FloatButton
+          tooltip={
+            <>
+              {t('experiment.MoveInNegativeZDirection', lang)}
+              <LabelMark>(Shift+Z {t('word.KeyboardKey', lang)})</LabelMark>
+            </>
+          }
+          description={'-Z'}
+          onMouseDown={() => startFlying(FlightControl.MoveInNegativeZ)}
+          onMouseUp={() => stopFlying()}
+        />
+        <FloatButton
+          tooltip={
+            <>
+              {t('experiment.MoveInPositiveYDirection', lang)}
+              <LabelMark>(W {t('word.KeyboardKey', lang)})</LabelMark>
+            </>
+          }
+          description={'+Y'}
+          onMouseDown={() => startFlying(FlightControl.MoveInPositiveY)}
+          onMouseUp={() => stopFlying()}
+        />
+        <FloatButton
+          tooltip={
+            <>
+              {t('experiment.MoveInNegativeYDirection', lang)}
+              <LabelMark>(S {t('word.KeyboardKey', lang)})</LabelMark>
+            </>
+          }
+          description={'-Y'}
+          onMouseDown={() => startFlying(FlightControl.MoveInNegativeY)}
+          onMouseUp={() => stopFlying()}
+        />
+        <FloatButton
+          tooltip={
+            <>
+              {t('experiment.MoveInPositiveXDirection', lang)}
+              <LabelMark>(D {t('word.KeyboardKey', lang)})</LabelMark>
+            </>
+          }
+          description={'+X'}
+          onMouseDown={() => startFlying(FlightControl.MoveInPositiveX)}
+          onMouseUp={() => stopFlying()}
+        />
+        <FloatButton
+          style={{ borderRadius: 0 }}
+          tooltip={
+            <>
+              {t('experiment.MoveInNegativeXDirection', lang)}
+              <LabelMark>(A {t('word.KeyboardKey', lang)})</LabelMark>
+            </>
+          }
+          description={'-X'}
+          onMouseDown={() => startFlying(FlightControl.MoveInNegativeX)}
+          onMouseUp={() => stopFlying()}
+        />
+      </FloatButton.Group>
+      <FloatButton.Group
+        shape="square"
+        style={{
+          position: 'absolute',
+          bottom: '8px',
+          left: '6px',
+          userSelect: 'none',
+        }}
+      >
+        <FloatButton
+          style={{ borderRadius: 0 }}
+          tooltip={
+            <>
+              {t('experiment.RotateAroundZClockwise', lang)}
+              <LabelMark>(Q {t('word.KeyboardKey', lang)})</LabelMark>
+            </>
+          }
+          icon={<img width="20px" alt={'rotate z cw'} src={RotateZCW} />}
+          onMouseDown={() => startFlying(FlightControl.YawLeft)}
+          onMouseUp={() => stopFlying()}
+        />
+        <FloatButton
+          tooltip={
+            <>
+              {t('experiment.RotateAroundZCounterclockwise', lang)}
+              <LabelMark>(E {t('word.KeyboardKey', lang)})</LabelMark>
+            </>
+          }
+          icon={<img width="20px" alt={'rotate z ccw'} src={RotateZCCW} />}
+          onMouseDown={() => startFlying(FlightControl.YawRight)}
+          onMouseUp={() => stopFlying()}
+        />
+        <FloatButton
+          tooltip={
+            <>
+              {t('experiment.RotateAroundYClockwise', lang)}
+              <LabelMark>(W {t('word.KeyboardKey', lang)})</LabelMark>
+            </>
+          }
+          icon={<img width="20px" alt={'rotate y cw'} src={RotateYCW} />}
+          onMouseDown={() => startFlying(FlightControl.PitchDown)}
+          onMouseUp={() => stopFlying()}
+        />
+        <FloatButton
+          tooltip={
+            <>
+              {t('experiment.RotateAroundYCounterclockwise', lang)}
+              <LabelMark>(S {t('word.KeyboardKey', lang)})</LabelMark>
+            </>
+          }
+          icon={<img width="20px" alt={'rotate y ccw'} src={RotateYCCW} />}
+          onMouseDown={() => startFlying(FlightControl.PitchUp)}
+          onMouseUp={() => stopFlying()}
+        />
+        <FloatButton
+          tooltip={
+            <>
+              {t('experiment.RotateAroundXClockwise', lang)}
+              <LabelMark>(D {t('word.KeyboardKey', lang)})</LabelMark>
+            </>
+          }
+          icon={<img width="20px" alt={'rotate x cw'} src={RotateXCW} />}
+          onMouseDown={() => startFlying(FlightControl.RollRight)}
+          onMouseUp={() => stopFlying()}
+        />
+        <FloatButton
+          style={{ borderRadius: 0 }}
+          tooltip={
+            <>
+              {t('experiment.RotateAroundXCounterclockwise', lang)}
+              <LabelMark>(A {t('word.KeyboardKey', lang)})</LabelMark>
+            </>
+          }
+          icon={<img width="20px" alt={'rotate x ccw'} src={RotateXCCW} />}
+          onMouseDown={() => startFlying(FlightControl.RollLeft)}
+          onMouseUp={() => stopFlying()}
+        />
+      </FloatButton.Group>
+    </>
   );
 });
 
