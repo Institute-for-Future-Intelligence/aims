@@ -3,10 +3,11 @@
  */
 
 import React from 'react';
+import { Spin } from 'antd';
 
 // TODO
 const Loading = React.memo(() => {
-  return <div>Loading...</div>;
+  return <Spin tip={'Loading...'}></Spin>;
 });
 
 export default Loading;

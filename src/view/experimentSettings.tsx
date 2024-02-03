@@ -49,7 +49,7 @@ const ExperimentSettings = React.memo(() => {
 
     const setTestMolecule = (testMoleculeName: string) => {
       setCommonStore((state) => {
-        if (testMoleculeName === null) {
+        if (testMoleculeName === 'None') {
           state.projectState.testMolecule = null;
         } else {
           for (const t of projectState.molecules) {
@@ -93,7 +93,7 @@ const ExperimentSettings = React.memo(() => {
                 setTestMolecule(newValue);
               }}
             >
-              <Option key={`None`} value={null}>
+              <Option key={`None`} value={'None'}>
                 {t('word.None', lang)}
               </Option>
               {projectState.molecules.map((d, i) => (

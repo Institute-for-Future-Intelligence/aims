@@ -27,6 +27,9 @@ import Spaceship from './view/spaceship.tsx';
 import Background from './view/background.tsx';
 import Cockpit from './view/cockpit.tsx';
 import MoveMoleculeButtons from './view/moveMoleculeButtons.tsx';
+import { usePrimitiveStore } from './stores/commonPrimitive.ts';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 export interface ReactionChamberProps {
   moleculeData: MoleculeData | null;
@@ -45,6 +48,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
   const cameraUp = useStore(Selector.cameraUp);
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
   const testMolecule = useStore(Selector.testMolecule);
+  const waiting = usePrimitiveStore(Selector.waiting);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lightRef = useRef<DirectionalLight>(null);
@@ -112,6 +116,22 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
       </Canvas>
       <ExperimentSettings />
       {testMolecule && <MoveMoleculeButtons />}
+      {waiting && canvasRef.current && (
+        <Spin
+          size={'large'}
+          indicator={
+            <LoadingOutlined
+              style={{
+                position: 'absolute',
+                fontSize: 200,
+                right: canvasRef.current.width / 2 - 100,
+                bottom: canvasRef.current.height / 2 - 100,
+              }}
+            />
+          }
+          fullscreen={true}
+        ></Spin>
+      )}
     </>
   );
 });

@@ -232,6 +232,11 @@ const MolecularViewer = React.memo(
     useEffect(() => {
       if (!mainGroupRef.current || !complex || !mode) return;
 
+      if (chamber) {
+        usePrimitiveStore.getState().set((state) => {
+          state.waiting = true;
+        });
+      }
       mainGroupRef.current.children = [];
       mainGroupRef.current.position.set(0, 0, 0);
 
@@ -245,21 +250,30 @@ const MolecularViewer = React.memo(
         },
       ];
       visual.resetReps(reps);
-      visual.rebuild().then(() => {
-        if (!mainGroupRef.current) return;
-        mainGroupRef.current.add(visual);
-        const boundingSphere = visual.getBoundaries().boundingSphere;
-        const offset = boundingSphere.center.clone().multiplyScalar(-1);
-        mainGroupRef.current.position.copy(offset);
-        if (chamber) {
-          usePrimitiveStore.getState().set((state) => {
-            state.boundingSphereRadius = boundingSphere.radius;
-          });
-        } else {
-          onLoaded(boundingSphere);
-        }
-        invalidate();
-      });
+      visual
+        .rebuild()
+        .then(() => {
+          if (!mainGroupRef.current) return;
+          mainGroupRef.current.add(visual);
+          const boundingSphere = visual.getBoundaries().boundingSphere;
+          const offset = boundingSphere.center.clone().multiplyScalar(-1);
+          mainGroupRef.current.position.copy(offset);
+          if (chamber) {
+            usePrimitiveStore.getState().set((state) => {
+              state.boundingSphereRadius = boundingSphere.radius;
+            });
+          } else {
+            onLoaded(boundingSphere);
+          }
+          invalidate();
+        })
+        .finally(() => {
+          if (chamber) {
+            usePrimitiveStore.getState().set((state) => {
+              state.waiting = false;
+            });
+          }
+        });
     }, [complex, material, mode, colorer, selector]);
 
     const testMoleculeRef = useRef<Group>(null);
