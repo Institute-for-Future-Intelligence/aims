@@ -90,6 +90,174 @@ const handleKeys = [
   'ctrl',
 ];
 
+let flyTimeout = -1;
+
+export const startFlying = (control: FlightControl) => {
+  if (flyTimeout === -1) {
+    loop(control);
+  }
+};
+
+export const stopFlying = () => {
+  clearTimeout(flyTimeout);
+  flyTimeout = -1;
+};
+
+const loop = (control: FlightControl) => {
+  const rotationStep = useStore.getState().projectState.rotationStep;
+  const translationStep = useStore.getState().projectState.translationStep;
+  if (useStore.getState().projectState.spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW) {
+    useStore.getState().set((state) => {
+      if (state.projectState.spaceshipRoll === undefined) state.projectState.spaceshipRoll = 0;
+      if (state.projectState.spaceshipPitch === undefined) state.projectState.spaceshipPitch = 0;
+      if (state.projectState.spaceshipYaw === undefined) state.projectState.spaceshipYaw = 0;
+      if (state.projectState.spaceshipZ === undefined) state.projectState.spaceshipZ = 0;
+      switch (control) {
+        case FlightControl.RollLeft:
+          state.projectState.spaceshipRoll += rotationStep;
+          break;
+        case FlightControl.RollRight:
+          state.projectState.spaceshipRoll -= rotationStep;
+          break;
+        case FlightControl.PitchUp:
+          state.projectState.spaceshipPitch += rotationStep;
+          break;
+        case FlightControl.PitchDown:
+          state.projectState.spaceshipPitch -= rotationStep;
+          break;
+        case FlightControl.YawLeft:
+          state.projectState.spaceshipYaw += rotationStep;
+          break;
+        case FlightControl.YawRight:
+          state.projectState.spaceshipYaw -= rotationStep;
+          break;
+        case FlightControl.MoveForward:
+          state.projectState.spaceshipZ -= translationStep;
+          break;
+        case FlightControl.MoveBackward:
+          state.projectState.spaceshipZ += translationStep;
+          break;
+      }
+    });
+  } else {
+    useStore.getState().set((state) => {
+      if (state.projectState.drugMoleculeEuler === undefined) state.projectState.drugMoleculeEuler = [0, 0, 0];
+      if (state.projectState.drugMoleculePosition === undefined) state.projectState.drugMoleculePosition = [0, 0, 0];
+      switch (control) {
+        case FlightControl.PitchUp: {
+          const ref = useRefStore.getState().loadedMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.rotation.x += rotationStep;
+            invalidate();
+          }
+          state.projectState.drugMoleculeEuler[0] += rotationStep;
+          break;
+        }
+        case FlightControl.PitchDown: {
+          const ref = useRefStore.getState().loadedMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.rotation.x -= rotationStep;
+            invalidate();
+          }
+          state.projectState.drugMoleculeEuler[0] -= rotationStep;
+          break;
+        }
+        case FlightControl.RollLeft: {
+          const ref = useRefStore.getState().loadedMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.rotation.y += rotationStep;
+            invalidate();
+          }
+          state.projectState.drugMoleculeEuler[1] += rotationStep;
+          break;
+        }
+        case FlightControl.RollRight: {
+          const ref = useRefStore.getState().loadedMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.rotation.y -= rotationStep;
+            invalidate();
+          }
+          state.projectState.drugMoleculeEuler[1] -= rotationStep;
+          break;
+        }
+        case FlightControl.YawLeft: {
+          const ref = useRefStore.getState().loadedMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.rotation.z += rotationStep;
+            invalidate();
+          }
+          state.projectState.drugMoleculeEuler[2] += rotationStep;
+          break;
+        }
+        case FlightControl.YawRight: {
+          const ref = useRefStore.getState().loadedMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.rotation.z -= rotationStep;
+            invalidate();
+          }
+          state.projectState.drugMoleculeEuler[2] -= rotationStep;
+          break;
+        }
+        case FlightControl.MoveInPositiveX: {
+          const ref = useRefStore.getState().loadedMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.position.x += translationStep;
+            invalidate();
+          }
+          state.projectState.drugMoleculePosition[0] += translationStep;
+          break;
+        }
+        case FlightControl.MoveInNegativeX: {
+          const ref = useRefStore.getState().loadedMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.position.x -= translationStep;
+            invalidate();
+          }
+          state.projectState.drugMoleculePosition[0] -= translationStep;
+          break;
+        }
+        case FlightControl.MoveInPositiveY: {
+          const ref = useRefStore.getState().loadedMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.position.y += translationStep;
+            invalidate();
+          }
+          state.projectState.drugMoleculePosition[1] += translationStep;
+          break;
+        }
+        case FlightControl.MoveInNegativeY: {
+          const ref = useRefStore.getState().loadedMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.position.y -= translationStep;
+            invalidate();
+          }
+          state.projectState.drugMoleculePosition[1] -= translationStep;
+          break;
+        }
+        case FlightControl.MoveInPositiveZ: {
+          const ref = useRefStore.getState().loadedMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.position.z += translationStep;
+            invalidate();
+          }
+          state.projectState.drugMoleculePosition[2] += translationStep;
+          break;
+        }
+        case FlightControl.MoveInNegativeZ: {
+          const ref = useRefStore.getState().loadedMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.position.z -= translationStep;
+            invalidate();
+          }
+          state.projectState.drugMoleculePosition[2] -= translationStep;
+          break;
+        }
+      }
+    });
+  }
+  flyTimeout = window.setTimeout(loop, 100, control);
+};
+
 const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProps) => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
@@ -145,172 +313,6 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     usePrimitiveStore.getState().set((state) => {
       state.autoRotate = !state.autoRotate;
     });
-  };
-
-  let flyTimeout = -1;
-
-  const startFlying = (control: FlightControl) => {
-    if (flyTimeout === -1) {
-      loop(control);
-    }
-  };
-
-  const stopFlying = () => {
-    clearTimeout(flyTimeout);
-    flyTimeout = -1;
-  };
-
-  const loop = (control: FlightControl) => {
-    if (spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW) {
-      setCommonStore((state) => {
-        if (state.projectState.spaceshipRoll === undefined) state.projectState.spaceshipRoll = 0;
-        if (state.projectState.spaceshipPitch === undefined) state.projectState.spaceshipPitch = 0;
-        if (state.projectState.spaceshipYaw === undefined) state.projectState.spaceshipYaw = 0;
-        if (state.projectState.spaceshipZ === undefined) state.projectState.spaceshipZ = 0;
-        switch (control) {
-          case FlightControl.RollLeft:
-            state.projectState.spaceshipRoll += rotationStep;
-            break;
-          case FlightControl.RollRight:
-            state.projectState.spaceshipRoll -= rotationStep;
-            break;
-          case FlightControl.PitchUp:
-            state.projectState.spaceshipPitch += rotationStep;
-            break;
-          case FlightControl.PitchDown:
-            state.projectState.spaceshipPitch -= rotationStep;
-            break;
-          case FlightControl.YawLeft:
-            state.projectState.spaceshipYaw += rotationStep;
-            break;
-          case FlightControl.YawRight:
-            state.projectState.spaceshipYaw -= rotationStep;
-            break;
-          case FlightControl.MoveForward:
-            state.projectState.spaceshipZ -= translationStep;
-            break;
-          case FlightControl.MoveBackward:
-            state.projectState.spaceshipZ += translationStep;
-            break;
-        }
-      });
-    } else {
-      setCommonStore((state) => {
-        if (state.projectState.drugMoleculeEuler === undefined) state.projectState.drugMoleculeEuler = [0, 0, 0];
-        if (state.projectState.drugMoleculePosition === undefined) state.projectState.drugMoleculePosition = [0, 0, 0];
-        switch (control) {
-          case FlightControl.PitchUp: {
-            const ref = useRefStore.getState().loadedMoleculeRef;
-            if (ref && ref.current) {
-              ref.current.rotation.x += rotationStep;
-              invalidate();
-            }
-            state.projectState.drugMoleculeEuler[0] += rotationStep;
-            break;
-          }
-          case FlightControl.PitchDown: {
-            const ref = useRefStore.getState().loadedMoleculeRef;
-            if (ref && ref.current) {
-              ref.current.rotation.x -= rotationStep;
-              invalidate();
-            }
-            state.projectState.drugMoleculeEuler[0] -= rotationStep;
-            break;
-          }
-          case FlightControl.RollLeft: {
-            const ref = useRefStore.getState().loadedMoleculeRef;
-            if (ref && ref.current) {
-              ref.current.rotation.y += rotationStep;
-              invalidate();
-            }
-            state.projectState.drugMoleculeEuler[1] += rotationStep;
-            break;
-          }
-          case FlightControl.RollRight: {
-            const ref = useRefStore.getState().loadedMoleculeRef;
-            if (ref && ref.current) {
-              ref.current.rotation.y -= rotationStep;
-              invalidate();
-            }
-            state.projectState.drugMoleculeEuler[1] -= rotationStep;
-            break;
-          }
-          case FlightControl.YawLeft: {
-            const ref = useRefStore.getState().loadedMoleculeRef;
-            if (ref && ref.current) {
-              ref.current.rotation.z += rotationStep;
-              invalidate();
-            }
-            state.projectState.drugMoleculeEuler[2] += rotationStep;
-            break;
-          }
-          case FlightControl.YawRight: {
-            const ref = useRefStore.getState().loadedMoleculeRef;
-            if (ref && ref.current) {
-              ref.current.rotation.z -= rotationStep;
-              invalidate();
-            }
-            state.projectState.drugMoleculeEuler[2] -= rotationStep;
-            break;
-          }
-          case FlightControl.MoveInPositiveX: {
-            const ref = useRefStore.getState().loadedMoleculeRef;
-            if (ref && ref.current) {
-              ref.current.position.x += translationStep;
-              invalidate();
-            }
-            state.projectState.drugMoleculePosition[0] += translationStep;
-            break;
-          }
-          case FlightControl.MoveInNegativeX: {
-            const ref = useRefStore.getState().loadedMoleculeRef;
-            if (ref && ref.current) {
-              ref.current.position.x -= translationStep;
-              invalidate();
-            }
-            state.projectState.drugMoleculePosition[0] -= translationStep;
-            break;
-          }
-          case FlightControl.MoveInPositiveY: {
-            const ref = useRefStore.getState().loadedMoleculeRef;
-            if (ref && ref.current) {
-              ref.current.position.y += translationStep;
-              invalidate();
-            }
-            state.projectState.drugMoleculePosition[1] += translationStep;
-            break;
-          }
-          case FlightControl.MoveInNegativeY: {
-            const ref = useRefStore.getState().loadedMoleculeRef;
-            if (ref && ref.current) {
-              ref.current.position.y -= translationStep;
-              invalidate();
-            }
-            state.projectState.drugMoleculePosition[1] -= translationStep;
-            break;
-          }
-          case FlightControl.MoveInPositiveZ: {
-            const ref = useRefStore.getState().loadedMoleculeRef;
-            if (ref && ref.current) {
-              ref.current.position.z += translationStep;
-              invalidate();
-            }
-            state.projectState.drugMoleculePosition[2] += translationStep;
-            break;
-          }
-          case FlightControl.MoveInNegativeZ: {
-            const ref = useRefStore.getState().loadedMoleculeRef;
-            if (ref && ref.current) {
-              ref.current.position.z -= translationStep;
-              invalidate();
-            }
-            state.projectState.drugMoleculePosition[2] -= translationStep;
-            break;
-          }
-        }
-      });
-    }
-    flyTimeout = window.setTimeout(loop, 100, control);
   };
 
   const handleKeyDown = (key: string) => {

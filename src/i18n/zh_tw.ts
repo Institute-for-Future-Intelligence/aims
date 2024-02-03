@@ -22,6 +22,7 @@ export const i18n_zh_tw = {
     },
 
     word: {
+      KeyboardKey: '鍵',
       None: '無',
       Size: '大小',
       Small: '小',

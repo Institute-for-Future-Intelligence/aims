@@ -22,6 +22,7 @@ export const i18n_en = {
     },
 
     word: {
+      KeyboardKey: 'Key',
       None: 'None',
       Size: 'Size',
       Small: 'Small',

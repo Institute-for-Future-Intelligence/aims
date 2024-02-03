@@ -16,8 +16,8 @@ import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { FlightControl } from '../constants.ts';
-import { useRefStore } from '../stores/commonRef.ts';
-import { invalidate } from '@react-three/fiber';
+import { LabelMark } from '../components/menuItem.tsx';
+import { startFlying, stopFlying } from '../keyboardListener.tsx';
 
 const MoveMoleculeButtons = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -34,137 +34,6 @@ const MoveMoleculeButtons = React.memo(() => {
     return { lng: language };
   }, [language]);
 
-  let moveTimeout = -1;
-
-  const start = (control: FlightControl) => {
-    if (moveTimeout === -1) {
-      loop(control);
-    }
-  };
-
-  const stop = () => {
-    clearTimeout(moveTimeout);
-    moveTimeout = -1;
-  };
-
-  const loop = (control: FlightControl) => {
-    setCommonStore((state) => {
-      if (state.projectState.drugMoleculeEuler === undefined) state.projectState.drugMoleculeEuler = [0, 0, 0];
-      if (state.projectState.drugMoleculePosition === undefined) state.projectState.drugMoleculePosition = [0, 0, 0];
-      switch (control) {
-        case FlightControl.PitchUp: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.rotation.x += rotationStep;
-            invalidate();
-          }
-          state.projectState.drugMoleculeEuler[0] += rotationStep;
-          break;
-        }
-        case FlightControl.PitchDown: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.rotation.x -= rotationStep;
-            invalidate();
-          }
-          state.projectState.drugMoleculeEuler[0] -= rotationStep;
-          break;
-        }
-        case FlightControl.RollLeft: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.rotation.y += rotationStep;
-            invalidate();
-          }
-          state.projectState.drugMoleculeEuler[1] += rotationStep;
-          break;
-        }
-        case FlightControl.RollRight: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.rotation.y -= rotationStep;
-            invalidate();
-          }
-          state.projectState.drugMoleculeEuler[1] -= rotationStep;
-          break;
-        }
-        case FlightControl.YawLeft: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.rotation.z += rotationStep;
-            invalidate();
-          }
-          state.projectState.drugMoleculeEuler[2] += rotationStep;
-          break;
-        }
-        case FlightControl.YawRight: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.rotation.z -= rotationStep;
-            invalidate();
-          }
-          state.projectState.drugMoleculeEuler[2] -= rotationStep;
-          break;
-        }
-        case FlightControl.MoveInPositiveX: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.position.x += translationStep;
-            invalidate();
-          }
-          state.projectState.drugMoleculePosition[0] += translationStep;
-          break;
-        }
-        case FlightControl.MoveInNegativeX: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.position.x -= translationStep;
-            invalidate();
-          }
-          state.projectState.drugMoleculePosition[0] -= translationStep;
-          break;
-        }
-        case FlightControl.MoveInPositiveY: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.position.y += translationStep;
-            invalidate();
-          }
-          state.projectState.drugMoleculePosition[1] += translationStep;
-          break;
-        }
-        case FlightControl.MoveInNegativeY: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.position.y -= translationStep;
-            invalidate();
-          }
-          state.projectState.drugMoleculePosition[1] -= translationStep;
-          break;
-        }
-        case FlightControl.MoveInPositiveZ: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.position.z += translationStep;
-            invalidate();
-          }
-          state.projectState.drugMoleculePosition[2] += translationStep;
-          break;
-        }
-        case FlightControl.MoveInNegativeZ: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.position.z -= translationStep;
-            invalidate();
-          }
-          state.projectState.drugMoleculePosition[2] -= translationStep;
-          break;
-        }
-      }
-    });
-    moveTimeout = window.setTimeout(loop, 100, control);
-  };
-
   return (
     <FloatButton.Group
       shape="square"
@@ -176,40 +45,70 @@ const MoveMoleculeButtons = React.memo(() => {
       }}
     >
       <FloatButton
-        tooltip={t('experiment.RotateAroundZClockwise', lang)}
+        tooltip={
+          <>
+            {t('experiment.RotateAroundZClockwise', lang)}
+            <LabelMark>(Q {t('word.KeyboardKey', lang)})</LabelMark>
+          </>
+        }
         icon={<img width="20px" alt={'rotate z cw'} src={RotateZCW} />}
-        onMouseDown={() => start(FlightControl.YawLeft)}
-        onMouseUp={() => stop()}
+        onMouseDown={() => startFlying(FlightControl.YawLeft)}
+        onMouseUp={() => stopFlying()}
       />
       <FloatButton
-        tooltip={t('experiment.RotateAroundZCounterclockwise', lang)}
+        tooltip={
+          <>
+            {t('experiment.RotateAroundZCounterclockwise', lang)}
+            <LabelMark>(E {t('word.KeyboardKey', lang)})</LabelMark>
+          </>
+        }
         icon={<img width="20px" alt={'rotate z ccw'} src={RotateZCCW} />}
-        onMouseDown={() => start(FlightControl.YawRight)}
-        onMouseUp={() => stop()}
+        onMouseDown={() => startFlying(FlightControl.YawRight)}
+        onMouseUp={() => stopFlying()}
       />
       <FloatButton
-        tooltip={t('experiment.RotateAroundYClockwise', lang)}
+        tooltip={
+          <>
+            {t('experiment.RotateAroundYClockwise', lang)}
+            <LabelMark>(W {t('word.KeyboardKey', lang)})</LabelMark>
+          </>
+        }
         icon={<img width="20px" alt={'rotate y cw'} src={RotateYCW} />}
-        onMouseDown={() => start(FlightControl.PitchDown)}
-        onMouseUp={() => stop()}
+        onMouseDown={() => startFlying(FlightControl.PitchDown)}
+        onMouseUp={() => stopFlying()}
       />
       <FloatButton
-        tooltip={t('experiment.RotateAroundYCounterclockwise', lang)}
+        tooltip={
+          <>
+            {t('experiment.RotateAroundYCounterclockwise', lang)}
+            <LabelMark>(S {t('word.KeyboardKey', lang)})</LabelMark>
+          </>
+        }
         icon={<img width="20px" alt={'rotate y ccw'} src={RotateYCCW} />}
-        onMouseDown={() => start(FlightControl.PitchUp)}
-        onMouseUp={() => stop()}
+        onMouseDown={() => startFlying(FlightControl.PitchUp)}
+        onMouseUp={() => stopFlying()}
       />
       <FloatButton
-        tooltip={t('experiment.RotateAroundXClockwise', lang)}
+        tooltip={
+          <>
+            {t('experiment.RotateAroundXClockwise', lang)}
+            <LabelMark>(D {t('word.KeyboardKey', lang)})</LabelMark>
+          </>
+        }
         icon={<img width="20px" alt={'rotate x cw'} src={RotateXCW} />}
-        onMouseDown={() => start(FlightControl.RollRight)}
-        onMouseUp={() => stop()}
+        onMouseDown={() => startFlying(FlightControl.RollRight)}
+        onMouseUp={() => stopFlying()}
       />
       <FloatButton
-        tooltip={t('experiment.RotateAroundXCounterclockwise', lang)}
+        tooltip={
+          <>
+            {t('experiment.RotateAroundXCounterclockwise', lang)}
+            <LabelMark>(A {t('word.KeyboardKey', lang)})</LabelMark>
+          </>
+        }
         icon={<img width="20px" alt={'rotate x ccw'} src={RotateXCCW} />}
-        onMouseDown={() => start(FlightControl.RollLeft)}
-        onMouseUp={() => stop()}
+        onMouseDown={() => startFlying(FlightControl.RollLeft)}
+        onMouseUp={() => stopFlying()}
       />
     </FloatButton.Group>
   );
