@@ -8,6 +8,12 @@ import RotateYCW from '../assets/rotate-around-y-cw.png';
 import RotateYCCW from '../assets/rotate-around-y-ccw.png';
 import RotateXCW from '../assets/rotate-around-x-cw.png';
 import RotateXCCW from '../assets/rotate-around-x-ccw.png';
+import TranslateXPos from '../assets/translate-in-x-positive.png';
+import TranslateXNeg from '../assets/translate-in-x-negative.png';
+import TranslateYPos from '../assets/translate-in-y-positive.png';
+import TranslateYNeg from '../assets/translate-in-y-negative.png';
+import TranslateZPos from '../assets/translate-in-z-positive.png';
+import TranslateZNeg from '../assets/translate-in-z-negative.png';
 
 import React, { useMemo, useState } from 'react';
 import { FloatButton } from 'antd';
@@ -44,6 +50,52 @@ const MoveMoleculeButtons = React.memo(() => {
         userSelect: 'none',
       }}
     >
+      {/* translation buttons */}
+      <FloatButton
+        tooltip={
+          <>
+            {t('experiment.MoveInPositiveXDirection', lang)}
+            <LabelMark>(X {t('word.KeyboardKey', lang)})</LabelMark>
+          </>
+        }
+        icon={<img width="20px" alt={'translate in x positive'} src={TranslateXPos} />}
+        onMouseDown={() => startFlying(FlightControl.TranslateInPositiveX)}
+        onMouseUp={() => stopFlying()}
+      />
+      <FloatButton
+        style={{ borderRadius: 0 }}
+        tooltip={
+          <>
+            {t('experiment.MoveInNegativeXDirection', lang)}
+            <LabelMark>(Shift+X {t('word.KeyboardKey', lang)})</LabelMark>
+          </>
+        }
+        icon={<img width="20px" alt={'translate in x negative'} src={TranslateXNeg} />}
+        onMouseDown={() => startFlying(FlightControl.TranslateInNegativeX)}
+        onMouseUp={() => stopFlying()}
+      />
+      <FloatButton
+        tooltip={
+          <>
+            {t('experiment.MoveInPositiveYDirection', lang)}
+            <LabelMark>(Y {t('word.KeyboardKey', lang)})</LabelMark>
+          </>
+        }
+        icon={<img width="20px" alt={'translate in y positive'} src={TranslateYPos} />}
+        onMouseDown={() => startFlying(FlightControl.TranslateInPositiveY)}
+        onMouseUp={() => stopFlying()}
+      />
+      <FloatButton
+        tooltip={
+          <>
+            {t('experiment.MoveInNegativeYDirection', lang)}
+            <LabelMark>(Shift+Y {t('word.KeyboardKey', lang)})</LabelMark>
+          </>
+        }
+        icon={<img width="20px" alt={'translate in y negative'} src={TranslateYNeg} />}
+        onMouseDown={() => startFlying(FlightControl.TranslateInNegativeY)}
+        onMouseUp={() => stopFlying()}
+      />
       <FloatButton
         style={{ borderRadius: 0 }}
         tooltip={
@@ -52,7 +104,7 @@ const MoveMoleculeButtons = React.memo(() => {
             <LabelMark>(Z {t('word.KeyboardKey', lang)})</LabelMark>
           </>
         }
-        description={'+Z'}
+        icon={<img width="20px" alt={'translate in z positive'} src={TranslateZPos} />}
         onMouseDown={() => startFlying(FlightControl.TranslateInPositiveZ)}
         onMouseUp={() => stopFlying()}
       />
@@ -63,76 +115,33 @@ const MoveMoleculeButtons = React.memo(() => {
             <LabelMark>(Shift+Z {t('word.KeyboardKey', lang)})</LabelMark>
           </>
         }
-        description={'-Z'}
+        icon={<img width="20px" alt={'translate in z negative'} src={TranslateZNeg} />}
         onMouseDown={() => startFlying(FlightControl.TranslateInNegativeZ)}
         onMouseUp={() => stopFlying()}
       />
+
+      {/* rotation buttons */}
       <FloatButton
         tooltip={
           <>
-            {t('experiment.MoveInPositiveYDirection', lang)}
-            <LabelMark>(W {t('word.KeyboardKey', lang)})</LabelMark>
-          </>
-        }
-        description={'+Y'}
-        onMouseDown={() => startFlying(FlightControl.TranslateInPositiveY)}
-        onMouseUp={() => stopFlying()}
-      />
-      <FloatButton
-        tooltip={
-          <>
-            {t('experiment.MoveInNegativeYDirection', lang)}
-            <LabelMark>(S {t('word.KeyboardKey', lang)})</LabelMark>
-          </>
-        }
-        description={'-Y'}
-        onMouseDown={() => startFlying(FlightControl.TranslateInNegativeY)}
-        onMouseUp={() => stopFlying()}
-      />
-      <FloatButton
-        tooltip={
-          <>
-            {t('experiment.MoveInPositiveXDirection', lang)}
+            {t('experiment.RotateAroundXClockwise', lang)}
             <LabelMark>(D {t('word.KeyboardKey', lang)})</LabelMark>
           </>
         }
-        description={'+X'}
-        onMouseDown={() => startFlying(FlightControl.TranslateInPositiveX)}
+        icon={<img width="20px" alt={'rotate x cw'} src={RotateXCW} />}
+        onMouseDown={() => startFlying(FlightControl.RotateAroundXClockwise)}
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
         style={{ borderRadius: 0 }}
         tooltip={
           <>
-            {t('experiment.MoveInNegativeXDirection', lang)}
+            {t('experiment.RotateAroundXCounterclockwise', lang)}
             <LabelMark>(A {t('word.KeyboardKey', lang)})</LabelMark>
           </>
         }
-        description={'-X'}
-        onMouseDown={() => startFlying(FlightControl.TranslateInNegativeX)}
-        onMouseUp={() => stopFlying()}
-      />
-      <FloatButton
-        style={{ borderRadius: 0 }}
-        tooltip={
-          <>
-            {t('experiment.RotateAroundZClockwise', lang)}
-            <LabelMark>(Q {t('word.KeyboardKey', lang)})</LabelMark>
-          </>
-        }
-        icon={<img width="20px" alt={'rotate z cw'} src={RotateZCW} />}
-        onMouseDown={() => startFlying(FlightControl.RotateAroundZClockwise)}
-        onMouseUp={() => stopFlying()}
-      />
-      <FloatButton
-        tooltip={
-          <>
-            {t('experiment.RotateAroundZCounterclockwise', lang)}
-            <LabelMark>(E {t('word.KeyboardKey', lang)})</LabelMark>
-          </>
-        }
-        icon={<img width="20px" alt={'rotate z ccw'} src={RotateZCCW} />}
-        onMouseDown={() => startFlying(FlightControl.RotateAroundZCounterclockwise)}
+        icon={<img width="20px" alt={'rotate x ccw'} src={RotateXCCW} />}
+        onMouseDown={() => startFlying(FlightControl.RotateAroundXCounterclockwise)}
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
@@ -158,26 +167,26 @@ const MoveMoleculeButtons = React.memo(() => {
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
-        tooltip={
-          <>
-            {t('experiment.RotateAroundXClockwise', lang)}
-            <LabelMark>(D {t('word.KeyboardKey', lang)})</LabelMark>
-          </>
-        }
-        icon={<img width="20px" alt={'rotate x cw'} src={RotateXCW} />}
-        onMouseDown={() => startFlying(FlightControl.RotateAroundXClockwise)}
-        onMouseUp={() => stopFlying()}
-      />
-      <FloatButton
         style={{ borderRadius: 0 }}
         tooltip={
           <>
-            {t('experiment.RotateAroundXCounterclockwise', lang)}
-            <LabelMark>(A {t('word.KeyboardKey', lang)})</LabelMark>
+            {t('experiment.RotateAroundZClockwise', lang)}
+            <LabelMark>(Q {t('word.KeyboardKey', lang)})</LabelMark>
           </>
         }
-        icon={<img width="20px" alt={'rotate x ccw'} src={RotateXCCW} />}
-        onMouseDown={() => startFlying(FlightControl.RotateAroundXCounterclockwise)}
+        icon={<img width="20px" alt={'rotate z cw'} src={RotateZCW} />}
+        onMouseDown={() => startFlying(FlightControl.RotateAroundZClockwise)}
+        onMouseUp={() => stopFlying()}
+      />
+      <FloatButton
+        tooltip={
+          <>
+            {t('experiment.RotateAroundZCounterclockwise', lang)}
+            <LabelMark>(E {t('word.KeyboardKey', lang)})</LabelMark>
+          </>
+        }
+        icon={<img width="20px" alt={'rotate z ccw'} src={RotateZCCW} />}
+        onMouseDown={() => startFlying(FlightControl.RotateAroundZCounterclockwise)}
         onMouseUp={() => stopFlying()}
       />
     </FloatButton.Group>
