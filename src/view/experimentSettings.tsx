@@ -244,6 +244,7 @@ const ExperimentSettings = React.memo(() => {
             top: '8px',
             left: '6px',
             height: '20px',
+            zIndex: 13,
           }}
           description={
             <span style={{ fontSize: '20px' }}>
@@ -266,7 +267,7 @@ const ExperimentSettings = React.memo(() => {
               position: 'absolute',
               top: '14px',
               left: '56px',
-              zIndex: 999,
+              zIndex: 13,
               fontSize: '20px',
               userSelect: 'none',
               color: 'lightgray',
@@ -281,7 +282,7 @@ const ExperimentSettings = React.memo(() => {
             position: 'absolute',
             top: '14px',
             left: '56px',
-            zIndex: 999,
+            zIndex: 13,
             fontSize: '20px',
             userSelect: 'none',
             color: 'lightgray',

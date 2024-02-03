@@ -48,6 +48,7 @@ const MoveMoleculeButtons = React.memo(() => {
         top: '56px',
         left: '6px',
         userSelect: 'none',
+        zIndex: 13,
       }}
     >
       {/* translation buttons */}
