@@ -47,8 +47,63 @@ const ExperimentSettings = React.memo(() => {
       setChanged(true);
     };
 
+    const setTestMolecule = (testMoleculeName: string) => {
+      setCommonStore((state) => {
+        if (testMoleculeName === null) {
+          state.projectState.testMolecule = null;
+        } else {
+          for (const t of projectState.molecules) {
+            if (t.name === testMoleculeName) {
+              state.projectState.testMolecule = t;
+              break;
+            }
+          }
+        }
+      });
+      setChanged(true);
+    };
+
     return (
       <div style={{ width: '420px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.TestMolecule', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <Select
+              style={{ width: '100%' }}
+              value={projectState.testMolecule?.name ?? t('word.None', lang)}
+              showSearch
+              onChange={(value: string) => {
+                const oldValue = projectState.testMolecule?.name;
+                const newValue = value;
+                const undoableChange = {
+                  name: 'Select Test Molecule',
+                  timestamp: Date.now(),
+                  oldValue: oldValue,
+                  newValue: newValue,
+                  undo: () => {
+                    setTestMolecule(undoableChange.oldValue as string);
+                  },
+                  redo: () => {
+                    setTestMolecule(undoableChange.newValue as string);
+                  },
+                } as UndoableChange;
+                addUndoable(undoableChange);
+                setTestMolecule(newValue);
+              }}
+            >
+              <Option key={`None`} value={null}>
+                {t('word.None', lang)}
+              </Option>
+              {projectState.molecules.map((d, i) => (
+                <Option key={`${i}-${d.name}`} value={d.name}>
+                  {d.name}
+                </Option>
+              ))}
+            </Select>
+          </Col>
+        </Row>
         <Row gutter={16} style={{ paddingBottom: '4px' }}>
           <Col span={8} style={{ paddingTop: '5px' }}>
             <span>{t('experiment.Target', lang)}: </span>
@@ -111,7 +166,7 @@ const ExperimentSettings = React.memo(() => {
         </Row>
       </div>
     );
-  }, [lang, projectState.targetProtein, projectState.chamberViewerSelector, selector]);
+  }, [lang, projectState.targetProtein, projectState.testMolecule, projectState.chamberViewerSelector, selector]);
 
   const createInfo = useMemo(() => {
     const items: DescriptionsProps['items'] = [

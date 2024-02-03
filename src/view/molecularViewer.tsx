@@ -265,26 +265,29 @@ const MolecularViewer = React.memo(
     const testMoleculeRef = useRef<Group>(null);
 
     useEffect(() => {
-      if (testMolecule && chamber && testMoleculeRef.current) {
+      if (!chamber) return;
+      if (testMoleculeRef.current) {
         testMoleculeRef.current.children = [];
-        const complexTestMolecule = parsedResultsMap.get(testMolecule.name);
-        if (complexTestMolecule) {
-          const visualTestMolecule = new ComplexVisual(testMolecule.name, complexTestMolecule);
-          visualTestMolecule.resetReps([
-            {
-              mode: STYLE_MAP.get(projectViewerStyle),
-              colorer: COLORING_MAP.get(MolecularViewerColoring.Element),
-              selector: 'all',
-              material: MATERIAL_MAP.get(projectViewerMaterial),
-            },
-          ]);
-          visualTestMolecule.rebuild().then(() => {
-            if (!testMoleculeRef.current) return;
-            testMoleculeRef.current.add(visualTestMolecule);
-            invalidate();
-          });
+        if (testMolecule) {
+          const complexTestMolecule = parsedResultsMap.get(testMolecule.name);
+          if (complexTestMolecule) {
+            const visualTestMolecule = new ComplexVisual(testMolecule.name, complexTestMolecule);
+            visualTestMolecule.resetReps([
+              {
+                mode: STYLE_MAP.get(projectViewerStyle),
+                colorer: COLORING_MAP.get(MolecularViewerColoring.Element),
+                selector: 'all',
+                material: MATERIAL_MAP.get(projectViewerMaterial),
+              },
+            ]);
+            visualTestMolecule.rebuild().then(() => {
+              if (!testMoleculeRef.current) return;
+              testMoleculeRef.current.add(visualTestMolecule);
+              invalidate();
+            });
+          }
+          useRefStore.setState((state) => ({ testMoleculeRef: testMoleculeRef }));
         }
-        useRefStore.setState((state) => ({ testMoleculeRef: testMoleculeRef }));
       }
     }, [testMolecule, parsedResultsMap, projectViewerStyle, projectViewerMaterial]);
 
