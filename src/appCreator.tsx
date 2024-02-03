@@ -56,10 +56,10 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
     loadProvidedMolecularProperties();
     setCommonStore((state) => {
       // make sure the selected molecule is in the same array of molecules
-      if (state.selectedMolecule !== null) {
+      if (state.projectState.selectedMolecule) {
         for (const m of state.projectState.molecules) {
-          if (m.name === state.selectedMolecule.name) {
-            state.selectedMolecule = m;
+          if (m.name === state.projectState.selectedMolecule.name) {
+            state.projectState.selectedMolecule = m;
             break;
           }
         }

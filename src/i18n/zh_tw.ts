@@ -184,7 +184,7 @@ export const i18n_zh_tw = {
       ProjectDescription: '描述',
       ProjectSettings: '專案設定',
       DisplayWindowSize: '展示視窗大小',
-      AddSelectedMoleculeToExperiment: '把選中的分子加到實驗中',
+      OutputSelectedMoleculeToTest: '把選中的分子加到實驗中',
       ImportMolecule: '輸入分子',
       MoleculeName: '分子名稱',
       MoleculeAlreadyAdded: '專案已經有此分子',

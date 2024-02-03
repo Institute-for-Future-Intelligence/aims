@@ -185,7 +185,7 @@ export const i18n_en = {
       ProjectDescription: 'Description',
       ProjectSettings: 'Project Settings',
       DisplayWindowSize: 'Display Window Size',
-      AddSelectedMoleculeToExperiment: 'Add selected molecule to experiment',
+      OutputSelectedMoleculeToTest: 'Output selected molecule to test',
       ImportMolecule: 'Import a molecule',
       MoleculeName: 'Molecule Name',
       MoleculeAlreadyAdded: 'Molecule already added',

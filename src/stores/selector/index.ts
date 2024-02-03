@@ -43,7 +43,7 @@ export const targetData = (state: CommonStoreState) => state.targetData;
 
 export const testMolecule = (state: CommonStoreState) => state.projectState.testMolecule;
 
-export const selectedMolecule = (state: CommonStoreState) => state.selectedMolecule;
+export const selectedMolecule = (state: CommonStoreState) => state.projectState.selectedMolecule;
 
 export const hoveredMolecule = (state: PrimitiveStoreState) => state.hoveredMolecule;
 

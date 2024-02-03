@@ -36,6 +36,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           dataColoring: data.dataColoring ?? DataColoring.ALL,
           type: data.type,
           molecules: data.molecules,
+          selectedMolecule: data.selectedMolecule,
           testMolecule: data.testMolecule,
           targetProtein: data.targetProtein,
           ranges: data.ranges,

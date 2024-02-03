@@ -426,7 +426,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       e.stopPropagation();
                       removeMolecule(selectedMolecule);
                       setCommonStore((state) => {
-                        state.selectedMolecule = null;
+                        state.projectState.selectedMolecule = null;
                       });
                       setUpdateFlag(!updateFlag);
                       setChanged(true);
@@ -488,7 +488,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               >
                 <LoginOutlined
                   style={{ fontSize: '24px', color: 'gray' }}
-                  title={t('projectPanel.AddSelectedMoleculeToExperiment', lang)}
+                  title={t('projectPanel.OutputSelectedMoleculeToTest', lang)}
                 />
               </Button>
             )}
@@ -938,7 +938,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     width={canvasWidth}
                     height={canvasHeight}
                     moleculeData={data}
-                    selected={selectedMolecule === data}
+                    selected={selectedMolecule?.name === data.name}
                   />
                   <div
                     style={{

@@ -62,7 +62,8 @@ const MoleculeContainer = React.memo(({ width, height, moleculeData, selected }:
         }}
         onMouseDown={() => {
           setCommonStore((state) => {
-            state.selectedMolecule = moleculeData?.name !== state.selectedMolecule?.name ? moleculeData : null;
+            state.projectState.selectedMolecule =
+              moleculeData?.name !== state.projectState.selectedMolecule?.name ? moleculeData : null;
           });
           setChanged(true);
         }}

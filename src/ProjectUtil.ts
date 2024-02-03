@@ -26,6 +26,7 @@ export class ProjectUtil {
       title: null,
       description: null,
       molecules: new Array<MoleculeData>(),
+      selectedMolecule: null,
       testMolecule: null,
       targetProtein: null,
       selectedProperty: null,
