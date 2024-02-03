@@ -16,7 +16,7 @@ export interface ProjectState {
   title: string | null;
   description: string | null;
   molecules: MoleculeData[];
-  loadedMolecule: MoleculeData | null;
+  testMolecule: MoleculeData | null;
   targetProtein: MoleculeData | null;
   selectedProperty: string | null;
   dataColoring: DataColoring;
@@ -47,8 +47,8 @@ export interface ProjectState {
   rotationStep: number;
   translationStep: number;
 
-  drugMoleculeEuler: number[]; // [pitch, roll, yaw] (Euler.DEFAULT_ORDER assumed)
-  drugMoleculePosition: number[];
+  testMoleculeRotation: number[]; // euler angles
+  testMoleculeTranslation: number[]; // translation displacement along x, y, z axes
 
   spaceshipDisplayMode: SpaceshipDisplayMode;
   spaceshipRoll: number;

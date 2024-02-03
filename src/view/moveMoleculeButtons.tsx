@@ -53,7 +53,7 @@ const MoveMoleculeButtons = React.memo(() => {
           </>
         }
         description={'+Z'}
-        onMouseDown={() => startFlying(FlightControl.MoveInPositiveZ)}
+        onMouseDown={() => startFlying(FlightControl.TranslateInPositiveZ)}
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
@@ -64,7 +64,7 @@ const MoveMoleculeButtons = React.memo(() => {
           </>
         }
         description={'-Z'}
-        onMouseDown={() => startFlying(FlightControl.MoveInNegativeZ)}
+        onMouseDown={() => startFlying(FlightControl.TranslateInNegativeZ)}
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
@@ -75,7 +75,7 @@ const MoveMoleculeButtons = React.memo(() => {
           </>
         }
         description={'+Y'}
-        onMouseDown={() => startFlying(FlightControl.MoveInPositiveY)}
+        onMouseDown={() => startFlying(FlightControl.TranslateInPositiveY)}
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
@@ -86,7 +86,7 @@ const MoveMoleculeButtons = React.memo(() => {
           </>
         }
         description={'-Y'}
-        onMouseDown={() => startFlying(FlightControl.MoveInNegativeY)}
+        onMouseDown={() => startFlying(FlightControl.TranslateInNegativeY)}
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
@@ -97,7 +97,7 @@ const MoveMoleculeButtons = React.memo(() => {
           </>
         }
         description={'+X'}
-        onMouseDown={() => startFlying(FlightControl.MoveInPositiveX)}
+        onMouseDown={() => startFlying(FlightControl.TranslateInPositiveX)}
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
@@ -109,7 +109,7 @@ const MoveMoleculeButtons = React.memo(() => {
           </>
         }
         description={'-X'}
-        onMouseDown={() => startFlying(FlightControl.MoveInNegativeX)}
+        onMouseDown={() => startFlying(FlightControl.TranslateInNegativeX)}
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
@@ -121,7 +121,7 @@ const MoveMoleculeButtons = React.memo(() => {
           </>
         }
         icon={<img width="20px" alt={'rotate z cw'} src={RotateZCW} />}
-        onMouseDown={() => startFlying(FlightControl.YawLeft)}
+        onMouseDown={() => startFlying(FlightControl.RotateAroundZClockwise)}
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
@@ -132,7 +132,7 @@ const MoveMoleculeButtons = React.memo(() => {
           </>
         }
         icon={<img width="20px" alt={'rotate z ccw'} src={RotateZCCW} />}
-        onMouseDown={() => startFlying(FlightControl.YawRight)}
+        onMouseDown={() => startFlying(FlightControl.RotateAroundZCounterclockwise)}
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
@@ -143,7 +143,7 @@ const MoveMoleculeButtons = React.memo(() => {
           </>
         }
         icon={<img width="20px" alt={'rotate y cw'} src={RotateYCW} />}
-        onMouseDown={() => startFlying(FlightControl.PitchDown)}
+        onMouseDown={() => startFlying(FlightControl.RotateAroundYClockwise)}
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
@@ -154,7 +154,7 @@ const MoveMoleculeButtons = React.memo(() => {
           </>
         }
         icon={<img width="20px" alt={'rotate y ccw'} src={RotateYCCW} />}
-        onMouseDown={() => startFlying(FlightControl.PitchUp)}
+        onMouseDown={() => startFlying(FlightControl.RotateAroundYCounterclockwise)}
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
@@ -165,7 +165,7 @@ const MoveMoleculeButtons = React.memo(() => {
           </>
         }
         icon={<img width="20px" alt={'rotate x cw'} src={RotateXCW} />}
-        onMouseDown={() => startFlying(FlightControl.RollRight)}
+        onMouseDown={() => startFlying(FlightControl.RotateAroundXClockwise)}
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
@@ -177,7 +177,7 @@ const MoveMoleculeButtons = React.memo(() => {
           </>
         }
         icon={<img width="20px" alt={'rotate x ccw'} src={RotateXCCW} />}
-        onMouseDown={() => startFlying(FlightControl.RollLeft)}
+        onMouseDown={() => startFlying(FlightControl.RotateAroundXCounterclockwise)}
         onMouseUp={() => stopFlying()}
       />
     </FloatButton.Group>

@@ -57,9 +57,9 @@ const MolecularViewer = React.memo(
     const projectViewerStyle = useStore(Selector.projectViewerStyle);
     const parsedResultsMap = useStore(Selector.parsedResultsMap);
     const setParsedResult = useStore(Selector.setParsedResult);
-    const loadedMolecule = useStore(Selector.loadedMolecule);
-    const drugMoleculeEuler = useStore.getState().projectState.drugMoleculeEuler ?? [0, 0, 0];
-    const drugMoleculePosition = useStore.getState().projectState.drugMoleculePosition ?? [0, 0, 0];
+    const testMolecule = useStore(Selector.testMolecule);
+    const testMoleculeRotation = useStore.getState().projectState.testMoleculeRotation ?? [0, 0, 0];
+    const testMoleculeTranslation = useStore.getState().projectState.testMoleculeTranslation ?? [0, 0, 0];
 
     const [complex, setComplex] = useState<any>();
 
@@ -98,16 +98,16 @@ const MolecularViewer = React.memo(
     }, [coloring]);
 
     useEffect(() => {
-      if (loadedMolecule && chamber) {
+      if (testMolecule && chamber) {
         originalPositions.current.length = 0;
-        const complex = parsedResultsMap.get(loadedMolecule.name);
+        const complex = parsedResultsMap.get(testMolecule.name);
         if (complex) {
           for (const a of complex._atoms) {
             originalPositions.current.push(a.position.clone());
           }
         }
       }
-    }, [loadedMolecule, parsedResultsMap]);
+    }, [testMolecule, parsedResultsMap]);
 
     useEffect(() => {
       const mol = getSample(moleculeData.name);
@@ -262,14 +262,15 @@ const MolecularViewer = React.memo(
       });
     }, [complex, material, mode, colorer, selector]);
 
-    const loadedMoleculeRef = useRef<Group>(null);
+    const testMoleculeRef = useRef<Group>(null);
+
     useEffect(() => {
-      if (loadedMolecule && chamber && loadedMoleculeRef.current) {
-        loadedMoleculeRef.current.children = [];
-        const complexLoaded = parsedResultsMap.get(loadedMolecule.name);
-        if (complexLoaded) {
-          const visualLoaded = new ComplexVisual(loadedMolecule.name, complexLoaded);
-          visualLoaded.resetReps([
+      if (testMolecule && chamber && testMoleculeRef.current) {
+        testMoleculeRef.current.children = [];
+        const complexTestMolecule = parsedResultsMap.get(testMolecule.name);
+        if (complexTestMolecule) {
+          const visualTestMolecule = new ComplexVisual(testMolecule.name, complexTestMolecule);
+          visualTestMolecule.resetReps([
             {
               mode: STYLE_MAP.get(projectViewerStyle),
               colorer: COLORING_MAP.get(MolecularViewerColoring.Element),
@@ -277,15 +278,15 @@ const MolecularViewer = React.memo(
               material: MATERIAL_MAP.get(projectViewerMaterial),
             },
           ]);
-          visualLoaded.rebuild().then(() => {
-            if (!loadedMoleculeRef.current) return;
-            loadedMoleculeRef.current.add(visualLoaded);
+          visualTestMolecule.rebuild().then(() => {
+            if (!testMoleculeRef.current) return;
+            testMoleculeRef.current.add(visualTestMolecule);
             invalidate();
           });
         }
-        useRefStore.setState((state) => ({ loadedMoleculeRef: loadedMoleculeRef }));
+        useRefStore.setState((state) => ({ testMoleculeRef: testMoleculeRef }));
       }
-    }, [loadedMolecule, parsedResultsMap, projectViewerStyle, projectViewerMaterial]);
+    }, [testMolecule, parsedResultsMap, projectViewerStyle, projectViewerMaterial]);
 
     return (
       <>
@@ -301,9 +302,9 @@ const MolecularViewer = React.memo(
           // }}
         />
         <group
-          position={[drugMoleculePosition[0], drugMoleculePosition[1], drugMoleculePosition[2]]}
-          rotation={[drugMoleculeEuler[0], drugMoleculeEuler[1], drugMoleculeEuler[2]]}
-          ref={loadedMoleculeRef}
+          position={[testMoleculeTranslation[0], testMoleculeTranslation[1], testMoleculeTranslation[2]]}
+          rotation={[testMoleculeRotation[0], testMoleculeRotation[1], testMoleculeRotation[2]]}
+          ref={testMoleculeRef}
         />
       </>
     );

@@ -41,7 +41,7 @@ export const panCenter = (state: CommonStoreState) => state.projectState.panCent
 
 export const targetData = (state: CommonStoreState) => state.targetData;
 
-export const loadedMolecule = (state: CommonStoreState) => state.projectState.loadedMolecule;
+export const testMolecule = (state: CommonStoreState) => state.projectState.testMolecule;
 
 export const selectedMolecule = (state: CommonStoreState) => state.selectedMolecule;
 
@@ -160,10 +160,6 @@ export const spaceshipX = (state: CommonStoreState) => state.projectState.spaces
 export const spaceshipY = (state: CommonStoreState) => state.projectState.spaceshipY;
 
 export const spaceshipZ = (state: CommonStoreState) => state.projectState.spaceshipZ;
-
-export const drugMolecueEuler = (state: CommonStoreState) => state.projectState.drugMoleculeEuler;
-
-export const drugMoleculePosition = (state: CommonStoreState) => state.projectState.drugMoleculePosition;
 
 export const rotationStep = (state: CommonStoreState) => state.projectState.rotationStep;
 

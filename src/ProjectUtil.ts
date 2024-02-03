@@ -26,7 +26,7 @@ export class ProjectUtil {
       title: null,
       description: null,
       molecules: new Array<MoleculeData>(),
-      loadedMolecule: null,
+      testMolecule: null,
       targetProtein: null,
       selectedProperty: null,
       dataColoring: DataColoring.ALL,
@@ -57,8 +57,8 @@ export class ProjectUtil {
       rotationStep: 0.1,
       translationStep: 1,
 
-      drugMoleculeEuler: [0, 0, 0],
-      drugMoleculePosition: [0, 0, 0],
+      testMoleculeRotation: [0, 0, 0],
+      testMoleculeTranslation: [0, 0, 0],
 
       spaceshipDisplayMode: SpaceshipDisplayMode.NONE,
       spaceshipSize: 1,

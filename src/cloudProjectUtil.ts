@@ -36,7 +36,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           dataColoring: data.dataColoring ?? DataColoring.ALL,
           type: data.type,
           molecules: data.molecules,
-          loadedMolecule: data.loadedMolecule,
+          testMolecule: data.testMolecule,
           targetProtein: data.targetProtein,
           ranges: data.ranges,
           filters: data.filters,
@@ -61,8 +61,8 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           rotationStep: data.rotationStep ?? 0.1,
           translationStep: data.translationStep ?? 1,
 
-          drugMoleculeEuler: data.drugMoleculeEuler ?? [0, 0, 0],
-          drugMoleculePosition: data.drugMoleculePosition ?? [0, 0, 0],
+          testMoleculeRotation: data.testMoleculeRotation ?? [0, 0, 0],
+          testMoleculeTranslation: data.testMoleculeTranslation ?? [0, 0, 0],
 
           spaceshipDisplayMode: data.spaceshipDisplayMode ?? SpaceshipDisplayMode.NONE,
           spaceshipSize: data.spaceshipSize ?? 1,

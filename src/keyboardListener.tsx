@@ -10,12 +10,23 @@ import { UndoableCheck } from './undo/UndoableCheck';
 import { showInfo } from './helpers';
 import i18n from './i18n/i18n';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { FlightControl, SpaceshipDisplayMode, UNDO_SHOW_INFO_DURATION } from './constants';
+import {
+  FlightControl,
+  SpaceshipDisplayMode,
+  UNDO_SHOW_INFO_DURATION,
+  UNIT_VECTOR_NEG_X,
+  UNIT_VECTOR_NEG_Y,
+  UNIT_VECTOR_NEG_Z,
+  UNIT_VECTOR_POS_X,
+  UNIT_VECTOR_POS_Y,
+  UNIT_VECTOR_POS_Z,
+} from './constants';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { askToCreateProject, askToOpenProject, saveProject, saveProjectAs } from './components/mainMenu/projectMenu';
 import { resetView, zoomView } from './components/mainMenu/viewMenu';
 import { useRefStore } from './stores/commonRef';
 import { invalidate } from '@react-three/fiber';
+import { Euler, Quaternion } from 'three';
 
 export interface KeyboardListenerProps {
   setNavigationView: (selected: boolean) => void;
@@ -103,6 +114,12 @@ export const stopFlying = () => {
   flyTimeout = -1;
 };
 
+const saveEuler = (rotation: number[], euler: Euler) => {
+  rotation[0] = euler.x;
+  rotation[1] = euler.y;
+  rotation[2] = euler.z;
+};
+
 const loop = (control: FlightControl) => {
   const rotationStep = useStore.getState().projectState.rotationStep;
   const translationStep = useStore.getState().projectState.translationStep;
@@ -141,115 +158,123 @@ const loop = (control: FlightControl) => {
     });
   } else {
     useStore.getState().set((state) => {
-      if (state.projectState.drugMoleculeEuler === undefined) state.projectState.drugMoleculeEuler = [0, 0, 0];
-      if (state.projectState.drugMoleculePosition === undefined) state.projectState.drugMoleculePosition = [0, 0, 0];
+      if (state.projectState.testMoleculeRotation === undefined) state.projectState.testMoleculeRotation = [0, 0, 0];
+      if (state.projectState.testMoleculeTranslation === undefined)
+        state.projectState.testMoleculeTranslation = [0, 0, 0];
       switch (control) {
-        case FlightControl.PitchUp: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
+        // rotation
+        case FlightControl.RotateAroundXClockwise: {
+          const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.rotation.x += rotationStep;
+            ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_POS_X, rotationStep));
             invalidate();
+            saveEuler(state.projectState.testMoleculeRotation, ref.current.rotation);
           }
-          state.projectState.drugMoleculeEuler[0] += rotationStep;
           break;
         }
-        case FlightControl.PitchDown: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
+        case FlightControl.RotateAroundXCounterclockwise: {
+          state.projectState.testMoleculeRotation[0] -= rotationStep;
+          const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.rotation.x -= rotationStep;
+            ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_NEG_X, rotationStep));
             invalidate();
+            saveEuler(state.projectState.testMoleculeRotation, ref.current.rotation);
           }
-          state.projectState.drugMoleculeEuler[0] -= rotationStep;
           break;
         }
-        case FlightControl.RollLeft: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
+        case FlightControl.RotateAroundYClockwise: {
+          state.projectState.testMoleculeRotation[1] += rotationStep;
+          const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.rotation.y += rotationStep;
+            ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_POS_Y, rotationStep));
             invalidate();
+            saveEuler(state.projectState.testMoleculeRotation, ref.current.rotation);
           }
-          state.projectState.drugMoleculeEuler[1] += rotationStep;
           break;
         }
-        case FlightControl.RollRight: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
+        case FlightControl.RotateAroundYCounterclockwise: {
+          state.projectState.testMoleculeRotation[1] -= rotationStep;
+          const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.rotation.y -= rotationStep;
+            ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_NEG_Y, rotationStep));
             invalidate();
+            saveEuler(state.projectState.testMoleculeRotation, ref.current.rotation);
           }
-          state.projectState.drugMoleculeEuler[1] -= rotationStep;
           break;
         }
-        case FlightControl.YawLeft: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
+        case FlightControl.RotateAroundZClockwise: {
+          state.projectState.testMoleculeRotation[2] += rotationStep;
+          const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.rotation.z += rotationStep;
+            ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_POS_Z, rotationStep));
             invalidate();
+            saveEuler(state.projectState.testMoleculeRotation, ref.current.rotation);
           }
-          state.projectState.drugMoleculeEuler[2] += rotationStep;
           break;
         }
-        case FlightControl.YawRight: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
+        case FlightControl.RotateAroundZCounterclockwise: {
+          state.projectState.testMoleculeRotation[2] -= rotationStep;
+          const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.rotation.z -= rotationStep;
+            ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_NEG_Z, rotationStep));
             invalidate();
+            saveEuler(state.projectState.testMoleculeRotation, ref.current.rotation);
           }
-          state.projectState.drugMoleculeEuler[2] -= rotationStep;
           break;
         }
-        case FlightControl.MoveInPositiveX: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
+        // translation
+        case FlightControl.TranslateInPositiveX: {
+          const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
             ref.current.position.x += translationStep;
             invalidate();
           }
-          state.projectState.drugMoleculePosition[0] += translationStep;
+          state.projectState.testMoleculeTranslation[0] += translationStep;
           break;
         }
-        case FlightControl.MoveInNegativeX: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
+        case FlightControl.TranslateInNegativeX: {
+          const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
             ref.current.position.x -= translationStep;
             invalidate();
           }
-          state.projectState.drugMoleculePosition[0] -= translationStep;
+          state.projectState.testMoleculeTranslation[0] -= translationStep;
           break;
         }
-        case FlightControl.MoveInPositiveY: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
+        case FlightControl.TranslateInPositiveY: {
+          const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
             ref.current.position.y += translationStep;
             invalidate();
           }
-          state.projectState.drugMoleculePosition[1] += translationStep;
+          state.projectState.testMoleculeTranslation[1] += translationStep;
           break;
         }
-        case FlightControl.MoveInNegativeY: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
+        case FlightControl.TranslateInNegativeY: {
+          const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
             ref.current.position.y -= translationStep;
             invalidate();
           }
-          state.projectState.drugMoleculePosition[1] -= translationStep;
+          state.projectState.testMoleculeTranslation[1] -= translationStep;
           break;
         }
-        case FlightControl.MoveInPositiveZ: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
+        case FlightControl.TranslateInPositiveZ: {
+          const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
             ref.current.position.z += translationStep;
             invalidate();
           }
-          state.projectState.drugMoleculePosition[2] += translationStep;
+          state.projectState.testMoleculeTranslation[2] += translationStep;
           break;
         }
-        case FlightControl.MoveInNegativeZ: {
-          const ref = useRefStore.getState().loadedMoleculeRef;
+        case FlightControl.TranslateInNegativeZ: {
+          const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
             ref.current.position.z -= translationStep;
             invalidate();
           }
-          state.projectState.drugMoleculePosition[2] -= translationStep;
+          state.projectState.testMoleculeTranslation[2] -= translationStep;
           break;
         }
       }
@@ -342,22 +367,22 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         startFlying(FlightControl.PitchUp);
         break;
       case 'x':
-        startFlying(FlightControl.MoveInPositiveX);
+        startFlying(FlightControl.TranslateInPositiveX);
         break;
       case 'shift+x':
-        startFlying(FlightControl.MoveInNegativeX);
+        startFlying(FlightControl.TranslateInNegativeX);
         break;
       case 'y':
-        startFlying(FlightControl.MoveInPositiveY);
+        startFlying(FlightControl.TranslateInPositiveY);
         break;
       case 'shift+y':
-        startFlying(FlightControl.MoveInNegativeY);
+        startFlying(FlightControl.TranslateInNegativeY);
         break;
       case 'z':
-        startFlying(FlightControl.MoveInPositiveZ);
+        startFlying(FlightControl.TranslateInPositiveZ);
         break;
       case 'shift+z':
-        startFlying(FlightControl.MoveInNegativeZ);
+        startFlying(FlightControl.TranslateInNegativeZ);
         break;
       case 'ctrl+[':
       case 'meta+[': // for Mac

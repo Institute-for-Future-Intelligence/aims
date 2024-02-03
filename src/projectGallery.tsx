@@ -481,7 +481,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   setCommonStore((state) => {
-                    state.projectState.loadedMolecule = selectedMolecule;
+                    state.projectState.testMolecule = selectedMolecule;
                   });
                   setChanged(true);
                 }}

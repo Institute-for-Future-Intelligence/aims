@@ -44,7 +44,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
   const cameraRotation = useStore(Selector.cameraRotation);
   const cameraUp = useStore(Selector.cameraUp);
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
-  const loadedMolecule = useStore(Selector.loadedMolecule);
+  const testMolecule = useStore(Selector.testMolecule);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lightRef = useRef<DirectionalLight>(null);
@@ -111,7 +111,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
         </GizmoHelper>
       </Canvas>
       <ExperimentSettings />
-      {loadedMolecule && <MoveMoleculeButtons />}
+      {testMolecule && <MoveMoleculeButtons />}
     </>
   );
 });

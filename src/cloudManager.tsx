@@ -348,7 +348,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             thumbnailWidth: data.thumbnailWidth ?? 200,
             type: data.type ?? ProjectType.DRUG_DISCOVERY,
             molecules: data.molecules ?? [],
-            loadedMolecule: data.loadedMolecule ?? null,
+            testMolecule: data.testMolecule ?? null,
             targetProtein: data.targetProtein ?? null,
             ranges: data.ranges ?? [],
             filters: data.filters ?? [],
@@ -367,8 +367,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             rotationStep: data.rotationStep ?? 0.1,
             translationStep: data.translationStep ?? 1,
 
-            drugMoleculeEuler: data.drugMoleculeEuler ?? [0, 0, 0],
-            drugMoleculePosition: data.drugMoleculePosition ?? [0, 0, 0],
+            testMoleculeRotation: data.testMoleculeRotation ?? [0, 0, 0],
+            testMoleculeTranslation: data.testMoleculeTranslation ?? [0, 0, 0],
 
             spaceshipDisplayMode: data.spaceshipDisplayMode ?? SpaceshipDisplayMode.NONE,
             spaceshipSize: data.spaceshipSize ?? 1,
