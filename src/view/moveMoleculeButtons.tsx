@@ -176,31 +176,37 @@ const MoveMoleculeButtons = React.memo(() => {
       }}
     >
       <FloatButton
+        tooltip={t('experiment.RotateAroundZClockwise', lang)}
         icon={<img width="20px" alt={'rotate z cw'} src={RotateZCW} />}
         onMouseDown={() => start(FlightControl.YawLeft)}
         onMouseUp={() => stop()}
       />
       <FloatButton
+        tooltip={t('experiment.RotateAroundZCounterclockwise', lang)}
         icon={<img width="20px" alt={'rotate z ccw'} src={RotateZCCW} />}
         onMouseDown={() => start(FlightControl.YawRight)}
         onMouseUp={() => stop()}
       />
       <FloatButton
+        tooltip={t('experiment.RotateAroundYClockwise', lang)}
         icon={<img width="20px" alt={'rotate y cw'} src={RotateYCW} />}
         onMouseDown={() => start(FlightControl.PitchDown)}
         onMouseUp={() => stop()}
       />
       <FloatButton
+        tooltip={t('experiment.RotateAroundYCounterclockwise', lang)}
         icon={<img width="20px" alt={'rotate y ccw'} src={RotateYCCW} />}
         onMouseDown={() => start(FlightControl.PitchUp)}
         onMouseUp={() => stop()}
       />
       <FloatButton
+        tooltip={t('experiment.RotateAroundXClockwise', lang)}
         icon={<img width="20px" alt={'rotate x cw'} src={RotateXCW} />}
         onMouseDown={() => start(FlightControl.RollRight)}
         onMouseUp={() => stop()}
       />
       <FloatButton
+        tooltip={t('experiment.RotateAroundXCounterclockwise', lang)}
         icon={<img width="20px" alt={'rotate x ccw'} src={RotateXCCW} />}
         onMouseDown={() => start(FlightControl.RollLeft)}
         onMouseUp={() => stop()}

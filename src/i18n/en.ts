@@ -149,6 +149,12 @@ export const i18n_en = {
       Target: 'Target',
       SelectorCommands: 'Selector Commands',
       Information: 'Information',
+      RotateAroundXClockwise: 'Rotate test molecule around X in clockwise direction',
+      RotateAroundXCounterclockwise: 'Rotate test molecule around X in counterclockwise direction',
+      RotateAroundYClockwise: 'Rotate test molecule around Y in clockwise direction',
+      RotateAroundYCounterclockwise: 'Rotate test molecule around Y in counterclockwise direction',
+      RotateAroundZClockwise: 'Rotate test molecule around Z in clockwise direction',
+      RotateAroundZCounterclockwise: 'Rotate test molecule around Z in counterclockwise direction',
     },
 
     projectListPanel: {
@@ -171,6 +177,7 @@ export const i18n_en = {
       ProjectDescription: 'Description',
       ProjectSettings: 'Project Settings',
       DisplayWindowSize: 'Display Window Size',
+      AddSelectedMoleculeToExperiment: 'Add selected molecule to experiment',
       ImportMolecule: 'Import a molecule',
       MoleculeName: 'Molecule Name',
       MoleculeAlreadyAdded: 'Molecule already added',

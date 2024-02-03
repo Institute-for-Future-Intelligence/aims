@@ -7,6 +7,7 @@ import { DataColoring } from './constants';
 import styled from 'styled-components';
 import { Button, Checkbox, Col, Collapse, CollapseProps, ColorPicker, List, Popover, Radio, Row, Select } from 'antd';
 import {
+  LoginOutlined,
   BgColorsOutlined,
   CameraOutlined,
   CarryOutOutlined,
@@ -474,6 +475,23 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 <SettingOutlined style={{ fontSize: '24px', color: 'gray' }} />
               </Button>
             </Popover>
+            {selectedMolecule && (
+              <Button
+                style={{ border: 'none', padding: '4px' }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCommonStore((state) => {
+                    state.projectState.loadedMolecule = selectedMolecule;
+                  });
+                  setChanged(true);
+                }}
+              >
+                <LoginOutlined
+                  style={{ fontSize: '24px', color: 'gray' }}
+                  title={t('projectPanel.AddSelectedMoleculeToExperiment', lang)}
+                />
+              </Button>
+            )}
           </span>
         </SubHeader>
       ),

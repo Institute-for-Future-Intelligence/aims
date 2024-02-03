@@ -149,6 +149,12 @@ export const i18n_zh_tw = {
       Target: '目標',
       SelectorCommands: '選擇指令',
       Information: '資訊',
+      RotateAroundXClockwise: '繞著X軸沿順時針方向旋轉試驗分子',
+      RotateAroundXCounterclockwise: '繞著X軸沿逆時針方向旋轉試驗分子',
+      RotateAroundYClockwise: '繞著Y軸沿順時針方向旋轉試驗分子',
+      RotateAroundYCounterclockwise: '繞著Y軸沿逆時針方向旋轉試驗分子',
+      RotateAroundZClockwise: '繞著Z軸沿順時針方向旋轉試驗分子',
+      RotateAroundZCounterclockwise: '繞著Z軸沿逆時針方向旋轉試驗分子',
     },
 
     projectListPanel: {
@@ -170,6 +176,7 @@ export const i18n_zh_tw = {
       ProjectDescription: '描述',
       ProjectSettings: '專案設定',
       DisplayWindowSize: '展示視窗大小',
+      AddSelectedMoleculeToExperiment: '把選中的分子加到實驗中',
       ImportMolecule: '輸入分子',
       MoleculeName: '分子名稱',
       MoleculeAlreadyAdded: '專案已經有此分子',

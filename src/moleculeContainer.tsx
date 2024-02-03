@@ -62,15 +62,9 @@ const MoleculeContainer = React.memo(({ width, height, moleculeData, selected }:
         }}
         onMouseDown={() => {
           setCommonStore((state) => {
-            state.selectedMolecule = moleculeData !== state.selectedMolecule ? moleculeData : null;
+            state.selectedMolecule = moleculeData?.name !== state.selectedMolecule?.name ? moleculeData : null;
           });
           setChanged(true);
-        }}
-        onDoubleClick={() => {
-          setCommonStore((state) => {
-            state.selectedMolecule = moleculeData;
-            state.projectState.loadedMolecule = moleculeData;
-          });
         }}
       >
         <ProjectGalleryControls lightRef={lightRef} />

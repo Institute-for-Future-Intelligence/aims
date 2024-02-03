@@ -9,7 +9,7 @@ import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { UndoableChange } from '../undo/UndoableChange';
 import { sampleProteins } from '../internalDatabase';
-import { AimOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { AimOutlined, InfoCircleOutlined, ExperimentOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 
 const { Option } = Select;
@@ -190,7 +190,11 @@ const ExperimentSettings = React.memo(() => {
             left: '6px',
             height: '20px',
           }}
-          description={<span style={{ fontSize: '20px' }}>🧪</span>}
+          description={
+            <span style={{ fontSize: '20px' }}>
+              <ExperimentOutlined />
+            </span>
+          }
         />
       </Popover>
       {projectState.targetProtein?.name ? (
