@@ -118,7 +118,6 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
       {testMolecule && <MoveMoleculeButtons />}
       {loading && canvasRef.current && (
         <Spin
-          size={'large'}
           indicator={
             <LoadingOutlined
               style={{
@@ -129,7 +128,6 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
               }}
             />
           }
-          fullscreen={true}
         />
       )}
     </>

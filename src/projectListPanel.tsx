@@ -29,7 +29,7 @@ const { Column } = Table;
 const Container = styled.div`
   position: fixed;
   top: 90px;
-  right: 40px;
+  left: calc(50vw + 320px);
   display: flex;
   justify-content: center;
   align-items: center;
