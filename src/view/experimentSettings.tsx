@@ -37,10 +37,14 @@ const ExperimentSettings = React.memo(() => {
   const createContent = useMemo(() => {
     const setTargetProtein = (targetName: string) => {
       setCommonStore((state) => {
-        for (const t of sampleProteins) {
-          if (t.name === targetName) {
-            state.projectState.targetProtein = t;
-            break;
+        if (targetName === 'None') {
+          state.projectState.targetProtein = null;
+        } else {
+          for (const t of sampleProteins) {
+            if (t.name === targetName) {
+              state.projectState.targetProtein = t;
+              break;
+            }
           }
         }
       });
@@ -111,7 +115,7 @@ const ExperimentSettings = React.memo(() => {
           <Col span={16}>
             <Select
               style={{ width: '100%' }}
-              value={projectState.targetProtein?.name}
+              value={projectState.targetProtein?.name ?? t('word.None', lang)}
               showSearch
               onChange={(value: string) => {
                 const oldValue = projectState.targetProtein?.name;
@@ -132,6 +136,9 @@ const ExperimentSettings = React.memo(() => {
                 setTargetProtein(newValue);
               }}
             >
+              <Option key={`None`} value={'None'}>
+                {t('word.None', lang)}
+              </Option>
               {sampleProteins.map((d, i) => (
                 <Option key={`${i}-${d.name}`} value={d.name}>
                   {d.name}

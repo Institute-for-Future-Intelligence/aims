@@ -211,11 +211,14 @@ export const i18n_zh_tw = {
       PolarSurfaceArea: '極性表面積',
       PolarSurfaceAreaShort: '極性表面積',
       HydrogenBondDonorCount: '氫鍵提供原子數量',
-      HydrogenBondDonorCountShort: '氫鍵提供原子數',
+      HydrogenBondDonorCountShort: '氫鍵提供原子',
       HydrogenBondAcceptorCount: '氫鍵接受原子數量',
-      HydrogenBondAcceptorCountShort: '氫鍵接受原子數',
+      HydrogenBondAcceptorCountShort: '氫鍵接受原子',
       RotatableBondCount: '可旋轉鍵數量',
-      RotatableBondCountShort: '可旋轉鍵數',
+      RotatableBondCountShort: '可旋轉鍵',
+      HeavyAtomCount: '重原子數量',
+      HeavyAtomCountShort: '重原子',
+      Complexity: '複雜性',
     },
 
     menu: {

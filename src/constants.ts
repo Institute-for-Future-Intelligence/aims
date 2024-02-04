@@ -55,7 +55,7 @@ export const HALF_PI_Z_EULER = new Euler(0, 0, HALF_PI);
 
 export const REGEX_ALLOWABLE_IN_NAME = /^[A-Za-z0-9\s-_()!?%&,]*$/;
 
-export const DEFAULT_CAMERA_POSITION = [5, 10, 20];
+export const DEFAULT_CAMERA_POSITION = [50, 50, 50];
 
 export const DEFAULT_CAMERA_ROTATION = [0, 0, 0];
 

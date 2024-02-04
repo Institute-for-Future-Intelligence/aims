@@ -217,6 +217,9 @@ export const i18n_zh_cn = {
       HydrogenBondAcceptorCountShort: '氢键接受原子数',
       RotatableBondCount: '可旋转键数量',
       RotatableBondCountShort: '可旋转键数',
+      HeavyAtomCount: '重原子数量',
+      HeavyAtomCountShort: '重原子',
+      Complexity: '复杂性',
     },
 
     menu: {

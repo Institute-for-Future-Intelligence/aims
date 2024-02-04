@@ -34,7 +34,7 @@ export class ProjectUtil {
       sortDescending: false,
       ranges: new Array<Range>(),
       filters: new Array<Filter>(),
-      hiddenProperties: new Array<string>(),
+      hiddenProperties: ['atomCount', 'bondCount', 'heavyAtomCount', 'complexity'],
       counter: 0,
       xAxisNameScatteredPlot: 'atomCount',
       yAxisNameScatteredPlot: 'atomCount',
@@ -86,6 +86,8 @@ export class ProjectUtil {
     if (!hidden?.includes('hydrogenBondAcceptorCount')) a.push('hydrogenBondAcceptorCount');
     if (!hidden?.includes('rotatableBondCount')) a.push('rotatableBondCount');
     if (!hidden?.includes('polarSurfaceArea')) a.push('polarSurfaceArea');
+    if (!hidden?.includes('heavyAtomCount')) a.push('heavyAtomCount');
+    if (!hidden?.includes('complexity')) a.push('complexity');
     return a;
   }
 
@@ -100,6 +102,8 @@ export class ProjectUtil {
       a.push(i18n.t('projectPanel.HydrogenBondAcceptorCountShort', l));
     if (!hidden?.includes('rotatableBondCount')) a.push(i18n.t('projectPanel.RotatableBondCountShort', l));
     if (!hidden?.includes('polarSurfaceArea')) a.push(i18n.t('projectPanel.PolarSurfaceAreaShort', l));
+    if (!hidden?.includes('heavyAtomCount')) a.push(i18n.t('projectPanel.HeavyAtomCountShort', l));
+    if (!hidden?.includes('complexity')) a.push(i18n.t('projectPanel.Complexity', l));
     return a;
   }
 
@@ -113,6 +117,8 @@ export class ProjectUtil {
     if (!hidden?.includes('hydrogenBondAcceptorCount')) a.push('number');
     if (!hidden?.includes('rotatableBondCount')) a.push('number');
     if (!hidden?.includes('polarSurfaceArea')) a.push('number');
+    if (!hidden?.includes('heavyAtomCount')) a.push('number');
+    if (!hidden?.includes('complexity')) a.push('number');
     return a;
   }
 
@@ -126,6 +132,8 @@ export class ProjectUtil {
     if (!hidden?.includes('hydrogenBondAcceptorCount')) a.push(0);
     if (!hidden?.includes('rotatableBondCount')) a.push(0);
     if (!hidden?.includes('polarSurfaceArea')) a.push(1);
+    if (!hidden?.includes('heavyAtomCount')) a.push(0);
+    if (!hidden?.includes('complexity')) a.push(1);
     return a;
   }
 
@@ -139,6 +147,8 @@ export class ProjectUtil {
     if (!hidden?.includes('hydrogenBondAcceptorCount')) a.push(true);
     if (!hidden?.includes('rotatableBondCount')) a.push(true);
     if (!hidden?.includes('polarSurfaceArea')) a.push(false);
+    if (!hidden?.includes('heavyAtomCount')) a.push(true);
+    if (!hidden?.includes('complexity')) a.push(false);
     return a;
   }
 
@@ -152,6 +162,8 @@ export class ProjectUtil {
     if (!hidden?.includes('hydrogenBondAcceptorCount')) a.push('');
     if (!hidden?.includes('rotatableBondCount')) a.push('');
     if (!hidden?.includes('polarSurfaceArea')) a.push('Å²');
+    if (!hidden?.includes('heavyAtomCount')) a.push('');
+    if (!hidden?.includes('complexity')) a.push('');
     return a;
   }
 
@@ -176,6 +188,10 @@ export class ProjectUtil {
           if (p.rotatableBondCount > f.upperBound || p.rotatableBondCount < f.lowerBound) return true;
         } else if (f.variable === 'polarSurfaceArea') {
           if (p.polarSurfaceArea > f.upperBound || p.polarSurfaceArea < f.lowerBound) return true;
+        } else if (f.variable === 'heavyAtomCount') {
+          if (p.heavyAtomCount > f.upperBound || p.heavyAtomCount < f.lowerBound) return true;
+        } else if (f.variable === 'complexity') {
+          if (p.complexity > f.upperBound || p.complexity < f.lowerBound) return true;
         }
       }
     }

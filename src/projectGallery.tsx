@@ -196,6 +196,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     !projectState.hiddenProperties?.includes('rotatableBondCount'),
   );
   const polarSurfaceAreaSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('polarSurfaceArea'));
+  const heavyAtomCountSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('heavyAtomCount'));
+  const complexitySelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('complexity'));
 
   useEffect(() => {
     atomCountSelectionRef.current = !projectState.hiddenProperties?.includes('atomCount');
@@ -206,6 +208,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     hBondAcceptorCountSelectionRef.current = !projectState.hiddenProperties?.includes('hydrogenBondAcceptorCount');
     rotatableBondCountSelectionRef.current = !projectState.hiddenProperties?.includes('rotatableBondCount');
     polarSurfaceAreaSelectionRef.current = !projectState.hiddenProperties?.includes('polarSurfaceArea');
+    heavyAtomCountSelectionRef.current = !projectState.hiddenProperties?.includes('heavyAtomCount');
+    complexitySelectionRef.current = !projectState.hiddenProperties?.includes('complexity');
     setUpdateFlag(!updateFlag);
   }, [projectState.hiddenProperties]);
 
@@ -651,6 +655,28 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
         >
           <span style={{ fontSize: '12px' }}>{t('projectPanel.PolarSurfaceArea', lang)}</span>
         </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            heavyAtomCountSelectionRef.current = e.target.checked;
+            selectProperty(heavyAtomCountSelectionRef.current, 'heavyAtomCount');
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={heavyAtomCountSelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.HeavyAtomCount', lang)}</span>
+        </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            complexitySelectionRef.current = e.target.checked;
+            selectProperty(complexitySelectionRef.current, 'complexity');
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={complexitySelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.Complexity', lang)}</span>
+        </Checkbox>
       </div>
     );
   };
@@ -718,6 +744,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           if (!projectState.hiddenProperties?.includes('rotatableBondCount'))
             d['rotatableBondCount'] = p.rotatableBondCount;
           if (!projectState.hiddenProperties?.includes('polarSurfaceArea')) d['polarSurfaceArea'] = p.polarSurfaceArea;
+          if (!projectState.hiddenProperties?.includes('heavyAtomCount')) d['heavyAtomCount'] = p.heavyAtomCount;
+          if (!projectState.hiddenProperties?.includes('complexity')) d['complexity'] = p.complexity;
           d['group'] = projectState.dataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
           d['selected'] = selectedMolecule === m;
           d['hovered'] = hoveredMolecule === m;
@@ -789,6 +817,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       array.push(getMin('hydrogenBondAcceptorCount', 0));
     if (!projectState.hiddenProperties?.includes('rotatableBondCount')) array.push(getMin('rotatableBondCount', 0));
     if (!projectState.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMin('polarSurfaceArea', 0));
+    if (!projectState.hiddenProperties?.includes('heavyAtomCount')) array.push(getMin('heavyAtomCount', 0));
+    if (!projectState.hiddenProperties?.includes('complexity')) array.push(getMin('complexity', 0));
     return array;
   }, [updateHiddenFlag, projectState.ranges, projectState.hiddenProperties]);
 
@@ -804,6 +834,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       array.push(getMax('hydrogenBondAcceptorCount', 20));
     if (!projectState.hiddenProperties?.includes('rotatableBondCount')) array.push(getMax('rotatableBondCount', 20));
     if (!projectState.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMax('polarSurfaceArea', 200));
+    if (!projectState.hiddenProperties?.includes('heavyAtomCount')) array.push(getMax('heavyAtomCount', 200));
+    if (!projectState.hiddenProperties?.includes('complexity')) array.push(getMax('complexity', 2000));
     return array;
   }, [updateHiddenFlag, projectState.ranges, projectState.hiddenProperties]);
 
@@ -817,6 +849,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     if (!projectState.hiddenProperties?.includes('hydrogenBondAcceptorCount')) array.push(1);
     if (!projectState.hiddenProperties?.includes('rotatableBondCount')) array.push(1);
     if (!projectState.hiddenProperties?.includes('polarSurfaceArea')) array.push(1);
+    if (!projectState.hiddenProperties?.includes('heavyAtomCount')) array.push(1);
+    if (!projectState.hiddenProperties?.includes('complexity')) array.push(1);
     return array;
   }, [updateHiddenFlag, projectState.hiddenProperties]);
 
@@ -871,6 +905,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       array.push(createFilter('rotatableBondCount', 10, 0));
     if (!projectState.hiddenProperties?.includes('polarSurfaceArea'))
       array.push(createFilter('polarSurfaceArea', 140, 0));
+    if (!projectState.hiddenProperties?.includes('heavyAtomCount')) array.push(createFilter('heavyAtomCount', 100, 1));
+    if (!projectState.hiddenProperties?.includes('complexity')) array.push(createFilter('complexity', 1000, 0));
     return array;
   }, [updateHiddenFlag, projectState.filters, projectState.hiddenProperties]);
 
@@ -958,61 +994,63 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               );
             }}
           ></List>
-          <PropertiesHeader>
-            <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
-            <span>
-              <Popover
-                title={
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <CarryOutOutlined /> {t('projectPanel.ChooseProperties', lang)}
-                  </div>
-                }
-                onOpenChange={(visible) => {}}
-                content={createChoosePropertiesContent()}
-              >
-                <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                  <CarryOutOutlined style={{ fontSize: '24px', color: 'gray' }} />
+          {data.length > 0 && (
+            <PropertiesHeader>
+              <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
+              <span>
+                <Popover
+                  title={
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <CarryOutOutlined /> {t('projectPanel.ChooseProperties', lang)}
+                    </div>
+                  }
+                  onOpenChange={(visible) => {}}
+                  content={createChoosePropertiesContent()}
+                >
+                  <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                    <CarryOutOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                  </Button>
+                </Popover>
+                <Popover
+                  title={
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <BgColorsOutlined /> {t('projectPanel.ChooseDataColoring', lang)}
+                    </div>
+                  }
+                  content={createChooseDataColoringContent()}
+                >
+                  <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                    <BgColorsOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                  </Button>
+                </Popover>
+                <Button
+                  style={{ border: 'none', paddingRight: '20px', background: 'white' }}
+                  onClick={() => {
+                    saveSvg('property-space')
+                      .then(() => {
+                        showInfo(t('message.ScreenshotSaved', lang));
+                        if (loggable) {
+                          setCommonStore((state) => {
+                            state.actionInfo = {
+                              name: 'Take Screenshot of Property Space',
+                              timestamp: new Date().getTime(),
+                            };
+                          });
+                        }
+                      })
+                      .catch((reason) => {
+                        showError(reason);
+                      });
+                  }}
+                >
+                  <CameraOutlined
+                    style={{ fontSize: '24px', color: 'gray' }}
+                    title={t('projectPanel.PropertiesScreenshot', lang)}
+                  />
                 </Button>
-              </Popover>
-              <Popover
-                title={
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <BgColorsOutlined /> {t('projectPanel.ChooseDataColoring', lang)}
-                  </div>
-                }
-                content={createChooseDataColoringContent()}
-              >
-                <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                  <BgColorsOutlined style={{ fontSize: '24px', color: 'gray' }} />
-                </Button>
-              </Popover>
-              <Button
-                style={{ border: 'none', paddingRight: '20px', background: 'white' }}
-                onClick={() => {
-                  saveSvg('property-space')
-                    .then(() => {
-                      showInfo(t('message.ScreenshotSaved', lang));
-                      if (loggable) {
-                        setCommonStore((state) => {
-                          state.actionInfo = {
-                            name: 'Take Screenshot of Property Space',
-                            timestamp: new Date().getTime(),
-                          };
-                        });
-                      }
-                    })
-                    .catch((reason) => {
-                      showError(reason);
-                    });
-                }}
-              >
-                <CameraOutlined
-                  style={{ fontSize: '24px', color: 'gray' }}
-                  title={t('projectPanel.PropertiesScreenshot', lang)}
-                />
-              </Button>
-            </span>
-          </PropertiesHeader>
+              </span>
+            </PropertiesHeader>
+          )}
           {data.length > 0 && (
             <ParallelCoordinates
               id={'property-space'}

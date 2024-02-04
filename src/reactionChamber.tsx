@@ -92,7 +92,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
         />
         <Background />
         {viewerAxes && <Axes />}
-        {moleculeData && (
+        {(moleculeData || testMolecule) && (
           <MolecularViewer
             moleculeData={moleculeData}
             style={viewerStyle}

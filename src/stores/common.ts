@@ -13,7 +13,7 @@ import { ActionInfo, MoleculeData, ProjectState } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
-import moleculesUrl from '../assets/molecules.csv';
+import molecularPropertiesUrl from '../assets/molecular-properties.csv';
 import { ChemicalElement } from '../models/ChemicalElement';
 import Papa from 'papaparse';
 import { AtomTS } from '../models/AtomTS';
@@ -207,21 +207,23 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             return get().providedMolecularProperties[name];
           },
           loadProvidedMolecularProperties() {
-            Papa.parse(moleculesUrl, {
+            Papa.parse(molecularPropertiesUrl, {
               download: true,
               complete: function (results) {
                 for (const token of results.data) {
                   if (Array.isArray(token) && token.length > 1) {
                     if (token[0] !== 'Name') {
-                      const mol = {
+                      const molProp = {
                         logP: parseFloat(token[1].trim()),
                         hydrogenBondDonorCount: parseInt(token[2].trim()),
                         hydrogenBondAcceptorCount: parseInt(token[3].trim()),
                         rotatableBondCount: parseInt(token[4].trim()),
                         polarSurfaceArea: parseFloat(token[5].trim()),
+                        heavyAtomCount: parseFloat(token[6].trim()),
+                        complexity: parseFloat(token[7].trim()),
                       } as MolecularProperties;
                       immerSet((state: CommonStoreState) => {
-                        state.providedMolecularProperties[token[0].trim()] = mol;
+                        state.providedMolecularProperties[token[0].trim()] = molProp;
                       });
                     }
                   }

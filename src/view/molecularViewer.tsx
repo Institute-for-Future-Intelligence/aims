@@ -37,7 +37,7 @@ import { getSample } from '../internalDatabase';
 import { useRefStore } from '../stores/commonRef';
 
 export interface MolecularViewerProps {
-  moleculeData: MoleculeData;
+  moleculeData: MoleculeData | null;
   style: MolecularViewerStyle;
   material: MolecularViewerMaterial;
   coloring: MolecularViewerColoring;
@@ -111,6 +111,10 @@ const MolecularViewer = React.memo(
     }, [testMolecule, parsedResultsMap]);
 
     useEffect(() => {
+      if (!moleculeData) {
+        setComplex(undefined);
+        return;
+      }
       const mol = getSample(moleculeData.name);
       if (mol?.url) {
         fetch(mol.url).then((response) => {
@@ -215,29 +219,30 @@ const MolecularViewer = React.memo(
           state.targetData = { name, metadata, atoms, bonds, residues, chains, structures, molecules } as MoleculeTS;
         });
       }
-      const properties = getProvidedMolecularProperties(moleculeData.name);
-      if (properties) {
-        setMolecularProperties(moleculeData.name, {
-          atomCount: result._atoms.length,
-          bondCount: result._bonds.length,
-          molecularMass: totalMass,
-          logP: properties.logP,
-          hydrogenBondDonorCount: properties.hydrogenBondDonorCount,
-          hydrogenBondAcceptorCount: properties.hydrogenBondAcceptorCount,
-          rotatableBondCount: properties.rotatableBondCount,
-          polarSurfaceArea: properties.polarSurfaceArea,
-        } as MolecularProperties);
+      if (moleculeData) {
+        const properties = getProvidedMolecularProperties(moleculeData.name);
+        if (properties) {
+          setMolecularProperties(moleculeData.name, {
+            atomCount: result._atoms.length,
+            bondCount: result._bonds.length,
+            molecularMass: totalMass,
+            logP: properties.logP,
+            hydrogenBondDonorCount: properties.hydrogenBondDonorCount,
+            hydrogenBondAcceptorCount: properties.hydrogenBondAcceptorCount,
+            rotatableBondCount: properties.rotatableBondCount,
+            polarSurfaceArea: properties.polarSurfaceArea,
+          } as MolecularProperties);
+        }
       }
     };
 
     useEffect(() => {
-      if (!mainGroupRef.current || !complex || !mode) return;
-
+      if (!mainGroupRef.current || !mode) return;
+      mainGroupRef.current.children = [];
+      if (!complex) return;
       if (setLoading) setLoading(true);
 
-      mainGroupRef.current.children = [];
       mainGroupRef.current.position.set(0, 0, 0);
-
       const visual = new ComplexVisual(complex.name, complex);
       const reps = [
         {
@@ -313,9 +318,10 @@ const MolecularViewer = React.memo(
           // }}
         />
         <group
+          name={'Test'}
+          ref={testMoleculeRef}
           position={[testMoleculeTranslation[0], testMoleculeTranslation[1], testMoleculeTranslation[2]]}
           rotation={[testMoleculeRotation[0], testMoleculeRotation[1], testMoleculeRotation[2]]}
-          ref={testMoleculeRef}
         />
       </>
     );

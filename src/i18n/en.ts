@@ -217,6 +217,9 @@ export const i18n_en = {
       HydrogenBondAcceptorCountShort: 'HB Acceptors',
       RotatableBondCount: 'Rotatable Bond Count',
       RotatableBondCountShort: 'Rotatable Bonds',
+      HeavyAtomCount: 'Heavy Atom Count',
+      HeavyAtomCountShort: 'Heavy Atoms',
+      Complexity: 'Complexity',
     },
 
     menu: {
