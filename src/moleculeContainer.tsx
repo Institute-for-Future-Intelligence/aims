@@ -72,10 +72,10 @@ const MoleculeContainer = React.memo(({ width, height, moleculeData, selected }:
           position: cameraPositionVector,
           rotation: [HALF_PI / 2, 0, HALF_PI / 2],
         }}
-        onMouseDown={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           setCommonStore((state) => {
-            state.projectState.selectedMolecule =
-              moleculeData?.name !== state.projectState.selectedMolecule?.name ? moleculeData : null;
+            state.projectState.selectedMolecule = moleculeData;
           });
           setChanged(true);
         }}

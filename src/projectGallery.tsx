@@ -930,57 +930,68 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           }}
         />
         <CanvasContainer>
-          <List
+          <div
             style={{
               width: '100%',
-              height: totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80),
-              paddingTop: '8px',
-              paddingLeft: '8px',
-              overflowX: 'hidden',
-              overflowY: 'auto',
             }}
-            locale={{ emptyText: t('projectPanel.NoMolecule', lang) }}
-            grid={{ column: canvasColumns, gutter: 0 }}
-            dataSource={sortedMoleculesRef.current}
-            renderItem={(data: MoleculeData) => {
-              return (
-                <List.Item
-                  style={{ height: canvasHeight }}
-                  onMouseOver={() => {
-                    usePrimitiveStore.getState().set((state) => {
-                      state.hoveredMolecule = data;
-                    });
-                  }}
-                  onMouseLeave={() => {
-                    usePrimitiveStore.getState().set((state) => {
-                      state.hoveredMolecule = null;
-                    });
-                  }}
-                >
-                  <MoleculeContainer
-                    width={canvasWidth}
-                    height={canvasHeight}
-                    moleculeData={data}
-                    selected={selectedMolecule?.name === data.name}
-                  />
-                  <div
-                    style={{
-                      position: 'relative',
-                      left: '10px',
-                      textAlign: 'left',
-                      bottom: '18px',
-                      color: 'gray',
-                      fontSize: '10px',
-                      fontWeight: 'normal',
-                      width: 'calc(100% - 14px)',
+            onClick={() => {
+              setCommonStore((state) => {
+                state.projectState.selectedMolecule = null;
+              });
+              setChanged(true);
+            }}
+          >
+            <List
+              style={{
+                height: totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80),
+                paddingTop: '8px',
+                paddingLeft: '8px',
+                overflowX: 'hidden',
+                overflowY: 'auto',
+              }}
+              locale={{ emptyText: t('projectPanel.NoMolecule', lang) }}
+              grid={{ column: canvasColumns, gutter: 0 }}
+              dataSource={sortedMoleculesRef.current}
+              renderItem={(data: MoleculeData) => {
+                return (
+                  <List.Item
+                    style={{ height: canvasHeight }}
+                    onMouseOver={() => {
+                      usePrimitiveStore.getState().set((state) => {
+                        state.hoveredMolecule = data;
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      usePrimitiveStore.getState().set((state) => {
+                        state.hoveredMolecule = null;
+                      });
                     }}
                   >
-                    {data.name}
-                  </div>
-                </List.Item>
-              );
-            }}
-          ></List>
+                    <MoleculeContainer
+                      width={canvasWidth}
+                      height={canvasHeight}
+                      moleculeData={data}
+                      selected={selectedMolecule?.name === data.name}
+                    />
+                    <div
+                      style={{
+                        position: 'relative',
+                        left: '10px',
+                        textAlign: 'left',
+                        bottom: '18px',
+                        color: 'gray',
+                        fontSize: '10px',
+                        fontWeight: 'normal',
+                        width: 'calc(100% - 14px)',
+                      }}
+                    >
+                      {data.name}
+                    </div>
+                  </List.Item>
+                );
+              }}
+            />
+          </div>
           {data.length > 0 && (
             <PropertiesHeader>
               <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
