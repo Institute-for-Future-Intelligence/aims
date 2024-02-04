@@ -35,11 +35,14 @@ const MoleculeContainer = React.memo(({ width, height, moleculeData, selected }:
   const viewerMaterial = useStore(Selector.projectViewerMaterial);
   const viewerBackground = useStore(Selector.projectViewerBackground);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const hoveredMolecule = usePrimitiveStore(Selector.hoveredMolecule);
 
   const [loading, setLoading] = useState<boolean>(false);
   const lightRef = useRef<DirectionalLight>(null);
 
   const cameraPositionVector = useMemo(() => new Vector3().fromArray(DEFAULT_CAMERA_POSITION), []);
+
+  const hovered = hoveredMolecule?.name === moleculeData?.name;
 
   return (
     <>
@@ -53,7 +56,13 @@ const MoleculeContainer = React.memo(({ width, height, moleculeData, selected }:
           width: width + 'px',
           backgroundColor: viewerBackground,
           borderRadius: '10px',
-          border: selected ? '2px solid red' : '1px solid gray',
+          border: selected
+            ? hovered
+              ? '2px dashed red'
+              : '2px solid red'
+            : hovered
+              ? '1px dashed gray'
+              : '1px solid gray',
           opacity: moleculeData?.excluded ? 0.25 : 1,
         }}
         camera={{

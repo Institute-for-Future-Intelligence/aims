@@ -16,7 +16,6 @@ const { Option } = Select;
 
 export interface ImportMoleculeModalProps {
   importByName: (name: string) => void;
-  isLoading: () => boolean;
   setName: (title: string) => void;
   getName: () => string;
   setDialogVisible: (visible: boolean) => void;
@@ -24,7 +23,7 @@ export interface ImportMoleculeModalProps {
 }
 
 const ImportMoleculeModal = React.memo(
-  ({ importByName, isLoading, setName, getName, setDialogVisible, isDialogVisible }: ImportMoleculeModalProps) => {
+  ({ importByName, setName, getName, setDialogVisible, isDialogVisible }: ImportMoleculeModalProps) => {
     const language = useStore(Selector.language);
 
     const [dragEnabled, setDragEnabled] = useState<boolean>(false);
@@ -82,7 +81,6 @@ const ImportMoleculeModal = React.memo(
             {t('word.OK', lang)}
           </Button>,
         ]}
-        confirmLoading={isLoading()}
         onCancel={onCancel}
         modalRender={(modal) => (
           <Draggable disabled={!dragEnabled} bounds={bounds} onStart={(event, uiData) => onStart(event, uiData)}>

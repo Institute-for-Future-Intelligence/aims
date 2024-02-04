@@ -43,6 +43,8 @@ export const panCenter = (state: CommonStoreState) => state.projectState.panCent
 
 export const targetData = (state: CommonStoreState) => state.targetData;
 
+export const molecules = (state: CommonStoreState) => state.projectState.molecules;
+
 export const testMolecule = (state: CommonStoreState) => state.projectState.testMolecule;
 
 export const selectedMolecule = (state: CommonStoreState) => state.projectState.selectedMolecule;

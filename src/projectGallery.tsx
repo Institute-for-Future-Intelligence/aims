@@ -133,7 +133,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
 
-  const [loading, setLoading] = useState(false);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const [updateHiddenFlag, setUpdateHiddenFlag] = useState<boolean>(false);
   const [moleculeName, setMoleculeName] = useState<string>('Aspirin');
@@ -234,18 +233,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const totalWidth = Math.round(window.innerWidth * relativeWidth);
   const canvasWidth = totalWidth / canvasColumns - gridGutter * (canvasColumns - 1);
   const canvasHeight = (canvasWidth * 2) / 3;
-
-  const hover = (i: number) => {
-    if (projectState.molecules) {
-      usePrimitiveStore.getState().set((state) => {
-        if (i >= 0 && i < projectState.molecules.length) {
-          state.hoveredMolecule = projectState.molecules[i];
-        } else {
-          state.hoveredMolecule = null;
-        }
-      });
-    }
-  };
 
   const closeProject = () => {
     setCommonStore((state) => {
@@ -1004,7 +991,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       <CarryOutOutlined /> {t('projectPanel.ChooseProperties', lang)}
                     </div>
                   }
-                  onOpenChange={(visible) => {}}
+                  onOpenChange={(visible) => {
+                    // TODO
+                  }}
                   content={createChoosePropertiesContent()}
                 >
                   <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
@@ -1067,7 +1056,16 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               digits={digits}
               tickIntegers={tickIntegers}
               filters={filters}
-              hover={hover}
+              hover={(i: number) => {
+                usePrimitiveStore.getState().set((state) => {
+                  for (const [index, m] of projectState.molecules.entries()) {
+                    if (index === i) {
+                      state.hoveredMolecule = m;
+                      break;
+                    }
+                  }
+                });
+              }}
               hoveredIndex={
                 projectState.molecules && hoveredMolecule ? projectState.molecules.indexOf(hoveredMolecule) : -1
               }
@@ -1092,7 +1090,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               showError(t('projectPanel.MoleculeNotFound', lang) + ': ' + moleculeName, 3);
             }
           }}
-          isLoading={() => loading}
           setName={setMoleculeName}
           getName={() => moleculeName}
           setDialogVisible={setMoleculeNameDialogVisible}
