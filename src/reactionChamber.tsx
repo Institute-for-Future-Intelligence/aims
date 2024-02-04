@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
   DEFAULT_CAMERA_POSITION,
@@ -27,7 +27,6 @@ import Spaceship from './view/spaceship.tsx';
 import Background from './view/background.tsx';
 import Cockpit from './view/cockpit.tsx';
 import MoveMoleculeButtons from './view/moveMoleculeButtons.tsx';
-import { usePrimitiveStore } from './stores/commonPrimitive.ts';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
@@ -48,8 +47,8 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
   const cameraUp = useStore(Selector.cameraUp);
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
   const testMolecule = useStore(Selector.testMolecule);
-  const waiting = usePrimitiveStore(Selector.waiting);
 
+  const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lightRef = useRef<DirectionalLight>(null);
 
@@ -101,6 +100,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
             coloring={viewerColoring}
             chamber={true}
             selector={viewerSelector}
+            setLoading={setLoading}
           />
         )}
         {spaceshipDisplayMode === SpaceshipDisplayMode.INSIDE_VIEW && <Cockpit />}
@@ -116,7 +116,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
       </Canvas>
       <ExperimentSettings />
       {testMolecule && <MoveMoleculeButtons />}
-      {waiting && canvasRef.current && (
+      {loading && canvasRef.current && (
         <Spin
           size={'large'}
           indicator={
@@ -130,7 +130,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
             />
           }
           fullscreen={true}
-        ></Spin>
+        />
       )}
     </>
   );

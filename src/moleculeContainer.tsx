@@ -2,7 +2,7 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
   DEFAULT_CAMERA_POSITION,
@@ -19,6 +19,8 @@ import { MolecularViewerColoring } from './view/displayOptions';
 import { DirectionalLight, Vector3 } from 'three';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { ProjectGalleryControls } from './controls';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 export interface MoleculeContainerProps {
   width: number;
@@ -34,6 +36,7 @@ const MoleculeContainer = React.memo(({ width, height, moleculeData, selected }:
   const viewerBackground = useStore(Selector.projectViewerBackground);
   const setChanged = usePrimitiveStore(Selector.setChanged);
 
+  const [loading, setLoading] = useState<boolean>(false);
   const lightRef = useRef<DirectionalLight>(null);
 
   const cameraPositionVector = useMemo(() => new Vector3().fromArray(DEFAULT_CAMERA_POSITION), []);
@@ -85,9 +88,24 @@ const MoleculeContainer = React.memo(({ width, height, moleculeData, selected }:
             coloring={MolecularViewerColoring.Element}
             chamber={false}
             lightRef={lightRef}
+            setLoading={setLoading}
           />
         )}
       </Canvas>
+      {loading && (
+        <Spin
+          indicator={
+            <LoadingOutlined
+              style={{
+                position: 'absolute',
+                fontSize: 50,
+                right: width / 2 - 25,
+                bottom: height / 2 - 25,
+              }}
+            />
+          }
+        />
+      )}
     </>
   );
 });

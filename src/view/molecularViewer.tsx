@@ -44,10 +44,11 @@ export interface MolecularViewerProps {
   chamber?: boolean;
   selector?: string;
   lightRef?: React.RefObject<DirectionalLight>;
+  setLoading?: (loading: boolean) => void;
 }
 
 const MolecularViewer = React.memo(
-  ({ moleculeData, style, material, coloring, chamber, selector, lightRef }: MolecularViewerProps) => {
+  ({ moleculeData, style, material, coloring, chamber, selector, lightRef, setLoading }: MolecularViewerProps) => {
     const setCommonStore = useStore(Selector.set);
     const chemicalElements = useStore(Selector.chemicalElements);
     const getChemicalElement = useStore(Selector.getChemicalElement);
@@ -232,11 +233,8 @@ const MolecularViewer = React.memo(
     useEffect(() => {
       if (!mainGroupRef.current || !complex || !mode) return;
 
-      if (chamber) {
-        usePrimitiveStore.getState().set((state) => {
-          state.waiting = true;
-        });
-      }
+      if (setLoading) setLoading(true);
+
       mainGroupRef.current.children = [];
       mainGroupRef.current.position.set(0, 0, 0);
 
@@ -268,11 +266,7 @@ const MolecularViewer = React.memo(
           invalidate();
         })
         .finally(() => {
-          if (chamber) {
-            usePrimitiveStore.getState().set((state) => {
-              state.waiting = false;
-            });
-          }
+          if (setLoading) setLoading(false);
         });
     }, [complex, material, mode, colorer, selector]);
 
