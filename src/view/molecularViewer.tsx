@@ -8,10 +8,9 @@ import XYZParser from '../lib/io/parsers/XYZParser';
 import MOL2Parser from '../lib/io/parsers/MOL2Parser';
 import CIFParser from '../lib/io/parsers/CIFParser';
 import PubChemParser from '../lib/io/parsers/PubChemParser';
-import ElementColorer from '../lib/gfx/colorers/ElementColorer';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Color, DirectionalLight, Group, Sphere, Vector3 } from 'three';
+import { DirectionalLight, Group, Sphere, Vector3 } from 'three';
 import { MoleculeTS } from '../models/MoleculeTS';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
@@ -149,68 +148,41 @@ const MolecularViewer = React.memo(
 
     const processResult = (result: any) => {
       setComplex(result);
-      const name = result.name;
-      const metadata = result.metadata;
-      const atoms: AtomTS[] = [];
-      let cx = 0;
-      let cy = 0;
-      let cz = 0;
-      let totalMass = 0;
-      const white = { r: 255, g: 255, b: 255 };
-      const elementColorer = new ElementColorer(); // default to Jmol colors (same as CPK from PubChem)
-      for (let i = 0; i < result._atoms.length; i++) {
-        const atom = result._atoms[i] as AtomJS;
-        const elementSymbol = Util.capitalizeFirstLetter(atom.element.name);
-        const color = Util.decimalColorToRgb(elementColorer.getAtomColor(atom)) ?? white;
-        cx += atom.position.x;
-        cy += atom.position.y;
-        cz += atom.position.z;
-        const element = getChemicalElement(elementSymbol);
-        totalMass += element?.atomicMass;
-        atoms.push({
-          elementSymbol,
-          position: atom.position.clone(),
-          color: new Color(color.r / 255, color.g / 255, color.b / 255).convertSRGBToLinear(),
-          radius: (element?.atomicRadius ?? 1) / 5,
-        } as AtomTS);
-      }
-      if (atoms.length > 0) {
-        cx /= atoms.length;
-        cy /= atoms.length;
-        cz /= atoms.length;
-        for (const a of atoms) {
-          a.position.x -= cx;
-          a.position.y -= cy;
-          a.position.z -= cz;
-        }
-      }
-      const bonds: BondTS[] = [];
-      for (let i = 0; i < result._bonds.length; i++) {
-        const bond = result._bonds[i] as BondJS;
-        const atom1 = bond._left;
-        const atom2 = bond._right;
-        const elementSymbol1 = atom1.element.name;
-        const elementSymbol2 = atom2.element.name;
-        const c1 = Util.decimalColorToRgb(elementColorer.getAtomColor(atom1)) ?? white;
-        const c2 = Util.decimalColorToRgb(elementColorer.getAtomColor(atom2)) ?? white;
-        bonds.push(
-          new BondTS(
-            {
-              elementSymbol: elementSymbol1,
-              position: new Vector3(atom1.position.x - cx, atom1.position.y - cy, atom1.position.z - cz),
-              color: new Color(c1.r / 255, c1.g / 255, c1.b / 255).convertSRGBToLinear(),
-              radius: getChemicalElement(elementSymbol1)?.atomicRadius / 5,
-            } as AtomTS,
-            {
-              elementSymbol: elementSymbol2,
-              position: new Vector3(atom2.position.x - cx, atom2.position.y - cy, atom2.position.z - cz),
-              color: new Color(c2.r / 255, c2.g / 255, c2.b / 255).convertSRGBToLinear(),
-              radius: getChemicalElement(elementSymbol2)?.atomicRadius / 5,
-            } as AtomTS,
-          ),
-        );
-      }
       if (chamber) {
+        const name = result.name;
+        const metadata = result.metadata;
+        const atoms: AtomTS[] = [];
+        for (let i = 0; i < result._atoms.length; i++) {
+          const atom = result._atoms[i] as AtomJS;
+          const elementSymbol = Util.capitalizeFirstLetter(atom.element.name);
+          const element = getChemicalElement(elementSymbol);
+          if (element) {
+            atoms.push({
+              elementSymbol,
+              position: atom.position.clone(),
+            } as AtomTS);
+          }
+        }
+        const bonds: BondTS[] = [];
+        for (let i = 0; i < result._bonds.length; i++) {
+          const bond = result._bonds[i] as BondJS;
+          const atom1 = bond._left;
+          const atom2 = bond._right;
+          const elementSymbol1 = atom1.element.name;
+          const elementSymbol2 = atom2.element.name;
+          bonds.push(
+            new BondTS(
+              {
+                elementSymbol: elementSymbol1,
+                position: new Vector3(atom1.position.x, atom1.position.y, atom1.position.z),
+              } as AtomTS,
+              {
+                elementSymbol: elementSymbol2,
+                position: new Vector3(atom2.position.x, atom2.position.y, atom2.position.z),
+              } as AtomTS,
+            ),
+          );
+        }
         const residues = result._residues;
         const chains = result._chains;
         const structures = result.structures;
@@ -225,12 +197,14 @@ const MolecularViewer = React.memo(
           setMolecularProperties(moleculeData.name, {
             atomCount: result._atoms.length,
             bondCount: result._bonds.length,
-            molecularMass: totalMass,
+            molecularMass: properties.molecularMass,
             logP: properties.logP,
             hydrogenBondDonorCount: properties.hydrogenBondDonorCount,
             hydrogenBondAcceptorCount: properties.hydrogenBondAcceptorCount,
             rotatableBondCount: properties.rotatableBondCount,
             polarSurfaceArea: properties.polarSurfaceArea,
+            heavyAtomCount: properties.heavyAtomCount,
+            complexity: properties.complexity,
           } as MolecularProperties);
         }
       }

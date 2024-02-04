@@ -214,13 +214,14 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                   if (Array.isArray(token) && token.length > 1) {
                     if (token[0] !== 'Name') {
                       const molProp = {
-                        logP: parseFloat(token[1].trim()),
-                        hydrogenBondDonorCount: parseInt(token[2].trim()),
-                        hydrogenBondAcceptorCount: parseInt(token[3].trim()),
-                        rotatableBondCount: parseInt(token[4].trim()),
-                        polarSurfaceArea: parseFloat(token[5].trim()),
-                        heavyAtomCount: parseFloat(token[6].trim()),
-                        complexity: parseFloat(token[7].trim()),
+                        molecularMass: parseFloat(token[1].trim()),
+                        logP: parseFloat(token[2].trim()),
+                        hydrogenBondDonorCount: parseInt(token[3].trim()),
+                        hydrogenBondAcceptorCount: parseInt(token[4].trim()),
+                        rotatableBondCount: parseInt(token[5].trim()),
+                        polarSurfaceArea: parseFloat(token[6].trim()),
+                        heavyAtomCount: parseFloat(token[7].trim()),
+                        complexity: parseFloat(token[8].trim()),
                       } as MolecularProperties;
                       immerSet((state: CommonStoreState) => {
                         state.providedMolecularProperties[token[0].trim()] = molProp;
