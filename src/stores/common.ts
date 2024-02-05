@@ -41,7 +41,8 @@ export interface CommonStoreState {
   projectState: ProjectState;
   projectView: boolean;
 
-  targetData: MoleculeTS | undefined;
+  targetProteinData: MoleculeTS | undefined;
+  testMoleculeData: AtomTS[] | undefined;
 
   projectStateToOpen: ProjectState | null;
 
@@ -100,7 +101,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           projectState: ProjectUtil.createDefaultProjectState(),
           projectView: true,
 
-          targetData: undefined,
+          targetProteinData: undefined,
+          testMoleculeData: undefined,
 
           projectStateToOpen: null,
 

@@ -41,11 +41,13 @@ export const cameraUp = (state: CommonStoreState) => state.projectState.cameraUp
 
 export const panCenter = (state: CommonStoreState) => state.projectState.panCenter;
 
-export const targetData = (state: CommonStoreState) => state.targetData;
+export const targetProteinData = (state: CommonStoreState) => state.targetProteinData;
 
 export const molecules = (state: CommonStoreState) => state.projectState.molecules;
 
 export const testMolecule = (state: CommonStoreState) => state.projectState.testMolecule;
+
+export const testMoleculeData = (state: CommonStoreState) => state.testMoleculeData;
 
 export const selectedMolecule = (state: CommonStoreState) => state.projectState.selectedMolecule;
 

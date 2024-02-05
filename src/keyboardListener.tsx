@@ -27,6 +27,7 @@ import { resetView, zoomView } from './components/mainMenu/viewMenu';
 import { useRefStore } from './stores/commonRef';
 import { invalidate } from '@react-three/fiber';
 import { Euler, Quaternion } from 'three';
+import { collide } from './models/physics.ts';
 
 export interface KeyboardListenerProps {
   setNavigationView: (selected: boolean) => void;
@@ -161,6 +162,13 @@ const loop = (control: FlightControl) => {
       if (state.projectState.testMoleculeRotation === undefined) state.projectState.testMoleculeRotation = [0, 0, 0];
       if (state.projectState.testMoleculeTranslation === undefined)
         state.projectState.testMoleculeTranslation = [0, 0, 0];
+      let collisionFactor = 1;
+      if (state.targetProteinData && state.testMoleculeData) {
+        const translation = state.projectState.testMoleculeTranslation;
+        if (collide(state.targetProteinData.atoms, state.testMoleculeData, state.chemicalElements, translation)) {
+          collisionFactor = -1;
+        }
+      }
       switch (control) {
         // rotation
         case FlightControl.RotateAroundXClockwise: {
@@ -226,55 +234,55 @@ const loop = (control: FlightControl) => {
         case FlightControl.TranslateInPositiveX: {
           const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.position.x += translationStep;
+            ref.current.position.x += translationStep * collisionFactor;
             invalidate();
           }
-          state.projectState.testMoleculeTranslation[0] += translationStep;
+          state.projectState.testMoleculeTranslation[0] += translationStep * collisionFactor;
           break;
         }
         case FlightControl.TranslateInNegativeX: {
           const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.position.x -= translationStep;
+            ref.current.position.x -= translationStep * collisionFactor;
             invalidate();
           }
-          state.projectState.testMoleculeTranslation[0] -= translationStep;
+          state.projectState.testMoleculeTranslation[0] -= translationStep * collisionFactor;
           break;
         }
         case FlightControl.TranslateInPositiveY: {
           const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.position.y += translationStep;
+            ref.current.position.y += translationStep * collisionFactor;
             invalidate();
           }
-          state.projectState.testMoleculeTranslation[1] += translationStep;
+          state.projectState.testMoleculeTranslation[1] += translationStep * collisionFactor;
           break;
         }
         case FlightControl.TranslateInNegativeY: {
           const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.position.y -= translationStep;
+            ref.current.position.y -= translationStep * collisionFactor;
             invalidate();
           }
-          state.projectState.testMoleculeTranslation[1] -= translationStep;
+          state.projectState.testMoleculeTranslation[1] -= translationStep * collisionFactor;
           break;
         }
         case FlightControl.TranslateInPositiveZ: {
           const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.position.z += translationStep;
+            ref.current.position.z += translationStep * collisionFactor;
             invalidate();
           }
-          state.projectState.testMoleculeTranslation[2] += translationStep;
+          state.projectState.testMoleculeTranslation[2] += translationStep * collisionFactor;
           break;
         }
         case FlightControl.TranslateInNegativeZ: {
           const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.position.z -= translationStep;
+            ref.current.position.z -= translationStep * collisionFactor;
             invalidate();
           }
-          state.projectState.testMoleculeTranslation[2] -= translationStep;
+          state.projectState.testMoleculeTranslation[2] -= translationStep * collisionFactor;
           break;
         }
       }
@@ -341,6 +349,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   };
 
   const handleKeyDown = (key: string) => {
+    const ship = useStore.getState().projectState.spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW;
     switch (key) {
       case 'up':
         startFlying(FlightControl.MoveForward);
@@ -349,22 +358,22 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         startFlying(FlightControl.MoveBackward);
         break;
       case 'q':
-        startFlying(FlightControl.YawLeft);
+        startFlying(ship ? FlightControl.YawLeft : FlightControl.RotateAroundZClockwise);
         break;
       case 'e':
-        startFlying(FlightControl.YawRight);
+        startFlying(ship ? FlightControl.YawRight : FlightControl.RotateAroundZCounterclockwise);
         break;
       case 'a':
-        startFlying(FlightControl.RollLeft);
+        startFlying(ship ? FlightControl.RollLeft : FlightControl.RotateAroundXCounterclockwise);
         break;
       case 'd':
-        startFlying(FlightControl.RollRight);
+        startFlying(ship ? FlightControl.RollRight : FlightControl.RotateAroundXClockwise);
         break;
       case 'w':
-        startFlying(FlightControl.PitchDown);
+        startFlying(ship ? FlightControl.PitchDown : FlightControl.RotateAroundYClockwise);
         break;
       case 's':
-        startFlying(FlightControl.PitchUp);
+        startFlying(ship ? FlightControl.PitchUp : FlightControl.RotateAroundYCounterclockwise);
         break;
       case 'x':
         startFlying(FlightControl.TranslateInPositiveX);

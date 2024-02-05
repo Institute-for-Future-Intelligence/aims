@@ -63,7 +63,8 @@ const MolecularViewer = React.memo(
 
     const [complex, setComplex] = useState<any>();
 
-    const mainGroupRef = useRef<Group>(null);
+    const groupRef = useRef<Group>(null);
+    const firstGroupRef = useRef<Group>(null);
     const originalPositions = useRef<Vector3[]>([]);
 
     const { invalidate, camera } = useThree();
@@ -188,8 +189,37 @@ const MolecularViewer = React.memo(
         const structures = result.structures;
         const molecules = result._molecules;
         setCommonStore((state) => {
-          state.targetData = { name, metadata, atoms, bonds, residues, chains, structures, molecules } as MoleculeTS;
+          state.targetProteinData = {
+            name,
+            metadata,
+            atoms,
+            bonds,
+            residues,
+            chains,
+            structures,
+            molecules,
+          } as MoleculeTS;
         });
+      } else {
+        if (testMolecule && moleculeData) {
+          if (testMolecule.name === moleculeData.name) {
+            const atoms: AtomTS[] = [];
+            for (let i = 0; i < result._atoms.length; i++) {
+              const atom = result._atoms[i] as AtomJS;
+              const elementSymbol = Util.capitalizeFirstLetter(atom.element.name);
+              const element = getChemicalElement(elementSymbol);
+              if (element) {
+                atoms.push({
+                  elementSymbol,
+                  position: atom.position.clone(),
+                } as AtomTS);
+              }
+            }
+            setCommonStore((state) => {
+              state.testMoleculeData = atoms;
+            });
+          }
+        }
       }
       if (moleculeData) {
         const properties = getProvidedMolecularProperties(moleculeData.name);
@@ -211,12 +241,13 @@ const MolecularViewer = React.memo(
     };
 
     useEffect(() => {
-      if (!mainGroupRef.current || !mode) return;
-      mainGroupRef.current.children = [];
+      groupRef.current?.position.set(0, 0, 0);
+      if (!firstGroupRef.current || !mode) return;
+      firstGroupRef.current.children = [];
       if (!complex) return;
       if (setLoading) setLoading(true);
 
-      mainGroupRef.current.position.set(0, 0, 0);
+      firstGroupRef.current.position.set(0, 0, 0);
       const visual = new ComplexVisual(complex.name, complex);
       const reps = [
         {
@@ -230,11 +261,10 @@ const MolecularViewer = React.memo(
       visual
         .rebuild()
         .then(() => {
-          if (!mainGroupRef.current) return;
-          mainGroupRef.current.add(visual);
+          if (!firstGroupRef.current) return;
+          firstGroupRef.current.add(visual);
           const boundingSphere = visual.getBoundaries().boundingSphere;
-          const offset = boundingSphere.center.clone().multiplyScalar(-1);
-          mainGroupRef.current.position.copy(offset);
+          groupRef.current?.position.copy(boundingSphere.center.clone().multiplyScalar(-1));
           if (chamber) {
             usePrimitiveStore.getState().set((state) => {
               state.boundingSphereRadius = boundingSphere.radius;
@@ -249,12 +279,12 @@ const MolecularViewer = React.memo(
         });
     }, [complex, material, mode, colorer, selector]);
 
-    const testMoleculeRef = useRef<Group>(null);
+    const secondGroupRef = useRef<Group>(null);
 
     useEffect(() => {
       if (!chamber) return;
-      if (testMoleculeRef.current) {
-        testMoleculeRef.current.children = [];
+      if (secondGroupRef.current) {
+        secondGroupRef.current.children = [];
         if (testMolecule) {
           const complexTestMolecule = parsedResultsMap.get(testMolecule.name);
           if (complexTestMolecule) {
@@ -268,21 +298,21 @@ const MolecularViewer = React.memo(
               },
             ]);
             visualTestMolecule.rebuild().then(() => {
-              if (!testMoleculeRef.current) return;
-              testMoleculeRef.current.add(visualTestMolecule);
+              if (!secondGroupRef.current) return;
+              secondGroupRef.current.add(visualTestMolecule);
               invalidate();
             });
           }
-          useRefStore.setState((state) => ({ testMoleculeRef: testMoleculeRef }));
+          useRefStore.setState((state) => ({ testMoleculeRef: secondGroupRef }));
         }
       }
     }, [testMolecule, parsedResultsMap, projectViewerStyle, projectViewerMaterial]);
 
     return (
-      <>
+      <group ref={groupRef}>
         <group
-          name={'Main'}
-          ref={mainGroupRef}
+          name={'First'}
+          ref={firstGroupRef}
           // FIXME: adding this would slow down the viewer significantly
           // onContextMenu={(e) => {
           //   e.stopPropagation();
@@ -292,12 +322,12 @@ const MolecularViewer = React.memo(
           // }}
         />
         <group
-          name={'Test'}
-          ref={testMoleculeRef}
+          name={'Second'}
+          ref={secondGroupRef}
           position={[testMoleculeTranslation[0], testMoleculeTranslation[1], testMoleculeTranslation[2]]}
           rotation={[testMoleculeRotation[0], testMoleculeRotation[1], testMoleculeRotation[2]]}
         />
-      </>
+      </group>
     );
   },
 );

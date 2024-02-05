@@ -20,7 +20,7 @@ const ExperimentSettings = React.memo(() => {
   const language = useStore(Selector.language);
   const addUndoable = useStore(Selector.addUndoable);
   const projectState = useStore(Selector.projectState);
-  const targetData = useStore(Selector.targetData);
+  const targetProteinData = useStore(Selector.targetProteinData);
   const setChanged = usePrimitiveStore(Selector.setChanged);
 
   const [selector, setSelector] = useState<string | undefined>();
@@ -180,45 +180,45 @@ const ExperimentSettings = React.memo(() => {
       {
         key: '1',
         label: t('word.Codename', lang),
-        children: targetData?.name,
+        children: targetProteinData?.name,
       },
       {
         key: '2',
         label: t('projectPanel.AtomCount', lang),
-        children: targetData?.atoms.length,
+        children: targetProteinData?.atoms.length,
       },
       {
         key: '3',
         label: t('projectPanel.BondCount', lang),
-        children: targetData?.bonds.length,
+        children: targetProteinData?.bonds.length,
       },
       {
         key: '4',
         label: t('projectPanel.ResidueCount', lang),
-        children: targetData?.residues.length,
+        children: targetProteinData?.residues.length,
       },
       {
         key: '5',
         label: t('projectPanel.ChainCount', lang),
-        children: targetData?.chains.length,
+        children: targetProteinData?.chains.length,
       },
       {
         key: '6',
         label: t('projectPanel.StructureCount', lang),
-        children: targetData?.structures.length,
+        children: targetProteinData?.structures.length,
       },
       {
         key: '7',
         label: t('projectPanel.MoleculeCount', lang),
-        children: targetData?.molecules.length,
+        children: targetProteinData?.molecules.length,
       },
     ];
     return (
       <div style={{ width: '300px' }}>
-        {targetData && (
+        {targetProteinData && (
           <span style={{ paddingTop: '10px', fontSize: '10px' }}>
-            {targetData?.metadata['classification']}
-            <br /> {targetData?.metadata['title']}
+            {targetProteinData?.metadata['classification']}
+            <br /> {targetProteinData?.metadata['title']}
           </span>
         )}
         <Descriptions
@@ -231,7 +231,7 @@ const ExperimentSettings = React.memo(() => {
         />
       </div>
     );
-  }, [lang, targetData]);
+  }, [lang, targetProteinData]);
 
   return (
     <>
