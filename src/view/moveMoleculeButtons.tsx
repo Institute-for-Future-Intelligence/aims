@@ -15,26 +15,18 @@ import TranslateYNeg from '../assets/translate-in-y-negative.png';
 import TranslateZPos from '../assets/translate-in-z-positive.png';
 import TranslateZNeg from '../assets/translate-in-z-negative.png';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { FloatButton } from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
-import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { FlightControl } from '../constants.ts';
 import { LabelMark } from '../components/menuItem.tsx';
-import { startFlying, stopFlying } from '../keyboardListener.tsx';
+import { stopFlying } from '../fly.ts';
+import { startFlying } from '../fly.ts';
 
 const MoveMoleculeButtons = React.memo(() => {
-  const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
-  const addUndoable = useStore(Selector.addUndoable);
-  const setChanged = usePrimitiveStore(Selector.setChanged);
-  const rotationStep = useStore(Selector.rotationStep) ?? 0.1;
-  const translationStep = useStore(Selector.translationStep) ?? 1.0;
-
-  const [selector, setSelector] = useState<string | undefined>();
-
   const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };

@@ -41,9 +41,6 @@ import {
 } from './view/displayOptions';
 import { getSampleMolecule } from './internalDatabase';
 import MoleculeContainer from './moleculeContainer';
-import { AtomTS } from './models/AtomTS.ts';
-import AtomJS from './lib/chem/Atom';
-import { Util } from './Util.ts';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
