@@ -13,6 +13,7 @@ import { usePrimitiveStore } from './stores/commonPrimitive';
 import { DataColoring, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import dayjs from 'dayjs';
+import { Util } from './Util.ts';
 
 export const fetchProject = async (userid: string, project: string, setProjectState: (ps: ProjectState) => void) => {
   const lang = { lng: useStore.getState().language };
@@ -59,7 +60,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           chamberViewerBackground: data.chamberViewerBackground ?? 'black',
           chamberViewerSelector: data.chamberViewerSelector ?? 'all',
 
-          rotationStep: data.rotationStep ?? 0.1,
+          rotationStep: data.rotationStep ?? Util.toRadians(5),
           translationStep: data.translationStep ?? 1,
 
           testMoleculeRotation: data.testMoleculeRotation ?? [0, 0, 0],

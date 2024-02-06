@@ -365,7 +365,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             chamberViewerBackground: data.chamberViewerBackground ?? 'black',
             chamberViewerSelector: data.chamberViewerSelector ?? 'all',
 
-            rotationStep: data.rotationStep ?? 0.1,
+            rotationStep: data.rotationStep ?? Util.toRadians(5),
             translationStep: data.translationStep ?? 1,
 
             testMoleculeRotation: data.testMoleculeRotation ?? [0, 0, 0],

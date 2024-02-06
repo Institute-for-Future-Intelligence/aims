@@ -28,6 +28,14 @@ export class Util {
     return false;
   }
 
+  static toRadians(degrees: number): number {
+    return degrees * (Math.PI / 180);
+  }
+
+  static toDegrees(radians: number): number {
+    return radians * (180 / Math.PI);
+  }
+
   static decimalColorToRgb(value: number) {
     return Util.hexColorToRgb(value.toString(16));
   }

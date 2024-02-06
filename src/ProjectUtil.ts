@@ -16,6 +16,7 @@ import {
   SpaceshipDisplayMode,
 } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
+import { Util } from './Util.ts';
 
 export class ProjectUtil {
   static createDefaultProjectState() {
@@ -55,7 +56,7 @@ export class ProjectUtil {
       chamberViewerBackground: 'black',
       chamberViewerSelector: 'all',
 
-      rotationStep: 0.1,
+      rotationStep: Util.toRadians(5),
       translationStep: 1,
 
       testMoleculeRotation: [0, 0, 0],

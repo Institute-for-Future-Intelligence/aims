@@ -151,6 +151,8 @@ export const i18n_en = {
       TestMolecule: 'Test Molecule',
       SelectorCommands: 'Selector Commands',
       Information: 'Information',
+      MovingStep: 'Moving Step',
+      RotationStep: 'Rotation Step',
       MoveInPositiveXDirection: 'Move test molecule in positive X direction',
       MoveInNegativeXDirection: 'Move test molecule in negative X direction',
       MoveInPositiveYDirection: 'Move test molecule in positive Y direction',

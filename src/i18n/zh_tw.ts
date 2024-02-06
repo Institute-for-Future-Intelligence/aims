@@ -151,6 +151,8 @@ export const i18n_zh_tw = {
       TestMolecule: '試驗分子',
       SelectorCommands: '選擇指令',
       Information: '資訊',
+      MovingStep: '平移步長',
+      RotationStep: '旋轉步長',
       MoveInPositiveXDirection: '沿著X軸正方向平移試驗分子',
       MoveInNegativeXDirection: '沿著X軸負方向平移試驗分子',
       MoveInPositiveYDirection: '沿著Y軸正方向平移試驗分子',

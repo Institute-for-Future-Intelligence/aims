@@ -19,6 +19,7 @@ import { useRefStore } from './stores/commonRef.ts';
 import { invalidate } from '@react-three/fiber';
 
 let flyTimeout = -1;
+let collisionDirection = null;
 
 export const startFlying = (control: FlightControl) => {
   if (flyTimeout === -1) {
@@ -29,6 +30,7 @@ export const startFlying = (control: FlightControl) => {
 export const stopFlying = () => {
   clearTimeout(flyTimeout);
   flyTimeout = -1;
+  collisionDirection = null;
 };
 
 const saveEuler = (rotation: number[], euler: Euler) => {
@@ -83,64 +85,63 @@ const loop = (control: FlightControl) => {
         const translation = state.projectState.testMoleculeTranslation;
         collided = collide(state.targetProteinData.atoms, state.testMoleculeData, state.chemicalElements, translation);
       }
-      if (collided) {
-        stopFlying();
-      }
-      console.log(collided);
+      collisionDirection = collided ? control : null;
+      console.log(collided, collisionDirection);
+      const delta = collisionDirection === control ? -translationStep : translationStep;
       switch (control) {
         // translation
         case FlightControl.TranslateInPositiveX: {
           const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.position.x += translationStep;
+            ref.current.position.x += delta;
             invalidate();
           }
-          state.projectState.testMoleculeTranslation[0] += translationStep;
+          state.projectState.testMoleculeTranslation[0] += delta;
           break;
         }
         case FlightControl.TranslateInNegativeX: {
           const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.position.x -= translationStep;
+            ref.current.position.x -= delta;
             invalidate();
           }
-          state.projectState.testMoleculeTranslation[0] -= translationStep;
+          state.projectState.testMoleculeTranslation[0] -= delta;
           break;
         }
         case FlightControl.TranslateInPositiveY: {
           const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.position.y += translationStep;
+            ref.current.position.y += delta;
             invalidate();
           }
-          state.projectState.testMoleculeTranslation[1] += translationStep;
+          state.projectState.testMoleculeTranslation[1] += delta;
           break;
         }
         case FlightControl.TranslateInNegativeY: {
           const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.position.y -= translationStep;
+            ref.current.position.y -= delta;
             invalidate();
           }
-          state.projectState.testMoleculeTranslation[1] -= translationStep;
+          state.projectState.testMoleculeTranslation[1] -= delta;
           break;
         }
         case FlightControl.TranslateInPositiveZ: {
           const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.position.z += translationStep;
+            ref.current.position.z += delta;
             invalidate();
           }
-          state.projectState.testMoleculeTranslation[2] += translationStep;
+          state.projectState.testMoleculeTranslation[2] += delta;
           break;
         }
         case FlightControl.TranslateInNegativeZ: {
           const ref = useRefStore.getState().testMoleculeRef;
           if (ref && ref.current) {
-            ref.current.position.z -= translationStep;
+            ref.current.position.z -= delta;
             invalidate();
           }
-          state.projectState.testMoleculeTranslation[2] -= translationStep;
+          state.projectState.testMoleculeTranslation[2] -= delta;
           break;
         }
         // rotation

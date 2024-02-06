@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Input, Col, Descriptions, DescriptionsProps, FloatButton, Popover, Row, Select } from 'antd';
+import { Input, Col, Descriptions, DescriptionsProps, FloatButton, Popover, Row, Select, InputNumber } from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ import { UndoableChange } from '../undo/UndoableChange';
 import { sampleProteins } from '../internalDatabase';
 import { AimOutlined, InfoCircleOutlined, ExperimentOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
+import { Util } from '../Util.ts';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -21,10 +22,14 @@ const ExperimentSettings = React.memo(() => {
   const addUndoable = useStore(Selector.addUndoable);
   const projectState = useStore(Selector.projectState);
   const targetProteinData = useStore(Selector.targetProteinData);
+  const translationStep = useStore(Selector.translationStep);
+  const rotationStep = useStore(Selector.rotationStep);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const updateTestMoleculeData = useStore(Selector.updateTestMoleculeData);
 
   const [selector, setSelector] = useState<string | undefined>();
+  const [inputTranslationStep, setInputTranslationStep] = useState<number>(translationStep);
+  const [inputRotationStep, setInputRotationStep] = useState<number>(rotationStep);
 
   useEffect(() => {
     setSelector(projectState.chamberViewerSelector);
@@ -147,6 +152,47 @@ const ExperimentSettings = React.memo(() => {
                 </Option>
               ))}
             </Select>
+          </Col>
+        </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.MovingStep', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <InputNumber
+              min={0.1}
+              max={1}
+              style={{ width: '100%' }}
+              precision={2}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(inputTranslationStep.toFixed(2))}
+              step={1}
+              onChange={(value) => {
+                if (value === null) return;
+                setInputTranslationStep(value);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.RotationStep', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <InputNumber
+              min={1}
+              max={10}
+              formatter={(value) => `${value}°`}
+              style={{ width: '100%' }}
+              precision={2}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(Util.toDegrees(inputRotationStep).toFixed(2))}
+              step={1}
+              onChange={(value) => {
+                if (value === null) return;
+                setInputRotationStep(Util.toRadians(value));
+              }}
+            />
           </Col>
         </Row>
         <Row gutter={16} style={{ paddingBottom: '4px' }}>
