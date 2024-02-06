@@ -24,6 +24,7 @@ import { User } from '../User';
 import { ProjectUtil } from '../ProjectUtil';
 import { MoleculeTS } from '../models/MoleculeTS';
 import Complex from '../lib/chem/Complex';
+import AtomJS from '../lib/chem/Atom';
 
 enableMapSet();
 
@@ -43,6 +44,7 @@ export interface CommonStoreState {
 
   targetProteinData: MoleculeTS | undefined;
   testMoleculeData: AtomTS[] | undefined;
+  updateTestMoleculeData: () => void;
 
   projectStateToOpen: ProjectState | null;
 
@@ -103,6 +105,28 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
 
           targetProteinData: undefined,
           testMoleculeData: undefined,
+          updateTestMoleculeData() {
+            immerSet((state: CommonStoreState) => {
+              if (state.projectState.testMolecule) {
+                const result = state.parsedResultsMap.get(state.projectState.testMolecule.name);
+                if (result) {
+                  const atoms: AtomTS[] = [];
+                  for (let i = 0; i < result._atoms.length; i++) {
+                    const atom = result._atoms[i] as AtomJS;
+                    atoms.push({
+                      elementSymbol: Util.capitalizeFirstLetter(atom.element.name),
+                      position: atom.position.clone(),
+                    } as AtomTS);
+                  }
+                  state.testMoleculeData = atoms;
+                } else {
+                  state.testMoleculeData = undefined;
+                }
+              } else {
+                state.testMoleculeData = undefined;
+              }
+            });
+          },
 
           projectStateToOpen: null,
 

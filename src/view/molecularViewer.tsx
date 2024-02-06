@@ -50,7 +50,6 @@ const MolecularViewer = React.memo(
   ({ moleculeData, style, material, coloring, chamber, selector, lightRef, setLoading }: MolecularViewerProps) => {
     const setCommonStore = useStore(Selector.set);
     const chemicalElements = useStore(Selector.chemicalElements);
-    const getChemicalElement = useStore(Selector.getChemicalElement);
     const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
     const setMolecularProperties = useStore(Selector.setMolecularProperties);
     const projectViewerMaterial = useStore(Selector.projectViewerMaterial);
@@ -58,6 +57,7 @@ const MolecularViewer = React.memo(
     const parsedResultsMap = useStore(Selector.parsedResultsMap);
     const setParsedResult = useStore(Selector.setParsedResult);
     const testMolecule = useStore(Selector.testMolecule);
+    const updateTestMoleculeData = useStore(Selector.updateTestMoleculeData);
     const testMoleculeRotation = useStore.getState().projectState.testMoleculeRotation ?? [0, 0, 0];
     const testMoleculeTranslation = useStore.getState().projectState.testMoleculeTranslation ?? [0, 0, 0];
 
@@ -155,14 +155,10 @@ const MolecularViewer = React.memo(
         const atoms: AtomTS[] = [];
         for (let i = 0; i < result._atoms.length; i++) {
           const atom = result._atoms[i] as AtomJS;
-          const elementSymbol = Util.capitalizeFirstLetter(atom.element.name);
-          const element = getChemicalElement(elementSymbol);
-          if (element) {
-            atoms.push({
-              elementSymbol,
-              position: atom.position.clone(),
-            } as AtomTS);
-          }
+          atoms.push({
+            elementSymbol: Util.capitalizeFirstLetter(atom.element.name),
+            position: atom.position.clone(),
+          } as AtomTS);
         }
         const bonds: BondTS[] = [];
         for (let i = 0; i < result._bonds.length; i++) {
@@ -202,23 +198,7 @@ const MolecularViewer = React.memo(
         });
       } else {
         if (testMolecule && moleculeData) {
-          if (testMolecule.name === moleculeData.name) {
-            const atoms: AtomTS[] = [];
-            for (let i = 0; i < result._atoms.length; i++) {
-              const atom = result._atoms[i] as AtomJS;
-              const elementSymbol = Util.capitalizeFirstLetter(atom.element.name);
-              const element = getChemicalElement(elementSymbol);
-              if (element) {
-                atoms.push({
-                  elementSymbol,
-                  position: atom.position.clone(),
-                } as AtomTS);
-              }
-            }
-            setCommonStore((state) => {
-              state.testMoleculeData = atoms;
-            });
-          }
+          updateTestMoleculeData();
         }
       }
       if (moleculeData) {

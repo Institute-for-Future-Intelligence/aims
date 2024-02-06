@@ -47,7 +47,7 @@ export const molecules = (state: CommonStoreState) => state.projectState.molecul
 
 export const testMolecule = (state: CommonStoreState) => state.projectState.testMolecule;
 
-export const testMoleculeData = (state: CommonStoreState) => state.testMoleculeData;
+export const updateTestMoleculeData = (state: CommonStoreState) => state.updateTestMoleculeData;
 
 export const selectedMolecule = (state: CommonStoreState) => state.projectState.selectedMolecule;
 

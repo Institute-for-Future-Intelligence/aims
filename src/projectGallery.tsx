@@ -41,6 +41,9 @@ import {
 } from './view/displayOptions';
 import { getSampleMolecule } from './internalDatabase';
 import MoleculeContainer from './moleculeContainer';
+import { AtomTS } from './models/AtomTS.ts';
+import AtomJS from './lib/chem/Atom';
+import { Util } from './Util.ts';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -132,6 +135,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const projectState = useStore(Selector.projectState);
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const updateTestMoleculeData = useStore(Selector.updateTestMoleculeData);
 
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const [updateHiddenFlag, setUpdateHiddenFlag] = useState<boolean>(false);
@@ -474,6 +478,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   setCommonStore((state) => {
                     state.projectState.testMolecule = selectedMolecule;
                   });
+                  updateTestMoleculeData();
                   setChanged(true);
                 }}
               >

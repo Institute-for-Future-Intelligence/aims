@@ -162,14 +162,68 @@ const loop = (control: FlightControl) => {
       if (state.projectState.testMoleculeRotation === undefined) state.projectState.testMoleculeRotation = [0, 0, 0];
       if (state.projectState.testMoleculeTranslation === undefined)
         state.projectState.testMoleculeTranslation = [0, 0, 0];
-      let collisionFactor = 1;
+      let collided = false;
       if (state.targetProteinData && state.testMoleculeData) {
         const translation = state.projectState.testMoleculeTranslation;
-        if (collide(state.targetProteinData.atoms, state.testMoleculeData, state.chemicalElements, translation)) {
-          collisionFactor = -1;
-        }
+        collided = collide(state.targetProteinData.atoms, state.testMoleculeData, state.chemicalElements, translation);
       }
+      console.log(collided);
       switch (control) {
+        // translation
+        case FlightControl.TranslateInPositiveX: {
+          const ref = useRefStore.getState().testMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.position.x += translationStep;
+            invalidate();
+          }
+          state.projectState.testMoleculeTranslation[0] += translationStep;
+          break;
+        }
+        case FlightControl.TranslateInNegativeX: {
+          const ref = useRefStore.getState().testMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.position.x -= translationStep;
+            invalidate();
+          }
+          state.projectState.testMoleculeTranslation[0] -= translationStep;
+          break;
+        }
+        case FlightControl.TranslateInPositiveY: {
+          const ref = useRefStore.getState().testMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.position.y += translationStep;
+            invalidate();
+          }
+          state.projectState.testMoleculeTranslation[1] += translationStep;
+          break;
+        }
+        case FlightControl.TranslateInNegativeY: {
+          const ref = useRefStore.getState().testMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.position.y -= translationStep;
+            invalidate();
+          }
+          state.projectState.testMoleculeTranslation[1] -= translationStep;
+          break;
+        }
+        case FlightControl.TranslateInPositiveZ: {
+          const ref = useRefStore.getState().testMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.position.z += translationStep;
+            invalidate();
+          }
+          state.projectState.testMoleculeTranslation[2] += translationStep;
+          break;
+        }
+        case FlightControl.TranslateInNegativeZ: {
+          const ref = useRefStore.getState().testMoleculeRef;
+          if (ref && ref.current) {
+            ref.current.position.z -= translationStep;
+            invalidate();
+          }
+          state.projectState.testMoleculeTranslation[2] -= translationStep;
+          break;
+        }
         // rotation
         case FlightControl.RotateAroundXClockwise: {
           const ref = useRefStore.getState().testMoleculeRef;
@@ -230,61 +284,6 @@ const loop = (control: FlightControl) => {
           }
           break;
         }
-        // translation
-        case FlightControl.TranslateInPositiveX: {
-          const ref = useRefStore.getState().testMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.position.x += translationStep * collisionFactor;
-            invalidate();
-          }
-          state.projectState.testMoleculeTranslation[0] += translationStep * collisionFactor;
-          break;
-        }
-        case FlightControl.TranslateInNegativeX: {
-          const ref = useRefStore.getState().testMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.position.x -= translationStep * collisionFactor;
-            invalidate();
-          }
-          state.projectState.testMoleculeTranslation[0] -= translationStep * collisionFactor;
-          break;
-        }
-        case FlightControl.TranslateInPositiveY: {
-          const ref = useRefStore.getState().testMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.position.y += translationStep * collisionFactor;
-            invalidate();
-          }
-          state.projectState.testMoleculeTranslation[1] += translationStep * collisionFactor;
-          break;
-        }
-        case FlightControl.TranslateInNegativeY: {
-          const ref = useRefStore.getState().testMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.position.y -= translationStep * collisionFactor;
-            invalidate();
-          }
-          state.projectState.testMoleculeTranslation[1] -= translationStep * collisionFactor;
-          break;
-        }
-        case FlightControl.TranslateInPositiveZ: {
-          const ref = useRefStore.getState().testMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.position.z += translationStep * collisionFactor;
-            invalidate();
-          }
-          state.projectState.testMoleculeTranslation[2] += translationStep * collisionFactor;
-          break;
-        }
-        case FlightControl.TranslateInNegativeZ: {
-          const ref = useRefStore.getState().testMoleculeRef;
-          if (ref && ref.current) {
-            ref.current.position.z -= translationStep * collisionFactor;
-            invalidate();
-          }
-          state.projectState.testMoleculeTranslation[2] -= translationStep * collisionFactor;
-          break;
-        }
       }
     });
   }
@@ -299,9 +298,6 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const undoManager = useStore(Selector.undoManager);
   const addUndoable = useStore(Selector.addUndoable);
   const selectedObject = useStore(Selector.selectedObject);
-  const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
-  const rotationStep = useStore(Selector.rotationStep) ?? 0.1;
-  const translationStep = useStore(Selector.translationStep) ?? 1.0;
 
   const lang = useMemo(() => {
     return { lng: language };

@@ -22,6 +22,7 @@ const ExperimentSettings = React.memo(() => {
   const projectState = useStore(Selector.projectState);
   const targetProteinData = useStore(Selector.targetProteinData);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const updateTestMoleculeData = useStore(Selector.updateTestMoleculeData);
 
   const [selector, setSelector] = useState<string | undefined>();
 
@@ -64,6 +65,7 @@ const ExperimentSettings = React.memo(() => {
           }
         }
       });
+      updateTestMoleculeData();
       setChanged(true);
     };
 
@@ -173,7 +175,14 @@ const ExperimentSettings = React.memo(() => {
         </Row>
       </div>
     );
-  }, [lang, projectState.targetProtein, projectState.testMolecule, projectState.chamberViewerSelector, selector]);
+  }, [
+    lang,
+    projectState.targetProtein,
+    projectState.testMolecule,
+    projectState.molecules,
+    projectState.chamberViewerSelector,
+    selector,
+  ]);
 
   const createInfo = useMemo(() => {
     const items: DescriptionsProps['items'] = [
