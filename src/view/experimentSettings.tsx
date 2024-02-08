@@ -20,20 +20,23 @@ const ExperimentSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const addUndoable = useStore(Selector.addUndoable);
-  const projectState = useStore(Selector.projectState);
+  const molecules = useStore(Selector.molecules);
+  const testMolecule = useStore(Selector.testMolecule);
+  const targetProtein = useStore(Selector.targetProtein);
   const targetProteinData = useStore(Selector.targetProteinData);
   const translationStep = useStore(Selector.translationStep);
   const rotationStep = useStore(Selector.rotationStep);
+  const chamberViewerSelector = useStore(Selector.chamberViewerSelector);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const updateTestMoleculeData = useStore(Selector.updateTestMoleculeData);
 
+  // onChange of a text area changes at every key typing, triggering the viewer to re-render each time.
+  // So we store the intermediate result here
   const [selector, setSelector] = useState<string | undefined>();
-  const [inputTranslationStep, setInputTranslationStep] = useState<number>(translationStep);
-  const [inputRotationStep, setInputRotationStep] = useState<number>(rotationStep);
 
   useEffect(() => {
-    setSelector(projectState.chamberViewerSelector);
-  }, [projectState.chamberViewerSelector]);
+    setSelector(chamberViewerSelector);
+  }, [chamberViewerSelector]);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -62,7 +65,7 @@ const ExperimentSettings = React.memo(() => {
         if (testMoleculeName === 'None') {
           state.projectState.testMolecule = null;
         } else {
-          for (const t of projectState.molecules) {
+          for (const t of molecules) {
             if (t.name === testMoleculeName) {
               state.projectState.testMolecule = t;
               break;
@@ -83,10 +86,10 @@ const ExperimentSettings = React.memo(() => {
           <Col span={16}>
             <Select
               style={{ width: '100%' }}
-              value={projectState.testMolecule?.name ?? t('word.None', lang)}
+              value={testMolecule?.name ?? t('word.None', lang)}
               showSearch
               onChange={(value: string) => {
-                const oldValue = projectState.testMolecule?.name;
+                const oldValue = testMolecule?.name;
                 const newValue = value;
                 const undoableChange = {
                   name: 'Select Test Molecule',
@@ -107,7 +110,7 @@ const ExperimentSettings = React.memo(() => {
               <Option key={`None`} value={'None'}>
                 {t('word.None', lang)}
               </Option>
-              {projectState.molecules.map((d, i) => (
+              {molecules.map((d, i) => (
                 <Option key={`${i}-${d.name}`} value={d.name}>
                   {d.name}
                 </Option>
@@ -122,10 +125,10 @@ const ExperimentSettings = React.memo(() => {
           <Col span={16}>
             <Select
               style={{ width: '100%' }}
-              value={projectState.targetProtein?.name ?? t('word.None', lang)}
+              value={targetProtein?.name ?? t('word.None', lang)}
               showSearch
               onChange={(value: string) => {
-                const oldValue = projectState.targetProtein?.name;
+                const oldValue = targetProtein?.name;
                 const newValue = value;
                 const undoableChange = {
                   name: 'Select Target Protein',
@@ -165,11 +168,13 @@ const ExperimentSettings = React.memo(() => {
               style={{ width: '100%' }}
               precision={2}
               // make sure that we round up the number as toDegrees may cause things like .999999999
-              value={parseFloat(inputTranslationStep.toFixed(2))}
-              step={1}
+              value={parseFloat(translationStep.toFixed(2))}
+              step={0.1}
               onChange={(value) => {
                 if (value === null) return;
-                setInputTranslationStep(value);
+                setCommonStore((state) => {
+                  state.projectState.translationStep = value;
+                });
               }}
             />
           </Col>
@@ -186,11 +191,14 @@ const ExperimentSettings = React.memo(() => {
               style={{ width: '100%' }}
               precision={2}
               // make sure that we round up the number as toDegrees may cause things like .999999999
-              value={parseFloat(Util.toDegrees(inputRotationStep).toFixed(2))}
+              value={parseFloat(Util.toDegrees(rotationStep).toFixed(2))}
               step={1}
               onChange={(value) => {
                 if (value === null) return;
-                setInputRotationStep(Util.toRadians(value));
+                const step = Util.toRadians(value);
+                setCommonStore((state) => {
+                  state.projectState.rotationStep = step;
+                });
               }}
             />
           </Col>
@@ -221,14 +229,7 @@ const ExperimentSettings = React.memo(() => {
         </Row>
       </div>
     );
-  }, [
-    lang,
-    projectState.targetProtein,
-    projectState.testMolecule,
-    projectState.molecules,
-    projectState.chamberViewerSelector,
-    selector,
-  ]);
+  }, [lang, targetProtein, testMolecule, molecules, chamberViewerSelector, translationStep, rotationStep, selector]);
 
   const createInfo = useMemo(() => {
     const items: DescriptionsProps['items'] = [
@@ -315,7 +316,7 @@ const ExperimentSettings = React.memo(() => {
           }
         />
       </Popover>
-      {projectState.targetProtein?.name ? (
+      {targetProtein?.name ? (
         <Popover
           title={
             <div onClick={(e) => e.stopPropagation()}>
@@ -335,7 +336,7 @@ const ExperimentSettings = React.memo(() => {
               color: 'lightgray',
             }}
           >
-            {projectState.targetProtein.name}
+            {targetProtein.name}
           </span>
         </Popover>
       ) : (

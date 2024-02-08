@@ -130,22 +130,22 @@ const MolecularViewer = React.memo(
               else if (url.endsWith('.xyz')) parser = new XYZParser(text, options);
               else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
               if (parser) {
-                parser.parse().then((result) => {
-                  processResult(result);
-                });
                 if (!chamber) {
-                  // have to parse again to create a distinct copy for common store
+                  // have to parse twice to create a distinct copy for common store
                   // because deep copy using JSON does not work (circular references)
                   parser.parse().then((result) => {
                     setParsedResult(moleculeData.name, result);
                   });
                 }
+                parser.parse().then((result) => {
+                  processResult(result);
+                });
               }
             }
           });
         });
       }
-    }, [moleculeData, chemicalElements]);
+    }, [moleculeData?.name, chemicalElements]);
 
     const processResult = (result: any) => {
       setComplex(result);
@@ -197,7 +197,7 @@ const MolecularViewer = React.memo(
           } as MoleculeTS;
         });
       } else {
-        if (testMolecule && moleculeData) {
+        if (testMolecule && moleculeData && testMolecule.name === moleculeData.name) {
           updateTestMoleculeData();
         }
       }

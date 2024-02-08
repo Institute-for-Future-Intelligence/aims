@@ -19,7 +19,7 @@ import { useRefStore } from './stores/commonRef.ts';
 import { invalidate } from '@react-three/fiber';
 
 let flyTimeout = -1;
-let collisionDirection = null;
+let collisionDirection: FlightControl | null = null;
 
 export const startFlying = (control: FlightControl) => {
   if (flyTimeout === -1) {
@@ -86,7 +86,6 @@ const loop = (control: FlightControl) => {
         collided = collide(state.targetProteinData.atoms, state.testMoleculeData, state.chemicalElements, translation);
       }
       collisionDirection = collided ? control : null;
-      console.log(collided, collisionDirection);
       const delta = collisionDirection === control ? -translationStep : translationStep;
       switch (control) {
         // translation
