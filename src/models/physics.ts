@@ -5,6 +5,18 @@
 import { AtomTS } from './AtomTS.ts';
 import { ChemicalElement } from './ChemicalElement.ts';
 
+/*
+ * The interaction between the spaceship and the interaction centers are given by the following energy function:
+ *
+ * v(r) = (core / r)^12 + q * Q / r + (p dot r) * Q / r^3
+ *
+ * The first term models the Pauli repulsion. The second term is the Coulombic interaction. The third term is the
+ * charge-dipole interaction.
+ *
+ * @author Charles Xie
+ *
+ */
+
 export const collide = (
   target: AtomTS[],
   test: AtomTS[],

@@ -355,7 +355,6 @@ const VerticalAxis = React.memo(
                       state.hoveredMolecule = null;
                     });
                     setCommonStore((state) => {
-                      state.projectState.selectedMolecule = null;
                       if (state.projectState.filters) {
                         let index = -1;
                         for (const [i, f] of state.projectState.filters.entries()) {
