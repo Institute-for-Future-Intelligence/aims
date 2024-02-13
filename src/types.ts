@@ -50,6 +50,8 @@ export interface ProjectState {
 
   testMoleculeRotation: number[]; // euler angles
   testMoleculeTranslation: number[]; // translation displacement along x, y, z axes
+  testMoleculeVelocity: number[]; // velocity along x, y, z axes
+  // testMoleculeAcceleration: number[]; // acceleration along x, y, z axes
 
   spaceshipDisplayMode: SpaceshipDisplayMode;
   spaceshipRoll: number;
