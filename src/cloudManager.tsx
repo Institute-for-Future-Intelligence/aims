@@ -15,7 +15,6 @@ import 'firebase/storage';
 import { showError, showInfo } from './helpers';
 import { ProjectState } from './types';
 import Spinner from './components/spinner';
-import i18n from './i18n/i18n';
 import { Util } from './Util';
 import MainToolBar from './mainToolBar';
 import ProjectListPanel from './projectListPanel';
@@ -33,6 +32,7 @@ import {
 } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import { ProjectUtil } from './ProjectUtil';
+import { useTranslation } from 'react-i18next';
 
 export interface CloudManagerProps {
   viewOnly: boolean;
@@ -69,6 +69,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   const [updateMyProjectsFlag, setUpdateMyProjectsFlag] = useState(false);
   const myProjectsRef = useRef<ProjectState[] | void>(); // Not sure why I need to use ref to store this
 
+  const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
@@ -204,7 +205,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       })
       .catch((error) => {
         if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-          showError(i18n.t('message.CannotSignIn', lang) + ': ' + error);
+          showError(t('message.CannotSignIn', lang) + ': ' + error);
         }
       });
   };
@@ -283,10 +284,10 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             os: Util.getOS(),
           })
           .then(() => {
-            showInfo(i18n.t('message.YourAccountWasCreated', lang));
+            showInfo(t('message.YourAccountWasCreated', lang));
           })
           .catch((error) => {
-            showError(i18n.t('message.CannotCreateAccount', lang) + ': ' + error);
+            showError(t('message.CannotCreateAccount', lang) + ': ' + error);
           });
       }
     }
@@ -312,7 +313,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         });
       })
       .catch((error) => {
-        showError(i18n.t('message.CannotSignOut', lang) + ': ' + error);
+        showError(t('message.CannotSignOut', lang) + ': ' + error);
       });
   };
 
@@ -393,7 +394,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         return a;
       })
       .catch((error) => {
-        showError(i18n.t('message.CannotOpenYourProjects', lang) + ': ' + error);
+        showError(t('message.CannotOpenYourProjects', lang) + ': ' + error);
       })
       .finally(() => {
         if (!silent) setProcessing(false);
@@ -434,7 +435,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         setUpdateMyProjectsFlag(!updateMyProjectsFlag);
       })
       .catch((error) => {
-        showError(i18n.t('message.CannotDeleteProject', lang) + ': ' + error);
+        showError(t('message.CannotDeleteProject', lang) + ': ' + error);
       })
       .finally(() => {
         // if the project list panel is open, update it
@@ -459,7 +460,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         }
       }
       if (exist) {
-        showInfo(i18n.t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
+        showInfo(t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
       } else {
         if (!user.uid) return;
         const files = firebase.firestore().collection('users').doc(user.uid).collection('projects');
@@ -500,7 +501,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             }
           })
           .catch((error) => {
-            showError(i18n.t('message.CannotRenameProject', lang) + ': ' + error);
+            showError(t('message.CannotRenameProject', lang) + ': ' + error);
           });
       }
     });
@@ -520,12 +521,12 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     if (!user || !user.uid) return;
     const title = usePrimitiveStore.getState().projectTitle;
     if (!title) {
-      showError(i18n.t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
+      showError(t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
       return;
     }
-    const t = title.trim();
-    if (t.length === 0) {
-      showError(i18n.t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
+    const newTitle = title.trim();
+    if (newTitle.length === 0) {
+      showError(t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
       return;
     }
     // check if the project title is already used
@@ -533,14 +534,14 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       let exist = false;
       if (myProjectsRef.current) {
         for (const p of myProjectsRef.current) {
-          if (p.title === t) {
+          if (p.title === newTitle) {
             exist = true;
             break;
           }
         }
       }
       if (exist) {
-        showInfo(i18n.t('message.TitleUsedChooseDifferentOne', lang) + ': ' + t);
+        showInfo(t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
       } else {
         if (user && user.uid) {
           const timestamp = new Date().getTime();
@@ -548,7 +549,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           ps.timestamp = timestamp;
           ps.key = timestamp.toString();
           ps.time = dayjs(new Date(timestamp)).format('MM/DD/YYYY hh:mm A');
-          ps.title = t;
+          ps.title = newTitle;
           ps.owner = user.uid;
           ps.type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
           ps.description = usePrimitiveStore.getState().projectDescription;
@@ -561,7 +562,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             .collection('users')
             .doc(user.uid)
             .collection('projects')
-            .doc(t)
+            .doc(newTitle)
             .set(ps)
             .then(() => {
               setCommonStore((state) => {
@@ -571,7 +572,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
               setUpdateMyProjectsFlag(!updateMyProjectsFlag);
             })
             .catch((error) => {
-              showError(i18n.t('message.CannotCreateNewProject', lang) + ': ' + error);
+              showError(t('message.CannotCreateNewProject', lang) + ': ' + error);
             })
             .finally(() => {
               // if the project list panel is open, update it
@@ -590,55 +591,57 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   function saveProject() {
     if (!user || !user.uid) return;
     const title = useStore.getState().projectState.title;
-    if (title) {
-      setProcessing(true);
-      const ps = JSON.parse(JSON.stringify(useStore.getState().projectState)) as ProjectState;
-      ps.timestamp = new Date().getTime();
-      ps.time = dayjs(new Date(ps.timestamp)).format('MM/DD/YYYY hh:mm A');
-      ps.key = ps.timestamp.toString();
-      if (myProjectsRef.current) {
-        for (const p of myProjectsRef.current) {
-          if (p.title === ps.title) {
-            p.timestamp = ps.timestamp;
-            p.time = ps.time;
-            p.key = ps.key;
-            break;
-          }
+    if (!title) {
+      showError(t('message.CannotSaveProjectWithoutTitle', lang));
+      return;
+    }
+    setProcessing(true);
+    const ps = JSON.parse(JSON.stringify(useStore.getState().projectState)) as ProjectState;
+    ps.timestamp = new Date().getTime();
+    ps.time = dayjs(new Date(ps.timestamp)).format('MM/DD/YYYY hh:mm A');
+    ps.key = ps.timestamp.toString();
+    if (myProjectsRef.current) {
+      for (const p of myProjectsRef.current) {
+        if (p.title === ps.title) {
+          p.timestamp = ps.timestamp;
+          p.time = ps.time;
+          p.key = ps.key;
+          break;
         }
       }
-      firebase
-        .firestore()
-        .collection('users')
-        .doc(user.uid)
-        .collection('projects')
-        .doc(title)
-        .set(ps)
-        .then(() => {
-          setUpdateMyProjectsFlag(!updateMyProjectsFlag);
-        })
-        .catch((error) => {
-          showError(i18n.t('message.CannotSaveProject', lang) + ': ' + error);
-        })
-        .finally(() => {
-          if (saveAndThenOpenProjectFlag) {
-            setProjectState(useStore.getState().projectStateToOpen);
-          }
-          setProcessing(false);
-          setChanged(false);
-        });
     }
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('projects')
+      .doc(title)
+      .set(ps)
+      .then(() => {
+        setUpdateMyProjectsFlag(!updateMyProjectsFlag);
+      })
+      .catch((error) => {
+        showError(t('message.CannotSaveProject', lang) + ': ' + error);
+      })
+      .finally(() => {
+        if (saveAndThenOpenProjectFlag) {
+          setProjectState(useStore.getState().projectStateToOpen);
+        }
+        setProcessing(false);
+        setChanged(false);
+      });
   }
 
   function saveProjectAs() {
     if (!user || !user.uid) return;
     const title = usePrimitiveStore.getState().projectTitle;
     if (!title) {
-      showError(i18n.t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
+      showError(t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
       return;
     }
     const newTitle = title.trim();
     if (newTitle.length === 0) {
-      showError(i18n.t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
+      showError(t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
       return;
     }
     // check if the project title is already taken
@@ -653,7 +656,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         }
       }
       if (exist) {
-        showInfo(i18n.t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
+        showInfo(t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
       } else {
         if (user && user.uid) {
           const state = useStore.getState();
@@ -682,7 +685,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
               });
             })
             .catch((error) => {
-              showError(i18n.t('message.CannotCreateNewProject', lang) + ': ' + error);
+              showError(t('message.CannotCreateNewProject', lang) + ': ' + error);
             })
             .finally(() => {
               // if the project list panel is open, update it
@@ -702,7 +705,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   function curateMoleculeToProject() {
     const projectOwner = useStore.getState().projectState.owner;
     if (user.uid !== projectOwner) {
-      showInfo(i18n.t('message.CannotAddMoleculeToProjectOwnedByOthers', lang));
+      showInfo(t('message.CannotAddMoleculeToProjectOwnedByOthers', lang));
     } else {
       const projectTitle = useStore.getState().projectState.title;
       if (projectTitle) {
@@ -735,10 +738,10 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           classID: user.classID ?? ClassID.UNKNOWN,
         })
         .then(() => {
-          showInfo(i18n.t('message.YourAccountSettingsWereSaved', lang));
+          showInfo(t('message.YourAccountSettingsWereSaved', lang));
         })
         .catch((error) => {
-          showError(i18n.t('message.CannotSaveYourAccountSettings', lang) + ': ' + error);
+          showError(t('message.CannotSaveYourAccountSettings', lang) + ': ' + error);
         });
     }
   }

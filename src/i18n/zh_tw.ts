@@ -83,6 +83,7 @@ export const i18n_zh_tw = {
       CannotOpenYourProjects: '無法打開您的專案列表',
       CannotOpenProject: '無法打開專案',
       CannotSaveProject: '無法保存專案',
+      CannotSaveProjectWithoutTitle: '沒有標題, 無法保存專案',
       CannotDeleteProject: '無法刪除專案',
       CannotRenameProject: '無法給專案改名',
       CannotAddMoleculeToProject: '無法把此分子加到專案裡',

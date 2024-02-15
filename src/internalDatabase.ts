@@ -30,6 +30,7 @@ import moleculeUrl023 from './molecules/sdf/vanillin.sdf';
 import moleculeUrl024 from './molecules/pdb/water.pdb';
 import moleculeUrl025 from './molecules/pdb/atp.pdb';
 import moleculeUrl026 from './molecules/sdf/efaproxiral.sdf';
+import moleculeUrl027 from './molecules/pdb/xenon.pdb';
 
 import proteinUrl001 from './proteins/1crn.pdb';
 import proteinUrl002 from './proteins/1a3n.pdb';
@@ -64,6 +65,7 @@ export const sampleMolecules = [
   { url: moleculeUrl024, internal: true, name: 'Water' } as MoleculeData,
   { url: moleculeUrl025, internal: true, name: 'ATP' } as MoleculeData,
   { url: moleculeUrl026, internal: true, name: 'Efaproxiral' } as MoleculeData,
+  { url: moleculeUrl027, internal: true, name: 'Xenon' } as MoleculeData,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const sampleProteins = [

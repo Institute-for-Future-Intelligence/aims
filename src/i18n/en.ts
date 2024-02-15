@@ -83,6 +83,7 @@ export const i18n_en = {
       CannotOpenYourProjects: 'Cannot open your projects',
       CannotOpenProject: 'Cannot open the project',
       CannotSaveProject: 'Cannot save the project',
+      CannotSaveProjectWithoutTitle: 'Cannot save the project without a title',
       CannotDeleteProject: 'Cannot delete the project',
       CannotRenameProject: 'Cannot rename the project',
       CannotAddMoleculeToProject: 'Cannot add this molecule to the project',

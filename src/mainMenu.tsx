@@ -65,6 +65,7 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
   const user = useStore.getState().user;
   const language = useStore(Selector.language);
   const undoManager = useStore.getState().undoManager;
+  const projectTitle = useStore.getState().projectState.title;
 
   const [aboutUs, setAboutUs] = useState(false);
 
@@ -186,7 +187,7 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
     });
 
     return items;
-  }, [language, hasUndo, hasRedo, user.uid]);
+  }, [language, hasUndo, hasRedo, user.uid, projectTitle]);
 
   return (
     <>

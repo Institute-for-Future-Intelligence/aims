@@ -119,8 +119,12 @@ const MolecularViewer = React.memo(
       if (mol?.url) {
         fetch(mol.url).then((response) => {
           response.text().then((text) => {
-            const url = mol.url;
+            let url = mol.url;
             if (url) {
+              if (url.includes('?')) {
+                // sometimes the url has an appendix (not sure who adds it)
+                url = url.substring(0, url.indexOf('?'));
+              }
               let parser = null;
               const options = {};
               if (url.endsWith('.sdf')) parser = new SDFParser(text, options);

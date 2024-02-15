@@ -120,10 +120,12 @@ export const createProjectMenu = (isMac: boolean) => {
     label: <OpenProjectItem isMac={isMac} askToOpenProject={askToOpenProject} />,
   });
 
-  items.push({
-    key: 'save-project',
-    label: <SaveProjectItem isMac={isMac} saveProject={saveProject} />,
-  });
+  if (useStore.getState().projectState.title) {
+    items.push({
+      key: 'save-project',
+      label: <SaveProjectItem isMac={isMac} saveProject={saveProject} />,
+    });
+  }
 
   items.push({
     key: 'save-project-as',
