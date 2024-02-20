@@ -123,6 +123,8 @@ export const showProjectListPanel = (state: PrimitiveStoreState) => state.showPr
 
 export const saveAccountSettingsFlag = (state: PrimitiveStoreState) => state.saveAccountSettingsFlag;
 
+export const projectType = (state: CommonStoreState) => state.projectState.type;
+
 export const projectTitle = (state: CommonStoreState) => state.projectState.title;
 
 export const projectOwner = (state: CommonStoreState) => state.projectState.owner;

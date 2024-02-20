@@ -133,6 +133,9 @@ const NewProjectDialog = React.memo(({ saveAs }: { saveAs: boolean }) => {
             <Option key={ProjectType.DRUG_DISCOVERY} value={ProjectType.DRUG_DISCOVERY}>
               {`${t('term.DrugDiscovery', lang)}`}
             </Option>
+            <Option key={ProjectType.QSAR_MODELING} value={ProjectType.QSAR_MODELING}>
+              {`${t('term.QSARModeling', lang)}`}
+            </Option>
           </Select>
         </Col>
       </Row>

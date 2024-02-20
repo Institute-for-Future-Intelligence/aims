@@ -8,7 +8,7 @@ import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { UndoableChange } from '../undo/UndoableChange';
-import { sampleProteins } from '../internalDatabase';
+import { targetProteins } from '../internalDatabase';
 import { AimOutlined, InfoCircleOutlined, ExperimentOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { Util } from '../Util.ts';
@@ -49,7 +49,7 @@ const ExperimentSettings = React.memo(() => {
         if (targetName === 'None') {
           state.projectState.targetProtein = null;
         } else {
-          for (const t of sampleProteins) {
+          for (const t of targetProteins) {
             if (t.name === targetName) {
               state.projectState.targetProtein = t;
               break;
@@ -149,7 +149,7 @@ const ExperimentSettings = React.memo(() => {
               <Option key={`None`} value={'None'}>
                 {t('word.None', lang)}
               </Option>
-              {sampleProteins.map((d, i) => (
+              {targetProteins.map((d, i) => (
                 <Option key={`${i}-${d.name}`} value={d.name}>
                   {d.name}
                 </Option>

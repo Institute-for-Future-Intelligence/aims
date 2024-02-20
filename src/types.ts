@@ -79,6 +79,7 @@ export interface Range {
 
 export interface MoleculeData {
   name: string;
+  formula?: string;
   internal?: boolean;
   url?: string;
   invisible?: boolean;

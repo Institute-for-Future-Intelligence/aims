@@ -8,6 +8,7 @@ import Residue from '../lib/chem/Residue';
 import Chain from '../lib/chem/Chain';
 import Molecule from '../lib/chem/Molecule';
 import StructuralElement from '../lib/chem/StructuralElement';
+import { Vector3 } from 'three';
 
 export interface MoleculeTS {
   name: string;
@@ -18,4 +19,5 @@ export interface MoleculeTS {
   chains: Chain[];
   structures: StructuralElement[];
   molecules: Molecule[];
+  centerOffset: Vector3;
 }

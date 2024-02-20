@@ -9,8 +9,9 @@ import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { useTranslation } from 'react-i18next';
-import { sampleMolecules } from './internalDatabase';
 import { ImportOutlined } from '@ant-design/icons';
+import { MoleculeType, ProjectType } from './constants.ts';
+import { commonMolecules, drugMolecules } from './internalDatabase.ts';
 
 const { Option } = Select;
 
@@ -25,7 +26,11 @@ export interface ImportMoleculeModalProps {
 const ImportMoleculeModal = React.memo(
   ({ importByName, setName, getName, setDialogVisible, isDialogVisible }: ImportMoleculeModalProps) => {
     const language = useStore(Selector.language);
+    const projectType = useStore(Selector.projectType);
 
+    const [moleculeType, setMoleculeType] = useState<MoleculeType>(
+      projectType === ProjectType.DRUG_DISCOVERY ? MoleculeType.DRUG : MoleculeType.COMMON,
+    );
     const [dragEnabled, setDragEnabled] = useState<boolean>(false);
     const [bounds, setBounds] = useState<DraggableBounds>({ left: 0, top: 0, bottom: 0, right: 0 } as DraggableBounds);
     const dragRef = useRef<HTMLDivElement | null>(null);
@@ -90,6 +95,26 @@ const ImportMoleculeModal = React.memo(
       >
         <Space direction={'horizontal'}>
           <Space direction={'horizontal'} style={{ width: '150px' }}>
+            {i18n.t('projectPanel.MoleculeType', lang)}:
+          </Space>
+          <Select
+            style={{ width: '240px' }}
+            value={moleculeType}
+            onChange={(value: MoleculeType) => {
+              setMoleculeType(value);
+              setName(value === MoleculeType.DRUG ? drugMolecules[0].name : commonMolecules[0].name);
+            }}
+          >
+            <Option key={MoleculeType.COMMON} value={MoleculeType.COMMON}>
+              {`${t('term.CommonMolecules', lang)}`}
+            </Option>
+            <Option key={MoleculeType.DRUG} value={MoleculeType.DRUG}>
+              {`${t('term.DrugMolecules', lang)}`}
+            </Option>
+          </Select>
+        </Space>
+        <Space direction={'horizontal'}>
+          <Space direction={'horizontal'} style={{ width: '150px' }}>
             {i18n.t('projectPanel.MoleculeName', lang)}:
           </Space>
           <Select
@@ -100,9 +125,9 @@ const ImportMoleculeModal = React.memo(
               setName(value);
             }}
           >
-            {sampleMolecules.map((d, i) => (
+            {(moleculeType === MoleculeType.DRUG ? drugMolecules : commonMolecules).map((d, i) => (
               <Option key={`${i}-${d.name}`} value={d.name}>
-                {d.name}
+                {d.name + (d.formula ? ' (' + d.formula + ')' : '')}
               </Option>
             ))}
           </Select>

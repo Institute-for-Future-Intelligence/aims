@@ -118,16 +118,19 @@ const loop = (control: FlightControl) => {
           steer,
           friction,
         );
-        a.multiplyScalar(1000);
+        a.multiplyScalar(1);
         console.log(a);
         // update velocity
-        vel[0] += a.x * timeStep;
-        vel[1] += a.y * timeStep;
-        vel[2] += a.z * timeStep;
+        // vel[0] += a.x * timeStep;
+        // vel[1] += a.y * timeStep;
+        // vel[2] += a.z * timeStep;
         // update position
-        const dx = vel[0] * timeStep + a.x * timeStepSqHalf;
-        const dy = vel[1] * timeStep + a.y * timeStepSqHalf;
-        const dz = vel[2] * timeStep + a.z * timeStepSqHalf;
+        // const dx = vel[0] * timeStep + a.x * timeStepSqHalf;
+        // const dy = vel[1] * timeStep + a.y * timeStepSqHalf;
+        // const dz = vel[2] * timeStep + a.z * timeStepSqHalf;
+        const dx = a.x * timeStep;
+        const dy = a.y * timeStep;
+        const dz = a.z * timeStep;
         pos[0] += dx;
         pos[1] += dy;
         pos[2] += dz;

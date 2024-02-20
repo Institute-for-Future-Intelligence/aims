@@ -37,7 +37,7 @@ export const computeAcceleration = (
   let fy = 0;
   let fz = 0;
   let mass = 0;
-  const strength = 0.0001;
+  const strength = 0.01;
   const pi = new Vector3();
 
   // compute the interatomic force on each individual atom of the test molecule from the target protein
@@ -49,15 +49,19 @@ export const computeAcceleration = (
     pi.x += translation[0];
     pi.y += translation[1];
     pi.z += translation[2];
+    console.log('***', pi);
     for (let j = 0; j < target.length; j++) {
       const ej = elements[target[j].elementSymbol];
-      rij = ei.atomicRadius * ej.atomicRadius;
+      rij = 10 * ei.atomicRadius * ej.atomicRadius;
       dx = pi.x - target[j].position.x;
       dy = pi.y - target[j].position.y;
       dz = pi.z - target[j].position.z;
       rsq = dx * dx + dy * dy + dz * dz;
       if (rsq < rij * rij * CUTOFF_RATIO_SQUARED) {
-        if (rsq < 4) rsq = 4;
+        if (rsq < 1) {
+          console.log(j, dx, dy, dz, rsq);
+          rsq = 1;
+        }
         rsq6 = rsq * rsq * rsq;
         rsq6 *= rsq6;
         core12 = rij * rij * rij;
@@ -71,18 +75,21 @@ export const computeAcceleration = (
   }
 
   // compute the steering force and friction force
-  fx += steeringForce.x - velocity[0] * friction;
-  fy += steeringForce.y - velocity[1] * friction;
-  fz += steeringForce.z - velocity[2] * friction;
+  // fx += steeringForce.x - velocity[0] * friction;
+  // fy += steeringForce.y - velocity[1] * friction;
+  // fz += steeringForce.z - velocity[2] * friction;
 
-  const max = 5;
-  if (fx > max) fx = max;
-  else if (fx < -max) fx = -max;
-  if (fy > max) fy = max;
-  else if (fy < -max) fy = -max;
-  if (fz > max) fz = max;
-  else if (fz < -max) fz = -max;
+  // const max = 1;
+  // if (fx > max) fx = max;
+  // else if (fx < -max) fx = -max;
+  // if (fy > max) fy = max;
+  // else if (fy < -max) fy = -max;
+  // if (fz > max) fz = max;
+  // else if (fz < -max) fz = -max;
+
+  console.log(JSON.stringify(translation), steeringForce, fx, fy, fz);
 
   // return the acceleration vector
+  // return new Vector3(fx / mass*Math.sign(steeringForce.x), fy / mass*Math.sign(steeringForce.y), fz / mass*Math.sign(steeringForce.z));
   return new Vector3(fx / mass, fy / mass, fz / mass);
 };

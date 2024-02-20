@@ -25,6 +25,7 @@ import { ProjectUtil } from '../ProjectUtil';
 import { MoleculeTS } from '../models/MoleculeTS';
 import Complex from '../lib/chem/Complex';
 import AtomJS from '../lib/chem/Atom';
+import { Vector3 } from 'three';
 
 enableMapSet();
 
@@ -115,7 +116,9 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                     const atom = result._atoms[i] as AtomJS;
                     atoms.push({
                       elementSymbol: Util.capitalizeFirstLetter(atom.element.name),
-                      position: atom.position.clone(),
+                      position: (atom.position.clone() as Vector3).sub(
+                        state.targetProteinData?.centerOffset ?? new Vector3(),
+                      ),
                     } as AtomTS);
                   }
                   state.testMoleculeData = atoms;

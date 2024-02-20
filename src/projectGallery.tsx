@@ -3,11 +3,10 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DataColoring } from './constants';
+import { DataColoring, ProjectType } from './constants';
 import styled from 'styled-components';
 import { Button, Checkbox, Col, Collapse, CollapseProps, ColorPicker, List, Popover, Radio, Row, Select } from 'antd';
 import {
-  LoginOutlined,
   BgColorsOutlined,
   CameraOutlined,
   CarryOutOutlined,
@@ -16,6 +15,7 @@ import {
   EditFilled,
   EditOutlined,
   ImportOutlined,
+  LoginOutlined,
   SettingOutlined,
   SortAscendingOutlined,
   SortDescendingOutlined,
@@ -39,7 +39,7 @@ import {
   MolecularViewerMaterial,
   MolecularViewerStyle,
 } from './view/displayOptions';
-import { getSampleMolecule } from './internalDatabase';
+import { commonMolecules, drugMolecules, getMolecule } from './internalDatabase';
 import MoleculeContainer from './moleculeContainer';
 
 export interface ProjectGalleryProps {
@@ -130,13 +130,16 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const viewerMaterial = useStore(Selector.projectViewerMaterial);
   const viewerBackground = useStore(Selector.projectViewerBackground);
   const projectState = useStore(Selector.projectState);
+  const projectType = useStore(Selector.projectType);
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const updateTestMoleculeData = useStore(Selector.updateTestMoleculeData);
 
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const [updateHiddenFlag, setUpdateHiddenFlag] = useState<boolean>(false);
-  const [moleculeName, setMoleculeName] = useState<string>('Aspirin');
+  const [moleculeName, setMoleculeName] = useState<string>(
+    projectType === ProjectType.DRUG_DISCOVERY ? drugMolecules[0].name : commonMolecules[0].name,
+  );
   const [moleculeNameDialogVisible, setMoleculeNameDialogVisible] = useState(false);
 
   const { t } = useTranslation();
@@ -1090,7 +1093,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
         </CanvasContainer>
         <ImportMoleculeModal
           importByName={() => {
-            const m = getSampleMolecule(moleculeName);
+            const m = getMolecule(moleculeName);
             if (m) {
               const added = addMolecule(m);
               if (added) {

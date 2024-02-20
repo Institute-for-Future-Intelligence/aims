@@ -22,7 +22,7 @@ import { BondTS } from '../models/BondTS';
 import { Util } from '../Util';
 import { MolecularProperties } from '../models/MolecularProperties';
 import ComplexVisual from '../lib/ComplexVisual';
-import { useThree } from '@react-three/fiber';
+import { invalidate, useThree } from '@react-three/fiber';
 import {
   COLORING_MAP,
   MATERIAL_MAP,
@@ -32,7 +32,7 @@ import {
   STYLE_MAP,
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
-import { getSample } from '../internalDatabase';
+import { getData } from '../internalDatabase';
 import { useRefStore } from '../stores/commonRef';
 
 export interface MolecularViewerProps {
@@ -115,7 +115,7 @@ const MolecularViewer = React.memo(
         setComplex(undefined);
         return;
       }
-      const mol = getSample(moleculeData.name);
+      const mol = getData(moleculeData.name);
       if (mol?.url) {
         fetch(mol.url).then((response) => {
           response.text().then((text) => {
@@ -157,11 +157,27 @@ const MolecularViewer = React.memo(
         const name = result.name;
         const metadata = result.metadata;
         const atoms: AtomTS[] = [];
+        let cx = 0;
+        let cy = 0;
+        let cz = 0;
+        const n = result._atoms.length;
+        for (let i = 0; i < n; i++) {
+          const atom = result._atoms[i] as AtomJS;
+          cx += atom.position.x;
+          cy += atom.position.y;
+          cz += atom.position.z;
+        }
+        if (n > 0) {
+          cx /= n;
+          cy /= n;
+          cz /= n;
+        }
+        groupRef.current?.position.set(-cx, -cy, -cz);
         for (let i = 0; i < result._atoms.length; i++) {
           const atom = result._atoms[i] as AtomJS;
           atoms.push({
             elementSymbol: Util.capitalizeFirstLetter(atom.element.name),
-            position: atom.position.clone(),
+            position: new Vector3(atom.position.x - cx, atom.position.y - cy, atom.position.z - cz),
           } as AtomTS);
         }
         const bonds: BondTS[] = [];
@@ -175,11 +191,11 @@ const MolecularViewer = React.memo(
             new BondTS(
               {
                 elementSymbol: elementSymbol1,
-                position: new Vector3(atom1.position.x, atom1.position.y, atom1.position.z),
+                position: new Vector3(atom1.position.x - cx, atom1.position.y - cy, atom1.position.z - cz),
               } as AtomTS,
               {
                 elementSymbol: elementSymbol2,
-                position: new Vector3(atom2.position.x, atom2.position.y, atom2.position.z),
+                position: new Vector3(atom2.position.x - cx, atom2.position.y - cy, atom2.position.z - cz),
               } as AtomTS,
             ),
           );
@@ -198,12 +214,13 @@ const MolecularViewer = React.memo(
             chains,
             structures,
             molecules,
+            centerOffset: new Vector3(cx, cy, cz),
           } as MoleculeTS;
         });
       } else {
-        if (testMolecule && moleculeData && testMolecule.name === moleculeData.name) {
-          updateTestMoleculeData();
-        }
+        // if (testMolecule && moleculeData && testMolecule.name === moleculeData.name) {
+        //   updateTestMoleculeData();
+        // }
       }
       if (moleculeData) {
         const properties = getProvidedMolecularProperties(moleculeData.name);
@@ -225,7 +242,7 @@ const MolecularViewer = React.memo(
     };
 
     useEffect(() => {
-      groupRef.current?.position.set(0, 0, 0);
+      // groupRef.current?.position.set(0, 0, 0);
       if (!firstGroupRef.current || !mode) return;
       firstGroupRef.current.children = [];
       if (!complex) return;
@@ -248,7 +265,6 @@ const MolecularViewer = React.memo(
           if (!firstGroupRef.current) return;
           firstGroupRef.current.add(visual);
           const boundingSphere = visual.getBoundaries().boundingSphere;
-          groupRef.current?.position.copy(boundingSphere.center.clone().multiplyScalar(-1));
           if (chamber) {
             usePrimitiveStore.getState().set((state) => {
               state.boundingSphereRadius = boundingSphere.radius;
@@ -283,6 +299,7 @@ const MolecularViewer = React.memo(
             ]);
             visualTestMolecule.rebuild().then(() => {
               if (!secondGroupRef.current) return;
+              updateTestMoleculeData();
               secondGroupRef.current.add(visualTestMolecule);
               invalidate();
             });

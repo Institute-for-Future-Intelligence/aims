@@ -106,6 +106,12 @@ export enum Language {
 
 export enum ProjectType {
   DRUG_DISCOVERY = 'Drug Discovery',
+  QSAR_MODELING = 'QSAR Modeling',
+}
+
+export enum MoleculeType {
+  COMMON = 'Common',
+  DRUG = 'Drug',
 }
 
 export enum BondType {

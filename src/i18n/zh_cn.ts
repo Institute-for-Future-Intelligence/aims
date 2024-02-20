@@ -54,6 +54,9 @@ export const i18n_zh_cn = {
 
     term: {
       DrugDiscovery: '药物发现',
+      QSARModeling: '定量构效关系模型(QSAR/QSPR)',
+      CommonMolecules: '普通分子',
+      DrugMolecules: '药物分子',
     },
 
     aboutUs: {
@@ -190,6 +193,7 @@ export const i18n_zh_cn = {
       DisplayWindowSize: '展示窗口大小',
       OutputSelectedMoleculeToTest: '把选中的分子加到实验中',
       ImportMolecule: '输入分子',
+      MoleculeType: '分子类别',
       MoleculeName: '分子名称',
       MoleculeAlreadyAdded: '项目已经有此分子',
       MoleculeNotFound: '分子没有找到',

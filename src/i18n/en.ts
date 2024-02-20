@@ -54,6 +54,9 @@ export const i18n_en = {
 
     term: {
       DrugDiscovery: 'Drug Discovery',
+      QSARModeling: 'QSAR/QSPR Modeling',
+      CommonMolecules: 'Common Molecules',
+      DrugMolecules: 'Drug Molecules',
     },
 
     aboutUs: {
@@ -190,6 +193,7 @@ export const i18n_en = {
       DisplayWindowSize: 'Display Window Size',
       OutputSelectedMoleculeToTest: 'Output selected molecule to test',
       ImportMolecule: 'Import a molecule',
+      MoleculeType: 'Molecule Type',
       MoleculeName: 'Molecule Name',
       MoleculeAlreadyAdded: 'Molecule already added',
       MoleculeNotFound: 'Molecule not found',
