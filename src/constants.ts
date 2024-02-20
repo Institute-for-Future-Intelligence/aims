@@ -114,6 +114,11 @@ export enum MoleculeType {
   DRUG = 'Drug',
 }
 
+export enum LabelType {
+  NAME = 'Name',
+  FORMULA = 'Formula',
+}
+
 export enum BondType {
   SINGLE_BOND = 0,
   DOUBLE_BOND = 1,

@@ -20,6 +20,10 @@ import commonMoleculeUrl013 from './molecules/sdf/nonane.sdf';
 import commonMoleculeUrl014 from './molecules/sdf/decane.sdf';
 import commonMoleculeUrl015 from './molecules/sdf/undecane.sdf';
 import commonMoleculeUrl016 from './molecules/sdf/dodecane.sdf';
+import commonMoleculeUrl017 from './molecules/sdf/tridecane.sdf';
+import commonMoleculeUrl018 from './molecules/sdf/tetradecane.sdf';
+import commonMoleculeUrl019 from './molecules/sdf/pentadecane.sdf';
+import commonMoleculeUrl020 from './molecules/sdf/hexadecane.sdf';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
@@ -42,7 +46,7 @@ import drugMoleculeUrl018 from './molecules/sdf/zidovudine.sdf';
 import drugMoleculeUrl019 from './molecules/sdf/lipitor.sdf';
 import drugMoleculeUrl020 from './molecules/sdf/metformin.sdf';
 import drugMoleculeUrl021 from './molecules/sdf/thioketal_haloperidol.sdf';
-import drugMoleculeUrl022 from './molecules/pdb/atp.pdb';
+import drugMoleculeUrl022 from './molecules/sdf/atp.sdf';
 import drugMoleculeUrl023 from './molecules/sdf/vanillin.sdf';
 
 import proteinUrl001 from './proteins/1crn.pdb';
@@ -68,32 +72,36 @@ export const commonMolecules = [
   { url: commonMoleculeUrl014, internal: true, name: 'Decane', formula: 'C₁₀H₂₂' } as MoleculeData,
   { url: commonMoleculeUrl015, internal: true, name: 'Undecane', formula: 'C₁₁H₂₄' } as MoleculeData,
   { url: commonMoleculeUrl016, internal: true, name: 'Dodecane', formula: 'C₁₂H₂₆' } as MoleculeData,
+  { url: commonMoleculeUrl017, internal: true, name: 'Tridecane', formula: 'C₁₃H₂₈' } as MoleculeData,
+  { url: commonMoleculeUrl018, internal: true, name: 'Tetradecane', formula: 'C₁₄H₃₀' } as MoleculeData,
+  { url: commonMoleculeUrl019, internal: true, name: 'Pentadecane', formula: 'C₁₅H₃₂' } as MoleculeData,
+  { url: commonMoleculeUrl020, internal: true, name: 'Hexadecane', formula: 'C₁₆H₃₄' } as MoleculeData,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const drugMolecules = [
-  { url: drugMoleculeUrl001, internal: true, name: 'Aspirin' } as MoleculeData,
-  { url: drugMoleculeUrl002, internal: true, name: 'Ibuprofen' } as MoleculeData,
-  { url: drugMoleculeUrl003, internal: true, name: 'Paxlovid' } as MoleculeData,
-  { url: drugMoleculeUrl004, internal: true, name: 'Caffeine' } as MoleculeData,
-  { url: drugMoleculeUrl005, internal: true, name: 'D-Glucose' } as MoleculeData,
-  { url: drugMoleculeUrl006, internal: true, name: 'Cholesterol' } as MoleculeData,
-  { url: drugMoleculeUrl007, internal: true, name: 'Claritin' } as MoleculeData,
-  { url: drugMoleculeUrl008, internal: true, name: 'Zyrtec' } as MoleculeData,
-  { url: drugMoleculeUrl009, internal: true, name: 'Efaproxiral' } as MoleculeData,
-  { url: drugMoleculeUrl010, internal: true, name: 'Penicillin G' } as MoleculeData,
-  { url: drugMoleculeUrl011, internal: true, name: 'Voxelotor' } as MoleculeData,
-  { url: drugMoleculeUrl012, internal: true, name: 'Morphine' } as MoleculeData,
-  { url: drugMoleculeUrl013, internal: true, name: 'Ether' } as MoleculeData,
-  { url: drugMoleculeUrl014, internal: true, name: 'Darunavir' } as MoleculeData,
-  { url: drugMoleculeUrl015, internal: true, name: 'Viagra' } as MoleculeData,
-  { url: drugMoleculeUrl016, internal: true, name: 'Nitroglycerin' } as MoleculeData,
-  { url: drugMoleculeUrl017, internal: true, name: 'Thorazine' } as MoleculeData,
-  { url: drugMoleculeUrl018, internal: true, name: 'Zidovudine' } as MoleculeData,
-  { url: drugMoleculeUrl019, internal: true, name: 'Lipitor' } as MoleculeData,
-  { url: drugMoleculeUrl020, internal: true, name: 'Metformin' } as MoleculeData,
-  { url: drugMoleculeUrl021, internal: true, name: 'Thioketal Haloperidol' } as MoleculeData,
-  { url: drugMoleculeUrl022, internal: true, name: 'ATP' } as MoleculeData,
-  { url: drugMoleculeUrl023, internal: true, name: 'Vanillin' } as MoleculeData,
+  { url: drugMoleculeUrl001, internal: true, name: 'Aspirin', formula: 'C₉H₈O₄' } as MoleculeData,
+  { url: drugMoleculeUrl002, internal: true, name: 'Ibuprofen', formula: 'C₁₃H₁₈O₂' } as MoleculeData,
+  { url: drugMoleculeUrl003, internal: true, name: 'Paxlovid', formula: 'C₂₃H₃₂F₃N₅O₄' } as MoleculeData,
+  { url: drugMoleculeUrl004, internal: true, name: 'Caffeine', formula: 'C₈H₁₀N₄O₂' } as MoleculeData,
+  { url: drugMoleculeUrl005, internal: true, name: 'D-Glucose', formula: 'C₆H₁₂O₆' } as MoleculeData,
+  { url: drugMoleculeUrl006, internal: true, name: 'Cholesterol', formula: 'C₂₇H₄₆O' } as MoleculeData,
+  { url: drugMoleculeUrl007, internal: true, name: 'Claritin', formula: 'C₂₂H₂₃ClN₂O₂' } as MoleculeData,
+  { url: drugMoleculeUrl008, internal: true, name: 'Zyrtec', formula: 'C₂₁H₂₇Cl₃N₂O₃' } as MoleculeData,
+  { url: drugMoleculeUrl009, internal: true, name: 'Efaproxiral', formula: 'C₂₀H₂₃NO₄' } as MoleculeData,
+  { url: drugMoleculeUrl010, internal: true, name: 'Penicillin G', formula: 'C₁₆H₁₈N₂O₄S' } as MoleculeData,
+  { url: drugMoleculeUrl011, internal: true, name: 'Voxelotor', formula: 'C₁₉H₁₉N₃O₃' } as MoleculeData,
+  { url: drugMoleculeUrl012, internal: true, name: 'Morphine', formula: 'C₁₇H₁₉NO₃' } as MoleculeData,
+  { url: drugMoleculeUrl013, internal: true, name: 'Ether', formula: 'C₄H₁₀O' } as MoleculeData,
+  { url: drugMoleculeUrl014, internal: true, name: 'Darunavir', formula: 'C₂₇H₃₇N₃O₇S' } as MoleculeData,
+  { url: drugMoleculeUrl015, internal: true, name: 'Viagra', formula: 'C₂₈H₃₈N₆O₁₁S' } as MoleculeData,
+  { url: drugMoleculeUrl016, internal: true, name: 'Nitroglycerin', formula: 'C₃H₅N₃O₉' } as MoleculeData,
+  { url: drugMoleculeUrl017, internal: true, name: 'Thorazine', formula: 'C₁₇H₁₉ClN₂S' } as MoleculeData,
+  { url: drugMoleculeUrl018, internal: true, name: 'Zidovudine', formula: 'C₁₀H₁₃N₅O₄' } as MoleculeData,
+  { url: drugMoleculeUrl019, internal: true, name: 'Lipitor', formula: 'C₆₆H₆₈CaF₂N₄O₁₀' } as MoleculeData,
+  { url: drugMoleculeUrl020, internal: true, name: 'Metformin', formula: 'C₄H₁₁N₅' } as MoleculeData,
+  { url: drugMoleculeUrl021, internal: true, name: 'Thioketal Haloperidol', formula: 'C₂₃H₂₇ClFNOS₂' } as MoleculeData,
+  { url: drugMoleculeUrl022, internal: true, name: 'ATP', formula: 'C₁₀H₁₆N₅O₁₃P₃' } as MoleculeData,
+  { url: drugMoleculeUrl023, internal: true, name: 'Vanillin', formula: 'C₈H₈O₃' } as MoleculeData,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const targetProteins = [

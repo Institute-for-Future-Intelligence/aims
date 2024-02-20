@@ -151,6 +151,8 @@ export const projectViewerMaterial = (state: CommonStoreState) => state.projectS
 
 export const projectViewerBackground = (state: CommonStoreState) => state.projectState.projectViewerBackground;
 
+export const labelType = (state: CommonStoreState) => state.projectState.labelType;
+
 export const targetProtein = (state: CommonStoreState) => state.projectState.targetProtein;
 
 export const spaceshipDisplayMode = (state: CommonStoreState) => state.projectState.spaceshipDisplayMode;

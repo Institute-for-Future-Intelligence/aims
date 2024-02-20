@@ -226,6 +226,8 @@ export const i18n_zh_tw = {
       HeavyAtomCount: '重原子數量',
       HeavyAtomCountShort: '重原子',
       Complexity: '複雜性',
+      LabelType: '標籤類別',
+      MoleculeFormula: '分子式',
     },
 
     menu: {

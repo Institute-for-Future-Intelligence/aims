@@ -27,6 +27,7 @@ import {
   DEFAULT_CAMERA_UP,
   DEFAULT_PAN_CENTER,
   FirebaseName,
+  LabelType,
   ProjectType,
   SpaceshipDisplayMode,
 } from './constants';
@@ -384,6 +385,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             projectViewerStyle: data.projectViewerStyle ?? MolecularViewerStyle.Stick,
             projectViewerMaterial: data.projectViewerMaterial ?? MolecularViewerMaterial.Soft,
             projectViewerBackground: data.projectViewerBackground ?? 'white',
+
+            labelType: data.labelType ?? LabelType.NAME,
 
             cameraPosition: data.cameraPosition ?? DEFAULT_CAMERA_POSITION,
             cameraRotation: data.cameraRotation ?? DEFAULT_CAMERA_ROTATION,

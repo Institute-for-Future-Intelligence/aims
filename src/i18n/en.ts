@@ -227,6 +227,8 @@ export const i18n_en = {
       HeavyAtomCount: 'Heavy Atom Count',
       HeavyAtomCountShort: 'Heavy Atoms',
       Complexity: 'Complexity',
+      LabelType: 'Label Type',
+      MoleculeFormula: 'Molecule Formula',
     },
 
     menu: {

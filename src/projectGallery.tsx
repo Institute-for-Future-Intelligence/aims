@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DataColoring, ProjectType } from './constants';
+import { DataColoring, LabelType, ProjectType } from './constants';
 import styled from 'styled-components';
 import { Button, Checkbox, Col, Collapse, CollapseProps, ColorPicker, List, Popover, Radio, Row, Select } from 'antd';
 import {
@@ -129,6 +129,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const viewerStyle = useStore(Selector.projectViewerStyle);
   const viewerMaterial = useStore(Selector.projectViewerMaterial);
   const viewerBackground = useStore(Selector.projectViewerBackground);
+  const labelType = useStore(Selector.labelType);
   const projectState = useStore(Selector.projectState);
   const projectType = useStore(Selector.projectType);
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
@@ -245,6 +246,13 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   };
 
   const createProjectSettingsContent = useMemo(() => {
+    const setLabelType = (labelType: LabelType) => {
+      useStore.getState().set((state) => {
+        state.projectState.labelType = labelType;
+      });
+      setChanged(true);
+    };
+
     const setStyle = (style: MolecularViewerStyle) => {
       useStore.getState().set((state) => {
         state.projectState.projectViewerStyle = style;
@@ -267,12 +275,12 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     };
 
     return (
-      <div style={{ width: '300px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
+      <div style={{ width: '320px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
-          <Col span={12} style={{ paddingTop: '5px' }}>
+          <Col span={11} style={{ paddingTop: '5px' }}>
             <span>{t('molecularViewer.Style', lang)}: </span>
           </Col>
-          <Col span={12}>
+          <Col span={13}>
             <Select
               style={{ width: '100%' }}
               value={viewerStyle}
@@ -304,10 +312,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           </Col>
         </Row>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
-          <Col span={12} style={{ paddingTop: '5px' }}>
+          <Col span={11} style={{ paddingTop: '5px' }}>
             <span>{t('molecularViewer.Material', lang)}: </span>
           </Col>
-          <Col span={12}>
+          <Col span={13}>
             <Select
               style={{ width: '100%' }}
               value={viewerMaterial}
@@ -339,10 +347,46 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           </Col>
         </Row>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
-          <Col span={12} style={{ paddingTop: '5px' }}>
+          <Col span={11} style={{ paddingTop: '5px' }}>
+            <span>{t('projectPanel.LabelType', lang)}: </span>
+          </Col>
+          <Col span={13}>
+            <Select
+              style={{ width: '100%' }}
+              value={labelType}
+              onChange={(value: LabelType) => {
+                const oldValue = labelType;
+                const newValue = value;
+                const undoableChange = {
+                  name: 'Select Label Type for Project',
+                  timestamp: Date.now(),
+                  oldValue: oldValue,
+                  newValue: newValue,
+                  undo: () => {
+                    setLabelType(undoableChange.oldValue as LabelType);
+                  },
+                  redo: () => {
+                    setLabelType(undoableChange.newValue as LabelType);
+                  },
+                } as UndoableChange;
+                useStore.getState().addUndoable(undoableChange);
+                setLabelType(newValue);
+              }}
+            >
+              <Option key={LabelType.NAME} value={LabelType.NAME}>
+                {t('projectPanel.MoleculeName', lang)}
+              </Option>
+              <Option key={LabelType.FORMULA} value={LabelType.FORMULA}>
+                {t('projectPanel.MoleculeFormula', lang)}
+              </Option>
+            </Select>
+          </Col>
+        </Row>
+        <Row gutter={6} style={{ paddingBottom: '4px' }}>
+          <Col span={11} style={{ paddingTop: '5px' }}>
             <span>{t('molecularViewer.BackgroundColor', lang)}: </span>
           </Col>
-          <Col span={12}>
+          <Col span={13}>
             <ColorPicker
               style={{ width: '100%' }}
               showText={true}
@@ -369,7 +413,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
         </Row>
       </div>
     );
-  }, [lang, viewerStyle, viewerMaterial, viewerBackground]);
+  }, [lang, viewerStyle, viewerMaterial, viewerBackground, labelType]);
 
   const descriptionItems: CollapseProps['items'] = [
     {
@@ -912,7 +956,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       <ColumnWrapper>
         <Header>
           <span>
-            {t('projectPanel.Project', lang)} : {t('term.DrugDiscovery', lang)}
+            {t('projectPanel.Project', lang)} :{' '}
+            {t(projectType === ProjectType.DRUG_DISCOVERY ? 'term.DrugDiscovery' : 'term.QSARModeling', lang)}
           </span>
           <span
             style={{ cursor: 'pointer' }}
@@ -983,14 +1028,14 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                         position: 'relative',
                         left: '10px',
                         textAlign: 'left',
-                        bottom: '18px',
+                        bottom: labelType === LabelType.FORMULA ? '26px' : '18px',
                         color: 'gray',
-                        fontSize: '10px',
+                        fontSize: labelType === LabelType.FORMULA ? '14px' : '10px',
                         fontWeight: 'normal',
                         width: 'calc(100% - 14px)',
                       }}
                     >
-                      {data.name}
+                      {labelType === LabelType.FORMULA ? data.formula ?? data.name : data.name}
                     </div>
                   </List.Item>
                 );

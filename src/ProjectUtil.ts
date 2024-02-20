@@ -12,6 +12,7 @@ import {
   DEFAULT_CAMERA_ROTATION,
   DEFAULT_CAMERA_UP,
   DEFAULT_PAN_CENTER,
+  LabelType,
   ProjectType,
   SpaceshipDisplayMode,
 } from './constants';
@@ -74,6 +75,8 @@ export class ProjectUtil {
       projectViewerStyle: MolecularViewerStyle.Stick,
       projectViewerMaterial: MolecularViewerMaterial.Soft,
       projectViewerBackground: 'white',
+
+      labelType: LabelType.NAME,
     } as ProjectState;
   }
 

@@ -67,7 +67,7 @@ const ImportMoleculeModal = React.memo(
 
     return (
       <Modal
-        width={450}
+        width={480}
         title={
           <div
             style={{ width: '100%', cursor: 'move' }}
@@ -93,12 +93,12 @@ const ImportMoleculeModal = React.memo(
           </Draggable>
         )}
       >
-        <Space direction={'horizontal'}>
-          <Space direction={'horizontal'} style={{ width: '150px' }}>
+        <Space direction={'horizontal'} style={{ paddingBottom: '10px' }}>
+          <Space direction={'horizontal'} style={{ width: '120px' }}>
             {i18n.t('projectPanel.MoleculeType', lang)}:
           </Space>
           <Select
-            style={{ width: '240px' }}
+            style={{ width: '300px' }}
             value={moleculeType}
             onChange={(value: MoleculeType) => {
               setMoleculeType(value);
@@ -114,11 +114,11 @@ const ImportMoleculeModal = React.memo(
           </Select>
         </Space>
         <Space direction={'horizontal'}>
-          <Space direction={'horizontal'} style={{ width: '150px' }}>
+          <Space direction={'horizontal'} style={{ width: '120px' }}>
             {i18n.t('projectPanel.MoleculeName', lang)}:
           </Space>
           <Select
-            style={{ width: '240px' }}
+            style={{ width: '300px' }}
             value={getName()}
             showSearch
             onChange={(value: string) => {
