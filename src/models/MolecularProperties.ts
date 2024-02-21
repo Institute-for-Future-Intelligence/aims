@@ -3,6 +3,7 @@
  */
 
 export interface MolecularProperties {
+  formula: string;
   atomCount: number;
   bondCount: number;
   molecularMass: number;
@@ -13,4 +14,7 @@ export interface MolecularProperties {
   polarSurfaceArea: number; // the surface sum over all polar atoms
   heavyAtomCount: number;
   complexity: number;
+  density: number;
+  boilingPoint: number;
+  meltingPoint: number;
 }

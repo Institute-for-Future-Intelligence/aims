@@ -17,7 +17,7 @@ import { ProjectType } from '../constants.ts';
 const { Option } = Select;
 const { TextArea } = Input;
 
-const ExperimentSettings = React.memo(() => {
+const DockingSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const addUndoable = useStore(Selector.addUndoable);
@@ -120,97 +120,91 @@ const ExperimentSettings = React.memo(() => {
             </Select>
           </Col>
         </Row>
-        {projectType === ProjectType.DRUG_DISCOVERY && (
-          <Row gutter={16} style={{ paddingBottom: '4px' }}>
-            <Col span={8} style={{ paddingTop: '5px' }}>
-              <span>{t('experiment.Target', lang)}: </span>
-            </Col>
-            <Col span={16}>
-              <Select
-                style={{ width: '100%' }}
-                value={targetProtein?.name ?? t('word.None', lang)}
-                showSearch
-                onChange={(value: string) => {
-                  const oldValue = targetProtein?.name;
-                  const newValue = value;
-                  const undoableChange = {
-                    name: 'Select Target Protein',
-                    timestamp: Date.now(),
-                    oldValue: oldValue,
-                    newValue: newValue,
-                    undo: () => {
-                      setTargetProtein(undoableChange.oldValue as string);
-                    },
-                    redo: () => {
-                      setTargetProtein(undoableChange.newValue as string);
-                    },
-                  } as UndoableChange;
-                  addUndoable(undoableChange);
-                  setTargetProtein(newValue);
-                }}
-              >
-                <Option key={`None`} value={'None'}>
-                  {t('word.None', lang)}
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.Target', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <Select
+              style={{ width: '100%' }}
+              value={targetProtein?.name ?? t('word.None', lang)}
+              showSearch
+              onChange={(value: string) => {
+                const oldValue = targetProtein?.name;
+                const newValue = value;
+                const undoableChange = {
+                  name: 'Select Target Protein',
+                  timestamp: Date.now(),
+                  oldValue: oldValue,
+                  newValue: newValue,
+                  undo: () => {
+                    setTargetProtein(undoableChange.oldValue as string);
+                  },
+                  redo: () => {
+                    setTargetProtein(undoableChange.newValue as string);
+                  },
+                } as UndoableChange;
+                addUndoable(undoableChange);
+                setTargetProtein(newValue);
+              }}
+            >
+              <Option key={`None`} value={'None'}>
+                {t('word.None', lang)}
+              </Option>
+              {targetProteins.map((d, i) => (
+                <Option key={`${i}-${d.name}`} value={d.name}>
+                  {d.name}
                 </Option>
-                {targetProteins.map((d, i) => (
-                  <Option key={`${i}-${d.name}`} value={d.name}>
-                    {d.name}
-                  </Option>
-                ))}
-              </Select>
-            </Col>
-          </Row>
-        )}
-        {projectType === ProjectType.DRUG_DISCOVERY && (
-          <Row gutter={16} style={{ paddingBottom: '4px' }}>
-            <Col span={8} style={{ paddingTop: '5px' }}>
-              <span>{t('experiment.MovingStep', lang)}: </span>
-            </Col>
-            <Col span={16}>
-              <InputNumber
-                min={0.1}
-                max={1}
-                style={{ width: '100%' }}
-                precision={2}
-                // make sure that we round up the number as toDegrees may cause things like .999999999
-                value={parseFloat(translationStep.toFixed(2))}
-                step={0.1}
-                onChange={(value) => {
-                  if (value === null) return;
-                  setCommonStore((state) => {
-                    state.projectState.translationStep = value;
-                  });
-                }}
-              />
-            </Col>
-          </Row>
-        )}
-        {projectType === ProjectType.DRUG_DISCOVERY && (
-          <Row gutter={16} style={{ paddingBottom: '4px' }}>
-            <Col span={8} style={{ paddingTop: '5px' }}>
-              <span>{t('experiment.RotationStep', lang)}: </span>
-            </Col>
-            <Col span={16}>
-              <InputNumber
-                min={1}
-                max={10}
-                formatter={(value) => `${value}°`}
-                style={{ width: '100%' }}
-                precision={2}
-                // make sure that we round up the number as toDegrees may cause things like .999999999
-                value={parseFloat(Util.toDegrees(rotationStep).toFixed(2))}
-                step={1}
-                onChange={(value) => {
-                  if (value === null) return;
-                  const step = Util.toRadians(value);
-                  setCommonStore((state) => {
-                    state.projectState.rotationStep = step;
-                  });
-                }}
-              />
-            </Col>
-          </Row>
-        )}
+              ))}
+            </Select>
+          </Col>
+        </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.MovingStep', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <InputNumber
+              min={0.1}
+              max={1}
+              style={{ width: '100%' }}
+              precision={2}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(translationStep.toFixed(2))}
+              step={0.1}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.translationStep = value;
+                });
+              }}
+            />
+          </Col>
+        </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.RotationStep', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <InputNumber
+              min={1}
+              max={10}
+              formatter={(value) => `${value}°`}
+              style={{ width: '100%' }}
+              precision={2}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(Util.toDegrees(rotationStep).toFixed(2))}
+              step={1}
+              onChange={(value) => {
+                if (value === null) return;
+                const step = Util.toRadians(value);
+                setCommonStore((state) => {
+                  state.projectState.rotationStep = step;
+                });
+              }}
+            />
+          </Col>
+        </Row>
         <Row gutter={16} style={{ paddingBottom: '4px' }}>
           <Col span={8} style={{ paddingTop: '5px' }}>
             <span>{t('experiment.SelectorCommands', lang)}: </span>
@@ -366,4 +360,4 @@ const ExperimentSettings = React.memo(() => {
   );
 });
 
-export default ExperimentSettings;
+export default DockingSettings;

@@ -12,6 +12,7 @@ import {
   DEFAULT_SHADOW_CAMERA_FAR,
   DEFAULT_SHADOW_MAP_SIZE,
   HALF_PI,
+  ProjectType,
   SpaceshipDisplayMode,
 } from './constants';
 import { GizmoHelper, GizmoViewport } from '@react-three/drei';
@@ -21,7 +22,7 @@ import { MoleculeData } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { DirectionalLight, Euler, Vector3 } from 'three';
-import ExperimentSettings from './view/experimentSettings';
+import DockingSettings from './view/dockingSettings.tsx';
 import { ReactionChamberControls } from './controls';
 import Spaceship from './view/spaceship.tsx';
 import Background from './view/background.tsx';
@@ -47,6 +48,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
   const cameraUp = useStore(Selector.cameraUp);
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
   const testMolecule = useStore(Selector.testMolecule);
+  const projectType = useStore(Selector.projectType);
 
   const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -114,7 +116,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
           />
         </GizmoHelper>
       </Canvas>
-      <ExperimentSettings />
+      {projectType === ProjectType.DRUG_DISCOVERY && <DockingSettings />}
       {testMolecule && <MoveMoleculeButtons />}
       {loading && canvasRef.current && (
         <Spin
