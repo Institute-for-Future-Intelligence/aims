@@ -135,6 +135,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const updateTestMoleculeData = useStore(Selector.updateTestMoleculeData);
+  const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
 
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const [updateHiddenFlag, setUpdateHiddenFlag] = useState<boolean>(false);
@@ -1003,6 +1004,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               grid={{ column: canvasColumns, gutter: 0 }}
               dataSource={sortedMoleculesRef.current}
               renderItem={(data: MoleculeData) => {
+                const prop = getProvidedMolecularProperties(data.name);
                 return (
                   <List.Item
                     style={{ height: canvasHeight }}
@@ -1035,7 +1037,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                         width: 'calc(100% - 14px)',
                       }}
                     >
-                      {labelType === LabelType.FORMULA ? data.formula ?? data.name : data.name}
+                      {labelType === LabelType.FORMULA ? prop?.formula ?? data.name : data.name}
                     </div>
                   </List.Item>
                 );

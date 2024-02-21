@@ -27,6 +27,7 @@ const ImportMoleculeModal = React.memo(
   ({ importByName, setName, getName, setDialogVisible, isDialogVisible }: ImportMoleculeModalProps) => {
     const language = useStore(Selector.language);
     const projectType = useStore(Selector.projectType);
+    const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
 
     const [moleculeType, setMoleculeType] = useState<MoleculeType>(
       projectType === ProjectType.DRUG_DISCOVERY ? MoleculeType.DRUG : MoleculeType.COMMON,
@@ -125,11 +126,15 @@ const ImportMoleculeModal = React.memo(
               setName(value);
             }}
           >
-            {(moleculeType === MoleculeType.DRUG ? drugMolecules : commonMolecules).map((d, i) => (
-              <Option key={`${i}-${d.name}`} value={d.name}>
-                {d.name + (d.formula ? ' (' + d.formula + ')' : '')}
-              </Option>
-            ))}
+            {(moleculeType === MoleculeType.DRUG ? drugMolecules : commonMolecules).map((d, i) => {
+              const prop = getProvidedMolecularProperties(d.name);
+              const formula = prop?.formula;
+              return (
+                <Option key={`${i}-${d.name}`} value={d.name}>
+                  {d.name + (formula ? ' (' + formula + ')' : '')}
+                </Option>
+              );
+            })}
           </Select>
         </Space>
       </Modal>
