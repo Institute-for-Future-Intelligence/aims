@@ -153,7 +153,8 @@ const VerticalAxis = React.memo(
         variable === 'rotatableBondCount' ||
         variable === 'polarSurfaceArea' ||
         variable === 'heavyAtomCount' ||
-        variable === 'complexity'
+        variable === 'complexity' ||
+        variable === 'density'
       )
         return 0;
       return Number.MIN_SAFE_INTEGER;

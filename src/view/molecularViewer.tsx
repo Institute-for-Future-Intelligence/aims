@@ -236,6 +236,9 @@ const MolecularViewer = React.memo(
             polarSurfaceArea: properties.polarSurfaceArea,
             heavyAtomCount: properties.heavyAtomCount,
             complexity: properties.complexity,
+            density: properties.density,
+            boilingPoint: properties.boilingPoint,
+            meltingPoint: properties.meltingPoint,
           } as MolecularProperties);
         }
       }

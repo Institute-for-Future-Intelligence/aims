@@ -203,6 +203,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const polarSurfaceAreaSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('polarSurfaceArea'));
   const heavyAtomCountSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('heavyAtomCount'));
   const complexitySelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('complexity'));
+  const densitySelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('density'));
+  const boilingPointSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('boilingPoint'));
+  const meltingPointSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('meltingPoint'));
 
   useEffect(() => {
     atomCountSelectionRef.current = !projectState.hiddenProperties?.includes('atomCount');
@@ -215,6 +218,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     polarSurfaceAreaSelectionRef.current = !projectState.hiddenProperties?.includes('polarSurfaceArea');
     heavyAtomCountSelectionRef.current = !projectState.hiddenProperties?.includes('heavyAtomCount');
     complexitySelectionRef.current = !projectState.hiddenProperties?.includes('complexity');
+    densitySelectionRef.current = !projectState.hiddenProperties?.includes('density');
+    boilingPointSelectionRef.current = !projectState.hiddenProperties?.includes('boilingPoint');
+    meltingPointSelectionRef.current = !projectState.hiddenProperties?.includes('meltingPoint');
     setUpdateFlag(!updateFlag);
   }, [projectState.hiddenProperties]);
 
@@ -714,6 +720,39 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
         >
           <span style={{ fontSize: '12px' }}>{t('projectPanel.Complexity', lang)}</span>
         </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            densitySelectionRef.current = e.target.checked;
+            selectProperty(densitySelectionRef.current, 'density');
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={densitySelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.Density', lang)}</span>
+        </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            boilingPointSelectionRef.current = e.target.checked;
+            selectProperty(boilingPointSelectionRef.current, 'boilingPoint');
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={boilingPointSelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.BoilingPoint', lang)}</span>
+        </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            meltingPointSelectionRef.current = e.target.checked;
+            selectProperty(meltingPointSelectionRef.current, 'meltingPoint');
+            setUpdateHiddenFlag(!updateHiddenFlag);
+          }}
+          checked={meltingPointSelectionRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.MeltingPoint', lang)}</span>
+        </Checkbox>
       </div>
     );
   };
@@ -783,6 +822,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           if (!projectState.hiddenProperties?.includes('polarSurfaceArea')) d['polarSurfaceArea'] = p.polarSurfaceArea;
           if (!projectState.hiddenProperties?.includes('heavyAtomCount')) d['heavyAtomCount'] = p.heavyAtomCount;
           if (!projectState.hiddenProperties?.includes('complexity')) d['complexity'] = p.complexity;
+          if (!projectState.hiddenProperties?.includes('density')) d['density'] = p.density;
+          if (!projectState.hiddenProperties?.includes('boilingPoint')) d['boilingPoint'] = p.boilingPoint;
+          if (!projectState.hiddenProperties?.includes('meltingPoint')) d['meltingPoint'] = p.meltingPoint;
           d['group'] = projectState.dataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
           d['selected'] = selectedMolecule === m;
           d['hovered'] = hoveredMolecule === m;
@@ -856,6 +898,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     if (!projectState.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMin('polarSurfaceArea', 0));
     if (!projectState.hiddenProperties?.includes('heavyAtomCount')) array.push(getMin('heavyAtomCount', 0));
     if (!projectState.hiddenProperties?.includes('complexity')) array.push(getMin('complexity', 0));
+    if (!projectState.hiddenProperties?.includes('density')) array.push(getMin('density', 0));
+    if (!projectState.hiddenProperties?.includes('boilingPoint')) array.push(getMin('boilingPoint', -100));
+    if (!projectState.hiddenProperties?.includes('meltingPoint')) array.push(getMin('meltingPoint', -100));
     return array;
   }, [updateHiddenFlag, projectState.ranges, projectState.hiddenProperties]);
 
@@ -873,6 +918,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     if (!projectState.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMax('polarSurfaceArea', 200));
     if (!projectState.hiddenProperties?.includes('heavyAtomCount')) array.push(getMax('heavyAtomCount', 200));
     if (!projectState.hiddenProperties?.includes('complexity')) array.push(getMax('complexity', 2000));
+    if (!projectState.hiddenProperties?.includes('density')) array.push(getMax('density', 5));
+    if (!projectState.hiddenProperties?.includes('boilingPoint')) array.push(getMax('boilingPoint', 200));
+    if (!projectState.hiddenProperties?.includes('meltingPoint')) array.push(getMax('meltingPoint', 50));
     return array;
   }, [updateHiddenFlag, projectState.ranges, projectState.hiddenProperties]);
 
@@ -888,6 +936,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     if (!projectState.hiddenProperties?.includes('polarSurfaceArea')) array.push(1);
     if (!projectState.hiddenProperties?.includes('heavyAtomCount')) array.push(1);
     if (!projectState.hiddenProperties?.includes('complexity')) array.push(1);
+    if (!projectState.hiddenProperties?.includes('density')) array.push(0.1);
+    if (!projectState.hiddenProperties?.includes('boilingPoint')) array.push(1);
+    if (!projectState.hiddenProperties?.includes('meltingPoint')) array.push(1);
     return array;
   }, [updateHiddenFlag, projectState.hiddenProperties]);
 
@@ -944,6 +995,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       array.push(createFilter('polarSurfaceArea', 140, 0));
     if (!projectState.hiddenProperties?.includes('heavyAtomCount')) array.push(createFilter('heavyAtomCount', 100, 1));
     if (!projectState.hiddenProperties?.includes('complexity')) array.push(createFilter('complexity', 1000, 0));
+    if (!projectState.hiddenProperties?.includes('density')) array.push(createFilter('density', 5, 0));
+    if (!projectState.hiddenProperties?.includes('boilingPoint')) array.push(createFilter('boilingPoint', 200, 0));
+    if (!projectState.hiddenProperties?.includes('meltingPoint')) array.push(createFilter('meltingPoint', 50, 0));
     return array;
   }, [updateHiddenFlag, projectState.filters, projectState.hiddenProperties]);
 

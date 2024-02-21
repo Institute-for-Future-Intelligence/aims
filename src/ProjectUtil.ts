@@ -36,7 +36,15 @@ export class ProjectUtil {
       sortDescending: false,
       ranges: new Array<Range>(),
       filters: new Array<Filter>(),
-      hiddenProperties: ['atomCount', 'bondCount', 'heavyAtomCount', 'complexity'],
+      hiddenProperties: [
+        'atomCount',
+        'bondCount',
+        'heavyAtomCount',
+        'complexity',
+        'density',
+        'boilingPoint',
+        'meltingPoint',
+      ],
       counter: 0,
       xAxisNameScatteredPlot: 'atomCount',
       yAxisNameScatteredPlot: 'atomCount',
@@ -92,6 +100,9 @@ export class ProjectUtil {
     if (!hidden?.includes('polarSurfaceArea')) a.push('polarSurfaceArea');
     if (!hidden?.includes('heavyAtomCount')) a.push('heavyAtomCount');
     if (!hidden?.includes('complexity')) a.push('complexity');
+    if (!hidden?.includes('density')) a.push('density');
+    if (!hidden?.includes('boilingPoint')) a.push('boilingPoint');
+    if (!hidden?.includes('meltingPoint')) a.push('meltingPoint');
     return a;
   }
 
@@ -108,6 +119,9 @@ export class ProjectUtil {
     if (!hidden?.includes('polarSurfaceArea')) a.push(i18n.t('projectPanel.PolarSurfaceAreaShort', l));
     if (!hidden?.includes('heavyAtomCount')) a.push(i18n.t('projectPanel.HeavyAtomCountShort', l));
     if (!hidden?.includes('complexity')) a.push(i18n.t('projectPanel.Complexity', l));
+    if (!hidden?.includes('density')) a.push(i18n.t('projectPanel.Density', l));
+    if (!hidden?.includes('boilingPoint')) a.push(i18n.t('projectPanel.BoilingPoint', l));
+    if (!hidden?.includes('meltingPoint')) a.push(i18n.t('projectPanel.MeltingPoint', l));
     return a;
   }
 
@@ -123,6 +137,9 @@ export class ProjectUtil {
     if (!hidden?.includes('polarSurfaceArea')) a.push('number');
     if (!hidden?.includes('heavyAtomCount')) a.push('number');
     if (!hidden?.includes('complexity')) a.push('number');
+    if (!hidden?.includes('density')) a.push('number');
+    if (!hidden?.includes('boilingPoint')) a.push('number');
+    if (!hidden?.includes('meltingPoint')) a.push('number');
     return a;
   }
 
@@ -138,6 +155,9 @@ export class ProjectUtil {
     if (!hidden?.includes('polarSurfaceArea')) a.push(1);
     if (!hidden?.includes('heavyAtomCount')) a.push(0);
     if (!hidden?.includes('complexity')) a.push(1);
+    if (!hidden?.includes('density')) a.push(1);
+    if (!hidden?.includes('boilingPoint')) a.push(1);
+    if (!hidden?.includes('meltingPoint')) a.push(1);
     return a;
   }
 
@@ -153,6 +173,9 @@ export class ProjectUtil {
     if (!hidden?.includes('polarSurfaceArea')) a.push(false);
     if (!hidden?.includes('heavyAtomCount')) a.push(true);
     if (!hidden?.includes('complexity')) a.push(false);
+    if (!hidden?.includes('density')) a.push(false);
+    if (!hidden?.includes('boilingPoint')) a.push(true);
+    if (!hidden?.includes('meltingPoint')) a.push(true);
     return a;
   }
 
@@ -168,34 +191,26 @@ export class ProjectUtil {
     if (!hidden?.includes('polarSurfaceArea')) a.push('Å²');
     if (!hidden?.includes('heavyAtomCount')) a.push('');
     if (!hidden?.includes('complexity')) a.push('');
+    if (!hidden?.includes('density')) a.push('g/ml');
+    if (!hidden?.includes('boilingPoint')) a.push('°C');
+    if (!hidden?.includes('meltingPoint')) a.push('°C');
     return a;
   }
 
   static getUnit(variable: string, l: { lng: string }): string {
     if (variable === 'molecularMass') return 'u';
     if (variable === 'polarSurfaceArea') return 'Å²';
+    if (variable === 'boilingPoint') return '°C';
+    if (variable === 'meltingPoint') return '°C';
     return '';
   }
 
   static isExcluded(filters: Filter[], p: MolecularProperties): boolean {
     for (const f of filters) {
       if (f.type === FilterType.Between && f.upperBound !== undefined && f.lowerBound !== undefined) {
-        if (f.variable === 'molecularMass') {
-          if (p.molecularMass > f.upperBound || p.molecularMass < f.lowerBound) return true;
-        } else if (f.variable === 'logP') {
-          if (p.logP > f.upperBound || p.logP < f.lowerBound) return true;
-        } else if (f.variable === 'hydrogenBondDonorCount') {
-          if (p.hydrogenBondDonorCount > f.upperBound || p.hydrogenBondDonorCount < f.lowerBound) return true;
-        } else if (f.variable === 'hydrogenBondAcceptorCount') {
-          if (p.hydrogenBondAcceptorCount > f.upperBound || p.hydrogenBondAcceptorCount < f.lowerBound) return true;
-        } else if (f.variable === 'rotatableBondCount') {
-          if (p.rotatableBondCount > f.upperBound || p.rotatableBondCount < f.lowerBound) return true;
-        } else if (f.variable === 'polarSurfaceArea') {
-          if (p.polarSurfaceArea > f.upperBound || p.polarSurfaceArea < f.lowerBound) return true;
-        } else if (f.variable === 'heavyAtomCount') {
-          if (p.heavyAtomCount > f.upperBound || p.heavyAtomCount < f.lowerBound) return true;
-        } else if (f.variable === 'complexity') {
-          if (p.complexity > f.upperBound || p.complexity < f.lowerBound) return true;
+        const v = p[f.variable as keyof MolecularProperties];
+        if (typeof v === 'number') {
+          if (v > f.upperBound || v < f.lowerBound) return true;
         }
       }
     }
