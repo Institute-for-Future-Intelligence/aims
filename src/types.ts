@@ -26,9 +26,11 @@ export interface ProjectState {
   filters: Filter[] | null;
   hiddenProperties: string[] | null;
   counter: number;
-  xAxisNameScatteredPlot: string | null;
-  yAxisNameScatteredPlot: string | null;
-  dotSizeScatteredPlot: number | null;
+  xAxisNameScatterPlot: string | null;
+  yAxisNameScatterPlot: string | null;
+  xLinesScatterPlot: boolean;
+  yLinesScatterPlot: boolean;
+  dotSizeScatterPlot: number | null;
   thumbnailWidth: number | null;
 
   cameraPosition: number[];

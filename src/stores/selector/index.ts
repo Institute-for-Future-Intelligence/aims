@@ -141,6 +141,16 @@ export const projectRanges = (state: CommonStoreState) => state.projectState.ran
 
 export const hiddenProperties = (state: CommonStoreState) => state.projectState.hiddenProperties;
 
+export const xAxisNameScatterPlot = (state: CommonStoreState) => state.projectState.xAxisNameScatterPlot;
+
+export const yAxisNameScatterPlot = (state: CommonStoreState) => state.projectState.yAxisNameScatterPlot;
+
+export const xLinesScatterPlot = (state: CommonStoreState) => state.projectState.xLinesScatterPlot;
+
+export const yLinesScatterPlot = (state: CommonStoreState) => state.projectState.yLinesScatterPlot;
+
+export const dotSizeScatterPlot = (state: CommonStoreState) => state.projectState.dotSizeScatterPlot;
+
 export const chamberViewerPercentWidth = (state: CommonStoreState) => state.projectState.chamberViewerPercentWidth;
 
 export const chamberViewerBackground = (state: CommonStoreState) => state.projectState.chamberViewerBackground;

@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { DataColoring, GraphType, LabelType, ProjectType } from './constants';
 import styled from 'styled-components';
 import { Button, Checkbox, Col, Collapse, CollapseProps, ColorPicker, List, Popover, Radio, Row, Select } from 'antd';
@@ -41,6 +41,8 @@ import {
 } from './view/displayOptions';
 import { commonMolecules, drugMolecules, getMolecule } from './internalDatabase';
 import MoleculeContainer from './moleculeContainer';
+import { CartesianGrid, Dot, DotProps, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { MolecularProperties } from './models/MolecularProperties.ts';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -142,6 +144,11 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const projectMolecules = useStore(Selector.molecules);
   const selectedProperty = useStore(Selector.selectedProperty);
   const hiddenProperties = useStore(Selector.hiddenProperties);
+  const xAxisNameScatterPlot = useStore(Selector.xAxisNameScatterPlot);
+  const yAxisNameScatterPlot = useStore(Selector.yAxisNameScatterPlot);
+  const xLinesScatterPlot = useStore(Selector.xLinesScatterPlot);
+  const yLinesScatterPlot = useStore(Selector.yLinesScatterPlot);
+  const dotSizeScatterPlot = useStore(Selector.dotSizeScatterPlot);
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const updateTestMoleculeData = useStore(Selector.updateTestMoleculeData);
@@ -210,6 +217,11 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const densitySelectionRef = useRef<boolean>(!hiddenProperties?.includes('density'));
   const boilingPointSelectionRef = useRef<boolean>(!hiddenProperties?.includes('boilingPoint'));
   const meltingPointSelectionRef = useRef<boolean>(!hiddenProperties?.includes('meltingPoint'));
+  const xAxisRef = useRef<string>(xAxisNameScatterPlot ?? 'atomCount');
+  const yAxisRef = useRef<string>(yAxisNameScatterPlot ?? 'bondCount');
+  const dotSizeRef = useRef<number>(dotSizeScatterPlot ?? 5);
+  const xLinesRef = useRef<boolean>(xLinesScatterPlot);
+  const yLinesRef = useRef<boolean>(yLinesScatterPlot);
 
   useEffect(() => {
     atomCountSelectionRef.current = !hiddenProperties?.includes('atomCount');
@@ -1040,6 +1052,27 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return array;
   }, [updateHiddenFlag, projectFilters, hiddenProperties]);
 
+  const scatterData = useMemo(() => {
+    const data: { x: number; y: number }[] = [];
+    if (projectMolecules) {
+      for (const m of projectMolecules) {
+        const prop = molecularPropertiesMap.get(m.name);
+        if (prop) {
+          const x = prop[xAxisRef.current as keyof MolecularProperties];
+          const y = prop[yAxisRef.current as keyof MolecularProperties];
+          if (typeof x === 'number' && typeof y === 'number') {
+            data.push({ x, y });
+          }
+        }
+      }
+    }
+    return data;
+  }, [xAxisRef.current, yAxisRef.current, projectMolecules, molecularPropertiesMap]);
+
+  const RenderDot: FC<DotProps> = ({ cx, cy }) => {
+    return <Dot cx={cx} cy={cy} fill="#8884d8" r={dotSizeRef.current} />;
+  };
+
   return (
     <Container
       onContextMenu={(e) => {
@@ -1137,7 +1170,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               }}
             />
           </div>
-          {data.length > 0 && (
+
+          {/*parallel coordinates*/}
+
+          {data.length > 0 && graphType === GraphType.PARALLEL_COORDINATES && (
             <PropertiesHeader>
               <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
               <span>
@@ -1171,7 +1207,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 <Button
                   style={{ border: 'none', paddingRight: '20px', background: 'white' }}
                   onClick={() => {
-                    saveSvg('property-space')
+                    saveSvg('parallel-coordinates')
                       .then(() => {
                         showInfo(t('message.ScreenshotSaved', lang));
                         if (loggable) {
@@ -1196,9 +1232,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               </span>
             </PropertiesHeader>
           )}
-          {data.length > 0 && (
+          {data.length > 0 && graphType === GraphType.PARALLEL_COORDINATES && (
             <ParallelCoordinates
-              id={'property-space'}
+              id={'parallel-coordinates'}
               width={relativeWidth * window.innerWidth}
               height={totalHeight / 2 - 130}
               data={data}
@@ -1225,6 +1261,92 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               hoveredIndex={projectMolecules && hoveredMolecule ? projectMolecules.indexOf(hoveredMolecule) : -1}
               selectedIndex={projectMolecules && selectedMolecule ? projectMolecules.indexOf(selectedMolecule) : -1}
             />
+          )}
+
+          {/*scatter plot*/}
+
+          {data.length > 0 && graphType === GraphType.SCATTER_PLOT && (
+            <PropertiesHeader>
+              <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
+              <span>
+                <Button
+                  style={{ border: 'none', paddingRight: '20px', background: 'white' }}
+                  onClick={() => {
+                    saveSvg('scatter-plot')
+                      .then(() => {
+                        showInfo(t('message.ScreenshotSaved', lang));
+                        if (loggable) {
+                          setCommonStore((state) => {
+                            state.actionInfo = {
+                              name: 'Take Screenshot of the Scatter Plot',
+                              timestamp: new Date().getTime(),
+                            };
+                          });
+                        }
+                      })
+                      .catch((reason) => {
+                        showError(reason);
+                      });
+                  }}
+                >
+                  <CameraOutlined
+                    style={{ fontSize: '24px', color: 'gray' }}
+                    title={t('projectPanel.PropertiesScreenshot', lang)}
+                  />
+                </Button>
+              </span>
+            </PropertiesHeader>
+          )}
+          {data.length > 0 && graphType === GraphType.SCATTER_PLOT && (
+            <ScatterChart
+              id={'scatter-plot'}
+              width={relativeWidth * window.innerWidth}
+              height={totalHeight / 2 - 130}
+              margin={{
+                top: 10,
+                right: 40,
+                bottom: 20,
+                left: 10,
+              }}
+              data={data}
+            >
+              <CartesianGrid
+                strokeWidth="1"
+                stroke={'gray'}
+                horizontal={xLinesRef.current}
+                vertical={yLinesRef.current}
+              />
+              <XAxis
+                dataKey="x"
+                fontSize={10}
+                type="number"
+                domain={[0, 100]}
+                label={<Label value={xAxisRef.current} dy={10} fontSize={11} />}
+                name={xAxisRef.current}
+                unit={''}
+                strokeWidth={1}
+                stroke={'gray'}
+                tickFormatter={(value, index) => {
+                  return value;
+                }}
+              />
+              <YAxis
+                dataKey="y"
+                fontSize={10}
+                type="number"
+                domain={[0, 100]}
+                label={<Label value={yAxisRef.current} dx={-10} fontSize={11} angle={-90} />}
+                name={yAxisRef.current}
+                unit={''}
+                strokeWidth={1}
+                stroke={'gray'}
+                tickFormatter={(value, index) => {
+                  return value;
+                }}
+              />
+              <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+              <Scatter name="All" data={scatterData} fill="#8884d8" shape={<RenderDot />} />
+            </ScatterChart>
           )}
         </CanvasContainer>
         <ImportMoleculeModal

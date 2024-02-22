@@ -47,9 +47,11 @@ export class ProjectUtil {
         'meltingPoint',
       ],
       counter: 0,
-      xAxisNameScatteredPlot: 'atomCount',
-      yAxisNameScatteredPlot: 'atomCount',
-      dotSizeScatteredPlot: 5,
+      xAxisNameScatterPlot: 'atomCount',
+      yAxisNameScatterPlot: 'bondCount',
+      xLinesScatterPlot: false,
+      yLinesScatterPlot: false,
+      dotSizeScatterPlot: 5,
       thumbnailWidth: 200,
 
       cameraPosition: DEFAULT_CAMERA_POSITION,
@@ -219,25 +221,10 @@ export class ProjectUtil {
     return false;
   }
 
-  static setScatterData(name: string, axis: 'x' | 'y', datum: { x: number; y: number }, m: MoleculeData) {
-    switch (name) {
-      case 'atomCount':
-        // datum[axis] =;
-        break;
-      case 'bondCount':
-        break;
-      case 'molecularMass':
-        break;
-      case 'logP':
-        break;
-      case 'hydrogenBondDonorCount':
-        break;
-      case 'hydrogenBondAcceptorCount':
-        break;
-      case 'rotatableBondCount':
-        break;
-      case 'polarSurfaceArea':
-        break;
+  static setScatterData(name: string, axis: 'x' | 'y', datum: { x: number; y: number }, prop: MolecularProperties) {
+    const v = prop[name as keyof MolecularProperties];
+    if (typeof v === 'number') {
+      datum[axis] = v;
     }
   }
 }
