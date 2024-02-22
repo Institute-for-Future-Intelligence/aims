@@ -305,6 +305,40 @@ export const updateDotSizeScatterPlot = (userid: string, projectTitle: string, d
     });
 };
 
+export const updateHorizontalLinesScatterPlot = (userid: string, projectTitle: string, xLinesScatterPlot: boolean) => {
+  const lang = { lng: useStore.getState().language };
+  return firebase
+    .firestore()
+    .collection('users')
+    .doc(userid)
+    .collection('projects')
+    .doc(projectTitle)
+    .update({ xLinesScatterPlot })
+    .then(() => {
+      // ignore
+    })
+    .catch((error) => {
+      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
+    });
+};
+
+export const updateVerticalLinesScatterPlot = (userid: string, projectTitle: string, yLinesScatterPlot: boolean) => {
+  const lang = { lng: useStore.getState().language };
+  return firebase
+    .firestore()
+    .collection('users')
+    .doc(userid)
+    .collection('projects')
+    .doc(projectTitle)
+    .update({ yLinesScatterPlot })
+    .then(() => {
+      // ignore
+    })
+    .catch((error) => {
+      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
+    });
+};
+
 export const updateThumbnailWidth = (userid: string, projectTitle: string, thumbnailWidth: number) => {
   const lang = { lng: useStore.getState().language };
   return firebase

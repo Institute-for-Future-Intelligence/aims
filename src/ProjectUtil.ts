@@ -51,7 +51,7 @@ export class ProjectUtil {
       yAxisNameScatterPlot: 'bondCount',
       xLinesScatterPlot: false,
       yLinesScatterPlot: false,
-      dotSizeScatterPlot: 5,
+      dotSizeScatterPlot: 4,
       thumbnailWidth: 200,
 
       cameraPosition: DEFAULT_CAMERA_POSITION,

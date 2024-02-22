@@ -238,6 +238,9 @@ export const i18n_en = {
       SelectXYAxes: 'Select X-Y Axes',
       SelectXAxis: 'Select X Axis',
       SelectYAxis: 'Select Y Axis',
+      GridLines: 'Grid Lines',
+      HorizontalLines: 'Horizontal Lines',
+      VerticalLines: 'Vertical Lines',
     },
 
     menu: {

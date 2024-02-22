@@ -238,6 +238,9 @@ export const i18n_zh_cn = {
       SelectXYAxes: '选择X-Y轴',
       SelectXAxis: '选择X轴',
       SelectYAxis: '选择Y轴',
+      GridLines: '格线',
+      HorizontalLines: '水平线',
+      VerticalLines: '竖直线',
     },
 
     menu: {

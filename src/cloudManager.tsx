@@ -349,7 +349,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             yAxisNameScatterPlot: data.yAxisNameScatterPlot ?? 'bondCount',
             xLinesScatterPlot: !!data.xLinesScatterPlot,
             yLinesScatterPlot: !!data.yLinesScatterPlot,
-            dotSizeScatterPlot: data.dotSizeScatterPlot ?? 5,
+            dotSizeScatterPlot: data.dotSizeScatterPlot ?? 4,
             thumbnailWidth: data.thumbnailWidth ?? 200,
             type: data.type ?? ProjectType.DRUG_DISCOVERY,
             molecules: data.molecules ?? [],

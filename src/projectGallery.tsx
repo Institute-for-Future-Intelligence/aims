@@ -15,11 +15,12 @@ import {
   EditFilled,
   EditOutlined,
   ImportOutlined,
+  LineChartOutlined,
   LoginOutlined,
   SettingOutlined,
-  LineChartOutlined,
   SortAscendingOutlined,
   SortDescendingOutlined,
+  TableOutlined,
 } from '@ant-design/icons';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
@@ -35,6 +36,8 @@ import { usePrimitiveStore } from './stores/commonPrimitive';
 import {
   updateDataColoring,
   updateHiddenProperties,
+  updateHorizontalLinesScatterPlot,
+  updateVerticalLinesScatterPlot,
   updateXAxisNameScatterPlot,
   updateYAxisNameScatterPlot,
 } from './cloudProjectUtil';
@@ -225,9 +228,21 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const meltingPointSelectionRef = useRef<boolean>(!hiddenProperties?.includes('meltingPoint'));
   const xAxisRef = useRef<string>(xAxisNameScatterPlot ?? 'atomCount');
   const yAxisRef = useRef<string>(yAxisNameScatterPlot ?? 'bondCount');
-  const dotSizeRef = useRef<number>(dotSizeScatterPlot ?? 5);
+  const dotSizeRef = useRef<number>(dotSizeScatterPlot ?? 4);
   const xLinesRef = useRef<boolean>(xLinesScatterPlot);
   const yLinesRef = useRef<boolean>(yLinesScatterPlot);
+
+  useEffect(() => {
+    if (xAxisNameScatterPlot) {
+      xAxisRef.current = xAxisNameScatterPlot;
+    }
+  }, [xAxisNameScatterPlot]);
+
+  useEffect(() => {
+    if (yAxisNameScatterPlot) {
+      yAxisRef.current = yAxisNameScatterPlot;
+    }
+  }, [yAxisNameScatterPlot]);
 
   useEffect(() => {
     atomCountSelectionRef.current = !hiddenProperties?.includes('atomCount');
@@ -1058,6 +1073,52 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return array;
   }, [updateHiddenFlag, projectFilters, hiddenProperties]);
 
+  const createGridLinesContent = () => {
+    return (
+      <div>
+        <Checkbox
+          onChange={(e) => {
+            const checked = e.target.checked;
+            xLinesRef.current = checked;
+            if (isOwner) {
+              if (user.uid && projectTitle) {
+                updateHorizontalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
+                  setCommonStore((state) => {
+                    state.projectState.xLinesScatterPlot = checked;
+                  });
+                });
+              }
+            }
+            setChanged(true);
+          }}
+          checked={xLinesRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.HorizontalLines', lang)}</span>
+        </Checkbox>
+        <br />
+        <Checkbox
+          onChange={(e) => {
+            const checked = e.target.checked;
+            yLinesRef.current = checked;
+            if (isOwner) {
+              if (user.uid && projectTitle) {
+                updateVerticalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
+                  setCommonStore((state) => {
+                    state.projectState.yLinesScatterPlot = checked;
+                  });
+                });
+              }
+            }
+            setChanged(true);
+          }}
+          checked={yLinesRef.current}
+        >
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.VerticalLines', lang)}</span>
+        </Checkbox>
+      </div>
+    );
+  };
+
   const createAxisOptions = () => {
     return (
       <>
@@ -1388,6 +1449,18 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     <LineChartOutlined style={{ fontSize: '24px', color: 'gray' }} />
                   </Button>
                 </Popover>
+                <Popover
+                  title={
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <TableOutlined /> {t('projectPanel.GridLines', lang)}
+                    </div>
+                  }
+                  content={createGridLinesContent()}
+                >
+                  <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                    <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                  </Button>
+                </Popover>
                 <Button
                   style={{ border: 'none', paddingRight: '20px', background: 'white' }}
                   onClick={() => {
@@ -1464,7 +1537,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 }}
               />
               <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-              <Scatter name="All" data={scatterData} fill="#8884d8" shape={<RenderDot />} />
+              <Scatter name="All" data={scatterData} fill="#8884d8" line shape={<RenderDot />} />
             </ScatterChart>
           )}
         </CanvasContainer>
