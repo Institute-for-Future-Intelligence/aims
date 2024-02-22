@@ -232,6 +232,9 @@ export const i18n_zh_cn = {
       MeltingPoint: '熔点',
       LabelType: '标签类别',
       MolecularFormula: '分子式',
+      GraphType: '图形类别',
+      ParallelCoordinates: '平行坐标图',
+      ScatterPlot: '散点图',
     },
 
     menu: {

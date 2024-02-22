@@ -121,7 +121,7 @@ export enum LabelType {
 
 export enum GraphType {
   PARALLEL_COORDINATES = 'Parallel Coordinates',
-  SCATTERED_PLOT = 'Scattered Plot',
+  SCATTER_PLOT = 'Scatter Plot',
 }
 
 export enum BondType {

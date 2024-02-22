@@ -232,6 +232,9 @@ export const i18n_en = {
       MeltingPoint: 'Melting Point',
       LabelType: 'Label Type',
       MolecularFormula: 'Molecular Formula',
+      GraphType: 'Graph Type',
+      ParallelCoordinates: 'Parallel Coordinates',
+      ScatterPlot: 'Scatter Plot',
     },
 
     menu: {

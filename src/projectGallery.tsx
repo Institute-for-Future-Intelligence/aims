@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DataColoring, LabelType, ProjectType } from './constants';
+import { DataColoring, GraphType, LabelType, ProjectType } from './constants';
 import styled from 'styled-components';
 import { Button, Checkbox, Col, Collapse, CollapseProps, ColorPicker, List, Popover, Radio, Row, Select } from 'antd';
 import {
@@ -130,6 +130,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const viewerMaterial = useStore(Selector.projectViewerMaterial);
   const viewerBackground = useStore(Selector.projectViewerBackground);
   const labelType = useStore(Selector.labelType);
+  const graphType = useStore(Selector.graphType);
   const projectOwner = useStore(Selector.projectOwner);
   const projectType = useStore(Selector.projectType);
   const projectTitle = useStore(Selector.projectTitle);
@@ -256,6 +257,13 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   };
 
   const createProjectSettingsContent = useMemo(() => {
+    const setGraphType = (graphType: GraphType) => {
+      useStore.getState().set((state) => {
+        state.projectState.graphType = graphType;
+      });
+      setChanged(true);
+    };
+
     const setLabelType = (labelType: LabelType) => {
       useStore.getState().set((state) => {
         state.projectState.labelType = labelType;
@@ -287,10 +295,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return (
       <div style={{ width: '320px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
-          <Col span={11} style={{ paddingTop: '5px' }}>
+          <Col span={10} style={{ paddingTop: '5px' }}>
             <span>{t('molecularViewer.Style', lang)}: </span>
           </Col>
-          <Col span={13}>
+          <Col span={14}>
             <Select
               style={{ width: '100%' }}
               value={viewerStyle}
@@ -322,10 +330,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           </Col>
         </Row>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
-          <Col span={11} style={{ paddingTop: '5px' }}>
+          <Col span={10} style={{ paddingTop: '5px' }}>
             <span>{t('molecularViewer.Material', lang)}: </span>
           </Col>
-          <Col span={13}>
+          <Col span={14}>
             <Select
               style={{ width: '100%' }}
               value={viewerMaterial}
@@ -357,10 +365,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           </Col>
         </Row>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
-          <Col span={11} style={{ paddingTop: '5px' }}>
+          <Col span={10} style={{ paddingTop: '5px' }}>
             <span>{t('projectPanel.LabelType', lang)}: </span>
           </Col>
-          <Col span={13}>
+          <Col span={14}>
             <Select
               style={{ width: '100%' }}
               value={labelType}
@@ -393,10 +401,46 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           </Col>
         </Row>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
-          <Col span={11} style={{ paddingTop: '5px' }}>
+          <Col span={10} style={{ paddingTop: '5px' }}>
+            <span>{t('projectPanel.GraphType', lang)}: </span>
+          </Col>
+          <Col span={14}>
+            <Select
+              style={{ width: '100%' }}
+              value={graphType}
+              onChange={(value: GraphType) => {
+                const oldValue = graphType;
+                const newValue = value;
+                const undoableChange = {
+                  name: 'Select Graph Type for Project',
+                  timestamp: Date.now(),
+                  oldValue: oldValue,
+                  newValue: newValue,
+                  undo: () => {
+                    setGraphType(undoableChange.oldValue as GraphType);
+                  },
+                  redo: () => {
+                    setGraphType(undoableChange.newValue as GraphType);
+                  },
+                } as UndoableChange;
+                useStore.getState().addUndoable(undoableChange);
+                setGraphType(newValue);
+              }}
+            >
+              <Option key={GraphType.PARALLEL_COORDINATES} value={GraphType.PARALLEL_COORDINATES}>
+                {t('projectPanel.ParallelCoordinates', lang)}
+              </Option>
+              <Option key={GraphType.SCATTER_PLOT} value={GraphType.SCATTER_PLOT}>
+                {t('projectPanel.ScatterPlot', lang)}
+              </Option>
+            </Select>
+          </Col>
+        </Row>
+        <Row gutter={6} style={{ paddingBottom: '4px' }}>
+          <Col span={10} style={{ paddingTop: '5px' }}>
             <span>{t('molecularViewer.BackgroundColor', lang)}: </span>
           </Col>
-          <Col span={13}>
+          <Col span={14}>
             <ColorPicker
               style={{ width: '100%' }}
               showText={true}
@@ -423,7 +467,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
         </Row>
       </div>
     );
-  }, [lang, viewerStyle, viewerMaterial, viewerBackground, labelType]);
+  }, [lang, viewerStyle, viewerMaterial, viewerBackground, labelType, graphType]);
 
   const descriptionItems: CollapseProps['items'] = [
     {
