@@ -12,6 +12,7 @@ import {
   DEFAULT_CAMERA_ROTATION,
   DEFAULT_CAMERA_UP,
   DEFAULT_PAN_CENTER,
+  GraphType,
   LabelType,
   ProjectType,
   SpaceshipDisplayMode,
@@ -84,6 +85,7 @@ export class ProjectUtil {
       projectViewerMaterial: MolecularViewerMaterial.Soft,
       projectViewerBackground: 'white',
 
+      graphType: GraphType.PARALLEL_COORDINATES,
       labelType: LabelType.NAME,
     } as ProjectState;
   }

@@ -116,7 +116,7 @@ const ImportMoleculeModal = React.memo(
         </Space>
         <Space direction={'horizontal'}>
           <Space direction={'horizontal'} style={{ width: '120px' }}>
-            {i18n.t('projectPanel.MoleculeName', lang)}:
+            {i18n.t('projectPanel.MolecularName', lang)}:
           </Space>
           <Select
             style={{ width: '300px' }}

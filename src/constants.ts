@@ -119,6 +119,11 @@ export enum LabelType {
   FORMULA = 'Formula',
 }
 
+export enum GraphType {
+  PARALLEL_COORDINATES = 'Parallel Coordinates',
+  SCATTERED_PLOT = 'Scattered Plot',
+}
+
 export enum BondType {
   SINGLE_BOND = 0,
   DOUBLE_BOND = 1,

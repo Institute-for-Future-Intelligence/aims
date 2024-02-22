@@ -194,7 +194,7 @@ export const i18n_en = {
       OutputSelectedMoleculeToTest: 'Output selected molecule to test',
       ImportMolecule: 'Import a molecule',
       MoleculeType: 'Molecule Type',
-      MoleculeName: 'Molecule Name',
+      MolecularName: 'Molecular Name',
       MoleculeAlreadyAdded: 'Molecule already added',
       MoleculeNotFound: 'Molecule not found',
       RemoveSelectedMolecule: 'Remove selected molecule',
@@ -231,7 +231,7 @@ export const i18n_en = {
       BoilingPoint: 'Boiling Point',
       MeltingPoint: 'Melting Point',
       LabelType: 'Label Type',
-      MoleculeFormula: 'Molecule Formula',
+      MolecularFormula: 'Molecular Formula',
     },
 
     menu: {

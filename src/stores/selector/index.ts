@@ -29,8 +29,6 @@ export const userCount = (state: PrimitiveStoreState) => state.userCount;
 
 export const selectedFloatingWindow = (state: CommonStoreState) => state.selectedFloatingWindow;
 
-export const projectState = (state: CommonStoreState) => state.projectState;
-
 export const projectView = (state: CommonStoreState) => state.projectView;
 
 export const cameraPosition = (state: CommonStoreState) => state.projectState.cameraPosition;
@@ -48,6 +46,8 @@ export const molecules = (state: CommonStoreState) => state.projectState.molecul
 export const testMolecule = (state: CommonStoreState) => state.projectState.testMolecule;
 
 export const updateTestMoleculeData = (state: CommonStoreState) => state.updateTestMoleculeData;
+
+export const selectedProperty = (state: CommonStoreState) => state.projectState.selectedProperty;
 
 export const selectedMolecule = (state: CommonStoreState) => state.projectState.selectedMolecule;
 
@@ -129,6 +129,18 @@ export const projectTitle = (state: CommonStoreState) => state.projectState.titl
 
 export const projectOwner = (state: CommonStoreState) => state.projectState.owner;
 
+export const projectDescription = (state: CommonStoreState) => state.projectState.description;
+
+export const projectSortDesending = (state: CommonStoreState) => state.projectState.sortDescending;
+
+export const projectDataColoring = (state: CommonStoreState) => state.projectState.dataColoring;
+
+export const projectFilters = (state: CommonStoreState) => state.projectState.filters;
+
+export const projectRanges = (state: CommonStoreState) => state.projectState.ranges;
+
+export const hiddenProperties = (state: CommonStoreState) => state.projectState.hiddenProperties;
+
 export const chamberViewerPercentWidth = (state: CommonStoreState) => state.projectState.chamberViewerPercentWidth;
 
 export const chamberViewerBackground = (state: CommonStoreState) => state.projectState.chamberViewerBackground;
@@ -150,6 +162,8 @@ export const projectViewerStyle = (state: CommonStoreState) => state.projectStat
 export const projectViewerMaterial = (state: CommonStoreState) => state.projectState.projectViewerMaterial;
 
 export const projectViewerBackground = (state: CommonStoreState) => state.projectState.projectViewerBackground;
+
+export const graphType = (state: CommonStoreState) => state.projectState.graphType;
 
 export const labelType = (state: CommonStoreState) => state.projectState.labelType;
 

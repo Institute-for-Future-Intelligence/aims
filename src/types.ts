@@ -3,7 +3,7 @@
  */
 
 import { Filter } from './Filter';
-import { DataColoring, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
+import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 
 // use null for undefined, as we need to persist this in Firebase
@@ -66,6 +66,7 @@ export interface ProjectState {
   projectViewerMaterial: MolecularViewerMaterial;
   projectViewerBackground: string;
 
+  graphType: GraphType;
   labelType: LabelType;
 }
 

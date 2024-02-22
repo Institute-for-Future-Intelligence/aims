@@ -130,8 +130,17 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const viewerMaterial = useStore(Selector.projectViewerMaterial);
   const viewerBackground = useStore(Selector.projectViewerBackground);
   const labelType = useStore(Selector.labelType);
-  const projectState = useStore(Selector.projectState);
+  const projectOwner = useStore(Selector.projectOwner);
   const projectType = useStore(Selector.projectType);
+  const projectTitle = useStore(Selector.projectTitle);
+  const projectDescription = useStore(Selector.projectDescription);
+  const projectSortDescending = useStore(Selector.projectSortDesending);
+  const projectDataColoring = useStore(Selector.projectDataColoring);
+  const projectFilters = useStore(Selector.projectFilters);
+  const projectRanges = useStore(Selector.projectRanges);
+  const projectMolecules = useStore(Selector.molecules);
+  const selectedProperty = useStore(Selector.selectedProperty);
+  const hiddenProperties = useStore(Selector.hiddenProperties);
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const updateTestMoleculeData = useStore(Selector.updateTestMoleculeData);
@@ -149,7 +158,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return { lng: language };
   }, [language]);
 
-  const isOwner = user.uid === projectState.owner;
+  const isOwner = user.uid === projectOwner;
 
   const descriptionTextAreaEditableRef = useRef<boolean>(false);
   const descriptionRef = useRef<string | null>(null);
@@ -159,13 +168,13 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
 
   useEffect(() => {
     sortedMoleculesRef.current = [];
-    if (projectState.molecules) {
-      for (const m of projectState.molecules) {
+    if (projectMolecules) {
+      for (const m of projectMolecules) {
         sortedMoleculesRef.current.push(m);
       }
-      const p = projectState.selectedProperty;
+      const p = selectedProperty;
       if (p) {
-        const prefix = projectState.sortDescending ? 1 : -1;
+        const prefix = projectSortDescending ? 1 : -1;
         sortedMoleculesRef.current.sort((a, b) => {
           const propertiesA = molecularPropertiesMap.get(a.name);
           const propertiesB = molecularPropertiesMap.get(b.name);
@@ -183,46 +192,40 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       }
       setUpdateFlag(!updateFlag);
     }
-  }, [projectState.molecules, projectState.sortDescending, projectState.selectedProperty, molecularPropertiesMap]);
+  }, [projectMolecules, projectSortDescending, selectedProperty, molecularPropertiesMap]);
 
   const propertySelectionChangedRef = useRef<boolean>(false);
-  const dataColoringSelectionRef = useRef<DataColoring>(projectState.dataColoring ?? DataColoring.ALL);
-  const atomCountSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('atomCount'));
-  const bondCountSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('bondCount'));
-  const massSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('molecularMass'));
-  const logPSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('logP'));
-  const hBondDonorCountSelectionRef = useRef<boolean>(
-    !projectState.hiddenProperties?.includes('hydrogenBondDonorCount'),
-  );
-  const hBondAcceptorCountSelectionRef = useRef<boolean>(
-    !projectState.hiddenProperties?.includes('hydrogenBondAcceptorCount'),
-  );
-  const rotatableBondCountSelectionRef = useRef<boolean>(
-    !projectState.hiddenProperties?.includes('rotatableBondCount'),
-  );
-  const polarSurfaceAreaSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('polarSurfaceArea'));
-  const heavyAtomCountSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('heavyAtomCount'));
-  const complexitySelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('complexity'));
-  const densitySelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('density'));
-  const boilingPointSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('boilingPoint'));
-  const meltingPointSelectionRef = useRef<boolean>(!projectState.hiddenProperties?.includes('meltingPoint'));
+  const dataColoringSelectionRef = useRef<DataColoring>(projectDataColoring ?? DataColoring.ALL);
+  const atomCountSelectionRef = useRef<boolean>(!hiddenProperties?.includes('atomCount'));
+  const bondCountSelectionRef = useRef<boolean>(!hiddenProperties?.includes('bondCount'));
+  const massSelectionRef = useRef<boolean>(!hiddenProperties?.includes('molecularMass'));
+  const logPSelectionRef = useRef<boolean>(!hiddenProperties?.includes('logP'));
+  const hBondDonorCountSelectionRef = useRef<boolean>(!hiddenProperties?.includes('hydrogenBondDonorCount'));
+  const hBondAcceptorCountSelectionRef = useRef<boolean>(!hiddenProperties?.includes('hydrogenBondAcceptorCount'));
+  const rotatableBondCountSelectionRef = useRef<boolean>(!hiddenProperties?.includes('rotatableBondCount'));
+  const polarSurfaceAreaSelectionRef = useRef<boolean>(!hiddenProperties?.includes('polarSurfaceArea'));
+  const heavyAtomCountSelectionRef = useRef<boolean>(!hiddenProperties?.includes('heavyAtomCount'));
+  const complexitySelectionRef = useRef<boolean>(!hiddenProperties?.includes('complexity'));
+  const densitySelectionRef = useRef<boolean>(!hiddenProperties?.includes('density'));
+  const boilingPointSelectionRef = useRef<boolean>(!hiddenProperties?.includes('boilingPoint'));
+  const meltingPointSelectionRef = useRef<boolean>(!hiddenProperties?.includes('meltingPoint'));
 
   useEffect(() => {
-    atomCountSelectionRef.current = !projectState.hiddenProperties?.includes('atomCount');
-    bondCountSelectionRef.current = !projectState.hiddenProperties?.includes('bondCount');
-    massSelectionRef.current = !projectState.hiddenProperties?.includes('molecularMass');
-    logPSelectionRef.current = !projectState.hiddenProperties?.includes('logP');
-    hBondDonorCountSelectionRef.current = !projectState.hiddenProperties?.includes('hydrogenBondDonorCount');
-    hBondAcceptorCountSelectionRef.current = !projectState.hiddenProperties?.includes('hydrogenBondAcceptorCount');
-    rotatableBondCountSelectionRef.current = !projectState.hiddenProperties?.includes('rotatableBondCount');
-    polarSurfaceAreaSelectionRef.current = !projectState.hiddenProperties?.includes('polarSurfaceArea');
-    heavyAtomCountSelectionRef.current = !projectState.hiddenProperties?.includes('heavyAtomCount');
-    complexitySelectionRef.current = !projectState.hiddenProperties?.includes('complexity');
-    densitySelectionRef.current = !projectState.hiddenProperties?.includes('density');
-    boilingPointSelectionRef.current = !projectState.hiddenProperties?.includes('boilingPoint');
-    meltingPointSelectionRef.current = !projectState.hiddenProperties?.includes('meltingPoint');
+    atomCountSelectionRef.current = !hiddenProperties?.includes('atomCount');
+    bondCountSelectionRef.current = !hiddenProperties?.includes('bondCount');
+    massSelectionRef.current = !hiddenProperties?.includes('molecularMass');
+    logPSelectionRef.current = !hiddenProperties?.includes('logP');
+    hBondDonorCountSelectionRef.current = !hiddenProperties?.includes('hydrogenBondDonorCount');
+    hBondAcceptorCountSelectionRef.current = !hiddenProperties?.includes('hydrogenBondAcceptorCount');
+    rotatableBondCountSelectionRef.current = !hiddenProperties?.includes('rotatableBondCount');
+    polarSurfaceAreaSelectionRef.current = !hiddenProperties?.includes('polarSurfaceArea');
+    heavyAtomCountSelectionRef.current = !hiddenProperties?.includes('heavyAtomCount');
+    complexitySelectionRef.current = !hiddenProperties?.includes('complexity');
+    densitySelectionRef.current = !hiddenProperties?.includes('density');
+    boilingPointSelectionRef.current = !hiddenProperties?.includes('boilingPoint');
+    meltingPointSelectionRef.current = !hiddenProperties?.includes('meltingPoint');
     setUpdateFlag(!updateFlag);
-  }, [projectState.hiddenProperties]);
+  }, [hiddenProperties]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -236,8 +239,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   }, [updateFlag]);
 
   useEffect(() => {
-    descriptionRef.current = projectState.description ?? t('projectPanel.WriteABriefDescriptionAboutThisProject', lang);
-  }, [projectState.description]);
+    descriptionRef.current = projectDescription ?? t('projectPanel.WriteABriefDescriptionAboutThisProject', lang);
+  }, [projectDescription]);
 
   const totalHeight = window.innerHeight;
   const canvasColumns = 3;
@@ -381,10 +384,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               }}
             >
               <Option key={LabelType.NAME} value={LabelType.NAME}>
-                {t('projectPanel.MoleculeName', lang)}
+                {t('projectPanel.MolecularName', lang)}
               </Option>
               <Option key={LabelType.FORMULA} value={LabelType.FORMULA}>
-                {t('projectPanel.MoleculeFormula', lang)}
+                {t('projectPanel.MolecularFormula', lang)}
               </Option>
             </Select>
           </Col>
@@ -486,7 +489,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 )}
               </>
             }
-            {projectState.selectedProperty && (
+            {selectedProperty && (
               <Button
                 style={{ border: 'none', padding: '4px' }}
                 onClick={(e) => {
@@ -496,7 +499,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   });
                 }}
               >
-                {projectState.sortDescending ? (
+                {projectSortDescending ? (
                   <SortAscendingOutlined
                     style={{ fontSize: '24px', color: 'gray' }}
                     title={t('projectPanel.ClickToFlipSortingOrder', lang)}
@@ -597,8 +600,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const selectProperty = (selected: boolean, property: string) => {
     propertySelectionChangedRef.current = true;
     if (isOwner) {
-      if (user.uid && projectState.title) {
-        updateHiddenProperties(user.uid, projectState.title, property, !selected).then(() => {
+      if (user.uid && projectTitle) {
+        updateHiddenProperties(user.uid, projectTitle, property, !selected).then(() => {
           localSelectProperty(selected, property);
         });
       }
@@ -770,8 +773,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const selectDataColoring = (value: DataColoring) => {
     dataColoringSelectionRef.current = value;
     if (isOwner) {
-      if (user.uid && projectState.title) {
-        updateDataColoring(user.uid, projectState.title, dataColoringSelectionRef.current).then(() => {
+      if (user.uid && projectTitle) {
+        updateDataColoring(user.uid, projectTitle, dataColoringSelectionRef.current).then(() => {
           localSelectDataColoring();
         });
       }
@@ -788,7 +791,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           onChange={(e) => {
             selectDataColoring(e.target.value);
           }}
-          value={projectState.dataColoring ?? DataColoring.ALL}
+          value={projectDataColoring ?? DataColoring.ALL}
         >
           <Radio style={{ fontSize: '12px' }} value={DataColoring.ALL}>
             {t('projectPanel.SameColorForAllMolecules', lang)}
@@ -804,31 +807,30 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
 
   const data: DatumEntry[] = useMemo(() => {
     const data: DatumEntry[] = [];
-    if (projectState.molecules) {
-      for (const m of projectState.molecules) {
+    if (projectMolecules) {
+      for (const m of projectMolecules) {
         const d = {} as DatumEntry;
         const p = molecularPropertiesMap.get(m.name);
         if (p) {
-          if (!projectState.hiddenProperties?.includes('atomCount')) d['atomCount'] = p.atomCount;
-          if (!projectState.hiddenProperties?.includes('bondCount')) d['bondCount'] = p.bondCount;
-          if (!projectState.hiddenProperties?.includes('molecularMass')) d['molecularMass'] = p.molecularMass;
-          if (!projectState.hiddenProperties?.includes('logP')) d['logP'] = p.logP;
-          if (!projectState.hiddenProperties?.includes('hydrogenBondDonorCount'))
+          if (!hiddenProperties?.includes('atomCount')) d['atomCount'] = p.atomCount;
+          if (!hiddenProperties?.includes('bondCount')) d['bondCount'] = p.bondCount;
+          if (!hiddenProperties?.includes('molecularMass')) d['molecularMass'] = p.molecularMass;
+          if (!hiddenProperties?.includes('logP')) d['logP'] = p.logP;
+          if (!hiddenProperties?.includes('hydrogenBondDonorCount'))
             d['hydrogenBondDonorCount'] = p.hydrogenBondDonorCount;
-          if (!projectState.hiddenProperties?.includes('hydrogenBondAcceptorCount'))
+          if (!hiddenProperties?.includes('hydrogenBondAcceptorCount'))
             d['hydrogenBondAcceptorCount'] = p.hydrogenBondAcceptorCount;
-          if (!projectState.hiddenProperties?.includes('rotatableBondCount'))
-            d['rotatableBondCount'] = p.rotatableBondCount;
-          if (!projectState.hiddenProperties?.includes('polarSurfaceArea')) d['polarSurfaceArea'] = p.polarSurfaceArea;
-          if (!projectState.hiddenProperties?.includes('heavyAtomCount')) d['heavyAtomCount'] = p.heavyAtomCount;
-          if (!projectState.hiddenProperties?.includes('complexity')) d['complexity'] = p.complexity;
-          if (!projectState.hiddenProperties?.includes('density')) d['density'] = p.density;
-          if (!projectState.hiddenProperties?.includes('boilingPoint')) d['boilingPoint'] = p.boilingPoint;
-          if (!projectState.hiddenProperties?.includes('meltingPoint')) d['meltingPoint'] = p.meltingPoint;
-          d['group'] = projectState.dataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
+          if (!hiddenProperties?.includes('rotatableBondCount')) d['rotatableBondCount'] = p.rotatableBondCount;
+          if (!hiddenProperties?.includes('polarSurfaceArea')) d['polarSurfaceArea'] = p.polarSurfaceArea;
+          if (!hiddenProperties?.includes('heavyAtomCount')) d['heavyAtomCount'] = p.heavyAtomCount;
+          if (!hiddenProperties?.includes('complexity')) d['complexity'] = p.complexity;
+          if (!hiddenProperties?.includes('density')) d['density'] = p.density;
+          if (!hiddenProperties?.includes('boilingPoint')) d['boilingPoint'] = p.boilingPoint;
+          if (!hiddenProperties?.includes('meltingPoint')) d['meltingPoint'] = p.meltingPoint;
+          d['group'] = projectDataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
           d['selected'] = selectedMolecule === m;
           d['hovered'] = hoveredMolecule === m;
-          d['excluded'] = projectState.filters ? ProjectUtil.isExcluded(projectState.filters, p) : false;
+          d['excluded'] = projectFilters ? ProjectUtil.isExcluded(projectFilters, p) : false;
           d['invisible'] = !!m.invisible;
           data.push(d);
         }
@@ -839,29 +841,29 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     molecularPropertiesMap,
     hoveredMolecule,
     selectedMolecule,
-    projectState.molecules,
-    projectState.dataColoring,
-    projectState.filters,
-    projectState.hiddenProperties,
+    projectMolecules,
+    projectDataColoring,
+    projectFilters,
+    hiddenProperties,
     updateHiddenFlag,
   ]);
 
   const [variables, titles, units, digits, tickIntegers, types] = useMemo(
     () => [
-      ProjectUtil.getVariables(projectState.hiddenProperties ?? []),
-      ProjectUtil.getTitles(projectState.hiddenProperties ?? [], lang),
-      ProjectUtil.getUnits(projectState.hiddenProperties ?? [], lang),
-      ProjectUtil.getDigits(projectState.hiddenProperties ?? []),
-      ProjectUtil.getTickIntegers(projectState.hiddenProperties ?? []),
-      ProjectUtil.getTypes(projectState.hiddenProperties ?? []),
+      ProjectUtil.getVariables(hiddenProperties ?? []),
+      ProjectUtil.getTitles(hiddenProperties ?? [], lang),
+      ProjectUtil.getUnits(hiddenProperties ?? [], lang),
+      ProjectUtil.getDigits(hiddenProperties ?? []),
+      ProjectUtil.getTickIntegers(hiddenProperties ?? []),
+      ProjectUtil.getTypes(hiddenProperties ?? []),
     ],
-    [updateHiddenFlag, lang, projectState.hiddenProperties],
+    [updateHiddenFlag, lang, hiddenProperties],
   );
 
   const getMin = (variable: string, defaultValue: number) => {
     let min = defaultValue;
-    if (projectState.ranges) {
-      for (const r of projectState.ranges) {
+    if (projectRanges) {
+      for (const r of projectRanges) {
         if (r.variable === variable) {
           min = r.minimum ?? defaultValue;
           break;
@@ -873,8 +875,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
 
   const getMax = (variable: string, defaultValue: number) => {
     let max = defaultValue;
-    if (projectState.ranges) {
-      for (const r of projectState.ranges) {
+    if (projectRanges) {
+      for (const r of projectRanges) {
         if (r.variable === variable) {
           max = r.maximum ?? defaultValue;
           break;
@@ -886,66 +888,62 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
 
   const minima: number[] = useMemo(() => {
     const array: number[] = [];
-    if (!projectState.hiddenProperties?.includes('atomCount')) array.push(getMin('atomCount', 0));
-    if (!projectState.hiddenProperties?.includes('bondCount')) array.push(getMin('bondCount', 0));
-    if (!projectState.hiddenProperties?.includes('molecularMass')) array.push(getMin('molecularMass', 0));
-    if (!projectState.hiddenProperties?.includes('logP')) array.push(getMin('logP', -10));
-    if (!projectState.hiddenProperties?.includes('hydrogenBondDonorCount'))
-      array.push(getMin('hydrogenBondDonorCount', 0));
-    if (!projectState.hiddenProperties?.includes('hydrogenBondAcceptorCount'))
-      array.push(getMin('hydrogenBondAcceptorCount', 0));
-    if (!projectState.hiddenProperties?.includes('rotatableBondCount')) array.push(getMin('rotatableBondCount', 0));
-    if (!projectState.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMin('polarSurfaceArea', 0));
-    if (!projectState.hiddenProperties?.includes('heavyAtomCount')) array.push(getMin('heavyAtomCount', 0));
-    if (!projectState.hiddenProperties?.includes('complexity')) array.push(getMin('complexity', 0));
-    if (!projectState.hiddenProperties?.includes('density')) array.push(getMin('density', 0));
-    if (!projectState.hiddenProperties?.includes('boilingPoint')) array.push(getMin('boilingPoint', -100));
-    if (!projectState.hiddenProperties?.includes('meltingPoint')) array.push(getMin('meltingPoint', -100));
+    if (!hiddenProperties?.includes('atomCount')) array.push(getMin('atomCount', 0));
+    if (!hiddenProperties?.includes('bondCount')) array.push(getMin('bondCount', 0));
+    if (!hiddenProperties?.includes('molecularMass')) array.push(getMin('molecularMass', 0));
+    if (!hiddenProperties?.includes('logP')) array.push(getMin('logP', -10));
+    if (!hiddenProperties?.includes('hydrogenBondDonorCount')) array.push(getMin('hydrogenBondDonorCount', 0));
+    if (!hiddenProperties?.includes('hydrogenBondAcceptorCount')) array.push(getMin('hydrogenBondAcceptorCount', 0));
+    if (!hiddenProperties?.includes('rotatableBondCount')) array.push(getMin('rotatableBondCount', 0));
+    if (!hiddenProperties?.includes('polarSurfaceArea')) array.push(getMin('polarSurfaceArea', 0));
+    if (!hiddenProperties?.includes('heavyAtomCount')) array.push(getMin('heavyAtomCount', 0));
+    if (!hiddenProperties?.includes('complexity')) array.push(getMin('complexity', 0));
+    if (!hiddenProperties?.includes('density')) array.push(getMin('density', 0));
+    if (!hiddenProperties?.includes('boilingPoint')) array.push(getMin('boilingPoint', -100));
+    if (!hiddenProperties?.includes('meltingPoint')) array.push(getMin('meltingPoint', -100));
     return array;
-  }, [updateHiddenFlag, projectState.ranges, projectState.hiddenProperties]);
+  }, [updateHiddenFlag, projectRanges, hiddenProperties]);
 
   const maxima: number[] = useMemo(() => {
     const array: number[] = [];
-    if (!projectState.hiddenProperties?.includes('atomCount')) array.push(getMax('atomCount', 200));
-    if (!projectState.hiddenProperties?.includes('bondCount')) array.push(getMax('bondCount', 200));
-    if (!projectState.hiddenProperties?.includes('molecularMass')) array.push(getMax('molecularMass', 1000));
-    if (!projectState.hiddenProperties?.includes('logP')) array.push(getMax('logP', 10));
-    if (!projectState.hiddenProperties?.includes('hydrogenBondDonorCount'))
-      array.push(getMax('hydrogenBondDonorCount', 20));
-    if (!projectState.hiddenProperties?.includes('hydrogenBondAcceptorCount'))
-      array.push(getMax('hydrogenBondAcceptorCount', 20));
-    if (!projectState.hiddenProperties?.includes('rotatableBondCount')) array.push(getMax('rotatableBondCount', 20));
-    if (!projectState.hiddenProperties?.includes('polarSurfaceArea')) array.push(getMax('polarSurfaceArea', 200));
-    if (!projectState.hiddenProperties?.includes('heavyAtomCount')) array.push(getMax('heavyAtomCount', 200));
-    if (!projectState.hiddenProperties?.includes('complexity')) array.push(getMax('complexity', 2000));
-    if (!projectState.hiddenProperties?.includes('density')) array.push(getMax('density', 5));
-    if (!projectState.hiddenProperties?.includes('boilingPoint')) array.push(getMax('boilingPoint', 200));
-    if (!projectState.hiddenProperties?.includes('meltingPoint')) array.push(getMax('meltingPoint', 50));
+    if (!hiddenProperties?.includes('atomCount')) array.push(getMax('atomCount', 200));
+    if (!hiddenProperties?.includes('bondCount')) array.push(getMax('bondCount', 200));
+    if (!hiddenProperties?.includes('molecularMass')) array.push(getMax('molecularMass', 1000));
+    if (!hiddenProperties?.includes('logP')) array.push(getMax('logP', 10));
+    if (!hiddenProperties?.includes('hydrogenBondDonorCount')) array.push(getMax('hydrogenBondDonorCount', 20));
+    if (!hiddenProperties?.includes('hydrogenBondAcceptorCount')) array.push(getMax('hydrogenBondAcceptorCount', 20));
+    if (!hiddenProperties?.includes('rotatableBondCount')) array.push(getMax('rotatableBondCount', 20));
+    if (!hiddenProperties?.includes('polarSurfaceArea')) array.push(getMax('polarSurfaceArea', 200));
+    if (!hiddenProperties?.includes('heavyAtomCount')) array.push(getMax('heavyAtomCount', 200));
+    if (!hiddenProperties?.includes('complexity')) array.push(getMax('complexity', 2000));
+    if (!hiddenProperties?.includes('density')) array.push(getMax('density', 5));
+    if (!hiddenProperties?.includes('boilingPoint')) array.push(getMax('boilingPoint', 200));
+    if (!hiddenProperties?.includes('meltingPoint')) array.push(getMax('meltingPoint', 50));
     return array;
-  }, [updateHiddenFlag, projectState.ranges, projectState.hiddenProperties]);
+  }, [updateHiddenFlag, projectRanges, hiddenProperties]);
 
   const steps: number[] = useMemo(() => {
     const array: number[] = [];
-    if (!projectState.hiddenProperties?.includes('atomCount')) array.push(1);
-    if (!projectState.hiddenProperties?.includes('bondCount')) array.push(1);
-    if (!projectState.hiddenProperties?.includes('molecularMass')) array.push(0.1);
-    if (!projectState.hiddenProperties?.includes('logP')) array.push(0.1);
-    if (!projectState.hiddenProperties?.includes('hydrogenBondDonorCount')) array.push(1);
-    if (!projectState.hiddenProperties?.includes('hydrogenBondAcceptorCount')) array.push(1);
-    if (!projectState.hiddenProperties?.includes('rotatableBondCount')) array.push(1);
-    if (!projectState.hiddenProperties?.includes('polarSurfaceArea')) array.push(1);
-    if (!projectState.hiddenProperties?.includes('heavyAtomCount')) array.push(1);
-    if (!projectState.hiddenProperties?.includes('complexity')) array.push(1);
-    if (!projectState.hiddenProperties?.includes('density')) array.push(0.1);
-    if (!projectState.hiddenProperties?.includes('boilingPoint')) array.push(1);
-    if (!projectState.hiddenProperties?.includes('meltingPoint')) array.push(1);
+    if (!hiddenProperties?.includes('atomCount')) array.push(1);
+    if (!hiddenProperties?.includes('bondCount')) array.push(1);
+    if (!hiddenProperties?.includes('molecularMass')) array.push(0.1);
+    if (!hiddenProperties?.includes('logP')) array.push(0.1);
+    if (!hiddenProperties?.includes('hydrogenBondDonorCount')) array.push(1);
+    if (!hiddenProperties?.includes('hydrogenBondAcceptorCount')) array.push(1);
+    if (!hiddenProperties?.includes('rotatableBondCount')) array.push(1);
+    if (!hiddenProperties?.includes('polarSurfaceArea')) array.push(1);
+    if (!hiddenProperties?.includes('heavyAtomCount')) array.push(1);
+    if (!hiddenProperties?.includes('complexity')) array.push(1);
+    if (!hiddenProperties?.includes('density')) array.push(0.1);
+    if (!hiddenProperties?.includes('boilingPoint')) array.push(1);
+    if (!hiddenProperties?.includes('meltingPoint')) array.push(1);
     return array;
-  }, [updateHiddenFlag, projectState.hiddenProperties]);
+  }, [updateHiddenFlag, hiddenProperties]);
 
   const getFilterLowerBound = (variable: string, defaultValue: number) => {
     let lowerBound = defaultValue;
-    if (projectState.filters) {
-      for (const f of projectState.filters) {
+    if (projectFilters) {
+      for (const f of projectFilters) {
         if (f.variable === variable) {
           lowerBound = f.lowerBound ?? defaultValue;
           break;
@@ -957,8 +955,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
 
   const getFilterUpperBound = (variable: string, defaultValue: number) => {
     let upperBound = defaultValue;
-    if (projectState.filters) {
-      for (const f of projectState.filters) {
+    if (projectFilters) {
+      for (const f of projectFilters) {
         if (f.variable === variable) {
           upperBound = f.upperBound ?? defaultValue;
           break;
@@ -979,27 +977,24 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
 
   const filters: Filter[] = useMemo(() => {
     const array: Filter[] = [];
-    if (!projectState.hiddenProperties?.includes('atomCount'))
+    if (!hiddenProperties?.includes('atomCount'))
       array.push({ variable: 'atomCount', type: FilterType.None } as Filter);
-    if (!projectState.hiddenProperties?.includes('bondCount'))
+    if (!hiddenProperties?.includes('bondCount'))
       array.push({ variable: 'bondCount', type: FilterType.None } as Filter);
-    if (!projectState.hiddenProperties?.includes('molecularMass')) array.push(createFilter('molecularMass', 500, 0));
-    if (!projectState.hiddenProperties?.includes('logP')) array.push(createFilter('logP', 5, -5));
-    if (!projectState.hiddenProperties?.includes('hydrogenBondDonorCount'))
-      array.push(createFilter('hydrogenBondDonorCount', 5, 0));
-    if (!projectState.hiddenProperties?.includes('hydrogenBondAcceptorCount'))
+    if (!hiddenProperties?.includes('molecularMass')) array.push(createFilter('molecularMass', 500, 0));
+    if (!hiddenProperties?.includes('logP')) array.push(createFilter('logP', 5, -5));
+    if (!hiddenProperties?.includes('hydrogenBondDonorCount')) array.push(createFilter('hydrogenBondDonorCount', 5, 0));
+    if (!hiddenProperties?.includes('hydrogenBondAcceptorCount'))
       array.push(createFilter('hydrogenBondAcceptorCount', 10, 0));
-    if (!projectState.hiddenProperties?.includes('rotatableBondCount'))
-      array.push(createFilter('rotatableBondCount', 10, 0));
-    if (!projectState.hiddenProperties?.includes('polarSurfaceArea'))
-      array.push(createFilter('polarSurfaceArea', 140, 0));
-    if (!projectState.hiddenProperties?.includes('heavyAtomCount')) array.push(createFilter('heavyAtomCount', 100, 1));
-    if (!projectState.hiddenProperties?.includes('complexity')) array.push(createFilter('complexity', 1000, 0));
-    if (!projectState.hiddenProperties?.includes('density')) array.push(createFilter('density', 5, 0));
-    if (!projectState.hiddenProperties?.includes('boilingPoint')) array.push(createFilter('boilingPoint', 200, 0));
-    if (!projectState.hiddenProperties?.includes('meltingPoint')) array.push(createFilter('meltingPoint', 50, 0));
+    if (!hiddenProperties?.includes('rotatableBondCount')) array.push(createFilter('rotatableBondCount', 10, 0));
+    if (!hiddenProperties?.includes('polarSurfaceArea')) array.push(createFilter('polarSurfaceArea', 140, 0));
+    if (!hiddenProperties?.includes('heavyAtomCount')) array.push(createFilter('heavyAtomCount', 100, 1));
+    if (!hiddenProperties?.includes('complexity')) array.push(createFilter('complexity', 1000, 0));
+    if (!hiddenProperties?.includes('density')) array.push(createFilter('density', 5, 0));
+    if (!hiddenProperties?.includes('boilingPoint')) array.push(createFilter('boilingPoint', 200, 0));
+    if (!hiddenProperties?.includes('meltingPoint')) array.push(createFilter('meltingPoint', 50, 0));
     return array;
-  }, [updateHiddenFlag, projectState.filters, projectState.hiddenProperties]);
+  }, [updateHiddenFlag, projectFilters, hiddenProperties]);
 
   return (
     <Container
@@ -1175,7 +1170,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               filters={filters}
               hover={(i: number) => {
                 usePrimitiveStore.getState().set((state) => {
-                  for (const [index, m] of projectState.molecules.entries()) {
+                  for (const [index, m] of projectMolecules.entries()) {
                     if (index === i) {
                       state.hoveredMolecule = m;
                       break;
@@ -1183,12 +1178,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   }
                 });
               }}
-              hoveredIndex={
-                projectState.molecules && hoveredMolecule ? projectState.molecules.indexOf(hoveredMolecule) : -1
-              }
-              selectedIndex={
-                projectState.molecules && selectedMolecule ? projectState.molecules.indexOf(selectedMolecule) : -1
-              }
+              hoveredIndex={projectMolecules && hoveredMolecule ? projectMolecules.indexOf(hoveredMolecule) : -1}
+              selectedIndex={projectMolecules && selectedMolecule ? projectMolecules.indexOf(selectedMolecule) : -1}
             />
           )}
         </CanvasContainer>

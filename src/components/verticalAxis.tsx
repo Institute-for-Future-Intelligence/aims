@@ -50,7 +50,9 @@ const VerticalAxis = React.memo(
     const setCommonStore = useStore(Selector.set);
     const user = useStore(Selector.user);
     const language = useStore(Selector.language);
-    const projectState = useStore(Selector.projectState);
+    const projectOwner = useStore(Selector.projectOwner);
+    const projectTitle = useStore(Selector.projectTitle);
+    const selectedProperty = useStore(Selector.selectedProperty);
     const setChanged = usePrimitiveStore(Selector.setChanged);
 
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -67,7 +69,7 @@ const VerticalAxis = React.memo(
 
     const { t } = useTranslation();
     const lang = { lng: language };
-    const isOwner = user.uid === projectState.owner;
+    const isOwner = user.uid === projectOwner;
     const range = yScale.range();
     const areaHeight = yScale(min) - yScale(max);
     const areaWidth = 40;
@@ -106,12 +108,8 @@ const VerticalAxis = React.memo(
     };
 
     const select = () => {
-      if (isOwner && projectState.owner && projectState.title) {
-        updateSelectedProperty(
-          projectState.owner,
-          projectState.title,
-          projectState.selectedProperty !== variable ? variable : null,
-        ).then(() => {
+      if (isOwner && projectOwner && projectTitle) {
+        updateSelectedProperty(projectOwner, projectTitle, selectedProperty !== variable ? variable : null).then(() => {
           localSelect();
         });
       } else {
@@ -135,7 +133,7 @@ const VerticalAxis = React.memo(
             textAnchor: 'middle',
             fill: 'dimgray',
             cursor: 'pointer',
-            fontWeight: projectState.selectedProperty === variable ? 'bold' : 'normal',
+            fontWeight: selectedProperty === variable ? 'bold' : 'normal',
           }}
         >
           {name}
@@ -197,21 +195,21 @@ const VerticalAxis = React.memo(
                           minimum: value,
                           maximum: range.maximum,
                         } as Range;
-                        if (user.uid && projectState.title) {
-                          updateRanges(user.uid, projectState.title, state.projectState.ranges);
+                        if (user.uid && projectTitle) {
+                          updateRanges(user.uid, projectTitle, state.projectState.ranges);
                         }
                       } else {
                         const r = { variable, minimum: value, maximum: max } as Range;
                         state.projectState.ranges.push(r);
-                        if (user.uid && projectState.title) {
-                          addRange(user.uid, projectState.title, r);
+                        if (user.uid && projectTitle) {
+                          addRange(user.uid, projectTitle, r);
                         }
                       }
                     } else {
                       const r = { variable, minimum: value, maximum: max } as Range;
                       state.projectState.ranges = [r];
-                      if (user.uid && projectState.title) {
-                        addRange(user.uid, projectState.title, r);
+                      if (user.uid && projectTitle) {
+                        addRange(user.uid, projectTitle, r);
                       }
                     }
                   });
@@ -248,21 +246,21 @@ const VerticalAxis = React.memo(
                           minimum: range.minimum,
                           maximum: value,
                         } as Range;
-                        if (user.uid && projectState.title) {
-                          updateRanges(user.uid, projectState.title, state.projectState.ranges);
+                        if (user.uid && projectTitle) {
+                          updateRanges(user.uid, projectTitle, state.projectState.ranges);
                         }
                       } else {
                         const r = { variable, minimum: min, maximum: value } as Range;
                         state.projectState.ranges.push(r);
-                        if (user.uid && projectState.title) {
-                          addRange(user.uid, projectState.title, r);
+                        if (user.uid && projectTitle) {
+                          addRange(user.uid, projectTitle, r);
                         }
                       }
                     } else {
                       const r = { variable, minimum: min, maximum: value } as Range;
                       state.projectState.ranges = [r];
-                      if (user.uid && projectState.title) {
-                        addRange(user.uid, projectState.title, r);
+                      if (user.uid && projectTitle) {
+                        addRange(user.uid, projectTitle, r);
                       }
                     }
                   });
@@ -307,7 +305,7 @@ const VerticalAxis = React.memo(
           width={areaWidth}
           height={areaHeight}
           fill="gold"
-          fillOpacity={projectState.selectedProperty === variable ? 0.25 : 0}
+          fillOpacity={selectedProperty === variable ? 0.25 : 0}
         />
 
         {/* Ticks and labels */}

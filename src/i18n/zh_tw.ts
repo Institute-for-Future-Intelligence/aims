@@ -193,7 +193,7 @@ export const i18n_zh_tw = {
       OutputSelectedMoleculeToTest: '把選中的分子加到實驗中',
       ImportMolecule: '輸入分子',
       MoleculeType: '分子類别',
-      MoleculeName: '分子名稱',
+      MolecularName: '分子名稱',
       MoleculeAlreadyAdded: '專案已經有此分子',
       MoleculeNotFound: '分子没有找到',
       RemoveSelectedMolecule: '移除選取的分子',
@@ -230,7 +230,7 @@ export const i18n_zh_tw = {
       BoilingPoint: '沸點',
       MeltingPoint: '熔點',
       LabelType: '標籤類別',
-      MoleculeFormula: '分子式',
+      MolecularFormula: '分子式',
     },
 
     menu: {

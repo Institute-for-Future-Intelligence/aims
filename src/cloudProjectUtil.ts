@@ -10,7 +10,7 @@ import { showError, showInfo } from './helpers';
 import i18n from './i18n/i18n';
 import { MoleculeData, Range, ProjectState } from './types';
 import { usePrimitiveStore } from './stores/commonPrimitive';
-import { DataColoring, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
+import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import dayjs from 'dayjs';
 import { Util } from './Util.ts';
@@ -79,6 +79,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           projectViewerMaterial: data.projectViewerMaterial ?? MolecularViewerMaterial.Soft,
           projectViewerBackground: data.projectViewerBackground ?? 'white',
 
+          graphType: data.graphType ?? GraphType.PARALLEL_COORDINATES,
           labelType: data.labelType ?? LabelType.NAME,
 
           cameraPosition: data.cameraPosition,
