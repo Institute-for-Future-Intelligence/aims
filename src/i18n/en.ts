@@ -235,6 +235,9 @@ export const i18n_en = {
       GraphType: 'Graph Type',
       ParallelCoordinates: 'Parallel Coordinates',
       ScatterPlot: 'Scatter Plot',
+      SelectXYAxes: 'Select X-Y Axes',
+      SelectXAxis: 'Select X Axis',
+      SelectYAxis: 'Select Y Axis',
     },
 
     menu: {

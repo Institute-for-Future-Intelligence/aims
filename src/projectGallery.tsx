@@ -17,6 +17,7 @@ import {
   ImportOutlined,
   LoginOutlined,
   SettingOutlined,
+  LineChartOutlined,
   SortAscendingOutlined,
   SortDescendingOutlined,
 } from '@ant-design/icons';
@@ -31,7 +32,12 @@ import { saveSvg, showError, showInfo } from './helpers';
 import ParallelCoordinates from './components/parallelCoordinates';
 import { ProjectUtil } from './ProjectUtil';
 import { usePrimitiveStore } from './stores/commonPrimitive';
-import { updateDataColoring, updateHiddenProperties } from './cloudProjectUtil';
+import {
+  updateDataColoring,
+  updateHiddenProperties,
+  updateXAxisNameScatterPlot,
+  updateYAxisNameScatterPlot,
+} from './cloudProjectUtil';
 import { Filter, FilterType } from './Filter';
 import {
   GALLERY_STYLE_LABELS,
@@ -1052,6 +1058,107 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return array;
   }, [updateHiddenFlag, projectFilters, hiddenProperties]);
 
+  const createAxisOptions = () => {
+    return (
+      <>
+        <Option key={'atomCount'} value={'atomCount'}>
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.AtomCount', lang)}</span>
+        </Option>
+        <Option key={'bondCount'} value={'bondCount'}>
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.BondCount', lang)}</span>
+        </Option>
+        <Option key={'molecularMass'} value={'molecularMass'}>
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.MolecularMass', lang)}</span>
+        </Option>
+        <Option key={'logP'} value={'logP'}>
+          <span style={{ fontSize: '12px' }}>logP</span>
+        </Option>
+        <Option key={'hydrogenBondDonorCount'} value={'hydrogenBondDonorCount'}>
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.HydrogenBondDonorCount', lang)}</span>
+        </Option>
+        <Option key={'hydrogenBondAcceptorCount'} value={'hydrogenBondAcceptorCount'}>
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.HydrogenBondAcceptorCount', lang)}</span>
+        </Option>
+        <Option key={'rotatableBondCount'} value={'rotatableBondCount'}>
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.RotatableBondCount', lang)}</span>
+        </Option>
+        <Option key={'polarSurfaceArea'} value={'polarSurfaceArea'}>
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.PolarSurfaceArea', lang)}</span>
+        </Option>
+        <Option key={'heavyAtomCount'} value={'heavyAtomCount'}>
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.HeavyAtomCount', lang)}</span>
+        </Option>
+        <Option key={'complexity'} value={'complexity'}>
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.Complexity', lang)}</span>
+        </Option>
+        <Option key={'density'} value={'density'}>
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.Density', lang)}</span>
+        </Option>
+        <Option key={'boilingPoint'} value={'boilingPoint'}>
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.BoilingPoint', lang)}</span>
+        </Option>
+        <Option key={'meltingPoint'} value={'meltingPoint'}>
+          <span style={{ fontSize: '12px' }}>{t('projectPanel.MeltingPoint', lang)}</span>
+        </Option>
+      </>
+    );
+  };
+
+  const createXYAxesContent = () => {
+    return (
+      <div style={{ width: '280px' }}>
+        <Row gutter={6} style={{ paddingBottom: '4px' }}>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span style={{ fontSize: '12px' }}>{t('projectPanel.SelectXAxis', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <Select
+              style={{ width: '100%' }}
+              value={xAxisRef.current}
+              onChange={(value) => {
+                xAxisRef.current = value;
+                if (isOwner) {
+                  if (user.uid && projectTitle) {
+                    updateXAxisNameScatterPlot(user.uid, projectTitle, value).then(() => {
+                      //ignore
+                    });
+                  }
+                }
+                setUpdateFlag(!updateFlag);
+              }}
+            >
+              {createAxisOptions()}
+            </Select>
+          </Col>
+        </Row>
+        <Row gutter={6} style={{ paddingBottom: '8px' }}>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span style={{ fontSize: '12px' }}>{t('projectPanel.SelectYAxis', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <Select
+              style={{ width: '100%' }}
+              value={yAxisRef.current}
+              onChange={(value) => {
+                yAxisRef.current = value;
+                if (isOwner) {
+                  if (user.uid && projectTitle) {
+                    updateYAxisNameScatterPlot(user.uid, projectTitle, value).then(() => {
+                      //ignore
+                    });
+                  }
+                }
+                setUpdateFlag(!updateFlag);
+              }}
+            >
+              {createAxisOptions()}
+            </Select>
+          </Col>
+        </Row>
+      </div>
+    );
+  };
+
   const scatterData = useMemo(() => {
     const data: { x: number; y: number }[] = [];
     if (projectMolecules) {
@@ -1269,6 +1376,18 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             <PropertiesHeader>
               <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
               <span>
+                <Popover
+                  title={
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <LineChartOutlined /> {t('projectPanel.SelectXYAxes', lang)}
+                    </div>
+                  }
+                  content={createXYAxesContent()}
+                >
+                  <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                    <LineChartOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                  </Button>
+                </Popover>
                 <Button
                   style={{ border: 'none', paddingRight: '20px', background: 'white' }}
                   onClick={() => {

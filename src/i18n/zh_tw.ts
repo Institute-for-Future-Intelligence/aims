@@ -234,6 +234,9 @@ export const i18n_zh_tw = {
       GraphType: '圖形類別',
       ParallelCoordinates: '平行座標圖',
       ScatterPlot: '散點圖',
+      SelectXYAxes: '選擇X-Y軸',
+      SelectXAxis: '選擇X軸',
+      SelectYAxis: '選擇Y軸',
     },
 
     menu: {

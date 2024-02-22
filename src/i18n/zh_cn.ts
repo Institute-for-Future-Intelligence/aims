@@ -235,6 +235,9 @@ export const i18n_zh_cn = {
       GraphType: '图形类别',
       ParallelCoordinates: '平行坐标图',
       ScatterPlot: '散点图',
+      SelectXYAxes: '选择X-Y轴',
+      SelectXAxis: '选择X轴',
+      SelectYAxis: '选择Y轴',
     },
 
     menu: {
