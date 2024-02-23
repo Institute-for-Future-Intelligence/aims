@@ -187,7 +187,7 @@ export class ProjectUtil {
     return a;
   }
 
-  static getUnits(hidden: string[], l: { lng: string }): string[] {
+  static getUnits(hidden: string[]): string[] {
     const a: string[] = [];
     if (!hidden?.includes('atomCount')) a.push('');
     if (!hidden?.includes('bondCount')) a.push('');
@@ -205,7 +205,7 @@ export class ProjectUtil {
     return a;
   }
 
-  static getUnit(variable: string, l: { lng: string }): string {
+  static getUnit(variable: string): string {
     if (variable === 'molecularMass') return 'u';
     if (variable === 'polarSurfaceArea') return 'Å²';
     if (variable === 'boilingPoint') return '°C';
@@ -223,12 +223,5 @@ export class ProjectUtil {
       }
     }
     return false;
-  }
-
-  static setScatterData(name: string, axis: 'x' | 'y', datum: { x: number; y: number }, prop: MolecularProperties) {
-    const v = prop[name as keyof MolecularProperties];
-    if (typeof v === 'number') {
-      datum[axis] = v;
-    }
   }
 }

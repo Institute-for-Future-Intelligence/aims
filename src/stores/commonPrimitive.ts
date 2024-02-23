@@ -52,7 +52,6 @@ export interface PrimitiveStoreState {
 
   saveAccountSettingsFlag: boolean;
 
-  curateMoleculeToProjectFlag: boolean;
   showProjectsFlag: boolean;
   updateProjectsFlag: boolean;
   showProjectListPanel: boolean;
@@ -154,7 +153,6 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
 
     saveAccountSettingsFlag: false,
 
-    curateMoleculeToProjectFlag: false,
     showProjectsFlag: false,
     updateProjectsFlag: false,
     showProjectListPanel: false,

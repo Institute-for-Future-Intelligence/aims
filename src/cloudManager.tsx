@@ -61,7 +61,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   const saveProjectAsFlag = usePrimitiveStore(Selector.saveProjectAsFlag);
   const saveProjectFlag = usePrimitiveStore(Selector.saveProjectFlag);
   const saveAndThenOpenProjectFlag = usePrimitiveStore(Selector.saveAndThenOpenProjectFlag);
-  const curateMoleculeToProjectFlag = usePrimitiveStore(Selector.curateMoleculeToProjectFlag);
   const showProjectsFlag = usePrimitiveStore(Selector.showProjectsFlag);
   const updateProjectsFlag = usePrimitiveStore(Selector.updateProjectsFlag);
   const setChanged = usePrimitiveStore(Selector.setChanged);
@@ -89,10 +88,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   useFlag(showProjectsFlag, showMyProjectsList, () => setPrimitiveStore('showProjectsFlag', false));
 
   useFlag(updateProjectsFlag, hideMyProjectsList, () => setPrimitiveStore('updateProjectsFlag', false));
-
-  useFlag(curateMoleculeToProjectFlag, curateMoleculeToProject, () =>
-    setPrimitiveStore('curateMoleculeToProjectFlag', false),
-  );
 
   useEffect(() => {
     const config = {
@@ -518,16 +513,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     });
   };
 
-  const addMoleculeToProject = (
-    projectType: string,
-    projectTitle: string,
-    moleculeTitle: string,
-    thumbnailWidth: number,
-  ) => {
-    if (!user.uid) return;
-    // TODO
-  };
-
   function createNewProject() {
     if (!user || !user.uid) return;
     const title = usePrimitiveStore.getState().projectTitle;
@@ -711,22 +696,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         }
       }
     });
-  }
-
-  function curateMoleculeToProject() {
-    const projectOwner = useStore.getState().projectState.owner;
-    if (user.uid !== projectOwner) {
-      showInfo(t('message.CannotAddMoleculeToProjectOwnedByOthers', lang));
-    } else {
-      const projectTitle = useStore.getState().projectState.title;
-      if (projectTitle) {
-        setProcessing(true);
-        const projectType = useStore.getState().projectState.type ?? ProjectType.DRUG_DISCOVERY;
-        const thumbnailWidth = useStore.getState().projectState.thumbnailWidth ?? 200;
-        const counter = useStore.getState().projectState.counter ?? 0;
-        addMoleculeToProject(projectType, projectTitle, projectTitle + ' ' + counter, thumbnailWidth);
-      }
-    }
   }
 
   function showMyProjectsList() {

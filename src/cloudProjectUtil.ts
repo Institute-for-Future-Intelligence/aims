@@ -288,6 +288,74 @@ export const updateYAxisNameScatterPlot = (
     });
 };
 
+export const updateXMinScatterPlot = (userid: string, projectTitle: string, xMinScatterPlot: number) => {
+  const lang = { lng: useStore.getState().language };
+  return firebase
+    .firestore()
+    .collection('users')
+    .doc(userid)
+    .collection('projects')
+    .doc(projectTitle)
+    .update({ xMinScatterPlot })
+    .then(() => {
+      // ignore
+    })
+    .catch((error) => {
+      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
+    });
+};
+
+export const updateXMaxScatterPlot = (userid: string, projectTitle: string, xMaxScatterPlot: number) => {
+  const lang = { lng: useStore.getState().language };
+  return firebase
+    .firestore()
+    .collection('users')
+    .doc(userid)
+    .collection('projects')
+    .doc(projectTitle)
+    .update({ xMaxScatterPlot })
+    .then(() => {
+      // ignore
+    })
+    .catch((error) => {
+      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
+    });
+};
+
+export const updateYMinScatterPlot = (userid: string, projectTitle: string, yMinScatterPlot: number) => {
+  const lang = { lng: useStore.getState().language };
+  return firebase
+    .firestore()
+    .collection('users')
+    .doc(userid)
+    .collection('projects')
+    .doc(projectTitle)
+    .update({ yMinScatterPlot })
+    .then(() => {
+      // ignore
+    })
+    .catch((error) => {
+      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
+    });
+};
+
+export const updateYMaxScatterPlot = (userid: string, projectTitle: string, yMaxScatterPlot: number) => {
+  const lang = { lng: useStore.getState().language };
+  return firebase
+    .firestore()
+    .collection('users')
+    .doc(userid)
+    .collection('projects')
+    .doc(projectTitle)
+    .update({ yMaxScatterPlot })
+    .then(() => {
+      // ignore
+    })
+    .catch((error) => {
+      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
+    });
+};
+
 export const updateDotSizeScatterPlot = (userid: string, projectTitle: string, dotSizeScatterPlot: number) => {
   const lang = { lng: useStore.getState().language };
   return firebase

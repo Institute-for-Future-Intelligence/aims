@@ -117,8 +117,6 @@ export const showProjectsFlag = (state: PrimitiveStoreState) => state.showProjec
 
 export const updateProjectsFlag = (state: PrimitiveStoreState) => state.updateProjectsFlag;
 
-export const curateMoleculeToProjectFlag = (state: PrimitiveStoreState) => state.curateMoleculeToProjectFlag;
-
 export const showProjectListPanel = (state: PrimitiveStoreState) => state.showProjectListPanel;
 
 export const saveAccountSettingsFlag = (state: PrimitiveStoreState) => state.saveAccountSettingsFlag;

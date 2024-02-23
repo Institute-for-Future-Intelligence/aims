@@ -52,7 +52,11 @@ import {
   updateHorizontalLinesScatterPlot,
   updateVerticalLinesScatterPlot,
   updateXAxisNameScatterPlot,
+  updateXMaxScatterPlot,
+  updateXMinScatterPlot,
   updateYAxisNameScatterPlot,
+  updateYMaxScatterPlot,
+  updateYMinScatterPlot,
 } from './cloudProjectUtil';
 import { Filter, FilterType } from './Filter';
 import {
@@ -946,7 +950,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     () => [
       ProjectUtil.getVariables(hiddenProperties ?? []),
       ProjectUtil.getTitles(hiddenProperties ?? [], lang),
-      ProjectUtil.getUnits(hiddenProperties ?? [], lang),
+      ProjectUtil.getUnits(hiddenProperties ?? []),
       ProjectUtil.getDigits(hiddenProperties ?? []),
       ProjectUtil.getTickIntegers(hiddenProperties ?? []),
       ProjectUtil.getTypes(hiddenProperties ?? []),
@@ -1252,9 +1256,15 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               value={xMinScatterPlot}
               onChange={(value) => {
                 if (value === null) return;
-                setCommonStore((state) => {
-                  state.projectState.xMinScatterPlot = value;
-                });
+                if (isOwner) {
+                  if (user.uid && projectTitle) {
+                    updateXMinScatterPlot(user.uid, projectTitle, value).then(() => {
+                      setCommonStore((state) => {
+                        state.projectState.xMinScatterPlot = value;
+                      });
+                    });
+                  }
+                }
                 setUpdateFlag(!updateFlag);
                 setChanged(true);
               }}
@@ -1274,9 +1284,15 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               value={xMaxScatterPlot}
               onChange={(value) => {
                 if (value === null) return;
-                setCommonStore((state) => {
-                  state.projectState.xMaxScatterPlot = value;
-                });
+                if (isOwner) {
+                  if (user.uid && projectTitle) {
+                    updateXMaxScatterPlot(user.uid, projectTitle, value).then(() => {
+                      setCommonStore((state) => {
+                        state.projectState.xMaxScatterPlot = value;
+                      });
+                    });
+                  }
+                }
                 setUpdateFlag(!updateFlag);
                 setChanged(true);
               }}
@@ -1296,9 +1312,15 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               value={yMinScatterPlot}
               onChange={(value) => {
                 if (value === null) return;
-                setCommonStore((state) => {
-                  state.projectState.yMinScatterPlot = value;
-                });
+                if (isOwner) {
+                  if (user.uid && projectTitle) {
+                    updateYMinScatterPlot(user.uid, projectTitle, value).then(() => {
+                      setCommonStore((state) => {
+                        state.projectState.yMinScatterPlot = value;
+                      });
+                    });
+                  }
+                }
                 setUpdateFlag(!updateFlag);
                 setChanged(true);
               }}
@@ -1318,9 +1340,15 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               value={yMaxScatterPlot}
               onChange={(value) => {
                 if (value === null) return;
-                setCommonStore((state) => {
-                  state.projectState.yMaxScatterPlot = value;
-                });
+                if (isOwner) {
+                  if (user.uid && projectTitle) {
+                    updateYMaxScatterPlot(user.uid, projectTitle, value).then(() => {
+                      setCommonStore((state) => {
+                        state.projectState.yMaxScatterPlot = value;
+                      });
+                    });
+                  }
+                }
                 setUpdateFlag(!updateFlag);
                 setChanged(true);
               }}
