@@ -28,6 +28,10 @@ export interface ProjectState {
   counter: number;
   xAxisNameScatterPlot: string | null;
   yAxisNameScatterPlot: string | null;
+  xMinScatterPlot: number;
+  xMaxScatterPlot: number;
+  yMinScatterPlot: number;
+  yMaxScatterPlot: number;
   xLinesScatterPlot: boolean;
   yLinesScatterPlot: boolean;
   dotSizeScatterPlot: number | null;

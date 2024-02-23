@@ -5,7 +5,20 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { DataColoring, GraphType, LabelType, ProjectType } from './constants';
 import styled from 'styled-components';
-import { Button, Checkbox, Col, Collapse, CollapseProps, ColorPicker, List, Popover, Radio, Row, Select } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Col,
+  Collapse,
+  CollapseProps,
+  ColorPicker,
+  InputNumber,
+  List,
+  Popover,
+  Radio,
+  Row,
+  Select,
+} from 'antd';
 import {
   BgColorsOutlined,
   CameraOutlined,
@@ -155,6 +168,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const hiddenProperties = useStore(Selector.hiddenProperties);
   const xAxisNameScatterPlot = useStore(Selector.xAxisNameScatterPlot);
   const yAxisNameScatterPlot = useStore(Selector.yAxisNameScatterPlot);
+  const xMinScatterPlot = useStore(Selector.xMinScatterPlot) ?? 0;
+  const xMaxScatterPlot = useStore(Selector.xMaxScatterPlot) ?? 100;
+  const yMinScatterPlot = useStore(Selector.yMinScatterPlot) ?? 0;
+  const yMaxScatterPlot = useStore(Selector.yMaxScatterPlot) ?? 100;
   const xLinesScatterPlot = useStore(Selector.xLinesScatterPlot);
   const yLinesScatterPlot = useStore(Selector.yLinesScatterPlot);
   const dotSizeScatterPlot = useStore(Selector.dotSizeScatterPlot);
@@ -1181,10 +1198,13 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 if (isOwner) {
                   if (user.uid && projectTitle) {
                     updateXAxisNameScatterPlot(user.uid, projectTitle, value).then(() => {
-                      //ignore
+                      setCommonStore((state) => {
+                        state.projectState.xAxisNameScatterPlot = value;
+                      });
                     });
                   }
                 }
+                setChanged(true);
                 setUpdateFlag(!updateFlag);
               }}
             >
@@ -1205,15 +1225,106 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 if (isOwner) {
                   if (user.uid && projectTitle) {
                     updateYAxisNameScatterPlot(user.uid, projectTitle, value).then(() => {
-                      //ignore
+                      setCommonStore((state) => {
+                        state.projectState.yAxisNameScatterPlot = value;
+                      });
                     });
                   }
                 }
+                setChanged(true);
                 setUpdateFlag(!updateFlag);
               }}
             >
               {createAxisOptions()}
             </Select>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span style={{ fontSize: '12px' }}>{t('projectPanel.MinimumX', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <InputNumber
+              style={{ width: '100%' }}
+              // min={0}
+              // max={1}
+              step={1}
+              value={xMinScatterPlot}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.xMinScatterPlot = value;
+                });
+                setUpdateFlag(!updateFlag);
+                setChanged(true);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span style={{ fontSize: '12px' }}>{t('projectPanel.MaximumX', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <InputNumber
+              style={{ width: '100%' }}
+              // min={0}
+              // max={1}
+              step={1}
+              value={xMaxScatterPlot}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.xMaxScatterPlot = value;
+                });
+                setUpdateFlag(!updateFlag);
+                setChanged(true);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span style={{ fontSize: '12px' }}>{t('projectPanel.MinimumY', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <InputNumber
+              style={{ width: '100%' }}
+              // min={0}
+              // max={1}
+              step={1}
+              value={yMinScatterPlot}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.yMinScatterPlot = value;
+                });
+                setUpdateFlag(!updateFlag);
+                setChanged(true);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span style={{ fontSize: '12px' }}>{t('projectPanel.MaximumY', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <InputNumber
+              style={{ width: '100%' }}
+              // min={0}
+              // max={1}
+              step={1}
+              value={yMaxScatterPlot}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.yMaxScatterPlot = value;
+                });
+                setUpdateFlag(!updateFlag);
+                setChanged(true);
+              }}
+            />
           </Col>
         </Row>
       </div>
@@ -1440,7 +1551,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 <Popover
                   title={
                     <div onClick={(e) => e.stopPropagation()}>
-                      <LineChartOutlined /> {t('projectPanel.SelectXYAxes', lang)}
+                      <LineChartOutlined /> {t('projectPanel.SetXYAxes', lang)}
                     </div>
                   }
                   content={createXYAxesContent()}
@@ -1512,7 +1623,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 dataKey="x"
                 fontSize={10}
                 type="number"
-                domain={[0, 100]}
+                domain={[xMinScatterPlot, xMaxScatterPlot]}
                 label={<Label value={xAxisRef.current} dy={10} fontSize={11} />}
                 name={xAxisRef.current}
                 unit={''}
@@ -1526,7 +1637,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 dataKey="y"
                 fontSize={10}
                 type="number"
-                domain={[0, 100]}
+                domain={[yMinScatterPlot, yMaxScatterPlot]}
                 label={<Label value={yAxisRef.current} dx={-10} fontSize={11} angle={-90} />}
                 name={yAxisRef.current}
                 unit={''}
