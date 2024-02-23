@@ -223,11 +223,12 @@ export class ProjectUtil {
     return a;
   }
 
-  static getUnit(variable: string): string {
-    if (variable === 'molecularMass') return 'u';
-    if (variable === 'polarSurfaceArea') return 'Å²';
-    if (variable === 'boilingPoint') return '°C';
-    if (variable === 'meltingPoint') return '°C';
+  static getUnit(property: string): string {
+    if (property === 'molecularMass') return 'u';
+    if (property === 'polarSurfaceArea') return 'Å²';
+    if (property === 'density') return 'g/ml';
+    if (property === 'boilingPoint') return '°C';
+    if (property === 'meltingPoint') return '°C';
     return '';
   }
 

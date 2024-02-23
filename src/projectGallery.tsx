@@ -1730,14 +1730,22 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 fontSize={10}
                 type="number"
                 domain={[xMinScatterPlot, xMaxScatterPlot]}
-                label={<Label value={ProjectUtil.getPropertyName(xAxisRef.current, lang)} dy={10} fontSize={11} />}
-                name={xAxisRef.current}
-                unit={''}
+                label={
+                  <Label
+                    value={
+                      ProjectUtil.getPropertyName(xAxisRef.current, lang) +
+                      ' (' +
+                      ProjectUtil.getUnit(xAxisRef.current) +
+                      ')'
+                    }
+                    dy={10}
+                    fontSize={11}
+                  />
+                }
+                name={ProjectUtil.getPropertyName(xAxisRef.current, lang)}
+                // unit={ProjectUtil.getUnit(xAxisRef.current)}
                 strokeWidth={1}
                 stroke={'gray'}
-                tickFormatter={(value, index) => {
-                  return value;
-                }}
               />
               <YAxis
                 dataKey="y"
@@ -1746,21 +1754,47 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 domain={[yMinScatterPlot, yMaxScatterPlot]}
                 label={
                   <Label
-                    value={ProjectUtil.getPropertyName(yAxisRef.current, lang)}
+                    value={
+                      ProjectUtil.getPropertyName(yAxisRef.current, lang) +
+                      ' (' +
+                      ProjectUtil.getUnit(yAxisRef.current) +
+                      ')'
+                    }
                     dx={-10}
                     fontSize={11}
                     angle={-90}
                   />
                 }
-                name={yAxisRef.current}
-                unit={''}
+                name={ProjectUtil.getPropertyName(yAxisRef.current, lang)}
+                // unit={ProjectUtil.getUnit(yAxisRef.current)}
                 strokeWidth={1}
                 stroke={'gray'}
-                tickFormatter={(value, index) => {
-                  return value;
+              />
+              <Tooltip
+                cursor={{ strokeDasharray: '3 3' }}
+                content={({ active, payload }) => {
+                  if (!active || !payload) return null;
+                  return (
+                    <div
+                      style={{
+                        fontSize: '12px',
+                        backgroundColor: 'white',
+                        padding: '10px',
+                        border: '1px solid gray',
+                        borderRadius: '8px',
+                      }}
+                    >
+                      {payload.map((p) => {
+                        return (
+                          <div key={p.name}>
+                            {p.name}: {p.value}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
                 }}
               />
-              <Tooltip cursor={{ strokeDasharray: '3 3' }} />
               <Scatter
                 name="All"
                 data={scatterData}
