@@ -1127,8 +1127,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const createGraphSettingsContent = () => {
     return (
       <div>
-        <Space style={{ fontSize: '12px' }}>
-          {t('projectPanel.GridLines')}:
+        <Space style={{ fontSize: '12px', paddingBottom: '8px' }}>
+          <Space>{t('projectPanel.GridLines', lang) + ':'}</Space>
           <Checkbox
             onChange={(e) => {
               const checked = e.target.checked;
@@ -1170,9 +1170,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
         </Space>
         <br />
         <Space style={{ fontSize: '12px' }}>
-          {t('projectPanel.SymbolSize')}:
+          <Space style={{ width: '80px' }}>{t('projectPanel.SymbolSize', lang) + ':'}</Space>
           <Slider
-            style={{ width: '140px' }}
+            style={{ width: '120px' }}
             min={0}
             max={10}
             value={dotSizeRef.current}
@@ -1193,9 +1193,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
         </Space>
         <br />
         <Space style={{ fontSize: '12px' }}>
-          {t('projectPanel.LineWidth')}:
+          <Space style={{ width: '80px' }}>{t('projectPanel.LineWidth', lang) + ':'}</Space>
           <Slider
-            style={{ width: '140px' }}
+            style={{ width: '120px' }}
             min={0}
             max={6}
             value={lineWidthRef.current}
@@ -1730,7 +1730,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 fontSize={10}
                 type="number"
                 domain={[xMinScatterPlot, xMaxScatterPlot]}
-                label={<Label value={xAxisRef.current} dy={10} fontSize={11} />}
+                label={<Label value={ProjectUtil.getPropertyName(xAxisRef.current, lang)} dy={10} fontSize={11} />}
                 name={xAxisRef.current}
                 unit={''}
                 strokeWidth={1}
@@ -1744,7 +1744,14 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 fontSize={10}
                 type="number"
                 domain={[yMinScatterPlot, yMaxScatterPlot]}
-                label={<Label value={yAxisRef.current} dx={-10} fontSize={11} angle={-90} />}
+                label={
+                  <Label
+                    value={ProjectUtil.getPropertyName(yAxisRef.current, lang)}
+                    dx={-10}
+                    fontSize={11}
+                    angle={-90}
+                  />
+                }
                 name={yAxisRef.current}
                 unit={''}
                 strokeWidth={1}

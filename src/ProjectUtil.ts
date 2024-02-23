@@ -134,6 +134,23 @@ export class ProjectUtil {
     return a;
   }
 
+  static getPropertyName(property: string, l: { lng: string }): string | undefined {
+    if (property === 'atomCount') return i18n.t('projectPanel.AtomCount', l);
+    if (property === 'bondCount') return i18n.t('projectPanel.BondCount', l);
+    if (property === 'molecularMass') return i18n.t('projectPanel.MolecularMass', l);
+    if (property === 'logP') return 'log P';
+    if (property === 'hydrogenBondDonorCount') return i18n.t('projectPanel.HydrogenBondDonorCountShort', l);
+    if (property === 'hydrogenBondAcceptorCount') return i18n.t('projectPanel.HydrogenBondAcceptorCountShort', l);
+    if (property === 'rotatableBondCount') return i18n.t('projectPanel.RotatableBondCountShort', l);
+    if (property === 'polarSurfaceArea') return i18n.t('projectPanel.PolarSurfaceAreaShort', l);
+    if (property === 'heavyAtomCount') return i18n.t('projectPanel.HeavyAtomCountShort', l);
+    if (property === 'complexity') return i18n.t('projectPanel.Complexity', l);
+    if (property === 'density') return i18n.t('projectPanel.Density', l);
+    if (property === 'boilingPoint') return i18n.t('projectPanel.BoilingPoint', l);
+    if (property === 'meltingPoint') return i18n.t('projectPanel.MeltingPoint', l);
+    return undefined;
+  }
+
   static getTypes(hidden: string[]): string[] {
     const a: string[] = [];
     if (!hidden?.includes('atomCount')) a.push('number');
