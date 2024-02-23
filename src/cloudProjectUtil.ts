@@ -50,6 +50,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           yAxisNameScatterPlot: data.yAxisNameScatterPlot,
           xLinesScatterPlot: !!data.xLinesScatterPlot,
           yLinesScatterPlot: !!data.yLinesScatterPlot,
+          lineWidthScatterPlot: data.lineWidthScatterPlot,
           dotSizeScatterPlot: data.dotSizeScatterPlot,
           thumbnailWidth: data.thumbnailWidth,
 
@@ -399,6 +400,40 @@ export const updateVerticalLinesScatterPlot = (userid: string, projectTitle: str
     .collection('projects')
     .doc(projectTitle)
     .update({ yLinesScatterPlot })
+    .then(() => {
+      // ignore
+    })
+    .catch((error) => {
+      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
+    });
+};
+
+export const updateSymbolSizeScatterPlot = (userid: string, projectTitle: string, dotSizeScatterPlot: number) => {
+  const lang = { lng: useStore.getState().language };
+  return firebase
+    .firestore()
+    .collection('users')
+    .doc(userid)
+    .collection('projects')
+    .doc(projectTitle)
+    .update({ dotSizeScatterPlot })
+    .then(() => {
+      // ignore
+    })
+    .catch((error) => {
+      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
+    });
+};
+
+export const updateLineWidthScatterPlot = (userid: string, projectTitle: string, lineWidthScatterPlot: number) => {
+  const lang = { lng: useStore.getState().language };
+  return firebase
+    .firestore()
+    .collection('users')
+    .doc(userid)
+    .collection('projects')
+    .doc(projectTitle)
+    .update({ lineWidthScatterPlot })
     .then(() => {
       // ignore
     })

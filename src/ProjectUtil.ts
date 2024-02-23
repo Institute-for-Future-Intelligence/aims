@@ -55,6 +55,7 @@ export class ProjectUtil {
       yMaxScatterPlot: 100,
       xLinesScatterPlot: false,
       yLinesScatterPlot: false,
+      lineWidthScatterPlot: 1,
       dotSizeScatterPlot: 4,
       thumbnailWidth: 200,
 

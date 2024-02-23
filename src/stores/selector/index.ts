@@ -155,6 +155,8 @@ export const xLinesScatterPlot = (state: CommonStoreState) => state.projectState
 
 export const yLinesScatterPlot = (state: CommonStoreState) => state.projectState.yLinesScatterPlot;
 
+export const lineWidthScatterPlot = (state: CommonStoreState) => state.projectState.lineWidthScatterPlot;
+
 export const dotSizeScatterPlot = (state: CommonStoreState) => state.projectState.dotSizeScatterPlot;
 
 export const chamberViewerPercentWidth = (state: CommonStoreState) => state.projectState.chamberViewerPercentWidth;

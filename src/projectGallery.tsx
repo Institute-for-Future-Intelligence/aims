@@ -18,6 +18,8 @@ import {
   Radio,
   Row,
   Select,
+  Slider,
+  Space,
 } from 'antd';
 import {
   BgColorsOutlined,
@@ -50,6 +52,8 @@ import {
   updateDataColoring,
   updateHiddenProperties,
   updateHorizontalLinesScatterPlot,
+  updateLineWidthScatterPlot,
+  updateSymbolSizeScatterPlot,
   updateVerticalLinesScatterPlot,
   updateXAxisNameScatterPlot,
   updateXMaxScatterPlot,
@@ -178,6 +182,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const yMaxScatterPlot = useStore(Selector.yMaxScatterPlot) ?? 100;
   const xLinesScatterPlot = useStore(Selector.xLinesScatterPlot);
   const yLinesScatterPlot = useStore(Selector.yLinesScatterPlot);
+  const lineWidthScatterPlot = useStore(Selector.lineWidthScatterPlot);
   const dotSizeScatterPlot = useStore(Selector.dotSizeScatterPlot);
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
@@ -249,9 +254,34 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const meltingPointSelectionRef = useRef<boolean>(!hiddenProperties?.includes('meltingPoint'));
   const xAxisRef = useRef<string>(xAxisNameScatterPlot ?? 'atomCount');
   const yAxisRef = useRef<string>(yAxisNameScatterPlot ?? 'bondCount');
+  const lineWidthRef = useRef<number>(lineWidthScatterPlot ?? 1);
   const dotSizeRef = useRef<number>(dotSizeScatterPlot ?? 4);
   const xLinesRef = useRef<boolean>(xLinesScatterPlot);
   const yLinesRef = useRef<boolean>(yLinesScatterPlot);
+
+  useEffect(() => {
+    if (xLinesScatterPlot) {
+      xLinesRef.current = xLinesScatterPlot;
+    }
+  }, [xLinesScatterPlot]);
+
+  useEffect(() => {
+    if (yLinesScatterPlot) {
+      yLinesRef.current = yLinesScatterPlot;
+    }
+  }, [yLinesScatterPlot]);
+
+  useEffect(() => {
+    if (dotSizeScatterPlot) {
+      dotSizeRef.current = dotSizeScatterPlot;
+    }
+  }, [dotSizeScatterPlot]);
+
+  useEffect(() => {
+    if (lineWidthScatterPlot) {
+      lineWidthRef.current = lineWidthScatterPlot;
+    }
+  }, [lineWidthScatterPlot]);
 
   useEffect(() => {
     if (xAxisNameScatterPlot) {
@@ -1094,48 +1124,96 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return array;
   }, [updateHiddenFlag, projectFilters, hiddenProperties]);
 
-  const createGridLinesContent = () => {
+  const createGraphSettingsContent = () => {
     return (
       <div>
-        <Checkbox
-          onChange={(e) => {
-            const checked = e.target.checked;
-            xLinesRef.current = checked;
-            if (isOwner) {
-              if (user.uid && projectTitle) {
-                updateHorizontalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
-                  setCommonStore((state) => {
-                    state.projectState.xLinesScatterPlot = checked;
+        <Space style={{ fontSize: '12px' }}>
+          {t('projectPanel.GridLines')}:
+          <Checkbox
+            onChange={(e) => {
+              const checked = e.target.checked;
+              xLinesRef.current = checked;
+              if (isOwner) {
+                if (user.uid && projectTitle) {
+                  updateHorizontalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
+                    setCommonStore((state) => {
+                      state.projectState.xLinesScatterPlot = checked;
+                    });
                   });
-                });
+                }
               }
-            }
-            setChanged(true);
-          }}
-          checked={xLinesRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.HorizontalLines', lang)}</span>
-        </Checkbox>
+              setChanged(true);
+            }}
+            checked={xLinesRef.current}
+          >
+            <span style={{ fontSize: '12px' }}>{t('projectPanel.HorizontalLines', lang)}</span>
+          </Checkbox>
+          <Checkbox
+            onChange={(e) => {
+              const checked = e.target.checked;
+              yLinesRef.current = checked;
+              if (isOwner) {
+                if (user.uid && projectTitle) {
+                  updateVerticalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
+                    setCommonStore((state) => {
+                      state.projectState.yLinesScatterPlot = checked;
+                    });
+                  });
+                }
+              }
+              setChanged(true);
+            }}
+            checked={yLinesRef.current}
+          >
+            <span style={{ fontSize: '12px' }}>{t('projectPanel.VerticalLines', lang)}</span>
+          </Checkbox>
+        </Space>
         <br />
-        <Checkbox
-          onChange={(e) => {
-            const checked = e.target.checked;
-            yLinesRef.current = checked;
-            if (isOwner) {
-              if (user.uid && projectTitle) {
-                updateVerticalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
-                  setCommonStore((state) => {
-                    state.projectState.yLinesScatterPlot = checked;
+        <Space style={{ fontSize: '12px' }}>
+          {t('projectPanel.SymbolSize')}:
+          <Slider
+            style={{ width: '140px' }}
+            min={0}
+            max={10}
+            value={dotSizeRef.current}
+            onChange={(v) => {
+              dotSizeRef.current = v;
+              if (isOwner) {
+                if (user.uid && projectTitle) {
+                  updateSymbolSizeScatterPlot(user.uid, projectTitle, v).then(() => {
+                    setCommonStore((state) => {
+                      state.projectState.dotSizeScatterPlot = v;
+                    });
                   });
-                });
+                }
               }
-            }
-            setChanged(true);
-          }}
-          checked={yLinesRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.VerticalLines', lang)}</span>
-        </Checkbox>
+              setChanged(true);
+            }}
+          />
+        </Space>
+        <br />
+        <Space style={{ fontSize: '12px' }}>
+          {t('projectPanel.LineWidth')}:
+          <Slider
+            style={{ width: '140px' }}
+            min={0}
+            max={6}
+            value={lineWidthRef.current}
+            onChange={(v) => {
+              lineWidthRef.current = v;
+              if (isOwner) {
+                if (user.uid && projectTitle) {
+                  updateLineWidthScatterPlot(user.uid, projectTitle, v).then(() => {
+                    setCommonStore((state) => {
+                      state.projectState.lineWidthScatterPlot = v;
+                    });
+                  });
+                }
+              }
+              setChanged(true);
+            }}
+          />
+        </Space>
       </div>
     );
   };
@@ -1186,7 +1264,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     );
   };
 
-  const createXYAxesContent = () => {
+  const createCoordinateSystemSettingsContent = () => {
     return (
       <div style={{ width: '280px' }}>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
@@ -1533,7 +1611,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 >
                   <CameraOutlined
                     style={{ fontSize: '24px', color: 'gray' }}
-                    title={t('projectPanel.PropertiesScreenshot', lang)}
+                    title={t('projectPanel.GraphScreenshot', lang)}
                   />
                 </Button>
               </span>
@@ -1579,10 +1657,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 <Popover
                   title={
                     <div onClick={(e) => e.stopPropagation()}>
-                      <LineChartOutlined /> {t('projectPanel.SetXYAxes', lang)}
+                      <LineChartOutlined /> {t('projectPanel.CoordinateSystemSettings', lang)}
                     </div>
                   }
-                  content={createXYAxesContent()}
+                  content={createCoordinateSystemSettingsContent()}
                 >
                   <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
                     <LineChartOutlined style={{ fontSize: '24px', color: 'gray' }} />
@@ -1591,10 +1669,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 <Popover
                   title={
                     <div onClick={(e) => e.stopPropagation()}>
-                      <TableOutlined /> {t('projectPanel.GridLines', lang)}
+                      <TableOutlined /> {t('projectPanel.ScatterPlotSettings', lang)}
                     </div>
                   }
-                  content={createGridLinesContent()}
+                  content={createGraphSettingsContent()}
                 >
                   <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
                     <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
@@ -1622,7 +1700,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 >
                   <CameraOutlined
                     style={{ fontSize: '24px', color: 'gray' }}
-                    title={t('projectPanel.PropertiesScreenshot', lang)}
+                    title={t('projectPanel.GraphScreenshot', lang)}
                   />
                 </Button>
               </span>
@@ -1676,7 +1754,14 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 }}
               />
               <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-              <Scatter name="All" data={scatterData} fill="#8884d8" line shape={<RenderDot />} />
+              <Scatter
+                name="All"
+                data={scatterData}
+                fill="#8884d8"
+                line={true}
+                strokeWidth={lineWidthRef.current}
+                shape={<RenderDot />}
+              />
             </ScatterChart>
           )}
         </CanvasContainer>

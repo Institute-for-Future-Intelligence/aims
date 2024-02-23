@@ -34,8 +34,9 @@ export interface ProjectState {
   yMaxScatterPlot: number;
   xLinesScatterPlot: boolean;
   yLinesScatterPlot: boolean;
-  dotSizeScatterPlot: number | null;
-  thumbnailWidth: number | null;
+  lineWidthScatterPlot: number;
+  dotSizeScatterPlot: number;
+  thumbnailWidth: number;
 
   cameraPosition: number[];
   cameraRotation: number[];
