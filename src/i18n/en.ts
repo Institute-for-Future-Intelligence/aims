@@ -234,6 +234,7 @@ export const i18n_en = {
       MolecularFormula: 'Molecular Formula',
       GraphType: 'Graph Type',
       ParallelCoordinates: 'Parallel Coordinates',
+      Relationship: 'Relationship',
       ScatterPlot: 'Scatter Plot',
       CoordinateSystemSettings: 'Coordinate System Settings',
       SelectXAxis: 'Select X Axis',

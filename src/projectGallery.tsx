@@ -1652,7 +1652,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
 
           {data.length > 0 && graphType === GraphType.SCATTER_PLOT && (
             <PropertiesHeader>
-              <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
+              <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Relationship', lang)}</span>
               <span>
                 <Popover
                   title={
@@ -1777,6 +1777,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   return (
                     <div
                       style={{
+                        textAlign: 'left',
                         fontSize: '12px',
                         backgroundColor: 'white',
                         padding: '10px',

@@ -234,6 +234,7 @@ export const i18n_zh_cn = {
       MolecularFormula: '分子式',
       GraphType: '图形类别',
       ParallelCoordinates: '平行坐标图',
+      Relationship: '关系',
       ScatterPlot: '散点图',
       CoordinateSystemSettings: '坐标系设定',
       SelectXAxis: '选择X轴',

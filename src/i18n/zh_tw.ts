@@ -233,6 +233,7 @@ export const i18n_zh_tw = {
       MolecularFormula: '分子式',
       GraphType: '圖形類別',
       ParallelCoordinates: '平行座標圖',
+      Relationship: '關係',
       ScatterPlot: '散點圖',
       CoordinateSystemSettings: '座標系設定',
       SelectXAxis: '選擇X軸',
