@@ -30,6 +30,7 @@ import Cockpit from './view/cockpit.tsx';
 import MoveMoleculeButtons from './view/moveMoleculeButtons.tsx';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
+import MolecularDynamicsSettings from './view/molecularDynamicsSettings.tsx';
 
 export interface ReactionChamberProps {
   moleculeData: MoleculeData | null;
@@ -117,6 +118,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
         </GizmoHelper>
       </Canvas>
       {projectType === ProjectType.DRUG_DISCOVERY && <DockingSettings />}
+      {projectType === ProjectType.QSAR_MODELING && <MolecularDynamicsSettings />}
       {testMolecule && <MoveMoleculeButtons />}
       {loading && canvasRef.current && (
         <Spin

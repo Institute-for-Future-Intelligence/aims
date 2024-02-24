@@ -1813,6 +1813,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             if (m) {
               const added = addMolecule(m);
               if (added) {
+                setCommonStore((state) => {
+                  state.projectState.selectedMolecule = m;
+                });
                 setUpdateFlag(!updateFlag);
                 setChanged(true);
               } else {
