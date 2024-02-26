@@ -22,7 +22,7 @@ import { BondTS } from '../models/BondTS';
 import { Util } from '../Util';
 import { MolecularProperties } from '../models/MolecularProperties';
 import ComplexVisual from '../lib/ComplexVisual';
-import { invalidate, useThree } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
 import {
   COLORING_MAP,
   MATERIAL_MAP,

@@ -70,7 +70,7 @@ const AccountSettingsPanel = React.memo(() => {
 
   // nodeRef is to suppress ReactDOM.findDOMNode() deprecation warning. See:
   // https://github.com/react-grid-layout/react-draggable/blob/v4.4.2/lib/DraggableCore.js#L159-L171
-  const nodeRef = React.useRef(null);
+  const nodeRef = useRef(null);
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const schoolIdRef = useRef<SchoolID>(user.schoolID ?? SchoolID.UNKNOWN);

@@ -5,7 +5,7 @@
   "homepage": "https://institute-for-future-intelligence.github.io/aims",
   "type": "module",
   "dependencies": {
-    "@react-three/drei": "^9.99.1",
+    "@react-three/drei": "^9.99.4",
     "@react-three/fiber": "^8.15.16",
     "antd": "^5.12.5",
     "d3-brush": "^3.0.0",

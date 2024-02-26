@@ -3,7 +3,15 @@
  */
 
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
-import { DataColoring, GraphType, LabelType, ProjectType } from './constants';
+import {
+  DataColoring,
+  DEFAULT_CAMERA_POSITION,
+  DEFAULT_FOV,
+  DEFAULT_LIGHT_INTENSITY,
+  GraphType,
+  LabelType,
+  ProjectType,
+} from './constants';
 import styled from 'styled-components';
 import {
   Button,
@@ -66,6 +74,7 @@ import { Filter, FilterType } from './Filter';
 import {
   GALLERY_STYLE_LABELS,
   MATERIAL_LABELS,
+  MolecularViewerColoring,
   MolecularViewerMaterial,
   MolecularViewerStyle,
 } from './view/displayOptions';
@@ -73,21 +82,18 @@ import { commonMolecules, drugMolecules, getMolecule } from './internalDatabase'
 import MoleculeContainer from './moleculeContainer';
 import { CartesianGrid, Dot, DotProps, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MolecularProperties } from './models/MolecularProperties.ts';
+import { Bounds, Box, OrbitControls, OrthographicCamera, PerspectiveCamera, Preload, View } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import { ProjectGalleryControls } from './controls.tsx';
+import MolecularViewer from './view/molecularViewer.tsx';
+import Axes from './view/axes.tsx';
+import { DirectionalLight, Vector3 } from 'three';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
 }
 
 const { Option } = Select;
-
-const CanvasContainer = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  background: white;
-`;
 
 const Container = styled.div`
   position: relative;
@@ -208,6 +214,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const descriptionChangedRef = useRef<boolean>(false);
   const descriptionExpandedRef = useRef<boolean>(false);
   const sortedMoleculesRef = useRef<MoleculeData[]>([]); // store a sorted copy of molecules
+  const containerRef = useRef(null);
 
   useEffect(() => {
     sortedMoleculesRef.current = [];
@@ -1458,6 +1465,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return <Dot cx={cx} cy={cy} fill="#8884d8" r={dotSizeRef.current} />;
   };
 
+  const lightRef = useRef<DirectionalLight>(null);
+  const cameraPositionVector = useMemo(() => new Vector3().fromArray(DEFAULT_CAMERA_POSITION), []);
+
   return (
     <Container
       onContextMenu={(e) => {
@@ -1491,11 +1501,23 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             setUpdateFlag(!updateFlag);
           }}
         />
-        <CanvasContainer>
+        <div style={{ background: 'white', height: '100%' }}>
           <div
             style={{
               width: '100%',
+              height: totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80),
+              paddingTop: '8px',
+              paddingLeft: '8px',
+              overflowX: 'auto',
+              overflowY: 'auto',
+              position: 'relative',
+              background: 'white',
+              display: 'grid',
+              columnGap: '5px',
+              rowGap: '5px',
+              gridTemplateColumns: canvasWidth + 'px ' + canvasWidth + 'px ' + canvasWidth + 'px',
             }}
+            ref={containerRef}
             onClick={() => {
               setCommonStore((state) => {
                 state.projectState.selectedMolecule = null;
@@ -1503,58 +1525,113 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               setChanged(true);
             }}
           >
-            <List
-              style={{
-                height: totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80),
-                paddingTop: '8px',
-                paddingLeft: '8px',
-                overflowX: 'hidden',
-                overflowY: 'auto',
-              }}
-              locale={{ emptyText: t('projectPanel.NoMolecule', lang) }}
-              grid={{ column: canvasColumns, gutter: 0 }}
-              dataSource={sortedMoleculesRef.current}
-              renderItem={(data: MoleculeData) => {
-                const prop = getProvidedMolecularProperties(data.name);
-                return (
-                  <List.Item
-                    style={{ height: canvasHeight }}
-                    onMouseOver={() => {
-                      usePrimitiveStore.getState().set((state) => {
-                        state.hoveredMolecule = data;
-                      });
-                    }}
-                    onMouseLeave={() => {
-                      usePrimitiveStore.getState().set((state) => {
-                        state.hoveredMolecule = null;
-                      });
-                    }}
-                  >
-                    <MoleculeContainer
-                      width={canvasWidth}
-                      height={canvasHeight}
-                      moleculeData={data}
-                      selected={selectedMolecule?.name === data.name}
-                    />
-                    <div
-                      style={{
-                        position: 'relative',
-                        left: '10px',
-                        textAlign: 'left',
-                        bottom: labelType === LabelType.FORMULA ? '26px' : '18px',
-                        color: 'gray',
-                        fontSize: labelType === LabelType.FORMULA ? '14px' : '10px',
-                        fontWeight: 'normal',
-                        width: 'calc(100% - 14px)',
-                      }}
-                    >
-                      {labelType === LabelType.FORMULA ? prop?.formula ?? data.name : data.name}
-                    </div>
-                  </List.Item>
-                );
-              }}
-            />
+            {sortedMoleculesRef.current.map((mol, index) => {
+              return (
+                <View
+                  key={index}
+                  // @ts-expect-error: track is deprecated
+                  track={null}
+                  index={1}
+                  visible={true}
+                  style={{
+                    position: 'relative',
+                    height: canvasHeight + 'px',
+                    width: canvasWidth + 'px',
+                    backgroundColor: viewerBackground,
+                    borderRadius: '10px',
+                    border: '1px solid gray',
+                  }}
+                >
+                  <PerspectiveCamera makeDefault position={[1, 1, 1]} fov={DEFAULT_FOV} />
+                  <OrbitControls makeDefault />
+                  {/*<ProjectGalleryControls/>*/}
+                  <directionalLight
+                    name={'Directional Light'}
+                    ref={lightRef}
+                    color="white"
+                    position={cameraPositionVector}
+                    intensity={DEFAULT_LIGHT_INTENSITY}
+                    castShadow={false}
+                  />
+                  {/*<Bounds fit clip observe margin={1.5}>*/}
+                  <MolecularViewer
+                    moleculeData={sortedMoleculesRef.current[index]}
+                    style={viewerStyle}
+                    material={viewerMaterial}
+                    coloring={MolecularViewerColoring.Element}
+                    chamber={false}
+                    lightRef={lightRef}
+                  />
+                  {/*</Bounds>*/}
+                </View>
+              );
+            })}
+
+            {containerRef.current && (
+              <Canvas
+                eventSource={containerRef.current}
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: (10 + canvasHeight) * Math.ceil(sortedMoleculesRef.current.length / canvasColumns) + 'px',
+                }}
+              >
+                <View.Port />
+              </Canvas>
+            )}
           </div>
+
+          {/*<List*/}
+          {/*  style={{*/}
+          {/*    height: totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80),*/}
+          {/*    paddingTop: '8px',*/}
+          {/*    paddingLeft: '8px',*/}
+          {/*    overflowX: 'hidden',*/}
+          {/*    overflowY: 'auto',*/}
+          {/*  }}*/}
+          {/*  locale={{ emptyText: t('projectPanel.NoMolecule', lang) }}*/}
+          {/*  grid={{ column: canvasColumns, gutter: 0 }}*/}
+          {/*  dataSource={sortedMoleculesRef.current}*/}
+          {/*  renderItem={(data: MoleculeData) => {*/}
+          {/*    const prop = getProvidedMolecularProperties(data.name);*/}
+          {/*    return (*/}
+          {/*      <List.Item*/}
+          {/*        style={{ height: canvasHeight }}*/}
+          {/*        onMouseOver={() => {*/}
+          {/*          usePrimitiveStore.getState().set((state) => {*/}
+          {/*            state.hoveredMolecule = data;*/}
+          {/*          });*/}
+          {/*        }}*/}
+          {/*        onMouseLeave={() => {*/}
+          {/*          usePrimitiveStore.getState().set((state) => {*/}
+          {/*            state.hoveredMolecule = null;*/}
+          {/*          });*/}
+          {/*        }}*/}
+          {/*      >*/}
+          {/*        <MoleculeContainer*/}
+          {/*          width={canvasWidth}*/}
+          {/*          height={canvasHeight}*/}
+          {/*          moleculeData={data}*/}
+          {/*          selected={selectedMolecule?.name === data.name}*/}
+          {/*        />*/}
+          {/*        <div*/}
+          {/*          style={{*/}
+          {/*            position: 'relative',*/}
+          {/*            left: '10px',*/}
+          {/*            textAlign: 'left',*/}
+          {/*            bottom: labelType === LabelType.FORMULA ? '26px' : '18px',*/}
+          {/*            color: 'gray',*/}
+          {/*            fontSize: labelType === LabelType.FORMULA ? '14px' : '10px',*/}
+          {/*            fontWeight: 'normal',*/}
+          {/*            width: 'calc(100% - 14px)',*/}
+          {/*          }}*/}
+          {/*        >*/}
+          {/*          {labelType === LabelType.FORMULA ? prop?.formula ?? data.name : data.name}*/}
+          {/*        </div>*/}
+          {/*      </List.Item>*/}
+          {/*    );*/}
+          {/*  }}*/}
+          {/*/>*/}
 
           {/*parallel coordinates*/}
 
@@ -1806,7 +1883,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               />
             </ScatterChart>
           )}
-        </CanvasContainer>
+        </div>
         <ImportMoleculeModal
           importByName={() => {
             const m = getMolecule(moleculeName);
