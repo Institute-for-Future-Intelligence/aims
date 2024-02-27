@@ -74,10 +74,9 @@ import {
 import { commonMolecules, drugMolecules, getMolecule } from './internalDatabase';
 import { CartesianGrid, Dot, DotProps, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MolecularProperties } from './models/MolecularProperties.ts';
-import { Html, View } from '@react-three/drei';
+import { View } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { DirectionalLight } from 'three';
-import ProjectGalleryView from './projectGalleryView.tsx';
+import MolecularContainer from './molecularContainer.tsx';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -972,7 +971,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     projectDataColoring,
     projectFilters,
     hiddenProperties,
-    updateHiddenFlag,
   ]);
 
   const [variables, titles, units, digits, tickIntegers, types] = useMemo(
@@ -984,7 +982,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       ProjectUtil.getTickIntegers(hiddenProperties ?? []),
       ProjectUtil.getTypes(hiddenProperties ?? []),
     ],
-    [updateHiddenFlag, lang, hiddenProperties],
+    [lang, hiddenProperties],
   );
 
   const getMin = (variable: string, defaultValue: number) => {
@@ -1029,7 +1027,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     if (!hiddenProperties?.includes('boilingPoint')) array.push(getMin('boilingPoint', -100));
     if (!hiddenProperties?.includes('meltingPoint')) array.push(getMin('meltingPoint', -100));
     return array;
-  }, [updateHiddenFlag, projectRanges, hiddenProperties]);
+  }, [projectRanges, hiddenProperties]);
 
   const maxima: number[] = useMemo(() => {
     const array: number[] = [];
@@ -1065,7 +1063,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     if (!hiddenProperties?.includes('boilingPoint')) array.push(1);
     if (!hiddenProperties?.includes('meltingPoint')) array.push(1);
     return array;
-  }, [updateHiddenFlag, hiddenProperties]);
+  }, [hiddenProperties]);
 
   const getFilterLowerBound = (variable: string, defaultValue: number) => {
     let lowerBound = defaultValue;
@@ -1457,8 +1455,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return <Dot cx={cx} cy={cy} fill="#8884d8" r={dotSizeRef.current} />;
   };
 
-  const lightRef = useRef<DirectionalLight>(null);
-
   return (
     <Container
       onContextMenu={(e) => {
@@ -1544,29 +1540,17 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     opacity: mol?.excluded ? 0.25 : 1,
                   }}
                 >
-                  <ProjectGalleryView
+                  <MolecularContainer
+                    viewWidth={viewWidth}
+                    viewHeight={viewHeight}
+                    selected={selected}
                     moleculeData={mol}
+                    formula={prop?.formula}
                     style={viewerStyle}
                     material={viewerMaterial}
                     setLoading={setLoading}
                     updateFlag={() => setUpdateFlag(!updateFlag)}
                   />
-                  <Html>
-                    <div
-                      style={{
-                        position: 'relative',
-                        left: 4 - viewWidth / 2 + 'px',
-                        textAlign: 'left',
-                        bottom: (labelType === LabelType.FORMULA ? 26 : 16) - viewHeight / 2 + 'px',
-                        color: 'gray',
-                        fontSize: labelType === LabelType.FORMULA ? '14px' : '10px',
-                        fontWeight: selected ? 'bold' : 'normal',
-                        width: 'calc(100% - 14px)',
-                      }}
-                    >
-                      {labelType === LabelType.FORMULA ? prop?.formula ?? mol.name : mol.name}
-                    </div>
-                  </Html>
                 </View>
               );
             })}
