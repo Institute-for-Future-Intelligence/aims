@@ -83,7 +83,7 @@ import {
 import { commonMolecules, drugMolecules, getMolecule } from './internalDatabase';
 import { CartesianGrid, Dot, DotProps, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MolecularProperties } from './models/MolecularProperties.ts';
-import { Html, OrbitControls, PerspectiveCamera, View } from '@react-three/drei';
+import { Html, OrbitControls, PerspectiveCamera, TrackballControls, View } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { ProjectGalleryControls } from './controls.tsx';
 import MolecularViewer from './view/molecularViewer.tsx';
@@ -1556,8 +1556,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   }}
                 >
                   <PerspectiveCamera makeDefault position={[1, 1, 1]} fov={DEFAULT_FOV} />
-                  <OrbitControls makeDefault />
-                  {/*<ProjectGalleryControls/>*/}
+                  <ProjectGalleryControls lightRef={lightRef} />
                   <directionalLight
                     name={'Directional Light'}
                     ref={lightRef}

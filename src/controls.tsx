@@ -14,6 +14,7 @@ import { MyTrackballControls } from './js/MyTrackballControls';
 import { Object3DNode, extend } from '@react-three/fiber';
 import { UndoableCameraChange } from './undo/UndoableCameraChange';
 import { UndoableResetView } from './undo/UndoableResetView';
+import { TrackballControls } from '@react-three/drei';
 
 extend({ MyTrackballControls });
 
@@ -322,9 +323,7 @@ export const ProjectGalleryControls = React.memo(({ lightRef }: ControlsProps) =
   };
 
   return (
-    <myTrackballControls
-      ref={controlsRef}
-      args={[camera, gl.domElement]}
+    <TrackballControls
       rotateSpeed={6}
       zoomSpeed={1}
       panSpeed={0.1}
