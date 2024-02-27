@@ -50,7 +50,6 @@ import { ProjectUtil } from './ProjectUtil';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import {
   updateDataColoring,
-  updateHiddenProperties,
   updateHorizontalLinesScatterPlot,
   updateLineWidthScatterPlot,
   updateSymbolSizeScatterPlot,
@@ -70,6 +69,7 @@ import { View } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import MolecularContainer from './molecularContainer.tsx';
 import ProjectSettingsContent from './projectSettingsContent.tsx';
+import PropertiesSelectionContent from './propertiesSelectionContent.tsx';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -228,21 +228,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     }
   }, [projectMolecules, projectSortDescending, selectedProperty, molecularPropertiesMap]);
 
-  const propertySelectionChangedRef = useRef<boolean>(false);
   const dataColoringSelectionRef = useRef<DataColoring>(projectDataColoring ?? DataColoring.ALL);
-  const atomCountSelectionRef = useRef<boolean>(!hiddenProperties?.includes('atomCount'));
-  const bondCountSelectionRef = useRef<boolean>(!hiddenProperties?.includes('bondCount'));
-  const massSelectionRef = useRef<boolean>(!hiddenProperties?.includes('molecularMass'));
-  const logPSelectionRef = useRef<boolean>(!hiddenProperties?.includes('logP'));
-  const hBondDonorCountSelectionRef = useRef<boolean>(!hiddenProperties?.includes('hydrogenBondDonorCount'));
-  const hBondAcceptorCountSelectionRef = useRef<boolean>(!hiddenProperties?.includes('hydrogenBondAcceptorCount'));
-  const rotatableBondCountSelectionRef = useRef<boolean>(!hiddenProperties?.includes('rotatableBondCount'));
-  const polarSurfaceAreaSelectionRef = useRef<boolean>(!hiddenProperties?.includes('polarSurfaceArea'));
-  const heavyAtomCountSelectionRef = useRef<boolean>(!hiddenProperties?.includes('heavyAtomCount'));
-  const complexitySelectionRef = useRef<boolean>(!hiddenProperties?.includes('complexity'));
-  const densitySelectionRef = useRef<boolean>(!hiddenProperties?.includes('density'));
-  const boilingPointSelectionRef = useRef<boolean>(!hiddenProperties?.includes('boilingPoint'));
-  const meltingPointSelectionRef = useRef<boolean>(!hiddenProperties?.includes('meltingPoint'));
   const xAxisRef = useRef<string>(xAxisNameScatterPlot ?? 'atomCount');
   const yAxisRef = useRef<string>(yAxisNameScatterPlot ?? 'bondCount');
   const lineWidthRef = useRef<number>(lineWidthScatterPlot ?? 1);
@@ -285,23 +271,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       yAxisRef.current = yAxisNameScatterPlot;
     }
   }, [yAxisNameScatterPlot]);
-
-  useEffect(() => {
-    atomCountSelectionRef.current = !hiddenProperties?.includes('atomCount');
-    bondCountSelectionRef.current = !hiddenProperties?.includes('bondCount');
-    massSelectionRef.current = !hiddenProperties?.includes('molecularMass');
-    logPSelectionRef.current = !hiddenProperties?.includes('logP');
-    hBondDonorCountSelectionRef.current = !hiddenProperties?.includes('hydrogenBondDonorCount');
-    hBondAcceptorCountSelectionRef.current = !hiddenProperties?.includes('hydrogenBondAcceptorCount');
-    rotatableBondCountSelectionRef.current = !hiddenProperties?.includes('rotatableBondCount');
-    polarSurfaceAreaSelectionRef.current = !hiddenProperties?.includes('polarSurfaceArea');
-    heavyAtomCountSelectionRef.current = !hiddenProperties?.includes('heavyAtomCount');
-    complexitySelectionRef.current = !hiddenProperties?.includes('complexity');
-    densitySelectionRef.current = !hiddenProperties?.includes('density');
-    boilingPointSelectionRef.current = !hiddenProperties?.includes('boilingPoint');
-    meltingPointSelectionRef.current = !hiddenProperties?.includes('meltingPoint');
-    setUpdateFlag(!updateFlag);
-  }, [hiddenProperties]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -494,185 +463,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       ),
     },
   ];
-
-  const localSelectProperty = (selected: boolean, property: string) => {
-    setCommonStore((state) => {
-      if (state.projectState.hiddenProperties) {
-        if (selected) {
-          if (state.projectState.hiddenProperties.includes(property)) {
-            state.projectState.hiddenProperties.splice(state.projectState.hiddenProperties.indexOf(property), 1);
-          }
-        } else {
-          if (!state.projectState.hiddenProperties.includes(property)) {
-            state.projectState.hiddenProperties.push(property);
-          }
-        }
-      }
-    });
-  };
-
-  const selectProperty = (selected: boolean, property: string) => {
-    propertySelectionChangedRef.current = true;
-    if (isOwner) {
-      if (user.uid && projectTitle) {
-        updateHiddenProperties(user.uid, projectTitle, property, !selected).then(() => {
-          localSelectProperty(selected, property);
-        });
-      }
-    } else {
-      localSelectProperty(selected, property);
-    }
-    setChanged(true);
-  };
-
-  const createChoosePropertiesContent = () => {
-    return (
-      <div>
-        <Checkbox
-          onChange={(e) => {
-            atomCountSelectionRef.current = e.target.checked;
-            selectProperty(atomCountSelectionRef.current, 'atomCount');
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={atomCountSelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.AtomCount', lang)}</span>
-        </Checkbox>
-        <br />
-        <Checkbox
-          onChange={(e) => {
-            bondCountSelectionRef.current = e.target.checked;
-            selectProperty(bondCountSelectionRef.current, 'bondCount');
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={bondCountSelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.BondCount', lang)}</span>
-        </Checkbox>
-        <br />
-        <Checkbox
-          onChange={(e) => {
-            massSelectionRef.current = e.target.checked;
-            selectProperty(massSelectionRef.current, 'molecularMass');
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={massSelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.MolecularMass', lang)}</span>
-        </Checkbox>
-        <br />
-        <Checkbox
-          onChange={(e) => {
-            logPSelectionRef.current = e.target.checked;
-            selectProperty(logPSelectionRef.current, 'logP');
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={logPSelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>log P</span>
-        </Checkbox>
-        <br />
-        <Checkbox
-          onChange={(e) => {
-            hBondDonorCountSelectionRef.current = e.target.checked;
-            selectProperty(hBondDonorCountSelectionRef.current, 'hydrogenBondDonorCount');
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={hBondDonorCountSelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.HydrogenBondDonorCount', lang)}</span>
-        </Checkbox>
-        <br />
-        <Checkbox
-          onChange={(e) => {
-            hBondAcceptorCountSelectionRef.current = e.target.checked;
-            selectProperty(hBondAcceptorCountSelectionRef.current, 'hydrogenBondAcceptorCount');
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={hBondAcceptorCountSelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.HydrogenBondAcceptorCount', lang)}</span>
-        </Checkbox>
-        <br />
-        <Checkbox
-          onChange={(e) => {
-            rotatableBondCountSelectionRef.current = e.target.checked;
-            selectProperty(rotatableBondCountSelectionRef.current, 'rotatableBondCount');
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={rotatableBondCountSelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.RotatableBondCount', lang)}</span>
-        </Checkbox>
-        <br />
-        <Checkbox
-          onChange={(e) => {
-            polarSurfaceAreaSelectionRef.current = e.target.checked;
-            selectProperty(polarSurfaceAreaSelectionRef.current, 'polarSurfaceArea');
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={polarSurfaceAreaSelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.PolarSurfaceArea', lang)}</span>
-        </Checkbox>
-        <br />
-        <Checkbox
-          onChange={(e) => {
-            heavyAtomCountSelectionRef.current = e.target.checked;
-            selectProperty(heavyAtomCountSelectionRef.current, 'heavyAtomCount');
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={heavyAtomCountSelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.HeavyAtomCount', lang)}</span>
-        </Checkbox>
-        <br />
-        <Checkbox
-          onChange={(e) => {
-            complexitySelectionRef.current = e.target.checked;
-            selectProperty(complexitySelectionRef.current, 'complexity');
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={complexitySelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.Complexity', lang)}</span>
-        </Checkbox>
-        <br />
-        <Checkbox
-          onChange={(e) => {
-            densitySelectionRef.current = e.target.checked;
-            selectProperty(densitySelectionRef.current, 'density');
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={densitySelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.Density', lang)}</span>
-        </Checkbox>
-        <br />
-        <Checkbox
-          onChange={(e) => {
-            boilingPointSelectionRef.current = e.target.checked;
-            selectProperty(boilingPointSelectionRef.current, 'boilingPoint');
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={boilingPointSelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.BoilingPoint', lang)}</span>
-        </Checkbox>
-        <br />
-        <Checkbox
-          onChange={(e) => {
-            meltingPointSelectionRef.current = e.target.checked;
-            selectProperty(meltingPointSelectionRef.current, 'meltingPoint');
-            setUpdateHiddenFlag(!updateHiddenFlag);
-          }}
-          checked={meltingPointSelectionRef.current}
-        >
-          <span style={{ fontSize: '12px' }}>{t('projectPanel.MeltingPoint', lang)}</span>
-        </Checkbox>
-      </div>
-    );
-  };
 
   const localSelectDataColoring = () => {
     setCommonStore((state) => {
@@ -1387,7 +1177,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   onOpenChange={(visible) => {
                     // TODO
                   }}
-                  content={createChoosePropertiesContent()}
+                  content={
+                    <PropertiesSelectionContent updateHiddenFlag={() => setUpdateHiddenFlag(!updateHiddenFlag)} />
+                  }
                 >
                   <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
                     <CarryOutOutlined style={{ fontSize: '24px', color: 'gray' }} />
