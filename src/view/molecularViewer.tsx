@@ -44,10 +44,25 @@ export interface MolecularViewerProps {
   selector?: string;
   lightRef?: React.RefObject<DirectionalLight>;
   setLoading?: (loading: boolean) => void;
+  onPointerOver?: () => void;
+  onPointerLeave?: () => void;
+  onClick?: () => void;
 }
 
 const MolecularViewer = React.memo(
-  ({ moleculeData, style, material, coloring, chamber, selector, lightRef, setLoading }: MolecularViewerProps) => {
+  ({
+    moleculeData,
+    style,
+    material,
+    coloring,
+    chamber,
+    selector,
+    lightRef,
+    setLoading,
+    onPointerOver,
+    onPointerLeave,
+    onClick,
+  }: MolecularViewerProps) => {
     const setCommonStore = useStore(Selector.set);
     const chemicalElements = useStore(Selector.chemicalElements);
     const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
@@ -313,7 +328,7 @@ const MolecularViewer = React.memo(
     }, [testMolecule, parsedResultsMap, projectViewerStyle, projectViewerMaterial]);
 
     return (
-      <group ref={groupRef}>
+      <group ref={groupRef} onPointerOver={onPointerOver} onPointerLeave={onPointerLeave} onClick={onClick}>
         <group
           name={'First'}
           ref={firstGroupRef}

@@ -20,14 +20,15 @@ import {
   Collapse,
   CollapseProps,
   ColorPicker,
+  Empty,
   InputNumber,
-  List,
   Popover,
   Radio,
   Row,
   Select,
   Slider,
   Space,
+  Spin,
 } from 'antd';
 import {
   BgColorsOutlined,
@@ -39,6 +40,7 @@ import {
   EditOutlined,
   ImportOutlined,
   LineChartOutlined,
+  LoadingOutlined,
   LoginOutlined,
   SettingOutlined,
   SortAscendingOutlined,
@@ -79,14 +81,12 @@ import {
   MolecularViewerStyle,
 } from './view/displayOptions';
 import { commonMolecules, drugMolecules, getMolecule } from './internalDatabase';
-import MoleculeContainer from './moleculeContainer';
 import { CartesianGrid, Dot, DotProps, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MolecularProperties } from './models/MolecularProperties.ts';
-import { Bounds, Box, OrbitControls, OrthographicCamera, PerspectiveCamera, Preload, View } from '@react-three/drei';
+import { Html, OrbitControls, PerspectiveCamera, View } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { ProjectGalleryControls } from './controls.tsx';
 import MolecularViewer from './view/molecularViewer.tsx';
-import Axes from './view/axes.tsx';
 import { DirectionalLight, Vector3 } from 'three';
 
 export interface ProjectGalleryProps {
@@ -162,6 +162,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const loggable = useStore.getState().loggable;
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const hoveredMolecule = usePrimitiveStore(Selector.hoveredMolecule);
+  const clickedMolecule = usePrimitiveStore(Selector.clickedMolecule);
   const addMolecule = useStore(Selector.addMolecule);
   const removeMolecule = useStore(Selector.removeMolecule);
   const viewerStyle = useStore(Selector.projectViewerStyle);
@@ -195,6 +196,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const updateTestMoleculeData = useStore(Selector.updateTestMoleculeData);
   const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
 
+  const [loading, setLoading] = useState<boolean>(false);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const [updateHiddenFlag, setUpdateHiddenFlag] = useState<boolean>(false);
   const [moleculeName, setMoleculeName] = useState<string>(
@@ -231,7 +233,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           if (propertiesA && propertiesB) {
             if (p) {
               if (p in propertiesA && p in propertiesB) {
-                // @ts-expect-error: Explain what?
+                // @ts-expect-error: ignore
                 return prefix * (propertiesA[p] - propertiesB[p]);
               }
             }
@@ -338,8 +340,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const canvasColumns = 3;
   const gridGutter = 8;
   const totalWidth = Math.round(window.innerWidth * relativeWidth);
-  const canvasWidth = totalWidth / canvasColumns - gridGutter * (canvasColumns - 1);
-  const canvasHeight = (canvasWidth * 2) / 3;
+  const viewWidth = totalWidth / canvasColumns - gridGutter * (canvasColumns - 1);
+  const viewHeight = (viewWidth * 2) / 3;
 
   const closeProject = () => {
     setCommonStore((state) => {
@@ -1502,6 +1504,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           }}
         />
         <div style={{ background: 'white', height: '100%' }}>
+          {sortedMoleculesRef.current.length === 0 && <Empty description={t('projectPanel.NoMolecule', lang)} />}
           <div
             style={{
               width: '100%',
@@ -1515,7 +1518,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               display: 'grid',
               columnGap: '5px',
               rowGap: '5px',
-              gridTemplateColumns: canvasWidth + 'px ' + canvasWidth + 'px ' + canvasWidth + 'px',
+              gridTemplateColumns: viewWidth + 'px ' + viewWidth + 'px ' + viewWidth + 'px',
             }}
             ref={containerRef}
             onClick={() => {
@@ -1526,6 +1529,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             }}
           >
             {sortedMoleculesRef.current.map((mol, index) => {
+              const prop = getProvidedMolecularProperties(mol.name);
+              const hovered = hoveredMolecule?.name === mol.name;
+              const selected = clickedMolecule?.name === mol.name;
               return (
                 <View
                   key={index}
@@ -1535,11 +1541,18 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   visible={true}
                   style={{
                     position: 'relative',
-                    height: canvasHeight + 'px',
-                    width: canvasWidth + 'px',
+                    height: viewHeight + 'px',
+                    width: viewWidth + 'px',
                     backgroundColor: viewerBackground,
                     borderRadius: '10px',
-                    border: '1px solid gray',
+                    border: selected
+                      ? hovered
+                        ? '2px dashed red'
+                        : '2px solid red'
+                      : hovered
+                        ? '1px dashed gray'
+                        : '1px solid gray',
+                    opacity: mol?.excluded ? 0.25 : 1,
                   }}
                 >
                   <PerspectiveCamera makeDefault position={[1, 1, 1]} fov={DEFAULT_FOV} />
@@ -1553,7 +1566,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     intensity={DEFAULT_LIGHT_INTENSITY}
                     castShadow={false}
                   />
-                  {/*<Bounds fit clip observe margin={1.5}>*/}
                   <MolecularViewer
                     moleculeData={sortedMoleculesRef.current[index]}
                     style={viewerStyle}
@@ -1561,8 +1573,46 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     coloring={MolecularViewerColoring.Element}
                     chamber={false}
                     lightRef={lightRef}
+                    setLoading={setLoading}
+                    onPointerOver={() => {
+                      usePrimitiveStore.getState().set((state) => {
+                        state.hoveredMolecule = mol;
+                      });
+                      setUpdateFlag(!updateFlag);
+                    }}
+                    onPointerLeave={() => {
+                      usePrimitiveStore.getState().set((state) => {
+                        state.hoveredMolecule = null;
+                      });
+                    }}
+                    onClick={() => {
+                      usePrimitiveStore.getState().set((state) => {
+                        state.clickedMolecule = mol;
+                      });
+                      // FIXME: Not sure why this doesn't cause the view to update. So we use the above for now.
+                      setCommonStore((state) => {
+                        state.projectState.selectedMolecule = mol;
+                      });
+                      setUpdateFlag(!updateFlag);
+                      setChanged(true);
+                    }}
                   />
-                  {/*</Bounds>*/}
+                  <Html>
+                    <div
+                      style={{
+                        position: 'relative',
+                        left: 4 - viewWidth / 2 + 'px',
+                        textAlign: 'left',
+                        bottom: (labelType === LabelType.FORMULA ? 26 : 16) - viewHeight / 2 + 'px',
+                        color: 'gray',
+                        fontSize: labelType === LabelType.FORMULA ? '14px' : '10px',
+                        fontWeight: selected ? 'bold' : 'normal',
+                        width: 'calc(100% - 14px)',
+                      }}
+                    >
+                      {labelType === LabelType.FORMULA ? prop?.formula ?? mol.name : mol.name}
+                    </div>
+                  </Html>
                 </View>
               );
             })}
@@ -1573,65 +1623,28 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 style={{
                   position: 'absolute',
                   width: '100%',
-                  height: (10 + canvasHeight) * Math.ceil(sortedMoleculesRef.current.length / canvasColumns) + 'px',
+                  height: (10 + viewHeight) * Math.ceil(sortedMoleculesRef.current.length / canvasColumns) + 'px',
                 }}
               >
                 <View.Port />
               </Canvas>
             )}
+            {/*FIXME: This doesn't work properly yet */}
+            {loading && (
+              <Spin
+                indicator={
+                  <LoadingOutlined
+                    style={{
+                      position: 'absolute',
+                      fontSize: 100,
+                      right: totalWidth / 2 - 50,
+                      bottom: (totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80)) / 2 - 50,
+                    }}
+                  />
+                }
+              />
+            )}
           </div>
-
-          {/*<List*/}
-          {/*  style={{*/}
-          {/*    height: totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80),*/}
-          {/*    paddingTop: '8px',*/}
-          {/*    paddingLeft: '8px',*/}
-          {/*    overflowX: 'hidden',*/}
-          {/*    overflowY: 'auto',*/}
-          {/*  }}*/}
-          {/*  locale={{ emptyText: t('projectPanel.NoMolecule', lang) }}*/}
-          {/*  grid={{ column: canvasColumns, gutter: 0 }}*/}
-          {/*  dataSource={sortedMoleculesRef.current}*/}
-          {/*  renderItem={(data: MoleculeData) => {*/}
-          {/*    const prop = getProvidedMolecularProperties(data.name);*/}
-          {/*    return (*/}
-          {/*      <List.Item*/}
-          {/*        style={{ height: canvasHeight }}*/}
-          {/*        onMouseOver={() => {*/}
-          {/*          usePrimitiveStore.getState().set((state) => {*/}
-          {/*            state.hoveredMolecule = data;*/}
-          {/*          });*/}
-          {/*        }}*/}
-          {/*        onMouseLeave={() => {*/}
-          {/*          usePrimitiveStore.getState().set((state) => {*/}
-          {/*            state.hoveredMolecule = null;*/}
-          {/*          });*/}
-          {/*        }}*/}
-          {/*      >*/}
-          {/*        <MoleculeContainer*/}
-          {/*          width={canvasWidth}*/}
-          {/*          height={canvasHeight}*/}
-          {/*          moleculeData={data}*/}
-          {/*          selected={selectedMolecule?.name === data.name}*/}
-          {/*        />*/}
-          {/*        <div*/}
-          {/*          style={{*/}
-          {/*            position: 'relative',*/}
-          {/*            left: '10px',*/}
-          {/*            textAlign: 'left',*/}
-          {/*            bottom: labelType === LabelType.FORMULA ? '26px' : '18px',*/}
-          {/*            color: 'gray',*/}
-          {/*            fontSize: labelType === LabelType.FORMULA ? '14px' : '10px',*/}
-          {/*            fontWeight: 'normal',*/}
-          {/*            width: 'calc(100% - 14px)',*/}
-          {/*          }}*/}
-          {/*        >*/}
-          {/*          {labelType === LabelType.FORMULA ? prop?.formula ?? data.name : data.name}*/}
-          {/*        </div>*/}
-          {/*      </List.Item>*/}
-          {/*    );*/}
-          {/*  }}*/}
-          {/*/>*/}
 
           {/*parallel coordinates*/}
 
