@@ -5,7 +5,13 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { DirectionalLight, Euler, Vector3 } from 'three';
 import { useStore } from './stores/common';
-import { DEFAULT_CAMERA_POSITION, DEFAULT_CAMERA_ROTATION, DEFAULT_CAMERA_UP, DEFAULT_PAN_CENTER } from './constants';
+import {
+  DEFAULT_CAMERA_POSITION,
+  DEFAULT_CAMERA_ROTATION,
+  DEFAULT_CAMERA_UP,
+  DEFAULT_FOV,
+  DEFAULT_PAN_CENTER,
+} from './constants';
 import { useEffect, useMemo, useRef } from 'react';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import * as Selector from './stores/selector';
@@ -14,7 +20,7 @@ import { MyTrackballControls } from './js/MyTrackballControls';
 import { Object3DNode, extend } from '@react-three/fiber';
 import { UndoableCameraChange } from './undo/UndoableCameraChange';
 import { UndoableResetView } from './undo/UndoableResetView';
-import { TrackballControls } from '@react-three/drei';
+import { PerspectiveCamera, TrackballControls } from '@react-three/drei';
 
 extend({ MyTrackballControls });
 
@@ -267,70 +273,25 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
 });
 
 export const ProjectGalleryControls = React.memo(({ lightRef }: ControlsProps) => {
-  const { gl, camera, scene } = useThree();
-  const controlsRef = useRef<MyTrackballControls>(null);
-
-  const timerIdRef = useRef<NodeJS.Timeout | null>(null);
-  const animatingRef = useRef(false);
-
-  const clearTimer = () => {
-    if (timerIdRef.current) {
-      clearTimeout(timerIdRef.current);
-      timerIdRef.current = null;
-    }
-  };
-
-  const start = () => {
-    animatingRef.current = true;
-    render();
-  };
-
-  const end = () => {
-    animatingRef.current = false;
-  };
-
-  const render = () => {
-    controlsRef.current?.update();
-    gl.render(scene, camera);
-
-    if (animatingRef.current) {
-      requestAnimationFrame(render);
-    }
-  };
-
-  const onControlStart = () => {
-    if (timerIdRef.current) {
-      clearTimer();
-    } else {
-      start();
-    }
-  };
-
   const onControlChange = () => {
     if (lightRef.current) {
       // sets the point light to a location above the camera
       lightRef.current.position.set(0, 1, 0);
-      lightRef.current.position.add(camera.position);
+      lightRef.current.position.add(cameraRef.current.position);
     }
   };
 
-  const onControlEnd = () => {
-    // for damping
-    timerIdRef.current = setTimeout(() => {
-      end();
-      timerIdRef.current = null;
-    }, 1500);
-  };
-
+  const cameraRef = useRef<any>(null);
   return (
-    <TrackballControls
-      rotateSpeed={6}
-      zoomSpeed={1}
-      panSpeed={0.1}
-      dynamicDampingFactor={0.1}
-      onStart={onControlStart}
-      onChange={onControlChange}
-      onEnd={onControlEnd}
-    />
+    <>
+      <PerspectiveCamera ref={cameraRef} makeDefault position={[1, 1, 1]} fov={DEFAULT_FOV} />
+      <TrackballControls
+        rotateSpeed={6}
+        zoomSpeed={1}
+        panSpeed={0.1}
+        dynamicDampingFactor={0.1}
+        onChange={onControlChange}
+      />
+    </>
   );
 });

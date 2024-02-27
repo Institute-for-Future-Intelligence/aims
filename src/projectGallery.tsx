@@ -3,15 +3,7 @@
  */
 
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  DataColoring,
-  DEFAULT_CAMERA_POSITION,
-  DEFAULT_FOV,
-  DEFAULT_LIGHT_INTENSITY,
-  GraphType,
-  LabelType,
-  ProjectType,
-} from './constants';
+import { DataColoring, GraphType, LabelType, ProjectType } from './constants';
 import styled from 'styled-components';
 import {
   Button,
@@ -76,18 +68,16 @@ import { Filter, FilterType } from './Filter';
 import {
   GALLERY_STYLE_LABELS,
   MATERIAL_LABELS,
-  MolecularViewerColoring,
   MolecularViewerMaterial,
   MolecularViewerStyle,
 } from './view/displayOptions';
 import { commonMolecules, drugMolecules, getMolecule } from './internalDatabase';
 import { CartesianGrid, Dot, DotProps, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MolecularProperties } from './models/MolecularProperties.ts';
-import { Html, OrbitControls, PerspectiveCamera, TrackballControls, View } from '@react-three/drei';
+import { Html, View } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { ProjectGalleryControls } from './controls.tsx';
-import MolecularViewer from './view/molecularViewer.tsx';
-import { DirectionalLight, Vector3 } from 'three';
+import { DirectionalLight } from 'three';
+import ProjectGalleryView from './projectGalleryView.tsx';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -1468,7 +1458,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   };
 
   const lightRef = useRef<DirectionalLight>(null);
-  const cameraPositionVector = useMemo(() => new Vector3().fromArray(DEFAULT_CAMERA_POSITION), []);
 
   return (
     <Container
@@ -1555,46 +1544,12 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     opacity: mol?.excluded ? 0.25 : 1,
                   }}
                 >
-                  <PerspectiveCamera makeDefault position={[1, 1, 1]} fov={DEFAULT_FOV} />
-                  <ProjectGalleryControls lightRef={lightRef} />
-                  <directionalLight
-                    name={'Directional Light'}
-                    ref={lightRef}
-                    color="white"
-                    position={cameraPositionVector}
-                    intensity={DEFAULT_LIGHT_INTENSITY}
-                    castShadow={false}
-                  />
-                  <MolecularViewer
-                    moleculeData={sortedMoleculesRef.current[index]}
+                  <ProjectGalleryView
+                    moleculeData={mol}
                     style={viewerStyle}
                     material={viewerMaterial}
-                    coloring={MolecularViewerColoring.Element}
-                    chamber={false}
-                    lightRef={lightRef}
                     setLoading={setLoading}
-                    onPointerOver={() => {
-                      usePrimitiveStore.getState().set((state) => {
-                        state.hoveredMolecule = mol;
-                      });
-                      setUpdateFlag(!updateFlag);
-                    }}
-                    onPointerLeave={() => {
-                      usePrimitiveStore.getState().set((state) => {
-                        state.hoveredMolecule = null;
-                      });
-                    }}
-                    onClick={() => {
-                      usePrimitiveStore.getState().set((state) => {
-                        state.clickedMolecule = mol;
-                      });
-                      // FIXME: Not sure why this doesn't cause the view to update. So we use the above for now.
-                      setCommonStore((state) => {
-                        state.projectState.selectedMolecule = mol;
-                      });
-                      setUpdateFlag(!updateFlag);
-                      setChanged(true);
-                    }}
+                    updateFlag={() => setUpdateFlag(!updateFlag)}
                   />
                   <Html>
                     <div
