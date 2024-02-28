@@ -43,7 +43,7 @@ import { Canvas } from '@react-three/fiber';
 import MolecularContainer from './molecularContainer.tsx';
 import ProjectSettingsContent from './projectSettingsContent.tsx';
 import PropertiesSelectionContent from './propertiesSelectionContent.tsx';
-import CoordinateSystemSettingsContent from './CoordinateSystemSettingsContent.tsx';
+import CoordinateSystemSettingsContent from './coordinateSystemSettingsContent.tsx';
 import GraphSettingsContent from './graphSettingsContent.tsx';
 
 export interface ProjectGalleryProps {

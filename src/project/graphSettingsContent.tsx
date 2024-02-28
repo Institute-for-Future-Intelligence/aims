@@ -40,16 +40,16 @@ const GraphSettingsContent = React.memo(() => {
         <Checkbox
           onChange={(e) => {
             const checked = e.target.checked;
+            setCommonStore((state) => {
+              state.projectState.xLinesScatterPlot = checked;
+            });
             if (isOwner) {
               if (user.uid && projectTitle) {
                 updateHorizontalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
-                  setCommonStore((state) => {
-                    state.projectState.xLinesScatterPlot = checked;
-                  });
+                  setChanged(true);
                 });
               }
             }
-            setChanged(true);
           }}
           checked={xLinesScatterPlot}
         >
@@ -58,16 +58,16 @@ const GraphSettingsContent = React.memo(() => {
         <Checkbox
           onChange={(e) => {
             const checked = e.target.checked;
+            setCommonStore((state) => {
+              state.projectState.yLinesScatterPlot = checked;
+            });
             if (isOwner) {
               if (user.uid && projectTitle) {
                 updateVerticalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
-                  setCommonStore((state) => {
-                    state.projectState.yLinesScatterPlot = checked;
-                  });
+                  setChanged(true);
                 });
               }
             }
-            setChanged(true);
           }}
           checked={yLinesScatterPlot}
         >
@@ -83,16 +83,16 @@ const GraphSettingsContent = React.memo(() => {
           max={10}
           value={dotSizeScatterPlot}
           onChange={(v) => {
+            setCommonStore((state) => {
+              state.projectState.dotSizeScatterPlot = v;
+            });
             if (isOwner) {
               if (user.uid && projectTitle) {
                 updateSymbolSizeScatterPlot(user.uid, projectTitle, v).then(() => {
-                  setCommonStore((state) => {
-                    state.projectState.dotSizeScatterPlot = v;
-                  });
+                  setChanged(true);
                 });
               }
             }
-            setChanged(true);
           }}
         />
       </Space>
@@ -105,16 +105,16 @@ const GraphSettingsContent = React.memo(() => {
           max={6}
           value={lineWidthScatterPlot}
           onChange={(v) => {
+            setCommonStore((state) => {
+              state.projectState.lineWidthScatterPlot = v;
+            });
             if (isOwner) {
               if (user.uid && projectTitle) {
                 updateLineWidthScatterPlot(user.uid, projectTitle, v).then(() => {
-                  setCommonStore((state) => {
-                    state.projectState.lineWidthScatterPlot = v;
-                  });
+                  setChanged(true);
                 });
               }
             }
-            setChanged(true);
           }}
         />
       </Space>

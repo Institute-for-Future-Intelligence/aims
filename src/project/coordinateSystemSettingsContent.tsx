@@ -100,16 +100,16 @@ const CoordinateSystemSettingsContent = React.memo(
               style={{ width: '100%' }}
               value={xAxisNameScatterPlot}
               onChange={(value) => {
+                setCommonStore((state) => {
+                  state.projectState.xAxisNameScatterPlot = value;
+                });
                 if (isOwner) {
                   if (user.uid && projectTitle) {
                     updateXAxisNameScatterPlot(user.uid, projectTitle, value).then(() => {
-                      setCommonStore((state) => {
-                        state.projectState.xAxisNameScatterPlot = value;
-                      });
+                      setChanged(true);
                     });
                   }
                 }
-                setChanged(true);
               }}
             >
               {createAxisOptions()}
@@ -125,16 +125,16 @@ const CoordinateSystemSettingsContent = React.memo(
               style={{ width: '100%' }}
               value={yAxisNameScatterPlot}
               onChange={(value) => {
+                setCommonStore((state) => {
+                  state.projectState.yAxisNameScatterPlot = value;
+                });
                 if (isOwner) {
                   if (user.uid && projectTitle) {
                     updateYAxisNameScatterPlot(user.uid, projectTitle, value).then(() => {
-                      setCommonStore((state) => {
-                        state.projectState.yAxisNameScatterPlot = value;
-                      });
+                      setChanged(true);
                     });
                   }
                 }
-                setChanged(true);
               }}
             >
               {createAxisOptions()}
@@ -148,22 +148,20 @@ const CoordinateSystemSettingsContent = React.memo(
           <Col span={16}>
             <InputNumber
               style={{ width: '100%' }}
-              // min={0}
-              // max={1}
               step={1}
               value={xMinScatterPlot}
               onChange={(value) => {
                 if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.xMinScatterPlot = value;
+                });
                 if (isOwner) {
                   if (user.uid && projectTitle) {
                     updateXMinScatterPlot(user.uid, projectTitle, value).then(() => {
-                      setCommonStore((state) => {
-                        state.projectState.xMinScatterPlot = value;
-                      });
+                      setChanged(true);
                     });
                   }
                 }
-                setChanged(true);
               }}
             />
           </Col>
@@ -175,22 +173,20 @@ const CoordinateSystemSettingsContent = React.memo(
           <Col span={16}>
             <InputNumber
               style={{ width: '100%' }}
-              // min={0}
-              // max={1}
               step={1}
               value={xMaxScatterPlot}
               onChange={(value) => {
                 if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.xMaxScatterPlot = value;
+                });
                 if (isOwner) {
                   if (user.uid && projectTitle) {
                     updateXMaxScatterPlot(user.uid, projectTitle, value).then(() => {
-                      setCommonStore((state) => {
-                        state.projectState.xMaxScatterPlot = value;
-                      });
+                      setChanged(true);
                     });
                   }
                 }
-                setChanged(true);
               }}
             />
           </Col>
@@ -202,22 +198,20 @@ const CoordinateSystemSettingsContent = React.memo(
           <Col span={16}>
             <InputNumber
               style={{ width: '100%' }}
-              // min={0}
-              // max={1}
               step={1}
               value={yMinScatterPlot}
               onChange={(value) => {
                 if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.yMinScatterPlot = value;
+                });
                 if (isOwner) {
                   if (user.uid && projectTitle) {
                     updateYMinScatterPlot(user.uid, projectTitle, value).then(() => {
-                      setCommonStore((state) => {
-                        state.projectState.yMinScatterPlot = value;
-                      });
+                      setChanged(true);
                     });
                   }
                 }
-                setChanged(true);
               }}
             />
           </Col>
@@ -229,22 +223,20 @@ const CoordinateSystemSettingsContent = React.memo(
           <Col span={16}>
             <InputNumber
               style={{ width: '100%' }}
-              // min={0}
-              // max={1}
               step={1}
               value={yMaxScatterPlot}
               onChange={(value) => {
                 if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.yMaxScatterPlot = value;
+                });
                 if (isOwner) {
                   if (user.uid && projectTitle) {
                     updateYMaxScatterPlot(user.uid, projectTitle, value).then(() => {
-                      setCommonStore((state) => {
-                        state.projectState.yMaxScatterPlot = value;
-                      });
+                      setChanged(true);
                     });
                   }
                 }
-                setChanged(true);
               }}
             />
           </Col>
