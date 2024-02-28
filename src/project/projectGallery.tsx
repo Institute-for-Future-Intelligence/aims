@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DataColoring, GraphType, ProjectType } from '../constants.ts';
 import styled from 'styled-components';
 import { Button, Collapse, CollapseProps, Empty, Popover, Radio, Spin } from 'antd';
@@ -36,7 +36,7 @@ import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { updateDataColoring } from '../cloudProjectUtil.ts';
 import { Filter, FilterType } from '../Filter.ts';
 import { commonMolecules, drugMolecules, getMolecule } from '../internalDatabase.ts';
-import { CartesianGrid, Dot, DotProps, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, Dot, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { View } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
@@ -117,7 +117,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const loggable = useStore.getState().loggable;
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const hoveredMolecule = usePrimitiveStore(Selector.hoveredMolecule);
-  const clickedMolecule = usePrimitiveStore(Selector.clickedMolecule);
   const addMolecule = useStore(Selector.addMolecule);
   const removeMolecule = useStore(Selector.removeMolecule);
   const viewerStyle = useStore(Selector.projectViewerStyle);
@@ -623,9 +622,24 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return data;
   }, [xAxisNameScatterPlot, yAxisNameScatterPlot, projectMolecules, molecularPropertiesMap]);
 
-  const RenderDot: FC<DotProps> = ({ cx, cy }) => {
-    return <Dot cx={cx} cy={cy} fill="#8884d8" r={dotSizeScatterPlot} />;
-  };
+  const selectedData = useMemo(() => {
+    const data: { x: number; y: number }[] = [];
+    if (projectMolecules) {
+      for (const m of projectMolecules) {
+        if (m === selectedMolecule) {
+          const prop = molecularPropertiesMap.get(m.name);
+          if (prop) {
+            const x = prop[xAxisNameScatterPlot as keyof MolecularProperties];
+            const y = prop[yAxisNameScatterPlot as keyof MolecularProperties];
+            if (typeof x === 'number' && typeof y === 'number') {
+              data.push({ x, y });
+            }
+          }
+        }
+      }
+    }
+    return data;
+  }, [xAxisNameScatterPlot, yAxisNameScatterPlot, projectMolecules, molecularPropertiesMap, selectedMolecule]);
 
   return (
     <Container
@@ -680,7 +694,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             ref={containerRef}
             onClick={() => {
               setCommonStore((state) => {
-                state.projectState.selectedMolecule = null;
+                // state.projectState.selectedMolecule = null;
               });
               setChanged(true);
             }}
@@ -688,7 +702,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             {sortedMoleculesRef.current.map((mol, index) => {
               const prop = getProvidedMolecularProperties(mol.name);
               const hovered = hoveredMolecule?.name === mol.name;
-              const selected = clickedMolecule?.name === mol.name;
+              const selected = selectedMolecule?.name === mol.name;
               return (
                 <View
                   key={index}
@@ -960,9 +974,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   <Label
                     value={
                       ProjectUtil.getPropertyName(xAxisNameScatterPlot, lang) +
-                      ' (' +
-                      ProjectUtil.getUnit(xAxisNameScatterPlot) +
-                      ')'
+                      (ProjectUtil.getUnit(xAxisNameScatterPlot) === ''
+                        ? ''
+                        : ' (' + ProjectUtil.getUnit(xAxisNameScatterPlot) + ')')
                     }
                     dy={10}
                     fontSize={11}
@@ -981,9 +995,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   <Label
                     value={
                       ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang) +
-                      ' (' +
-                      ProjectUtil.getUnit(yAxisNameScatterPlot) +
-                      ')'
+                      (ProjectUtil.getUnit(yAxisNameScatterPlot) === ''
+                        ? ''
+                        : ' (' + ProjectUtil.getUnit(yAxisNameScatterPlot) + ')')
                     }
                     dx={-10}
                     fontSize={11}
@@ -1026,8 +1040,23 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 fill="#8884d8"
                 line={true}
                 strokeWidth={lineWidthScatterPlot}
-                shape={<RenderDot />}
+                shape={<Dot fill="#8884d8" r={dotSizeScatterPlot} />}
               />
+              {selectedMolecule && (
+                <Scatter
+                  name="Selected"
+                  data={selectedData}
+                  shape={
+                    <Dot
+                      fillOpacity={0}
+                      r={dotSizeScatterPlot * 1.5}
+                      stroke={'black'}
+                      strokeWidth={'1px'}
+                      strokeDasharray={'2 1'}
+                    />
+                  }
+                />
+              )}
             </ScatterChart>
           )}
         </div>

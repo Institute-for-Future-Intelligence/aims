@@ -64,29 +64,36 @@ const MolecularContainer = React.memo(
           chamber={false}
           lightRef={lightRef}
           setLoading={setLoading}
-          onPointerOver={() => {
-            usePrimitiveStore.getState().set((state) => {
-              state.hoveredMolecule = moleculeData;
-            });
-            updateFlag();
-          }}
-          onPointerLeave={() => {
-            usePrimitiveStore.getState().set((state) => {
-              state.hoveredMolecule = null;
-            });
-          }}
-          onClick={() => {
-            usePrimitiveStore.getState().set((state) => {
-              state.clickedMolecule = moleculeData;
-            });
-            // FIXME: Not sure why this doesn't cause the view to update. So we use the above for now.
-            useStore.getState().set((state) => {
-              state.projectState.selectedMolecule = moleculeData;
-            });
-            updateFlag();
-            setChanged(true);
-          }}
         />
+        <Html>
+          <div
+            style={{
+              position: 'relative',
+              left: -viewWidth / 2,
+              top: -viewHeight / 2,
+              width: viewWidth,
+              height: viewHeight,
+            }}
+            onPointerOver={() => {
+              usePrimitiveStore.getState().set((state) => {
+                state.hoveredMolecule = moleculeData;
+              });
+              updateFlag();
+            }}
+            onPointerLeave={() => {
+              usePrimitiveStore.getState().set((state) => {
+                state.hoveredMolecule = null;
+              });
+            }}
+            onMouseDown={() => {
+              useStore.getState().set((state) => {
+                state.projectState.selectedMolecule = moleculeData;
+              });
+              updateFlag();
+              setChanged(true);
+            }}
+          ></div>
+        </Html>
         <Html>
           <div
             style={{

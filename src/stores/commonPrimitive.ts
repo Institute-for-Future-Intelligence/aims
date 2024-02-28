@@ -15,7 +15,6 @@ export interface PrimitiveStoreState {
   setSkipChange: (b: boolean) => void;
 
   hoveredMolecule: MoleculeData | null;
-  clickedMolecule: MoleculeData | null;
 
   boundingSphereRadius: number;
 
@@ -100,7 +99,6 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     },
 
     hoveredMolecule: null,
-    clickedMolecule: null,
 
     boundingSphereRadius: 10,
 
