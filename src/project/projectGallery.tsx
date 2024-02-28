@@ -136,8 +136,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const projectMolecules = useStore(Selector.molecules);
   const selectedProperty = useStore(Selector.selectedProperty);
   const hiddenProperties = useStore(Selector.hiddenProperties);
-  const xAxisNameScatterPlot = useStore(Selector.xAxisNameScatterPlot);
-  const yAxisNameScatterPlot = useStore(Selector.yAxisNameScatterPlot);
+  const xAxisNameScatterPlot = useStore(Selector.xAxisNameScatterPlot) ?? 'atomCount';
+  const yAxisNameScatterPlot = useStore(Selector.yAxisNameScatterPlot) ?? 'bondCount';
   const xMinScatterPlot = useStore(Selector.xMinScatterPlot) ?? 0;
   const xMaxScatterPlot = useStore(Selector.xMaxScatterPlot) ?? 100;
   const yMinScatterPlot = useStore(Selector.yMinScatterPlot) ?? 0;
@@ -202,20 +202,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   }, [projectMolecules, projectSortDescending, selectedProperty, molecularPropertiesMap]);
 
   const dataColoringSelectionRef = useRef<DataColoring>(projectDataColoring ?? DataColoring.ALL);
-  const xAxisRef = useRef<string>(xAxisNameScatterPlot ?? 'atomCount');
-  const yAxisRef = useRef<string>(yAxisNameScatterPlot ?? 'bondCount');
-
-  useEffect(() => {
-    if (xAxisNameScatterPlot) {
-      xAxisRef.current = xAxisNameScatterPlot;
-    }
-  }, [xAxisNameScatterPlot]);
-
-  useEffect(() => {
-    if (yAxisNameScatterPlot) {
-      yAxisRef.current = yAxisNameScatterPlot;
-    }
-  }, [yAxisNameScatterPlot]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -629,8 +615,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       for (const m of projectMolecules) {
         const prop = molecularPropertiesMap.get(m.name);
         if (prop) {
-          const x = prop[xAxisRef.current as keyof MolecularProperties];
-          const y = prop[yAxisRef.current as keyof MolecularProperties];
+          const x = prop[xAxisNameScatterPlot as keyof MolecularProperties];
+          const y = prop[yAxisNameScatterPlot as keyof MolecularProperties];
           if (typeof x === 'number' && typeof y === 'number') {
             data.push({ x, y });
           }
@@ -638,7 +624,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       }
     }
     return data;
-  }, [xAxisRef.current, yAxisRef.current, projectMolecules, molecularPropertiesMap]);
+  }, [xAxisNameScatterPlot, yAxisNameScatterPlot, projectMolecules, molecularPropertiesMap]);
 
   const RenderDot: FC<DotProps> = ({ cx, cy }) => {
     return <Dot cx={cx} cy={cy} fill="#8884d8" r={dotSizeScatterPlot} />;
@@ -898,14 +884,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   }
                   content={
                     <CoordinateSystemSettingsContent
-                      xAxis={xAxisRef.current}
-                      yAxis={yAxisRef.current}
-                      setXAxis={(value) => {
-                        xAxisRef.current = value;
-                      }}
-                      setYAxis={(value) => {
-                        yAxisRef.current = value;
-                      }}
                       xMinScatterPlot={xMinScatterPlot}
                       xMaxScatterPlot={xMaxScatterPlot}
                       yMinScatterPlot={yMinScatterPlot}
@@ -984,17 +962,16 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 label={
                   <Label
                     value={
-                      ProjectUtil.getPropertyName(xAxisRef.current, lang) +
+                      ProjectUtil.getPropertyName(xAxisNameScatterPlot, lang) +
                       ' (' +
-                      ProjectUtil.getUnit(xAxisRef.current) +
+                      ProjectUtil.getUnit(xAxisNameScatterPlot) +
                       ')'
                     }
                     dy={10}
                     fontSize={11}
                   />
                 }
-                name={ProjectUtil.getPropertyName(xAxisRef.current, lang)}
-                // unit={ProjectUtil.getUnit(xAxisRef.current)}
+                name={ProjectUtil.getPropertyName(xAxisNameScatterPlot, lang)}
                 strokeWidth={1}
                 stroke={'gray'}
               />
@@ -1006,9 +983,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 label={
                   <Label
                     value={
-                      ProjectUtil.getPropertyName(yAxisRef.current, lang) +
+                      ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang) +
                       ' (' +
-                      ProjectUtil.getUnit(yAxisRef.current) +
+                      ProjectUtil.getUnit(yAxisNameScatterPlot) +
                       ')'
                     }
                     dx={-10}
@@ -1016,8 +993,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     angle={-90}
                   />
                 }
-                name={ProjectUtil.getPropertyName(yAxisRef.current, lang)}
-                // unit={ProjectUtil.getUnit(yAxisRef.current)}
+                name={ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang)}
                 strokeWidth={1}
                 stroke={'gray'}
               />

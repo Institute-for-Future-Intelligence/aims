@@ -18,10 +18,6 @@ import {
 } from '../cloudProjectUtil.ts';
 
 interface CoordinateSystemSettingsContentProps {
-  xAxis: string;
-  yAxis: string;
-  setXAxis: (value: string) => void;
-  setYAxis: (value: string) => void;
   xMinScatterPlot: number;
   xMaxScatterPlot: number;
   yMinScatterPlot: number;
@@ -29,22 +25,15 @@ interface CoordinateSystemSettingsContentProps {
 }
 
 const CoordinateSystemSettingsContent = React.memo(
-  ({
-    xAxis,
-    yAxis,
-    setXAxis,
-    setYAxis,
-    xMinScatterPlot,
-    xMaxScatterPlot,
-    yMinScatterPlot,
-    yMaxScatterPlot,
-  }: CoordinateSystemSettingsContentProps) => {
+  ({ xMinScatterPlot, xMaxScatterPlot, yMinScatterPlot, yMaxScatterPlot }: CoordinateSystemSettingsContentProps) => {
     const setCommonStore = useStore(Selector.set);
     const language = useStore(Selector.language);
     const user = useStore(Selector.user);
     const setChanged = usePrimitiveStore(Selector.setChanged);
     const projectOwner = useStore(Selector.projectOwner);
     const projectTitle = useStore(Selector.projectTitle);
+    const xAxisNameScatterPlot = useStore(Selector.xAxisNameScatterPlot);
+    const yAxisNameScatterPlot = useStore(Selector.yAxisNameScatterPlot);
 
     const { Option } = Select;
 
@@ -109,9 +98,8 @@ const CoordinateSystemSettingsContent = React.memo(
           <Col span={16}>
             <Select
               style={{ width: '100%' }}
-              value={xAxis}
+              value={xAxisNameScatterPlot}
               onChange={(value) => {
-                setXAxis(value);
                 if (isOwner) {
                   if (user.uid && projectTitle) {
                     updateXAxisNameScatterPlot(user.uid, projectTitle, value).then(() => {
@@ -135,9 +123,8 @@ const CoordinateSystemSettingsContent = React.memo(
           <Col span={16}>
             <Select
               style={{ width: '100%' }}
-              value={yAxis}
+              value={yAxisNameScatterPlot}
               onChange={(value) => {
-                setYAxis(value);
                 if (isOwner) {
                   if (user.uid && projectTitle) {
                     updateYAxisNameScatterPlot(user.uid, projectTitle, value).then(() => {
