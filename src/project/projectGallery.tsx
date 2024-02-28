@@ -204,34 +204,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const dataColoringSelectionRef = useRef<DataColoring>(projectDataColoring ?? DataColoring.ALL);
   const xAxisRef = useRef<string>(xAxisNameScatterPlot ?? 'atomCount');
   const yAxisRef = useRef<string>(yAxisNameScatterPlot ?? 'bondCount');
-  const lineWidthRef = useRef<number>(lineWidthScatterPlot ?? 1);
-  const dotSizeRef = useRef<number>(dotSizeScatterPlot ?? 4);
-  const xLinesRef = useRef<boolean>(xLinesScatterPlot);
-  const yLinesRef = useRef<boolean>(yLinesScatterPlot);
-
-  useEffect(() => {
-    if (xLinesScatterPlot) {
-      xLinesRef.current = xLinesScatterPlot;
-    }
-  }, [xLinesScatterPlot]);
-
-  useEffect(() => {
-    if (yLinesScatterPlot) {
-      yLinesRef.current = yLinesScatterPlot;
-    }
-  }, [yLinesScatterPlot]);
-
-  useEffect(() => {
-    if (dotSizeScatterPlot) {
-      dotSizeRef.current = dotSizeScatterPlot;
-    }
-  }, [dotSizeScatterPlot]);
-
-  useEffect(() => {
-    if (lineWidthScatterPlot) {
-      lineWidthRef.current = lineWidthScatterPlot;
-    }
-  }, [lineWidthScatterPlot]);
 
   useEffect(() => {
     if (xAxisNameScatterPlot) {
@@ -669,7 +641,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   }, [xAxisRef.current, yAxisRef.current, projectMolecules, molecularPropertiesMap]);
 
   const RenderDot: FC<DotProps> = ({ cx, cy }) => {
-    return <Dot cx={cx} cy={cy} fill="#8884d8" r={dotSizeRef.current} />;
+    return <Dot cx={cx} cy={cy} fill="#8884d8" r={dotSizeScatterPlot} />;
   };
 
   return (
@@ -951,18 +923,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       <TableOutlined /> {t('projectPanel.ScatterPlotSettings', lang)}
                     </div>
                   }
-                  content={
-                    <GraphSettingsContent
-                      xLines={xLinesRef.current}
-                      yLines={yLinesRef.current}
-                      dotSize={dotSizeRef.current}
-                      lineWidth={lineWidthRef.current}
-                      setXLines={(value) => (xLinesRef.current = value)}
-                      setYLines={(value) => (yLinesRef.current = value)}
-                      setDotSize={(value) => (dotSizeRef.current = value)}
-                      setLineWidth={(value) => (lineWidthRef.current = value)}
-                    />
-                  }
+                  content={<GraphSettingsContent />}
                 >
                   <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
                     <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
@@ -1012,8 +973,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               <CartesianGrid
                 strokeWidth="1"
                 stroke={'gray'}
-                horizontal={xLinesRef.current}
-                vertical={yLinesRef.current}
+                horizontal={xLinesScatterPlot}
+                vertical={yLinesScatterPlot}
               />
               <XAxis
                 dataKey="x"
@@ -1091,7 +1052,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 data={scatterData}
                 fill="#8884d8"
                 line={true}
-                strokeWidth={lineWidthRef.current}
+                strokeWidth={lineWidthScatterPlot}
                 shape={<RenderDot />}
               />
             </ScatterChart>
