@@ -130,7 +130,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const projectTitle = useStore(Selector.projectTitle);
   const projectDescription = useStore(Selector.projectDescription);
   const projectSortDescending = useStore(Selector.projectSortDesending);
-  const projectDataColoring = useStore(Selector.projectDataColoring);
+  const projectDataColoring = useStore(Selector.projectDataColoring) ?? DataColoring.ALL;
   const projectFilters = useStore(Selector.projectFilters);
   const projectRanges = useStore(Selector.projectRanges);
   const projectMolecules = useStore(Selector.molecules);
@@ -200,8 +200,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       setUpdateFlag(!updateFlag);
     }
   }, [projectMolecules, projectSortDescending, selectedProperty, molecularPropertiesMap]);
-
-  const dataColoringSelectionRef = useRef<DataColoring>(projectDataColoring ?? DataColoring.ALL);
 
   useEffect(() => {
     const handleResize = () => {
@@ -395,9 +393,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     },
   ];
 
-  const localSelectDataColoring = () => {
+  const localSelectDataColoring = (value: DataColoring) => {
     setCommonStore((state) => {
-      state.projectState.dataColoring = dataColoringSelectionRef.current;
+      state.projectState.dataColoring = value;
     });
     usePrimitiveStore.getState().set((state) => {
       state.updateProjectsFlag = true;
@@ -406,15 +404,14 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   };
 
   const selectDataColoring = (value: DataColoring) => {
-    dataColoringSelectionRef.current = value;
     if (isOwner) {
       if (user.uid && projectTitle) {
-        updateDataColoring(user.uid, projectTitle, dataColoringSelectionRef.current).then(() => {
-          localSelectDataColoring();
+        updateDataColoring(user.uid, projectTitle, value).then(() => {
+          localSelectDataColoring(value);
         });
       }
     } else {
-      localSelectDataColoring();
+      localSelectDataColoring(value);
     }
     setChanged(true);
   };
