@@ -692,9 +692,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               gridTemplateColumns: viewWidth + 'px ' + viewWidth + 'px ' + viewWidth + 'px',
             }}
             ref={containerRef}
-            onClick={() => {
+            onMouseDown={() => {
               setCommonStore((state) => {
-                // state.projectState.selectedMolecule = null;
+                state.projectState.selectedMolecule = null;
               });
               setChanged(true);
             }}

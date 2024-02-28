@@ -85,7 +85,8 @@ const MolecularContainer = React.memo(
                 state.hoveredMolecule = null;
               });
             }}
-            onMouseDown={() => {
+            onMouseDown={(e) => {
+              e.stopPropagation();
               useStore.getState().set((state) => {
                 state.projectState.selectedMolecule = moleculeData;
               });
