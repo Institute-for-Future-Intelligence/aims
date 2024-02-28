@@ -24,7 +24,8 @@ interface MolecularContainerProps {
   material: MolecularViewerMaterial;
   selector?: string;
   setLoading?: (loading: boolean) => void;
-  updateFlag: () => void;
+  scatterDataIndex: number;
+  setScatterDataHoveredIndex: (index: number) => void;
 }
 
 const MolecularContainer = React.memo(
@@ -37,7 +38,8 @@ const MolecularContainer = React.memo(
     style,
     material,
     setLoading,
-    updateFlag,
+    scatterDataIndex,
+    setScatterDataHoveredIndex,
   }: MolecularContainerProps) => {
     const setChanged = usePrimitiveStore(Selector.setChanged);
     const cameraPositionVector = useMemo(() => new Vector3().fromArray(DEFAULT_CAMERA_POSITION), []);
@@ -78,7 +80,7 @@ const MolecularContainer = React.memo(
               usePrimitiveStore.getState().set((state) => {
                 state.hoveredMolecule = moleculeData;
               });
-              updateFlag();
+              setScatterDataHoveredIndex(scatterDataIndex);
             }}
             onPointerLeave={() => {
               usePrimitiveStore.getState().set((state) => {
@@ -90,7 +92,6 @@ const MolecularContainer = React.memo(
               useStore.getState().set((state) => {
                 state.projectState.selectedMolecule = moleculeData;
               });
-              updateFlag();
               setChanged(true);
             }}
           ></div>

@@ -36,7 +36,7 @@ import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { updateDataColoring } from '../cloudProjectUtil.ts';
 import { Filter, FilterType } from '../Filter.ts';
 import { commonMolecules, drugMolecules, getMolecule } from '../internalDatabase.ts';
-import { CartesianGrid, Dot, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, Cell, Dot, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { View } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
@@ -157,6 +157,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     projectType === ProjectType.DRUG_DISCOVERY ? drugMolecules[0].name : commonMolecules[0].name,
   );
   const [moleculeNameDialogVisible, setMoleculeNameDialogVisible] = useState(false);
+  const [scatterDataHoveredIndex, setScatterDataHoveredIndex] = useState<number>(-1);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -622,25 +623,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return data;
   }, [xAxisNameScatterPlot, yAxisNameScatterPlot, projectMolecules, molecularPropertiesMap]);
 
-  const selectedData = useMemo(() => {
-    const data: { x: number; y: number }[] = [];
-    if (projectMolecules) {
-      for (const m of projectMolecules) {
-        if (m === selectedMolecule) {
-          const prop = molecularPropertiesMap.get(m.name);
-          if (prop) {
-            const x = prop[xAxisNameScatterPlot as keyof MolecularProperties];
-            const y = prop[yAxisNameScatterPlot as keyof MolecularProperties];
-            if (typeof x === 'number' && typeof y === 'number') {
-              data.push({ x, y });
-            }
-          }
-        }
-      }
-    }
-    return data;
-  }, [xAxisNameScatterPlot, yAxisNameScatterPlot, projectMolecules, molecularPropertiesMap, selectedMolecule]);
-
   return (
     <Container
       onContextMenu={(e) => {
@@ -682,7 +664,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               height: totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80),
               paddingTop: '8px',
               paddingLeft: '8px',
-              overflowX: 'auto',
+              overflowX: 'hidden',
               overflowY: 'auto',
               position: 'relative',
               background: 'white',
@@ -701,7 +683,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           >
             {sortedMoleculesRef.current.map((mol, index) => {
               const prop = getProvidedMolecularProperties(mol.name);
-              const hovered = hoveredMolecule?.name === mol.name;
+              const hovered = hoveredMolecule?.name === mol.name || scatterDataHoveredIndex === index;
               const selected = selectedMolecule?.name === mol.name;
               return (
                 <View
@@ -735,7 +717,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     style={viewerStyle}
                     material={viewerMaterial}
                     setLoading={setLoading}
-                    updateFlag={() => setUpdateFlag(!updateFlag)}
+                    scatterDataIndex={index}
+                    setScatterDataHoveredIndex={setScatterDataHoveredIndex}
                   />
                 </View>
               );
@@ -746,7 +729,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 eventSource={containerRef.current}
                 style={{
                   position: 'absolute',
-                  width: '100%',
+                  width: viewWidth * 3,
                   height: (10 + viewHeight) * Math.ceil(sortedMoleculesRef.current.length / canvasColumns) + 'px',
                 }}
               >
@@ -1037,26 +1020,55 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               <Scatter
                 name="All"
                 data={scatterData}
-                fill="#8884d8"
+                fill={'#8884d8'}
                 line={true}
                 strokeWidth={lineWidthScatterPlot}
-                shape={<Dot fill="#8884d8" r={dotSizeScatterPlot} />}
-              />
-              {selectedMolecule && (
-                <Scatter
-                  name="Selected"
-                  data={selectedData}
-                  shape={
-                    <Dot
-                      fillOpacity={0}
-                      r={dotSizeScatterPlot * 1.5}
-                      stroke={'black'}
-                      strokeWidth={'1px'}
-                      strokeDasharray={'2 1'}
-                    />
+                shape={<Dot r={dotSizeScatterPlot} />}
+                onPointerOver={(e) => {
+                  setScatterDataHoveredIndex(scatterData.indexOf(e.payload));
+                }}
+                onClick={(e) => {
+                  const index = scatterData.indexOf(e.payload);
+                  if (index >= 0) {
+                    setCommonStore((state) => {
+                      state.projectState.selectedMolecule = sortedMoleculesRef.current[index];
+                    });
                   }
-                />
-              )}
+                }}
+              >
+                {scatterData.map((entry, index) => {
+                  const selected = selectedMolecule
+                    ? index === sortedMoleculesRef.current.indexOf(selectedMolecule)
+                    : false;
+                  const hovered = index === scatterDataHoveredIndex;
+                  if (selected && hovered) {
+                    return (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill="#8884d8"
+                        stroke={'black'}
+                        strokeWidth={2}
+                        strokeDasharray={'2 2'}
+                      />
+                    );
+                  }
+                  if (hovered && !selected) {
+                    return (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill="#8884d8"
+                        stroke={'black'}
+                        strokeWidth={1}
+                        strokeDasharray={'2 2'}
+                      />
+                    );
+                  }
+                  if (selected) {
+                    return <Cell key={`cell-${index}`} fill="#8884d8" stroke={'black'} strokeWidth={2} />;
+                  }
+                  return <Cell key={`cell-${index}`} fill="#8884d8" />;
+                })}
+              </Scatter>
             </ScatterChart>
           )}
         </div>
