@@ -2,7 +2,7 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
@@ -27,35 +27,6 @@ const GraphSettingsContent = React.memo(() => {
   const dotSizeScatterPlot = useStore(Selector.dotSizeScatterPlot);
   const lineWidthScatterPlot = useStore(Selector.lineWidthScatterPlot);
 
-  const xLinesRef = useRef<boolean>(xLinesScatterPlot);
-  const yLinesRef = useRef<boolean>(yLinesScatterPlot);
-  const lineWidthRef = useRef<number>(lineWidthScatterPlot ?? 1);
-  const dotSizeRef = useRef<number>(dotSizeScatterPlot ?? 4);
-
-  useEffect(() => {
-    if (xLinesScatterPlot) {
-      xLinesRef.current = xLinesScatterPlot;
-    }
-  }, [xLinesScatterPlot]);
-
-  useEffect(() => {
-    if (yLinesScatterPlot) {
-      yLinesRef.current = yLinesScatterPlot;
-    }
-  }, [yLinesScatterPlot]);
-
-  useEffect(() => {
-    if (dotSizeScatterPlot) {
-      dotSizeRef.current = dotSizeScatterPlot;
-    }
-  }, [dotSizeScatterPlot]);
-
-  useEffect(() => {
-    if (lineWidthScatterPlot) {
-      lineWidthRef.current = lineWidthScatterPlot;
-    }
-  }, [lineWidthScatterPlot]);
-
   const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
@@ -69,7 +40,6 @@ const GraphSettingsContent = React.memo(() => {
         <Checkbox
           onChange={(e) => {
             const checked = e.target.checked;
-            xLinesRef.current = checked;
             if (isOwner) {
               if (user.uid && projectTitle) {
                 updateHorizontalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
@@ -81,14 +51,13 @@ const GraphSettingsContent = React.memo(() => {
             }
             setChanged(true);
           }}
-          checked={xLinesRef.current}
+          checked={xLinesScatterPlot}
         >
           <span style={{ fontSize: '12px' }}>{t('projectPanel.HorizontalLines', lang)}</span>
         </Checkbox>
         <Checkbox
           onChange={(e) => {
             const checked = e.target.checked;
-            yLinesRef.current = checked;
             if (isOwner) {
               if (user.uid && projectTitle) {
                 updateVerticalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
@@ -100,7 +69,7 @@ const GraphSettingsContent = React.memo(() => {
             }
             setChanged(true);
           }}
-          checked={yLinesRef.current}
+          checked={yLinesScatterPlot}
         >
           <span style={{ fontSize: '12px' }}>{t('projectPanel.VerticalLines', lang)}</span>
         </Checkbox>
@@ -112,9 +81,8 @@ const GraphSettingsContent = React.memo(() => {
           style={{ width: '120px' }}
           min={0}
           max={10}
-          value={dotSizeRef.current}
+          value={dotSizeScatterPlot}
           onChange={(v) => {
-            dotSizeRef.current = v;
             if (isOwner) {
               if (user.uid && projectTitle) {
                 updateSymbolSizeScatterPlot(user.uid, projectTitle, v).then(() => {
@@ -135,9 +103,8 @@ const GraphSettingsContent = React.memo(() => {
           style={{ width: '120px' }}
           min={0}
           max={6}
-          value={lineWidthRef.current}
+          value={lineWidthScatterPlot}
           onChange={(v) => {
-            lineWidthRef.current = v;
             if (isOwner) {
               if (user.uid && projectTitle) {
                 updateLineWidthScatterPlot(user.uid, projectTitle, v).then(() => {
