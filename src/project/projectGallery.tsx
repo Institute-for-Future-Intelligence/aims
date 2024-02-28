@@ -5,7 +5,7 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { DataColoring, GraphType, ProjectType } from '../constants.ts';
 import styled from 'styled-components';
-import { Button, Checkbox, Collapse, CollapseProps, Empty, Popover, Radio, Slider, Space, Spin } from 'antd';
+import { Button, Collapse, CollapseProps, Empty, Popover, Radio, Spin } from 'antd';
 import {
   BgColorsOutlined,
   CameraOutlined,
@@ -33,13 +33,7 @@ import { saveSvg, showError, showInfo } from '../helpers.ts';
 import ParallelCoordinates from '../components/parallelCoordinates.tsx';
 import { ProjectUtil } from './ProjectUtil.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
-import {
-  updateDataColoring,
-  updateHorizontalLinesScatterPlot,
-  updateLineWidthScatterPlot,
-  updateSymbolSizeScatterPlot,
-  updateVerticalLinesScatterPlot,
-} from '../cloudProjectUtil.ts';
+import { updateDataColoring } from '../cloudProjectUtil.ts';
 import { Filter, FilterType } from '../Filter.ts';
 import { commonMolecules, drugMolecules, getMolecule } from '../internalDatabase.ts';
 import { CartesianGrid, Dot, DotProps, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
@@ -50,6 +44,7 @@ import MolecularContainer from './molecularContainer.tsx';
 import ProjectSettingsContent from './projectSettingsContent.tsx';
 import PropertiesSelectionContent from './propertiesSelectionContent.tsx';
 import CoordinateSystemSettingsContent from './CoordinateSystemSettingsContent.tsx';
+import GraphSettingsContent from './graphSettingsContent.tsx';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -656,100 +651,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return array;
   }, [updateHiddenFlag, projectFilters, hiddenProperties]);
 
-  const createGraphSettingsContent = () => {
-    return (
-      <div>
-        <Space style={{ fontSize: '12px', paddingBottom: '8px' }}>
-          <Space>{t('projectPanel.GridLines', lang) + ':'}</Space>
-          <Checkbox
-            onChange={(e) => {
-              const checked = e.target.checked;
-              xLinesRef.current = checked;
-              if (isOwner) {
-                if (user.uid && projectTitle) {
-                  updateHorizontalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
-                    setCommonStore((state) => {
-                      state.projectState.xLinesScatterPlot = checked;
-                    });
-                  });
-                }
-              }
-              setChanged(true);
-            }}
-            checked={xLinesRef.current}
-          >
-            <span style={{ fontSize: '12px' }}>{t('projectPanel.HorizontalLines', lang)}</span>
-          </Checkbox>
-          <Checkbox
-            onChange={(e) => {
-              const checked = e.target.checked;
-              yLinesRef.current = checked;
-              if (isOwner) {
-                if (user.uid && projectTitle) {
-                  updateVerticalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
-                    setCommonStore((state) => {
-                      state.projectState.yLinesScatterPlot = checked;
-                    });
-                  });
-                }
-              }
-              setChanged(true);
-            }}
-            checked={yLinesRef.current}
-          >
-            <span style={{ fontSize: '12px' }}>{t('projectPanel.VerticalLines', lang)}</span>
-          </Checkbox>
-        </Space>
-        <br />
-        <Space style={{ fontSize: '12px' }}>
-          <Space style={{ width: '80px' }}>{t('projectPanel.SymbolSize', lang) + ':'}</Space>
-          <Slider
-            style={{ width: '120px' }}
-            min={0}
-            max={10}
-            value={dotSizeRef.current}
-            onChange={(v) => {
-              dotSizeRef.current = v;
-              if (isOwner) {
-                if (user.uid && projectTitle) {
-                  updateSymbolSizeScatterPlot(user.uid, projectTitle, v).then(() => {
-                    setCommonStore((state) => {
-                      state.projectState.dotSizeScatterPlot = v;
-                    });
-                  });
-                }
-              }
-              setChanged(true);
-            }}
-          />
-        </Space>
-        <br />
-        <Space style={{ fontSize: '12px' }}>
-          <Space style={{ width: '80px' }}>{t('projectPanel.LineWidth', lang) + ':'}</Space>
-          <Slider
-            style={{ width: '120px' }}
-            min={0}
-            max={6}
-            value={lineWidthRef.current}
-            onChange={(v) => {
-              lineWidthRef.current = v;
-              if (isOwner) {
-                if (user.uid && projectTitle) {
-                  updateLineWidthScatterPlot(user.uid, projectTitle, v).then(() => {
-                    setCommonStore((state) => {
-                      state.projectState.lineWidthScatterPlot = v;
-                    });
-                  });
-                }
-              }
-              setChanged(true);
-            }}
-          />
-        </Space>
-      </div>
-    );
-  };
-
   const scatterData = useMemo(() => {
     const data: { x: number; y: number }[] = [];
     if (projectMolecules) {
@@ -1050,7 +951,18 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       <TableOutlined /> {t('projectPanel.ScatterPlotSettings', lang)}
                     </div>
                   }
-                  content={createGraphSettingsContent()}
+                  content={
+                    <GraphSettingsContent
+                      xLines={xLinesRef.current}
+                      yLines={yLinesRef.current}
+                      dotSize={dotSizeRef.current}
+                      lineWidth={lineWidthRef.current}
+                      setXLines={(value) => (xLinesRef.current = value)}
+                      setYLines={(value) => (yLinesRef.current = value)}
+                      setDotSize={(value) => (dotSizeRef.current = value)}
+                      setLineWidth={(value) => (lineWidthRef.current = value)}
+                    />
+                  }
                 >
                   <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
                     <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
