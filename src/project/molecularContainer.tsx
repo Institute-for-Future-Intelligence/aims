@@ -2,16 +2,16 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import { usePrimitiveStore } from './stores/commonPrimitive';
-import { MoleculeData } from './types';
-import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
-import MolecularViewer from './view/molecularViewer';
-import * as Selector from './stores/selector';
-import { useStore } from './stores/common';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
+import { MoleculeData } from '../types.ts';
+import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from '../view/displayOptions.ts';
+import MolecularViewer from '../view/molecularViewer.tsx';
+import * as Selector from '../stores/selector';
+import { useStore } from '../stores/common.ts';
 import React, { useMemo, useRef } from 'react';
 import { DirectionalLight, Vector3 } from 'three';
-import { DEFAULT_CAMERA_POSITION, DEFAULT_LIGHT_INTENSITY, LabelType } from './constants';
-import { ProjectGalleryControls } from './controls';
+import { DEFAULT_CAMERA_POSITION, DEFAULT_LIGHT_INTENSITY, LabelType } from '../constants.ts';
+import { ProjectGalleryControls } from '../controls.tsx';
 import { Html } from '@react-three/drei';
 
 interface MolecularContainerProps {

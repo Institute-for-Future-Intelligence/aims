@@ -2,10 +2,10 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import i18n from './i18n/i18n';
-import { MoleculeData, ProjectState, Range } from './types';
-import { MolecularProperties } from './models/MolecularProperties';
-import { Filter, FilterType } from './Filter';
+import i18n from '../i18n/i18n.ts';
+import { MoleculeData, ProjectState, Range } from '../types.ts';
+import { MolecularProperties } from '../models/MolecularProperties.ts';
+import { Filter, FilterType } from '../Filter.ts';
 import {
   DataColoring,
   DEFAULT_CAMERA_POSITION,
@@ -16,9 +16,9 @@ import {
   LabelType,
   ProjectType,
   SpaceshipDisplayMode,
-} from './constants';
-import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
-import { Util } from './Util.ts';
+} from '../constants.ts';
+import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from '../view/displayOptions.ts';
+import { Util } from '../Util.ts';
 
 export class ProjectUtil {
   static createDefaultProjectState() {

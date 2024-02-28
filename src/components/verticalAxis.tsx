@@ -11,7 +11,7 @@ import { ConfigProvider, InputNumber, Popover, Slider } from 'antd';
 import { Range } from '../types';
 import { useTranslation } from 'react-i18next';
 import { Filter, FilterType } from '../Filter';
-import { ProjectUtil } from '../ProjectUtil';
+import { ProjectUtil } from '../project/ProjectUtil.ts';
 
 type VerticalAxisProps = {
   variable: string;

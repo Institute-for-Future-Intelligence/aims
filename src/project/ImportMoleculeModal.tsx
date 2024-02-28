@@ -4,14 +4,14 @@
 
 import React, { useMemo, useRef, useState } from 'react';
 import { Button, Modal, Select, Space } from 'antd';
-import i18n from './i18n/i18n';
+import i18n from '../i18n/i18n.ts';
 import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react-draggable';
-import { useStore } from './stores/common';
-import * as Selector from './stores/selector';
+import { useStore } from '../stores/common.ts';
+import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { ImportOutlined } from '@ant-design/icons';
-import { MoleculeType, ProjectType } from './constants.ts';
-import { commonMolecules, drugMolecules } from './internalDatabase.ts';
+import { MoleculeType, ProjectType } from '../constants.ts';
+import { commonMolecules, drugMolecules } from '../internalDatabase.ts';
 
 const { Option } = Select;
 

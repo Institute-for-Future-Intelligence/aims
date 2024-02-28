@@ -33,7 +33,7 @@ import {
   SpaceshipDisplayMode,
 } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
-import { ProjectUtil } from './ProjectUtil';
+import { ProjectUtil } from './project/ProjectUtil.ts';
 import { useTranslation } from 'react-i18next';
 
 export interface CloudManagerProps {

@@ -21,7 +21,7 @@ import { BondTS } from '../models/BondTS';
 import { useRefStore } from './commonRef';
 import { MolecularProperties } from '../models/MolecularProperties';
 import { User } from '../User';
-import { ProjectUtil } from '../ProjectUtil';
+import { ProjectUtil } from '../project/ProjectUtil.ts';
 import { MoleculeTS } from '../models/MoleculeTS';
 import Complex from '../lib/chem/Complex';
 import AtomJS from '../lib/chem/Atom';

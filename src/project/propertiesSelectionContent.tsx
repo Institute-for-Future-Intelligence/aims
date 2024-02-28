@@ -4,11 +4,11 @@
 
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Checkbox } from 'antd';
-import { useStore } from './stores/common.ts';
-import * as Selector from './stores/selector';
-import { usePrimitiveStore } from './stores/commonPrimitive.ts';
+import { useStore } from '../stores/common.ts';
+import * as Selector from '../stores/selector';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useTranslation } from 'react-i18next';
-import { updateHiddenProperties } from './cloudProjectUtil.ts';
+import { updateHiddenProperties } from '../cloudProjectUtil.ts';
 
 interface PropertiesSelectionContentProps {
   updateHiddenFlag: () => void;

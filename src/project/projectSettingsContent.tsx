@@ -3,19 +3,19 @@
  */
 
 import React, { useMemo } from 'react';
-import { GraphType, LabelType } from './constants.ts';
-import { useStore } from './stores/common.ts';
+import { GraphType, LabelType } from '../constants.ts';
+import { useStore } from '../stores/common.ts';
 import {
   GALLERY_STYLE_LABELS,
   MATERIAL_LABELS,
   MolecularViewerMaterial,
   MolecularViewerStyle,
-} from './view/displayOptions.ts';
+} from '../view/displayOptions.ts';
 import { Col, ColorPicker, Row, Select } from 'antd';
-import { UndoableChange } from './undo/UndoableChange.ts';
+import { UndoableChange } from '../undo/UndoableChange.ts';
 import { useTranslation } from 'react-i18next';
-import * as Selector from './stores/selector';
-import { usePrimitiveStore } from './stores/commonPrimitive.ts';
+import * as Selector from '../stores/selector';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 const { Option } = Select;
 

@@ -13,7 +13,7 @@ import MainMenu from './mainMenu';
 import { VERSION } from './constants';
 import SplitPane from 'react-split-pane';
 import ShareLinks from './shareLinks';
-import ProjectGallery from './projectGallery';
+import ProjectGallery from './project/projectGallery.tsx';
 import ReactionChamber from './reactionChamber';
 import AcceptCookie from './acceptCookie';
 import DropdownContextMenu from './components/contextMenu';
