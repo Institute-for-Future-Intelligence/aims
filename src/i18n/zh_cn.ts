@@ -240,6 +240,8 @@ export const i18n_zh_cn = {
       CoordinateSystemSettings: '坐标系设定',
       SelectXAxis: '选择X轴',
       SelectYAxis: '选择Y轴',
+      XFormula: '函数f(x)',
+      YFormula: '函数f(y)',
       MinimumX: '最小X',
       MaximumX: '最大X',
       MinimumY: '最小Y',

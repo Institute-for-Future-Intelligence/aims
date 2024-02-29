@@ -260,7 +260,6 @@ const MolecularViewer = React.memo(
     };
 
     useEffect(() => {
-      // groupRef.current?.position.set(0, 0, 0);
       if (!firstGroupRef.current || !mode) return;
       firstGroupRef.current.children = [];
       if (!complex) return;
@@ -301,6 +300,7 @@ const MolecularViewer = React.memo(
 
     useEffect(() => {
       if (!chamber) return;
+      if (!moleculeData) groupRef.current?.position.set(0, 0, 0);
       if (secondGroupRef.current) {
         secondGroupRef.current.children = [];
         if (testMolecule) {

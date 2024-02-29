@@ -49,6 +49,8 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           sortDescending: data.sortDescending,
           xAxisNameScatterPlot: data.xAxisNameScatterPlot,
           yAxisNameScatterPlot: data.yAxisNameScatterPlot,
+          xFormula: data.xFormula,
+          yFormula: data.yFormula,
           xLinesScatterPlot: !!data.xLinesScatterPlot,
           yLinesScatterPlot: !!data.yLinesScatterPlot,
           lineWidthScatterPlot: data.lineWidthScatterPlot,

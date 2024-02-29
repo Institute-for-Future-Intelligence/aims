@@ -2,8 +2,8 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useMemo } from 'react';
-import { Col, InputNumber, Row, Select } from 'antd';
+import React, { useMemo, useRef, useState } from 'react';
+import { Col, Input, InputNumber, Row, Select } from 'antd';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
@@ -18,6 +18,10 @@ import {
 } from '../cloudProjectUtil.ts';
 
 interface CoordinateSystemSettingsContentProps {
+  xAxisNameScatterPlot: string | null;
+  yAxisNameScatterPlot: string | null;
+  xFormula: string | null;
+  yFormula: string | null;
   xMinScatterPlot: number;
   xMaxScatterPlot: number;
   yMinScatterPlot: number;
@@ -25,15 +29,22 @@ interface CoordinateSystemSettingsContentProps {
 }
 
 const CoordinateSystemSettingsContent = React.memo(
-  ({ xMinScatterPlot, xMaxScatterPlot, yMinScatterPlot, yMaxScatterPlot }: CoordinateSystemSettingsContentProps) => {
+  ({
+    xAxisNameScatterPlot,
+    yAxisNameScatterPlot,
+    xFormula,
+    yFormula,
+    xMinScatterPlot,
+    xMaxScatterPlot,
+    yMinScatterPlot,
+    yMaxScatterPlot,
+  }: CoordinateSystemSettingsContentProps) => {
     const setCommonStore = useStore(Selector.set);
     const language = useStore(Selector.language);
     const user = useStore(Selector.user);
     const setChanged = usePrimitiveStore(Selector.setChanged);
     const projectOwner = useStore(Selector.projectOwner);
     const projectTitle = useStore(Selector.projectTitle);
-    const xAxisNameScatterPlot = useStore(Selector.xAxisNameScatterPlot);
-    const yAxisNameScatterPlot = useStore(Selector.yAxisNameScatterPlot);
 
     const { Option } = Select;
 
@@ -42,6 +53,9 @@ const CoordinateSystemSettingsContent = React.memo(
       return { lng: language };
     }, [language]);
     const isOwner = user.uid === projectOwner;
+
+    const [xFormulaTemp, setXFormulaTemp] = useState<string | null>(xFormula);
+    const [yFormulaTemp, setYFormulaTemp] = useState<string | null>(yFormula);
 
     const createAxisOptions = () => {
       return (
@@ -139,6 +153,44 @@ const CoordinateSystemSettingsContent = React.memo(
             >
               {createAxisOptions()}
             </Select>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span style={{ fontSize: '12px' }}>{t('projectPanel.XFormula', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <Input
+              style={{ width: '100%' }}
+              value={xFormulaTemp ?? 'x'}
+              onChange={(e) => {
+                setXFormulaTemp(e.target.value);
+              }}
+              onPressEnter={() => {
+                setCommonStore((state) => {
+                  state.projectState.xFormula = xFormulaTemp;
+                });
+              }}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span style={{ fontSize: '12px' }}>{t('projectPanel.YFormula', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <Input
+              style={{ width: '100%' }}
+              value={yFormulaTemp ?? 'y'}
+              onChange={(e) => {
+                setYFormulaTemp(e.target.value);
+              }}
+              onPressEnter={() => {
+                setCommonStore((state) => {
+                  state.projectState.yFormula = yFormulaTemp;
+                });
+              }}
+            />
           </Col>
         </Row>
         <Row>

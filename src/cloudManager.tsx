@@ -342,6 +342,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             sortDescending: data.sortDescending ?? 'false',
             xAxisNameScatterPlot: data.xAxisNameScatterPlot ?? 'atomCount',
             yAxisNameScatterPlot: data.yAxisNameScatterPlot ?? 'bondCount',
+            xFormula: data.xFormula ?? 'x',
+            yFormula: data.yFormula ?? 'y',
             xMinScatterPlot: data.xMinScatterPlot !== undefined ? data.xMinScatterPlot : 0,
             xMaxScatterPlot: data.xMaxScatterPlot !== undefined ? data.xMaxScatterPlot : 100,
             yMinScatterPlot: data.yMinScatterPlot !== undefined ? data.yMinScatterPlot : 0,

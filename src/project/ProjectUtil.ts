@@ -50,6 +50,8 @@ export class ProjectUtil {
       counter: 0,
       xAxisNameScatterPlot: 'atomCount',
       yAxisNameScatterPlot: 'bondCount',
+      xFormula: 'x',
+      yFormula: 'y',
       xMinScatterPlot: 0,
       xMaxScatterPlot: 100,
       yMinScatterPlot: 0,

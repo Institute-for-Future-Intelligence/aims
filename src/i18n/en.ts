@@ -240,6 +240,8 @@ export const i18n_en = {
       CoordinateSystemSettings: 'Coordinate System Settings',
       SelectXAxis: 'Select X Axis',
       SelectYAxis: 'Select Y Axis',
+      XFormula: 'Function f(x)',
+      YFormula: 'Function f(y)',
       MinimumX: 'Minimum X',
       MaximumX: 'Maximum X',
       MinimumY: 'Minimum Y',

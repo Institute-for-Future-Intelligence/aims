@@ -29,6 +29,8 @@ export interface ProjectState {
   counter: number;
   xAxisNameScatterPlot: string | null;
   yAxisNameScatterPlot: string | null;
+  xFormula: string | null;
+  yFormula: string | null;
   xMinScatterPlot: number;
   xMaxScatterPlot: number;
   yMinScatterPlot: number;

@@ -145,6 +145,10 @@ export const xAxisNameScatterPlot = (state: CommonStoreState) => state.projectSt
 
 export const yAxisNameScatterPlot = (state: CommonStoreState) => state.projectState.yAxisNameScatterPlot;
 
+export const xFormula = (state: CommonStoreState) => state.projectState.xFormula;
+
+export const yFormula = (state: CommonStoreState) => state.projectState.yFormula;
+
 export const xMinScatterPlot = (state: CommonStoreState) => state.projectState.xMinScatterPlot;
 
 export const xMaxScatterPlot = (state: CommonStoreState) => state.projectState.xMaxScatterPlot;

@@ -45,6 +45,7 @@ import ProjectSettingsContent from './projectSettingsContent.tsx';
 import PropertiesSelectionContent from './propertiesSelectionContent.tsx';
 import CoordinateSystemSettingsContent from './coordinateSystemSettingsContent.tsx';
 import GraphSettingsContent from './graphSettingsContent.tsx';
+import { evaluate, MathExpression, parse } from 'mathjs';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -138,6 +139,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const hiddenProperties = useStore(Selector.hiddenProperties);
   const xAxisNameScatterPlot = useStore(Selector.xAxisNameScatterPlot) ?? 'atomCount';
   const yAxisNameScatterPlot = useStore(Selector.yAxisNameScatterPlot) ?? 'bondCount';
+  const xFormula = useStore(Selector.xFormula);
+  const yFormula = useStore(Selector.yFormula);
   const xMinScatterPlot = useStore(Selector.xMinScatterPlot) ?? 0;
   const xMaxScatterPlot = useStore(Selector.xMaxScatterPlot) ?? 100;
   const yMinScatterPlot = useStore(Selector.yMinScatterPlot) ?? 0;
@@ -619,16 +622,30 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       for (const m of projectMolecules) {
         const prop = molecularPropertiesMap.get(m.name);
         if (prop) {
-          const x = prop[xAxisNameScatterPlot as keyof MolecularProperties];
-          const y = prop[yAxisNameScatterPlot as keyof MolecularProperties];
+          let x = prop[xAxisNameScatterPlot as keyof MolecularProperties];
+          let y = prop[yAxisNameScatterPlot as keyof MolecularProperties];
           if (typeof x === 'number' && typeof y === 'number') {
+            if (xFormula && xFormula !== 'x') {
+              try {
+                x = evaluate(xFormula as MathExpression, { x }) as number;
+              } catch (e) {
+                // ignore
+              }
+            }
+            if (yFormula && xFormula !== 'y') {
+              try {
+                y = evaluate(yFormula as MathExpression, { y }) as number;
+              } catch (e) {
+                // ignore
+              }
+            }
             data.push({ x, y });
           }
         }
       }
     }
     return data;
-  }, [xAxisNameScatterPlot, yAxisNameScatterPlot, projectMolecules, molecularPropertiesMap]);
+  }, [xAxisNameScatterPlot, yAxisNameScatterPlot, xFormula, yFormula, projectMolecules, molecularPropertiesMap]);
 
   return (
     <Container
@@ -890,6 +907,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   }
                   content={
                     <CoordinateSystemSettingsContent
+                      xAxisNameScatterPlot={xAxisNameScatterPlot}
+                      yAxisNameScatterPlot={yAxisNameScatterPlot}
+                      xFormula={xFormula}
+                      yFormula={yFormula}
                       xMinScatterPlot={xMinScatterPlot}
                       xMaxScatterPlot={xMaxScatterPlot}
                       yMinScatterPlot={yMinScatterPlot}

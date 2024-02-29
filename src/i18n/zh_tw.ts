@@ -239,6 +239,8 @@ export const i18n_zh_tw = {
       CoordinateSystemSettings: '座標系設定',
       SelectXAxis: '選擇X軸',
       SelectYAxis: '選擇Y軸',
+      XFormula: '函數f(x)',
+      YFormula: '函數f(y)',
       MinimumX: '最小X',
       MaximumX: '最大X',
       MinimumY: '最小Y',
