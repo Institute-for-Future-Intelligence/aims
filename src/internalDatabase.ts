@@ -28,6 +28,10 @@ import commonMoleculeUrl021 from './molecules/sdf/heptadecane.sdf';
 import commonMoleculeUrl022 from './molecules/sdf/octadecane.sdf';
 import commonMoleculeUrl023 from './molecules/sdf/nonadecane.sdf';
 import commonMoleculeUrl024 from './molecules/sdf/icosane.sdf';
+import commonMoleculeUrl025 from './molecules/sdf/heneicosane.sdf';
+import commonMoleculeUrl026 from './molecules/sdf/docosane.sdf';
+import commonMoleculeUrl027 from './molecules/sdf/tricosane.sdf';
+import commonMoleculeUrl028 from './molecules/sdf/tetracosane.sdf';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
@@ -84,6 +88,10 @@ export const commonMolecules = [
   { url: commonMoleculeUrl022, internal: true, name: 'Octadecane' } as MoleculeData,
   { url: commonMoleculeUrl023, internal: true, name: 'Nonadecane' } as MoleculeData,
   { url: commonMoleculeUrl024, internal: true, name: 'Icosane' } as MoleculeData,
+  { url: commonMoleculeUrl025, internal: true, name: 'Heneicosane' } as MoleculeData,
+  { url: commonMoleculeUrl026, internal: true, name: 'Docosane' } as MoleculeData,
+  { url: commonMoleculeUrl027, internal: true, name: 'Tricosane' } as MoleculeData,
+  { url: commonMoleculeUrl028, internal: true, name: 'Tetracosane' } as MoleculeData,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const drugMolecules = [
