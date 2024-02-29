@@ -119,6 +119,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const hoveredMolecule = usePrimitiveStore(Selector.hoveredMolecule);
   const addMolecule = useStore(Selector.addMolecule);
   const removeMolecule = useStore(Selector.removeMolecule);
+  const numberOfColumns = useStore(Selector.numberOfColumns) ?? 3;
   const viewerStyle = useStore(Selector.projectViewerStyle);
   const viewerMaterial = useStore(Selector.projectViewerMaterial);
   const viewerBackground = useStore(Selector.projectViewerBackground);
@@ -217,11 +218,16 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   }, [projectDescription]);
 
   const totalHeight = window.innerHeight;
-  const canvasColumns = 3;
   const gridGutter = 8;
   const totalWidth = Math.round(window.innerWidth * relativeWidth);
-  const viewWidth = totalWidth / canvasColumns - gridGutter * (canvasColumns - 1);
+  const viewWidth = (totalWidth - gridGutter * (numberOfColumns + 2)) / numberOfColumns;
   const viewHeight = (viewWidth * 2) / 3;
+
+  const gridTemplateColumns = useMemo(() => {
+    let s = '';
+    for (let i = 0; i < numberOfColumns; i++) s += viewWidth + 'px ';
+    return s;
+  }, [numberOfColumns, viewWidth]);
 
   const closeProject = () => {
     setCommonStore((state) => {
@@ -324,6 +330,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               }
               content={
                 <ProjectSettingsContent
+                  numberOfColumns={numberOfColumns}
                   viewerStyle={viewerStyle}
                   viewerMaterial={viewerMaterial}
                   viewerBackground={viewerBackground}
@@ -671,7 +678,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               display: 'grid',
               columnGap: '5px',
               rowGap: '5px',
-              gridTemplateColumns: viewWidth + 'px ' + viewWidth + 'px ' + viewWidth + 'px',
+              gridTemplateColumns: gridTemplateColumns,
             }}
             ref={containerRef}
             onMouseDown={() => {
@@ -729,8 +736,11 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 eventSource={containerRef.current}
                 style={{
                   position: 'absolute',
-                  width: viewWidth * 3,
-                  height: (10 + viewHeight) * Math.ceil(sortedMoleculesRef.current.length / canvasColumns) + 'px',
+                  width: '100%',
+                  height:
+                    ((10 * numberOfColumns) / 2 + viewHeight) *
+                      Math.ceil(sortedMoleculesRef.current.length / numberOfColumns) +
+                    'px',
                 }}
               >
                 <View.Port />

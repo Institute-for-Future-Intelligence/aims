@@ -11,7 +11,7 @@ import {
   MolecularViewerMaterial,
   MolecularViewerStyle,
 } from '../view/displayOptions.ts';
-import { Col, ColorPicker, Row, Select } from 'antd';
+import { Col, ColorPicker, InputNumber, Row, Select } from 'antd';
 import { UndoableChange } from '../undo/UndoableChange.ts';
 import { useTranslation } from 'react-i18next';
 import * as Selector from '../stores/selector';
@@ -20,6 +20,7 @@ import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 const { Option } = Select;
 
 interface ProjectSettingsContentProps {
+  numberOfColumns: number;
   viewerStyle: MolecularViewerStyle;
   viewerMaterial: MolecularViewerMaterial;
   viewerBackground: string;
@@ -28,7 +29,14 @@ interface ProjectSettingsContentProps {
 }
 
 const ProjectSettingsContent = React.memo(
-  ({ viewerStyle, viewerMaterial, viewerBackground, labelType, graphType }: ProjectSettingsContentProps) => {
+  ({
+    numberOfColumns,
+    viewerStyle,
+    viewerMaterial,
+    viewerBackground,
+    labelType,
+    graphType,
+  }: ProjectSettingsContentProps) => {
     const language = useStore(Selector.language);
     const setChanged = usePrimitiveStore(Selector.setChanged);
 
@@ -72,8 +80,33 @@ const ProjectSettingsContent = React.memo(
       setChanged(true);
     };
 
+    const setNumberOfColumns = (numberOfColumns: number) => {
+      useStore.getState().set((state) => {
+        state.projectState.numberOfColumns = numberOfColumns;
+      });
+      setChanged(true);
+    };
+
     return (
       <div style={{ width: '320px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
+        <Row gutter={6} style={{ paddingBottom: '4px' }}>
+          <Col span={10} style={{ paddingTop: '5px' }}>
+            <span style={{ fontSize: '12px' }}>{t('projectPanel.NumberOfColumns', lang)}: </span>
+          </Col>
+          <Col span={14}>
+            <InputNumber
+              style={{ width: '100%' }}
+              min={3}
+              max={10}
+              step={1}
+              value={numberOfColumns}
+              onChange={(value) => {
+                if (value === null) return;
+                setNumberOfColumns(value);
+              }}
+            />
+          </Col>
+        </Row>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
           <Col span={10} style={{ paddingTop: '5px' }}>
             <span>{t('molecularViewer.Style', lang)}: </span>

@@ -16,6 +16,7 @@ export interface ProjectState {
   title: string | null;
   description: string | null;
   molecules: MoleculeData[];
+  numberOfColumns: number;
   selectedMolecule: MoleculeData | null;
   testMolecule: MoleculeData | null;
   targetProtein: MoleculeData | null;
@@ -36,7 +37,6 @@ export interface ProjectState {
   yLinesScatterPlot: boolean;
   lineWidthScatterPlot: number;
   dotSizeScatterPlot: number;
-  thumbnailWidth: number;
 
   cameraPosition: number[];
   cameraRotation: number[];

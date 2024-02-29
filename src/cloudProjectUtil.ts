@@ -37,6 +37,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           dataColoring: data.dataColoring ?? DataColoring.ALL,
           type: data.type,
           molecules: data.molecules,
+          numberOfColumns: data.numberOfColumns ?? 3,
           selectedMolecule: data.selectedMolecule,
           testMolecule: data.testMolecule,
           targetProtein: data.targetProtein,
@@ -52,7 +53,6 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           yLinesScatterPlot: !!data.yLinesScatterPlot,
           lineWidthScatterPlot: data.lineWidthScatterPlot,
           dotSizeScatterPlot: data.dotSizeScatterPlot,
-          thumbnailWidth: data.thumbnailWidth,
 
           chamberViewerPercentWidth: data.chamberViewerPercentWidth ?? 50,
           chamberViewerAxes: data.chamberViewerAxes ?? true,
@@ -357,23 +357,6 @@ export const updateYMaxScatterPlot = (userid: string, projectTitle: string, yMax
     });
 };
 
-export const updateDotSizeScatterPlot = (userid: string, projectTitle: string, dotSizeScatterPlot: number) => {
-  const lang = { lng: useStore.getState().language };
-  return firebase
-    .firestore()
-    .collection('users')
-    .doc(userid)
-    .collection('projects')
-    .doc(projectTitle)
-    .update({ dotSizeScatterPlot })
-    .then(() => {
-      // ignore
-    })
-    .catch((error) => {
-      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
-    });
-};
-
 export const updateHorizontalLinesScatterPlot = (userid: string, projectTitle: string, xLinesScatterPlot: boolean) => {
   const lang = { lng: useStore.getState().language };
   return firebase
@@ -442,7 +425,7 @@ export const updateLineWidthScatterPlot = (userid: string, projectTitle: string,
     });
 };
 
-export const updateThumbnailWidth = (userid: string, projectTitle: string, thumbnailWidth: number) => {
+export const updateNumberOfColumns = (userid: string, projectTitle: string, numberOfColumns: number) => {
   const lang = { lng: useStore.getState().language };
   return firebase
     .firestore()
@@ -450,7 +433,7 @@ export const updateThumbnailWidth = (userid: string, projectTitle: string, thumb
     .doc(userid)
     .collection('projects')
     .doc(projectTitle)
-    .update({ thumbnailWidth })
+    .update({ numberOfColumns })
     .then(() => {
       // ignore
     })

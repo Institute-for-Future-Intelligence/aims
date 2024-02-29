@@ -191,6 +191,7 @@ export const i18n_zh_tw = {
       ProjectSettings: '專案設定',
       DisplayWindowSize: '展示視窗大小',
       OutputSelectedMoleculeToTest: '把選中的分子加到實驗中',
+      NumberOfColumns: '列數',
       ImportMolecule: '輸入分子',
       MoleculeType: '分子類别',
       MolecularName: '分子名稱',

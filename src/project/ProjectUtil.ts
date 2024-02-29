@@ -29,6 +29,7 @@ export class ProjectUtil {
       title: null,
       description: null,
       molecules: new Array<MoleculeData>(),
+      numberOfColumns: 3,
       selectedMolecule: null,
       testMolecule: null,
       targetProtein: null,
@@ -57,7 +58,6 @@ export class ProjectUtil {
       yLinesScatterPlot: false,
       lineWidthScatterPlot: 1,
       dotSizeScatterPlot: 4,
-      thumbnailWidth: 200,
 
       cameraPosition: DEFAULT_CAMERA_POSITION,
       cameraRotation: DEFAULT_CAMERA_ROTATION,
