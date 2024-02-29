@@ -22,7 +22,7 @@ import { BondTS } from '../models/BondTS';
 import { Util } from '../Util';
 import { MolecularProperties } from '../models/MolecularProperties';
 import ComplexVisual from '../lib/ComplexVisual';
-import { useThree } from '@react-three/fiber';
+import { ThreeEvent, useThree } from '@react-three/fiber';
 import {
   COLORING_MAP,
   MATERIAL_MAP,
@@ -46,7 +46,7 @@ export interface MolecularViewerProps {
   setLoading?: (loading: boolean) => void;
   onPointerOver?: () => void;
   onPointerLeave?: () => void;
-  onClick?: () => void;
+  onPointerDown?: (e: ThreeEvent<PointerEvent>) => void;
 }
 
 const MolecularViewer = React.memo(
@@ -61,7 +61,7 @@ const MolecularViewer = React.memo(
     setLoading,
     onPointerOver,
     onPointerLeave,
-    onClick,
+    onPointerDown,
   }: MolecularViewerProps) => {
     const setCommonStore = useStore(Selector.set);
     const chemicalElements = useStore(Selector.chemicalElements);
@@ -328,7 +328,7 @@ const MolecularViewer = React.memo(
     }, [testMolecule, parsedResultsMap, projectViewerStyle, projectViewerMaterial]);
 
     return (
-      <group ref={groupRef} onPointerOver={onPointerOver} onPointerLeave={onPointerLeave} onClick={onClick}>
+      <group ref={groupRef} onPointerOver={onPointerOver} onPointerLeave={onPointerLeave} onPointerDown={onPointerDown}>
         <group
           name={'First'}
           ref={firstGroupRef}

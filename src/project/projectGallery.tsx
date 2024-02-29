@@ -736,6 +736,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 eventSource={containerRef.current}
                 style={{
                   position: 'absolute',
+                  borderBottom: '1px solid gray',
+                  borderBottomStyle: 'dashed',
                   width: '100%',
                   height:
                     ((10 * numberOfColumns) / 2 + viewHeight) *

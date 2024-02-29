@@ -13,6 +13,7 @@ import { DirectionalLight, Vector3 } from 'three';
 import { DEFAULT_CAMERA_POSITION, DEFAULT_LIGHT_INTENSITY, LabelType } from '../constants.ts';
 import { ProjectGalleryControls } from '../controls.tsx';
 import { Html } from '@react-three/drei';
+import { ThreeEvent } from '@react-three/fiber';
 
 interface MolecularContainerProps {
   viewWidth: number;
@@ -47,6 +48,36 @@ const MolecularContainer = React.memo(
 
     const lightRef = useRef<DirectionalLight>(null);
 
+    const onPointerOver = () => {
+      usePrimitiveStore.getState().set((state) => {
+        state.hoveredMolecule = moleculeData;
+      });
+      setScatterDataHoveredIndex(scatterDataIndex);
+    };
+
+    const onPointerLeave = () => {
+      usePrimitiveStore.getState().set((state) => {
+        state.hoveredMolecule = null;
+      });
+    };
+
+    // also pass this to molecularViewer.tsx (otherwise clicking the molecule will not select the container)
+    const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
+      e.stopPropagation();
+      useStore.getState().set((state) => {
+        state.projectState.selectedMolecule = moleculeData;
+      });
+      setChanged(true);
+    };
+
+    const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation();
+      useStore.getState().set((state) => {
+        state.projectState.selectedMolecule = moleculeData;
+      });
+      setChanged(true);
+    };
+
     return (
       <>
         <directionalLight
@@ -66,6 +97,9 @@ const MolecularContainer = React.memo(
           chamber={false}
           lightRef={lightRef}
           setLoading={setLoading}
+          onPointerOver={onPointerOver}
+          onPointerLeave={onPointerLeave}
+          onPointerDown={onPointerDown}
         />
         <Html>
           <div
@@ -76,24 +110,9 @@ const MolecularContainer = React.memo(
               width: viewWidth,
               height: viewHeight,
             }}
-            onPointerOver={() => {
-              usePrimitiveStore.getState().set((state) => {
-                state.hoveredMolecule = moleculeData;
-              });
-              setScatterDataHoveredIndex(scatterDataIndex);
-            }}
-            onPointerLeave={() => {
-              usePrimitiveStore.getState().set((state) => {
-                state.hoveredMolecule = null;
-              });
-            }}
-            onMouseDown={(e) => {
-              e.stopPropagation();
-              useStore.getState().set((state) => {
-                state.projectState.selectedMolecule = moleculeData;
-              });
-              setChanged(true);
-            }}
+            onPointerOver={onPointerOver}
+            onPointerLeave={onPointerLeave}
+            onMouseDown={onMouseDown}
           ></div>
         </Html>
         <Html>
