@@ -17,7 +17,7 @@ import {
 } from './constants';
 import { GizmoHelper, GizmoViewport } from '@react-three/drei';
 import Axes from './view/axes';
-import MolecularViewer from './view/molecularViewer';
+import DynamicsViewer from './view/dynamicsViewer.tsx';
 import { MoleculeData } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
@@ -31,6 +31,7 @@ import MoveMoleculeButtons from './view/moveMoleculeButtons.tsx';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import MolecularDynamicsSettings from './view/molecularDynamicsSettings.tsx';
+import DockingViewer from './view/dockingViewer.tsx';
 
 export interface ReactionChamberProps {
   moleculeData: MoleculeData | null;
@@ -95,17 +96,26 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
         />
         <Background />
         {viewerAxes && <Axes />}
-        {(moleculeData || testMolecule) && (
-          <MolecularViewer
-            moleculeData={moleculeData}
-            style={viewerStyle}
-            material={viewerMaterial}
-            coloring={viewerColoring}
-            chamber={true}
-            selector={viewerSelector}
-            setLoading={setLoading}
-          />
-        )}
+        {(moleculeData || testMolecule) &&
+          (projectType === ProjectType.DRUG_DISCOVERY ? (
+            <DockingViewer
+              moleculeData={moleculeData}
+              style={viewerStyle}
+              material={viewerMaterial}
+              coloring={viewerColoring}
+              selector={viewerSelector}
+              setLoading={setLoading}
+            />
+          ) : (
+            <DynamicsViewer
+              moleculeData={moleculeData}
+              style={viewerStyle}
+              material={viewerMaterial}
+              coloring={viewerColoring}
+              selector={viewerSelector}
+              setLoading={setLoading}
+            />
+          ))}
         {spaceshipDisplayMode === SpaceshipDisplayMode.INSIDE_VIEW && <Cockpit />}
         {spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW && <Spaceship />}
         <GizmoHelper alignment="bottom-right" margin={[30, 30]}>

@@ -61,7 +61,7 @@ const MolecularContainer = React.memo(
       });
     };
 
-    // also pass this to molecularViewer.tsx (otherwise clicking the molecule will not select the container)
+    // also pass this to galleryViewer.tsx (otherwise clicking the molecule will not select the container)
     const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
       e.stopPropagation();
       useStore.getState().set((state) => {
