@@ -5,7 +5,6 @@
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { MoleculeData } from '../types.ts';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from '../view/displayOptions.ts';
-import MolecularViewer from '../view/molecularViewer.tsx';
 import * as Selector from '../stores/selector';
 import { useStore } from '../stores/common.ts';
 import React, { useMemo, useRef } from 'react';
@@ -14,6 +13,7 @@ import { DEFAULT_CAMERA_POSITION, DEFAULT_LIGHT_INTENSITY, LabelType } from '../
 import { ProjectGalleryControls } from '../controls.tsx';
 import { Html } from '@react-three/drei';
 import { ThreeEvent } from '@react-three/fiber';
+import GalleryViewer from '../view/galleryViewer.tsx';
 
 interface MolecularContainerProps {
   viewWidth: number;
@@ -89,12 +89,11 @@ const MolecularContainer = React.memo(
           castShadow={false}
         />
         <ProjectGalleryControls lightRef={lightRef} />
-        <MolecularViewer
+        <GalleryViewer
           moleculeData={moleculeData}
           style={style}
           material={material}
           coloring={MolecularViewerColoring.Element}
-          chamber={false}
           lightRef={lightRef}
           setLoading={setLoading}
           onPointerOver={onPointerOver}
