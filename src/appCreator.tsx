@@ -33,7 +33,6 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
   const projectOwner = useStore(Selector.projectOwner);
   const projectTitle = useStore(Selector.projectTitle);
-  const targetProtein = useStore(Selector.targetProtein);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
   const loadProvidedMolecularProperties = useStore(Selector.loadProvidedMolecularProperties);
   const showAccountSettingsPanel = usePrimitiveStore(Selector.showAccountSettingsPanel);
@@ -239,7 +238,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
               <></>
             )}
             <Suspense fallback={<Loading />}>
-              <ReactionChamber moleculeData={targetProtein} />
+              <ReactionChamber />
             </Suspense>
           </SplitPane>
           <KeyboardListener setNavigationView={setNavigationView} />

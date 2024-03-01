@@ -45,7 +45,7 @@ import ProjectSettingsContent from './projectSettingsContent.tsx';
 import PropertiesSelectionContent from './propertiesSelectionContent.tsx';
 import CoordinateSystemSettingsContent from './coordinateSystemSettingsContent.tsx';
 import GraphSettingsContent from './graphSettingsContent.tsx';
-import { evaluate, MathExpression, parse } from 'mathjs';
+import { evaluate, MathExpression } from 'mathjs';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -682,104 +682,110 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
         />
         <div style={{ background: 'white', height: '100%' }}>
           {sortedMoleculesRef.current.length === 0 && <Empty description={t('projectPanel.NoMolecule', lang)} />}
+          {/* this div has no mouse listener to avoid deselecting a molecule when scrolling */}
           <div
             style={{
-              width: '100%',
-              height: totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80),
-              paddingTop: '8px',
-              paddingLeft: '8px',
               overflowX: 'hidden',
               overflowY: 'auto',
-              position: 'relative',
-              background: 'white',
-              display: 'grid',
-              columnGap: '5px',
-              rowGap: '5px',
-              gridTemplateColumns: gridTemplateColumns,
-            }}
-            ref={containerRef}
-            onMouseDown={() => {
-              setCommonStore((state) => {
-                state.projectState.selectedMolecule = null;
-              });
-              setChanged(true);
             }}
           >
-            {sortedMoleculesRef.current.map((mol, index) => {
-              const prop = getProvidedMolecularProperties(mol.name);
-              const hovered = hoveredMolecule?.name === mol.name || scatterDataHoveredIndex === index;
-              const selected = selectedMolecule?.name === mol.name;
-              return (
-                <View
-                  key={index}
-                  // @ts-expect-error: track is deprecated
-                  track={null}
-                  index={1}
-                  visible={true}
+            <div
+              style={{
+                width: '100%',
+                height: totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80),
+                paddingTop: '8px',
+                paddingLeft: '8px',
+                position: 'relative',
+                background: 'white',
+                display: 'grid',
+                columnGap: '5px',
+                rowGap: '5px',
+                gridTemplateColumns: gridTemplateColumns,
+              }}
+              ref={containerRef}
+              onMouseDown={() => {
+                setCommonStore((state) => {
+                  state.projectState.selectedMolecule = null;
+                });
+                setChanged(true);
+              }}
+            >
+              {sortedMoleculesRef.current.map((mol, index) => {
+                const prop = getProvidedMolecularProperties(mol.name);
+                const hovered = hoveredMolecule?.name === mol.name || scatterDataHoveredIndex === index;
+                const selected = selectedMolecule?.name === mol.name;
+                return (
+                  <View
+                    key={index}
+                    // @ts-expect-error: track is deprecated
+                    track={null}
+                    index={1}
+                    visible={true}
+                    style={{
+                      position: 'relative',
+                      height: viewHeight + 'px',
+                      width: viewWidth + 'px',
+                      backgroundColor: viewerBackground,
+                      borderRadius: '10px',
+                      border: selected
+                        ? hovered
+                          ? '2px dashed red'
+                          : '2px solid red'
+                        : hovered
+                          ? '1px dashed gray'
+                          : '1px solid gray',
+                      opacity: mol?.excluded ? 0.25 : 1,
+                    }}
+                  >
+                    <MolecularContainer
+                      viewWidth={viewWidth}
+                      viewHeight={viewHeight}
+                      selected={selected}
+                      moleculeData={mol}
+                      formula={prop?.formula}
+                      style={viewerStyle}
+                      material={viewerMaterial}
+                      setLoading={setLoading}
+                      scatterDataIndex={index}
+                      setScatterDataHoveredIndex={setScatterDataHoveredIndex}
+                    />
+                  </View>
+                );
+              })}
+
+              {containerRef.current && (
+                <Canvas
+                  eventSource={containerRef.current}
                   style={{
-                    position: 'relative',
-                    height: viewHeight + 'px',
-                    width: viewWidth + 'px',
-                    backgroundColor: viewerBackground,
-                    borderRadius: '10px',
-                    border: selected
-                      ? hovered
-                        ? '2px dashed red'
-                        : '2px solid red'
-                      : hovered
-                        ? '1px dashed gray'
-                        : '1px solid gray',
-                    opacity: mol?.excluded ? 0.25 : 1,
+                    position: 'absolute',
+                    borderBottom: '1px solid gray',
+                    borderBottomStyle: 'dashed',
+                    width: '100%',
+                    height:
+                      ((10 * numberOfColumns) / 2 + viewHeight) *
+                        Math.ceil(sortedMoleculesRef.current.length / numberOfColumns) +
+                      'px',
                   }}
                 >
-                  <MolecularContainer
-                    viewWidth={viewWidth}
-                    viewHeight={viewHeight}
-                    selected={selected}
-                    moleculeData={mol}
-                    formula={prop?.formula}
-                    style={viewerStyle}
-                    material={viewerMaterial}
-                    setLoading={setLoading}
-                    scatterDataIndex={index}
-                    setScatterDataHoveredIndex={setScatterDataHoveredIndex}
-                  />
-                </View>
-              );
-            })}
-
-            {containerRef.current && (
-              <Canvas
-                eventSource={containerRef.current}
-                style={{
-                  position: 'absolute',
-                  borderBottom: '1px solid gray',
-                  borderBottomStyle: 'dashed',
-                  width: '100%',
-                  height:
-                    ((10 * numberOfColumns) / 2 + viewHeight) *
-                      Math.ceil(sortedMoleculesRef.current.length / numberOfColumns) +
-                    'px',
-                }}
-              >
-                <View.Port />
-              </Canvas>
-            )}
-            {/*FIXME: This doesn't work properly yet */}
-            {loading && (
-              <Spin
-                indicator={
-                  <LoadingOutlined
-                    style={{
-                      position: 'absolute',
-                      fontSize: 100,
-                      right: totalWidth / 2 - 50,
-                      bottom: (totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80)) / 2 - 50,
-                    }}
-                  />
-                }
-              />
-            )}
+                  <View.Port />
+                </Canvas>
+              )}
+              {/*FIXME: This doesn't work properly yet */}
+              {loading && (
+                <Spin
+                  indicator={
+                    <LoadingOutlined
+                      style={{
+                        position: 'absolute',
+                        fontSize: 100,
+                        right: totalWidth / 2 - 50,
+                        bottom: (totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80)) / 2 - 50,
+                      }}
+                    />
+                  }
+                />
+              )}
+            </div>
           </div>
 
           {/*parallel coordinates*/}

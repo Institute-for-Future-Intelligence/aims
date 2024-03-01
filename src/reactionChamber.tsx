@@ -18,7 +18,6 @@ import {
 import { GizmoHelper, GizmoViewport } from '@react-three/drei';
 import Axes from './view/axes';
 import DynamicsViewer from './view/dynamicsViewer.tsx';
-import { MoleculeData } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { DirectionalLight, Euler, Vector3 } from 'three';
@@ -33,11 +32,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import MolecularDynamicsSettings from './view/molecularDynamicsSettings.tsx';
 import DockingViewer from './view/dockingViewer.tsx';
 
-export interface ReactionChamberProps {
-  moleculeData: MoleculeData | null;
-}
-
-const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
+const ReactionChamber = React.memo(() => {
   const viewerStyle = useStore(Selector.chamberViewerStyle);
   const viewerMaterial = useStore(Selector.chamberViewerMaterial);
   const viewerColoring = useStore(Selector.chamberViewerColoring);
@@ -49,6 +44,7 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
   const cameraRotation = useStore(Selector.cameraRotation);
   const cameraUp = useStore(Selector.cameraUp);
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
+  const targetProtein = useStore(Selector.targetProtein);
   const testMolecule = useStore(Selector.testMolecule);
   const projectType = useStore(Selector.projectType);
 
@@ -96,26 +92,27 @@ const ReactionChamber = React.memo(({ moleculeData }: ReactionChamberProps) => {
         />
         <Background />
         {viewerAxes && <Axes />}
-        {(moleculeData || testMolecule) &&
-          (projectType === ProjectType.DRUG_DISCOVERY ? (
-            <DockingViewer
-              moleculeData={moleculeData}
-              style={viewerStyle}
-              material={viewerMaterial}
-              coloring={viewerColoring}
-              selector={viewerSelector}
-              setLoading={setLoading}
-            />
-          ) : (
-            <DynamicsViewer
-              moleculeData={moleculeData}
-              style={viewerStyle}
-              material={viewerMaterial}
-              coloring={viewerColoring}
-              selector={viewerSelector}
-              setLoading={setLoading}
-            />
-          ))}
+        {projectType === ProjectType.DRUG_DISCOVERY
+          ? targetProtein && (
+              <DockingViewer
+                moleculeData={targetProtein}
+                style={viewerStyle}
+                material={viewerMaterial}
+                coloring={viewerColoring}
+                selector={viewerSelector}
+                setLoading={setLoading}
+              />
+            )
+          : testMolecule && (
+              <DynamicsViewer
+                moleculeData={testMolecule}
+                style={viewerStyle}
+                material={viewerMaterial}
+                coloring={viewerColoring}
+                selector={viewerSelector}
+                setLoading={setLoading}
+              />
+            )}
         {spaceshipDisplayMode === SpaceshipDisplayMode.INSIDE_VIEW && <Cockpit />}
         {spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW && <Spaceship />}
         <GizmoHelper alignment="bottom-right" margin={[30, 30]}>
