@@ -2,20 +2,10 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import PDBParser from '../lib/io/parsers/PDBParser';
-import SDFParser from '../lib/io/parsers/SDFParser';
-import XYZParser from '../lib/io/parsers/XYZParser';
-import MOL2Parser from '../lib/io/parsers/MOL2Parser';
-import CIFParser from '../lib/io/parsers/CIFParser';
-import PubChemParser from '../lib/io/parsers/PubChemParser';
-
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Group } from 'three';
-import { useStore } from '../stores/common';
-import * as Selector from '../stores/selector';
 import { MoleculeData } from '../types';
 import AtomJS from '../lib/chem/Atom';
-import { MolecularProperties } from '../models/MolecularProperties';
 import ComplexVisual from '../lib/ComplexVisual';
 import { ThreeEvent, useThree } from '@react-three/fiber';
 import {
@@ -27,7 +17,7 @@ import {
   STYLE_MAP,
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
-import { getData } from '../internalDatabase';
+import { loadMolecule, setProperties } from './moleculeTools.ts';
 
 export interface DynamicsViewerProps {
   moleculeData: MoleculeData | null;
@@ -53,9 +43,6 @@ const DynamicsViewer = React.memo(
     onPointerLeave,
     onPointerDown,
   }: DynamicsViewerProps) => {
-    const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
-    const setMolecularProperties = useStore(Selector.setMolecularProperties);
-
     const [complex, setComplex] = useState<any>();
 
     const groupRef = useRef<Group>(null);
@@ -75,33 +62,7 @@ const DynamicsViewer = React.memo(
         setComplex(undefined);
         return;
       }
-      const mol = getData(moleculeData.name);
-      if (mol?.url) {
-        fetch(mol.url).then((response) => {
-          response.text().then((text) => {
-            let url = mol.url;
-            if (url) {
-              if (url.includes('?')) {
-                // sometimes the url has an appendix (not sure who adds it)
-                url = url.substring(0, url.indexOf('?'));
-              }
-              let parser = null;
-              const options = {};
-              if (url.endsWith('.sdf')) parser = new SDFParser(text, options);
-              else if (url.endsWith('.cif')) parser = new CIFParser(text, options);
-              else if (url.endsWith('.pdb')) parser = new PDBParser(text, options);
-              else if (url.endsWith('.pcj')) parser = new PubChemParser(text, options);
-              else if (url.endsWith('.xyz')) parser = new XYZParser(text, options);
-              else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
-              if (parser) {
-                parser.parse().then((result) => {
-                  processResult(result);
-                });
-              }
-            }
-          });
-        });
-      }
+      loadMolecule(moleculeData, processResult);
     }, [moleculeData?.name]);
 
     const processResult = (result: any) => {
@@ -123,24 +84,7 @@ const DynamicsViewer = React.memo(
       }
       groupRef.current?.position.set(-cx, -cy, -cz);
       if (moleculeData) {
-        const properties = getProvidedMolecularProperties(moleculeData.name);
-        if (properties) {
-          setMolecularProperties(moleculeData.name, {
-            atomCount: result._atoms.length,
-            bondCount: result._bonds.length,
-            molecularMass: properties.molecularMass,
-            logP: properties.logP,
-            hydrogenBondDonorCount: properties.hydrogenBondDonorCount,
-            hydrogenBondAcceptorCount: properties.hydrogenBondAcceptorCount,
-            rotatableBondCount: properties.rotatableBondCount,
-            polarSurfaceArea: properties.polarSurfaceArea,
-            heavyAtomCount: properties.heavyAtomCount,
-            complexity: properties.complexity,
-            density: properties.density,
-            boilingPoint: properties.boilingPoint,
-            meltingPoint: properties.meltingPoint,
-          } as MolecularProperties);
-        }
+        setProperties(moleculeData, result._atoms.length, result._bonds.length);
       }
     };
 

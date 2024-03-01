@@ -2,20 +2,12 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import PDBParser from '../lib/io/parsers/PDBParser';
-import SDFParser from '../lib/io/parsers/SDFParser';
-import XYZParser from '../lib/io/parsers/XYZParser';
-import MOL2Parser from '../lib/io/parsers/MOL2Parser';
-import CIFParser from '../lib/io/parsers/CIFParser';
-import PubChemParser from '../lib/io/parsers/PubChemParser';
-
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DirectionalLight, Group, Sphere } from 'three';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { MoleculeData } from '../types';
 import AtomJS from '../lib/chem/Atom';
-import { MolecularProperties } from '../models/MolecularProperties';
 import ComplexVisual from '../lib/ComplexVisual';
 import { ThreeEvent, useThree } from '@react-three/fiber';
 import {
@@ -26,7 +18,7 @@ import {
   MolecularViewerStyle,
   STYLE_MAP,
 } from './displayOptions';
-import { getData } from '../internalDatabase';
+import { loadMolecule, setProperties } from './moleculeTools.ts';
 
 export interface GalleryViewerProps {
   moleculeData: MoleculeData | null;
@@ -54,10 +46,7 @@ const GalleryViewer = React.memo(
     onPointerLeave,
     onPointerDown,
   }: GalleryViewerProps) => {
-    const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
-    const setMolecularProperties = useStore(Selector.setMolecularProperties);
     const projectViewerStyle = useStore(Selector.projectViewerStyle);
-    const setParsedResult = useStore(Selector.setParsedResult);
 
     const [complex, setComplex] = useState<any>();
 
@@ -99,38 +88,7 @@ const GalleryViewer = React.memo(
         setComplex(undefined);
         return;
       }
-      const mol = getData(moleculeData.name);
-      if (mol?.url) {
-        fetch(mol.url).then((response) => {
-          response.text().then((text) => {
-            let url = mol.url;
-            if (url) {
-              if (url.includes('?')) {
-                // sometimes the url has an appendix (not sure who adds it)
-                url = url.substring(0, url.indexOf('?'));
-              }
-              let parser = null;
-              const options = {};
-              if (url.endsWith('.sdf')) parser = new SDFParser(text, options);
-              else if (url.endsWith('.cif')) parser = new CIFParser(text, options);
-              else if (url.endsWith('.pdb')) parser = new PDBParser(text, options);
-              else if (url.endsWith('.pcj')) parser = new PubChemParser(text, options);
-              else if (url.endsWith('.xyz')) parser = new XYZParser(text, options);
-              else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
-              if (parser) {
-                // have to parse twice to create a distinct copy for common store
-                // because deep copy using JSON does not work (circular references)
-                parser.parse().then((result) => {
-                  setParsedResult(moleculeData.name, result);
-                });
-                parser.parse().then((result) => {
-                  processResult(result);
-                });
-              }
-            }
-          });
-        });
-      }
+      loadMolecule(moleculeData, processResult, true);
     }, [moleculeData?.name]);
 
     const processResult = (result: any) => {
@@ -154,26 +112,8 @@ const GalleryViewer = React.memo(
         groupRef.current?.position.set(-cx, -cy, -cz);
       }
 
-      // set properties
       if (moleculeData) {
-        const properties = getProvidedMolecularProperties(moleculeData.name);
-        if (properties) {
-          setMolecularProperties(moleculeData.name, {
-            atomCount: result._atoms.length,
-            bondCount: result._bonds.length,
-            molecularMass: properties.molecularMass,
-            logP: properties.logP,
-            hydrogenBondDonorCount: properties.hydrogenBondDonorCount,
-            hydrogenBondAcceptorCount: properties.hydrogenBondAcceptorCount,
-            rotatableBondCount: properties.rotatableBondCount,
-            polarSurfaceArea: properties.polarSurfaceArea,
-            heavyAtomCount: properties.heavyAtomCount,
-            complexity: properties.complexity,
-            density: properties.density,
-            boilingPoint: properties.boilingPoint,
-            meltingPoint: properties.meltingPoint,
-          } as MolecularProperties);
-        }
+        setProperties(moleculeData, result._atoms.length, result._bonds.length);
       }
     };
 
