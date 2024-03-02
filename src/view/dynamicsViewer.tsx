@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Group } from 'three';
+import { Group, Vector3 } from 'three';
 import { MoleculeData } from '../types';
 import AtomJS from '../lib/chem/Atom';
 import ComplexVisual from '../lib/ComplexVisual';
@@ -18,6 +18,10 @@ import {
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { loadMolecule, setProperties } from './moleculeTools.ts';
+import { AtomTS } from '../models/AtomTS.ts';
+import Complex from '../lib/chem/Complex';
+import Element from '../lib/chem/Element';
+import Molecule from '../lib/chem/Molecule';
 
 export interface DynamicsViewerProps {
   moleculeData: MoleculeData | null;
@@ -30,6 +34,39 @@ export interface DynamicsViewerProps {
   onPointerLeave?: () => void;
   onPointerDown?: (e: ThreeEvent<PointerEvent>) => void;
 }
+
+const generateMolecule = (moleculeName: string, atoms: AtomTS[]) => {
+  const complex = new Complex();
+
+  const het = true;
+  const altLoc = ' ';
+  const occupancy = 1;
+  const tempFactor = 1;
+  const charge = 0;
+
+  const chain = complex.addChain('A');
+  const residue = chain.addResidue('UNK', 1, ' ');
+
+  for (const [i, a] of atoms.entries()) {
+    const serial = i + 1;
+    const role = undefined;
+    const type = Element.getByName(a.elementSymbol);
+    residue.addAtom(a.elementSymbol, type, a.position, role, het, serial, altLoc, occupancy, tempFactor, charge);
+  }
+
+  const molecule = new Molecule(complex, moleculeName, 1);
+  molecule.residues = [residue];
+  complex._molecules[0] = molecule;
+
+  complex.finalize({
+    needAutoBonding: true,
+    detectAromaticLoops: false,
+    enableEditing: false,
+    serialAtomMap: false,
+  });
+
+  return complex;
+};
 
 const DynamicsViewer = React.memo(
   ({
@@ -66,22 +103,25 @@ const DynamicsViewer = React.memo(
     }, [moleculeData?.name]);
 
     const processResult = (result: any) => {
-      setComplex(result);
       let cx = 0;
       let cy = 0;
       let cz = 0;
       const n = result._atoms.length;
+      const atoms: AtomTS[] = [];
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
         cx += atom.position.x;
         cy += atom.position.y;
         cz += atom.position.z;
+        atoms.push({ elementSymbol: atom.element.name, position: atom.position } as AtomTS);
+        // atoms.push({elementSymbol: atom.element.name, position: (atom.position as Vector3).clone().add(new Vector3(4, 4, 0))} as AtomTS);
       }
       if (n > 0) {
         cx /= n;
         cy /= n;
         cz /= n;
       }
+      setComplex(generateMolecule('mol', atoms));
       groupRef.current?.position.set(-cx, -cy, -cz);
       if (moleculeData) {
         setProperties(moleculeData, result._atoms.length, result._bonds.length);
@@ -94,7 +134,6 @@ const DynamicsViewer = React.memo(
       if (!complex) return;
       if (setLoading) setLoading(true);
 
-      groupRef.current.position.set(0, 0, 0);
       const visual = new ComplexVisual(complex.name, complex);
       const reps = [
         {
