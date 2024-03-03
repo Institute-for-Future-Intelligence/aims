@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Group, Vector3 } from 'three';
+import { DoubleSide, Group } from 'three';
 import { MoleculeData } from '../types';
 import AtomJS from '../lib/chem/Atom';
 import ComplexVisual from '../lib/ComplexVisual';
@@ -22,6 +22,9 @@ import { AtomTS } from '../models/AtomTS.ts';
 import Complex from '../lib/chem/Complex';
 import Element from '../lib/chem/Element';
 import Molecule from '../lib/chem/Molecule';
+import * as Selector from '../stores/selector';
+import { Grid, Plane } from '@react-three/drei';
+import { HALF_PI } from '../constants.ts';
 
 export interface DynamicsViewerProps {
   molecules: MoleculeData[];
@@ -80,6 +83,13 @@ const DynamicsViewer = React.memo(
     onPointerLeave,
     onPointerDown,
   }: DynamicsViewerProps) => {
+    const xyPlaneVisible = usePrimitiveStore(Selector.xyPlaneVisible);
+    const yzPlaneVisible = usePrimitiveStore(Selector.yzPlaneVisible);
+    const xzPlaneVisible = usePrimitiveStore(Selector.xzPlaneVisible);
+    const xyPlanePosition = usePrimitiveStore(Selector.xyPlanePosition);
+    const yzPlanePosition = usePrimitiveStore(Selector.yzPlanePosition);
+    const xzPlanePosition = usePrimitiveStore(Selector.xzPlanePosition);
+
     const [complex, setComplex] = useState<any>();
 
     const atomsRef = useRef<AtomTS[]>([]);
@@ -170,13 +180,78 @@ const DynamicsViewer = React.memo(
         });
     }, [complex, material, mode, colorer, selector]);
 
+    const planeSize = 20;
+    const planeOpacity = 0.4;
+
     return (
-      <group
-        ref={groupRef}
-        onPointerOver={onPointerOver}
-        onPointerLeave={onPointerLeave}
-        onPointerDown={onPointerDown}
-      />
+      <>
+        <group
+          ref={groupRef}
+          onPointerOver={onPointerOver}
+          onPointerLeave={onPointerLeave}
+          onPointerDown={onPointerDown}
+        />
+        {xyPlaneVisible && (
+          <group position={[0, 0, xyPlanePosition]}>
+            <Plane visible={false} name={'X-Y Plane'} args={[planeSize, planeSize]} rotation={[0, 0, 0]}>
+              <meshStandardMaterial
+                attach="material"
+                opacity={planeOpacity}
+                side={DoubleSide}
+                transparent
+                color={'blue'}
+              />
+            </Plane>
+            <Grid
+              args={[planeSize, planeSize]}
+              rotation={[HALF_PI, 0, 0]}
+              sectionColor={'blue'}
+              sectionThickness={1}
+              side={DoubleSide}
+            ></Grid>
+          </group>
+        )}
+        {yzPlaneVisible && (
+          <group position={[yzPlanePosition, 0, 0]}>
+            <Plane visible={false} name={'Y-Z Plane'} args={[planeSize, planeSize]} rotation={[0, HALF_PI, 0]}>
+              <meshStandardMaterial
+                attach="material"
+                opacity={planeOpacity}
+                side={DoubleSide}
+                transparent
+                color={'red'}
+              />
+            </Plane>
+            <Grid
+              args={[planeSize, planeSize]}
+              rotation={[0, 0, HALF_PI]}
+              sectionColor={'red'}
+              sectionThickness={1}
+              side={DoubleSide}
+            ></Grid>
+          </group>
+        )}
+        {xzPlaneVisible && (
+          <group position={[0, xzPlanePosition, 0]}>
+            <Plane visible={false} name={'X-Z Plane'} args={[planeSize, planeSize]} rotation={[HALF_PI, 0, 0]}>
+              <meshStandardMaterial
+                attach="material"
+                opacity={planeOpacity}
+                side={DoubleSide}
+                transparent
+                color={'green'}
+              />
+            </Plane>
+            <Grid
+              args={[planeSize, planeSize]}
+              rotation={[0, HALF_PI, 0]}
+              sectionColor={'green'}
+              sectionThickness={1}
+              side={DoubleSide}
+            ></Grid>
+          </group>
+        )}
+      </>
     );
   },
 );

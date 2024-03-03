@@ -170,6 +170,9 @@ export const i18n_zh_cn = {
       RotateAroundYCounterclockwise: '绕着Y轴沿逆时针方向旋转试验分子',
       RotateAroundZClockwise: '绕着Z轴沿顺时针方向旋转试验分子',
       RotateAroundZCounterclockwise: '绕着Z轴沿逆时针方向旋转试验分子',
+      ShowXYPlane: '显示X-Y平面',
+      ShowYZPlane: '显示Y-Z平面',
+      ShowXZPlane: '显示X-Z平面',
     },
 
     projectListPanel: {

@@ -94,28 +94,27 @@ const ReactionChamber = React.memo(() => {
         />
         <Background />
         {viewerAxes && <Axes />}
-        {projectType === ProjectType.DRUG_DISCOVERY
-          ? protein && (
-              <DockingViewer
-                moleculeData={protein}
-                style={viewerStyle}
-                material={viewerMaterial}
-                coloring={viewerColoring}
-                selector={viewerSelector}
-                setLoading={setLoading}
-              />
-            )
-          : testMolecules &&
-            testMolecules.length > 0 && (
-              <DynamicsViewer
-                molecules={testMolecules}
-                style={viewerStyle}
-                material={viewerMaterial}
-                coloring={viewerColoring}
-                selector={viewerSelector}
-                setLoading={setLoading}
-              />
-            )}
+        {projectType === ProjectType.DRUG_DISCOVERY ? (
+          protein && (
+            <DockingViewer
+              moleculeData={protein}
+              style={viewerStyle}
+              material={viewerMaterial}
+              coloring={viewerColoring}
+              selector={viewerSelector}
+              setLoading={setLoading}
+            />
+          )
+        ) : (
+          <DynamicsViewer
+            molecules={testMolecules}
+            style={viewerStyle}
+            material={viewerMaterial}
+            coloring={viewerColoring}
+            selector={viewerSelector}
+            setLoading={setLoading}
+          />
+        )}
         {spaceshipDisplayMode === SpaceshipDisplayMode.INSIDE_VIEW && <Cockpit />}
         {spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW && <Spaceship />}
         <GizmoHelper alignment="bottom-right" margin={[30, 30]}>

@@ -7,9 +7,14 @@ import { FloatButton } from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 const DynamicsButtons = React.memo(() => {
   const language = useStore(Selector.language);
+  const xyPlaneVisible = usePrimitiveStore(Selector.xyPlaneVisible);
+  const yzPlaneVisible = usePrimitiveStore(Selector.yzPlaneVisible);
+  const xzPlaneVisible = usePrimitiveStore(Selector.xzPlaneVisible);
+
   const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
@@ -29,20 +34,32 @@ const DynamicsButtons = React.memo(() => {
       <FloatButton
         description={'X-Y'}
         tooltip={t('experiment.ShowXYPlane', lang)}
-        onMouseDown={() => {}}
-        onMouseUp={() => {}}
+        style={{ background: xyPlaneVisible ? 'lightgray' : 'white' }}
+        onClick={() => {
+          usePrimitiveStore.getState().set((state) => {
+            state.xyPlaneVisible = !state.xyPlaneVisible;
+          });
+        }}
       />
       <FloatButton
         description={'Y-Z'}
         tooltip={t('experiment.ShowYZPlane', lang)}
-        onMouseDown={() => {}}
-        onMouseUp={() => {}}
+        style={{ background: yzPlaneVisible ? 'lightgray' : 'white' }}
+        onClick={() => {
+          usePrimitiveStore.getState().set((state) => {
+            state.yzPlaneVisible = !state.yzPlaneVisible;
+          });
+        }}
       />
       <FloatButton
         description={'X-Z'}
         tooltip={t('experiment.ShowXZPlane', lang)}
-        onMouseDown={() => {}}
-        onMouseUp={() => {}}
+        style={{ background: xzPlaneVisible ? 'lightgray' : 'white' }}
+        onClick={() => {
+          usePrimitiveStore.getState().set((state) => {
+            state.xzPlaneVisible = !state.xzPlaneVisible;
+          });
+        }}
       />
     </FloatButton.Group>
   );
