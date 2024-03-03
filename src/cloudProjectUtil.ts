@@ -88,6 +88,13 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           graphType: data.graphType ?? GraphType.PARALLEL_COORDINATES,
           labelType: data.labelType ?? LabelType.NAME,
 
+          xyPlaneVisible: !!data.xyPlaneVisible,
+          yzPlaneVisible: !!data.yzPlaneVisible,
+          xzPlaneVisible: !!data.xzPlaneVisible,
+          xyPlanePosition: data.xyPlanePosition ?? 0,
+          yzPlanePosition: data.yzPlanePosition ?? 0,
+          xzPlanePosition: data.xzPlanePosition ?? 0,
+
           cameraPosition: data.cameraPosition,
           cameraRotation: data.cameraRotation,
           cameraUp: data.cameraUp,

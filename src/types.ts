@@ -78,6 +78,13 @@ export interface ProjectState {
 
   graphType: GraphType;
   labelType: LabelType;
+
+  xyPlaneVisible: boolean;
+  yzPlaneVisible: boolean;
+  xzPlaneVisible: boolean;
+  xyPlanePosition: number;
+  yzPlanePosition: number;
+  xzPlanePosition: number;
 }
 
 export interface DatumEntry {

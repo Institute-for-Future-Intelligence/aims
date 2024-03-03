@@ -395,6 +395,13 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             graphType: data.graphType ?? GraphType.PARALLEL_COORDINATES,
             labelType: data.labelType ?? LabelType.NAME,
 
+            xyPlaneVisible: !!data.xyPlaneVisible,
+            yzPlaneVisible: !!data.yzPlaneVisible,
+            xzPlaneVisible: !!data.xzPlaneVisible,
+            xyPlanePosition: data.xyPlanePosition ?? 0,
+            yzPlanePosition: data.yzPlanePosition ?? 0,
+            xzPlanePosition: data.xzPlanePosition ?? 0,
+
             cameraPosition: data.cameraPosition ?? DEFAULT_CAMERA_POSITION,
             cameraRotation: data.cameraRotation ?? DEFAULT_CAMERA_ROTATION,
             cameraUp: data.cameraUp ?? DEFAULT_CAMERA_UP,

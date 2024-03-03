@@ -7,13 +7,13 @@ import { FloatButton } from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
-import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 const DynamicsButtons = React.memo(() => {
+  const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
-  const xyPlaneVisible = usePrimitiveStore(Selector.xyPlaneVisible);
-  const yzPlaneVisible = usePrimitiveStore(Selector.yzPlaneVisible);
-  const xzPlaneVisible = usePrimitiveStore(Selector.xzPlaneVisible);
+  const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
+  const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
+  const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -36,8 +36,8 @@ const DynamicsButtons = React.memo(() => {
         tooltip={t('experiment.ShowXYPlane', lang)}
         style={{ background: xyPlaneVisible ? 'lightgray' : 'white' }}
         onClick={() => {
-          usePrimitiveStore.getState().set((state) => {
-            state.xyPlaneVisible = !state.xyPlaneVisible;
+          setCommonStore((state) => {
+            state.projectState.xyPlaneVisible = !state.projectState.xyPlaneVisible;
           });
         }}
       />
@@ -46,8 +46,8 @@ const DynamicsButtons = React.memo(() => {
         tooltip={t('experiment.ShowYZPlane', lang)}
         style={{ background: yzPlaneVisible ? 'lightgray' : 'white' }}
         onClick={() => {
-          usePrimitiveStore.getState().set((state) => {
-            state.yzPlaneVisible = !state.yzPlaneVisible;
+          setCommonStore((state) => {
+            state.projectState.yzPlaneVisible = !state.projectState.yzPlaneVisible;
           });
         }}
       />
@@ -56,8 +56,8 @@ const DynamicsButtons = React.memo(() => {
         tooltip={t('experiment.ShowXZPlane', lang)}
         style={{ background: xzPlaneVisible ? 'lightgray' : 'white' }}
         onClick={() => {
-          usePrimitiveStore.getState().set((state) => {
-            state.xzPlaneVisible = !state.xzPlaneVisible;
+          setCommonStore((state) => {
+            state.projectState.xzPlaneVisible = !state.projectState.xzPlaneVisible;
           });
         }}
       />

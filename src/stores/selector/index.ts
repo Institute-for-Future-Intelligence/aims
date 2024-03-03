@@ -23,17 +23,17 @@ export const setChanged = (state: PrimitiveStoreState) => state.setChanged;
 
 export const setSkipChange = (state: PrimitiveStoreState) => state.setSkipChange;
 
-export const xyPlaneVisible = (state: PrimitiveStoreState) => state.xyPlaneVisible;
+export const xyPlaneVisible = (state: CommonStoreState) => state.projectState.xyPlaneVisible;
 
-export const yzPlaneVisible = (state: PrimitiveStoreState) => state.yzPlaneVisible;
+export const yzPlaneVisible = (state: CommonStoreState) => state.projectState.yzPlaneVisible;
 
-export const xzPlaneVisible = (state: PrimitiveStoreState) => state.xzPlaneVisible;
+export const xzPlaneVisible = (state: CommonStoreState) => state.projectState.xzPlaneVisible;
 
-export const xyPlanePosition = (state: PrimitiveStoreState) => state.xyPlanePosition;
+export const xyPlanePosition = (state: CommonStoreState) => state.projectState.xyPlanePosition;
 
-export const yzPlanePosition = (state: PrimitiveStoreState) => state.yzPlanePosition;
+export const yzPlanePosition = (state: CommonStoreState) => state.projectState.yzPlanePosition;
 
-export const xzPlanePosition = (state: PrimitiveStoreState) => state.xzPlanePosition;
+export const xzPlanePosition = (state: CommonStoreState) => state.projectState.xzPlanePosition;
 
 export const showAccountSettingsPanel = (state: PrimitiveStoreState) => state.showAccountSettingsPanel;
 

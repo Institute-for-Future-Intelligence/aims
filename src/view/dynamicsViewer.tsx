@@ -25,6 +25,7 @@ import Molecule from '../lib/chem/Molecule';
 import * as Selector from '../stores/selector';
 import { Grid, Plane } from '@react-three/drei';
 import { HALF_PI } from '../constants.ts';
+import { useStore } from '../stores/common.ts';
 
 export interface DynamicsViewerProps {
   molecules: MoleculeData[];
@@ -83,12 +84,12 @@ const DynamicsViewer = React.memo(
     onPointerLeave,
     onPointerDown,
   }: DynamicsViewerProps) => {
-    const xyPlaneVisible = usePrimitiveStore(Selector.xyPlaneVisible);
-    const yzPlaneVisible = usePrimitiveStore(Selector.yzPlaneVisible);
-    const xzPlaneVisible = usePrimitiveStore(Selector.xzPlaneVisible);
-    const xyPlanePosition = usePrimitiveStore(Selector.xyPlanePosition);
-    const yzPlanePosition = usePrimitiveStore(Selector.yzPlanePosition);
-    const xzPlanePosition = usePrimitiveStore(Selector.xzPlanePosition);
+    const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
+    const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
+    const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
+    const xyPlanePosition = useStore(Selector.xyPlanePosition) ?? 0;
+    const yzPlanePosition = useStore(Selector.yzPlanePosition) ?? 0;
+    const xzPlanePosition = useStore(Selector.xzPlanePosition) ?? 0;
 
     const [complex, setComplex] = useState<any>();
 
@@ -181,7 +182,7 @@ const DynamicsViewer = React.memo(
     }, [complex, material, mode, colorer, selector]);
 
     const planeSize = 20;
-    const planeOpacity = 0.4;
+    const planeOpacity = 0.5;
 
     return (
       <>
@@ -208,12 +209,20 @@ const DynamicsViewer = React.memo(
               sectionColor={'blue'}
               sectionThickness={1}
               side={DoubleSide}
-            ></Grid>
+            />
           </group>
         )}
         {yzPlaneVisible && (
           <group position={[yzPlanePosition, 0, 0]}>
-            <Plane visible={false} name={'Y-Z Plane'} args={[planeSize, planeSize]} rotation={[0, HALF_PI, 0]}>
+            <Plane
+              visible={false}
+              name={'Y-Z Plane'}
+              args={[planeSize, planeSize]}
+              rotation={[0, HALF_PI, 0]}
+              onClick={(e) => {
+                console.log(e.point);
+              }}
+            >
               <meshStandardMaterial
                 attach="material"
                 opacity={planeOpacity}
@@ -228,7 +237,7 @@ const DynamicsViewer = React.memo(
               sectionColor={'red'}
               sectionThickness={1}
               side={DoubleSide}
-            ></Grid>
+            />
           </group>
         )}
         {xzPlaneVisible && (
@@ -248,7 +257,7 @@ const DynamicsViewer = React.memo(
               sectionColor={'green'}
               sectionThickness={1}
               side={DoubleSide}
-            ></Grid>
+            />
           </group>
         )}
       </>

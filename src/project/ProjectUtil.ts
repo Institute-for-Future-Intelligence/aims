@@ -97,6 +97,13 @@ export class ProjectUtil {
 
       graphType: GraphType.PARALLEL_COORDINATES,
       labelType: LabelType.NAME,
+
+      xyPlaneVisible: false,
+      yzPlaneVisible: false,
+      xzPlaneVisible: false,
+      xyPlanePosition: 0,
+      yzPlanePosition: 0,
+      xzPlanePosition: 0,
     } as ProjectState;
   }
 
