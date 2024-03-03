@@ -9,7 +9,7 @@ import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { AimOutlined, ExperimentOutlined } from '@ant-design/icons';
 
-const MolecularDynamicsSettings = React.memo(() => {
+const DynamicsSettings = React.memo(() => {
   const language = useStore(Selector.language);
 
   const { t } = useTranslation();
@@ -48,4 +48,4 @@ const MolecularDynamicsSettings = React.memo(() => {
   );
 });
 
-export default MolecularDynamicsSettings;
+export default DynamicsSettings;

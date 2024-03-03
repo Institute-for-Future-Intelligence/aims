@@ -14,6 +14,13 @@ export interface PrimitiveStoreState {
   skipChange: boolean;
   setSkipChange: (b: boolean) => void;
 
+  xyPlaneVisible: boolean;
+  yzPlaneVisible: boolean;
+  xzPlaneVisible: boolean;
+  xyPlanePosition: number;
+  yzPlanePosition: number;
+  xzPlanePosition: number;
+
   hoveredMolecule: MoleculeData | null;
 
   boundingSphereRadius: number;
@@ -97,6 +104,14 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
         state.skipChange = b;
       });
     },
+
+    xyPlaneVisible: false,
+    yzPlaneVisible: false,
+    xzPlaneVisible: false,
+
+    xyPlanePosition: 0,
+    yzPlanePosition: 0,
+    xzPlanePosition: 0,
 
     hoveredMolecule: null,
 

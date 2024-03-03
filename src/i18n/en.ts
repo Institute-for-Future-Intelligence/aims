@@ -169,6 +169,9 @@ export const i18n_en = {
       RotateAroundYCounterclockwise: 'Rotate test molecule around Y in counterclockwise direction',
       RotateAroundZClockwise: 'Rotate test molecule around Z in clockwise direction',
       RotateAroundZCounterclockwise: 'Rotate test molecule around Z in counterclockwise direction',
+      ShowXYPlane: 'Show X-Y plane',
+      ShowYZPlane: 'Show Y-Z plane',
+      ShowXZPlane: 'Show X-Z plane',
     },
 
     projectListPanel: {

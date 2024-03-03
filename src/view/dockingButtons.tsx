@@ -25,7 +25,7 @@ import { LabelMark } from '../components/menuItem.tsx';
 import { stopFlying } from '../fly.ts';
 import { startFlying } from '../fly.ts';
 
-const MoveMoleculeButtons = React.memo(() => {
+const DockingButtons = React.memo(() => {
   const language = useStore(Selector.language);
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -186,4 +186,4 @@ const MoveMoleculeButtons = React.memo(() => {
   );
 });
 
-export default MoveMoleculeButtons;
+export default DockingButtons;

@@ -23,6 +23,18 @@ export const setChanged = (state: PrimitiveStoreState) => state.setChanged;
 
 export const setSkipChange = (state: PrimitiveStoreState) => state.setSkipChange;
 
+export const xyPlaneVisible = (state: PrimitiveStoreState) => state.xyPlaneVisible;
+
+export const yzPlaneVisible = (state: PrimitiveStoreState) => state.yzPlaneVisible;
+
+export const xzPlaneVisible = (state: PrimitiveStoreState) => state.xzPlaneVisible;
+
+export const xyPlanePosition = (state: PrimitiveStoreState) => state.xyPlanePosition;
+
+export const yzPlanePosition = (state: PrimitiveStoreState) => state.yzPlanePosition;
+
+export const xzPlanePosition = (state: PrimitiveStoreState) => state.xzPlanePosition;
+
 export const showAccountSettingsPanel = (state: PrimitiveStoreState) => state.showAccountSettingsPanel;
 
 export const userCount = (state: PrimitiveStoreState) => state.userCount;
