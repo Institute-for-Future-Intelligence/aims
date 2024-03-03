@@ -52,7 +52,7 @@ class XYZParser extends Parser {
     const chain = this._complex.addChain('A');
     const residue = chain.addResidue('UNK', 1, ' ');
 
-    for (let i = 0; i < this._atomsInf.length - 1; i++) {
+    for (let i = 0; i < this._atomsInf.length; i++) {
       const words = this._atomsInf[i].split(/[\s,]+/);
 
       if (words.length !== 4) {
