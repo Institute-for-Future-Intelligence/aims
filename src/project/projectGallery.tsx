@@ -352,9 +352,17 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   setCommonStore((state) => {
-                    state.projectState.ligand = selectedMolecule;
+                    switch (state.projectState.type) {
+                      case ProjectType.DRUG_DISCOVERY:
+                        state.projectState.ligand = selectedMolecule;
+                        updateLigandData();
+                        break;
+                      case ProjectType.QSAR_MODELING:
+                        if (!state.projectState.testMolecules) state.projectState.testMolecules = [];
+                        state.projectState.testMolecules.push(selectedMolecule);
+                        break;
+                    }
                   });
-                  updateLigandData();
                   setChanged(true);
                 }}
               >

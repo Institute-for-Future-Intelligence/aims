@@ -17,14 +17,14 @@ import {
   STYLE_MAP,
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
-import { loadMolecule, setProperties } from './moleculeTools.ts';
+import { loadMolecule } from './moleculeTools.ts';
 import { AtomTS } from '../models/AtomTS.ts';
 import Complex from '../lib/chem/Complex';
 import Element from '../lib/chem/Element';
 import Molecule from '../lib/chem/Molecule';
 
 export interface DynamicsViewerProps {
-  moleculeData: MoleculeData | null;
+  molecules: MoleculeData[];
   style: MolecularViewerStyle;
   material: MolecularViewerMaterial;
   coloring: MolecularViewerColoring;
@@ -70,7 +70,7 @@ const generateMolecule = (moleculeName: string, atoms: AtomTS[]) => {
 
 const DynamicsViewer = React.memo(
   ({
-    moleculeData,
+    molecules,
     style,
     material,
     coloring,
@@ -82,6 +82,7 @@ const DynamicsViewer = React.memo(
   }: DynamicsViewerProps) => {
     const [complex, setComplex] = useState<any>();
 
+    const atomsRef = useRef<AtomTS[]>([]);
     const groupRef = useRef<Group>(null);
 
     const { invalidate } = useThree();
@@ -95,36 +96,45 @@ const DynamicsViewer = React.memo(
     }, [coloring]);
 
     useEffect(() => {
-      if (!moleculeData) {
+      if (!molecules || molecules.length === 0) {
         setComplex(undefined);
         return;
       }
-      loadMolecule(moleculeData, processResult);
-    }, [moleculeData?.name]);
+      atomsRef.current = [];
+      for (const [i, m] of molecules.entries()) {
+        if (i < molecules.length - 1) {
+          loadMolecule(m, processResult);
+        } else {
+          loadMolecule(m, processResultAndUpdate);
+        }
+      }
+    }, [molecules]);
 
     const processResult = (result: any) => {
-      let cx = 0;
-      let cy = 0;
-      let cz = 0;
       const n = result._atoms.length;
-      const atoms: AtomTS[] = [];
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
-        cx += atom.position.x;
-        cy += atom.position.y;
-        cz += atom.position.z;
-        atoms.push({ elementSymbol: atom.element.name, position: atom.position } as AtomTS);
-        // atoms.push({elementSymbol: atom.element.name, position: (atom.position as Vector3).clone().add(new Vector3(4, 4, 0))} as AtomTS);
+        atomsRef.current.push({ elementSymbol: atom.element.name, position: atom.position } as AtomTS);
       }
+    };
+
+    const processResultAndUpdate = (result: any) => {
+      processResult(result);
+      const n = atomsRef.current.length;
       if (n > 0) {
+        setComplex(generateMolecule('all', atomsRef.current));
+        let cx = 0;
+        let cy = 0;
+        let cz = 0;
+        for (const a of atomsRef.current) {
+          cx += a.position.x;
+          cy += a.position.y;
+          cz += a.position.z;
+        }
         cx /= n;
         cy /= n;
         cz /= n;
-      }
-      setComplex(generateMolecule('mol', atoms));
-      groupRef.current?.position.set(-cx, -cy, -cz);
-      if (moleculeData) {
-        setProperties(moleculeData, result._atoms.length, result._bonds.length);
+        groupRef.current?.position.set(-cx, -cy, -cz);
       }
     };
 

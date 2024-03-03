@@ -43,6 +43,8 @@ export const proteinData = (state: CommonStoreState) => state.proteinData;
 
 export const molecules = (state: CommonStoreState) => state.projectState.molecules;
 
+export const testMolecules = (state: CommonStoreState) => state.projectState.testMolecules;
+
 export const numberOfColumns = (state: CommonStoreState) => state.projectState.numberOfColumns;
 
 export const ligand = (state: CommonStoreState) => state.projectState.ligand;

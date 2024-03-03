@@ -46,6 +46,7 @@ const ReactionChamber = React.memo(() => {
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
   const protein = useStore(Selector.protein);
   const ligand = useStore(Selector.ligand);
+  const testMolecules = useStore(Selector.testMolecules);
   const projectType = useStore(Selector.projectType);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -103,9 +104,10 @@ const ReactionChamber = React.memo(() => {
                 setLoading={setLoading}
               />
             )
-          : ligand && (
+          : testMolecules &&
+            testMolecules.length > 0 && (
               <DynamicsViewer
-                moleculeData={ligand}
+                molecules={testMolecules}
                 style={viewerStyle}
                 material={viewerMaterial}
                 coloring={viewerColoring}
