@@ -12,7 +12,6 @@ import { targetProteins } from '../internalDatabase';
 import { AimOutlined, ExperimentOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { Util } from '../Util.ts';
-import { ProjectType } from '../constants.ts';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -22,15 +21,14 @@ const DockingSettings = React.memo(() => {
   const language = useStore(Selector.language);
   const addUndoable = useStore(Selector.addUndoable);
   const molecules = useStore(Selector.molecules);
-  const projectType = useStore(Selector.projectType);
-  const testMolecule = useStore(Selector.testMolecule);
-  const targetProtein = useStore(Selector.targetProtein);
-  const targetProteinData = useStore(Selector.targetProteinData);
+  const ligand = useStore(Selector.ligand);
+  const protein = useStore(Selector.protein);
+  const proteinData = useStore(Selector.proteinData);
   const translationStep = useStore(Selector.translationStep);
   const rotationStep = useStore(Selector.rotationStep);
   const chamberViewerSelector = useStore(Selector.chamberViewerSelector);
   const setChanged = usePrimitiveStore(Selector.setChanged);
-  const updateTestMoleculeData = useStore(Selector.updateTestMoleculeData);
+  const updateLigandData = useStore(Selector.updateLigandData);
 
   // onChange of a text area changes at every key typing, triggering the viewer to re-render each time.
   // So we store the intermediate result here
@@ -46,14 +44,14 @@ const DockingSettings = React.memo(() => {
   }, [language]);
 
   const createContent = useMemo(() => {
-    const setTargetProtein = (targetName: string) => {
+    const setProtein = (targetName: string) => {
       setCommonStore((state) => {
         if (targetName === 'None') {
-          state.projectState.targetProtein = null;
+          state.projectState.protein = null;
         } else {
           for (const t of targetProteins) {
             if (t.name === targetName) {
-              state.projectState.targetProtein = t;
+              state.projectState.protein = t;
               break;
             }
           }
@@ -62,20 +60,20 @@ const DockingSettings = React.memo(() => {
       setChanged(true);
     };
 
-    const setTestMolecule = (testMoleculeName: string) => {
+    const setLigand = (ligandName: string) => {
       setCommonStore((state) => {
-        if (testMoleculeName === 'None') {
-          state.projectState.testMolecule = null;
+        if (ligandName === 'None') {
+          state.projectState.ligand = null;
         } else {
           for (const t of molecules) {
-            if (t.name === testMoleculeName) {
-              state.projectState.testMolecule = t;
+            if (t.name === ligandName) {
+              state.projectState.ligand = t;
               break;
             }
           }
         }
       });
-      updateTestMoleculeData();
+      updateLigandData();
       setChanged(true);
     };
 
@@ -83,15 +81,15 @@ const DockingSettings = React.memo(() => {
       <div style={{ width: '420px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
         <Row gutter={16} style={{ paddingBottom: '4px' }}>
           <Col span={8} style={{ paddingTop: '5px' }}>
-            <span>{t('experiment.TestMolecule', lang)}: </span>
+            <span>{t('experiment.Ligand', lang)}: </span>
           </Col>
           <Col span={16}>
             <Select
               style={{ width: '100%' }}
-              value={testMolecule?.name ?? t('word.None', lang)}
+              value={ligand?.name ?? t('word.None', lang)}
               showSearch
               onChange={(value: string) => {
-                const oldValue = testMolecule?.name;
+                const oldValue = ligand?.name;
                 const newValue = value;
                 const undoableChange = {
                   name: 'Select Test Molecule',
@@ -99,14 +97,14 @@ const DockingSettings = React.memo(() => {
                   oldValue: oldValue,
                   newValue: newValue,
                   undo: () => {
-                    setTestMolecule(undoableChange.oldValue as string);
+                    setLigand(undoableChange.oldValue as string);
                   },
                   redo: () => {
-                    setTestMolecule(undoableChange.newValue as string);
+                    setLigand(undoableChange.newValue as string);
                   },
                 } as UndoableChange;
                 addUndoable(undoableChange);
-                setTestMolecule(newValue);
+                setLigand(newValue);
               }}
             >
               <Option key={`None`} value={'None'}>
@@ -122,15 +120,15 @@ const DockingSettings = React.memo(() => {
         </Row>
         <Row gutter={16} style={{ paddingBottom: '4px' }}>
           <Col span={8} style={{ paddingTop: '5px' }}>
-            <span>{t('experiment.Target', lang)}: </span>
+            <span>{t('experiment.Protein', lang)}: </span>
           </Col>
           <Col span={16}>
             <Select
               style={{ width: '100%' }}
-              value={targetProtein?.name ?? t('word.None', lang)}
+              value={protein?.name ?? t('word.None', lang)}
               showSearch
               onChange={(value: string) => {
-                const oldValue = targetProtein?.name;
+                const oldValue = protein?.name;
                 const newValue = value;
                 const undoableChange = {
                   name: 'Select Target Protein',
@@ -138,14 +136,14 @@ const DockingSettings = React.memo(() => {
                   oldValue: oldValue,
                   newValue: newValue,
                   undo: () => {
-                    setTargetProtein(undoableChange.oldValue as string);
+                    setProtein(undoableChange.oldValue as string);
                   },
                   redo: () => {
-                    setTargetProtein(undoableChange.newValue as string);
+                    setProtein(undoableChange.newValue as string);
                   },
                 } as UndoableChange;
                 addUndoable(undoableChange);
-                setTargetProtein(newValue);
+                setProtein(newValue);
               }}
             >
               <Option key={`None`} value={'None'}>
@@ -231,52 +229,52 @@ const DockingSettings = React.memo(() => {
         </Row>
       </div>
     );
-  }, [lang, targetProtein, testMolecule, molecules, chamberViewerSelector, translationStep, rotationStep, selector]);
+  }, [lang, protein, ligand, molecules, chamberViewerSelector, translationStep, rotationStep, selector]);
 
   const createInfo = useMemo(() => {
     const items: DescriptionsProps['items'] = [
       {
         key: '1',
         label: t('word.Codename', lang),
-        children: targetProteinData?.name,
+        children: proteinData?.name,
       },
       {
         key: '2',
         label: t('projectPanel.AtomCount', lang),
-        children: targetProteinData?.atoms.length,
+        children: proteinData?.atoms.length,
       },
       {
         key: '3',
         label: t('projectPanel.BondCount', lang),
-        children: targetProteinData?.bonds.length,
+        children: proteinData?.bonds.length,
       },
       {
         key: '4',
         label: t('projectPanel.ResidueCount', lang),
-        children: targetProteinData?.residues.length,
+        children: proteinData?.residues.length,
       },
       {
         key: '5',
         label: t('projectPanel.ChainCount', lang),
-        children: targetProteinData?.chains.length,
+        children: proteinData?.chains.length,
       },
       {
         key: '6',
         label: t('projectPanel.StructureCount', lang),
-        children: targetProteinData?.structures.length,
+        children: proteinData?.structures.length,
       },
       {
         key: '7',
         label: t('projectPanel.MoleculeCount', lang),
-        children: targetProteinData?.molecules.length,
+        children: proteinData?.molecules.length,
       },
     ];
     return (
       <div style={{ width: '300px' }}>
-        {targetProteinData && (
+        {proteinData && (
           <span style={{ paddingTop: '10px', fontSize: '10px' }}>
-            {targetProteinData?.metadata['classification']}
-            <br /> {targetProteinData?.metadata['title']}
+            {proteinData?.metadata['classification']}
+            <br /> {proteinData?.metadata['title']}
           </span>
         )}
         <Descriptions
@@ -289,7 +287,7 @@ const DockingSettings = React.memo(() => {
         />
       </div>
     );
-  }, [lang, targetProteinData]);
+  }, [lang, proteinData]);
 
   return (
     <>
@@ -318,7 +316,7 @@ const DockingSettings = React.memo(() => {
           }
         />
       </Popover>
-      {targetProtein?.name ? (
+      {protein?.name ? (
         <Popover
           title={
             <div onClick={(e) => e.stopPropagation()}>
@@ -338,7 +336,7 @@ const DockingSettings = React.memo(() => {
               color: 'lightgray',
             }}
           >
-            {targetProtein.name}
+            {protein.name}
           </span>
         </Popover>
       ) : (

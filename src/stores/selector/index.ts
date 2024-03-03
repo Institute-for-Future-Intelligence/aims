@@ -39,15 +39,15 @@ export const cameraUp = (state: CommonStoreState) => state.projectState.cameraUp
 
 export const panCenter = (state: CommonStoreState) => state.projectState.panCenter;
 
-export const targetProteinData = (state: CommonStoreState) => state.targetProteinData;
+export const proteinData = (state: CommonStoreState) => state.proteinData;
 
 export const molecules = (state: CommonStoreState) => state.projectState.molecules;
 
 export const numberOfColumns = (state: CommonStoreState) => state.projectState.numberOfColumns;
 
-export const testMolecule = (state: CommonStoreState) => state.projectState.testMolecule;
+export const ligand = (state: CommonStoreState) => state.projectState.ligand;
 
-export const updateTestMoleculeData = (state: CommonStoreState) => state.updateTestMoleculeData;
+export const updateLigandData = (state: CommonStoreState) => state.updateLigandData;
 
 export const selectedProperty = (state: CommonStoreState) => state.projectState.selectedProperty;
 
@@ -191,7 +191,7 @@ export const graphType = (state: CommonStoreState) => state.projectState.graphTy
 
 export const labelType = (state: CommonStoreState) => state.projectState.labelType;
 
-export const targetProtein = (state: CommonStoreState) => state.projectState.targetProtein;
+export const protein = (state: CommonStoreState) => state.projectState.protein;
 
 export const spaceshipDisplayMode = (state: CommonStoreState) => state.projectState.spaceshipDisplayMode;
 

@@ -44,8 +44,8 @@ const ReactionChamber = React.memo(() => {
   const cameraRotation = useStore(Selector.cameraRotation);
   const cameraUp = useStore(Selector.cameraUp);
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
-  const targetProtein = useStore(Selector.targetProtein);
-  const testMolecule = useStore(Selector.testMolecule);
+  const protein = useStore(Selector.protein);
+  const ligand = useStore(Selector.ligand);
   const projectType = useStore(Selector.projectType);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -93,9 +93,9 @@ const ReactionChamber = React.memo(() => {
         <Background />
         {viewerAxes && <Axes />}
         {projectType === ProjectType.DRUG_DISCOVERY
-          ? targetProtein && (
+          ? protein && (
               <DockingViewer
-                moleculeData={targetProtein}
+                moleculeData={protein}
                 style={viewerStyle}
                 material={viewerMaterial}
                 coloring={viewerColoring}
@@ -103,9 +103,9 @@ const ReactionChamber = React.memo(() => {
                 setLoading={setLoading}
               />
             )
-          : testMolecule && (
+          : ligand && (
               <DynamicsViewer
-                moleculeData={testMolecule}
+                moleculeData={ligand}
                 style={viewerStyle}
                 material={viewerMaterial}
                 coloring={viewerColoring}
@@ -126,7 +126,7 @@ const ReactionChamber = React.memo(() => {
       </Canvas>
       {projectType === ProjectType.DRUG_DISCOVERY && <DockingSettings />}
       {projectType === ProjectType.QSAR_MODELING && <MolecularDynamicsSettings />}
-      {testMolecule && <MoveMoleculeButtons />}
+      {ligand && <MoveMoleculeButtons />}
       {loading && canvasRef.current && (
         <Spin
           indicator={

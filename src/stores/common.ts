@@ -43,9 +43,9 @@ export interface CommonStoreState {
   projectState: ProjectState;
   projectView: boolean;
 
-  targetProteinData: MoleculeTS | undefined;
-  testMoleculeData: AtomTS[] | undefined;
-  updateTestMoleculeData: () => void;
+  proteinData: MoleculeTS | undefined;
+  ligandData: AtomTS[] | undefined;
+  updateLigandData: () => void;
 
   projectStateToOpen: ProjectState | null;
 
@@ -104,12 +104,12 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           projectState: ProjectUtil.createDefaultProjectState(),
           projectView: true,
 
-          targetProteinData: undefined,
-          testMoleculeData: undefined,
-          updateTestMoleculeData() {
+          proteinData: undefined,
+          ligandData: undefined,
+          updateLigandData() {
             immerSet((state: CommonStoreState) => {
-              if (state.projectState.testMolecule) {
-                const result = state.parsedResultsMap.get(state.projectState.testMolecule.name);
+              if (state.projectState.ligand) {
+                const result = state.parsedResultsMap.get(state.projectState.ligand.name);
                 if (result) {
                   const atoms: AtomTS[] = [];
                   for (let i = 0; i < result._atoms.length; i++) {
@@ -117,16 +117,16 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                     atoms.push({
                       elementSymbol: Util.capitalizeFirstLetter(atom.element.name),
                       position: (atom.position.clone() as Vector3).sub(
-                        state.targetProteinData?.centerOffset ?? new Vector3(),
+                        state.proteinData?.centerOffset ?? new Vector3(),
                       ),
                     } as AtomTS);
                   }
-                  state.testMoleculeData = atoms;
+                  state.ligandData = atoms;
                 } else {
-                  state.testMoleculeData = undefined;
+                  state.ligandData = undefined;
                 }
               } else {
-                state.testMoleculeData = undefined;
+                state.ligandData = undefined;
               }
             });
           },

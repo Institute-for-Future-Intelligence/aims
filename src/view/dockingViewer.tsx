@@ -56,10 +56,10 @@ const DockingViewer = React.memo(
     const projectViewerMaterial = useStore(Selector.projectViewerMaterial);
     const projectViewerStyle = useStore(Selector.projectViewerStyle);
     const parsedResultsMap = useStore(Selector.parsedResultsMap);
-    const testMolecule = useStore(Selector.testMolecule);
-    const updateTestMoleculeData = useStore(Selector.updateTestMoleculeData);
-    const testMoleculeRotation = useStore.getState().projectState.testMoleculeRotation ?? [0, 0, 0];
-    const testMoleculeTranslation = useStore.getState().projectState.testMoleculeTranslation ?? [0, 0, 0];
+    const ligand = useStore(Selector.ligand);
+    const updateLigandData = useStore(Selector.updateLigandData);
+    const ligandRotation = useStore.getState().projectState.ligandRotation ?? [0, 0, 0];
+    const ligandTranslation = useStore.getState().projectState.ligandTranslation ?? [0, 0, 0];
 
     const [complex, setComplex] = useState<any>();
 
@@ -79,16 +79,16 @@ const DockingViewer = React.memo(
     }, [coloring]);
 
     useEffect(() => {
-      if (testMolecule) {
+      if (ligand) {
         originalPositions.current.length = 0;
-        const complex = parsedResultsMap.get(testMolecule.name);
+        const complex = parsedResultsMap.get(ligand.name);
         if (complex) {
           for (const a of complex._atoms) {
             originalPositions.current.push(a.position.clone());
           }
         }
       }
-    }, [testMolecule, parsedResultsMap]);
+    }, [ligand, parsedResultsMap]);
 
     useEffect(() => {
       if (!moleculeData) {
@@ -151,7 +151,7 @@ const DockingViewer = React.memo(
       const structures = result.structures;
       const molecules = result._molecules;
       setCommonStore((state) => {
-        state.targetProteinData = {
+        state.proteinData = {
           name,
           metadata,
           atoms,
@@ -205,11 +205,11 @@ const DockingViewer = React.memo(
       if (!moleculeData) groupRef.current?.position.set(0, 0, 0);
       if (ligandGroupRef.current) {
         ligandGroupRef.current.children = [];
-        if (testMolecule) {
-          const complexTestMolecule = parsedResultsMap.get(testMolecule.name);
-          if (complexTestMolecule) {
-            const visualTestMolecule = new ComplexVisual(testMolecule.name, complexTestMolecule);
-            visualTestMolecule.resetReps([
+        if (ligand) {
+          const complexLigand = parsedResultsMap.get(ligand.name);
+          if (complexLigand) {
+            const visualLigand = new ComplexVisual(ligand.name, complexLigand);
+            visualLigand.resetReps([
               {
                 mode: STYLE_MAP.get(projectViewerStyle),
                 colorer: COLORING_MAP.get(MolecularViewerColoring.Element),
@@ -217,17 +217,17 @@ const DockingViewer = React.memo(
                 material: MATERIAL_MAP.get(projectViewerMaterial),
               },
             ]);
-            visualTestMolecule.rebuild().then(() => {
+            visualLigand.rebuild().then(() => {
               if (!ligandGroupRef.current) return;
-              updateTestMoleculeData();
-              ligandGroupRef.current.add(visualTestMolecule);
+              updateLigandData();
+              ligandGroupRef.current.add(visualLigand);
               invalidate();
             });
           }
-          useRefStore.setState((state) => ({ testMoleculeRef: ligandGroupRef }));
+          useRefStore.setState((state) => ({ ligandRef: ligandGroupRef }));
         }
       }
-    }, [testMolecule, parsedResultsMap, projectViewerStyle, projectViewerMaterial]);
+    }, [ligand, parsedResultsMap, projectViewerStyle, projectViewerMaterial]);
 
     return (
       <group ref={groupRef} onPointerOver={onPointerOver} onPointerLeave={onPointerLeave} onPointerDown={onPointerDown}>
@@ -245,8 +245,8 @@ const DockingViewer = React.memo(
         <group
           name={'Ligand'}
           ref={ligandGroupRef}
-          position={[testMoleculeTranslation[0], testMoleculeTranslation[1], testMoleculeTranslation[2]]}
-          rotation={[testMoleculeRotation[0], testMoleculeRotation[1], testMoleculeRotation[2]]}
+          position={[ligandTranslation[0], ligandTranslation[1], ligandTranslation[2]]}
+          rotation={[ligandRotation[0], ligandRotation[1], ligandRotation[2]]}
         />
       </group>
     );

@@ -64,10 +64,10 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
         }
       }
       // make sure the test molecule is in the same array of molecules
-      if (state.projectState.testMolecule) {
+      if (state.projectState.ligand) {
         for (const m of state.projectState.molecules) {
-          if (m.name === state.projectState.testMolecule.name) {
-            state.projectState.testMolecule = m;
+          if (m.name === state.projectState.ligand.name) {
+            state.projectState.ligand = m;
             break;
           }
         }

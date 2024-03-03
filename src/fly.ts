@@ -79,16 +79,16 @@ const loop = (control: FlightControl) => {
     });
   } else {
     useStore.getState().set((state) => {
-      if (state.targetProteinData && state.testMoleculeData) {
+      if (state.proteinData && state.ligandData) {
         // make sure that these are initialized
-        if (!state.projectState.testMoleculeTranslation) state.projectState.testMoleculeTranslation = [0, 0, 0];
-        if (!state.projectState.testMoleculeVelocity) state.projectState.testMoleculeVelocity = [0, 0, 0];
-        if (!state.projectState.testMoleculeRotation) state.projectState.testMoleculeRotation = [0, 0, 0];
+        if (!state.projectState.ligandTranslation) state.projectState.ligandTranslation = [0, 0, 0];
+        if (!state.projectState.ligandVelocity) state.projectState.ligandVelocity = [0, 0, 0];
+        if (!state.projectState.ligandRotation) state.projectState.ligandRotation = [0, 0, 0];
 
         // translation
         const steer = new Vector3();
-        const pos = state.projectState.testMoleculeTranslation;
-        const vel = state.projectState.testMoleculeVelocity;
+        const pos = state.projectState.ligandTranslation;
+        const vel = state.projectState.ligandVelocity;
         switch (control) {
           case FlightControl.TranslateInPositiveX:
             steer.x = translationStep;
@@ -110,8 +110,8 @@ const loop = (control: FlightControl) => {
             break;
         }
         const a = computeAcceleration(
-          state.targetProteinData.atoms,
-          state.testMoleculeData,
+          state.proteinData.atoms,
+          state.ligandData,
           state.chemicalElements,
           pos,
           vel,
@@ -134,7 +134,7 @@ const loop = (control: FlightControl) => {
         pos[0] += dx;
         pos[1] += dy;
         pos[2] += dz;
-        const ref = useRefStore.getState().testMoleculeRef;
+        const ref = useRefStore.getState().ligandRef;
         if (ref && ref.current) {
           ref.current.position.x += dx;
           ref.current.position.y += dy;
@@ -145,61 +145,61 @@ const loop = (control: FlightControl) => {
         // rotation
         switch (control) {
           case FlightControl.RotateAroundXClockwise: {
-            const ref = useRefStore.getState().testMoleculeRef;
+            const ref = useRefStore.getState().ligandRef;
             if (ref && ref.current) {
               ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_POS_X, rotationStep));
               invalidate();
-              saveEuler(state.projectState.testMoleculeRotation, ref.current.rotation);
+              saveEuler(state.projectState.ligandRotation, ref.current.rotation);
             }
             break;
           }
           case FlightControl.RotateAroundXCounterclockwise: {
-            state.projectState.testMoleculeRotation[0] -= rotationStep;
-            const ref = useRefStore.getState().testMoleculeRef;
+            state.projectState.ligandRotation[0] -= rotationStep;
+            const ref = useRefStore.getState().ligandRef;
             if (ref && ref.current) {
               ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_NEG_X, rotationStep));
               invalidate();
-              saveEuler(state.projectState.testMoleculeRotation, ref.current.rotation);
+              saveEuler(state.projectState.ligandRotation, ref.current.rotation);
             }
             break;
           }
           case FlightControl.RotateAroundYClockwise: {
-            state.projectState.testMoleculeRotation[1] += rotationStep;
-            const ref = useRefStore.getState().testMoleculeRef;
+            state.projectState.ligandRotation[1] += rotationStep;
+            const ref = useRefStore.getState().ligandRef;
             if (ref && ref.current) {
               ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_POS_Y, rotationStep));
               invalidate();
-              saveEuler(state.projectState.testMoleculeRotation, ref.current.rotation);
+              saveEuler(state.projectState.ligandRotation, ref.current.rotation);
             }
             break;
           }
           case FlightControl.RotateAroundYCounterclockwise: {
-            state.projectState.testMoleculeRotation[1] -= rotationStep;
-            const ref = useRefStore.getState().testMoleculeRef;
+            state.projectState.ligandRotation[1] -= rotationStep;
+            const ref = useRefStore.getState().ligandRef;
             if (ref && ref.current) {
               ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_NEG_Y, rotationStep));
               invalidate();
-              saveEuler(state.projectState.testMoleculeRotation, ref.current.rotation);
+              saveEuler(state.projectState.ligandRotation, ref.current.rotation);
             }
             break;
           }
           case FlightControl.RotateAroundZClockwise: {
-            state.projectState.testMoleculeRotation[2] += rotationStep;
-            const ref = useRefStore.getState().testMoleculeRef;
+            state.projectState.ligandRotation[2] += rotationStep;
+            const ref = useRefStore.getState().ligandRef;
             if (ref && ref.current) {
               ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_POS_Z, rotationStep));
               invalidate();
-              saveEuler(state.projectState.testMoleculeRotation, ref.current.rotation);
+              saveEuler(state.projectState.ligandRotation, ref.current.rotation);
             }
             break;
           }
           case FlightControl.RotateAroundZCounterclockwise: {
-            state.projectState.testMoleculeRotation[2] -= rotationStep;
-            const ref = useRefStore.getState().testMoleculeRef;
+            state.projectState.ligandRotation[2] -= rotationStep;
+            const ref = useRefStore.getState().ligandRef;
             if (ref && ref.current) {
               ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_NEG_Z, rotationStep));
               invalidate();
-              saveEuler(state.projectState.testMoleculeRotation, ref.current.rotation);
+              saveEuler(state.projectState.ligandRotation, ref.current.rotation);
             }
             break;
           }

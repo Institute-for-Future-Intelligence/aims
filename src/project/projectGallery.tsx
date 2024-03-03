@@ -151,7 +151,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const dotSizeScatterPlot = useStore(Selector.dotSizeScatterPlot);
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
-  const updateTestMoleculeData = useStore(Selector.updateTestMoleculeData);
+  const updateLigandData = useStore(Selector.updateLigandData);
   const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -352,9 +352,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   setCommonStore((state) => {
-                    state.projectState.testMolecule = selectedMolecule;
+                    state.projectState.ligand = selectedMolecule;
                   });
-                  updateTestMoleculeData();
+                  updateLigandData();
                   setChanged(true);
                 }}
               >

@@ -9,13 +9,13 @@ import { Group } from 'three';
 export interface RefStoreState {
   selectNone: () => void;
   contentRef: RefObject<Group> | null;
-  testMoleculeRef: RefObject<Group> | null;
+  ligandRef: RefObject<Group> | null;
 }
 
 export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
   return {
     selectNone: () => {},
     contentRef: null,
-    testMoleculeRef: null,
+    ligandRef: null,
   };
 });

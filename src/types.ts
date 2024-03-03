@@ -16,10 +16,11 @@ export interface ProjectState {
   title: string | null;
   description: string | null;
   molecules: MoleculeData[];
+  testMolecules: MoleculeData[];
   numberOfColumns: number;
   selectedMolecule: MoleculeData | null;
-  testMolecule: MoleculeData | null;
-  targetProtein: MoleculeData | null;
+  ligand: MoleculeData | null;
+  protein: MoleculeData | null;
   selectedProperty: string | null;
   dataColoring: DataColoring;
   sortDescending: boolean | null;
@@ -57,10 +58,10 @@ export interface ProjectState {
   rotationStep: number;
   translationStep: number;
 
-  testMoleculeRotation: number[]; // euler angles
-  testMoleculeTranslation: number[]; // translation displacement along x, y, z axes
-  testMoleculeVelocity: number[]; // velocity along x, y, z axes
-  // testMoleculeAcceleration: number[]; // acceleration along x, y, z axes
+  ligandRotation: number[]; // euler angles
+  ligandTranslation: number[]; // translation displacement along x, y, z axes
+  ligandVelocity: number[]; // velocity along x, y, z axes
+  // ligandAcceleration: number[]; // acceleration along x, y, z axes
 
   spaceshipDisplayMode: SpaceshipDisplayMode;
   spaceshipRoll: number;
