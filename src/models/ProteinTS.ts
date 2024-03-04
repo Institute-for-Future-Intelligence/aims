@@ -10,7 +10,7 @@ import Molecule from '../lib/chem/Molecule';
 import StructuralElement from '../lib/chem/StructuralElement';
 import { Vector3 } from 'three';
 
-export interface MoleculeTS {
+export interface ProteinTS {
   name: string;
   metadata: any;
   atoms: AtomTS[];

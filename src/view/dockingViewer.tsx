@@ -4,7 +4,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DirectionalLight, Group, Vector3 } from 'three';
-import { MoleculeTS } from '../models/MoleculeTS';
+import { ProteinTS } from '../models/ProteinTS.ts';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { MoleculeData } from '../types';
@@ -161,7 +161,7 @@ const DockingViewer = React.memo(
           structures,
           molecules,
           centerOffset: new Vector3(cx, cy, cz),
-        } as MoleculeTS;
+        } as ProteinTS;
       });
       if (moleculeData) {
         setProperties(moleculeData, result._atoms.length, result._bonds.length);

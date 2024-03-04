@@ -22,7 +22,7 @@ import { useRefStore } from './commonRef';
 import { MolecularProperties } from '../models/MolecularProperties';
 import { User } from '../User';
 import { ProjectUtil } from '../project/ProjectUtil.ts';
-import { MoleculeTS } from '../models/MoleculeTS';
+import { ProteinTS } from '../models/ProteinTS.ts';
 import Complex from '../lib/chem/Complex';
 import AtomJS from '../lib/chem/Atom';
 import { Vector3 } from 'three';
@@ -43,7 +43,7 @@ export interface CommonStoreState {
   projectState: ProjectState;
   projectView: boolean;
 
-  proteinData: MoleculeTS | undefined;
+  proteinData: ProteinTS | undefined;
   ligandData: AtomTS[] | undefined;
   updateLigandData: () => void;
 
