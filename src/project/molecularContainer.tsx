@@ -7,7 +7,7 @@ import { MoleculeData } from '../types.ts';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from '../view/displayOptions.ts';
 import * as Selector from '../stores/selector';
 import { useStore } from '../stores/common.ts';
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { DirectionalLight, Vector3 } from 'three';
 import { DEFAULT_CAMERA_POSITION, DEFAULT_LIGHT_INTENSITY, LabelType } from '../constants.ts';
 import { ProjectGalleryControls } from '../controls.tsx';
@@ -47,8 +47,10 @@ const MolecularContainer = React.memo(
     const labelType = useStore(Selector.labelType);
 
     const lightRef = useRef<DirectionalLight>(null);
+    const [controlDisabled, setControlDisabled] = useState<boolean>(false);
 
     const onPointerOver = () => {
+      setControlDisabled(false);
       usePrimitiveStore.getState().set((state) => {
         state.hoveredMolecule = moleculeData;
       });
@@ -56,6 +58,7 @@ const MolecularContainer = React.memo(
     };
 
     const onPointerLeave = () => {
+      setControlDisabled(true);
       usePrimitiveStore.getState().set((state) => {
         state.hoveredMolecule = null;
       });
@@ -88,7 +91,7 @@ const MolecularContainer = React.memo(
           intensity={DEFAULT_LIGHT_INTENSITY}
           castShadow={false}
         />
-        <ProjectGalleryControls lightRef={lightRef} />
+        <ProjectGalleryControls disabled={controlDisabled || !selected} lightRef={lightRef} />
         <GalleryViewer
           moleculeData={moleculeData}
           style={style}
@@ -112,7 +115,14 @@ const MolecularContainer = React.memo(
             onPointerOver={onPointerOver}
             onPointerLeave={onPointerLeave}
             onMouseDown={onMouseDown}
-          ></div>
+            draggable
+            onDragStart={(e) => {
+              setControlDisabled(true);
+            }}
+            onDragEnd={(e) => {
+              setControlDisabled(false);
+            }}
+          />
         </Html>
         <Html>
           <div
@@ -126,6 +136,7 @@ const MolecularContainer = React.memo(
               fontWeight: selected ? 'bold' : 'normal',
               width: 'calc(100% - 14px)',
             }}
+            onMouseDown={onMouseDown}
           >
             {labelType === LabelType.FORMULA ? formula ?? moleculeData?.name : moleculeData?.name}
           </div>

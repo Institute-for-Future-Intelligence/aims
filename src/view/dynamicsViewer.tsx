@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DoubleSide, Group } from 'three';
+import { DoubleSide, Group, Raycaster, Vector2 } from 'three';
 import { MoleculeData } from '../types';
 import AtomJS from '../lib/chem/Atom';
 import ComplexVisual from '../lib/ComplexVisual';
@@ -90,13 +90,18 @@ const DynamicsViewer = React.memo(
     const xyPlanePosition = useStore(Selector.xyPlanePosition) ?? 0;
     const yzPlanePosition = useStore(Selector.yzPlanePosition) ?? 0;
     const xzPlanePosition = useStore(Selector.xzPlanePosition) ?? 0;
+    const dropX = usePrimitiveStore(Selector.dropX);
+    const dropY = usePrimitiveStore(Selector.dropY);
 
     const [complex, setComplex] = useState<any>();
 
     const atomsRef = useRef<AtomTS[]>([]);
     const groupRef = useRef<Group>(null);
+    const planeXYRef = useRef<any>();
+    const planeYZRef = useRef<any>();
+    const planeXZRef = useRef<any>();
 
-    const { invalidate } = useThree();
+    const { invalidate, camera } = useThree();
 
     const mode = useMemo(() => {
       return STYLE_MAP.get(style);
@@ -105,6 +110,19 @@ const DynamicsViewer = React.memo(
     const colorer = useMemo(() => {
       return COLORING_MAP.get(coloring);
     }, [coloring]);
+
+    useEffect(() => {
+      const planes = [];
+      if (xyPlaneVisible && planeXYRef.current) planes.push(planeXYRef.current);
+      if (yzPlaneVisible && planeYZRef.current) planes.push(planeYZRef.current);
+      if (xzPlaneVisible && planeXZRef.current) planes.push(planeXZRef.current);
+      const raycaster = new Raycaster();
+      raycaster.setFromCamera(new Vector2(dropX, dropY), camera);
+      const intersects = raycaster.intersectObjects(planes);
+      if (intersects.length > 0) {
+        console.log(intersects[0].point, intersects[0].object);
+      }
+    }, [dropX, dropY]);
 
     useEffect(() => {
       if (!molecules || molecules.length === 0) {
@@ -194,7 +212,13 @@ const DynamicsViewer = React.memo(
         />
         {xyPlaneVisible && (
           <group position={[0, 0, xyPlanePosition]}>
-            <Plane visible={false} name={'X-Y Plane'} args={[planeSize, planeSize]} rotation={[0, 0, 0]}>
+            <Plane
+              ref={planeXYRef}
+              visible={false}
+              name={'X-Y Plane'}
+              args={[planeSize, planeSize]}
+              rotation={[0, 0, 0]}
+            >
               <meshStandardMaterial
                 attach="material"
                 opacity={planeOpacity}
@@ -204,6 +228,7 @@ const DynamicsViewer = React.memo(
               />
             </Plane>
             <Grid
+              name={'X-Y Grid'}
               args={[planeSize, planeSize]}
               rotation={[HALF_PI, 0, 0]}
               sectionColor={'blue'}
@@ -215,6 +240,7 @@ const DynamicsViewer = React.memo(
         {yzPlaneVisible && (
           <group position={[yzPlanePosition, 0, 0]}>
             <Plane
+              ref={planeYZRef}
               visible={false}
               name={'Y-Z Plane'}
               args={[planeSize, planeSize]}
@@ -232,6 +258,7 @@ const DynamicsViewer = React.memo(
               />
             </Plane>
             <Grid
+              name={'Y-Z Grid'}
               args={[planeSize, planeSize]}
               rotation={[0, 0, HALF_PI]}
               sectionColor={'red'}
@@ -242,7 +269,13 @@ const DynamicsViewer = React.memo(
         )}
         {xzPlaneVisible && (
           <group position={[0, xzPlanePosition, 0]}>
-            <Plane visible={false} name={'X-Z Plane'} args={[planeSize, planeSize]} rotation={[HALF_PI, 0, 0]}>
+            <Plane
+              ref={planeXZRef}
+              visible={false}
+              name={'X-Z Plane'}
+              args={[planeSize, planeSize]}
+              rotation={[HALF_PI, 0, 0]}
+            >
               <meshStandardMaterial
                 attach="material"
                 opacity={planeOpacity}
@@ -252,6 +285,7 @@ const DynamicsViewer = React.memo(
               />
             </Plane>
             <Grid
+              name={'X-Z Grid'}
               args={[planeSize, planeSize]}
               rotation={[0, HALF_PI, 0]}
               sectionColor={'green'}

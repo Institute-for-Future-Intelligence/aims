@@ -32,6 +32,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import DynamicsSettings from './view/dynamicsSettings.tsx';
 import DockingViewer from './view/dockingViewer.tsx';
 import DynamicsButtons from './view/dynamicsButtons.tsx';
+import { usePrimitiveStore } from './stores/commonPrimitive.ts';
 
 const ReactionChamber = React.memo(() => {
   const viewerStyle = useStore(Selector.chamberViewerStyle);
@@ -73,6 +74,18 @@ const ReactionChamber = React.memo(() => {
               ? [cameraRotation[0], cameraRotation[1], cameraRotation[2], Euler.DEFAULT_ORDER]
               : [HALF_PI / 2, 0, HALF_PI / 2, Euler.DEFAULT_ORDER],
           ),
+        }}
+        onDrop={(e) => {
+          const rect = (e.target as HTMLDivElement).getBoundingClientRect();
+          usePrimitiveStore.getState().set((state) => {
+            if (canvasRef.current) {
+              state.dropX = ((e.clientX - rect.left) / canvasRef.current.width) * 2 - 1;
+              state.dropY = -((e.clientY - rect.top) / canvasRef.current.height) * 2 + 1;
+            }
+          });
+        }}
+        onDragOver={(e) => {
+          e.preventDefault();
         }}
       >
         <ReactionChamberControls lightRef={lightRef} />

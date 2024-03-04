@@ -31,6 +31,7 @@ declare module '@react-three/fiber' {
 }
 
 interface ControlsProps {
+  disabled?: boolean;
   lightRef: React.RefObject<DirectionalLight>;
 }
 
@@ -272,7 +273,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   );
 });
 
-export const ProjectGalleryControls = React.memo(({ lightRef }: ControlsProps) => {
+export const ProjectGalleryControls = ({ disabled, lightRef }: ControlsProps) => {
   const onControlChange = () => {
     if (lightRef.current) {
       // sets the point light to a location above the camera
@@ -286,6 +287,7 @@ export const ProjectGalleryControls = React.memo(({ lightRef }: ControlsProps) =
     <>
       <PerspectiveCamera ref={cameraRef} makeDefault position={[1, 1, 1]} fov={DEFAULT_FOV} />
       <TrackballControls
+        enabled={!disabled}
         rotateSpeed={6}
         zoomSpeed={1}
         panSpeed={0.1}
@@ -294,4 +296,4 @@ export const ProjectGalleryControls = React.memo(({ lightRef }: ControlsProps) =
       />
     </>
   );
-});
+};
