@@ -3,8 +3,8 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DoubleSide, Group, Raycaster, Vector2 } from 'three';
-import { MoleculeData } from '../types';
+import { DoubleSide, Group, Vector2 } from 'three';
+import { MoleculeData } from '../types.ts';
 import AtomJS from '../lib/chem/Atom';
 import ComplexVisual from '../lib/ComplexVisual';
 import { ThreeEvent, useThree } from '@react-three/fiber';
@@ -28,7 +28,6 @@ import { HALF_PI } from '../constants.ts';
 import { useStore } from '../stores/common.ts';
 
 export interface DynamicsViewerProps {
-  molecules: MoleculeData[];
   style: MolecularViewerStyle;
   material: MolecularViewerMaterial;
   coloring: MolecularViewerColoring;
@@ -74,7 +73,6 @@ const generateMolecule = (moleculeName: string, atoms: AtomTS[]) => {
 
 const DynamicsViewer = React.memo(
   ({
-    molecules,
     style,
     material,
     coloring,
@@ -84,6 +82,7 @@ const DynamicsViewer = React.memo(
     onPointerLeave,
     onPointerDown,
   }: DynamicsViewerProps) => {
+    const setCommonStore = useStore(Selector.set);
     const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
     const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
     const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
@@ -92,6 +91,8 @@ const DynamicsViewer = React.memo(
     const xzPlanePosition = useStore(Selector.xzPlanePosition) ?? 0;
     const dropX = usePrimitiveStore(Selector.dropX);
     const dropY = usePrimitiveStore(Selector.dropY);
+    const testMolecules = useStore(Selector.testMolecules);
+    const selectedMolecule = useStore(Selector.selectedMolecule);
 
     const [complex, setComplex] = useState<any>();
 
@@ -100,8 +101,9 @@ const DynamicsViewer = React.memo(
     const planeXYRef = useRef<any>();
     const planeYZRef = useRef<any>();
     const planeXZRef = useRef<any>();
+    const firstTimeDropRef = useRef<boolean>(true);
 
-    const { invalidate, camera } = useThree();
+    const { invalidate, camera, raycaster } = useThree();
 
     const mode = useMemo(() => {
       return STYLE_MAP.get(style);
@@ -112,58 +114,61 @@ const DynamicsViewer = React.memo(
     }, [coloring]);
 
     useEffect(() => {
+      if (firstTimeDropRef.current) {
+        firstTimeDropRef.current = false;
+        return;
+      }
       const planes = [];
       if (xyPlaneVisible && planeXYRef.current) planes.push(planeXYRef.current);
       if (yzPlaneVisible && planeYZRef.current) planes.push(planeYZRef.current);
       if (xzPlaneVisible && planeXZRef.current) planes.push(planeXZRef.current);
-      const raycaster = new Raycaster();
       raycaster.setFromCamera(new Vector2(dropX, dropY), camera);
       const intersects = raycaster.intersectObjects(planes);
-      if (intersects.length > 0) {
-        console.log(intersects[0].point, intersects[0].object);
+      if (intersects.length > 0 && selectedMolecule) {
+        setCommonStore((state) => {
+          const m = { ...selectedMolecule };
+          m.x = intersects[0].point.x;
+          m.y = intersects[0].point.y;
+          m.z = intersects[0].point.z;
+          state.projectState.testMolecules.push(m);
+        });
       }
     }, [dropX, dropY]);
 
     useEffect(() => {
-      if (!molecules || molecules.length === 0) {
+      if (!testMolecules || testMolecules.length === 0) {
         setComplex(undefined);
         return;
       }
       atomsRef.current = [];
-      for (const [i, m] of molecules.entries()) {
-        if (i < molecules.length - 1) {
+      for (const [i, m] of testMolecules.entries()) {
+        if (i < testMolecules.length - 1) {
           loadMolecule(m, processResult);
         } else {
           loadMolecule(m, processResultAndUpdate);
         }
       }
-    }, [molecules]);
+    }, [testMolecules]);
 
-    const processResult = (result: any) => {
+    const processResult = (result: any, moleculeData?: MoleculeData) => {
       const n = result._atoms.length;
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
-        atomsRef.current.push({ elementSymbol: atom.element.name, position: atom.position } as AtomTS);
+        const a = { elementSymbol: atom.element.name, position: atom.position } as AtomTS;
+        if (moleculeData) {
+          a.position.x += moleculeData.x ?? 0;
+          a.position.y += moleculeData.y ?? 0;
+          a.position.z += moleculeData.z ?? 0;
+        }
+        atomsRef.current.push(a);
       }
     };
 
-    const processResultAndUpdate = (result: any) => {
-      processResult(result);
+    const processResultAndUpdate = (result: any, moleculeData?: MoleculeData) => {
+      processResult(result, moleculeData);
       const n = atomsRef.current.length;
       if (n > 0) {
         setComplex(generateMolecule('all', atomsRef.current));
-        let cx = 0;
-        let cy = 0;
-        let cz = 0;
-        for (const a of atomsRef.current) {
-          cx += a.position.x;
-          cy += a.position.y;
-          cz += a.position.z;
-        }
-        cx /= n;
-        cy /= n;
-        cz /= n;
-        groupRef.current?.position.set(-cx, -cy, -cz);
       }
     };
 
@@ -245,9 +250,6 @@ const DynamicsViewer = React.memo(
               name={'Y-Z Plane'}
               args={[planeSize, planeSize]}
               rotation={[0, HALF_PI, 0]}
-              onClick={(e) => {
-                console.log(e.point);
-              }}
             >
               <meshStandardMaterial
                 attach="material"

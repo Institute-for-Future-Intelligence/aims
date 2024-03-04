@@ -103,6 +103,9 @@ export interface MoleculeData {
   url?: string;
   invisible?: boolean;
   excluded?: boolean;
+  x?: number;
+  y?: number;
+  z?: number;
 }
 
 export interface ActionInfo {

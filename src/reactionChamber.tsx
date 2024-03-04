@@ -61,7 +61,7 @@ const ReactionChamber = React.memo(() => {
         id={'reaction-chamber'}
         ref={canvasRef}
         shadows={false}
-        gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: true }}
+        gl={{ preserveDrawingBuffer: true, logarithmicDepthBuffer: false }}
         frameloop={'demand'}
         style={{ height: '100%', width: '100%', backgroundColor: viewerBackground }}
         camera={{
@@ -120,7 +120,6 @@ const ReactionChamber = React.memo(() => {
           )
         ) : (
           <DynamicsViewer
-            molecules={testMolecules}
             style={viewerStyle}
             material={viewerMaterial}
             coloring={viewerColoring}

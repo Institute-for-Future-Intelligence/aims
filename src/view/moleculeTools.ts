@@ -13,7 +13,11 @@ import { MoleculeData } from '../types.ts';
 import { useStore } from '../stores/common.ts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 
-export const loadMolecule = (moleculeData: MoleculeData, processResult: (result: any) => void, store?: boolean) => {
+export const loadMolecule = (
+  moleculeData: MoleculeData,
+  processResult: (result: any, moleculeData?: MoleculeData) => void,
+  store?: boolean,
+) => {
   const setParsedResult = useStore.getState().setParsedResult;
   const mol = getData(moleculeData.name);
   if (mol?.url) {
@@ -42,7 +46,7 @@ export const loadMolecule = (moleculeData: MoleculeData, processResult: (result:
               });
             }
             parser.parse().then((result) => {
-              processResult(result);
+              processResult(result, moleculeData);
             });
           }
         }
