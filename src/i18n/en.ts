@@ -153,6 +153,7 @@ export const i18n_en = {
       ExperimentSettings: 'Experiment Settings',
       Protein: 'Protein',
       Ligand: 'Ligand',
+      Molecules: 'Molecules',
       SelectorCommands: 'Selector Commands',
       Information: 'Information',
       MovingStep: 'Moving Step',

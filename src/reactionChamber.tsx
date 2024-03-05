@@ -20,7 +20,7 @@ import Axes from './view/axes';
 import DynamicsViewer from './view/dynamicsViewer.tsx';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import { DirectionalLight, Euler, Vector3 } from 'three';
+import { DirectionalLight, Euler, Vector2, Vector3 } from 'three';
 import DockingSettings from './view/dockingSettings.tsx';
 import { ReactionChamberControls } from './controls';
 import Spaceship from './view/spaceship.tsx';
@@ -32,9 +32,11 @@ import { LoadingOutlined } from '@ant-design/icons';
 import DynamicsSettings from './view/dynamicsSettings.tsx';
 import DockingViewer from './view/dockingViewer.tsx';
 import DynamicsButtons from './view/dynamicsButtons.tsx';
-import { usePrimitiveStore } from './stores/commonPrimitive.ts';
+import { useRefStore } from './stores/commonRef.ts';
 
 const ReactionChamber = React.memo(() => {
+  const setCommonStore = useStore(Selector.set);
+  const selectedMolecule = useStore(Selector.selectedMolecule);
   const viewerStyle = useStore(Selector.chamberViewerStyle);
   const viewerMaterial = useStore(Selector.chamberViewerMaterial);
   const viewerColoring = useStore(Selector.chamberViewerColoring);
@@ -48,12 +50,21 @@ const ReactionChamber = React.memo(() => {
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
   const protein = useStore(Selector.protein);
   const ligand = useStore(Selector.ligand);
-  const testMolecules = useStore(Selector.testMolecules);
   const projectType = useStore(Selector.projectType);
+  const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
+  const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
+  const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
 
   const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lightRef = useRef<DirectionalLight>(null);
+
+  const cameraRef = useRefStore.getState().cameraRef;
+  const raycasterRef = useRefStore.getState().raycasterRef;
+  const planeXYRef = useRefStore.getState().planeXYRef;
+  const planeYZRef = useRefStore.getState().planeYZRef;
+  const planeXZRef = useRefStore.getState().planeXZRef;
+  const moleculesRef = useRefStore.getState().moleculesRef;
 
   return (
     <>
@@ -77,12 +88,25 @@ const ReactionChamber = React.memo(() => {
         }}
         onDrop={(e) => {
           const rect = (e.target as HTMLDivElement).getBoundingClientRect();
-          usePrimitiveStore.getState().set((state) => {
-            if (canvasRef.current) {
-              state.dropX = ((e.clientX - rect.left) / canvasRef.current.width) * 2 - 1;
-              state.dropY = -((e.clientY - rect.top) / canvasRef.current.height) * 2 + 1;
+          if (canvasRef.current && cameraRef?.current && raycasterRef?.current) {
+            const dropX = ((e.clientX - rect.left) / canvasRef.current.width) * 2 - 1;
+            const dropY = -((e.clientY - rect.top) / canvasRef.current.height) * 2 + 1;
+            const planes = [];
+            if (xyPlaneVisible && planeXYRef?.current) planes.push(planeXYRef.current);
+            if (yzPlaneVisible && planeYZRef?.current) planes.push(planeYZRef.current);
+            if (xzPlaneVisible && planeXZRef?.current) planes.push(planeXZRef.current);
+            raycasterRef.current.setFromCamera(new Vector2(dropX, dropY), cameraRef.current);
+            const intersects = raycasterRef.current.intersectObjects(planes);
+            if (intersects.length > 0 && selectedMolecule) {
+              setCommonStore((state) => {
+                const m = { ...selectedMolecule };
+                m.x = intersects[0].point.x;
+                m.y = intersects[0].point.y;
+                m.z = intersects[0].point.z;
+                state.projectState.testMolecules.push(m);
+              });
             }
-          });
+          }
         }}
         onDragOver={(e) => {
           e.preventDefault();
@@ -147,7 +171,7 @@ const ReactionChamber = React.memo(() => {
       )}
       {projectType === ProjectType.QSAR_MODELING && (
         <>
-          <DynamicsSettings />
+          <DynamicsSettings molecules={moleculesRef?.current ? [...moleculesRef.current] : []} />
           <DynamicsButtons />
         </>
       )}

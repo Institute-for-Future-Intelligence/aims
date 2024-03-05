@@ -3,11 +3,11 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DoubleSide, Group, Vector2 } from 'three';
+import { DoubleSide, Group, Raycaster } from 'three';
 import { MoleculeData } from '../types.ts';
 import AtomJS from '../lib/chem/Atom';
 import ComplexVisual from '../lib/ComplexVisual';
-import { ThreeEvent, useThree } from '@react-three/fiber';
+import { Camera, ThreeEvent, useThree } from '@react-three/fiber';
 import {
   COLORING_MAP,
   MATERIAL_MAP,
@@ -26,6 +26,8 @@ import * as Selector from '../stores/selector';
 import { Grid, Plane } from '@react-three/drei';
 import { HALF_PI } from '../constants.ts';
 import { useStore } from '../stores/common.ts';
+import { MoleculeTS } from '../models/MoleculeTS.ts';
+import { useRefStore } from '../stores/commonRef.ts';
 
 export interface DynamicsViewerProps {
   style: MolecularViewerStyle;
@@ -38,36 +40,36 @@ export interface DynamicsViewerProps {
   onPointerDown?: (e: ThreeEvent<PointerEvent>) => void;
 }
 
-const generateMolecule = (moleculeName: string, atoms: AtomTS[]) => {
+// TODO: We have to generate a complex for each molecule
+const generateComplex = (name: string, molecules: MoleculeTS[]) => {
   const complex = new Complex();
-
-  const het = true;
-  const altLoc = ' ';
-  const occupancy = 1;
-  const tempFactor = 1;
-  const charge = 0;
-
-  const chain = complex.addChain('A');
-  const residue = chain.addResidue('UNK', 1, ' ');
-
-  for (const [i, a] of atoms.entries()) {
-    const serial = i + 1;
-    const role = undefined;
-    const type = Element.getByName(a.elementSymbol);
-    residue.addAtom(a.elementSymbol, type, a.position, role, het, serial, altLoc, occupancy, tempFactor, charge);
+  for (const [idx, mol] of molecules.entries()) {
+    const chain = complex.addChain('Chain' + idx);
+    const residue = chain.addResidue('UNK' + idx, idx, ' ');
+    for (const [i, a] of mol.atoms.entries()) {
+      residue.addAtom(
+        a.elementSymbol,
+        Element.getByName(a.elementSymbol),
+        a.position,
+        undefined,
+        true,
+        i + 1,
+        ' ',
+        1,
+        1,
+        0,
+      );
+    }
+    const molecule = new Molecule(complex, name, idx + 1);
+    molecule.residues = [residue];
+    complex._molecules.push(molecule);
   }
-
-  const molecule = new Molecule(complex, moleculeName, 1);
-  molecule.residues = [residue];
-  complex._molecules[0] = molecule;
-
   complex.finalize({
     needAutoBonding: true,
     detectAromaticLoops: false,
     enableEditing: false,
     serialAtomMap: false,
   });
-
   return complex;
 };
 
@@ -82,26 +84,23 @@ const DynamicsViewer = React.memo(
     onPointerLeave,
     onPointerDown,
   }: DynamicsViewerProps) => {
-    const setCommonStore = useStore(Selector.set);
     const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
     const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
     const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
     const xyPlanePosition = useStore(Selector.xyPlanePosition) ?? 0;
     const yzPlanePosition = useStore(Selector.yzPlanePosition) ?? 0;
     const xzPlanePosition = useStore(Selector.xzPlanePosition) ?? 0;
-    const dropX = usePrimitiveStore(Selector.dropX);
-    const dropY = usePrimitiveStore(Selector.dropY);
     const testMolecules = useStore(Selector.testMolecules);
-    const selectedMolecule = useStore(Selector.selectedMolecule);
 
     const [complex, setComplex] = useState<any>();
 
-    const atomsRef = useRef<AtomTS[]>([]);
+    const moleculesRef = useRef<MoleculeTS[]>([]);
     const groupRef = useRef<Group>(null);
     const planeXYRef = useRef<any>();
     const planeYZRef = useRef<any>();
     const planeXZRef = useRef<any>();
-    const firstTimeDropRef = useRef<boolean>(true);
+    const cameraRef = useRef<Camera | undefined>();
+    const raycasterRef = useRef<Raycaster | undefined>();
 
     const { invalidate, camera, raycaster } = useThree();
 
@@ -114,33 +113,24 @@ const DynamicsViewer = React.memo(
     }, [coloring]);
 
     useEffect(() => {
-      if (firstTimeDropRef.current) {
-        firstTimeDropRef.current = false;
-        return;
-      }
-      const planes = [];
-      if (xyPlaneVisible && planeXYRef.current) planes.push(planeXYRef.current);
-      if (yzPlaneVisible && planeYZRef.current) planes.push(planeYZRef.current);
-      if (xzPlaneVisible && planeXZRef.current) planes.push(planeXZRef.current);
-      raycaster.setFromCamera(new Vector2(dropX, dropY), camera);
-      const intersects = raycaster.intersectObjects(planes);
-      if (intersects.length > 0 && selectedMolecule) {
-        setCommonStore((state) => {
-          const m = { ...selectedMolecule };
-          m.x = intersects[0].point.x;
-          m.y = intersects[0].point.y;
-          m.z = intersects[0].point.z;
-          state.projectState.testMolecules.push(m);
-        });
-      }
-    }, [dropX, dropY]);
+      cameraRef.current = camera;
+      raycasterRef.current = raycaster;
+      useRefStore.setState({
+        cameraRef: cameraRef,
+        raycasterRef: raycasterRef,
+        planeXYRef: planeXYRef,
+        planeYZRef: planeYZRef,
+        planeXZRef: planeXZRef,
+        moleculesRef: moleculesRef,
+      });
+    }, [camera, raycaster, planeXYRef, planeYZRef, planeXZRef, cameraRef, raycasterRef, moleculesRef]);
 
     useEffect(() => {
       if (!testMolecules || testMolecules.length === 0) {
         setComplex(undefined);
         return;
       }
-      atomsRef.current = [];
+      moleculesRef.current.length = 0;
       for (const [i, m] of testMolecules.entries()) {
         if (i < testMolecules.length - 1) {
           loadMolecule(m, processResult);
@@ -150,25 +140,26 @@ const DynamicsViewer = React.memo(
       }
     }, [testMolecules]);
 
-    const processResult = (result: any, moleculeData?: MoleculeData) => {
+    const processResult = (result: any, molecule?: MoleculeData) => {
+      const mol = { name: molecule?.name, metadata: null, atoms: [], bonds: [] } as MoleculeTS;
       const n = result._atoms.length;
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
         const a = { elementSymbol: atom.element.name, position: atom.position } as AtomTS;
-        if (moleculeData) {
-          a.position.x += moleculeData.x ?? 0;
-          a.position.y += moleculeData.y ?? 0;
-          a.position.z += moleculeData.z ?? 0;
+        if (molecule) {
+          a.position.x += molecule.x ?? 0;
+          a.position.y += molecule.y ?? 0;
+          a.position.z += molecule.z ?? 0;
         }
-        atomsRef.current.push(a);
+        mol.atoms.push(a);
       }
+      moleculesRef.current.push(mol);
     };
 
-    const processResultAndUpdate = (result: any, moleculeData?: MoleculeData) => {
-      processResult(result, moleculeData);
-      const n = atomsRef.current.length;
-      if (n > 0) {
-        setComplex(generateMolecule('all', atomsRef.current));
+    const processResultAndUpdate = (result: any, molecule?: MoleculeData) => {
+      processResult(result, molecule);
+      if (moleculesRef.current.length > 0) {
+        setComplex(generateComplex('all', moleculesRef.current));
       }
     };
 

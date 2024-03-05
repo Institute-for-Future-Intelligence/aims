@@ -153,6 +153,7 @@ export const i18n_zh_tw = {
       ExperimentSettings: '實驗設定',
       Protein: '蛋白質',
       Ligand: '配體',
+      Molecules: '分子',
       SelectorCommands: '選擇指令',
       Information: '資訊',
       MovingStep: '平移步長',

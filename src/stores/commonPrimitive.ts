@@ -14,9 +14,6 @@ export interface PrimitiveStoreState {
   skipChange: boolean;
   setSkipChange: (b: boolean) => void;
 
-  dropX: number;
-  dropY: number;
-
   hoveredMolecule: MoleculeData | null;
 
   boundingSphereRadius: number;
@@ -100,9 +97,6 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
         state.skipChange = b;
       });
     },
-
-    dropX: 0,
-    dropY: 0,
 
     hoveredMolecule: null,
 
