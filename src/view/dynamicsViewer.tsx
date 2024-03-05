@@ -131,12 +131,8 @@ const DynamicsViewer = React.memo(
         return;
       }
       moleculesRef.current.length = 0;
-      for (const [i, m] of testMolecules.entries()) {
-        if (i < testMolecules.length - 1) {
-          loadMolecule(m, processResult);
-        } else {
-          loadMolecule(m, processResultAndUpdate);
-        }
+      for (const m of testMolecules) {
+        loadMolecule(m, processResult);
       }
     }, [testMolecules]);
 
@@ -154,11 +150,7 @@ const DynamicsViewer = React.memo(
         mol.atoms.push(a);
       }
       moleculesRef.current.push(mol);
-    };
-
-    const processResultAndUpdate = (result: any, molecule?: MoleculeData) => {
-      processResult(result, molecule);
-      if (moleculesRef.current.length > 0) {
+      if (moleculesRef.current.length === testMolecules.length) {
         setComplex(generateComplex('all', moleculesRef.current));
       }
     };

@@ -66,6 +66,29 @@ const ReactionChamber = React.memo(() => {
   const planeXZRef = useRefStore.getState().planeXZRef;
   const moleculesRef = useRefStore.getState().moleculesRef;
 
+  const dropMolecule = (e: React.DragEvent) => {
+    const rect = (e.target as HTMLDivElement).getBoundingClientRect();
+    if (canvasRef.current && cameraRef?.current && raycasterRef?.current) {
+      const dropX = ((e.clientX - rect.left) / canvasRef.current.width) * 2 - 1;
+      const dropY = -((e.clientY - rect.top) / canvasRef.current.height) * 2 + 1;
+      const planes = [];
+      if (xyPlaneVisible && planeXYRef?.current) planes.push(planeXYRef.current);
+      if (yzPlaneVisible && planeYZRef?.current) planes.push(planeYZRef.current);
+      if (xzPlaneVisible && planeXZRef?.current) planes.push(planeXZRef.current);
+      raycasterRef.current.setFromCamera(new Vector2(dropX, dropY), cameraRef.current);
+      const intersects = raycasterRef.current.intersectObjects(planes);
+      if (intersects.length > 0 && selectedMolecule) {
+        setCommonStore((state) => {
+          const m = { ...selectedMolecule };
+          m.x = intersects[0].point.x;
+          m.y = intersects[0].point.y;
+          m.z = intersects[0].point.z;
+          state.projectState.testMolecules.push(m);
+        });
+      }
+    }
+  };
+
   return (
     <>
       <Canvas
@@ -86,28 +109,7 @@ const ReactionChamber = React.memo(() => {
               : [HALF_PI / 2, 0, HALF_PI / 2, Euler.DEFAULT_ORDER],
           ),
         }}
-        onDrop={(e) => {
-          const rect = (e.target as HTMLDivElement).getBoundingClientRect();
-          if (canvasRef.current && cameraRef?.current && raycasterRef?.current) {
-            const dropX = ((e.clientX - rect.left) / canvasRef.current.width) * 2 - 1;
-            const dropY = -((e.clientY - rect.top) / canvasRef.current.height) * 2 + 1;
-            const planes = [];
-            if (xyPlaneVisible && planeXYRef?.current) planes.push(planeXYRef.current);
-            if (yzPlaneVisible && planeYZRef?.current) planes.push(planeYZRef.current);
-            if (xzPlaneVisible && planeXZRef?.current) planes.push(planeXZRef.current);
-            raycasterRef.current.setFromCamera(new Vector2(dropX, dropY), cameraRef.current);
-            const intersects = raycasterRef.current.intersectObjects(planes);
-            if (intersects.length > 0 && selectedMolecule) {
-              setCommonStore((state) => {
-                const m = { ...selectedMolecule };
-                m.x = intersects[0].point.x;
-                m.y = intersects[0].point.y;
-                m.z = intersects[0].point.z;
-                state.projectState.testMolecules.push(m);
-              });
-            }
-          }
-        }}
+        onDrop={dropMolecule}
         onDragOver={(e) => {
           e.preventDefault();
         }}

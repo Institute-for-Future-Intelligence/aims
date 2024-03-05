@@ -45,6 +45,7 @@ const DockingButtons = React.memo(() => {
     >
       {/* translation buttons */}
       <FloatButton
+        shape="square"
         tooltip={
           <>
             {t('experiment.MoveInPositiveXDirection', lang)}
@@ -56,6 +57,7 @@ const DockingButtons = React.memo(() => {
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
+        shape="square"
         style={{ borderRadius: 0 }}
         tooltip={
           <>
@@ -68,6 +70,7 @@ const DockingButtons = React.memo(() => {
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
+        shape="square"
         tooltip={
           <>
             {t('experiment.MoveInPositiveYDirection', lang)}
@@ -79,6 +82,7 @@ const DockingButtons = React.memo(() => {
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
+        shape="square"
         tooltip={
           <>
             {t('experiment.MoveInNegativeYDirection', lang)}
@@ -90,6 +94,7 @@ const DockingButtons = React.memo(() => {
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
+        shape="square"
         style={{ borderRadius: 0 }}
         tooltip={
           <>
@@ -102,6 +107,7 @@ const DockingButtons = React.memo(() => {
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
+        shape="square"
         tooltip={
           <>
             {t('experiment.MoveInNegativeZDirection', lang)}
@@ -115,6 +121,7 @@ const DockingButtons = React.memo(() => {
 
       {/* rotation buttons */}
       <FloatButton
+        shape="square"
         tooltip={
           <>
             {t('experiment.RotateAroundXClockwise', lang)}
@@ -126,6 +133,7 @@ const DockingButtons = React.memo(() => {
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
+        shape="square"
         style={{ borderRadius: 0 }}
         tooltip={
           <>
@@ -138,6 +146,7 @@ const DockingButtons = React.memo(() => {
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
+        shape="square"
         tooltip={
           <>
             {t('experiment.RotateAroundYClockwise', lang)}
@@ -149,6 +158,7 @@ const DockingButtons = React.memo(() => {
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
+        shape="square"
         tooltip={
           <>
             {t('experiment.RotateAroundYCounterclockwise', lang)}
@@ -160,6 +170,7 @@ const DockingButtons = React.memo(() => {
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
+        shape="square"
         style={{ borderRadius: 0 }}
         tooltip={
           <>
@@ -172,6 +183,7 @@ const DockingButtons = React.memo(() => {
         onMouseUp={() => stopFlying()}
       />
       <FloatButton
+        shape="square"
         tooltip={
           <>
             {t('experiment.RotateAroundZCounterclockwise', lang)}

@@ -32,6 +32,7 @@ const DynamicsButtons = React.memo(() => {
       }}
     >
       <FloatButton
+        shape="square"
         description={'X-Y'}
         tooltip={t('experiment.ShowXYPlane', lang)}
         style={{ background: xyPlaneVisible ? 'lightgray' : 'white' }}
@@ -42,6 +43,7 @@ const DynamicsButtons = React.memo(() => {
         }}
       />
       <FloatButton
+        shape="square"
         description={'Y-Z'}
         tooltip={t('experiment.ShowYZPlane', lang)}
         style={{ background: yzPlaneVisible ? 'lightgray' : 'white' }}
@@ -52,6 +54,7 @@ const DynamicsButtons = React.memo(() => {
         }}
       />
       <FloatButton
+        shape="square"
         description={'X-Z'}
         tooltip={t('experiment.ShowXZPlane', lang)}
         style={{ background: xzPlaneVisible ? 'lightgray' : 'white' }}
