@@ -633,9 +633,6 @@ class MyTrackballControls extends EventDispatcher {
       scope.domElement.removeEventListener('pointerdown', onPointerDown);
       scope.domElement.removeEventListener('pointercancel', onPointerCancel);
       scope.domElement.removeEventListener('wheel', onMouseWheel);
-
-      console.log('remove pointermove');
-
       scope.domElement.removeEventListener('pointermove', onPointerMove);
       scope.domElement.removeEventListener('pointerup', onPointerUp);
 

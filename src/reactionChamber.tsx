@@ -117,6 +117,7 @@ const ReactionChamber = React.memo(() => {
         onPointerUp={() => {
           usePrimitiveStore.getState().set((state) => {
             state.enableRotate = true;
+            state.selectedPlane = -1;
           });
         }}
       >

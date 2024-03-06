@@ -19,6 +19,7 @@ const DropPlanes = React.memo(() => {
   const xyPlanePosition = useStore(Selector.xyPlanePosition) ?? 0;
   const yzPlanePosition = useStore(Selector.yzPlanePosition) ?? 0;
   const xzPlanePosition = useStore(Selector.xzPlanePosition) ?? 0;
+  const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
 
   const [hoveredPlaneIndex, setHoveredPlaneIndex] = useState<number>(-1);
   const [hoveredHandleIndex, setHoveredHandleIndex] = useState<number>(-1);
@@ -51,45 +52,47 @@ const DropPlanes = React.memo(() => {
     return (
       <>
         <Line name={name} points={points} color={color} lineWidth={2} />
-        {points.map((p, handleIndex) => {
-          if (handleIndex === points.length - 1) return null;
-          return (
-            <Box
-              name={name + ' Handle ' + handleIndex}
-              args={[box[0], box[1], box[2]]}
-              position={p}
-              onPointerEnter={() => {
-                setHoveredPlaneIndex(planeIndex);
-                setHoveredHandleIndex(handleIndex);
-                gl.domElement.style.cursor = 'pointer';
-              }}
-              onPointerLeave={() => {
-                setHoveredPlaneIndex(-1);
-                setHoveredHandleIndex(-1);
-                gl.domElement.style.cursor = 'default';
-              }}
-              onPointerDown={() => {
-                usePrimitiveStore.getState().set((state) => {
-                  state.enableRotate = false;
-                });
-              }}
-              onPointerUp={() => {
-                usePrimitiveStore.getState().set((state) => {
-                  state.enableRotate = true;
-                });
-              }}
-            >
-              <meshBasicMaterial
-                attach="material"
-                color={
-                  hoveredHandleIndex === handleIndex && hoveredPlaneIndex === planeIndex
-                    ? HIGHLIGHT_HANDLE_COLOR
-                    : color
-                }
-              />
-            </Box>
-          );
-        })}
+        {selectedPlane === planeIndex &&
+          points.map((p, handleIndex) => {
+            if (handleIndex === points.length - 1) return null;
+            return (
+              <Box
+                key={handleIndex}
+                name={name + ' Handle ' + handleIndex}
+                args={[box[0], box[1], box[2]]}
+                position={p}
+                onPointerEnter={() => {
+                  setHoveredPlaneIndex(planeIndex);
+                  setHoveredHandleIndex(handleIndex);
+                  gl.domElement.style.cursor = 'pointer';
+                }}
+                onPointerLeave={() => {
+                  setHoveredPlaneIndex(-1);
+                  setHoveredHandleIndex(-1);
+                  gl.domElement.style.cursor = 'default';
+                }}
+                onPointerDown={() => {
+                  usePrimitiveStore.getState().set((state) => {
+                    state.enableRotate = false;
+                  });
+                }}
+                onPointerUp={() => {
+                  usePrimitiveStore.getState().set((state) => {
+                    state.enableRotate = true;
+                  });
+                }}
+              >
+                <meshBasicMaterial
+                  attach="material"
+                  color={
+                    hoveredHandleIndex === handleIndex && hoveredPlaneIndex === planeIndex
+                      ? HIGHLIGHT_HANDLE_COLOR
+                      : color
+                  }
+                />
+              </Box>
+            );
+          })}
       </>
     );
   };
@@ -105,7 +108,9 @@ const DropPlanes = React.memo(() => {
             args={[planeSize, planeSize]}
             rotation={[0, 0, 0]}
             onClick={(e) => {
-              // console.log('a');
+              usePrimitiveStore.getState().set((state) => {
+                state.selectedPlane = 0;
+              });
             }}
           >
             <meshStandardMaterial
@@ -147,6 +152,11 @@ const DropPlanes = React.memo(() => {
             name={'Y-Z Plane'}
             args={[planeSize, planeSize]}
             rotation={[0, HALF_PI, 0]}
+            onClick={(e) => {
+              usePrimitiveStore.getState().set((state) => {
+                state.selectedPlane = 1;
+              });
+            }}
           >
             <meshStandardMaterial
               attach="material"
@@ -163,7 +173,6 @@ const DropPlanes = React.memo(() => {
             sectionColor={'red'}
             sectionThickness={1}
             side={DoubleSide}
-            onClick={(e) => {}}
           />
           {createBorder(
             1,
@@ -188,6 +197,11 @@ const DropPlanes = React.memo(() => {
             name={'X-Z Plane'}
             args={[planeSize, planeSize]}
             rotation={[HALF_PI, 0, 0]}
+            onClick={(e) => {
+              usePrimitiveStore.getState().set((state) => {
+                state.selectedPlane = 2;
+              });
+            }}
           >
             <meshStandardMaterial
               attach="material"

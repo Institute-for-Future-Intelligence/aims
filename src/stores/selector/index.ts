@@ -23,6 +23,8 @@ export const setChanged = (state: PrimitiveStoreState) => state.setChanged;
 
 export const setSkipChange = (state: PrimitiveStoreState) => state.setSkipChange;
 
+export const selectedPlane = (state: PrimitiveStoreState) => state.selectedPlane;
+
 export const xyPlaneVisible = (state: CommonStoreState) => state.projectState.xyPlaneVisible;
 
 export const yzPlaneVisible = (state: CommonStoreState) => state.projectState.yzPlaneVisible;
