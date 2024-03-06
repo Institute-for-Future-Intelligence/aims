@@ -97,6 +97,10 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const undoManager = useStore(Selector.undoManager);
   const addUndoable = useStore(Selector.addUndoable);
   const selectedObject = useStore(Selector.selectedObject);
+  const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
+  const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
+  const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
+  const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -147,10 +151,42 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     const ship = useStore.getState().projectState.spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW;
     switch (key) {
       case 'up':
-        startFlying(FlightControl.MoveForward);
+        if (selectedPlane >= 0) {
+          setCommonStore((state) => {
+            switch (selectedPlane) {
+              case 0:
+                if (xyPlaneVisible) state.projectState.xyPlanePosition += 0.1;
+                break;
+              case 1:
+                if (yzPlaneVisible) state.projectState.yzPlanePosition += 0.1;
+                break;
+              case 2:
+                if (xzPlaneVisible) state.projectState.xzPlanePosition += 0.1;
+                break;
+            }
+          });
+        } else {
+          startFlying(FlightControl.MoveForward);
+        }
         break;
       case 'down':
-        startFlying(FlightControl.MoveBackward);
+        if (selectedPlane >= 0) {
+          setCommonStore((state) => {
+            switch (selectedPlane) {
+              case 0:
+                if (xyPlaneVisible) state.projectState.xyPlanePosition -= 0.1;
+                break;
+              case 1:
+                if (yzPlaneVisible) state.projectState.yzPlanePosition -= 0.1;
+                break;
+              case 2:
+                if (xzPlaneVisible) state.projectState.xzPlanePosition -= 0.1;
+                break;
+            }
+          });
+        } else {
+          startFlying(FlightControl.MoveBackward);
+        }
         break;
       case 'q':
         startFlying(ship ? FlightControl.YawLeft : FlightControl.RotateAroundZClockwise);

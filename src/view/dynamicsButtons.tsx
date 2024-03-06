@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { FloatButton } from 'antd';
+import { FloatButton, InputNumber, Popover } from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,9 @@ const DynamicsButtons = React.memo(() => {
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
+  const xyPlanePosition = useStore(Selector.xyPlanePosition);
+  const yzPlanePosition = useStore(Selector.yzPlanePosition);
+  const xzPlanePosition = useStore(Selector.xzPlanePosition);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -31,39 +34,102 @@ const DynamicsButtons = React.memo(() => {
         zIndex: 13,
       }}
     >
-      <FloatButton
-        shape="square"
-        description={'X-Y'}
-        tooltip={t('experiment.ShowXYPlane', lang)}
-        style={{ background: xyPlaneVisible ? 'lightgray' : 'white' }}
-        onClick={() => {
-          setCommonStore((state) => {
-            state.projectState.xyPlaneVisible = !state.projectState.xyPlaneVisible;
-          });
-        }}
-      />
-      <FloatButton
-        shape="square"
-        description={'Y-Z'}
-        tooltip={t('experiment.ShowYZPlane', lang)}
-        style={{ background: yzPlaneVisible ? 'lightgray' : 'white' }}
-        onClick={() => {
-          setCommonStore((state) => {
-            state.projectState.yzPlaneVisible = !state.projectState.yzPlaneVisible;
-          });
-        }}
-      />
-      <FloatButton
-        shape="square"
-        description={'X-Z'}
-        tooltip={t('experiment.ShowXZPlane', lang)}
-        style={{ background: xzPlaneVisible ? 'lightgray' : 'white' }}
-        onClick={() => {
-          setCommonStore((state) => {
-            state.projectState.xzPlaneVisible = !state.projectState.xzPlaneVisible;
-          });
-        }}
-      />
+      <Popover
+        placement={'right'}
+        content={
+          xyPlaneVisible ? (
+            <InputNumber
+              style={{ width: '120px' }}
+              addonBefore={'Z'}
+              value={xyPlanePosition}
+              step={0.1}
+              precision={1}
+              onChange={(value) => {
+                if (!value) return;
+                setCommonStore((state) => {
+                  state.projectState.xyPlanePosition = value;
+                });
+              }}
+            />
+          ) : undefined
+        }
+      >
+        <FloatButton
+          shape="square"
+          description={'X-Y'}
+          tooltip={xyPlaneVisible ? undefined : t('experiment.ShowXYPlane', lang)}
+          style={{ background: xyPlaneVisible ? 'lightgray' : 'white' }}
+          onClick={() => {
+            setCommonStore((state) => {
+              state.projectState.xyPlaneVisible = !state.projectState.xyPlaneVisible;
+            });
+          }}
+        />
+      </Popover>
+      <Popover
+        placement={'right'}
+        content={
+          yzPlaneVisible ? (
+            <InputNumber
+              style={{ width: '120px' }}
+              addonBefore={'X'}
+              value={yzPlanePosition}
+              step={0.1}
+              precision={1}
+              onChange={(value) => {
+                if (!value) return;
+                setCommonStore((state) => {
+                  state.projectState.yzPlanePosition = value;
+                });
+              }}
+            />
+          ) : undefined
+        }
+      >
+        <FloatButton
+          shape="square"
+          description={'Y-Z'}
+          tooltip={yzPlaneVisible ? undefined : t('experiment.ShowYZPlane', lang)}
+          style={{ background: yzPlaneVisible ? 'lightgray' : 'white' }}
+          onClick={() => {
+            setCommonStore((state) => {
+              state.projectState.yzPlaneVisible = !state.projectState.yzPlaneVisible;
+            });
+          }}
+        />
+      </Popover>
+      <Popover
+        placement={'right'}
+        content={
+          xzPlaneVisible ? (
+            <InputNumber
+              style={{ width: '120px' }}
+              addonBefore={'Y'}
+              value={xzPlanePosition}
+              step={0.1}
+              precision={1}
+              onChange={(value) => {
+                if (!value) return;
+                setCommonStore((state) => {
+                  state.projectState.xzPlanePosition = value;
+                });
+              }}
+            />
+          ) : undefined
+        }
+      >
+        <FloatButton
+          shape="square"
+          description={'X-Z'}
+          tooltip={xzPlaneVisible ? undefined : t('experiment.ShowXZPlane', lang)}
+          style={{ background: xzPlaneVisible ? 'lightgray' : 'white' }}
+          onClick={() => {
+            setCommonStore((state) => {
+              state.projectState.xzPlaneVisible = !state.projectState.xzPlaneVisible;
+            });
+          }}
+        />
+      </Popover>
     </FloatButton.Group>
   );
 });
