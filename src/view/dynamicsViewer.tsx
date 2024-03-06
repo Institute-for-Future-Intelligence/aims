@@ -23,7 +23,7 @@ import Complex from '../lib/chem/Complex';
 import Element from '../lib/chem/Element';
 import Molecule from '../lib/chem/Molecule';
 import * as Selector from '../stores/selector';
-import { Grid, Plane } from '@react-three/drei';
+import { Grid, Line, Plane } from '@react-three/drei';
 import { HALF_PI } from '../constants.ts';
 import { useStore } from '../stores/common.ts';
 import { MoleculeTS } from '../models/MoleculeTS.ts';
@@ -187,7 +187,8 @@ const DynamicsViewer = React.memo(
         });
     }, [complex, material, mode, colorer, selector]);
 
-    const planeSize = 20;
+    const halfPlaneSize = 10;
+    const planeSize = 2 * halfPlaneSize;
     const planeOpacity = 0.5;
 
     return (
@@ -207,7 +208,7 @@ const DynamicsViewer = React.memo(
               args={[planeSize, planeSize]}
               rotation={[0, 0, 0]}
               onClick={(e) => {
-                console.log('a');
+                // console.log('a');
               }}
             >
               <meshStandardMaterial
@@ -225,9 +226,18 @@ const DynamicsViewer = React.memo(
               sectionColor={'blue'}
               sectionThickness={1}
               side={DoubleSide}
-              onClick={(e) => {
-                console.log('b');
-              }}
+            />
+            <Line
+              name={'x-y plane border lines'}
+              points={[
+                [-halfPlaneSize, -halfPlaneSize, 0],
+                [halfPlaneSize, -halfPlaneSize, 0],
+                [halfPlaneSize, halfPlaneSize, 0],
+                [-halfPlaneSize, halfPlaneSize, 0],
+                [-halfPlaneSize, -halfPlaneSize, 0],
+              ]}
+              color={'blue'}
+              lineWidth={2}
             />
           </group>
         )}
@@ -257,6 +267,18 @@ const DynamicsViewer = React.memo(
               side={DoubleSide}
               onClick={(e) => {}}
             />
+            <Line
+              name={'y-z plane border lines'}
+              points={[
+                [0, -halfPlaneSize, -halfPlaneSize],
+                [0, halfPlaneSize, -halfPlaneSize],
+                [0, halfPlaneSize, halfPlaneSize],
+                [0, -halfPlaneSize, halfPlaneSize],
+                [0, -halfPlaneSize, -halfPlaneSize],
+              ]}
+              color={'red'}
+              lineWidth={2}
+            />
           </group>
         )}
         {xzPlaneVisible && (
@@ -284,6 +306,18 @@ const DynamicsViewer = React.memo(
               sectionThickness={1}
               side={DoubleSide}
               onClick={(e) => {}}
+            />
+            <Line
+              name={'x-z plane border lines'}
+              points={[
+                [-halfPlaneSize, 0, -halfPlaneSize],
+                [halfPlaneSize, 0, -halfPlaneSize],
+                [halfPlaneSize, 0, halfPlaneSize],
+                [-halfPlaneSize, 0, halfPlaneSize],
+                [-halfPlaneSize, 0, -halfPlaneSize],
+              ]}
+              color={'green'}
+              lineWidth={2}
             />
           </group>
         )}
