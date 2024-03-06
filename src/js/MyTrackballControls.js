@@ -364,12 +364,12 @@ class MyTrackballControls extends EventDispatcher {
     }
 
     function onPointerUp(event) {
-      if (scope.enabled === false) return;
-
-      if (event.pointerType === 'touch') {
-        onTouchEnd(event);
-      } else {
-        onMouseUp();
+      if (scope.enabled) {
+        if (event.pointerType === 'touch') {
+          onTouchEnd(event);
+        } else {
+          onMouseUp();
+        }
       }
 
       //
@@ -633,6 +633,8 @@ class MyTrackballControls extends EventDispatcher {
       scope.domElement.removeEventListener('pointerdown', onPointerDown);
       scope.domElement.removeEventListener('pointercancel', onPointerCancel);
       scope.domElement.removeEventListener('wheel', onMouseWheel);
+
+      console.log('remove pointermove');
 
       scope.domElement.removeEventListener('pointermove', onPointerMove);
       scope.domElement.removeEventListener('pointerup', onPointerUp);
