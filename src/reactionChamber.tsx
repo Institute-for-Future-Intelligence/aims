@@ -33,6 +33,7 @@ import DynamicsSettings from './view/dynamicsSettings.tsx';
 import DockingViewer from './view/dockingViewer.tsx';
 import DynamicsButtons from './view/dynamicsButtons.tsx';
 import { useRefStore } from './stores/commonRef.ts';
+import { usePrimitiveStore } from './stores/commonPrimitive.ts';
 
 const ReactionChamber = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -112,6 +113,11 @@ const ReactionChamber = React.memo(() => {
         onDrop={dropMolecule}
         onDragOver={(e) => {
           e.preventDefault();
+        }}
+        onPointerUp={() => {
+          usePrimitiveStore.getState().set((state) => {
+            state.enableRotate = true;
+          });
         }}
       >
         <ReactionChamberControls lightRef={lightRef} />

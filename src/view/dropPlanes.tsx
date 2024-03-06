@@ -10,6 +10,7 @@ import { Box, Grid, Line, Plane } from '@react-three/drei';
 import { HALF_PI, HIGHLIGHT_HANDLE_COLOR } from '../constants.ts';
 import { useStore } from '../stores/common.ts';
 import { useRefStore } from '../stores/commonRef.ts';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 const DropPlanes = React.memo(() => {
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
@@ -66,6 +67,16 @@ const DropPlanes = React.memo(() => {
                 setHoveredPlaneIndex(-1);
                 setHoveredHandleIndex(-1);
                 gl.domElement.style.cursor = 'default';
+              }}
+              onPointerDown={() => {
+                usePrimitiveStore.getState().set((state) => {
+                  state.enableRotate = false;
+                });
+              }}
+              onPointerUp={() => {
+                usePrimitiveStore.getState().set((state) => {
+                  state.enableRotate = true;
+                });
               }}
             >
               <meshBasicMaterial
