@@ -19,6 +19,9 @@ export const DEFAULT_LIGHT_INTENSITY = 5;
 
 export const UNDO_SHOW_INFO_DURATION = 0.5;
 
+export const MOVE_HANDLE_COLOR = 'white';
+export const HIGHLIGHT_HANDLE_COLOR = 'yellow';
+
 export const GRID_RATIO = 5;
 export const FINE_GRID_SCALE = 0.1;
 export const NORMAL_GRID_SCALE = GRID_RATIO * FINE_GRID_SCALE;
