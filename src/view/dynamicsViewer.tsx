@@ -43,7 +43,7 @@ export interface DynamicsViewerProps {
 const generateComplex = (name: string, molecules: MoleculeTS[]) => {
   const complex = new Complex();
   for (const [idx, mol] of molecules.entries()) {
-    const chain = complex.addChain('Chain' + idx);
+    const chain = complex.addChain('MOL' + idx);
     const residue = chain.addResidue('UNK' + idx, idx, ' ');
     for (const [i, a] of mol.atoms.entries()) {
       residue.addAtom(
@@ -149,14 +149,17 @@ const DynamicsViewer = React.memo(
       if (setLoading) setLoading(true);
 
       const visual = new ComplexVisual(complex.name, complex);
-      const reps = [
-        {
+      const reps = [];
+      // Don't change the selector below. We use 'chain' to identify molecules as there is no 'molecule' keyword
+      // according to https://lifescience.opensource.epam.com/miew/selectors.html
+      for (let i = 0; i < testMolecules.length; i++) {
+        reps.push({
           mode: mode,
           colorer: colorer,
-          selector: selector ?? 'all',
+          selector: 'chain MOL' + i,
           material: MATERIAL_MAP.get(material),
-        },
-      ];
+        });
+      }
       visual.resetReps(reps);
       visual
         .rebuild()
