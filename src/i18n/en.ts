@@ -196,6 +196,7 @@ export const i18n_en = {
       ProjectSettings: 'Project Settings',
       DisplayWindowSize: 'Display Window Size',
       OutputSelectedMoleculeToTest: 'Output selected molecule to test',
+      ToggleDragAndDropMoleculeMode: 'Toggle drag-and-drop-molecule mode',
       NumberOfColumns: 'Columns',
       ImportMolecule: 'Import a molecule',
       MoleculeType: 'Molecule Type',

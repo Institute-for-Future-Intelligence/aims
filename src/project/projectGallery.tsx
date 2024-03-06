@@ -153,6 +153,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const updateLigandData = useStore(Selector.updateLigandData);
   const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
+  const dragAndDropMolecule = usePrimitiveStore(Selector.dragAndDropMolecule);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -346,22 +347,14 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 <SettingOutlined style={{ fontSize: '24px', color: 'gray' }} />
               </Button>
             </Popover>
-            {selectedMolecule && (
+            {selectedMolecule && projectType === ProjectType.DRUG_DISCOVERY && (
               <Button
                 style={{ border: 'none', padding: '4px' }}
                 onClick={(e) => {
                   e.stopPropagation();
                   setCommonStore((state) => {
-                    switch (state.projectState.type) {
-                      case ProjectType.DRUG_DISCOVERY:
-                        state.projectState.ligand = selectedMolecule;
-                        updateLigandData();
-                        break;
-                      case ProjectType.QSAR_MODELING:
-                        if (!state.projectState.testMolecules) state.projectState.testMolecules = [];
-                        state.projectState.testMolecules.push(selectedMolecule);
-                        break;
-                    }
+                    state.projectState.ligand = selectedMolecule;
+                    updateLigandData();
                   });
                   setChanged(true);
                 }}
@@ -369,6 +362,26 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 <LoginOutlined
                   style={{ fontSize: '24px', color: 'gray' }}
                   title={t('projectPanel.OutputSelectedMoleculeToTest', lang)}
+                />
+              </Button>
+            )}
+            {selectedMolecule && projectType === ProjectType.QSAR_MODELING && (
+              <Button
+                style={{
+                  border: dragAndDropMolecule ? '1px solid gray' : 'none',
+                  padding: '4px',
+                  background: dragAndDropMolecule ? 'lightgray' : 'white',
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  usePrimitiveStore.getState().set((state) => {
+                    state.dragAndDropMolecule = !state.dragAndDropMolecule;
+                  });
+                }}
+              >
+                <LoginOutlined
+                  style={{ fontSize: '24px', color: 'gray' }}
+                  title={t('projectPanel.ToggleDragAndDropMoleculeMode', lang)}
                 />
               </Button>
             )}

@@ -7,7 +7,7 @@ import { MoleculeData } from '../types.ts';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from '../view/displayOptions.ts';
 import * as Selector from '../stores/selector';
 import { useStore } from '../stores/common.ts';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { DirectionalLight, Vector3 } from 'three';
 import { DEFAULT_CAMERA_POSITION, DEFAULT_LIGHT_INTENSITY, LabelType } from '../constants.ts';
 import { ProjectGalleryControls } from '../controls.tsx';
@@ -45,12 +45,11 @@ const MolecularContainer = React.memo(
     const setChanged = usePrimitiveStore(Selector.setChanged);
     const cameraPositionVector = useMemo(() => new Vector3().fromArray(DEFAULT_CAMERA_POSITION), []);
     const labelType = useStore(Selector.labelType);
+    const dragAndDropMolecule = usePrimitiveStore(Selector.dragAndDropMolecule);
 
     const lightRef = useRef<DirectionalLight>(null);
-    const [controlDisabled, setControlDisabled] = useState<boolean>(false);
 
     const onPointerOver = () => {
-      setControlDisabled(false);
       usePrimitiveStore.getState().set((state) => {
         state.hoveredMolecule = moleculeData;
       });
@@ -58,7 +57,6 @@ const MolecularContainer = React.memo(
     };
 
     const onPointerLeave = () => {
-      setControlDisabled(true);
       usePrimitiveStore.getState().set((state) => {
         state.hoveredMolecule = null;
       });
@@ -91,7 +89,7 @@ const MolecularContainer = React.memo(
           intensity={DEFAULT_LIGHT_INTENSITY}
           castShadow={false}
         />
-        <ProjectGalleryControls disabled={controlDisabled || !selected} lightRef={lightRef} />
+        <ProjectGalleryControls disabled={dragAndDropMolecule} lightRef={lightRef} />
         <GalleryViewer
           moleculeData={moleculeData}
           style={style}
@@ -115,12 +113,12 @@ const MolecularContainer = React.memo(
             onPointerOver={onPointerOver}
             onPointerLeave={onPointerLeave}
             onMouseDown={onMouseDown}
-            draggable
+            draggable={dragAndDropMolecule}
             onDragStart={(e) => {
-              setControlDisabled(true);
+              // TODO
             }}
             onDragEnd={(e) => {
-              setControlDisabled(false);
+              // TODO
             }}
           />
         </Html>

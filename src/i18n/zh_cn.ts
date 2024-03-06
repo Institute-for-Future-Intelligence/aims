@@ -196,6 +196,7 @@ export const i18n_zh_cn = {
       ProjectSettings: '项目设定',
       DisplayWindowSize: '展示窗口大小',
       OutputSelectedMoleculeToTest: '把选中的分子加到实验中',
+      ToggleDragAndDropMoleculeMode: '切换到拖放分子的模式',
       NumberOfColumns: '列数',
       ImportMolecule: '输入分子',
       MoleculeType: '分子类别',

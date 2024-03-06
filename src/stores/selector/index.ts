@@ -69,6 +69,8 @@ export const selectedMolecule = (state: CommonStoreState) => state.projectState.
 
 export const hoveredMolecule = (state: PrimitiveStoreState) => state.hoveredMolecule;
 
+export const dragAndDropMolecule = (state: PrimitiveStoreState) => state.dragAndDropMolecule;
+
 export const enableRotate = (state: PrimitiveStoreState) => state.enableRotate;
 
 export const autoRotate = (state: PrimitiveStoreState) => state.autoRotate;

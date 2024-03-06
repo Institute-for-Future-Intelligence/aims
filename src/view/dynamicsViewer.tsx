@@ -206,6 +206,9 @@ const DynamicsViewer = React.memo(
               name={'X-Y Plane'}
               args={[planeSize, planeSize]}
               rotation={[0, 0, 0]}
+              onClick={(e) => {
+                console.log('a');
+              }}
             >
               <meshStandardMaterial
                 attach="material"
@@ -222,6 +225,9 @@ const DynamicsViewer = React.memo(
               sectionColor={'blue'}
               sectionThickness={1}
               side={DoubleSide}
+              onClick={(e) => {
+                console.log('b');
+              }}
             />
           </group>
         )}
@@ -249,6 +255,7 @@ const DynamicsViewer = React.memo(
               sectionColor={'red'}
               sectionThickness={1}
               side={DoubleSide}
+              onClick={(e) => {}}
             />
           </group>
         )}
@@ -276,6 +283,7 @@ const DynamicsViewer = React.memo(
               sectionColor={'green'}
               sectionThickness={1}
               side={DoubleSide}
+              onClick={(e) => {}}
             />
           </group>
         )}
