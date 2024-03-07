@@ -44,7 +44,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: MoleculeTS[] | 
       {
         key: '3',
         label: t('projectPanel.BondCount', lang),
-        children: 'NA',
+        children: bondCount,
       },
     ];
     return (

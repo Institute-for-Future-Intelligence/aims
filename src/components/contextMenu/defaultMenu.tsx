@@ -18,9 +18,11 @@ import {
   StyleRadioGroup,
 } from './defaultMenuItems';
 import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
+import { ProjectType } from '../../constants.ts';
 
 export const createDefaultMenu = () => {
   const lang = { lng: useStore.getState().language };
+  const projectType = useStore.getState().projectState.type;
   const contextMenuObjectType = usePrimitiveStore.getState().contextMenuObjectType;
 
   const items: MenuProps['items'] = [];
@@ -41,17 +43,19 @@ export const createDefaultMenu = () => {
       label: <FogCheckBox />,
     });
 
-    items.push({
-      key: 'spaceship-display-mode-submenu',
-      label: <MenuItem hasPadding={true}>{i18n.t('spaceship.SpaceshipDisplay', lang)}</MenuItem>,
-      children: [
-        {
-          key: 'spaceship-display-mode-radio-group',
-          label: <SpaceshipDisplayModeRadioGroup />,
-          style: { backgroundColor: 'white' },
-        },
-      ],
-    });
+    if (projectType === ProjectType.DRUG_DISCOVERY) {
+      items.push({
+        key: 'spaceship-display-mode-submenu',
+        label: <MenuItem hasPadding={true}>{i18n.t('spaceship.SpaceshipDisplay', lang)}</MenuItem>,
+        children: [
+          {
+            key: 'spaceship-display-mode-radio-group',
+            label: <SpaceshipDisplayModeRadioGroup />,
+            style: { backgroundColor: 'white' },
+          },
+        ],
+      });
+    }
   }
 
   items.push({
