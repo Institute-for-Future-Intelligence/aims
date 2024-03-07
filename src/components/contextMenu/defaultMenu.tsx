@@ -39,12 +39,10 @@ export const createDefaultMenu = () => {
       label: <AxesCheckBox />,
     });
 
-    if (projectType === ProjectType.QSAR_MODELING) {
-      items.push({
-        key: 'molecular-viewer-container',
-        label: <ContainerCheckBox />,
-      });
-    }
+    items.push({
+      key: 'molecular-viewer-container',
+      label: <ContainerCheckBox />,
+    });
 
     items.push({
       key: 'molecular-viewer-foggy',

@@ -29,6 +29,7 @@ const DockingSettings = React.memo(() => {
   const chamberViewerSelector = useStore(Selector.chamberViewerSelector);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const updateLigandData = useStore(Selector.updateLigandData);
+  const molecularContainer = useStore(Selector.molecularContainer);
 
   // onChange of a text area changes at every key typing, triggering the viewer to re-render each time.
   // So we store the intermediate result here
@@ -159,6 +160,75 @@ const DockingSettings = React.memo(() => {
         </Row>
         <Row gutter={16} style={{ paddingBottom: '4px' }}>
           <Col span={8} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.ContainerLx', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <InputNumber
+              min={10}
+              max={100}
+              style={{ width: '100%' }}
+              precision={1}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(molecularContainer.lx.toFixed(1))}
+              step={1}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.molecularContainer.lx = value;
+                });
+                setChanged(true);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.ContainerLy', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <InputNumber
+              min={10}
+              max={100}
+              style={{ width: '100%' }}
+              precision={1}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(molecularContainer.ly.toFixed(1))}
+              step={1}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.molecularContainer.ly = value;
+                });
+                setChanged(true);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={8} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.ContainerLz', lang)}: </span>
+          </Col>
+          <Col span={16}>
+            <InputNumber
+              min={10}
+              max={100}
+              style={{ width: '100%' }}
+              precision={1}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(molecularContainer.lz.toFixed(1))}
+              step={1}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.molecularContainer.lz = value;
+                });
+                setChanged(true);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={8} style={{ paddingTop: '5px' }}>
             <span>{t('experiment.MovingStep', lang)}: </span>
           </Col>
           <Col span={16}>
@@ -229,7 +299,19 @@ const DockingSettings = React.memo(() => {
         </Row>
       </div>
     );
-  }, [lang, protein, ligand, molecules, chamberViewerSelector, translationStep, rotationStep, selector]);
+  }, [
+    lang,
+    protein,
+    ligand,
+    molecules,
+    chamberViewerSelector,
+    translationStep,
+    rotationStep,
+    selector,
+    molecularContainer.lx,
+    molecularContainer.ly,
+    molecularContainer.lz,
+  ]);
 
   const createInfo = useMemo(() => {
     const items: DescriptionsProps['items'] = [

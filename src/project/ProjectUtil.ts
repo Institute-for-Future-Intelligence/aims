@@ -105,7 +105,7 @@ export class ProjectUtil {
       yzPlanePosition: 0,
       xzPlanePosition: 0,
 
-      molecularContainer: { lx: 20, ly: 20, lz: 20 } as MolecularContainer,
+      molecularContainer: { lx: 50, ly: 50, lz: 50 } as MolecularContainer,
       molecularContainerVisible: false,
     } as ProjectState;
   }

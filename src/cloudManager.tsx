@@ -330,6 +330,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           const data = doc.data();
           // Assign default values below as an attribute may not be defined by the time the data was created
           // In that case, undefined will be used, resulting in a crash from Firestore
+          const cl = data.type === ProjectType.DRUG_DISCOVERY ? 50 : 20;
           a.push({
             owner: user.uid,
             title: doc.id,
@@ -402,7 +403,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             yzPlanePosition: data.yzPlanePosition ?? 0,
             xzPlanePosition: data.xzPlanePosition ?? 0,
 
-            molecularContainer: data.molecularContainer ?? ({ lx: 20, ly: 20, lz: 20 } as MolecularContainer),
+            molecularContainer: data.molecularContainer ?? ({ lx: cl, ly: cl, lz: cl } as MolecularContainer),
             molecularContainerVisible: !!data.molecularContainerVisible,
 
             cameraPosition: data.cameraPosition ?? DEFAULT_CAMERA_POSITION,

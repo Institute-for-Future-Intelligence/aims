@@ -86,12 +86,10 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
     label: <AxesCheckBox />,
   });
 
-  if (projectType === ProjectType.QSAR_MODELING) {
-    items.push({
-      key: 'container-check-box',
-      label: <ContainerCheckBox />,
-    });
-  }
+  items.push({
+    key: 'container-check-box',
+    label: <ContainerCheckBox />,
+  });
 
   items.push({
     key: 'foggy-check-box',

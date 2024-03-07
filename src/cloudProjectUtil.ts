@@ -27,6 +27,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
     .then((doc) => {
       const data = doc.data();
       if (data) {
+        const cl = data.type === ProjectType.DRUG_DISCOVERY ? 50 : 20;
         setProjectState({
           owner: userid,
           title: doc.id,
@@ -95,7 +96,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           yzPlanePosition: data.yzPlanePosition ?? 0,
           xzPlanePosition: data.xzPlanePosition ?? 0,
 
-          molecularContainer: data.molecularContainer ?? ({ lx: 20, ly: 20, lz: 20 } as MolecularContainer),
+          molecularContainer: data.molecularContainer ?? ({ lx: cl, ly: cl, lz: cl } as MolecularContainer),
           molecularContainerVisible: !!data.molecularContainerVisible,
 
           cameraPosition: data.cameraPosition,

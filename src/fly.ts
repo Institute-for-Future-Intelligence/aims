@@ -12,15 +12,10 @@ import {
   UNIT_VECTOR_POS_Y,
   UNIT_VECTOR_POS_Z,
 } from './constants.ts';
-import { Euler, Quaternion, Vector3 } from 'three';
+import { Euler, Quaternion } from 'three';
 import { useStore } from './stores/common.ts';
-import { computeAcceleration } from './models/physics.ts';
 import { useRefStore } from './stores/commonRef.ts';
 import { invalidate } from '@react-three/fiber';
-
-const timeStep = 1;
-const timeStepSqHalf = timeStep * timeStep * 0.5;
-const friction = 2;
 
 let flyTimeout = -1;
 
@@ -86,54 +81,29 @@ const loop = (control: FlightControl) => {
         if (!state.projectState.ligandRotation) state.projectState.ligandRotation = [0, 0, 0];
 
         // translation
-        const steer = new Vector3();
-        const pos = state.projectState.ligandTranslation;
-        const vel = state.projectState.ligandVelocity;
+        let dx = 0;
+        let dy = 0;
+        let dz = 0;
         switch (control) {
           case FlightControl.TranslateInPositiveX:
-            steer.x = translationStep;
+            dx = translationStep;
             break;
           case FlightControl.TranslateInNegativeX:
-            steer.x = -translationStep;
+            dx = -translationStep;
             break;
           case FlightControl.TranslateInPositiveY:
-            steer.y = translationStep;
+            dy = translationStep;
             break;
           case FlightControl.TranslateInNegativeY:
-            steer.y = -translationStep;
+            dy = -translationStep;
             break;
           case FlightControl.TranslateInPositiveZ:
-            steer.z = translationStep;
+            dz = translationStep;
             break;
           case FlightControl.TranslateInNegativeZ:
-            steer.z = -translationStep;
+            dz = -translationStep;
             break;
         }
-        const a = computeAcceleration(
-          state.proteinData.atoms,
-          state.ligandData,
-          state.chemicalElements,
-          pos,
-          vel,
-          steer,
-          friction,
-        );
-        a.multiplyScalar(1);
-        console.log(a);
-        // update velocity
-        // vel[0] += a.x * timeStep;
-        // vel[1] += a.y * timeStep;
-        // vel[2] += a.z * timeStep;
-        // update position
-        // const dx = vel[0] * timeStep + a.x * timeStepSqHalf;
-        // const dy = vel[1] * timeStep + a.y * timeStepSqHalf;
-        // const dz = vel[2] * timeStep + a.z * timeStepSqHalf;
-        const dx = a.x * timeStep;
-        const dy = a.y * timeStep;
-        const dz = a.z * timeStep;
-        pos[0] += dx;
-        pos[1] += dy;
-        pos[2] += dz;
         const ref = useRefStore.getState().ligandRef;
         if (ref && ref.current) {
           ref.current.position.x += dx;
