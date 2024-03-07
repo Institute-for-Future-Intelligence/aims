@@ -132,7 +132,7 @@ const ScissorBox = React.memo(
               color: 'gray',
               fontSize: labelType === LabelType.FORMULA ? '14px' : '10px',
               fontWeight: selected ? 'bold' : 'normal',
-              width: 'calc(100% - 14px)',
+              width: viewWidth - 14 + 'px',
             }}
             onMouseDown={onMouseDown}
           >

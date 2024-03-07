@@ -109,6 +109,9 @@ const loop = (control: FlightControl) => {
           ref.current.position.x += dx;
           ref.current.position.y += dy;
           ref.current.position.z += dz;
+          state.projectState.ligandTranslation[0] = ref.current.position.x;
+          state.projectState.ligandTranslation[1] = ref.current.position.y;
+          state.projectState.ligandTranslation[2] = ref.current.position.z;
           invalidate();
         }
 

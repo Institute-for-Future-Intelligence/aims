@@ -96,7 +96,7 @@ const ProjectSettingsContent = React.memo(
           <Col span={14}>
             <InputNumber
               style={{ width: '100%' }}
-              min={3}
+              min={2}
               max={10}
               step={1}
               value={numberOfColumns}
