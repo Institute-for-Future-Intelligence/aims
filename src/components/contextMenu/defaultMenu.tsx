@@ -11,6 +11,7 @@ import {
   AxesCheckBox,
   BackgroundColor,
   ColoringRadioGroup,
+  ContainerCheckBox,
   FogCheckBox,
   MaterialRadioGroup,
   Screenshot,
@@ -37,6 +38,13 @@ export const createDefaultMenu = () => {
       key: 'molecular-viewer-axes',
       label: <AxesCheckBox />,
     });
+
+    if (projectType === ProjectType.QSAR_MODELING) {
+      items.push({
+        key: 'molecular-viewer-container',
+        label: <ContainerCheckBox />,
+      });
+    }
 
     items.push({
       key: 'molecular-viewer-foggy',

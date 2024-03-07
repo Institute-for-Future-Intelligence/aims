@@ -3,7 +3,7 @@
  */
 
 import i18n from '../i18n/i18n.ts';
-import { MoleculeData, ProjectState, Range } from '../types.ts';
+import { MolecularContainer, MoleculeData, ProjectState, Range } from '../types.ts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { Filter, FilterType } from '../Filter.ts';
 import {
@@ -104,6 +104,9 @@ export class ProjectUtil {
       xyPlanePosition: 0,
       yzPlanePosition: 0,
       xzPlanePosition: 0,
+
+      molecularContainer: { lx: 20, ly: 20, lz: 20 } as MolecularContainer,
+      molecularContainerVisible: false,
     } as ProjectState;
   }
 

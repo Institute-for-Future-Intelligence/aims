@@ -13,7 +13,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { showError, showInfo } from './helpers';
-import { ProjectState } from './types';
+import { MolecularContainer, ProjectState } from './types';
 import Spinner from './components/spinner';
 import { Util } from './Util';
 import MainToolBar from './mainToolBar';
@@ -401,6 +401,9 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             xyPlanePosition: data.xyPlanePosition ?? 0,
             yzPlanePosition: data.yzPlanePosition ?? 0,
             xzPlanePosition: data.xzPlanePosition ?? 0,
+
+            molecularContainer: data.molecularContainer ?? ({ lx: 20, ly: 20, lz: 20 } as MolecularContainer),
+            molecularContainerVisible: !!data.molecularContainerVisible,
 
             cameraPosition: data.cameraPosition ?? DEFAULT_CAMERA_POSITION,
             cameraRotation: data.cameraRotation ?? DEFAULT_CAMERA_ROTATION,

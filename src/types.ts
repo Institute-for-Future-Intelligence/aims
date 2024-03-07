@@ -85,6 +85,15 @@ export interface ProjectState {
   xyPlanePosition: number;
   yzPlanePosition: number;
   xzPlanePosition: number;
+
+  molecularContainer: MolecularContainer;
+  molecularContainerVisible: boolean;
+}
+
+export interface MolecularContainer {
+  lx: number;
+  ly: number;
+  lz: number;
 }
 
 export interface DatumEntry {

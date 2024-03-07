@@ -40,7 +40,7 @@ import { CartesianGrid, Cell, Dot, Label, Scatter, ScatterChart, Tooltip, XAxis,
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { View } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import MolecularContainer from './molecularContainer.tsx';
+import ScissorBox from './scissorBox.tsx';
 import ProjectSettingsContent from './projectSettingsContent.tsx';
 import PropertiesSelectionContent from './propertiesSelectionContent.tsx';
 import CoordinateSystemSettingsContent from './coordinateSystemSettingsContent.tsx';
@@ -758,7 +758,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       opacity: mol?.excluded ? 0.25 : 1,
                     }}
                   >
-                    <MolecularContainer
+                    <ScissorBox
                       viewWidth={viewWidth}
                       viewHeight={viewHeight}
                       selected={selected}

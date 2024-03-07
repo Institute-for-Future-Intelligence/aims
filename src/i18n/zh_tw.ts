@@ -104,6 +104,7 @@ export const i18n_zh_tw = {
     molecularViewer: {
       Fog: '有霧',
       Axes: '顯示坐標軸',
+      Container: '顯示容器',
       Style: '風格',
       Color: '顏色',
       BallAndStick: '球和棍',
@@ -151,6 +152,9 @@ export const i18n_zh_tw = {
 
     experiment: {
       ExperimentSettings: '實驗設定',
+      ContainerLx: '容器Lx',
+      ContainerLy: '容器Ly',
+      ContainerLz: '容器Lz',
       Protein: '蛋白質',
       Ligand: '配體',
       Molecules: '分子',
@@ -214,6 +218,7 @@ export const i18n_zh_tw = {
       SameColorForAllMolecules: '所有分子一個顏色',
       OneColorForEachMolecule: '每個分子一個顏色',
       GraphScreenshot: '圖形截屏',
+      Elements: '包含化學元素',
       AtomCount: '原子數量',
       BondCount: '化學鍵數量',
       ResidueCount: '殘基數量',

@@ -11,6 +11,7 @@ import { HALF_PI, HIGHLIGHT_HANDLE_COLOR } from '../constants.ts';
 import { useStore } from '../stores/common.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
+import { MolecularContainer } from '../types.ts';
 
 const DropPlanes = React.memo(() => {
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
@@ -20,6 +21,7 @@ const DropPlanes = React.memo(() => {
   const yzPlanePosition = useStore(Selector.yzPlanePosition) ?? 0;
   const xzPlanePosition = useStore(Selector.xzPlanePosition) ?? 0;
   const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
+  const container = useStore(Selector.molecularContainer) ?? ({ lx: 20, ly: 20, lz: 20 } as MolecularContainer);
 
   const [hoveredPlaneIndex, setHoveredPlaneIndex] = useState<number>(-1);
   const [hoveredHandleIndex, setHoveredHandleIndex] = useState<number>(-1);
@@ -30,9 +32,11 @@ const DropPlanes = React.memo(() => {
 
   const { gl } = useThree();
 
-  const halfPlaneSize = 10;
-  const planeSize = 2 * halfPlaneSize;
+  const halfLx = container.lx / 2;
+  const halfLy = container.ly / 2;
+  const halfLz = container.lz / 2;
   const planeOpacity = 0.5;
+  const planeVisible = false;
 
   useEffect(() => {
     useRefStore.setState({
@@ -103,11 +107,11 @@ const DropPlanes = React.memo(() => {
         <group position={[0, 0, xyPlanePosition]}>
           <Plane
             ref={planeXYRef}
-            visible={false}
+            visible={planeVisible}
             name={'X-Y Plane'}
-            args={[planeSize, planeSize]}
+            args={[container.lx, container.ly]}
             rotation={[0, 0, 0]}
-            onClick={(e) => {
+            onClick={() => {
               usePrimitiveStore.getState().set((state) => {
                 state.selectedPlane = 0;
               });
@@ -123,7 +127,7 @@ const DropPlanes = React.memo(() => {
           </Plane>
           <Grid
             name={'X-Y Grid'}
-            args={[planeSize, planeSize]}
+            args={[container.lx, container.ly]}
             rotation={[HALF_PI, 0, 0]}
             sectionColor={'blue'}
             sectionThickness={1}
@@ -133,11 +137,11 @@ const DropPlanes = React.memo(() => {
             0,
             [0.5, 0.5, 0.2],
             [
-              [-halfPlaneSize, -halfPlaneSize, 0],
-              [halfPlaneSize, -halfPlaneSize, 0],
-              [halfPlaneSize, halfPlaneSize, 0],
-              [-halfPlaneSize, halfPlaneSize, 0],
-              [-halfPlaneSize, -halfPlaneSize, 0],
+              [-halfLx, -halfLy, 0],
+              [halfLx, -halfLy, 0],
+              [halfLx, halfLy, 0],
+              [-halfLx, halfLy, 0],
+              [-halfLx, -halfLy, 0],
             ],
             'X-Y Plane Border',
             'blue',
@@ -148,11 +152,11 @@ const DropPlanes = React.memo(() => {
         <group position={[yzPlanePosition, 0, 0]}>
           <Plane
             ref={planeYZRef}
-            visible={false}
+            visible={planeVisible}
             name={'Y-Z Plane'}
-            args={[planeSize, planeSize]}
+            args={[container.lz, container.ly]}
             rotation={[0, HALF_PI, 0]}
-            onClick={(e) => {
+            onClick={() => {
               usePrimitiveStore.getState().set((state) => {
                 state.selectedPlane = 1;
               });
@@ -168,7 +172,7 @@ const DropPlanes = React.memo(() => {
           </Plane>
           <Grid
             name={'Y-Z Grid'}
-            args={[planeSize, planeSize]}
+            args={[container.ly, container.lz]}
             rotation={[0, 0, HALF_PI]}
             sectionColor={'red'}
             sectionThickness={1}
@@ -178,11 +182,11 @@ const DropPlanes = React.memo(() => {
             1,
             [0.2, 0.5, 0.5],
             [
-              [0, -halfPlaneSize, -halfPlaneSize],
-              [0, halfPlaneSize, -halfPlaneSize],
-              [0, halfPlaneSize, halfPlaneSize],
-              [0, -halfPlaneSize, halfPlaneSize],
-              [0, -halfPlaneSize, -halfPlaneSize],
+              [0, -halfLy, -halfLz],
+              [0, halfLy, -halfLz],
+              [0, halfLy, halfLz],
+              [0, -halfLy, halfLz],
+              [0, -halfLy, -halfLz],
             ],
             'Y-Z Plane Border',
             'red',
@@ -193,11 +197,11 @@ const DropPlanes = React.memo(() => {
         <group position={[0, xzPlanePosition, 0]}>
           <Plane
             ref={planeXZRef}
-            visible={false}
+            visible={planeVisible}
             name={'X-Z Plane'}
-            args={[planeSize, planeSize]}
+            args={[container.lx, container.lz]}
             rotation={[HALF_PI, 0, 0]}
-            onClick={(e) => {
+            onClick={() => {
               usePrimitiveStore.getState().set((state) => {
                 state.selectedPlane = 2;
               });
@@ -213,22 +217,21 @@ const DropPlanes = React.memo(() => {
           </Plane>
           <Grid
             name={'X-Z Grid'}
-            args={[planeSize, planeSize]}
+            args={[container.lz, container.lx]}
             rotation={[0, HALF_PI, 0]}
             sectionColor={'green'}
             sectionThickness={1}
             side={DoubleSide}
-            onClick={(e) => {}}
           />
           {createBorder(
             2,
             [0.5, 0.2, 0.5],
             [
-              [-halfPlaneSize, 0, -halfPlaneSize],
-              [halfPlaneSize, 0, -halfPlaneSize],
-              [halfPlaneSize, 0, halfPlaneSize],
-              [-halfPlaneSize, 0, halfPlaneSize],
-              [-halfPlaneSize, 0, -halfPlaneSize],
+              [-halfLx, 0, -halfLz],
+              [halfLx, 0, -halfLz],
+              [halfLx, 0, halfLz],
+              [-halfLx, 0, halfLz],
+              [-halfLx, 0, -halfLz],
             ],
             'X-Z Plane Border',
             'green',

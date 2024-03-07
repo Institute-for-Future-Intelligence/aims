@@ -104,6 +104,7 @@ export const i18n_en = {
     molecularViewer: {
       Fog: 'Fog',
       Axes: 'Axes',
+      Container: 'Container',
       Style: 'Style',
       Color: 'Color',
       BallAndStick: 'Ball-and-Stick',
@@ -151,6 +152,9 @@ export const i18n_en = {
 
     experiment: {
       ExperimentSettings: 'Experiment Settings',
+      ContainerLx: 'Container Lx',
+      ContainerLy: 'Container Ly',
+      ContainerLz: 'Container Lz',
       Protein: 'Protein',
       Ligand: 'Ligand',
       Molecules: 'Molecules',
@@ -215,6 +219,7 @@ export const i18n_en = {
       SameColorForAllMolecules: 'Same color for all molecules',
       OneColorForEachMolecule: 'One color for each molecule',
       GraphScreenshot: 'Take a screenshot of the graph',
+      Elements: 'Elements',
       AtomCount: 'Atom Count',
       BondCount: 'Bond Count',
       ResidueCount: 'Residue Count',

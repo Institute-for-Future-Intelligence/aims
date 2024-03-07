@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Group, Raycaster } from 'three';
+import { DoubleSide, Group, Raycaster } from 'three';
 import { MoleculeData } from '../types.ts';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
@@ -30,6 +30,7 @@ import { useStore } from '../stores/common.ts';
 import { MoleculeTS } from '../models/MoleculeTS.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import DropPlanes from './dropPlanes.tsx';
+import { Box, Edges } from '@react-three/drei';
 
 export interface DynamicsViewerProps {
   style: MolecularViewerStyle;
@@ -100,6 +101,8 @@ const DynamicsViewer = React.memo(
     onPointerDown,
   }: DynamicsViewerProps) => {
     const testMolecules = useStore(Selector.testMolecules);
+    const molecularContainer = useStore(Selector.molecularContainer);
+    const molecularContainerVisible = useStore(Selector.molecularContainerVisible);
 
     const [complex, setComplex] = useState<any>();
 
@@ -201,6 +204,12 @@ const DynamicsViewer = React.memo(
           onPointerLeave={onPointerLeave}
           onPointerDown={onPointerDown}
         />
+        {molecularContainerVisible && (
+          <Box args={[molecularContainer.lx, molecularContainer.ly, molecularContainer.lz]}>
+            <meshStandardMaterial attach="material" opacity={0.1} side={DoubleSide} transparent color={'lightgray'} />
+            <Edges scale={1} threshold={15} color="dimgray" />
+          </Box>
+        )}
         <DropPlanes />
       </>
     );

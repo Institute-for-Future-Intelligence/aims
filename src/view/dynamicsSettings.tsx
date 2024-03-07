@@ -3,31 +3,113 @@
  */
 
 import React, { useMemo } from 'react';
-import { Descriptions, DescriptionsProps, FloatButton, Popover } from 'antd';
+import { Col, Descriptions, DescriptionsProps, FloatButton, InputNumber, Popover, Row } from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { AimOutlined, ExperimentOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { MoleculeTS } from '../models/MoleculeTS.ts';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 const DynamicsSettings = React.memo(({ molecules }: { molecules: MoleculeTS[] | undefined | null }) => {
+  const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const testMolecules = useStore(Selector.testMolecules);
+  const molecularContainer = useStore(Selector.molecularContainer);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
 
+  const createContent = useMemo(() => {
+    return (
+      <div style={{ width: '360px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={12} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.ContainerLx', lang)}: </span>
+          </Col>
+          <Col span={12}>
+            <InputNumber
+              min={10}
+              max={100}
+              style={{ width: '100%' }}
+              precision={1}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(molecularContainer.lx.toFixed(1))}
+              step={1}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.molecularContainer.lx = value;
+                });
+                setChanged(true);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={12} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.ContainerLy', lang)}: </span>
+          </Col>
+          <Col span={12}>
+            <InputNumber
+              min={10}
+              max={100}
+              style={{ width: '100%' }}
+              precision={1}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(molecularContainer.ly.toFixed(1))}
+              step={1}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.molecularContainer.ly = value;
+                });
+                setChanged(true);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={12} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.ContainerLz', lang)}: </span>
+          </Col>
+          <Col span={12}>
+            <InputNumber
+              min={10}
+              max={100}
+              style={{ width: '100%' }}
+              precision={1}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(molecularContainer.lz.toFixed(1))}
+              step={1}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.molecularContainer.lz = value;
+                });
+                setChanged(true);
+              }}
+            />
+          </Col>
+        </Row>
+      </div>
+    );
+  }, [lang, molecularContainer.lx, molecularContainer.ly, molecularContainer.lz]);
+
   const createInfo = useMemo(() => {
     let atomCount = 0;
     let bondCount = 0;
+    const elements: string[] = [];
     if (molecules) {
       for (const m of molecules) {
         atomCount += m.atoms.length;
-      }
-      for (const m of molecules) {
         bondCount += m.bonds.length;
+        for (const a of m.atoms) {
+          if (!elements.includes(a.elementSymbol)) elements.push(a.elementSymbol);
+        }
       }
     }
     const items: DescriptionsProps['items'] = [
@@ -46,11 +128,16 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: MoleculeTS[] | 
         label: t('projectPanel.BondCount', lang),
         children: bondCount,
       },
+      {
+        key: '4',
+        label: t('projectPanel.Elements', lang),
+        children: elements.join(', '),
+      },
     ];
     return (
       <div style={{ width: '200px' }}>
         <Descriptions
-          style={{ paddingTop: '30px' }}
+          style={{ paddingTop: '10px' }}
           contentStyle={{ fontSize: '12px' }}
           labelStyle={{ fontSize: '12px' }}
           column={1}
@@ -69,7 +156,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: MoleculeTS[] | 
             <AimOutlined /> {t('experiment.ExperimentSettings', lang)}
           </div>
         }
-        content={<div>Under construction...</div>}
+        content={createContent}
       >
         <FloatButton
           shape="square"

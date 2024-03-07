@@ -133,6 +133,46 @@ export const AxesCheckBox = () => {
   );
 };
 
+export const ContainerCheckBox = () => {
+  const visible = useStore(Selector.molecularContainerVisible);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const setVisible = (checked: boolean) => {
+    useStore.getState().set((state) => {
+      state.projectState.molecularContainerVisible = checked;
+    });
+    setChanged(true);
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Checkbox
+        checked={visible}
+        onChange={(e: CheckboxChangeEvent) => {
+          const checked = e.target.checked;
+          const undoableCheck = {
+            name: 'Show Container',
+            timestamp: Date.now(),
+            checked: checked,
+            undo: () => {
+              setVisible(!undoableCheck.checked);
+            },
+            redo: () => {
+              setVisible(undoableCheck.checked);
+            },
+          } as UndoableCheck;
+          useStore.getState().addUndoable(undoableCheck);
+          setVisible(checked);
+        }}
+      >
+        {t('molecularViewer.Container', lang)}
+      </Checkbox>
+    </MenuItem>
+  );
+};
+
 export const FogCheckBox = () => {
   const foggy = useStore(Selector.chamberViewerFoggy);
   const setChanged = usePrimitiveStore(Selector.setChanged);

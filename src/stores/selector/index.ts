@@ -37,6 +37,10 @@ export const yzPlanePosition = (state: CommonStoreState) => state.projectState.y
 
 export const xzPlanePosition = (state: CommonStoreState) => state.projectState.xzPlanePosition;
 
+export const molecularContainer = (state: CommonStoreState) => state.projectState.molecularContainer;
+
+export const molecularContainerVisible = (state: CommonStoreState) => state.projectState.molecularContainerVisible;
+
 export const showAccountSettingsPanel = (state: PrimitiveStoreState) => state.showAccountSettingsPanel;
 
 export const userCount = (state: PrimitiveStoreState) => state.userCount;

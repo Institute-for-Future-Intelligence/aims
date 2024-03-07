@@ -11,12 +11,14 @@ import {
   AxesCheckBox,
   BackgroundColor,
   ColoringRadioGroup,
+  ContainerCheckBox,
   FogCheckBox,
   MaterialRadioGroup,
   SpaceshipDisplayModeRadioGroup,
   StyleRadioGroup,
 } from '../contextMenu/defaultMenuItems';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
+import { ProjectType } from '../../constants.ts';
 
 export const resetView = () => {
   usePrimitiveStore.getState().resetView();
@@ -28,6 +30,7 @@ export const zoomView = (scale: number) => {
 
 export const createViewMenu = (keyHome: string, isMac: boolean) => {
   const lang = { lng: useStore.getState().language };
+  const projectType = useStore.getState().projectState.type;
 
   const handleResetView = () => {
     resetView();
@@ -83,6 +86,13 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
     label: <AxesCheckBox />,
   });
 
+  if (projectType === ProjectType.QSAR_MODELING) {
+    items.push({
+      key: 'container-check-box',
+      label: <ContainerCheckBox />,
+    });
+  }
+
   items.push({
     key: 'foggy-check-box',
     label: <FogCheckBox />,
@@ -93,17 +103,19 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
     label: <BackgroundColor />,
   });
 
-  items.push({
-    key: 'spaceship-display-mode',
-    label: <MenuItem hasPadding={true}>{i18n.t('spaceship.SpaceshipDisplay', lang)}</MenuItem>,
-    children: [
-      {
-        key: 'spaceship-display-mode-radio-group',
-        label: <SpaceshipDisplayModeRadioGroup />,
-        style: { backgroundColor: 'white' },
-      },
-    ],
-  });
+  if (projectType === ProjectType.DRUG_DISCOVERY) {
+    items.push({
+      key: 'spaceship-display-mode',
+      label: <MenuItem hasPadding={true}>{i18n.t('spaceship.SpaceshipDisplay', lang)}</MenuItem>,
+      children: [
+        {
+          key: 'spaceship-display-mode-radio-group',
+          label: <SpaceshipDisplayModeRadioGroup />,
+          style: { backgroundColor: 'white' },
+        },
+      ],
+    });
+  }
 
   items.push({
     key: 'display-style',

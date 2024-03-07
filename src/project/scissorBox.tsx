@@ -29,7 +29,7 @@ interface MolecularContainerProps {
   setScatterDataHoveredIndex: (index: number) => void;
 }
 
-const MolecularContainer = React.memo(
+const ScissorBox = React.memo(
   ({
     viewWidth,
     viewHeight,
@@ -144,4 +144,4 @@ const MolecularContainer = React.memo(
   },
 );
 
-export default MolecularContainer;
+export default ScissorBox;
