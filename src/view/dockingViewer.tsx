@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DirectionalLight, DoubleSide, Group, Vector3 } from 'three';
+import { DirectionalLight, DoubleSide, Vector3 } from 'three';
 import { ProteinTS } from '../models/ProteinTS.ts';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
@@ -14,7 +14,7 @@ import { AtomTS } from '../models/AtomTS';
 import { BondTS } from '../models/BondTS';
 import { Util } from '../Util';
 import ComplexVisual from '../lib/ComplexVisual';
-import { ThreeEvent, useThree } from '@react-three/fiber';
+import { ThreeEvent, extend, useThree } from '@react-three/fiber';
 import {
   COLORING_MAP,
   MATERIAL_MAP,
@@ -28,6 +28,9 @@ import { useRefStore } from '../stores/commonRef';
 import { loadMolecule, setProperties } from './moleculeTools.ts';
 import { Box, Edges } from '@react-three/drei';
 import DropPlanes from './dropPlanes.tsx';
+import Picker from '../lib/ui/Picker.js';
+import RCGroup from '../lib/gfx/RCGroup.js';
+extend({ RCGroup });
 
 export interface DockingViewerProps {
   moleculeData: MoleculeData | null;
@@ -67,12 +70,12 @@ const DockingViewer = React.memo(
 
     const [complex, setComplex] = useState<any>();
 
-    const groupRef = useRef<Group>(null);
-    const proteinGroupRef = useRef<Group>(null);
-    const ligandGroupRef = useRef<Group>(null);
+    const groupRef = useRef<RCGroup>(null);
+    const proteinGroupRef = useRef<RCGroup>(null);
+    const ligandGroupRef = useRef<RCGroup>(null);
     const originalPositions = useRef<Vector3[]>([]);
 
-    const { invalidate } = useThree();
+    const { invalidate, camera, gl } = useThree();
 
     const mode = useMemo(() => {
       return STYLE_MAP.get(style);
@@ -224,7 +227,7 @@ const DockingViewer = React.memo(
             visualLigand.rebuild().then(() => {
               if (!ligandGroupRef.current) return;
               updateLigandData();
-              ligandGroupRef.current.add(visualLigand);
+              ligandGroupRef.current.add(visualLigand, visualLigand.getSelectionGeo());
               invalidate();
             });
           }
@@ -233,9 +236,54 @@ const DockingViewer = React.memo(
       }
     }, [ligand, parsedResultsMap, projectViewerStyle, projectViewerMaterial]);
 
+    // picker
+    useEffect(() => {
+      const picker = new Picker(groupRef.current, camera, gl.domElement);
+      // @ts-ignore
+      picker.addEventListener('newpick', (event) => {
+        console.log('pick', event.obj);
+
+        // let complex = null;
+        // if (event.obj.atom) {
+        //   complex = event.obj.atom.residue.getChain().getComplex();
+        // } else if (event.obj.residue) {
+        //   complex = event.obj.residue.getChain().getComplex();
+        // } else if (event.obj.chain) {
+        //   complex = event.obj.chain.getComplex();
+        // } else if (event.obj.molecule) {
+        //   complex = event.obj.molecule.complex;
+        // } else {
+        // }
+
+        // if (proteinGroupRef.current) {
+        //   const visual = proteinGroupRef.current.children[0] as ComplexVisual;
+        //   if (visual && (visual.getComplex() === complex || complex === null)) {
+        //     visual.updateSelectionMask(event.obj);
+        //     visual.rebuildSelectionGeometry();
+        //   }
+        // }
+        // if (ligandGroupRef.current) {
+        //   const visual = ligandGroupRef.current.children[0] as ComplexVisual;
+        //   if (visual && (visual.getComplex() === complex || complex === null)) {
+        //     visual.updateSelectionMask(event.obj);
+        //     visual.rebuildSelectionGeometry();
+        //   }
+        // }
+      });
+
+      return () => {
+        picker.dispose();
+      };
+    }, []);
+
     return (
-      <group ref={groupRef} onPointerOver={onPointerOver} onPointerLeave={onPointerLeave} onPointerDown={onPointerDown}>
-        <group
+      <rCGroup
+        ref={groupRef}
+        onPointerOver={onPointerOver}
+        onPointerLeave={onPointerLeave}
+        onPointerDown={onPointerDown}
+      >
+        <rCGroup
           name={'Protein'}
           ref={proteinGroupRef}
           // FIXME: adding this would slow down the viewer significantly
@@ -246,7 +294,7 @@ const DockingViewer = React.memo(
           //   });
           // }}
         />
-        <group
+        <rCGroup
           name={'Ligand'}
           ref={ligandGroupRef}
           position={[ligandTranslation[0], ligandTranslation[1], ligandTranslation[2]]}
@@ -262,7 +310,7 @@ const DockingViewer = React.memo(
           </Box>
         )}
         <DropPlanes />
-      </group>
+      </rCGroup>
     );
   },
 );

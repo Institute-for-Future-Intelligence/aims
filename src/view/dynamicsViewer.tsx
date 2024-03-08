@@ -3,12 +3,12 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DoubleSide, Group, Raycaster } from 'three';
+import { DoubleSide, Raycaster } from 'three';
 import { MoleculeData } from '../types.ts';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
 import ComplexVisual from '../lib/ComplexVisual';
-import { Camera, ThreeEvent, useThree } from '@react-three/fiber';
+import { Camera, ThreeEvent, extend, useThree } from '@react-three/fiber';
 import {
   COLORING_MAP,
   MATERIAL_MAP,
@@ -31,6 +31,9 @@ import { MoleculeTS } from '../models/MoleculeTS.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import DropPlanes from './dropPlanes.tsx';
 import { Box, Edges } from '@react-three/drei';
+import RCGroup from '../lib/gfx/RCGroup.js';
+import Picker from '../lib/ui/Picker.js';
+extend({ RCGroup });
 
 export interface DynamicsViewerProps {
   style: MolecularViewerStyle;
@@ -107,11 +110,11 @@ const DynamicsViewer = React.memo(
     const [complex, setComplex] = useState<any>();
 
     const moleculesRef = useRef<MoleculeTS[]>([]);
-    const groupRef = useRef<Group>(null);
+    const groupRef = useRef<RCGroup>(null);
     const cameraRef = useRef<Camera | undefined>();
     const raycasterRef = useRef<Raycaster | undefined>();
 
-    const { invalidate, camera, raycaster } = useThree();
+    const { invalidate, camera, raycaster, gl } = useThree();
 
     const mode = useMemo(() => {
       return STYLE_MAP.get(style);
@@ -196,9 +199,41 @@ const DynamicsViewer = React.memo(
         });
     }, [complex, material, mode, colorer, selector]);
 
+    // picker
+    useEffect(() => {
+      const picker = new Picker(groupRef.current, camera, gl.domElement);
+      // @ts-ignore
+      picker.addEventListener('newpick', (event) => {
+        console.log('pick', event.obj);
+        // let complex = null;
+        // if (event.obj.atom) {
+        //   complex = event.obj.atom.residue.getChain().getComplex();
+        // } else if (event.obj.residue) {
+        //   complex = event.obj.residue.getChain().getComplex();
+        // } else if (event.obj.chain) {
+        //   complex = event.obj.chain.getComplex();
+        // } else if (event.obj.molecule) {
+        //   complex = event.obj.molecule.complex;
+        // } else {
+        // }
+
+        // if (groupRef.current) {
+        //   const visual = groupRef.current.children[0] as ComplexVisual;
+        //   if (visual && (visual.getComplex() === complex || complex === null)) {
+        //     visual.updateSelectionMask(event.obj);
+        //     visual.rebuildSelectionGeometry();
+        //   }
+        // }
+      });
+
+      return () => {
+        picker.dispose();
+      };
+    }, []);
+
     return (
       <>
-        <group
+        <rCGroup
           ref={groupRef}
           onPointerOver={onPointerOver}
           onPointerLeave={onPointerLeave}

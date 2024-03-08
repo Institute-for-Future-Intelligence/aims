@@ -2,9 +2,17 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
+import { Object3DNode } from '@react-three/fiber';
 import { Filter } from './Filter';
 import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
+import RCGroup from './lib/gfx/RCGroup';
+
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    rCGroup: Object3DNode<RCGroup, typeof RCGroup>;
+  }
+}
 
 // use null for undefined, as we need to persist this in Firebase
 export interface ProjectState {
