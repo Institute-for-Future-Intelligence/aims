@@ -37,6 +37,10 @@ export const yzPlanePosition = (state: CommonStoreState) => state.projectState.y
 
 export const xzPlanePosition = (state: CommonStoreState) => state.projectState.xzPlanePosition;
 
+export const temperature = (state: CommonStoreState) => state.projectState.temperature;
+
+export const pressure = (state: CommonStoreState) => state.projectState.pressure;
+
 export const molecularContainer = (state: CommonStoreState) => state.projectState.molecularContainer;
 
 export const molecularContainerVisible = (state: CommonStoreState) => state.projectState.molecularContainerVisible;

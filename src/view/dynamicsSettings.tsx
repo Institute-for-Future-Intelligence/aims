@@ -17,6 +17,8 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: MoleculeTS[] | 
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const testMolecules = useStore(Selector.testMolecules);
   const molecularContainer = useStore(Selector.molecularContainer);
+  const temperature = useStore(Selector.temperature) ?? 300;
+  const pressure = useStore(Selector.pressure) ?? 1;
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -32,6 +34,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: MoleculeTS[] | 
           </Col>
           <Col span={12}>
             <InputNumber
+              addonAfter={'Å'}
               min={10}
               max={100}
               style={{ width: '100%' }}
@@ -55,6 +58,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: MoleculeTS[] | 
           </Col>
           <Col span={12}>
             <InputNumber
+              addonAfter={'Å'}
               min={10}
               max={100}
               style={{ width: '100%' }}
@@ -78,6 +82,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: MoleculeTS[] | 
           </Col>
           <Col span={12}>
             <InputNumber
+              addonAfter={'Å'}
               min={10}
               max={100}
               style={{ width: '100%' }}
@@ -95,9 +100,57 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: MoleculeTS[] | 
             />
           </Col>
         </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={12} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.Temperature', lang)}: </span>
+          </Col>
+          <Col span={12}>
+            <InputNumber
+              addonAfter={'K'}
+              min={10}
+              max={1000}
+              style={{ width: '100%' }}
+              precision={1}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(temperature.toFixed(1))}
+              step={1}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.temperature = value;
+                });
+                setChanged(true);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={12} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.Pressure', lang)}: </span>
+          </Col>
+          <Col span={12}>
+            <InputNumber
+              addonAfter={'atm'}
+              min={0.01}
+              max={100}
+              style={{ width: '100%' }}
+              precision={2}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(pressure.toFixed(2))}
+              step={0.1}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.pressure = value;
+                });
+                setChanged(true);
+              }}
+            />
+          </Col>
+        </Row>
       </div>
     );
-  }, [lang, molecularContainer.lx, molecularContainer.ly, molecularContainer.lz]);
+  }, [lang, molecularContainer.lx, molecularContainer.ly, molecularContainer.lz, temperature, pressure]);
 
   const createInfo = useMemo(() => {
     let atomCount = 0;

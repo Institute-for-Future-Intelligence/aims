@@ -155,6 +155,8 @@ export const i18n_en = {
       ContainerLx: 'Container Lx',
       ContainerLy: 'Container Ly',
       ContainerLz: 'Container Lz',
+      Temperature: 'Temperature',
+      Pressure: 'Pressure',
       Protein: 'Protein',
       Ligand: 'Ligand',
       Molecules: 'Molecules',

@@ -107,6 +107,8 @@ export class ProjectUtil {
 
       molecularContainer: { lx: 50, ly: 50, lz: 50 } as MolecularContainer,
       molecularContainerVisible: false,
+      temperature: 300,
+      pressure: 1,
     } as ProjectState;
   }
 

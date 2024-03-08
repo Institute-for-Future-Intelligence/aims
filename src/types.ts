@@ -88,6 +88,9 @@ export interface ProjectState {
 
   molecularContainer: MolecularContainer;
   molecularContainerVisible: boolean;
+
+  temperature: number;
+  pressure: number;
 }
 
 export interface MolecularContainer {

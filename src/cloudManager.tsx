@@ -406,6 +406,9 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             molecularContainer: data.molecularContainer ?? ({ lx: cl, ly: cl, lz: cl } as MolecularContainer),
             molecularContainerVisible: !!data.molecularContainerVisible,
 
+            temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,
+            pressure: data.pressure !== undefined && data.pressure !== null ? data.pressure : 1,
+
             cameraPosition: data.cameraPosition ?? DEFAULT_CAMERA_POSITION,
             cameraRotation: data.cameraRotation ?? DEFAULT_CAMERA_ROTATION,
             cameraUp: data.cameraUp ?? DEFAULT_CAMERA_UP,

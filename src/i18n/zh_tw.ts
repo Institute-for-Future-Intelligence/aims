@@ -155,6 +155,8 @@ export const i18n_zh_tw = {
       ContainerLx: '容器Lx',
       ContainerLy: '容器Ly',
       ContainerLz: '容器Lz',
+      Temperature: '温度',
+      Pressure: '壓力',
       Protein: '蛋白質',
       Ligand: '配體',
       Molecules: '分子',

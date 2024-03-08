@@ -164,6 +164,7 @@ const DockingSettings = React.memo(() => {
           </Col>
           <Col span={16}>
             <InputNumber
+              addonAfter={'Å'}
               min={10}
               max={100}
               style={{ width: '100%' }}
@@ -187,6 +188,7 @@ const DockingSettings = React.memo(() => {
           </Col>
           <Col span={16}>
             <InputNumber
+              addonAfter={'Å'}
               min={10}
               max={100}
               style={{ width: '100%' }}
@@ -210,6 +212,7 @@ const DockingSettings = React.memo(() => {
           </Col>
           <Col span={16}>
             <InputNumber
+              addonAfter={'Å'}
               min={10}
               max={100}
               style={{ width: '100%' }}
@@ -233,6 +236,7 @@ const DockingSettings = React.memo(() => {
           </Col>
           <Col span={16}>
             <InputNumber
+              addonAfter={'Å'}
               min={0.1}
               max={1}
               style={{ width: '100%' }}

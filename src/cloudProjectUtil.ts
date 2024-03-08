@@ -103,6 +103,9 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           molecularContainer: data.molecularContainer ?? ({ lx: cl, ly: cl, lz: cl } as MolecularContainer),
           molecularContainerVisible: !!data.molecularContainerVisible,
 
+          temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,
+          pressure: data.pressure !== undefined && data.pressure !== null ? data.pressure : 1,
+
           cameraPosition: data.cameraPosition,
           cameraRotation: data.cameraRotation,
           cameraUp: data.cameraUp,
