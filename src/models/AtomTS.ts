@@ -6,6 +6,9 @@ import { Vector3 } from 'three';
 
 export interface AtomTS {
   elementSymbol: string;
-  position: Vector3;
   index: number;
+  position: Vector3;
+  velocity: Vector3;
+  acceleration: Vector3;
+  movable: boolean;
 }

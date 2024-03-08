@@ -11,7 +11,7 @@ import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { ImportOutlined } from '@ant-design/icons';
 import { MoleculeType, ProjectType } from '../constants.ts';
-import { commonMolecules, drugMolecules } from '../internalDatabase.ts';
+import { commonMolecules, drugMolecules, hydrocarbonMolecules } from '../internalDatabase.ts';
 
 const { Option } = Select;
 
@@ -66,6 +66,12 @@ const ImportMoleculeModal = React.memo(
       setDialogVisible(false);
     };
 
+    const collection = useMemo(() => {
+      if (moleculeType === MoleculeType.DRUG) return drugMolecules;
+      if (moleculeType === MoleculeType.HYDROCARBON) return hydrocarbonMolecules;
+      return commonMolecules;
+    }, [moleculeType]);
+
     return (
       <Modal
         width={480}
@@ -103,11 +109,23 @@ const ImportMoleculeModal = React.memo(
             value={moleculeType}
             onChange={(value: MoleculeType) => {
               setMoleculeType(value);
-              setName(value === MoleculeType.DRUG ? drugMolecules[0].name : commonMolecules[0].name);
+              switch (value) {
+                case MoleculeType.DRUG:
+                  setName(drugMolecules[0].name);
+                  break;
+                case MoleculeType.HYDROCARBON:
+                  setName(hydrocarbonMolecules[0].name);
+                  break;
+                default:
+                  setName(commonMolecules[0].name);
+              }
             }}
           >
             <Option key={MoleculeType.COMMON} value={MoleculeType.COMMON}>
               {`${t('term.CommonMolecules', lang)}`}
+            </Option>
+            <Option key={MoleculeType.HYDROCARBON} value={MoleculeType.HYDROCARBON}>
+              {`${t('term.HydrocarbonMolecules', lang)}`}
             </Option>
             <Option key={MoleculeType.DRUG} value={MoleculeType.DRUG}>
               {`${t('term.DrugMolecules', lang)}`}
@@ -126,7 +144,7 @@ const ImportMoleculeModal = React.memo(
               setName(value);
             }}
           >
-            {(moleculeType === MoleculeType.DRUG ? drugMolecules : commonMolecules).map((d, i) => {
+            {collection.map((d, i) => {
               const prop = getProvidedMolecularProperties(d.name);
               const formula = prop?.formula;
               return (

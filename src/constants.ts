@@ -114,6 +114,7 @@ export enum ProjectType {
 
 export enum MoleculeType {
   COMMON = 'Common',
+  HYDROCARBON = 'Hydrocarbon',
   DRUG = 'Drug',
 }
 

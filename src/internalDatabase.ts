@@ -6,32 +6,33 @@ import { MoleculeData } from './types';
 
 import commonMoleculeUrl001 from './molecules/pdb/xenon.pdb';
 import commonMoleculeUrl002 from './molecules/pdb/water.pdb';
-import commonMoleculeUrl003 from './molecules/xyz/benzene.xyz';
-import commonMoleculeUrl004 from './molecules/pdb/buckyball.pdb';
-import commonMoleculeUrl005 from './molecules/pdb/methane.pdb';
-import commonMoleculeUrl006 from './molecules/sdf/ethane.sdf';
-import commonMoleculeUrl007 from './molecules/sdf/propane.sdf';
-import commonMoleculeUrl008 from './molecules/sdf/butane.sdf';
-import commonMoleculeUrl009 from './molecules/sdf/pentane.sdf';
-import commonMoleculeUrl010 from './molecules/sdf/hexane.sdf';
-import commonMoleculeUrl011 from './molecules/sdf/heptane.sdf';
-import commonMoleculeUrl012 from './molecules/sdf/octane.sdf';
-import commonMoleculeUrl013 from './molecules/sdf/nonane.sdf';
-import commonMoleculeUrl014 from './molecules/sdf/decane.sdf';
-import commonMoleculeUrl015 from './molecules/sdf/undecane.sdf';
-import commonMoleculeUrl016 from './molecules/sdf/dodecane.sdf';
-import commonMoleculeUrl017 from './molecules/sdf/tridecane.sdf';
-import commonMoleculeUrl018 from './molecules/sdf/tetradecane.sdf';
-import commonMoleculeUrl019 from './molecules/sdf/pentadecane.sdf';
-import commonMoleculeUrl020 from './molecules/sdf/hexadecane.sdf';
-import commonMoleculeUrl021 from './molecules/sdf/heptadecane.sdf';
-import commonMoleculeUrl022 from './molecules/sdf/octadecane.sdf';
-import commonMoleculeUrl023 from './molecules/sdf/nonadecane.sdf';
-import commonMoleculeUrl024 from './molecules/sdf/icosane.sdf';
-import commonMoleculeUrl025 from './molecules/sdf/heneicosane.sdf';
-import commonMoleculeUrl026 from './molecules/sdf/docosane.sdf';
-import commonMoleculeUrl027 from './molecules/sdf/tricosane.sdf';
-import commonMoleculeUrl028 from './molecules/sdf/tetracosane.sdf';
+import commonMoleculeUrl003 from './molecules/pdb/buckyball.pdb';
+
+import hydrocarbonMoleculeUrl001 from './molecules/pdb/methane.pdb';
+import hydrocarbonMoleculeUrl002 from './molecules/sdf/ethane.sdf';
+import hydrocarbonMoleculeUrl003 from './molecules/sdf/propane.sdf';
+import hydrocarbonMoleculeUrl004 from './molecules/sdf/butane.sdf';
+import hydrocarbonMoleculeUrl005 from './molecules/sdf/pentane.sdf';
+import hydrocarbonMoleculeUrl006 from './molecules/sdf/hexane.sdf';
+import hydrocarbonMoleculeUrl007 from './molecules/sdf/heptane.sdf';
+import hydrocarbonMoleculeUrl008 from './molecules/sdf/octane.sdf';
+import hydrocarbonMoleculeUrl009 from './molecules/sdf/nonane.sdf';
+import hydrocarbonMoleculeUrl010 from './molecules/sdf/decane.sdf';
+import hydrocarbonMoleculeUrl011 from './molecules/sdf/undecane.sdf';
+import hydrocarbonMoleculeUrl012 from './molecules/sdf/dodecane.sdf';
+import hydrocarbonMoleculeUrl013 from './molecules/sdf/tridecane.sdf';
+import hydrocarbonMoleculeUrl014 from './molecules/sdf/tetradecane.sdf';
+import hydrocarbonMoleculeUrl015 from './molecules/sdf/pentadecane.sdf';
+import hydrocarbonMoleculeUrl016 from './molecules/sdf/hexadecane.sdf';
+import hydrocarbonMoleculeUrl017 from './molecules/sdf/heptadecane.sdf';
+import hydrocarbonMoleculeUrl018 from './molecules/sdf/octadecane.sdf';
+import hydrocarbonMoleculeUrl019 from './molecules/sdf/nonadecane.sdf';
+import hydrocarbonMoleculeUrl020 from './molecules/sdf/icosane.sdf';
+import hydrocarbonMoleculeUrl021 from './molecules/sdf/heneicosane.sdf';
+import hydrocarbonMoleculeUrl022 from './molecules/sdf/docosane.sdf';
+import hydrocarbonMoleculeUrl023 from './molecules/sdf/tricosane.sdf';
+import hydrocarbonMoleculeUrl024 from './molecules/sdf/tetracosane.sdf';
+import hydrocarbonMoleculeUrl101 from './molecules/xyz/benzene.xyz';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
@@ -66,33 +67,36 @@ import proteinUrl005 from './proteins/2fom.pdb';
 export const commonMolecules = [
   { url: commonMoleculeUrl001, internal: true, name: 'Xenon' } as MoleculeData,
   { url: commonMoleculeUrl002, internal: true, name: 'Water' } as MoleculeData,
-  { url: commonMoleculeUrl003, internal: true, name: 'Benzene' } as MoleculeData,
-  { url: commonMoleculeUrl004, internal: true, name: 'Buckminsterfullerene' } as MoleculeData,
-  { url: commonMoleculeUrl005, internal: true, name: 'Methane' } as MoleculeData,
-  { url: commonMoleculeUrl006, internal: true, name: 'Ethane' } as MoleculeData,
-  { url: commonMoleculeUrl007, internal: true, name: 'Propane' } as MoleculeData,
-  { url: commonMoleculeUrl008, internal: true, name: 'Butane' } as MoleculeData,
-  { url: commonMoleculeUrl009, internal: true, name: 'Pentane' } as MoleculeData,
-  { url: commonMoleculeUrl010, internal: true, name: 'Hexane' } as MoleculeData,
-  { url: commonMoleculeUrl011, internal: true, name: 'Heptane' } as MoleculeData,
-  { url: commonMoleculeUrl012, internal: true, name: 'Octane' } as MoleculeData,
-  { url: commonMoleculeUrl013, internal: true, name: 'Nonane' } as MoleculeData,
-  { url: commonMoleculeUrl014, internal: true, name: 'Decane' } as MoleculeData,
-  { url: commonMoleculeUrl015, internal: true, name: 'Undecane' } as MoleculeData,
-  { url: commonMoleculeUrl016, internal: true, name: 'Dodecane' } as MoleculeData,
-  { url: commonMoleculeUrl017, internal: true, name: 'Tridecane' } as MoleculeData,
-  { url: commonMoleculeUrl018, internal: true, name: 'Tetradecane' } as MoleculeData,
-  { url: commonMoleculeUrl019, internal: true, name: 'Pentadecane' } as MoleculeData,
-  { url: commonMoleculeUrl020, internal: true, name: 'Hexadecane' } as MoleculeData,
-  { url: commonMoleculeUrl021, internal: true, name: 'Heptadecane' } as MoleculeData,
-  { url: commonMoleculeUrl022, internal: true, name: 'Octadecane' } as MoleculeData,
-  { url: commonMoleculeUrl023, internal: true, name: 'Nonadecane' } as MoleculeData,
-  { url: commonMoleculeUrl024, internal: true, name: 'Icosane' } as MoleculeData,
-  { url: commonMoleculeUrl025, internal: true, name: 'Heneicosane' } as MoleculeData,
-  { url: commonMoleculeUrl026, internal: true, name: 'Docosane' } as MoleculeData,
-  { url: commonMoleculeUrl027, internal: true, name: 'Tricosane' } as MoleculeData,
-  { url: commonMoleculeUrl028, internal: true, name: 'Tetracosane' } as MoleculeData,
-].sort((a, b) => a.name.localeCompare(b.name));
+  { url: commonMoleculeUrl003, internal: true, name: 'Buckminsterfullerene' } as MoleculeData,
+];
+
+export const hydrocarbonMolecules = [
+  { url: hydrocarbonMoleculeUrl001, internal: true, name: 'Methane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl002, internal: true, name: 'Ethane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl003, internal: true, name: 'Propane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl004, internal: true, name: 'Butane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl005, internal: true, name: 'Pentane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl006, internal: true, name: 'Hexane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl007, internal: true, name: 'Heptane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl008, internal: true, name: 'Octane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl009, internal: true, name: 'Nonane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl010, internal: true, name: 'Decane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl011, internal: true, name: 'Undecane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl012, internal: true, name: 'Dodecane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl013, internal: true, name: 'Tridecane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl014, internal: true, name: 'Tetradecane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl015, internal: true, name: 'Pentadecane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl016, internal: true, name: 'Hexadecane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl017, internal: true, name: 'Heptadecane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl018, internal: true, name: 'Octadecane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl019, internal: true, name: 'Nonadecane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl020, internal: true, name: 'Icosane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl021, internal: true, name: 'Heneicosane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl022, internal: true, name: 'Docosane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl023, internal: true, name: 'Tricosane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl024, internal: true, name: 'Tetracosane' } as MoleculeData,
+  { url: hydrocarbonMoleculeUrl101, internal: true, name: 'Benzene' } as MoleculeData,
+];
 
 export const drugMolecules = [
   { url: drugMoleculeUrl001, internal: true, name: 'Aspirin' } as MoleculeData,
@@ -130,6 +134,9 @@ export const targetProteins = [
 
 export const getMolecule = (name: string) => {
   for (const m of commonMolecules) {
+    if (name === m.name) return m;
+  }
+  for (const m of hydrocarbonMolecules) {
     if (name === m.name) return m;
   }
   for (const m of drugMolecules) {

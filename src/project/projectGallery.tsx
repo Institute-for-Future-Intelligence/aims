@@ -35,7 +35,7 @@ import { ProjectUtil } from './ProjectUtil.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { updateDataColoring } from '../cloudProjectUtil.ts';
 import { Filter, FilterType } from '../Filter.ts';
-import { commonMolecules, drugMolecules, getMolecule } from '../internalDatabase.ts';
+import { drugMolecules, getMolecule, commonMolecules } from '../internalDatabase.ts';
 import { CartesianGrid, Cell, Dot, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { View } from '@react-three/drei';
