@@ -58,6 +58,7 @@ export const i18n_en = {
       CommonMolecules: 'Common Molecules',
       HydrocarbonMolecules: 'Hydrocarbon Molecules',
       DrugMolecules: 'Drug Molecules',
+      Monatomic: 'Monatomic',
     },
 
     aboutUs: {

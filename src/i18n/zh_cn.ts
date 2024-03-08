@@ -58,6 +58,7 @@ export const i18n_zh_cn = {
       CommonMolecules: '普通分子',
       HydrocarbonMolecules: '烃分子',
       DrugMolecules: '药物分子',
+      Monatomic: '单原子',
     },
 
     aboutUs: {

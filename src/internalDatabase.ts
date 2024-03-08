@@ -4,9 +4,14 @@
 
 import { MoleculeData } from './types';
 
-import commonMoleculeUrl001 from './molecules/pdb/xenon.pdb';
-import commonMoleculeUrl002 from './molecules/pdb/water.pdb';
-import commonMoleculeUrl003 from './molecules/pdb/buckyball.pdb';
+import monatomicUrl001 from './molecules/pdb/helium.pdb';
+import monatomicUrl002 from './molecules/pdb/neon.pdb';
+import monatomicUrl003 from './molecules/pdb/argon.pdb';
+import monatomicUrl004 from './molecules/pdb/krypton.pdb';
+import monatomicUrl005 from './molecules/pdb/xenon.pdb';
+
+import commonMoleculeUrl001 from './molecules/pdb/water.pdb';
+import commonMoleculeUrl101 from './molecules/pdb/buckyball.pdb';
 
 import hydrocarbonMoleculeUrl001 from './molecules/pdb/methane.pdb';
 import hydrocarbonMoleculeUrl002 from './molecules/sdf/ethane.sdf';
@@ -64,10 +69,17 @@ import proteinUrl003 from './proteins/1aid.pdb';
 import proteinUrl004 from './proteins/7qo7.pdb';
 import proteinUrl005 from './proteins/2fom.pdb';
 
+export const monatomicMolecules = [
+  { url: monatomicUrl001, internal: true, name: 'Helium' } as MoleculeData,
+  { url: monatomicUrl002, internal: true, name: 'Neon' } as MoleculeData,
+  { url: monatomicUrl003, internal: true, name: 'Argon' } as MoleculeData,
+  { url: monatomicUrl004, internal: true, name: 'Krypton' } as MoleculeData,
+  { url: monatomicUrl005, internal: true, name: 'Xenon' } as MoleculeData,
+];
+
 export const commonMolecules = [
-  { url: commonMoleculeUrl001, internal: true, name: 'Xenon' } as MoleculeData,
-  { url: commonMoleculeUrl002, internal: true, name: 'Water' } as MoleculeData,
-  { url: commonMoleculeUrl003, internal: true, name: 'Buckminsterfullerene' } as MoleculeData,
+  { url: commonMoleculeUrl001, internal: true, name: 'Water' } as MoleculeData,
+  { url: commonMoleculeUrl101, internal: true, name: 'Buckminsterfullerene' } as MoleculeData,
 ];
 
 export const hydrocarbonMolecules = [
@@ -133,6 +145,9 @@ export const targetProteins = [
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const getMolecule = (name: string) => {
+  for (const m of monatomicMolecules) {
+    if (name === m.name) return m;
+  }
   for (const m of commonMolecules) {
     if (name === m.name) return m;
   }
