@@ -367,9 +367,9 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
 
             chamberViewerPercentWidth: data.chamberViewerPercentWidth ?? 50,
             chamberViewerAxes: data.chamberViewerAxes ?? true,
-            chamberViewerStyle: data.chamberViewerStyle ?? MolecularViewerStyle.QuickSurface,
-            chamberViewerMaterial: data.chamberViewerMaterial ?? MolecularViewerMaterial.Soft,
-            chamberViewerColoring: data.chamberViewerColoring ?? MolecularViewerColoring.SecondaryStructure,
+            chamberViewerStyle: data.chamberViewerStyle ?? MolecularViewerStyle.BallAndStick,
+            chamberViewerMaterial: data.chamberViewerMaterial ?? MolecularViewerMaterial.Diffuse,
+            chamberViewerColoring: data.chamberViewerColoring ?? MolecularViewerColoring.Element,
             chamberViewerFoggy: !!data.chamberViewerFoggy,
             chamberViewerBackground: data.chamberViewerBackground ?? 'black',
             chamberViewerSelector: data.chamberViewerSelector ?? 'all',
