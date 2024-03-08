@@ -227,7 +227,7 @@ const DockingViewer = React.memo(
             visualLigand.rebuild().then(() => {
               if (!ligandGroupRef.current) return;
               updateLigandData();
-              ligandGroupRef.current.add(visualLigand, visualLigand.getSelectionGeo());
+              ligandGroupRef.current.add(visualLigand);
               invalidate();
             });
           }
