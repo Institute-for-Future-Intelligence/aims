@@ -33,6 +33,7 @@ import DropPlanes from './dropPlanes.tsx';
 import { Box, Edges } from '@react-three/drei';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import Picker from '../lib/ui/Picker.js';
+import settings from '../lib/settings.js';
 extend({ RCGroup });
 
 export interface DynamicsViewerProps {
@@ -187,7 +188,7 @@ const DynamicsViewer = React.memo(
         .rebuild()
         .then(() => {
           if (!groupRef.current) return;
-          groupRef.current.add(visual);
+          groupRef.current.add(visual, visual.getSelectionGeo());
           const boundingSphere = visual.getBoundaries().boundingSphere;
           usePrimitiveStore.getState().set((state) => {
             state.boundingSphereRadius = boundingSphere.radius;
@@ -202,28 +203,30 @@ const DynamicsViewer = React.memo(
     // picker
     useEffect(() => {
       const picker = new Picker(groupRef.current, camera, gl.domElement);
-      // @ts-ignore
+      // @ts-expect-error
+      settings.set('pick', 'molecule');
+      // @ts-expect-error
       picker.addEventListener('newpick', (event) => {
         console.log('pick', event.obj);
-        // let complex = null;
-        // if (event.obj.atom) {
-        //   complex = event.obj.atom.residue.getChain().getComplex();
-        // } else if (event.obj.residue) {
-        //   complex = event.obj.residue.getChain().getComplex();
-        // } else if (event.obj.chain) {
-        //   complex = event.obj.chain.getComplex();
-        // } else if (event.obj.molecule) {
-        //   complex = event.obj.molecule.complex;
-        // } else {
-        // }
+        let complex = null;
+        if (event.obj.atom) {
+          complex = event.obj.atom.residue.getChain().getComplex();
+        } else if (event.obj.residue) {
+          complex = event.obj.residue.getChain().getComplex();
+        } else if (event.obj.chain) {
+          complex = event.obj.chain.getComplex();
+        } else if (event.obj.molecule) {
+          complex = event.obj.molecule.complex;
+        } else {
+        }
 
-        // if (groupRef.current) {
-        //   const visual = groupRef.current.children[0] as ComplexVisual;
-        //   if (visual && (visual.getComplex() === complex || complex === null)) {
-        //     visual.updateSelectionMask(event.obj);
-        //     visual.rebuildSelectionGeometry();
-        //   }
-        // }
+        if (groupRef.current) {
+          const visual = groupRef.current.children[0] as ComplexVisual;
+          if (visual && (visual.getComplex() === complex || complex === null)) {
+            visual.updateSelectionMask(event.obj);
+            visual.rebuildSelectionGeometry();
+          }
+        }
       });
 
       return () => {
