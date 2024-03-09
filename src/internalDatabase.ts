@@ -10,9 +10,9 @@ import monatomicUrl003 from './molecules/pdb/argon.pdb';
 import monatomicUrl004 from './molecules/pdb/krypton.pdb';
 import monatomicUrl005 from './molecules/pdb/xenon.pdb';
 
-import commonMoleculeUrl001 from './molecules/sdf/hydrogen.sdf';
-import commonMoleculeUrl002 from './molecules/sdf/oxygen.sdf';
-import commonMoleculeUrl003 from './molecules/sdf/nitrogen.sdf';
+import commonMoleculeUrl001 from './molecules/sdf/dihydrogen.sdf';
+import commonMoleculeUrl002 from './molecules/sdf/dioxygen.sdf';
+import commonMoleculeUrl003 from './molecules/sdf/dinitrogen.sdf';
 import commonMoleculeUrl004 from './molecules/pdb/water.pdb';
 import commonMoleculeUrl005 from './molecules/sdf/carbon_dioxide.sdf';
 import commonMoleculeUrl101 from './molecules/pdb/buckyball.pdb';
@@ -84,9 +84,9 @@ export const monatomicMolecules = [
 ];
 
 export const commonMolecules = [
-  { url: commonMoleculeUrl001, internal: true, name: 'Hydrogen' } as MoleculeData,
-  { url: commonMoleculeUrl002, internal: true, name: 'Oxygen' } as MoleculeData,
-  { url: commonMoleculeUrl003, internal: true, name: 'Nitrogen' } as MoleculeData,
+  { url: commonMoleculeUrl001, internal: true, name: 'Dihydrogen' } as MoleculeData,
+  { url: commonMoleculeUrl002, internal: true, name: 'Dioxygen' } as MoleculeData,
+  { url: commonMoleculeUrl003, internal: true, name: 'Dinitrogen' } as MoleculeData,
   { url: commonMoleculeUrl004, internal: true, name: 'Water' } as MoleculeData,
   { url: commonMoleculeUrl005, internal: true, name: 'Carbon Dioxide' } as MoleculeData,
   { url: commonMoleculeUrl101, internal: true, name: 'Buckminsterfullerene' } as MoleculeData,

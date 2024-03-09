@@ -89,13 +89,14 @@ class AutoBond {
 
     const processAtom = function (atomB) {
       if (isHydrogenA && atomB.isHydrogen()) {
-        return;
+        // allow H-H molecule to be processed
+        if (atomA.residue._type._name !== 'Dihydrogen' || atomB.residue._type._name !== 'Dihydrogen') {
+          return;
+        }
       }
 
       const locationB = atomB.location;
-      if ((locationA !== cSpaceCode)
-        && (locationB !== cSpaceCode)
-        && (locationA !== locationB)) {
+      if (locationA !== cSpaceCode && locationB !== cSpaceCode && locationA !== locationB) {
         return;
       }
 
@@ -103,7 +104,7 @@ class AutoBond {
       const rB = atomB.element.radiusBonding;
       const maxAcceptable = cBondRadInJMOL ? rA + rB + cBondTolerance : cVMDTolerance * (rA + rB);
 
-      if (dist2 > (maxAcceptable * maxAcceptable)) {
+      if (dist2 > maxAcceptable * maxAcceptable) {
         return;
       }
 

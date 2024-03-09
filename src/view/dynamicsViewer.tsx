@@ -47,12 +47,11 @@ export interface DynamicsViewerProps {
   onPointerDown?: (e: ThreeEvent<PointerEvent>) => void;
 }
 
-// TODO: We have to generate a complex for each molecule
-const generateComplex = (name: string, molecules: MoleculeTS[]) => {
+const generateComplex = (molecules: MoleculeTS[]) => {
   const complex = new Complex();
   for (const [idx, mol] of molecules.entries()) {
     const chain = complex.addChain('MOL' + idx);
-    const residue = chain.addResidue('UNK' + idx, idx, ' ');
+    const residue = chain.addResidue(mol.name, idx, ' ');
     for (const [i, a] of mol.atoms.entries()) {
       residue.addAtom(
         a.elementSymbol,
@@ -67,7 +66,7 @@ const generateComplex = (name: string, molecules: MoleculeTS[]) => {
         0,
       );
     }
-    const molecule = new Molecule(complex, name, idx + 1);
+    const molecule = new Molecule(complex, mol.name, idx + 1);
     molecule.residues = [residue];
     complex._molecules.push(molecule);
   }
@@ -161,7 +160,7 @@ const DynamicsViewer = React.memo(
       }
       moleculesRef.current.push(mol);
       if (moleculesRef.current.length === testMolecules.length) {
-        setComplex(generateComplex('all', moleculesRef.current));
+        setComplex(generateComplex(moleculesRef.current));
       }
     };
 
