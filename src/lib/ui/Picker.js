@@ -146,6 +146,7 @@ Picker.prototype.pickObject = function (screenPos) {
 };
 
 Picker.prototype.getMouseInViewport = function (pageX, pageY) {
+  this.handleResize();
   return new THREE.Vector2(
     ((pageX - this.screen.left) / this.screen.width) * 2 - 1,
     (-(pageY - this.screen.top) / this.screen.height) * 2 + 1,
