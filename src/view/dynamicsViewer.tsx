@@ -203,9 +203,9 @@ const DynamicsViewer = React.memo(
     // picker
     useEffect(() => {
       const picker = new Picker(groupRef.current, camera, gl.domElement);
-      // @ts-expect-error
+      // @ts-expect-error ignore
       settings.set('pick', 'molecule');
-      // @ts-expect-error
+      // @ts-expect-error ignore
       picker.addEventListener('newpick', (event) => {
         console.log('pick', event.obj);
         let complex = null;
@@ -217,7 +217,6 @@ const DynamicsViewer = React.memo(
           complex = event.obj.chain.getComplex();
         } else if (event.obj.molecule) {
           complex = event.obj.molecule.complex;
-        } else {
         }
 
         if (groupRef.current) {
