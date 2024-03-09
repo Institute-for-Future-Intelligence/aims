@@ -405,6 +405,10 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
 
             molecularContainer: data.molecularContainer ?? ({ lx: cl, ly: cl, lz: cl } as MolecularContainer),
             molecularContainerVisible: !!data.molecularContainerVisible,
+            pickedMoleculeIndex:
+              data.pickedMoleculeIndex !== undefined && data.pickedMoleculeIndex !== null
+                ? data.pickedMoleculeIndex
+                : -1,
 
             temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,
             pressure: data.pressure !== undefined && data.pressure !== null ? data.pressure : 1,

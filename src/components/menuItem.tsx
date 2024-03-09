@@ -2,15 +2,14 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import { usePrimitiveStore } from '../stores/commonPrimitive';
+import React, { FC, ReactNode } from 'react';
 
 export interface MenuItemProps {
   hasPadding?: boolean;
   fontWeight?: string;
   stayAfterClick?: boolean;
   textSelectable?: boolean;
-  update?: boolean;
-  children?: React.ReactNode;
+  children?: ReactNode;
   onClick?: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
 }
 
@@ -22,12 +21,11 @@ export const LabelMark = ({ children }: LabelMarkProps) => {
   return <span style={{ paddingLeft: '2px', fontSize: 9 }}>{children}</span>;
 };
 
-export const MenuItem: React.FC<MenuItemProps> = ({
+export const MenuItem: FC<MenuItemProps> = ({
   stayAfterClick,
   fontWeight,
   hasPadding,
   textSelectable = true,
-  update,
   onClick,
   children,
 }) => {
@@ -37,9 +35,6 @@ export const MenuItem: React.FC<MenuItemProps> = ({
     }
     if (stayAfterClick) {
       e.stopPropagation();
-    }
-    if (update) {
-      usePrimitiveStore.getState().updateContextMenu();
     }
   };
 

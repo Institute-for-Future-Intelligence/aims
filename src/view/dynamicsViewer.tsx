@@ -103,6 +103,7 @@ const DynamicsViewer = React.memo(
     onPointerLeave,
     onPointerDown,
   }: DynamicsViewerProps) => {
+    const setCommonStore = useStore(Selector.set);
     const testMolecules = useStore(Selector.testMolecules);
     const molecularContainer = useStore(Selector.molecularContainer);
     const molecularContainerVisible = useStore(Selector.molecularContainerVisible);
@@ -206,7 +207,10 @@ const DynamicsViewer = React.memo(
       settings.set('pick', 'molecule');
       // @ts-expect-error ignore
       picker.addEventListener('newpick', (event) => {
-        console.log('pick', event.obj);
+        const pickedMoleculeIndex = event.obj.molecule ? event.obj.molecule.index - 1 : -1;
+        setCommonStore((state) => {
+          state.projectState.pickedMoleculeIndex = pickedMoleculeIndex;
+        });
         let complex = null;
         if (event.obj.atom) {
           complex = event.obj.atom.residue.getChain().getComplex();
@@ -221,6 +225,7 @@ const DynamicsViewer = React.memo(
         if (groupRef.current) {
           const visual = groupRef.current.children[0] as ComplexVisual;
           if (visual && (visual.getComplex() === complex || complex === null)) {
+            visual.resetSelectionMask();
             visual.updateSelectionMask(event.obj);
             visual.rebuildSelectionGeometry();
           }

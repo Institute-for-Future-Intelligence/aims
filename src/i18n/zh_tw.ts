@@ -34,6 +34,7 @@ export const i18n_zh_tw = {
       Open: '打開',
       Rename: '改名',
       Delete: '删除',
+      Copy: '拷貝',
       Warning: '警告',
       Caution: '小心',
       Title: '標題',

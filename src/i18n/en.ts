@@ -34,6 +34,7 @@ export const i18n_en = {
       Open: 'Open',
       Rename: 'Rename',
       Delete: 'Delete',
+      Copy: 'Copy',
       Warning: 'Warning',
       Caution: 'Caution',
       Title: 'Title',

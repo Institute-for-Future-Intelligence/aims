@@ -9,8 +9,7 @@ import React, { useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Group, MeshBasicMaterial, Vector3 } from 'three';
 import { useGLTF } from '@react-three/drei';
-import { HALF_PI, ObjectType } from '../constants.ts';
-import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
+import { HALF_PI } from '../constants.ts';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 
@@ -83,12 +82,6 @@ const Spaceship = React.memo(() => {
         }}
         onPointerOut={() => {
           gl.domElement.style.cursor = 'default';
-        }}
-        onContextMenu={(e) => {
-          e.stopPropagation();
-          usePrimitiveStore.getState().set((state) => {
-            state.contextMenuObjectType = ObjectType.Spaceship;
-          });
         }}
       >
         <mesh name="Renault_(S,_T1)_0" geometry={model.nodes['Renault_(S,_T1)_0'].geometry}>

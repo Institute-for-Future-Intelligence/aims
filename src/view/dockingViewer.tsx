@@ -239,7 +239,7 @@ const DockingViewer = React.memo(
     // picker
     useEffect(() => {
       const picker = new Picker(groupRef.current, camera, gl.domElement);
-      // @ts-ignore
+      // @ts-expect-error ignore
       picker.addEventListener('newpick', (event) => {
         console.log('pick', event.obj);
 
@@ -283,17 +283,7 @@ const DockingViewer = React.memo(
         onPointerLeave={onPointerLeave}
         onPointerDown={onPointerDown}
       >
-        <rCGroup
-          name={'Protein'}
-          ref={proteinGroupRef}
-          // FIXME: adding this would slow down the viewer significantly
-          // onContextMenu={(e) => {
-          //   e.stopPropagation();
-          //   usePrimitiveStore.getState().set((state) => {
-          //     state.contextMenuObjectType = ObjectType.Molecule;
-          //   });
-          // }}
-        />
+        <rCGroup name={'Protein'} ref={proteinGroupRef} />
         <rCGroup
           name={'Ligand'}
           ref={ligandGroupRef}

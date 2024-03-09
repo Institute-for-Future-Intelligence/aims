@@ -141,6 +141,8 @@ export enum ObjectType {
   Atom = 'Atom',
   Bond = 'Bond',
   Molecule = 'Molecule',
+  Protein = 'Protein',
+  Ligand = 'Ligand',
   Spaceship = 'Spaceship',
 }
 

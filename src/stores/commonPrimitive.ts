@@ -5,7 +5,7 @@
 import { createWithEqualityFn } from 'zustand/traditional';
 import { produce } from 'immer';
 import { MoleculeData } from '../types';
-import { ObjectType, ProjectType } from '../constants';
+import { ProjectType } from '../constants';
 
 // avoid using undefined value in the store for now.
 export interface PrimitiveStoreState {
@@ -31,10 +31,6 @@ export interface PrimitiveStoreState {
   zoomView: (scale: number) => void;
 
   waiting: boolean;
-
-  contextMenuObjectType: ObjectType | null;
-  contextMenuFlag: boolean;
-  updateContextMenu: () => void;
 
   // These stores the settings from newProjectDialog.tsx, because we don't want to overwrite
   // the local state in the common store yet. Don't be confused with commonStore's projectState,
@@ -126,14 +122,6 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     },
 
     waiting: false,
-
-    contextMenuObjectType: null,
-    contextMenuFlag: false,
-    updateContextMenu() {
-      immerSet((state) => {
-        state.contextMenuFlag = !state.contextMenuFlag;
-      });
-    },
 
     projectType: ProjectType.DRUG_DISCOVERY,
     projectTitle: null,

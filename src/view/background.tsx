@@ -6,7 +6,6 @@ import React, { useRef } from 'react';
 import { Mesh, Vector3 } from 'three';
 import { Plane } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
-import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 const Background = React.memo(() => {
   const { camera } = useThree();
@@ -23,20 +22,7 @@ const Background = React.memo(() => {
     }
   });
 
-  return (
-    <Plane
-      ref={planeRef}
-      visible={false}
-      name={'Background Plane'}
-      args={[100000, 100000]}
-      onContextMenu={(e) => {
-        e.stopPropagation();
-        usePrimitiveStore.getState().set((state) => {
-          state.contextMenuObjectType = null;
-        });
-      }}
-    />
-  );
+  return <Plane ref={planeRef} visible={false} name={'Background Plane'} args={[100000, 100000]} />;
 });
 
 export default Background;

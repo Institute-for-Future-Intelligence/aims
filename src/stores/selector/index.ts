@@ -45,6 +45,8 @@ export const molecularContainer = (state: CommonStoreState) => state.projectStat
 
 export const molecularContainerVisible = (state: CommonStoreState) => state.projectState.molecularContainerVisible;
 
+export const pickedMoleculeIndex = (state: CommonStoreState) => state.projectState.pickedMoleculeIndex;
+
 export const showAccountSettingsPanel = (state: PrimitiveStoreState) => state.showAccountSettingsPanel;
 
 export const userCount = (state: PrimitiveStoreState) => state.userCount;
@@ -126,8 +128,6 @@ export const loadChemicalElements = (state: CommonStoreState) => state.loadChemi
 export const getProvidedMolecularProperties = (state: CommonStoreState) => state.getProvidedMolecularProperties;
 
 export const loadProvidedMolecularProperties = (state: CommonStoreState) => state.loadProvidedMolecularProperties;
-
-export const contextMenuObjectType = (state: PrimitiveStoreState) => state.contextMenuObjectType;
 
 export const createProjectFlag = (state: PrimitiveStoreState) => state.createProjectFlag;
 

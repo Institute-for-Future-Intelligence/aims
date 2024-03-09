@@ -23,6 +23,54 @@ import {
 } from '../../view/displayOptions';
 import { SpaceshipDisplayMode } from '../../constants.ts';
 
+export const DeleteMolecule = () => {
+  const setCommonStore = useStore(Selector.set);
+  const loggable = useStore.getState().loggable;
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const deleteSelectedMolecule = () => {
+    if (loggable) {
+      setCommonStore((state) => {
+        state.actionInfo = {
+          name: 'Delete Selected Molecule',
+          timestamp: new Date().getTime(),
+        };
+      });
+    }
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={true} onClick={deleteSelectedMolecule}>
+      {t('word.Delete', lang)}
+    </MenuItem>
+  );
+};
+
+export const CopyMolecule = () => {
+  const setCommonStore = useStore(Selector.set);
+  const loggable = useStore.getState().loggable;
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const copySelectedMolecule = () => {
+    if (loggable) {
+      setCommonStore((state) => {
+        state.actionInfo = {
+          name: 'Copy Selected Molecule',
+          timestamp: new Date().getTime(),
+        };
+      });
+    }
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={true} onClick={copySelectedMolecule}>
+      {t('word.Copy', lang)}
+    </MenuItem>
+  );
+};
+
 export const AutoRotateCheckBox = ({ isMac }: { isMac?: boolean }) => {
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
   const { t } = useTranslation();

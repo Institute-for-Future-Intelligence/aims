@@ -157,7 +157,7 @@ Picker.prototype.mousedown = function (event) {
   event.preventDefault();
   event.stopPropagation();
 
-  if (event.button === 0) {
+  if (event.button === 0 || event.button === 2) {
     this._lastMousePos = this.getMouseInViewport(event.pageX, event.pageY);
     this._mouseTotalDist = 0.0;
     this._clickBeginTime = this._clock.getElapsedTime();
@@ -178,7 +178,7 @@ Picker.prototype.mouseup = function (event) {
   event.preventDefault();
   event.stopPropagation();
 
-  if (event.button === 0) {
+  if (event.button === 0 || event.button === 2) {
     if (this._mouseTotalDist < 0.01) {
       const curTime = this._clock.getElapsedTime();
       const curPos = this.getMouseInViewport(event.pageX, event.pageY);
