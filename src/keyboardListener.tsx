@@ -10,7 +10,7 @@ import { UndoableCheck } from './undo/UndoableCheck';
 import { showInfo } from './helpers';
 import i18n from './i18n/i18n';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { FlightControl, SpaceshipDisplayMode, UNDO_SHOW_INFO_DURATION } from './constants';
+import { FlightControl, ProjectType, SpaceshipDisplayMode, UNDO_SHOW_INFO_DURATION } from './constants';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { askToCreateProject, askToOpenProject, saveProject, saveProjectAs } from './components/mainMenu/projectMenu';
 import { resetView, zoomView } from './components/mainMenu/viewMenu';
@@ -97,6 +97,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const language = useStore(Selector.language);
   const undoManager = useStore(Selector.undoManager);
   const addUndoable = useStore(Selector.addUndoable);
+  const projectType = useStore(Selector.projectType);
   const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
@@ -105,6 +106,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const copiedMolecule = usePrimitiveStore(Selector.copiedMolecule);
   const clickPointRef = useRefStore.getState().clickPointRef;
+  const moleculesRef = useRefStore.getState().moleculesRef;
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -207,6 +209,35 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     }
   };
 
+  const onTranslation = (direction: string, displacement: number) => {
+    if (pickedMoleculeIndex === -1) return;
+    if (!moleculesRef?.current) return;
+    switch (direction) {
+      case 'x':
+        for (const m of moleculesRef.current) {
+          for (const a of m.atoms) {
+            a.position.x += displacement;
+          }
+        }
+        setCommonStore((state) => {
+          const m = state.projectState.testMolecules[pickedMoleculeIndex];
+          if (m.x !== undefined) m.x += displacement;
+        });
+        break;
+    }
+    usePrimitiveStore.getState().set((state) => {
+      state.updateViewerFlag = !state.updateViewerFlag;
+    });
+    if (loggable) {
+      setCommonStore((state) => {
+        state.actionInfo = {
+          name: 'Move Selected Molecule',
+          timestamp: new Date().getTime(),
+        };
+      });
+    }
+  };
+
   const handleKeyDown = (key: string) => {
     const ship = useStore.getState().projectState.spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW;
     switch (key) {
@@ -267,10 +298,18 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         startFlying(ship ? FlightControl.PitchUp : FlightControl.RotateAroundYCounterclockwise);
         break;
       case 'x':
-        startFlying(FlightControl.TranslateInPositiveX);
+        if (projectType === ProjectType.QSAR_MODELING) {
+          onTranslation('x', 1);
+        } else {
+          startFlying(FlightControl.TranslateInPositiveX);
+        }
         break;
       case 'shift+x':
-        startFlying(FlightControl.TranslateInNegativeX);
+        if (projectType === ProjectType.QSAR_MODELING) {
+          onTranslation('x', -1);
+        } else {
+          startFlying(FlightControl.TranslateInNegativeX);
+        }
         break;
       case 'y':
         startFlying(FlightControl.TranslateInPositiveY);

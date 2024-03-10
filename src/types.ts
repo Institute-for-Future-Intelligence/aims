@@ -23,8 +23,7 @@ export interface ProjectState {
   type: ProjectType;
   title: string | null;
   description: string | null;
-  molecules: MoleculeData[];
-  testMolecules: MoleculeData[];
+  molecules: MoleculeData[]; // molecules in the project gallery
   numberOfColumns: number;
   selectedMolecule: MoleculeData | null;
   ligand: MoleculeData | null;
@@ -94,6 +93,7 @@ export interface ProjectState {
   yzPlanePosition: number;
   xzPlanePosition: number;
 
+  testMolecules: MoleculeData[]; // molecules in the reaction chamber
   molecularContainer: MolecularContainer;
   molecularContainerVisible: boolean;
 

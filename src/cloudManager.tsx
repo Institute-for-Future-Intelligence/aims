@@ -356,7 +356,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             dotSizeScatterPlot: data.dotSizeScatterPlot !== undefined ? data.dotSizeScatterPlot : 4,
             type: data.type ?? ProjectType.DRUG_DISCOVERY,
             molecules: data.molecules ?? [],
-            testMolecules: data.testMolecules ?? [],
             numberOfColumns: data.numberOfColumns ?? 3,
             selectedMolecule: data.selectedMolecule ?? null,
             ligand: data.ligand ?? null,
@@ -407,6 +406,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             molecularContainer: data.molecularContainer ?? ({ lx: cl, ly: cl, lz: cl } as MolecularContainer),
             molecularContainerVisible: !!data.molecularContainerVisible,
 
+            testMolecules: data.testMolecules ?? [],
             temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,
             pressure: data.pressure !== undefined && data.pressure !== null ? data.pressure : 1,
 

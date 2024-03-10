@@ -38,7 +38,6 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           dataColoring: data.dataColoring ?? DataColoring.ALL,
           type: data.type,
           molecules: data.molecules,
-          testMolecules: data.testMolecules ?? [],
           numberOfColumns: data.numberOfColumns ?? 3,
           selectedMolecule: data.selectedMolecule,
           ligand: data.ligand,
@@ -103,6 +102,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           molecularContainer: data.molecularContainer ?? ({ lx: cl, ly: cl, lz: cl } as MolecularContainer),
           molecularContainerVisible: !!data.molecularContainerVisible,
 
+          testMolecules: data.testMolecules ?? [],
           temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,
           pressure: data.pressure !== undefined && data.pressure !== null ? data.pressure : 1,
 

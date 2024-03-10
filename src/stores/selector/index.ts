@@ -21,7 +21,7 @@ export const changed = (state: PrimitiveStoreState) => state.changed;
 
 export const setChanged = (state: PrimitiveStoreState) => state.setChanged;
 
-export const setSkipChange = (state: PrimitiveStoreState) => state.setSkipChange;
+export const updateViewerFlag = (state: PrimitiveStoreState) => state.updateViewerFlag;
 
 export const selectedPlane = (state: PrimitiveStoreState) => state.selectedPlane;
 
@@ -40,6 +40,8 @@ export const xzPlanePosition = (state: CommonStoreState) => state.projectState.x
 export const temperature = (state: CommonStoreState) => state.projectState.temperature;
 
 export const pressure = (state: CommonStoreState) => state.projectState.pressure;
+
+export const testMolecules = (state: CommonStoreState) => state.projectState.testMolecules;
 
 export const molecularContainer = (state: CommonStoreState) => state.projectState.molecularContainer;
 
@@ -68,8 +70,6 @@ export const panCenter = (state: CommonStoreState) => state.projectState.panCent
 export const proteinData = (state: CommonStoreState) => state.proteinData;
 
 export const molecules = (state: CommonStoreState) => state.projectState.molecules;
-
-export const testMolecules = (state: CommonStoreState) => state.projectState.testMolecules;
 
 export const numberOfColumns = (state: CommonStoreState) => state.projectState.numberOfColumns;
 

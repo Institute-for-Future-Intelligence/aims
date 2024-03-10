@@ -29,7 +29,6 @@ export class ProjectUtil {
       title: null,
       description: null,
       molecules: new Array<MoleculeData>(),
-      testMolecules: new Array<MoleculeData>(),
       numberOfColumns: 3,
       selectedMolecule: null,
       ligand: null,
@@ -108,6 +107,7 @@ export class ProjectUtil {
       molecularContainer: { lx: 50, ly: 50, lz: 50 } as MolecularContainer,
       molecularContainerVisible: false,
 
+      testMolecules: new Array<MoleculeData>(),
       temperature: 300,
       pressure: 1,
     } as ProjectState;

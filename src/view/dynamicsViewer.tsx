@@ -106,6 +106,7 @@ const DynamicsViewer = React.memo(
     const testMolecules = useStore(Selector.testMolecules);
     const molecularContainer = useStore(Selector.molecularContainer);
     const molecularContainerVisible = useStore(Selector.molecularContainerVisible);
+    const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
 
     const [complex, setComplex] = useState<any>();
 
@@ -139,6 +140,7 @@ const DynamicsViewer = React.memo(
         setComplex(undefined);
         return;
       }
+      if (setLoading) setLoading(true);
       moleculesRef.current.length = 0;
       for (const m of testMolecules) {
         loadMolecule(m, processResult);
@@ -168,7 +170,6 @@ const DynamicsViewer = React.memo(
       if (!groupRef.current || !mode) return;
       groupRef.current.children = [];
       if (!complex) return;
-      if (setLoading) setLoading(true);
 
       const visual = new ComplexVisual(complex.name, complex);
       const reps = [];
@@ -197,7 +198,7 @@ const DynamicsViewer = React.memo(
         .finally(() => {
           if (setLoading) setLoading(false);
         });
-    }, [complex, material, mode, colorer, selector, testMolecules]);
+    }, [complex, material, mode, colorer, selector, testMolecules, updateViewerFlag]);
 
     // picker
     useEffect(() => {
@@ -220,7 +221,6 @@ const DynamicsViewer = React.memo(
         } else if (event.obj.molecule) {
           complex = event.obj.molecule.complex;
         }
-
         if (groupRef.current) {
           const visual = groupRef.current.children[0] as ComplexVisual;
           if (visual && (visual.getComplex() === complex || complex === null)) {
@@ -230,7 +230,6 @@ const DynamicsViewer = React.memo(
           }
         }
       });
-
       return () => {
         picker.dispose();
       };
