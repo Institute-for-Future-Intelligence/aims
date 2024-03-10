@@ -4,8 +4,8 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { useStore } from './stores/common';
-import * as Selector from './stores/selector';
+import { useStore } from '../stores/common.ts';
+import * as Selector from '../stores/selector';
 import ReactDraggable, { DraggableBounds, DraggableData, DraggableEvent, DraggableEventHandler } from 'react-draggable';
 import { Dropdown, Input, Modal, Space, Table, Typography } from 'antd';
 import {
@@ -15,14 +15,14 @@ import {
   QuestionCircleOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
-import { HOME_URL, REGEX_ALLOWABLE_IN_NAME, Z_INDEX_FRONT_PANEL } from './constants';
-import { showInfo, showSuccess } from './helpers';
+import { HOME_URL, REGEX_ALLOWABLE_IN_NAME, Z_INDEX_FRONT_PANEL } from '../constants.ts';
+import { showInfo, showSuccess } from '../helpers.ts';
 import Draggable from 'react-draggable';
-import { usePrimitiveStore } from './stores/commonPrimitive';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useTranslation } from 'react-i18next';
 import { MenuProps } from 'antd/lib';
-import { MenuItem } from './components/menuItem';
-import { ProjectState } from './types';
+import { MenuItem } from '../components/menuItem.tsx';
+import { ProjectState } from '../types.ts';
 
 const { Column } = Table;
 
@@ -70,13 +70,6 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   cursor: move;
-
-  svg.icon {
-    height: 16px;
-    width: 16px;
-    padding: 8px;
-    fill: #666;
-  }
 `;
 
 export interface ProjectListPanelProps {
@@ -431,7 +424,16 @@ const ProjectListPanel = React.memo(
                             }}
                           />
                         </Dropdown>
-                        <Typography.Text style={{ fontSize: '12px', cursor: 'pointer', verticalAlign: 'top' }}>
+                        <Typography.Text
+                          style={{ fontSize: '12px', cursor: 'pointer', verticalAlign: 'top' }}
+                          title={t('word.Open', lang)}
+                          onClick={() => {
+                            const selection = window.getSelection();
+                            if (selection && selection.toString().length > 0) return;
+                            // only proceed when no text is selected
+                            openProject(record as ProjectState);
+                          }}
+                        >
                           {title}
                         </Typography.Text>
                       </Space>

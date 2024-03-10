@@ -17,7 +17,7 @@ import { MolecularContainer, ProjectState } from './types';
 import Spinner from './components/spinner';
 import { Util } from './Util';
 import MainToolBar from './mainToolBar';
-import ProjectListPanel from './projectListPanel';
+import ProjectListPanel from './project/projectListPanel.tsx';
 import { fetchProject } from './cloudProjectUtil';
 import { ClassID, SchoolID, User } from './User';
 import {
@@ -179,6 +179,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     });
     usePrimitiveStore.getState().set((state) => {
       state.updateProjectsFlag = true;
+      state.changed = false;
     });
   };
 
