@@ -96,7 +96,6 @@ export interface ProjectState {
 
   molecularContainer: MolecularContainer;
   molecularContainerVisible: boolean;
-  pickedMoleculeIndex: number;
 
   temperature: number;
   pressure: number;

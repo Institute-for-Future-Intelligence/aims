@@ -13,24 +13,25 @@ import {
   ColoringRadioGroup,
   ContainerCheckBox,
   CopyMolecule,
-  DeleteMolecule,
+  CutMolecule,
   FogCheckBox,
   MaterialRadioGroup,
+  PasteMolecule,
   Screenshot,
   SpaceshipDisplayModeRadioGroup,
   StyleRadioGroup,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
+import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
 
 export const createDefaultMenu = () => {
   const lang = { lng: useStore.getState().language };
   const projectType = useStore.getState().projectState.type;
-  const pickedMoleculeIndex = useStore.getState().projectState.pickedMoleculeIndex;
+  const pickedMoleculeIndex = usePrimitiveStore.getState().pickedMoleculeIndex;
+  const copiedMoleculeIndex = usePrimitiveStore.getState().copiedMoleculeIndex;
 
   const moleculePicked: boolean = pickedMoleculeIndex !== -1;
   const defaultItem = !moleculePicked;
-
-  // console.log(defaultItem)
 
   const items: MenuProps['items'] = [];
 
@@ -41,12 +42,19 @@ export const createDefaultMenu = () => {
     });
 
     items.push({
-      key: 'molecule-delete',
-      label: <DeleteMolecule />,
+      key: 'molecule-cut',
+      label: <CutMolecule />,
     });
   }
 
   if (defaultItem) {
+    if (copiedMoleculeIndex !== -1) {
+      items.push({
+        key: 'molecule-paste',
+        label: <PasteMolecule />,
+      });
+    }
+
     items.push({
       key: 'molecular-viewer-auto-rotate',
       label: <AutoRotateCheckBox />,

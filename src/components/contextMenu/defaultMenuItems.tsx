@@ -23,26 +23,33 @@ import {
 } from '../../view/displayOptions';
 import { SpaceshipDisplayMode } from '../../constants.ts';
 
-export const DeleteMolecule = () => {
+export const CutMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore.getState().loggable;
+  const pickedMoleculeIndex = usePrimitiveStore.getState().pickedMoleculeIndex;
+
   const { t } = useTranslation();
   const lang = useLanguage();
 
-  const deleteSelectedMolecule = () => {
-    if (loggable) {
-      setCommonStore((state) => {
+  const cutSelectedMolecule = () => {
+    if (pickedMoleculeIndex === -1) return;
+    usePrimitiveStore.getState().set((state) => {
+      state.copiedMoleculeIndex = pickedMoleculeIndex;
+    });
+    setCommonStore((state) => {
+      state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
+      if (loggable) {
         state.actionInfo = {
-          name: 'Delete Selected Molecule',
+          name: 'Cut Selected Molecule',
           timestamp: new Date().getTime(),
         };
-      });
-    }
+      }
+    });
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={true} onClick={deleteSelectedMolecule}>
-      {t('word.Delete', lang)}
+    <MenuItem stayAfterClick={false} hasPadding={true} onClick={cutSelectedMolecule}>
+      {t('word.Cut', lang)}
     </MenuItem>
   );
 };
@@ -54,6 +61,9 @@ export const CopyMolecule = () => {
   const lang = useLanguage();
 
   const copySelectedMolecule = () => {
+    usePrimitiveStore.getState().set((state) => {
+      state.copiedMoleculeIndex = state.pickedMoleculeIndex;
+    });
     if (loggable) {
       setCommonStore((state) => {
         state.actionInfo = {
@@ -67,6 +77,30 @@ export const CopyMolecule = () => {
   return (
     <MenuItem stayAfterClick={false} hasPadding={true} onClick={copySelectedMolecule}>
       {t('word.Copy', lang)}
+    </MenuItem>
+  );
+};
+
+export const PasteMolecule = () => {
+  const setCommonStore = useStore(Selector.set);
+  const loggable = useStore.getState().loggable;
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const pasteSelectedMolecule = () => {
+    if (loggable) {
+      setCommonStore((state) => {
+        state.actionInfo = {
+          name: 'Paste Selected Molecule',
+          timestamp: new Date().getTime(),
+        };
+      });
+    }
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={true} onClick={pasteSelectedMolecule}>
+      {t('word.Paste', lang)}
     </MenuItem>
   );
 };

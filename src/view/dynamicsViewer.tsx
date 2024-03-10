@@ -103,7 +103,6 @@ const DynamicsViewer = React.memo(
     onPointerLeave,
     onPointerDown,
   }: DynamicsViewerProps) => {
-    const setCommonStore = useStore(Selector.set);
     const testMolecules = useStore(Selector.testMolecules);
     const molecularContainer = useStore(Selector.molecularContainer);
     const molecularContainerVisible = useStore(Selector.molecularContainerVisible);
@@ -198,7 +197,7 @@ const DynamicsViewer = React.memo(
         .finally(() => {
           if (setLoading) setLoading(false);
         });
-    }, [complex, material, mode, colorer, selector]);
+    }, [complex, material, mode, colorer, selector, testMolecules]);
 
     // picker
     useEffect(() => {
@@ -208,8 +207,8 @@ const DynamicsViewer = React.memo(
       // @ts-expect-error ignore
       picker.addEventListener('newpick', (event) => {
         const pickedMoleculeIndex = event.obj.molecule ? event.obj.molecule.index - 1 : -1;
-        setCommonStore((state) => {
-          state.projectState.pickedMoleculeIndex = pickedMoleculeIndex;
+        usePrimitiveStore.getState().set((state) => {
+          state.pickedMoleculeIndex = pickedMoleculeIndex;
         });
         let complex = null;
         if (event.obj.atom) {

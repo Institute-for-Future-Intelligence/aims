@@ -18,6 +18,9 @@ export interface PrimitiveStoreState {
   hoveredMolecule: MoleculeData | null;
   selectedPlane: number;
 
+  pickedMoleculeIndex: number;
+  copiedMoleculeIndex: number;
+
   boundingSphereRadius: number;
 
   enableRotate: boolean;
@@ -99,6 +102,9 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     dragAndDropMolecule: false,
     hoveredMolecule: null,
     selectedPlane: -1,
+
+    pickedMoleculeIndex: -1,
+    copiedMoleculeIndex: -1,
 
     boundingSphereRadius: 10,
 
