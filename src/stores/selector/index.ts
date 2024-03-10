@@ -47,7 +47,7 @@ export const molecularContainerVisible = (state: CommonStoreState) => state.proj
 
 export const pickedMoleculeIndex = (state: PrimitiveStoreState) => state.pickedMoleculeIndex;
 
-export const copiedMoleculeIndex = (state: PrimitiveStoreState) => state.copiedMoleculeIndex;
+export const copiedMolecule = (state: PrimitiveStoreState) => state.copiedMolecule;
 
 export const showAccountSettingsPanel = (state: PrimitiveStoreState) => state.showAccountSettingsPanel;
 

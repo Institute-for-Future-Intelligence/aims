@@ -100,7 +100,8 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
-  const pickedMoleculeIndex = usePrimitiveStore.getState().pickedMoleculeIndex;
+  const testMolecules = useStore(Selector.testMolecules);
+  const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -151,7 +152,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     if (pickedMoleculeIndex !== -1) {
       if (cut) {
         usePrimitiveStore.getState().set((state) => {
-          state.copiedMoleculeIndex = pickedMoleculeIndex;
+          state.copiedMolecule = { ...testMolecules[pickedMoleculeIndex] };
         });
       }
       setCommonStore((state) => {
@@ -169,7 +170,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const onCopy = () => {
     if (pickedMoleculeIndex !== -1) {
       usePrimitiveStore.getState().set((state) => {
-        state.copiedMoleculeIndex = state.pickedMoleculeIndex;
+        state.copiedMolecule = { ...testMolecules[state.pickedMoleculeIndex] };
       });
       if (loggable) {
         setCommonStore((state) => {
@@ -391,6 +392,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         handleKeys={handleKeys}
         handleEventType={'keydown'}
         onKeyEvent={(key, e) => {
+          console.log(key);
           e.preventDefault();
           if (keyNameRef.current === key) return;
           keyNameRef.current = key;

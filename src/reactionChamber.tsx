@@ -143,6 +143,7 @@ const ReactionChamber = React.memo(() => {
           });
         }}
         onContextMenu={onContextMenu}
+        onClick={() => canvasRef.current?.focus()}
       >
         <ReactionChamberControls lightRef={lightRef} />
         {/* FIXME: temporary solution to turn on/off fog without updating materials */}

@@ -116,6 +116,11 @@ const DropPlanes = React.memo(() => {
                 state.selectedPlane = 0;
               });
             }}
+            onContextMenu={() => {
+              usePrimitiveStore.getState().set((state) => {
+                state.selectedPlane = 0;
+              });
+            }}
           >
             <meshStandardMaterial
               attach="material"
@@ -161,6 +166,11 @@ const DropPlanes = React.memo(() => {
                 state.selectedPlane = 1;
               });
             }}
+            onContextMenu={() => {
+              usePrimitiveStore.getState().set((state) => {
+                state.selectedPlane = 1;
+              });
+            }}
           >
             <meshStandardMaterial
               attach="material"
@@ -202,6 +212,11 @@ const DropPlanes = React.memo(() => {
             args={[container.lx, container.lz]}
             rotation={[HALF_PI, 0, 0]}
             onClick={() => {
+              usePrimitiveStore.getState().set((state) => {
+                state.selectedPlane = 2;
+              });
+            }}
+            onContextMenu={() => {
               usePrimitiveStore.getState().set((state) => {
                 state.selectedPlane = 2;
               });

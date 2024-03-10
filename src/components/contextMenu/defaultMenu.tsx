@@ -28,7 +28,8 @@ export const createDefaultMenu = () => {
   const lang = { lng: useStore.getState().language };
   const projectType = useStore.getState().projectState.type;
   const pickedMoleculeIndex = usePrimitiveStore.getState().pickedMoleculeIndex;
-  const copiedMoleculeIndex = usePrimitiveStore.getState().copiedMoleculeIndex;
+  const copiedMolecule = usePrimitiveStore.getState().copiedMolecule;
+  const selectedPlane = usePrimitiveStore.getState().selectedPlane;
 
   const moleculePicked: boolean = pickedMoleculeIndex !== -1;
   const defaultItem = !moleculePicked;
@@ -48,7 +49,7 @@ export const createDefaultMenu = () => {
   }
 
   if (defaultItem) {
-    if (copiedMoleculeIndex !== -1) {
+    if (copiedMolecule && selectedPlane !== -1) {
       items.push({
         key: 'molecule-paste',
         label: <PasteMolecule />,

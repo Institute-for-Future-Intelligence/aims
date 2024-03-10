@@ -38,8 +38,10 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const showAccountSettingsPanel = usePrimitiveStore(Selector.showAccountSettingsPanel);
 
   // Do not remove the following as they are used to trigger the context menu to rebuild
+  // by forcing the entire app to re-render
   const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
-  const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
+  const copiedMolecule = usePrimitiveStore(Selector.copiedMolecule);
+  const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
 
   // const setChanged = usePrimitiveStore(Selector.setChanged);
   // const setSkipChange = usePrimitiveStore(Selector.setSkipChange);
