@@ -64,6 +64,13 @@ const DynamicsButtons = React.memo(() => {
               state.projectState.xyPlaneVisible = !state.projectState.xyPlaneVisible;
             });
           }}
+          // the following disables keyboard focus
+          onMouseDown={(e) => e.preventDefault()}
+          // the following disables the context menu
+          onContextMenu={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
         />
       </Popover>
       <Popover
@@ -96,6 +103,13 @@ const DynamicsButtons = React.memo(() => {
               state.projectState.yzPlaneVisible = !state.projectState.yzPlaneVisible;
             });
           }}
+          // the following disables keyboard focus
+          onMouseDown={(e) => e.preventDefault()}
+          // the following disables the context menu
+          onContextMenu={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
         />
       </Popover>
       <Popover
@@ -127,6 +141,13 @@ const DynamicsButtons = React.memo(() => {
             setCommonStore((state) => {
               state.projectState.xzPlaneVisible = !state.projectState.xzPlaneVisible;
             });
+          }}
+          // the following disables keyboard focus
+          onMouseDown={(e) => e.preventDefault()}
+          // the following disables the context menu
+          onContextMenu={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
           }}
         />
       </Popover>

@@ -15,6 +15,7 @@ import { usePrimitiveStore } from './stores/commonPrimitive';
 import { askToCreateProject, askToOpenProject, saveProject, saveProjectAs } from './components/mainMenu/projectMenu';
 import { resetView, zoomView } from './components/mainMenu/viewMenu';
 import { startFlying, stopFlying } from './fly.ts';
+import { useRefStore } from './stores/commonRef.ts';
 
 export interface KeyboardListenerProps {
   setNavigationView: (selected: boolean) => void;
@@ -102,6 +103,8 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
   const testMolecules = useStore(Selector.testMolecules);
   const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
+  const copiedMolecule = usePrimitiveStore(Selector.copiedMolecule);
+  const clickPointRef = useRefStore.getState().clickPointRef;
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -183,7 +186,26 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     }
   };
 
-  const onPaste = () => {};
+  const onPaste = () => {
+    const p = clickPointRef?.current;
+    if (p && copiedMolecule) {
+      setCommonStore((state) => {
+        const m = { ...copiedMolecule };
+        m.x = p.x;
+        m.y = p.y;
+        m.z = p.z;
+        state.projectState.testMolecules.push(m);
+      });
+      if (loggable) {
+        setCommonStore((state) => {
+          state.actionInfo = {
+            name: 'Paste Selected Molecule',
+            timestamp: new Date().getTime(),
+          };
+        });
+      }
+    }
+  };
 
   const handleKeyDown = (key: string) => {
     const ship = useStore.getState().projectState.spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW;
@@ -392,7 +414,6 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         handleKeys={handleKeys}
         handleEventType={'keydown'}
         onKeyEvent={(key, e) => {
-          console.log(key);
           e.preventDefault();
           if (keyNameRef.current === key) return;
           keyNameRef.current = key;

@@ -59,7 +59,7 @@ const ReactionChamber = React.memo(() => {
   const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lightRef = useRef<DirectionalLight>(null);
-  const clickPointRef = useRef<Vector3>(new Vector3());
+  const clickPointRef = useRef<Vector3 | null>(null);
 
   const cameraRef = useRefStore.getState().cameraRef;
   const raycasterRef = useRefStore.getState().raycasterRef;
@@ -90,6 +90,7 @@ const ReactionChamber = React.memo(() => {
   const onContextMenu = (e: React.MouseEvent) => {
     const p = getIntersection(e);
     if (p) {
+      if (!clickPointRef.current) clickPointRef.current = new Vector3();
       clickPointRef.current.copy(p);
     }
   };
@@ -136,7 +137,14 @@ const ReactionChamber = React.memo(() => {
         onDragOver={(e) => {
           e.preventDefault();
         }}
-        onPointerUp={() => {
+        onPointerUp={(e) => {
+          const p = getIntersection(e);
+          if (p) {
+            if (!clickPointRef.current) clickPointRef.current = new Vector3();
+            clickPointRef.current.copy(p);
+          } else {
+            clickPointRef.current = null;
+          }
           usePrimitiveStore.getState().set((state) => {
             state.enableRotate = true;
             state.selectedPlane = -1;
