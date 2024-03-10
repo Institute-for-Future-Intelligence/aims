@@ -22,6 +22,7 @@ import {
   MolecularViewerStyle,
 } from '../../view/displayOptions';
 import { SpaceshipDisplayMode } from '../../constants.ts';
+import { useRefStore } from '../../stores/commonRef.ts';
 
 export const CutMolecule = () => {
   const setCommonStore = useStore(Selector.set);
@@ -57,10 +58,13 @@ export const CutMolecule = () => {
 export const CopyMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore.getState().loggable;
+  const pickedMoleculeIndex = usePrimitiveStore.getState().pickedMoleculeIndex;
+
   const { t } = useTranslation();
   const lang = useLanguage();
 
   const copySelectedMolecule = () => {
+    if (pickedMoleculeIndex === -1) return;
     usePrimitiveStore.getState().set((state) => {
       state.copiedMoleculeIndex = state.pickedMoleculeIndex;
     });
@@ -84,17 +88,34 @@ export const CopyMolecule = () => {
 export const PasteMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore.getState().loggable;
+  const testMolecules = useStore.getState().projectState.testMolecules;
+  const copiedMoleculeIndex = usePrimitiveStore.getState().copiedMoleculeIndex;
+  const clickPointRef = useRefStore.getState().clickPointRef;
+
   const { t } = useTranslation();
   const lang = useLanguage();
 
   const pasteSelectedMolecule = () => {
-    if (loggable) {
-      setCommonStore((state) => {
-        state.actionInfo = {
-          name: 'Paste Selected Molecule',
-          timestamp: new Date().getTime(),
-        };
-      });
+    const p = clickPointRef?.current;
+    if (p && copiedMoleculeIndex !== -1) {
+      const mol = testMolecules[copiedMoleculeIndex];
+      if (mol) {
+        setCommonStore((state) => {
+          const m = { ...mol };
+          m.x = p.x;
+          m.y = p.y;
+          m.z = p.z;
+          state.projectState.testMolecules.push(m);
+        });
+      }
+      if (loggable) {
+        setCommonStore((state) => {
+          state.actionInfo = {
+            name: 'Paste Selected Molecule',
+            timestamp: new Date().getTime(),
+          };
+        });
+      }
     }
   };
 

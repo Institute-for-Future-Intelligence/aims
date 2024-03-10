@@ -96,11 +96,11 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const language = useStore(Selector.language);
   const undoManager = useStore(Selector.undoManager);
   const addUndoable = useStore(Selector.addUndoable);
-  const selectedObject = useStore(Selector.selectedObject);
   const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
+  const pickedMoleculeIndex = usePrimitiveStore.getState().pickedMoleculeIndex;
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -146,6 +146,43 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       state.autoRotate = !state.autoRotate;
     });
   };
+
+  const onDelete = (cut: boolean) => {
+    if (pickedMoleculeIndex !== -1) {
+      if (cut) {
+        usePrimitiveStore.getState().set((state) => {
+          state.copiedMoleculeIndex = pickedMoleculeIndex;
+        });
+      }
+      setCommonStore((state) => {
+        state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
+        if (loggable) {
+          state.actionInfo = {
+            name: 'Delete Selected Molecule',
+            timestamp: new Date().getTime(),
+          };
+        }
+      });
+    }
+  };
+
+  const onCopy = () => {
+    if (pickedMoleculeIndex !== -1) {
+      usePrimitiveStore.getState().set((state) => {
+        state.copiedMoleculeIndex = state.pickedMoleculeIndex;
+      });
+      if (loggable) {
+        setCommonStore((state) => {
+          state.actionInfo = {
+            name: 'Copy Selected Molecule',
+            timestamp: new Date().getTime(),
+          };
+        });
+      }
+    }
+  };
+
+  const onPaste = () => {};
 
   const handleKeyDown = (key: string) => {
     const ship = useStore.getState().projectState.spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW;
@@ -234,19 +271,15 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         break;
       case 'ctrl+c':
       case 'meta+c': // for Mac
-        if (selectedObject) {
-          // TODO
-        }
+        onCopy();
         break;
       case 'ctrl+x':
       case 'meta+x': // for Mac
-        if (selectedObject) {
-          // TODO
-        }
+        onDelete(true);
         break;
       case 'ctrl+v':
       case 'meta+v': // for Mac
-        //TODO
+        onPaste();
         break;
       case 'ctrl+alt+h': // for Mac and Chrome OS
       case 'ctrl+home':
@@ -280,7 +313,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       case 'alt+backspace':
       case 'backspace':
       case 'delete': {
-        //TODO
+        onDelete(false);
         break;
       }
       case 'ctrl+z':

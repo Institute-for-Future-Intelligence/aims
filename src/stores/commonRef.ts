@@ -4,7 +4,7 @@
 
 import { createWithEqualityFn } from 'zustand/traditional';
 import { RefObject } from 'react';
-import { Group, Raycaster } from 'three';
+import { Group, Raycaster, Vector3 } from 'three';
 import { MoleculeTS } from '../models/MoleculeTS.ts';
 import { Camera } from '@react-three/fiber';
 
@@ -17,6 +17,7 @@ export interface RefStoreState {
   planeXZRef: RefObject<any> | null;
   ligandRef: RefObject<Group> | null;
   moleculesRef: RefObject<MoleculeTS[]> | null;
+  clickPointRef: RefObject<Vector3> | null;
 }
 
 export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
@@ -29,5 +30,6 @@ export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
     planeXZRef: null,
     ligandRef: null,
     moleculesRef: null,
+    clickPointRef: null,
   };
 });

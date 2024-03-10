@@ -130,7 +130,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const projectType = useStore(Selector.projectType);
   const projectTitle = useStore(Selector.projectTitle);
   const projectDescription = useStore(Selector.projectDescription);
-  const projectSortDescending = useStore(Selector.projectSortDesending);
+  const projectSortDescending = useStore(Selector.projectSortDescending);
   const projectDataColoring = useStore(Selector.projectDataColoring) ?? DataColoring.ALL;
   const projectFilters = useStore(Selector.projectFilters);
   const projectRanges = useStore(Selector.projectRanges);

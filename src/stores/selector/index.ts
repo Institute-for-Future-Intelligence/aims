@@ -99,11 +99,7 @@ export const removeMolecule = (state: CommonStoreState) => state.removeMolecule;
 
 export const molecularPropertiesMap = (state: CommonStoreState) => state.molecularPropertiesMap;
 
-export const setMolecularProperties = (state: CommonStoreState) => state.setMolecularProperties;
-
 export const parsedResultsMap = (state: CommonStoreState) => state.parsedResultsMap;
-
-export const setParsedResult = (state: CommonStoreState) => state.setParsedResult;
 
 export const navigationView = (state: CommonStoreState) => state.navigationView;
 
@@ -116,8 +112,6 @@ export const undoManager = (state: CommonStoreState) => state.undoManager;
 export const addUndoable = (state: CommonStoreState) => state.addUndoable;
 
 export const loggable = (state: CommonStoreState) => state.loggable;
-
-export const actionInfo = (state: CommonStoreState) => state.actionInfo;
 
 export const currentUndoable = (state: CommonStoreState) => state.currentUndoable;
 
@@ -159,7 +153,7 @@ export const projectOwner = (state: CommonStoreState) => state.projectState.owne
 
 export const projectDescription = (state: CommonStoreState) => state.projectState.description;
 
-export const projectSortDesending = (state: CommonStoreState) => state.projectState.sortDescending;
+export const projectSortDescending = (state: CommonStoreState) => state.projectState.sortDescending;
 
 export const projectDataColoring = (state: CommonStoreState) => state.projectState.dataColoring;
 

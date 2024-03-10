@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
   DEFAULT_CAMERA_POSITION,
@@ -59,6 +59,7 @@ const ReactionChamber = React.memo(() => {
   const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lightRef = useRef<DirectionalLight>(null);
+  const clickPointRef = useRef<Vector3>(new Vector3());
 
   const cameraRef = useRefStore.getState().cameraRef;
   const raycasterRef = useRefStore.getState().raycasterRef;
@@ -67,27 +68,48 @@ const ReactionChamber = React.memo(() => {
   const planeXZRef = useRefStore.getState().planeXZRef;
   const moleculesRef = useRefStore.getState().moleculesRef;
 
+  useEffect(() => {
+    useRefStore.setState({
+      clickPointRef: clickPointRef,
+    });
+  }, [clickPointRef]);
+
   const dropMolecule = (e: React.DragEvent) => {
+    const point = getIntersection(e);
+    if (point && selectedMolecule) {
+      setCommonStore((state) => {
+        const m = { ...selectedMolecule };
+        m.x = point.x;
+        m.y = point.y;
+        m.z = point.z;
+        state.projectState.testMolecules.push(m);
+      });
+    }
+  };
+
+  const onContextMenu = (e: React.MouseEvent) => {
+    const p = getIntersection(e);
+    if (p) {
+      clickPointRef.current.copy(p);
+    }
+  };
+
+  const getIntersection = (e: React.MouseEvent) => {
     const rect = (e.target as HTMLDivElement).getBoundingClientRect();
     if (canvasRef.current && cameraRef?.current && raycasterRef?.current) {
-      const dropX = ((e.clientX - rect.left) / canvasRef.current.width) * 2 - 1;
-      const dropY = -((e.clientY - rect.top) / canvasRef.current.height) * 2 + 1;
+      const x = ((e.clientX - rect.left) / canvasRef.current.width) * 2 - 1;
+      const y = -((e.clientY - rect.top) / canvasRef.current.height) * 2 + 1;
       const planes = [];
       if (xyPlaneVisible && planeXYRef?.current) planes.push(planeXYRef.current);
       if (yzPlaneVisible && planeYZRef?.current) planes.push(planeYZRef.current);
       if (xzPlaneVisible && planeXZRef?.current) planes.push(planeXZRef.current);
-      raycasterRef.current.setFromCamera(new Vector2(dropX, dropY), cameraRef.current);
+      raycasterRef.current.setFromCamera(new Vector2(x, y), cameraRef.current);
       const intersects = raycasterRef.current.intersectObjects(planes);
-      if (intersects.length > 0 && selectedMolecule) {
-        setCommonStore((state) => {
-          const m = { ...selectedMolecule };
-          m.x = intersects[0].point.x;
-          m.y = intersects[0].point.y;
-          m.z = intersects[0].point.z;
-          state.projectState.testMolecules.push(m);
-        });
+      if (intersects.length > 0) {
+        return intersects[0].point;
       }
     }
+    return null;
   };
 
   return (
@@ -120,6 +142,7 @@ const ReactionChamber = React.memo(() => {
             state.selectedPlane = -1;
           });
         }}
+        onContextMenu={onContextMenu}
       >
         <ReactionChamberControls lightRef={lightRef} />
         {/* FIXME: temporary solution to turn on/off fog without updating materials */}
