@@ -130,6 +130,9 @@ export interface MoleculeTransform {
   x: number;
   y: number;
   z: number;
+  rotateX: number;
+  rotateY: number;
+  rotateZ: number;
 }
 
 export interface ActionInfo {

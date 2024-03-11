@@ -155,11 +155,10 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
 
   const onDelete = (cut: boolean) => {
     if (pickedMoleculeIndex !== -1) {
-      if (cut) {
-        usePrimitiveStore.getState().set((state) => {
-          state.copiedMolecule = { ...testMolecules[pickedMoleculeIndex] };
-        });
-      }
+      usePrimitiveStore.getState().set((state) => {
+        if (cut) state.copiedMolecule = { ...testMolecules[pickedMoleculeIndex] };
+        state.pickedMoleculeIndex = -1;
+      });
       setCommonStore((state) => {
         state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
         state.projectState.testMoleculeTransforms.splice(pickedMoleculeIndex, 1);
@@ -218,6 +217,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
             for (const a of m.atoms) {
               a.position.x += displacement;
             }
+            break;
           }
         }
         setCommonStore((state) => {
@@ -231,6 +231,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
             for (const a of m.atoms) {
               a.position.y += displacement;
             }
+            break;
           }
         }
         setCommonStore((state) => {
@@ -244,6 +245,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
             for (const a of m.atoms) {
               a.position.z += displacement;
             }
+            break;
           }
         }
         setCommonStore((state) => {

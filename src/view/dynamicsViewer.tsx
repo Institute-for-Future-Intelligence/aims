@@ -3,12 +3,12 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DoubleSide, Raycaster } from 'three';
+import { Box3, DoubleSide, Raycaster } from 'three';
 import { MoleculeData, MoleculeTransform } from '../types.ts';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
 import ComplexVisual from '../lib/ComplexVisual';
-import { Camera, ThreeEvent, extend, useThree } from '@react-three/fiber';
+import { Camera, extend, ThreeEvent, useThree } from '@react-three/fiber';
 import {
   COLORING_MAP,
   MATERIAL_MAP,
@@ -30,10 +30,11 @@ import { useStore } from '../stores/common.ts';
 import { MoleculeTS } from '../models/MoleculeTS.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import DropPlanes from './dropPlanes.tsx';
-import { Box, Edges } from '@react-three/drei';
+import { Box, Edges, Instance, Instances } from '@react-three/drei';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import Picker from '../lib/ui/Picker.js';
 import settings from '../lib/settings.js';
+
 extend({ RCGroup });
 
 export interface DynamicsViewerProps {
@@ -56,7 +57,7 @@ const generateComplex = (molecules: MoleculeTS[]) => {
       residue.addAtom(
         a.elementSymbol,
         Element.getByName(a.elementSymbol),
-        a.position,
+        a.position, // this links to the current atom position vector
         undefined,
         true,
         i + 1,
@@ -108,6 +109,8 @@ const DynamicsViewer = React.memo(
     const molecularContainer = useStore(Selector.molecularContainer);
     const molecularContainerVisible = useStore(Selector.molecularContainerVisible);
     const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
+    const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
+    const viewerStyle = useStore(Selector.chamberViewerStyle);
 
     const [complex, setComplex] = useState<any>();
 
@@ -115,6 +118,7 @@ const DynamicsViewer = React.memo(
     const groupRef = useRef<RCGroup>(null);
     const cameraRef = useRef<Camera | undefined>();
     const raycasterRef = useRef<Raycaster | undefined>();
+    const boundingBoxRef = useRef<Box3 | undefined>();
 
     const { invalidate, camera, raycaster, gl } = useThree();
 
@@ -175,7 +179,6 @@ const DynamicsViewer = React.memo(
       if (!groupRef.current || !mode) return;
       groupRef.current.children = [];
       if (!complex) return;
-
       const visual = new ComplexVisual(complex.name, complex);
       const reps = [];
       // Don't change the selector below. We use 'chain' to identify molecules as there is no 'molecule' keyword
@@ -195,6 +198,7 @@ const DynamicsViewer = React.memo(
           if (!groupRef.current) return;
           groupRef.current.add(visual, visual.getSelectionGeo());
           const boundingSphere = visual.getBoundaries().boundingSphere;
+          boundingBoxRef.current = visual.getBoundaries().boundingBox;
           usePrimitiveStore.getState().set((state) => {
             state.boundingSphereRadius = boundingSphere.radius;
           });
@@ -203,7 +207,7 @@ const DynamicsViewer = React.memo(
         .finally(() => {
           if (setLoading) setLoading(false);
         });
-    }, [complex, material, mode, colorer, selector, testMolecules, updateViewerFlag]);
+    }, [complex, material, mode, colorer, selector, testMolecules, updateViewerFlag, pickedMoleculeIndex]);
 
     // picker
     useEffect(() => {
@@ -216,29 +220,28 @@ const DynamicsViewer = React.memo(
         usePrimitiveStore.getState().set((state) => {
           state.pickedMoleculeIndex = pickedMoleculeIndex;
         });
-        let complex = null;
-        if (event.obj.atom) {
-          complex = event.obj.atom.residue.getChain().getComplex();
-        } else if (event.obj.residue) {
-          complex = event.obj.residue.getChain().getComplex();
-        } else if (event.obj.chain) {
-          complex = event.obj.chain.getComplex();
-        } else if (event.obj.molecule) {
-          complex = event.obj.molecule.complex;
-        }
-        if (groupRef.current) {
-          const visual = groupRef.current.children[0] as ComplexVisual;
-          if (visual && (visual.getComplex() === complex || complex === null)) {
-            visual.resetSelectionMask();
-            visual.updateSelectionMask(event.obj);
-            visual.rebuildSelectionGeometry();
-          }
-        }
+        // if (groupRef.current) {
+        //   const visual = groupRef.current.children[0] as ComplexVisual;
+        //   if (visual) {
+        //     console.log(event.obj.molecule===complex._molecules[pickedMoleculeIndex])
+        //     visual.resetSelectionMask();
+        //     visual.updateSelectionMask(event.obj);
+        //     visual.rebuildSelectionGeometry();
+        //   }
+        // }
       });
       return () => {
         picker.dispose();
       };
     }, []);
+
+    const skinnyStyle = useMemo(() => {
+      return (
+        viewerStyle === MolecularViewerStyle.BallAndStick ||
+        viewerStyle === MolecularViewerStyle.Stick ||
+        viewerStyle === MolecularViewerStyle.Wireframe
+      );
+    }, [viewerStyle]);
 
     return (
       <>
@@ -253,6 +256,22 @@ const DynamicsViewer = React.memo(
             <meshStandardMaterial attach="material" opacity={0.1} side={DoubleSide} transparent color={'lightgray'} />
             <Edges scale={1} threshold={15} color="dimgray" />
           </Box>
+        )}
+        {pickedMoleculeIndex !== -1 && moleculesRef.current && (
+          <Instances limit={1000} range={1000}>
+            <sphereGeometry args={[1, 16, 16]} />
+            <meshStandardMaterial transparent opacity={0.25} />
+            {moleculesRef.current[pickedMoleculeIndex]?.atoms.map((a, i) => {
+              return (
+                <Instance
+                  key={i}
+                  scale={Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.4 : 1.2)}
+                  position={[a.position.x, a.position.y, a.position.z]}
+                  color={'yellow'}
+                />
+              );
+            })}
+          </Instances>
         )}
         <DropPlanes />
       </>

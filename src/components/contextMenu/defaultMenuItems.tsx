@@ -38,6 +38,7 @@ export const CutMolecule = () => {
     if (pickedMoleculeIndex === -1) return;
     usePrimitiveStore.getState().set((state) => {
       state.copiedMolecule = { ...testMolecules[pickedMoleculeIndex] };
+      state.pickedMoleculeIndex = -1;
     });
     setCommonStore((state) => {
       state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
