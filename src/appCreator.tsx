@@ -37,12 +37,6 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const loadProvidedMolecularProperties = useStore(Selector.loadProvidedMolecularProperties);
   const showAccountSettingsPanel = usePrimitiveStore(Selector.showAccountSettingsPanel);
 
-  // Do not remove the following as they are used to trigger the context menu to rebuild
-  // by forcing the entire app to re-render
-  const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
-  const copiedMolecule = usePrimitiveStore(Selector.copiedMolecule);
-  const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
-
   // const setChanged = usePrimitiveStore(Selector.setChanged);
   // const setSkipChange = usePrimitiveStore(Selector.setSkipChange);
   // const cameraPosition = useStore(Selector.cameraPosition);

@@ -22,14 +22,15 @@ import {
   StyleRadioGroup,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
-import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
+import { MoleculeData } from '../../types.ts';
 
-export const createDefaultMenu = () => {
+export const createDefaultMenu = (
+  pickedMoleculeIndex: number,
+  copiedMolecule: MoleculeData | null,
+  selectedPlane: number,
+) => {
   const lang = { lng: useStore.getState().language };
   const projectType = useStore.getState().projectState.type;
-  const pickedMoleculeIndex = usePrimitiveStore.getState().pickedMoleculeIndex;
-  const copiedMolecule = usePrimitiveStore.getState().copiedMolecule;
-  const selectedPlane = usePrimitiveStore.getState().selectedPlane;
 
   const moleculePicked: boolean = pickedMoleculeIndex !== -1;
   const defaultItem = !moleculePicked;
