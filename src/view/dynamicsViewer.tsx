@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Box3, DoubleSide, Raycaster } from 'three';
+import { Box3, Raycaster } from 'three';
 import { MoleculeData, MoleculeTransform } from '../types.ts';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
@@ -30,7 +30,7 @@ import { useStore } from '../stores/common.ts';
 import { MoleculeTS } from '../models/MoleculeTS.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import DropPlanes from './dropPlanes.tsx';
-import { Box, Edges, Instance, Instances } from '@react-three/drei';
+import { Instance, Instances, Line } from '@react-three/drei';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import Picker from '../lib/ui/Picker.js';
 import settings from '../lib/settings.js';
@@ -252,15 +252,53 @@ const DynamicsViewer = React.memo(
           onPointerDown={onPointerDown}
         />
         {molecularContainerVisible && (
-          <Box args={[molecularContainer.lx, molecularContainer.ly, molecularContainer.lz]}>
-            <meshStandardMaterial attach="material" opacity={0.1} side={DoubleSide} transparent color={'lightgray'} />
-            <Edges scale={1} threshold={15} color="dimgray" />
-          </Box>
+          <>
+            <Line
+              points={[
+                [-molecularContainer.lx / 2, -molecularContainer.ly / 2, -molecularContainer.lz / 2],
+                [molecularContainer.lx / 2, -molecularContainer.ly / 2, -molecularContainer.lz / 2],
+                [molecularContainer.lx / 2, molecularContainer.ly / 2, -molecularContainer.lz / 2],
+                [-molecularContainer.lx / 2, molecularContainer.ly / 2, -molecularContainer.lz / 2],
+                [-molecularContainer.lx / 2, -molecularContainer.ly / 2, -molecularContainer.lz / 2],
+                [-molecularContainer.lx / 2, -molecularContainer.ly / 2, molecularContainer.lz / 2],
+                [molecularContainer.lx / 2, -molecularContainer.ly / 2, molecularContainer.lz / 2],
+                [molecularContainer.lx / 2, molecularContainer.ly / 2, molecularContainer.lz / 2],
+                [-molecularContainer.lx / 2, molecularContainer.ly / 2, molecularContainer.lz / 2],
+                [-molecularContainer.lx / 2, -molecularContainer.ly / 2, molecularContainer.lz / 2],
+              ]}
+              color={'gray'}
+              lineWidth={2}
+            />
+            <Line
+              points={[
+                [molecularContainer.lx / 2, -molecularContainer.ly / 2, -molecularContainer.lz / 2],
+                [molecularContainer.lx / 2, -molecularContainer.ly / 2, molecularContainer.lz / 2],
+              ]}
+              color={'gray'}
+              lineWidth={2}
+            />
+            <Line
+              points={[
+                [molecularContainer.lx / 2, molecularContainer.ly / 2, -molecularContainer.lz / 2],
+                [molecularContainer.lx / 2, molecularContainer.ly / 2, molecularContainer.lz / 2],
+              ]}
+              color={'gray'}
+              lineWidth={2}
+            />
+            <Line
+              points={[
+                [-molecularContainer.lx / 2, molecularContainer.ly / 2, -molecularContainer.lz / 2],
+                [-molecularContainer.lx / 2, molecularContainer.ly / 2, molecularContainer.lz / 2],
+              ]}
+              color={'gray'}
+              lineWidth={2}
+            />
+          </>
         )}
         {pickedMoleculeIndex !== -1 && moleculesRef.current && (
           <Instances limit={1000} range={1000}>
             <sphereGeometry args={[1, 16, 16]} />
-            <meshStandardMaterial transparent opacity={0.25} />
+            <meshStandardMaterial transparent opacity={0.5} />
             {moleculesRef.current[pickedMoleculeIndex]?.atoms.map((a, i) => {
               return (
                 <Instance
