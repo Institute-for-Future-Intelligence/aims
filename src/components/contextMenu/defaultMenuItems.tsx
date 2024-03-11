@@ -23,6 +23,7 @@ import {
 } from '../../view/displayOptions';
 import { SpaceshipDisplayMode } from '../../constants.ts';
 import { useRefStore } from '../../stores/commonRef.ts';
+import { MoleculeTransform } from '../../types.ts';
 
 export const CutMolecule = () => {
   const setCommonStore = useStore(Selector.set);
@@ -40,6 +41,7 @@ export const CutMolecule = () => {
     });
     setCommonStore((state) => {
       state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
+      state.projectState.testMoleculeTransforms.splice(pickedMoleculeIndex, 1);
       if (loggable) {
         state.actionInfo = {
           name: 'Cut Selected Molecule',
@@ -101,10 +103,8 @@ export const PasteMolecule = () => {
     if (p && copiedMolecule) {
       setCommonStore((state) => {
         const m = { ...copiedMolecule };
-        m.x = p.x;
-        m.y = p.y;
-        m.z = p.z;
         state.projectState.testMolecules.push(m);
+        state.projectState.testMoleculeTransforms.push({ x: p.x, y: p.y, z: p.z } as MoleculeTransform);
       });
       if (loggable) {
         setCommonStore((state) => {

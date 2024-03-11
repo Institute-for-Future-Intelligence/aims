@@ -9,14 +9,15 @@ import PDBParser from '../lib/io/parsers/PDBParser';
 import PubChemParser from '../lib/io/parsers/PubChemParser';
 import XYZParser from '../lib/io/parsers/XYZParser';
 import MOL2Parser from '../lib/io/parsers/MOL2Parser';
-import { MoleculeData } from '../types.ts';
+import { MoleculeData, MoleculeTransform } from '../types.ts';
 import { useStore } from '../stores/common.ts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 
 export const loadMolecule = (
   moleculeData: MoleculeData,
-  processResult: (result: any, moleculeData?: MoleculeData) => void,
+  processResult: (result: any, moleculeData?: MoleculeData, transform?: MoleculeTransform) => void,
   store?: boolean,
+  transform?: MoleculeTransform,
 ) => {
   const setParsedResult = useStore.getState().setParsedResult;
   const mol = getData(moleculeData.name);
@@ -46,7 +47,7 @@ export const loadMolecule = (
               });
             }
             parser.parse().then((result) => {
-              processResult(result, moleculeData);
+              processResult(result, moleculeData, transform);
             });
           }
         }

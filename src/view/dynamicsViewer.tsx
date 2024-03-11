@@ -4,7 +4,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DoubleSide, Raycaster } from 'three';
-import { MoleculeData } from '../types.ts';
+import { MoleculeData, MoleculeTransform } from '../types.ts';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
 import ComplexVisual from '../lib/ComplexVisual';
@@ -104,6 +104,7 @@ const DynamicsViewer = React.memo(
     onPointerDown,
   }: DynamicsViewerProps) => {
     const testMolecules = useStore(Selector.testMolecules);
+    const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
     const molecularContainer = useStore(Selector.molecularContainer);
     const molecularContainerVisible = useStore(Selector.molecularContainerVisible);
     const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
@@ -142,21 +143,25 @@ const DynamicsViewer = React.memo(
       }
       if (setLoading) setLoading(true);
       moleculesRef.current.length = 0;
-      for (const m of testMolecules) {
-        loadMolecule(m, processResult);
+      for (const [i, m] of testMolecules.entries()) {
+        if (testMoleculeTransforms) {
+          loadMolecule(m, processResult, false, testMoleculeTransforms[i]);
+        } else {
+          loadMolecule(m, processResult);
+        }
       }
     }, [testMolecules]);
 
-    const processResult = (result: any, molecule?: MoleculeData) => {
+    const processResult = (result: any, molecule?: MoleculeData, transform?: MoleculeTransform) => {
       const mol = { name: molecule?.name, metadata: null, atoms: [], bonds: [] } as MoleculeTS;
       const n = result._atoms.length;
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
         const a = { elementSymbol: atom.element.name, position: atom.position, index: atom.index } as AtomTS;
-        if (molecule) {
-          a.position.x += molecule.x ?? 0;
-          a.position.y += molecule.y ?? 0;
-          a.position.z += molecule.z ?? 0;
+        if (transform) {
+          a.position.x += transform.x ?? 0;
+          a.position.y += transform.y ?? 0;
+          a.position.z += transform.z ?? 0;
         }
         mol.atoms.push(a);
       }

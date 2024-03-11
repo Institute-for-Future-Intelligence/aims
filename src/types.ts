@@ -94,6 +94,7 @@ export interface ProjectState {
   xzPlanePosition: number;
 
   testMolecules: MoleculeData[]; // molecules in the reaction chamber
+  testMoleculeTransforms: MoleculeTransform[];
   molecularContainer: MolecularContainer;
   molecularContainerVisible: boolean;
 
@@ -123,9 +124,12 @@ export interface MoleculeData {
   url?: string;
   invisible?: boolean;
   excluded?: boolean;
-  x?: number;
-  y?: number;
-  z?: number;
+}
+
+export interface MoleculeTransform {
+  x: number;
+  y: number;
+  z: number;
 }
 
 export interface ActionInfo {

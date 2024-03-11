@@ -243,7 +243,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     {
       key: '1',
       label: (
-        <SubHeader>
+        <SubHeader
+          // the following disables keyboard focus
+          onMouseDown={(e) => e.preventDefault()}
+        >
           <span>{t('projectPanel.ProjectDescription', lang)}</span>
           <span>
             {
@@ -812,7 +815,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           {/*parallel coordinates*/}
 
           {data.length > 0 && graphType === GraphType.PARALLEL_COORDINATES && (
-            <PropertiesHeader>
+            <PropertiesHeader
+              // the following disables keyboard focus
+              onMouseDown={(e) => e.preventDefault()}
+            >
               <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
               <span>
                 <Popover

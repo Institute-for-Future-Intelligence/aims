@@ -3,7 +3,7 @@
  */
 
 import i18n from '../i18n/i18n.ts';
-import { MolecularContainer, MoleculeData, ProjectState, Range } from '../types.ts';
+import { MolecularContainer, MoleculeData, MoleculeTransform, ProjectState, Range } from '../types.ts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { Filter, FilterType } from '../Filter.ts';
 import {
@@ -108,6 +108,7 @@ export class ProjectUtil {
       molecularContainerVisible: false,
 
       testMolecules: new Array<MoleculeData>(),
+      testMoleculeTransforms: new Array<MoleculeTransform>(),
       temperature: 300,
       pressure: 1,
     } as ProjectState;

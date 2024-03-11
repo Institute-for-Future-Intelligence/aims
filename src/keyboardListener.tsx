@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef } from 'react';
-import { ActionInfo } from './types';
+import { ActionInfo, MoleculeTransform } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { UndoableCheck } from './undo/UndoableCheck';
@@ -193,10 +193,8 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     if (p && copiedMolecule) {
       setCommonStore((state) => {
         const m = { ...copiedMolecule };
-        m.x = p.x;
-        m.y = p.y;
-        m.z = p.z;
         state.projectState.testMolecules.push(m);
+        state.projectState.testMoleculeTransforms.push({ x: p.x, y: p.y, z: p.z } as MoleculeTransform);
       });
       if (loggable) {
         setCommonStore((state) => {
@@ -214,14 +212,42 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     if (!moleculesRef?.current) return;
     switch (direction) {
       case 'x':
-        for (const m of moleculesRef.current) {
-          for (const a of m.atoms) {
-            a.position.x += displacement;
+        for (const [i, m] of moleculesRef.current.entries()) {
+          if (i === pickedMoleculeIndex) {
+            for (const a of m.atoms) {
+              a.position.x += displacement;
+            }
           }
         }
         setCommonStore((state) => {
-          const m = state.projectState.testMolecules[pickedMoleculeIndex];
+          const m = state.projectState.testMoleculeTransforms[pickedMoleculeIndex];
           if (m.x !== undefined) m.x += displacement;
+        });
+        break;
+      case 'y':
+        for (const [i, m] of moleculesRef.current.entries()) {
+          if (i === pickedMoleculeIndex) {
+            for (const a of m.atoms) {
+              a.position.y += displacement;
+            }
+          }
+        }
+        setCommonStore((state) => {
+          const m = state.projectState.testMoleculeTransforms[pickedMoleculeIndex];
+          if (m.y !== undefined) m.y += displacement;
+        });
+        break;
+      case 'z':
+        for (const [i, m] of moleculesRef.current.entries()) {
+          if (i === pickedMoleculeIndex) {
+            for (const a of m.atoms) {
+              a.position.z += displacement;
+            }
+          }
+        }
+        setCommonStore((state) => {
+          const m = state.projectState.testMoleculeTransforms[pickedMoleculeIndex];
+          if (m.z !== undefined) m.z += displacement;
         });
         break;
     }
@@ -312,16 +338,32 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         }
         break;
       case 'y':
-        startFlying(FlightControl.TranslateInPositiveY);
+        if (projectType === ProjectType.QSAR_MODELING) {
+          onTranslation('y', 1);
+        } else {
+          startFlying(FlightControl.TranslateInPositiveY);
+        }
         break;
       case 'shift+y':
-        startFlying(FlightControl.TranslateInNegativeY);
+        if (projectType === ProjectType.QSAR_MODELING) {
+          onTranslation('y', -1);
+        } else {
+          startFlying(FlightControl.TranslateInNegativeY);
+        }
         break;
       case 'z':
-        startFlying(FlightControl.TranslateInPositiveZ);
+        if (projectType === ProjectType.QSAR_MODELING) {
+          onTranslation('z', 1);
+        } else {
+          startFlying(FlightControl.TranslateInPositiveZ);
+        }
         break;
       case 'shift+z':
-        startFlying(FlightControl.TranslateInNegativeZ);
+        if (projectType === ProjectType.QSAR_MODELING) {
+          onTranslation('z', -1);
+        } else {
+          startFlying(FlightControl.TranslateInNegativeZ);
+        }
         break;
       case 'ctrl+[':
       case 'meta+[': // for Mac

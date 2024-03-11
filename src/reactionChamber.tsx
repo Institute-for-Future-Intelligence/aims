@@ -34,6 +34,7 @@ import DockingViewer from './view/dockingViewer.tsx';
 import DynamicsButtons from './view/dynamicsButtons.tsx';
 import { useRefStore } from './stores/commonRef.ts';
 import { usePrimitiveStore } from './stores/commonPrimitive.ts';
+import { MoleculeTransform } from './types.ts';
 
 const ReactionChamber = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -79,10 +80,8 @@ const ReactionChamber = React.memo(() => {
     if (point && selectedMolecule) {
       setCommonStore((state) => {
         const m = { ...selectedMolecule };
-        m.x = point.x;
-        m.y = point.y;
-        m.z = point.z;
         state.projectState.testMolecules.push(m);
+        state.projectState.testMoleculeTransforms.push({ x: point.x, y: point.y, z: point.z } as MoleculeTransform);
       });
     }
   };

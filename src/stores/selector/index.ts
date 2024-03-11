@@ -43,6 +43,8 @@ export const pressure = (state: CommonStoreState) => state.projectState.pressure
 
 export const testMolecules = (state: CommonStoreState) => state.projectState.testMolecules;
 
+export const testMoleculeTransforms = (state: CommonStoreState) => state.projectState.testMoleculeTransforms;
+
 export const molecularContainer = (state: CommonStoreState) => state.projectState.molecularContainer;
 
 export const molecularContainerVisible = (state: CommonStoreState) => state.projectState.molecularContainerVisible;
