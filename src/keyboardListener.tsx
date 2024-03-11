@@ -162,6 +162,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       }
       setCommonStore((state) => {
         state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
+        state.projectState.testMoleculeTransforms.splice(pickedMoleculeIndex, 1);
         if (loggable) {
           state.actionInfo = {
             name: 'Delete Selected Molecule',
@@ -221,7 +222,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         }
         setCommonStore((state) => {
           const m = state.projectState.testMoleculeTransforms[pickedMoleculeIndex];
-          if (m.x !== undefined) m.x += displacement;
+          if (m) m.x += displacement;
         });
         break;
       case 'y':
@@ -234,7 +235,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         }
         setCommonStore((state) => {
           const m = state.projectState.testMoleculeTransforms[pickedMoleculeIndex];
-          if (m.y !== undefined) m.y += displacement;
+          if (m) m.y += displacement;
         });
         break;
       case 'z':
@@ -247,7 +248,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         }
         setCommonStore((state) => {
           const m = state.projectState.testMoleculeTransforms[pickedMoleculeIndex];
-          if (m.z !== undefined) m.z += displacement;
+          if (m) m.z += displacement;
         });
         break;
     }
