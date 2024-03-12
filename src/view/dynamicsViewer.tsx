@@ -193,7 +193,7 @@ const DynamicsViewer = React.memo(
       }
       visual.resetReps(reps);
       visual
-        .rebuild()
+        .rebuildNow()
         .then(() => {
           if (!groupRef.current) return;
           groupRef.current.add(visual, visual.getSelectionGeo());
