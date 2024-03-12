@@ -17,6 +17,7 @@ import {
   FogCheckBox,
   MaterialRadioGroup,
   PasteMolecule,
+  RotateMolecule,
   Screenshot,
   SpaceshipDisplayModeRadioGroup,
   StyleRadioGroup,
@@ -72,6 +73,22 @@ export const createDefaultMenu = (
         {
           key: 'translate-molecule-fields',
           label: <TranslateMolecule />,
+          style: { backgroundColor: 'white' },
+        },
+      ],
+    });
+
+    items.push({
+      key: 'rotate-molecule-submenu',
+      label: (
+        <MenuItem stayAfterClick={true} hasPadding={false}>
+          {i18n.t('molecularViewer.RotateMolecule', lang)}
+        </MenuItem>
+      ),
+      children: [
+        {
+          key: 'rotate-molecule-fields',
+          label: <RotateMolecule />,
           style: { backgroundColor: 'white' },
         },
       ],

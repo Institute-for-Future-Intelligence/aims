@@ -22,9 +22,11 @@ import {
   MolecularViewerMaterial,
   MolecularViewerStyle,
 } from '../../view/displayOptions';
-import { SpaceshipDisplayMode } from '../../constants.ts';
+import { SpaceshipDisplayMode, UNIT_VECTOR_POS_X, UNIT_VECTOR_POS_Y, UNIT_VECTOR_POS_Z } from '../../constants.ts';
 import { useRefStore } from '../../stores/commonRef.ts';
 import { MoleculeTransform } from '../../types.ts';
+import { Util } from '../../Util.ts';
+import { ModelUtil } from '../../models/ModelUtil.ts';
 
 export const TranslateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
@@ -136,6 +138,137 @@ export const TranslateMolecule = () => {
               if (m) m.z += displacement;
             });
             postTranslateSelectedMolecule();
+          }}
+        />
+      </Space>
+    )
+  );
+};
+
+export const RotateMolecule = () => {
+  const setCommonStore = useStore(Selector.set);
+  const loggable = useStore(Selector.loggable);
+  const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
+  const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
+  const moleculesRef = useRefStore.getState().moleculesRef;
+
+  const postRotateSelectedMolecule = () => {
+    usePrimitiveStore.getState().set((state) => {
+      state.updateViewerFlag = !state.updateViewerFlag;
+    });
+    setCommonStore((state) => {
+      if (loggable) {
+        state.actionInfo = {
+          name: 'Rotate Selected Molecule',
+          timestamp: new Date().getTime(),
+        };
+      }
+    });
+  };
+
+  return (
+    pickedIndex !== -1 && (
+      <Space direction={'vertical'} onClick={(e) => e.stopPropagation()}>
+        <InputNumber
+          style={{ width: '120px' }}
+          addonBefore={'X'}
+          formatter={(value) => `${value}°`}
+          min={-180}
+          max={180}
+          value={Math.round(Util.toDegrees(testMoleculeTransforms[pickedIndex].rotateX ?? 0))}
+          step={5}
+          precision={1}
+          onChange={(value) => {
+            if (value === null) return;
+            if (pickedIndex === -1 || !moleculesRef?.current) return;
+            const increment = Util.toRadians(value) - (testMoleculeTransforms[pickedIndex].rotateX ?? 0);
+            for (const [i, m] of moleculesRef.current.entries()) {
+              if (i === pickedIndex) {
+                const c = ModelUtil.getMoleculeCenter(m);
+                for (const a of m.atoms) {
+                  const p = a.position.clone().sub(c).applyAxisAngle(UNIT_VECTOR_POS_X, increment);
+                  a.position.copy(p).add(c);
+                }
+                break;
+              }
+            }
+            setCommonStore((state) => {
+              if (pickedIndex === -1) return;
+              const m = state.projectState.testMoleculeTransforms[pickedIndex];
+              if (m) {
+                if (m.rotateX === undefined) m.rotateX = 0;
+                m.rotateX += increment;
+              }
+            });
+            postRotateSelectedMolecule();
+          }}
+        />
+        <InputNumber
+          style={{ width: '120px' }}
+          addonBefore={'Y'}
+          formatter={(value) => `${value}°`}
+          min={-180}
+          max={180}
+          value={Math.round(Util.toDegrees(testMoleculeTransforms[pickedIndex].rotateY ?? 0))}
+          step={5}
+          precision={1}
+          onChange={(value) => {
+            if (value === null) return;
+            if (pickedIndex === -1 || !moleculesRef?.current) return;
+            const increment = Util.toRadians(value) - (testMoleculeTransforms[pickedIndex].rotateY ?? 0);
+            for (const [i, m] of moleculesRef.current.entries()) {
+              if (i === pickedIndex) {
+                const c = ModelUtil.getMoleculeCenter(m);
+                for (const a of m.atoms) {
+                  const p = a.position.clone().sub(c).applyAxisAngle(UNIT_VECTOR_POS_Y, increment);
+                  a.position.copy(p).add(c);
+                }
+                break;
+              }
+            }
+            setCommonStore((state) => {
+              if (pickedIndex === -1) return;
+              const m = state.projectState.testMoleculeTransforms[pickedIndex];
+              if (m) {
+                if (m.rotateY === undefined) m.rotateY = 0;
+                m.rotateY += increment;
+              }
+            });
+            postRotateSelectedMolecule();
+          }}
+        />
+        <InputNumber
+          style={{ width: '120px' }}
+          addonBefore={'Z'}
+          formatter={(value) => `${value}°`}
+          min={-180}
+          max={180}
+          value={Math.round(Util.toDegrees(testMoleculeTransforms[pickedIndex].rotateZ ?? 0))}
+          step={5}
+          precision={1}
+          onChange={(value) => {
+            if (value === null) return;
+            if (pickedIndex === -1 || !moleculesRef?.current) return;
+            const increment = Util.toRadians(value) - (testMoleculeTransforms[pickedIndex].rotateZ ?? 0);
+            for (const [i, m] of moleculesRef.current.entries()) {
+              if (i === pickedIndex) {
+                const c = ModelUtil.getMoleculeCenter(m);
+                for (const a of m.atoms) {
+                  const p = a.position.clone().sub(c).applyAxisAngle(UNIT_VECTOR_POS_Z, increment);
+                  a.position.copy(p).add(c);
+                }
+                break;
+              }
+            }
+            setCommonStore((state) => {
+              if (pickedIndex === -1) return;
+              const m = state.projectState.testMoleculeTransforms[pickedIndex];
+              if (m) {
+                if (m.rotateZ === undefined) m.rotateZ = 0;
+                m.rotateZ += increment;
+              }
+            });
+            postRotateSelectedMolecule();
           }}
         />
       </Space>

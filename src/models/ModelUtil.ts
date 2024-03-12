@@ -14,7 +14,7 @@ export class ModelUtil {
     return null;
   }
 
-  static getMoleculeCenter(index: number, molecule: MoleculeTS): Vector3 {
+  static getMoleculeCenter(molecule: MoleculeTS): Vector3 {
     const c = new Vector3();
     for (const a of molecule.atoms) {
       c.add(a.position);
