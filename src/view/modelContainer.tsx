@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { DoubleSide } from 'three';
+import { DoubleSide, Vector3 } from 'three';
 import { useThree } from '@react-three/fiber';
 import * as Selector from '../stores/selector';
 import { Box, Grid, Line, Plane } from '@react-three/drei';
@@ -13,7 +13,7 @@ import { useRefStore } from '../stores/commonRef.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { MolecularContainer } from '../types.ts';
 
-const DropPlanes = React.memo(() => {
+const ModelContainer = React.memo(({ position }: { position?: Vector3 }) => {
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
@@ -21,6 +21,7 @@ const DropPlanes = React.memo(() => {
   const yzPlanePosition = useStore(Selector.yzPlanePosition) ?? 0;
   const xzPlanePosition = useStore(Selector.xzPlanePosition) ?? 0;
   const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
+  const containerVisible = useStore(Selector.molecularContainerVisible);
   const container = useStore(Selector.molecularContainer) ?? ({ lx: 20, ly: 20, lz: 20 } as MolecularContainer);
 
   const [hoveredPlaneIndex, setHoveredPlaneIndex] = useState<number>(-1);
@@ -37,6 +38,8 @@ const DropPlanes = React.memo(() => {
   const halfLz = container.lz / 2;
   const planeOpacity = 0.5;
   const planeVisible = false;
+  const containerLineWidth = 2;
+  const containerLineColor = 'gray';
 
   useEffect(() => {
     useRefStore.setState({
@@ -102,7 +105,51 @@ const DropPlanes = React.memo(() => {
   };
 
   return (
-    <group>
+    <group position={position ? [position.x, position.y, position.z] : [0, 0, 0]}>
+      {containerVisible && (
+        <group>
+          <Line
+            points={[
+              [-halfLx, -halfLy, -halfLz],
+              [halfLx, -halfLy, -halfLz],
+              [halfLx, halfLy, -halfLz],
+              [-halfLx, halfLy, -halfLz],
+              [-halfLx, -halfLy, -halfLz],
+              [-halfLx, -halfLy, halfLz],
+              [halfLx, -halfLy, halfLz],
+              [halfLx, halfLy, halfLz],
+              [-halfLx, halfLy, halfLz],
+              [-halfLx, -halfLy, halfLz],
+            ]}
+            color={containerLineColor}
+            lineWidth={containerLineWidth}
+          />
+          <Line
+            points={[
+              [halfLx, -halfLy, -halfLz],
+              [halfLx, -halfLy, halfLz],
+            ]}
+            color={containerLineColor}
+            lineWidth={containerLineWidth}
+          />
+          <Line
+            points={[
+              [halfLx, halfLy, -halfLz],
+              [halfLx, halfLy, halfLz],
+            ]}
+            color={containerLineColor}
+            lineWidth={containerLineWidth}
+          />
+          <Line
+            points={[
+              [-halfLx, halfLy, -halfLz],
+              [-halfLx, halfLy, halfLz],
+            ]}
+            color={containerLineColor}
+            lineWidth={containerLineWidth}
+          />
+        </group>
+      )}
       {xyPlaneVisible && (
         <group position={[0, 0, xyPlanePosition]}>
           <Plane
@@ -257,4 +304,4 @@ const DropPlanes = React.memo(() => {
   );
 });
 
-export default DropPlanes;
+export default ModelContainer;

@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DirectionalLight, DoubleSide, Vector3 } from 'three';
+import { DirectionalLight, Vector3 } from 'three';
 import { ProteinTS } from '../models/ProteinTS.ts';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
@@ -26,8 +26,7 @@ import {
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { useRefStore } from '../stores/commonRef';
 import { loadMolecule, setProperties } from './moleculeTools.ts';
-import { Box, Edges } from '@react-three/drei';
-import DropPlanes from './dropPlanes.tsx';
+import ModelContainer from './modelContainer.tsx';
 import Picker from '../lib/ui/Picker.js';
 import RCGroup from '../lib/gfx/RCGroup.js';
 extend({ RCGroup });
@@ -65,8 +64,6 @@ const DockingViewer = React.memo(
     const updateLigandData = useStore(Selector.updateLigandData);
     const ligandRotation = useStore.getState().projectState.ligandRotation ?? [0, 0, 0];
     const ligandTranslation = useStore.getState().projectState.ligandTranslation ?? [0, 0, 0];
-    const molecularContainer = useStore(Selector.molecularContainer);
-    const molecularContainerVisible = useStore(Selector.molecularContainerVisible);
 
     const [complex, setComplex] = useState<any>();
 
@@ -290,16 +287,16 @@ const DockingViewer = React.memo(
           position={[ligandTranslation[0], ligandTranslation[1], ligandTranslation[2]]}
           rotation={[ligandRotation[0], ligandRotation[1], ligandRotation[2]]}
         />
-        {molecularContainerVisible && (
-          <Box
-            args={[molecularContainer.lx, molecularContainer.ly, molecularContainer.lz]}
-            position={groupRef?.current?.position.clone().negate()}
-          >
-            <meshStandardMaterial attach="material" opacity={0.1} side={DoubleSide} transparent color={'lightgray'} />
-            <Edges scale={1} threshold={15} color="dimgray" />
-          </Box>
-        )}
-        <DropPlanes />
+        {/*{molecularContainerVisible && (*/}
+        {/*  <Box*/}
+        {/*    args={[molecularContainer.lx, molecularContainer.ly, molecularContainer.lz]}*/}
+        {/*    position={groupRef?.current?.position.clone().negate()}*/}
+        {/*  >*/}
+        {/*    <meshStandardMaterial attach="material" opacity={0.1} side={DoubleSide} transparent color={'lightgray'} />*/}
+        {/*    <Edges scale={1} threshold={15} color="dimgray" />*/}
+        {/*  </Box>*/}
+        {/*)}*/}
+        <ModelContainer position={groupRef?.current?.position.clone().negate()} />
       </rCGroup>
     );
   },

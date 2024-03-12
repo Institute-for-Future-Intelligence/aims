@@ -29,8 +29,8 @@ import * as Selector from '../stores/selector';
 import { useStore } from '../stores/common.ts';
 import { MoleculeTS } from '../models/MoleculeTS.ts';
 import { useRefStore } from '../stores/commonRef.ts';
-import DropPlanes from './dropPlanes.tsx';
-import { Instance, Instances, Line } from '@react-three/drei';
+import ModelContainer from './modelContainer.tsx';
+import { Instance, Instances } from '@react-three/drei';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import Picker from '../lib/ui/Picker.js';
 import settings from '../lib/settings.js';
@@ -106,8 +106,6 @@ const DynamicsViewer = React.memo(
   }: DynamicsViewerProps) => {
     const testMolecules = useStore(Selector.testMolecules);
     const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
-    const molecularContainer = useStore(Selector.molecularContainer);
-    const molecularContainerVisible = useStore(Selector.molecularContainerVisible);
     const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
     const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
     const viewerStyle = useStore(Selector.chamberViewerStyle);
@@ -251,50 +249,6 @@ const DynamicsViewer = React.memo(
           onPointerLeave={onPointerLeave}
           onPointerDown={onPointerDown}
         />
-        {molecularContainerVisible && (
-          <>
-            <Line
-              points={[
-                [-molecularContainer.lx / 2, -molecularContainer.ly / 2, -molecularContainer.lz / 2],
-                [molecularContainer.lx / 2, -molecularContainer.ly / 2, -molecularContainer.lz / 2],
-                [molecularContainer.lx / 2, molecularContainer.ly / 2, -molecularContainer.lz / 2],
-                [-molecularContainer.lx / 2, molecularContainer.ly / 2, -molecularContainer.lz / 2],
-                [-molecularContainer.lx / 2, -molecularContainer.ly / 2, -molecularContainer.lz / 2],
-                [-molecularContainer.lx / 2, -molecularContainer.ly / 2, molecularContainer.lz / 2],
-                [molecularContainer.lx / 2, -molecularContainer.ly / 2, molecularContainer.lz / 2],
-                [molecularContainer.lx / 2, molecularContainer.ly / 2, molecularContainer.lz / 2],
-                [-molecularContainer.lx / 2, molecularContainer.ly / 2, molecularContainer.lz / 2],
-                [-molecularContainer.lx / 2, -molecularContainer.ly / 2, molecularContainer.lz / 2],
-              ]}
-              color={'gray'}
-              lineWidth={2}
-            />
-            <Line
-              points={[
-                [molecularContainer.lx / 2, -molecularContainer.ly / 2, -molecularContainer.lz / 2],
-                [molecularContainer.lx / 2, -molecularContainer.ly / 2, molecularContainer.lz / 2],
-              ]}
-              color={'gray'}
-              lineWidth={2}
-            />
-            <Line
-              points={[
-                [molecularContainer.lx / 2, molecularContainer.ly / 2, -molecularContainer.lz / 2],
-                [molecularContainer.lx / 2, molecularContainer.ly / 2, molecularContainer.lz / 2],
-              ]}
-              color={'gray'}
-              lineWidth={2}
-            />
-            <Line
-              points={[
-                [-molecularContainer.lx / 2, molecularContainer.ly / 2, -molecularContainer.lz / 2],
-                [-molecularContainer.lx / 2, molecularContainer.ly / 2, molecularContainer.lz / 2],
-              ]}
-              color={'gray'}
-              lineWidth={2}
-            />
-          </>
-        )}
         {pickedMoleculeIndex !== -1 && moleculesRef.current && (
           <Instances limit={1000} range={1000}>
             <sphereGeometry args={[1, 16, 16]} />
@@ -311,7 +265,7 @@ const DynamicsViewer = React.memo(
             })}
           </Instances>
         )}
-        <DropPlanes />
+        <ModelContainer />
       </>
     );
   },
