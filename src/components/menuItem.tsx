@@ -9,6 +9,7 @@ export interface MenuItemProps {
   fontWeight?: string;
   stayAfterClick?: boolean;
   textSelectable?: boolean;
+  cursor?: string;
   children?: ReactNode;
   onClick?: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
 }
@@ -26,6 +27,7 @@ export const MenuItem: FC<MenuItemProps> = ({
   fontWeight,
   hasPadding,
   textSelectable = true,
+  cursor = undefined,
   onClick,
   children,
 }) => {
@@ -47,6 +49,7 @@ export const MenuItem: FC<MenuItemProps> = ({
         fontWeight: fontWeight,
         width: '100%',
         paddingLeft: hasPadding ? '24px' : '0px',
+        cursor: cursor ?? 'pointer',
       }}
     >
       {children}

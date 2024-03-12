@@ -45,7 +45,7 @@ const DynamicsButtons = React.memo(() => {
               step={0.1}
               precision={1}
               onChange={(value) => {
-                if (!value) return;
+                if (value === null) return;
                 setCommonStore((state) => {
                   state.projectState.xyPlanePosition = value;
                 });
@@ -84,7 +84,7 @@ const DynamicsButtons = React.memo(() => {
               step={0.1}
               precision={1}
               onChange={(value) => {
-                if (!value) return;
+                if (value === null) return;
                 setCommonStore((state) => {
                   state.projectState.yzPlanePosition = value;
                 });
@@ -123,7 +123,7 @@ const DynamicsButtons = React.memo(() => {
               step={0.1}
               precision={1}
               onChange={(value) => {
-                if (!value) return;
+                if (value === null) return;
                 setCommonStore((state) => {
                   state.projectState.xzPlanePosition = value;
                 });

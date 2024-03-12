@@ -20,6 +20,7 @@ import {
   Screenshot,
   SpaceshipDisplayModeRadioGroup,
   StyleRadioGroup,
+  TranslateMolecule,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
 import { MoleculeData } from '../../types.ts';
@@ -31,13 +32,25 @@ export const createDefaultMenu = (
 ) => {
   const lang = { lng: useStore.getState().language };
   const projectType = useStore.getState().projectState.type;
+  const testMolecules = useStore.getState().projectState.testMolecules;
 
-  const moleculePicked: boolean = pickedMoleculeIndex !== -1;
-  const defaultItem = !moleculePicked;
+  const pickedMolecule = pickedMoleculeIndex !== -1 ? testMolecules[pickedMoleculeIndex] : null;
 
   const items: MenuProps['items'] = [];
 
-  if (moleculePicked) {
+  if (pickedMolecule) {
+    items.push({
+      key: 'molecule-name',
+      label: (
+        <>
+          <MenuItem stayAfterClick={false} hasPadding={false} fontWeight={'bold'} cursor={'default'}>
+            {pickedMolecule.name}
+          </MenuItem>
+          <hr />
+        </>
+      ),
+    });
+
     items.push({
       key: 'molecule-copy',
       label: <CopyMolecule />,
@@ -47,13 +60,32 @@ export const createDefaultMenu = (
       key: 'molecule-cut',
       label: <CutMolecule />,
     });
-  }
 
-  if (defaultItem) {
+    items.push({
+      key: 'translate-molecule-submenu',
+      label: (
+        <MenuItem stayAfterClick={true} hasPadding={false}>
+          {i18n.t('molecularViewer.TranslateMolecule', lang)}
+        </MenuItem>
+      ),
+      children: [
+        {
+          key: 'translate-molecule-fields',
+          label: <TranslateMolecule />,
+          style: { backgroundColor: 'white' },
+        },
+      ],
+    });
+  } else {
     if (copiedMolecule && selectedPlane !== -1) {
       items.push({
         key: 'molecule-paste',
-        label: <PasteMolecule />,
+        label: (
+          <>
+            <PasteMolecule />
+            <hr style={{ marginLeft: '24px' }} />
+          </>
+        ),
       });
     }
 
@@ -90,45 +122,43 @@ export const createDefaultMenu = (
         ],
       });
     }
-  }
 
-  items.push({
-    key: 'molecular-viewer-style-submenu',
-    label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Style', lang)}</MenuItem>,
-    children: [
-      {
-        key: 'molecular-viewer-style-radio-group',
-        label: <StyleRadioGroup />,
-        style: { backgroundColor: 'white' },
-      },
-    ],
-  });
+    items.push({
+      key: 'molecular-viewer-style-submenu',
+      label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Style', lang)}</MenuItem>,
+      children: [
+        {
+          key: 'molecular-viewer-style-radio-group',
+          label: <StyleRadioGroup />,
+          style: { backgroundColor: 'white' },
+        },
+      ],
+    });
 
-  items.push({
-    key: 'molecular-viewer-material-submenu',
-    label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Material', lang)}</MenuItem>,
-    children: [
-      {
-        key: 'molecular-viewer-material-radio-group',
-        label: <MaterialRadioGroup />,
-        style: { backgroundColor: 'white' },
-      },
-    ],
-  });
+    items.push({
+      key: 'molecular-viewer-material-submenu',
+      label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Material', lang)}</MenuItem>,
+      children: [
+        {
+          key: 'molecular-viewer-material-radio-group',
+          label: <MaterialRadioGroup />,
+          style: { backgroundColor: 'white' },
+        },
+      ],
+    });
 
-  items.push({
-    key: 'molecular-viewer-coloring-submenu',
-    label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Color', lang)}</MenuItem>,
-    children: [
-      {
-        key: 'molecular-viewer-coloring-radio-group',
-        label: <ColoringRadioGroup />,
-        style: { backgroundColor: 'white' },
-      },
-    ],
-  });
+    items.push({
+      key: 'molecular-viewer-coloring-submenu',
+      label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Color', lang)}</MenuItem>,
+      children: [
+        {
+          key: 'molecular-viewer-coloring-radio-group',
+          label: <ColoringRadioGroup />,
+          style: { backgroundColor: 'white' },
+        },
+      ],
+    });
 
-  if (defaultItem) {
     items.push({
       key: 'molecular-viewer-background-color',
       label: <BackgroundColor />,

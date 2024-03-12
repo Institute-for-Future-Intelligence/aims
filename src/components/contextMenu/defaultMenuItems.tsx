@@ -2,10 +2,11 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
+import React from 'react';
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { useLanguage } from '../../hooks';
-import { Checkbox, ColorPicker, Radio, RadioChangeEvent, Space } from 'antd';
+import { Checkbox, ColorPicker, InputNumber, Radio, RadioChangeEvent, Space } from 'antd';
 import { UndoableChange } from '../../undo/UndoableChange';
 import { LabelMark, MenuItem } from '../menuItem';
 import { UndoableCheck } from '../../undo/UndoableCheck';
@@ -24,6 +25,123 @@ import {
 import { SpaceshipDisplayMode } from '../../constants.ts';
 import { useRefStore } from '../../stores/commonRef.ts';
 import { MoleculeTransform } from '../../types.ts';
+
+export const TranslateMolecule = () => {
+  const setCommonStore = useStore(Selector.set);
+  const loggable = useStore(Selector.loggable);
+  const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
+  const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
+  const molecularContainer = useStore(Selector.molecularContainer);
+  const moleculesRef = useRefStore.getState().moleculesRef;
+
+  const postTranslateSelectedMolecule = () => {
+    usePrimitiveStore.getState().set((state) => {
+      state.updateViewerFlag = !state.updateViewerFlag;
+    });
+    setCommonStore((state) => {
+      if (loggable) {
+        state.actionInfo = {
+          name: 'Translate Selected Molecule',
+          timestamp: new Date().getTime(),
+        };
+      }
+    });
+  };
+
+  return (
+    pickedIndex !== -1 && (
+      <Space direction={'vertical'} onClick={(e) => e.stopPropagation()}>
+        <InputNumber
+          style={{ width: '140px' }}
+          addonBefore={'X'}
+          addonAfter={'Å'}
+          min={-molecularContainer.lx / 2}
+          max={molecularContainer.lx / 2}
+          value={testMoleculeTransforms[pickedIndex].x}
+          step={0.1}
+          precision={1}
+          onChange={(value) => {
+            if (value === null) return;
+            if (pickedIndex === -1 || !moleculesRef?.current) return;
+            const displacement = value - testMoleculeTransforms[pickedIndex].x;
+            for (const [i, m] of moleculesRef.current.entries()) {
+              if (i === pickedIndex) {
+                for (const a of m.atoms) {
+                  a.position.x += displacement;
+                }
+                break;
+              }
+            }
+            setCommonStore((state) => {
+              if (pickedIndex === -1) return;
+              const m = state.projectState.testMoleculeTransforms[pickedIndex];
+              if (m) m.x += displacement;
+            });
+            postTranslateSelectedMolecule();
+          }}
+        />
+        <InputNumber
+          style={{ width: '140px' }}
+          addonBefore={'Y'}
+          addonAfter={'Å'}
+          min={-molecularContainer.ly / 2}
+          max={molecularContainer.ly / 2}
+          value={testMoleculeTransforms[pickedIndex].y}
+          step={0.1}
+          precision={1}
+          onChange={(value) => {
+            if (value === null) return;
+            if (pickedIndex === -1 || !moleculesRef?.current) return;
+            const displacement = value - testMoleculeTransforms[pickedIndex].y;
+            for (const [i, m] of moleculesRef.current.entries()) {
+              if (i === pickedIndex) {
+                for (const a of m.atoms) {
+                  a.position.y += displacement;
+                }
+                break;
+              }
+            }
+            setCommonStore((state) => {
+              if (pickedIndex === -1) return;
+              const m = state.projectState.testMoleculeTransforms[pickedIndex];
+              if (m) m.y += displacement;
+            });
+            postTranslateSelectedMolecule();
+          }}
+        />
+        <InputNumber
+          style={{ width: '140px' }}
+          addonBefore={'Z'}
+          addonAfter={'Å'}
+          min={-molecularContainer.lz / 2}
+          max={molecularContainer.lz / 2}
+          value={testMoleculeTransforms[pickedIndex].z}
+          step={0.1}
+          precision={1}
+          onChange={(value) => {
+            if (value === null) return;
+            if (pickedIndex === -1 || !moleculesRef?.current) return;
+            const displacement = value - testMoleculeTransforms[pickedIndex].z;
+            for (const [i, m] of moleculesRef.current.entries()) {
+              if (i === pickedIndex) {
+                for (const a of m.atoms) {
+                  a.position.z += displacement;
+                }
+                break;
+              }
+            }
+            setCommonStore((state) => {
+              if (pickedIndex === -1) return;
+              const m = state.projectState.testMoleculeTransforms[pickedIndex];
+              if (m) m.z += displacement;
+            });
+            postTranslateSelectedMolecule();
+          }}
+        />
+      </Space>
+    )
+  );
+};
 
 export const CutMolecule = () => {
   const setCommonStore = useStore(Selector.set);
@@ -53,7 +171,7 @@ export const CutMolecule = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={true} onClick={cutSelectedMolecule}>
+    <MenuItem stayAfterClick={false} hasPadding={false} onClick={cutSelectedMolecule}>
       {t('word.Cut', lang)}
     </MenuItem>
   );
@@ -84,7 +202,7 @@ export const CopyMolecule = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={true} onClick={copySelectedMolecule}>
+    <MenuItem stayAfterClick={false} hasPadding={false} onClick={copySelectedMolecule}>
       {t('word.Copy', lang)}
     </MenuItem>
   );
@@ -120,7 +238,7 @@ export const PasteMolecule = () => {
 
   return (
     <MenuItem stayAfterClick={false} hasPadding={true} onClick={pasteSelectedMolecule}>
-      {t('word.Paste', lang)}
+      {t('word.Paste', lang) + (copiedMolecule ? ' ' + copiedMolecule.name : '')}
     </MenuItem>
   );
 };

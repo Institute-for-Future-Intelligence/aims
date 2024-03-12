@@ -147,6 +147,8 @@ export const i18n_zh_cn = {
       Conformation: '构象',
       Molecule: '分子',
       TakeScreenshot: '截屏',
+      TranslateMolecule: '平移',
+      RotateMolecule: '旋转',
     },
 
     spaceship: {

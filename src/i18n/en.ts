@@ -146,6 +146,8 @@ export const i18n_en = {
       Conformation: 'Conformation',
       Molecule: 'Molecule',
       TakeScreenshot: 'Take Screenshot',
+      TranslateMolecule: 'Translate',
+      RotateMolecule: 'Rotate',
     },
 
     spaceship: {
