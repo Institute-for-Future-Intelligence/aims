@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Box3, Raycaster } from 'three';
+import { Box3, Raycaster, Vector3 } from 'three';
 import { MoleculeData, MoleculeTransform } from '../types.ts';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
@@ -34,6 +34,7 @@ import { Instance, Instances } from '@react-three/drei';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import Picker from '../lib/ui/Picker.js';
 import settings from '../lib/settings.js';
+import { UNIT_VECTOR_POS_X, UNIT_VECTOR_POS_Y, UNIT_VECTOR_POS_Z } from '../constants.ts';
 
 extend({ RCGroup });
 
@@ -157,6 +158,7 @@ const DynamicsViewer = React.memo(
     const processResult = (result: any, molecule?: MoleculeData, transform?: MoleculeTransform) => {
       const mol = { name: molecule?.name, metadata: null, atoms: [], bonds: [] } as MoleculeTS;
       const n = result._atoms.length;
+      const c = new Vector3();
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
         const a = { elementSymbol: atom.element.name, position: atom.position, index: atom.index } as AtomTS;
@@ -164,8 +166,22 @@ const DynamicsViewer = React.memo(
           a.position.x += transform.x ?? 0;
           a.position.y += transform.y ?? 0;
           a.position.z += transform.z ?? 0;
+          c.add(a.position);
         }
         mol.atoms.push(a);
+      }
+      if (transform) {
+        c.multiplyScalar(1 / n);
+        for (let i = 0; i < n; i++) {
+          const a = mol.atoms[i];
+          const p = a.position
+            .clone()
+            .sub(c)
+            .applyAxisAngle(UNIT_VECTOR_POS_X, transform.rotateX ?? 0)
+            .applyAxisAngle(UNIT_VECTOR_POS_Y, transform.rotateY ?? 0)
+            .applyAxisAngle(UNIT_VECTOR_POS_Z, transform.rotateZ ?? 0);
+          a.position.copy(p).add(c);
+        }
       }
       moleculesRef.current.push(mol);
       if (moleculesRef.current.length === testMolecules.length) {
