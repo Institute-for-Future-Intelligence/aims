@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { Euler, Quaternion } from 'three';
+import { Euler, Matrix4, Quaternion } from 'three';
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { useLanguage } from '../../hooks';
@@ -191,14 +191,12 @@ export const RotateMolecule = () => {
             if (value === null) return;
             if (pickedIndex === -1 || !moleculesRef?.current) return;
             const increment = Util.toRadians(value) - euler.x;
+            const matrix = new Matrix4().makeRotationX(increment);
             for (const [i, m] of moleculesRef.current.entries()) {
               if (i === pickedIndex) {
                 const c = ModelUtil.getMoleculeCenter(m);
                 for (const a of m.atoms) {
-                  const p = a.position
-                    .clone()
-                    .sub(c)
-                    .applyEuler(new Euler(increment, 0, 0));
+                  const p = a.position.clone().sub(c).applyMatrix4(matrix);
                   a.position.copy(p).add(c);
                 }
                 break;
@@ -208,7 +206,8 @@ export const RotateMolecule = () => {
               if (pickedIndex === -1) return;
               const m = state.projectState.testMoleculeTransforms[pickedIndex];
               if (m) {
-                const q = new Quaternion().setFromEuler(new Euler(euler.x + increment, euler.y, euler.z));
+                matrix.multiply(new Matrix4().makeRotationFromEuler(euler));
+                const q = new Quaternion().setFromRotationMatrix(matrix);
                 m.quaternion = [q.x, q.y, q.z, q.w];
               }
             });
@@ -228,14 +227,12 @@ export const RotateMolecule = () => {
             if (value === null) return;
             if (pickedIndex === -1 || !moleculesRef?.current) return;
             const increment = Util.toRadians(value) - euler.y;
+            const matrix = new Matrix4().makeRotationY(increment);
             for (const [i, m] of moleculesRef.current.entries()) {
               if (i === pickedIndex) {
                 const c = ModelUtil.getMoleculeCenter(m);
                 for (const a of m.atoms) {
-                  const p = a.position
-                    .clone()
-                    .sub(c)
-                    .applyEuler(new Euler(0, increment, 0));
+                  const p = a.position.clone().sub(c).applyMatrix4(matrix);
                   a.position.copy(p).add(c);
                 }
                 break;
@@ -245,7 +242,8 @@ export const RotateMolecule = () => {
               if (pickedIndex === -1) return;
               const m = state.projectState.testMoleculeTransforms[pickedIndex];
               if (m) {
-                const q = new Quaternion().setFromEuler(new Euler(euler.x, euler.y + increment, euler.z));
+                matrix.multiply(new Matrix4().makeRotationFromEuler(euler));
+                const q = new Quaternion().setFromRotationMatrix(matrix);
                 m.quaternion = [q.x, q.y, q.z, q.w];
               }
             });
@@ -265,14 +263,12 @@ export const RotateMolecule = () => {
             if (value === null) return;
             if (pickedIndex === -1 || !moleculesRef?.current) return;
             const increment = Util.toRadians(value) - euler.z;
+            const matrix = new Matrix4().makeRotationZ(increment);
             for (const [i, m] of moleculesRef.current.entries()) {
               if (i === pickedIndex) {
                 const c = ModelUtil.getMoleculeCenter(m);
                 for (const a of m.atoms) {
-                  const p = a.position
-                    .clone()
-                    .sub(c)
-                    .applyEuler(new Euler(0, 0, increment));
+                  const p = a.position.clone().sub(c).applyMatrix4(matrix);
                   a.position.copy(p).add(c);
                 }
                 break;
@@ -282,7 +278,8 @@ export const RotateMolecule = () => {
               if (pickedIndex === -1) return;
               const m = state.projectState.testMoleculeTransforms[pickedIndex];
               if (m) {
-                const q = new Quaternion().setFromEuler(new Euler(euler.x, euler.y, euler.z + increment));
+                matrix.multiply(new Matrix4().makeRotationFromEuler(euler));
+                const q = new Quaternion().setFromRotationMatrix(matrix);
                 m.quaternion = [q.x, q.y, q.z, q.w];
               }
             });
