@@ -2,7 +2,8 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
+import { Euler, Quaternion } from 'three';
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { useLanguage } from '../../hooks';
@@ -22,7 +23,7 @@ import {
   MolecularViewerMaterial,
   MolecularViewerStyle,
 } from '../../view/displayOptions';
-import { SpaceshipDisplayMode, UNIT_VECTOR_POS_X, UNIT_VECTOR_POS_Y, UNIT_VECTOR_POS_Z } from '../../constants.ts';
+import { SpaceshipDisplayMode } from '../../constants.ts';
 import { useRefStore } from '../../stores/commonRef.ts';
 import { MoleculeTransform } from '../../types.ts';
 import { Util } from '../../Util.ts';
@@ -166,6 +167,14 @@ export const RotateMolecule = () => {
     });
   };
 
+  const euler = useMemo(() => {
+    const e = new Euler();
+    if (pickedIndex === -1) return e;
+    const q = testMoleculeTransforms[pickedIndex].quaternion;
+    if (!q || q.length !== 4) return e;
+    return e.setFromQuaternion(new Quaternion(q[0], q[1], q[2], q[3]), 'XYZ');
+  }, [testMoleculeTransforms, pickedIndex]);
+
   return (
     pickedIndex !== -1 && (
       <Space direction={'vertical'} onClick={(e) => e.stopPropagation()}>
@@ -175,18 +184,21 @@ export const RotateMolecule = () => {
           formatter={(value) => `${value}°`}
           min={-180}
           max={180}
-          value={Math.round(Util.toDegrees(testMoleculeTransforms[pickedIndex].rotateX ?? 0))}
+          value={Math.round(Util.toDegrees(euler.x))}
           step={5}
           precision={1}
           onChange={(value) => {
             if (value === null) return;
             if (pickedIndex === -1 || !moleculesRef?.current) return;
-            const increment = Util.toRadians(value) - (testMoleculeTransforms[pickedIndex].rotateX ?? 0);
+            const increment = Util.toRadians(value) - euler.x;
             for (const [i, m] of moleculesRef.current.entries()) {
               if (i === pickedIndex) {
                 const c = ModelUtil.getMoleculeCenter(m);
                 for (const a of m.atoms) {
-                  const p = a.position.clone().sub(c).applyAxisAngle(UNIT_VECTOR_POS_X, increment);
+                  const p = a.position
+                    .clone()
+                    .sub(c)
+                    .applyEuler(new Euler(increment, 0, 0));
                   a.position.copy(p).add(c);
                 }
                 break;
@@ -196,8 +208,8 @@ export const RotateMolecule = () => {
               if (pickedIndex === -1) return;
               const m = state.projectState.testMoleculeTransforms[pickedIndex];
               if (m) {
-                if (m.rotateX === undefined) m.rotateX = 0;
-                m.rotateX += increment;
+                const q = new Quaternion().setFromEuler(new Euler(euler.x + increment, euler.y, euler.z));
+                m.quaternion = [q.x, q.y, q.z, q.w];
               }
             });
             postRotateSelectedMolecule();
@@ -209,18 +221,21 @@ export const RotateMolecule = () => {
           formatter={(value) => `${value}°`}
           min={-180}
           max={180}
-          value={Math.round(Util.toDegrees(testMoleculeTransforms[pickedIndex].rotateY ?? 0))}
+          value={Math.round(Util.toDegrees(euler.y))}
           step={5}
           precision={1}
           onChange={(value) => {
             if (value === null) return;
             if (pickedIndex === -1 || !moleculesRef?.current) return;
-            const increment = Util.toRadians(value) - (testMoleculeTransforms[pickedIndex].rotateY ?? 0);
+            const increment = Util.toRadians(value) - euler.y;
             for (const [i, m] of moleculesRef.current.entries()) {
               if (i === pickedIndex) {
                 const c = ModelUtil.getMoleculeCenter(m);
                 for (const a of m.atoms) {
-                  const p = a.position.clone().sub(c).applyAxisAngle(UNIT_VECTOR_POS_Y, increment);
+                  const p = a.position
+                    .clone()
+                    .sub(c)
+                    .applyEuler(new Euler(0, increment, 0));
                   a.position.copy(p).add(c);
                 }
                 break;
@@ -230,8 +245,8 @@ export const RotateMolecule = () => {
               if (pickedIndex === -1) return;
               const m = state.projectState.testMoleculeTransforms[pickedIndex];
               if (m) {
-                if (m.rotateY === undefined) m.rotateY = 0;
-                m.rotateY += increment;
+                const q = new Quaternion().setFromEuler(new Euler(euler.x, euler.y + increment, euler.z));
+                m.quaternion = [q.x, q.y, q.z, q.w];
               }
             });
             postRotateSelectedMolecule();
@@ -243,18 +258,21 @@ export const RotateMolecule = () => {
           formatter={(value) => `${value}°`}
           min={-180}
           max={180}
-          value={Math.round(Util.toDegrees(testMoleculeTransforms[pickedIndex].rotateZ ?? 0))}
+          value={Math.round(Util.toDegrees(euler.z))}
           step={5}
           precision={1}
           onChange={(value) => {
             if (value === null) return;
             if (pickedIndex === -1 || !moleculesRef?.current) return;
-            const increment = Util.toRadians(value) - (testMoleculeTransforms[pickedIndex].rotateZ ?? 0);
+            const increment = Util.toRadians(value) - euler.z;
             for (const [i, m] of moleculesRef.current.entries()) {
               if (i === pickedIndex) {
                 const c = ModelUtil.getMoleculeCenter(m);
                 for (const a of m.atoms) {
-                  const p = a.position.clone().sub(c).applyAxisAngle(UNIT_VECTOR_POS_Z, increment);
+                  const p = a.position
+                    .clone()
+                    .sub(c)
+                    .applyEuler(new Euler(0, 0, increment));
                   a.position.copy(p).add(c);
                 }
                 break;
@@ -264,8 +282,8 @@ export const RotateMolecule = () => {
               if (pickedIndex === -1) return;
               const m = state.projectState.testMoleculeTransforms[pickedIndex];
               if (m) {
-                if (m.rotateZ === undefined) m.rotateZ = 0;
-                m.rotateZ += increment;
+                const q = new Quaternion().setFromEuler(new Euler(euler.x, euler.y, euler.z + increment));
+                m.quaternion = [q.x, q.y, q.z, q.w];
               }
             });
             postRotateSelectedMolecule();
@@ -279,7 +297,6 @@ export const RotateMolecule = () => {
 export const CutMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
-  const testMolecules = useStore(Selector.testMolecules);
 
   const { t } = useTranslation();
   const lang = useLanguage();
@@ -313,7 +330,6 @@ export const CutMolecule = () => {
 export const CopyMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
-  const testMolecules = useStore(Selector.testMolecules);
 
   const { t } = useTranslation();
   const lang = useLanguage();
@@ -363,9 +379,7 @@ export const PasteMolecule = () => {
           x: p.x,
           y: p.y,
           z: p.z,
-          rotateX: t.rotateX,
-          rotateY: t.rotateY,
-          rotateZ: t.rotateZ,
+          quaternion: t.quaternion ? [...t.quaternion] : [0, 0, 0, 0],
         } as MoleculeTransform);
       });
       if (loggable) {

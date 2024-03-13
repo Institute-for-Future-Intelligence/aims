@@ -202,9 +202,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
           x: p.x,
           y: p.y,
           z: p.z,
-          rotateX: t.rotateX,
-          rotateY: t.rotateY,
-          rotateZ: t.rotateZ,
+          quaternion: t.quaternion ? [...t.quaternion] : [0, 0, 0, 1],
         } as MoleculeTransform);
       });
       if (loggable) {

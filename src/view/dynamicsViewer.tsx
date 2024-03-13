@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Box3, Raycaster, Vector3 } from 'three';
+import { Box3, Raycaster, Vector3, Quaternion } from 'three';
 import { MoleculeData, MoleculeTransform } from '../types.ts';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
@@ -34,7 +34,6 @@ import { Instance, Instances } from '@react-three/drei';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import Picker from '../lib/ui/Picker.js';
 import settings from '../lib/settings.js';
-import { UNIT_VECTOR_POS_X, UNIT_VECTOR_POS_Y, UNIT_VECTOR_POS_Z } from '../constants.ts';
 
 extend({ RCGroup });
 
@@ -172,14 +171,14 @@ const DynamicsViewer = React.memo(
       }
       if (transform) {
         c.multiplyScalar(1 / n);
+        const quaternion = new Quaternion();
+        const q = transform.quaternion;
+        if (q && q.length === 4) {
+          quaternion.set(q[0], q[1], q[2], q[3]);
+        }
         for (let i = 0; i < n; i++) {
           const a = mol.atoms[i];
-          const p = a.position
-            .clone()
-            .sub(c)
-            .applyAxisAngle(UNIT_VECTOR_POS_X, transform.rotateX ?? 0)
-            .applyAxisAngle(UNIT_VECTOR_POS_Y, transform.rotateY ?? 0)
-            .applyAxisAngle(UNIT_VECTOR_POS_Z, transform.rotateZ ?? 0);
+          const p = a.position.clone().sub(c).applyQuaternion(quaternion);
           a.position.copy(p).add(c);
         }
       }

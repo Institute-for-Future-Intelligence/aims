@@ -85,9 +85,7 @@ const ReactionChamber = React.memo(() => {
           x: point.x,
           y: point.y,
           z: point.z,
-          rotateX: 0,
-          rotateY: 0,
-          rotateZ: 0,
+          quaternion: [0, 0, 0, 1],
         } as MoleculeTransform);
       });
     }
