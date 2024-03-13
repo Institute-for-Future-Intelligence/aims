@@ -153,20 +153,6 @@ export const RotateMolecule = () => {
   const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
   const moleculesRef = useRefStore.getState().moleculesRef;
 
-  const postRotateSelectedMolecule = () => {
-    usePrimitiveStore.getState().set((state) => {
-      state.updateViewerFlag = !state.updateViewerFlag;
-    });
-    setCommonStore((state) => {
-      if (loggable) {
-        state.actionInfo = {
-          name: 'Rotate Selected Molecule',
-          timestamp: new Date().getTime(),
-        };
-      }
-    });
-  };
-
   const euler = useMemo(() => {
     const e = new Euler();
     if (pickedIndex === -1) return e;
@@ -174,6 +160,38 @@ export const RotateMolecule = () => {
     if (!q || q.length !== 4) return e;
     return e.setFromQuaternion(new Quaternion(q[0], q[1], q[2], q[3]), 'XYZ');
   }, [testMoleculeTransforms, pickedIndex]);
+
+  const rotateMolecule = (matrix: Matrix4) => {
+    if (pickedIndex === -1 || !moleculesRef?.current) return;
+    for (const [i, m] of moleculesRef.current.entries()) {
+      if (i === pickedIndex) {
+        const c = ModelUtil.getMoleculeCenter(m);
+        for (const a of m.atoms) {
+          const p = a.position.clone().sub(c).applyMatrix4(matrix);
+          a.position.copy(p).add(c);
+        }
+        break;
+      }
+    }
+    setCommonStore((state) => {
+      if (pickedIndex === -1) return;
+      const m = state.projectState.testMoleculeTransforms[pickedIndex];
+      if (m) {
+        matrix.multiply(new Matrix4().makeRotationFromEuler(euler));
+        const q = new Quaternion().setFromRotationMatrix(matrix);
+        m.quaternion = [q.x, q.y, q.z, q.w];
+      }
+      if (loggable) {
+        state.actionInfo = {
+          name: 'Rotate Selected Molecule',
+          timestamp: new Date().getTime(),
+        };
+      }
+    });
+    usePrimitiveStore.getState().set((state) => {
+      state.updateViewerFlag = !state.updateViewerFlag;
+    });
+  };
 
   return (
     pickedIndex !== -1 && (
@@ -189,29 +207,7 @@ export const RotateMolecule = () => {
           precision={1}
           onChange={(value) => {
             if (value === null) return;
-            if (pickedIndex === -1 || !moleculesRef?.current) return;
-            const increment = Util.toRadians(value) - euler.x;
-            const matrix = new Matrix4().makeRotationX(increment);
-            for (const [i, m] of moleculesRef.current.entries()) {
-              if (i === pickedIndex) {
-                const c = ModelUtil.getMoleculeCenter(m);
-                for (const a of m.atoms) {
-                  const p = a.position.clone().sub(c).applyMatrix4(matrix);
-                  a.position.copy(p).add(c);
-                }
-                break;
-              }
-            }
-            setCommonStore((state) => {
-              if (pickedIndex === -1) return;
-              const m = state.projectState.testMoleculeTransforms[pickedIndex];
-              if (m) {
-                matrix.multiply(new Matrix4().makeRotationFromEuler(euler));
-                const q = new Quaternion().setFromRotationMatrix(matrix);
-                m.quaternion = [q.x, q.y, q.z, q.w];
-              }
-            });
-            postRotateSelectedMolecule();
+            rotateMolecule(new Matrix4().makeRotationX(Util.toRadians(value) - euler.x));
           }}
         />
         <InputNumber
@@ -225,29 +221,7 @@ export const RotateMolecule = () => {
           precision={1}
           onChange={(value) => {
             if (value === null) return;
-            if (pickedIndex === -1 || !moleculesRef?.current) return;
-            const increment = Util.toRadians(value) - euler.y;
-            const matrix = new Matrix4().makeRotationY(increment);
-            for (const [i, m] of moleculesRef.current.entries()) {
-              if (i === pickedIndex) {
-                const c = ModelUtil.getMoleculeCenter(m);
-                for (const a of m.atoms) {
-                  const p = a.position.clone().sub(c).applyMatrix4(matrix);
-                  a.position.copy(p).add(c);
-                }
-                break;
-              }
-            }
-            setCommonStore((state) => {
-              if (pickedIndex === -1) return;
-              const m = state.projectState.testMoleculeTransforms[pickedIndex];
-              if (m) {
-                matrix.multiply(new Matrix4().makeRotationFromEuler(euler));
-                const q = new Quaternion().setFromRotationMatrix(matrix);
-                m.quaternion = [q.x, q.y, q.z, q.w];
-              }
-            });
-            postRotateSelectedMolecule();
+            rotateMolecule(new Matrix4().makeRotationY(Util.toRadians(value) - euler.y));
           }}
         />
         <InputNumber
@@ -261,29 +235,7 @@ export const RotateMolecule = () => {
           precision={1}
           onChange={(value) => {
             if (value === null) return;
-            if (pickedIndex === -1 || !moleculesRef?.current) return;
-            const increment = Util.toRadians(value) - euler.z;
-            const matrix = new Matrix4().makeRotationZ(increment);
-            for (const [i, m] of moleculesRef.current.entries()) {
-              if (i === pickedIndex) {
-                const c = ModelUtil.getMoleculeCenter(m);
-                for (const a of m.atoms) {
-                  const p = a.position.clone().sub(c).applyMatrix4(matrix);
-                  a.position.copy(p).add(c);
-                }
-                break;
-              }
-            }
-            setCommonStore((state) => {
-              if (pickedIndex === -1) return;
-              const m = state.projectState.testMoleculeTransforms[pickedIndex];
-              if (m) {
-                matrix.multiply(new Matrix4().makeRotationFromEuler(euler));
-                const q = new Quaternion().setFromRotationMatrix(matrix);
-                m.quaternion = [q.x, q.y, q.z, q.w];
-              }
-            });
-            postRotateSelectedMolecule();
+            rotateMolecule(new Matrix4().makeRotationZ(Util.toRadians(value) - euler.z));
           }}
         />
       </Space>
