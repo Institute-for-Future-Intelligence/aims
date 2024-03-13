@@ -148,6 +148,10 @@ export const i18n_zh_tw = {
       TakeScreenshot: '截屏',
       TranslateMolecule: '平移',
       RotateMolecule: '旋轉',
+      AboutXAxis: '繞X軸',
+      AboutYAxis: '繞Y軸',
+      AboutZAxis: '繞Z軸',
+      EulerAngle: '歐拉角',
     },
 
     spaceship: {

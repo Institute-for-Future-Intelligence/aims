@@ -7,7 +7,7 @@ import { Euler, Matrix4, Quaternion } from 'three';
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { useLanguage } from '../../hooks';
-import { Checkbox, ColorPicker, InputNumber, Radio, RadioChangeEvent, Space } from 'antd';
+import { Button, Checkbox, ColorPicker, InputNumber, Radio, RadioChangeEvent, Space } from 'antd';
 import { UndoableChange } from '../../undo/UndoableChange';
 import { LabelMark, MenuItem } from '../menuItem';
 import { UndoableCheck } from '../../undo/UndoableCheck';
@@ -15,6 +15,7 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useTranslation } from 'react-i18next';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
 import { screenshot, showError } from '../../helpers';
+import { RotateLeftOutlined, RotateRightOutlined } from '@ant-design/icons';
 import {
   CHAMBER_COLORING_LABELS,
   CHAMBER_STYLE_LABELS,
@@ -153,6 +154,9 @@ export const RotateMolecule = () => {
   const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
   const moleculesRef = useRefStore.getState().moleculesRef;
 
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
   const euler = useMemo(() => {
     const e = new Euler();
     if (pickedIndex === -1) return e;
@@ -161,8 +165,20 @@ export const RotateMolecule = () => {
     return e.setFromQuaternion(new Quaternion(q[0], q[1], q[2], q[3]), 'XYZ');
   }, [testMoleculeTransforms, pickedIndex]);
 
-  const rotateSelectedMolecule = (matrix: Matrix4) => {
+  const rotateSelectedMolecule = (axis: string, degrees: number) => {
     if (pickedIndex === -1 || !moleculesRef?.current) return;
+    let matrix: Matrix4;
+    switch (axis) {
+      case 'x':
+        matrix = new Matrix4().makeRotationX(Util.toRadians(degrees));
+        break;
+      case 'y':
+        matrix = new Matrix4().makeRotationY(Util.toRadians(degrees));
+        break;
+      default:
+        matrix = new Matrix4().makeRotationZ(Util.toRadians(degrees));
+        break;
+    }
     for (const [i, m] of moleculesRef.current.entries()) {
       if (i === pickedIndex) {
         const c = ModelUtil.getMoleculeCenter(m);
@@ -196,48 +212,40 @@ export const RotateMolecule = () => {
   return (
     pickedIndex !== -1 && (
       <Space direction={'vertical'} onClick={(e) => e.stopPropagation()}>
-        <InputNumber
-          style={{ width: '120px' }}
-          addonBefore={'α'}
-          formatter={(value) => `${value}°`}
-          min={-180}
-          max={180}
-          value={Math.round(Util.toDegrees(euler.x))}
-          step={5}
-          precision={1}
-          onChange={(value) => {
-            if (value === null) return;
-            rotateSelectedMolecule(new Matrix4().makeRotationX(Util.toRadians(value) - euler.x));
-          }}
-        />
-        <InputNumber
-          style={{ width: '120px' }}
-          addonBefore={'β'}
-          formatter={(value) => `${value}°`}
-          min={-180}
-          max={180}
-          value={Math.round(Util.toDegrees(euler.y))}
-          step={5}
-          precision={1}
-          onChange={(value) => {
-            if (value === null) return;
-            rotateSelectedMolecule(new Matrix4().makeRotationY(Util.toRadians(value) - euler.y));
-          }}
-        />
-        <InputNumber
-          style={{ width: '120px' }}
-          addonBefore={'γ'}
-          formatter={(value) => `${value}°`}
-          min={-180}
-          max={180}
-          value={Math.round(Util.toDegrees(euler.z))}
-          step={5}
-          precision={1}
-          onChange={(value) => {
-            if (value === null) return;
-            rotateSelectedMolecule(new Matrix4().makeRotationZ(Util.toRadians(value) - euler.z));
-          }}
-        />
+        <Space direction={'horizontal'}>
+          <span>{t('molecularViewer.AboutXAxis', lang) + ':'}</span>
+          <Button onClick={() => rotateSelectedMolecule('x', 5)}>
+            <RotateLeftOutlined />
+          </Button>
+          <Button onClick={() => rotateSelectedMolecule('x', -5)}>
+            <RotateRightOutlined />
+          </Button>
+        </Space>
+        <Space direction={'horizontal'}>
+          <span>{t('molecularViewer.AboutYAxis', lang) + ':'}</span>
+          <Button onClick={() => rotateSelectedMolecule('y', 5)}>
+            <RotateLeftOutlined />
+          </Button>
+          <Button onClick={() => rotateSelectedMolecule('y', -5)}>
+            <RotateRightOutlined />
+          </Button>
+        </Space>
+        <Space direction={'horizontal'}>
+          <span>{t('molecularViewer.AboutZAxis', lang) + ':'}</span>
+          <Button onClick={() => rotateSelectedMolecule('z', 5)}>
+            <RotateLeftOutlined />
+          </Button>
+          <Button onClick={() => rotateSelectedMolecule('z', -5)}>
+            <RotateRightOutlined />
+          </Button>
+        </Space>
+        <hr style={{ marginTop: '6px' }} />
+        <Space direction={'horizontal'}>{t('molecularViewer.EulerAngle', lang) + ':'}</Space>
+        <Space>
+          {'(' + Util.toDegrees(euler.x).toFixed(0) + '°, '}
+          {Util.toDegrees(euler.y).toFixed(0) + '°, '}
+          {Util.toDegrees(euler.z).toFixed(0) + '°)'}
+        </Space>
       </Space>
     )
   );

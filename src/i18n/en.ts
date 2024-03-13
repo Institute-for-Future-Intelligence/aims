@@ -148,6 +148,10 @@ export const i18n_en = {
       TakeScreenshot: 'Take Screenshot',
       TranslateMolecule: 'Translate',
       RotateMolecule: 'Rotate',
+      AboutXAxis: 'About X Axis',
+      AboutYAxis: 'About Y Axis',
+      AboutZAxis: 'About Z Axis',
+      EulerAngle: 'Euler Angle',
     },
 
     spaceship: {
