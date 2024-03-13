@@ -152,6 +152,7 @@ export const i18n_en = {
       AboutYAxis: 'About Y Axis',
       AboutZAxis: 'About Z Axis',
       EulerAngle: 'Euler Angle',
+      Order: 'Order',
     },
 
     spaceship: {

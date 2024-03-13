@@ -152,6 +152,7 @@ export const i18n_zh_tw = {
       AboutYAxis: '繞Y軸',
       AboutZAxis: '繞Z軸',
       EulerAngle: '歐拉角',
+      Order: '順序',
     },
 
     spaceship: {

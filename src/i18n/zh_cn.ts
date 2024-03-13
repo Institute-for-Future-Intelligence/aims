@@ -153,6 +153,7 @@ export const i18n_zh_cn = {
       AboutYAxis: '绕Y轴',
       AboutZAxis: '绕Z轴',
       EulerAngle: '欧拉角',
+      Order: '顺序',
     },
 
     spaceship: {

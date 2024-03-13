@@ -239,7 +239,9 @@ export const RotateMolecule = () => {
           </Button>
         </Space>
         <hr style={{ marginTop: '6px' }} />
-        <Space direction={'horizontal'}>{t('molecularViewer.EulerAngle', lang) + ':'}</Space>
+        <Space direction={'horizontal'}>
+          {t('molecularViewer.EulerAngle', lang) + ' (XYZ ' + t('molecularViewer.Order', lang) + '):'}
+        </Space>
         <Space>
           {'(' + Util.toDegrees(euler.x).toFixed(0) + '°, '}
           {Util.toDegrees(euler.y).toFixed(0) + '°, '}

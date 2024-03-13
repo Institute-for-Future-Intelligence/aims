@@ -34,6 +34,7 @@ import { Instance, Instances } from '@react-three/drei';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import Picker from '../lib/ui/Picker.js';
 import settings from '../lib/settings.js';
+import Movers from './movers.tsx';
 
 extend({ RCGroup });
 
@@ -256,6 +257,14 @@ const DynamicsViewer = React.memo(
       );
     }, [viewerStyle]);
 
+    const moleculeLengths = useMemo(() => {
+      if (pickedMoleculeIndex !== -1 && moleculesRef.current) {
+        const mol = moleculesRef.current[pickedMoleculeIndex];
+        return ModelUtil.getMoleculeLengths(mol);
+      }
+      return [10, 10, 10];
+    }, [pickedMoleculeIndex, moleculesRef]);
+
     return (
       <>
         <rCGroup
@@ -279,6 +288,16 @@ const DynamicsViewer = React.memo(
               );
             })}
           </Instances>
+        )}
+        {pickedMoleculeIndex !== -1 && (
+          <Movers
+            center={[
+              testMoleculeTransforms[pickedMoleculeIndex].x,
+              testMoleculeTransforms[pickedMoleculeIndex].y,
+              testMoleculeTransforms[pickedMoleculeIndex].z,
+            ]}
+            length={moleculeLengths}
+          />
         )}
         <ModelContainer />
       </>
