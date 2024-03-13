@@ -24,13 +24,8 @@ import {
   TranslateMolecule,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
-import { MoleculeData } from '../../types.ts';
 
-export const createDefaultMenu = (
-  pickedMoleculeIndex: number,
-  copiedMolecule: MoleculeData | null,
-  selectedPlane: number,
-) => {
+export const createDefaultMenu = (pickedMoleculeIndex: number, copiedMoleculeIndex: number, selectedPlane: number) => {
   const lang = { lng: useStore.getState().language };
   const projectType = useStore.getState().projectState.type;
   const testMolecules = useStore.getState().projectState.testMolecules;
@@ -94,7 +89,7 @@ export const createDefaultMenu = (
       ],
     });
   } else {
-    if (copiedMolecule && selectedPlane !== -1) {
+    if (copiedMoleculeIndex !== -1 && selectedPlane !== -1) {
       items.push({
         key: 'molecule-paste',
         label: (

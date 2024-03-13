@@ -20,7 +20,7 @@ export interface PrimitiveStoreState {
   selectedPlane: number;
 
   pickedMoleculeIndex: number;
-  copiedMolecule: MoleculeData | null;
+  copiedMoleculeIndex: number;
 
   boundingSphereRadius: number;
 
@@ -106,7 +106,7 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     selectedPlane: -1,
 
     pickedMoleculeIndex: -1,
-    copiedMolecule: null,
+    copiedMoleculeIndex: -1,
 
     boundingSphereRadius: 10,
 

@@ -288,7 +288,7 @@ export const CutMolecule = () => {
     const pickedMoleculeIndex = usePrimitiveStore.getState().pickedMoleculeIndex;
     if (pickedMoleculeIndex === -1) return;
     usePrimitiveStore.getState().set((state) => {
-      state.copiedMolecule = { ...testMolecules[pickedMoleculeIndex] };
+      state.copiedMoleculeIndex = pickedMoleculeIndex;
       state.pickedMoleculeIndex = -1;
     });
     setCommonStore((state) => {
@@ -322,7 +322,7 @@ export const CopyMolecule = () => {
     const pickedMoleculeIndex = usePrimitiveStore.getState().pickedMoleculeIndex;
     if (pickedMoleculeIndex === -1) return;
     usePrimitiveStore.getState().set((state) => {
-      state.copiedMolecule = { ...testMolecules[state.pickedMoleculeIndex] };
+      state.copiedMoleculeIndex = state.pickedMoleculeIndex;
     });
     if (loggable) {
       setCommonStore((state) => {
@@ -344,7 +344,9 @@ export const CopyMolecule = () => {
 export const PasteMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
-  const copiedMolecule = usePrimitiveStore(Selector.copiedMolecule);
+  const testMolecules = useStore(Selector.testMolecules);
+  const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
+  const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
   const clickPointRef = useRefStore.getState().clickPointRef;
 
   const { t } = useTranslation();
@@ -352,11 +354,19 @@ export const PasteMolecule = () => {
 
   const pasteSelectedMolecule = () => {
     const p = clickPointRef?.current;
-    if (p && copiedMolecule) {
+    if (p && copiedMoleculeIndex !== -1) {
       setCommonStore((state) => {
-        const m = { ...copiedMolecule };
+        const m = { ...testMolecules[copiedMoleculeIndex] };
+        const t = testMoleculeTransforms[copiedMoleculeIndex];
         state.projectState.testMolecules.push(m);
-        state.projectState.testMoleculeTransforms.push({ x: p.x, y: p.y, z: p.z } as MoleculeTransform);
+        state.projectState.testMoleculeTransforms.push({
+          x: p.x,
+          y: p.y,
+          z: p.z,
+          rotateX: t.rotateX,
+          rotateY: t.rotateY,
+          rotateZ: t.rotateZ,
+        } as MoleculeTransform);
       });
       if (loggable) {
         setCommonStore((state) => {
@@ -371,7 +381,7 @@ export const PasteMolecule = () => {
 
   return (
     <MenuItem stayAfterClick={false} hasPadding={true} onClick={pasteSelectedMolecule}>
-      {t('word.Paste', lang) + (copiedMolecule ? ' ' + copiedMolecule.name : '')}
+      {t('word.Paste', lang) + (copiedMoleculeIndex !== -1 ? ' ' + testMolecules[copiedMoleculeIndex].name : '')}
     </MenuItem>
   );
 };

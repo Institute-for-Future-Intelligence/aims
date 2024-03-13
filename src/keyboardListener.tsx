@@ -103,8 +103,9 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
   const testMolecules = useStore(Selector.testMolecules);
+  const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
   const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
-  const copiedMolecule = usePrimitiveStore(Selector.copiedMolecule);
+  const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
   const clickPointRef = useRefStore.getState().clickPointRef;
   const moleculesRef = useRefStore.getState().moleculesRef;
 
@@ -156,7 +157,9 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const onDelete = (cut: boolean) => {
     if (pickedMoleculeIndex !== -1) {
       usePrimitiveStore.getState().set((state) => {
-        if (cut) state.copiedMolecule = { ...testMolecules[pickedMoleculeIndex] };
+        if (cut) {
+          state.copiedMoleculeIndex = pickedMoleculeIndex;
+        }
         state.pickedMoleculeIndex = -1;
       });
       setCommonStore((state) => {
@@ -175,7 +178,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const onCopy = () => {
     if (pickedMoleculeIndex !== -1) {
       usePrimitiveStore.getState().set((state) => {
-        state.copiedMolecule = { ...testMolecules[state.pickedMoleculeIndex] };
+        state.copiedMoleculeIndex = state.pickedMoleculeIndex;
       });
       if (loggable) {
         setCommonStore((state) => {
@@ -190,11 +193,19 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
 
   const onPaste = () => {
     const p = clickPointRef?.current;
-    if (p && copiedMolecule) {
+    if (p && copiedMoleculeIndex !== -1) {
       setCommonStore((state) => {
-        const m = { ...copiedMolecule };
+        const m = { ...testMolecules[copiedMoleculeIndex] };
+        const t = testMoleculeTransforms[copiedMoleculeIndex];
         state.projectState.testMolecules.push(m);
-        state.projectState.testMoleculeTransforms.push({ x: p.x, y: p.y, z: p.z } as MoleculeTransform);
+        state.projectState.testMoleculeTransforms.push({
+          x: p.x,
+          y: p.y,
+          z: p.z,
+          rotateX: t.rotateX,
+          rotateY: t.rotateY,
+          rotateZ: t.rotateZ,
+        } as MoleculeTransform);
       });
       if (loggable) {
         setCommonStore((state) => {

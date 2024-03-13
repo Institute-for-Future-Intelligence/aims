@@ -81,7 +81,14 @@ const ReactionChamber = React.memo(() => {
       setCommonStore((state) => {
         const m = { ...selectedMolecule };
         state.projectState.testMolecules.push(m);
-        state.projectState.testMoleculeTransforms.push({ x: point.x, y: point.y, z: point.z } as MoleculeTransform);
+        state.projectState.testMoleculeTransforms.push({
+          x: point.x,
+          y: point.y,
+          z: point.z,
+          rotateX: 0,
+          rotateY: 0,
+          rotateZ: 0,
+        } as MoleculeTransform);
       });
     }
   };
