@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { Euler, Matrix4, Quaternion } from 'three';
+import { Euler, Matrix4 } from 'three';
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { useLanguage } from '../../hooks';
@@ -158,11 +158,10 @@ export const RotateMolecule = () => {
   const lang = useLanguage();
 
   const euler = useMemo(() => {
-    const e = new Euler();
-    if (pickedIndex === -1) return e;
-    const q = testMoleculeTransforms[pickedIndex].quaternion;
-    if (!q || q.length !== 4) return e;
-    return e.setFromQuaternion(new Quaternion(q[0], q[1], q[2], q[3]), 'XYZ');
+    if (pickedIndex === -1) return new Euler();
+    const angles = testMoleculeTransforms[pickedIndex].euler;
+    if (!angles || angles.length !== 3) return new Euler();
+    return new Euler(angles[0], angles[1], angles[2]);
   }, [testMoleculeTransforms, pickedIndex]);
 
   const rotateSelectedMolecule = (axis: string, degrees: number) => {
@@ -194,8 +193,8 @@ export const RotateMolecule = () => {
       const m = state.projectState.testMoleculeTransforms[pickedIndex];
       if (m) {
         matrix.multiply(new Matrix4().makeRotationFromEuler(euler));
-        const q = new Quaternion().setFromRotationMatrix(matrix);
-        m.quaternion = [q.x, q.y, q.z, q.w];
+        const angle = new Euler().setFromRotationMatrix(matrix);
+        m.euler = [angle.x, angle.y, angle.z];
       }
       if (loggable) {
         state.actionInfo = {
@@ -336,7 +335,7 @@ export const PasteMolecule = () => {
           x: p.x,
           y: p.y,
           z: p.z,
-          quaternion: t.quaternion ? [...t.quaternion] : [0, 0, 0, 0],
+          euler: t.euler ? [...t.euler] : [0, 0, 0],
         } as MoleculeTransform);
       });
       if (loggable) {

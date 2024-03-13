@@ -130,7 +130,7 @@ export interface MoleculeTransform {
   x: number;
   y: number;
   z: number;
-  quaternion: number[];
+  euler: number[];
 }
 
 export interface ActionInfo {

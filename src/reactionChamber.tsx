@@ -85,7 +85,7 @@ const ReactionChamber = React.memo(() => {
           x: point.x,
           y: point.y,
           z: point.z,
-          quaternion: [0, 0, 0, 1],
+          euler: [0, 0, 0],
         } as MoleculeTransform);
       });
     }

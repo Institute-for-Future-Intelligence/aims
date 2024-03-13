@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Box3, Raycaster, Vector3, Quaternion } from 'three';
+import { Box3, Raycaster, Vector3, Euler } from 'three';
 import { MoleculeData, MoleculeTransform } from '../types.ts';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
@@ -171,14 +171,14 @@ const DynamicsViewer = React.memo(
       }
       if (transform) {
         c.multiplyScalar(1 / n);
-        const quaternion = new Quaternion();
-        const q = transform.quaternion;
-        if (q && q.length === 4) {
-          quaternion.set(q[0], q[1], q[2], q[3]);
+        const euler = new Euler();
+        const angles = transform.euler;
+        if (angles && angles.length === 3) {
+          euler.set(angles[0], angles[1], angles[2]);
         }
         for (let i = 0; i < n; i++) {
           const a = mol.atoms[i];
-          const p = a.position.clone().sub(c).applyQuaternion(quaternion);
+          const p = a.position.clone().sub(c).applyEuler(euler);
           a.position.copy(p).add(c);
         }
       }
