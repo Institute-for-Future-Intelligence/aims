@@ -161,7 +161,7 @@ export const RotateMolecule = () => {
     return e.setFromQuaternion(new Quaternion(q[0], q[1], q[2], q[3]), 'XYZ');
   }, [testMoleculeTransforms, pickedIndex]);
 
-  const rotateMolecule = (matrix: Matrix4) => {
+  const rotateSelectedMolecule = (matrix: Matrix4) => {
     if (pickedIndex === -1 || !moleculesRef?.current) return;
     for (const [i, m] of moleculesRef.current.entries()) {
       if (i === pickedIndex) {
@@ -198,7 +198,7 @@ export const RotateMolecule = () => {
       <Space direction={'vertical'} onClick={(e) => e.stopPropagation()}>
         <InputNumber
           style={{ width: '120px' }}
-          addonBefore={'X'}
+          addonBefore={'α'}
           formatter={(value) => `${value}°`}
           min={-180}
           max={180}
@@ -207,12 +207,12 @@ export const RotateMolecule = () => {
           precision={1}
           onChange={(value) => {
             if (value === null) return;
-            rotateMolecule(new Matrix4().makeRotationX(Util.toRadians(value) - euler.x));
+            rotateSelectedMolecule(new Matrix4().makeRotationX(Util.toRadians(value) - euler.x));
           }}
         />
         <InputNumber
           style={{ width: '120px' }}
-          addonBefore={'Y'}
+          addonBefore={'β'}
           formatter={(value) => `${value}°`}
           min={-180}
           max={180}
@@ -221,12 +221,12 @@ export const RotateMolecule = () => {
           precision={1}
           onChange={(value) => {
             if (value === null) return;
-            rotateMolecule(new Matrix4().makeRotationY(Util.toRadians(value) - euler.y));
+            rotateSelectedMolecule(new Matrix4().makeRotationY(Util.toRadians(value) - euler.y));
           }}
         />
         <InputNumber
           style={{ width: '120px' }}
-          addonBefore={'Z'}
+          addonBefore={'γ'}
           formatter={(value) => `${value}°`}
           min={-180}
           max={180}
@@ -235,7 +235,7 @@ export const RotateMolecule = () => {
           precision={1}
           onChange={(value) => {
             if (value === null) return;
-            rotateMolecule(new Matrix4().makeRotationZ(Util.toRadians(value) - euler.z));
+            rotateSelectedMolecule(new Matrix4().makeRotationZ(Util.toRadians(value) - euler.z));
           }}
         />
       </Space>
@@ -344,7 +344,7 @@ export const PasteMolecule = () => {
 
   return (
     <MenuItem stayAfterClick={false} hasPadding={true} onClick={pasteSelectedMolecule}>
-      {t('word.Paste', lang) + (copiedMoleculeIndex !== -1 ? ' ' + testMolecules[copiedMoleculeIndex].name : '')}
+      {t('word.Paste', lang) + (copiedMoleculeIndex !== -1 ? ' ' + testMolecules[copiedMoleculeIndex]?.name : '')}
     </MenuItem>
   );
 };
