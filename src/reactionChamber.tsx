@@ -26,7 +26,6 @@ import { ReactionChamberControls } from './controls';
 import Spaceship from './view/spaceship.tsx';
 import Background from './view/background.tsx';
 import Cockpit from './view/cockpit.tsx';
-import DockingButtons from './view/dockingButtons.tsx';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import DynamicsSettings from './view/dynamicsSettings.tsx';
@@ -51,7 +50,6 @@ const ReactionChamber = React.memo(() => {
   const cameraUp = useStore(Selector.cameraUp);
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
   const protein = useStore(Selector.protein);
-  const ligand = useStore(Selector.ligand);
   const projectType = useStore(Selector.projectType);
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
@@ -208,18 +206,11 @@ const ReactionChamber = React.memo(() => {
         </GizmoHelper>
       </Canvas>
 
-      {projectType === ProjectType.DRUG_DISCOVERY && (
-        <>
-          <DockingSettings />
-          {ligand && <DockingButtons />}
-        </>
-      )}
+      {projectType === ProjectType.DRUG_DISCOVERY && <DockingSettings />}
       {projectType === ProjectType.QSAR_MODELING && (
-        <>
-          <DynamicsSettings molecules={moleculesRef?.current ? [...moleculesRef.current] : []} />
-          <DynamicsButtons />
-        </>
+        <DynamicsSettings molecules={moleculesRef?.current ? [...moleculesRef.current] : []} />
       )}
+      <DynamicsButtons />
 
       {loading && canvasRef.current && (
         <Spin

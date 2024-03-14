@@ -228,7 +228,7 @@ const DockingViewer = React.memo(
               invalidate();
             });
           }
-          useRefStore.setState((state) => ({ ligandRef: ligandGroupRef }));
+          useRefStore.setState({ ligandRef: ligandGroupRef });
         }
       }
     }, [ligand, parsedResultsMap, projectViewerStyle, projectViewerMaterial]);
@@ -239,33 +239,6 @@ const DockingViewer = React.memo(
       // @ts-expect-error ignore
       picker.addEventListener('newpick', (event) => {
         console.log('pick', event.obj);
-
-        // let complex = null;
-        // if (event.obj.atom) {
-        //   complex = event.obj.atom.residue.getChain().getComplex();
-        // } else if (event.obj.residue) {
-        //   complex = event.obj.residue.getChain().getComplex();
-        // } else if (event.obj.chain) {
-        //   complex = event.obj.chain.getComplex();
-        // } else if (event.obj.molecule) {
-        //   complex = event.obj.molecule.complex;
-        // } else {
-        // }
-
-        // if (proteinGroupRef.current) {
-        //   const visual = proteinGroupRef.current.children[0] as ComplexVisual;
-        //   if (visual && (visual.getComplex() === complex || complex === null)) {
-        //     visual.updateSelectionMask(event.obj);
-        //     visual.rebuildSelectionGeometry();
-        //   }
-        // }
-        // if (ligandGroupRef.current) {
-        //   const visual = ligandGroupRef.current.children[0] as ComplexVisual;
-        //   if (visual && (visual.getComplex() === complex || complex === null)) {
-        //     visual.updateSelectionMask(event.obj);
-        //     visual.rebuildSelectionGeometry();
-        //   }
-        // }
       });
 
       return () => {
@@ -287,15 +260,6 @@ const DockingViewer = React.memo(
           position={[ligandTranslation[0], ligandTranslation[1], ligandTranslation[2]]}
           rotation={[ligandRotation[0], ligandRotation[1], ligandRotation[2]]}
         />
-        {/*{molecularContainerVisible && (*/}
-        {/*  <Box*/}
-        {/*    args={[molecularContainer.lx, molecularContainer.ly, molecularContainer.lz]}*/}
-        {/*    position={groupRef?.current?.position.clone().negate()}*/}
-        {/*  >*/}
-        {/*    <meshStandardMaterial attach="material" opacity={0.1} side={DoubleSide} transparent color={'lightgray'} />*/}
-        {/*    <Edges scale={1} threshold={15} color="dimgray" />*/}
-        {/*  </Box>*/}
-        {/*)}*/}
         <ModelContainer position={groupRef?.current?.position.clone().negate()} />
       </rCGroup>
     );

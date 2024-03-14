@@ -6,7 +6,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Box3, Raycaster, Vector3, Euler } from 'three';
 import { MoleculeData, MoleculeTransform } from '../types.ts';
 import AtomJS from '../lib/chem/Atom';
-import BondJS from '../lib/chem/Bond';
 import ComplexVisual from '../lib/ComplexVisual';
 import { Camera, extend, ThreeEvent, useThree } from '@react-three/fiber';
 import {
@@ -18,13 +17,10 @@ import {
   STYLE_MAP,
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
-import { loadMolecule } from './moleculeTools.ts';
+import { generateComplex, loadMolecule } from './moleculeTools.ts';
 import { AtomTS } from '../models/AtomTS.ts';
-import { BondTS } from '../models/BondTS.ts';
 import { ModelUtil } from '../models/ModelUtil.ts';
-import Complex from '../lib/chem/Complex';
 import Element from '../lib/chem/Element';
-import Molecule from '../lib/chem/Molecule';
 import * as Selector from '../stores/selector';
 import { useStore } from '../stores/common.ts';
 import { MoleculeTS } from '../models/MoleculeTS.ts';
@@ -48,51 +44,6 @@ export interface DynamicsViewerProps {
   onPointerLeave?: () => void;
   onPointerDown?: (e: ThreeEvent<PointerEvent>) => void;
 }
-
-const generateComplex = (molecules: MoleculeTS[]) => {
-  const complex = new Complex();
-  for (const [idx, mol] of molecules.entries()) {
-    const chain = complex.addChain('MOL' + idx);
-    const residue = chain.addResidue(mol.name, idx, ' ');
-    for (const [i, a] of mol.atoms.entries()) {
-      residue.addAtom(
-        a.elementSymbol,
-        Element.getByName(a.elementSymbol),
-        a.position, // this links to the current atom position vector
-        undefined,
-        true,
-        i + 1,
-        ' ',
-        1,
-        1,
-        0,
-      );
-    }
-    const molecule = new Molecule(complex, mol.name, idx + 1);
-    molecule.residues = [residue];
-    complex._molecules.push(molecule);
-  }
-  complex.finalize({
-    needAutoBonding: true,
-    detectAromaticLoops: false,
-    enableEditing: false,
-    serialAtomMap: false,
-  });
-  const bonds = complex.getBonds() as BondJS[];
-  const atoms: AtomTS[] = [];
-  for (const m of molecules) {
-    atoms.push(...m.atoms);
-  }
-  for (const b of bonds) {
-    const startAtomIndex = (b._left as AtomJS).index;
-    const endAtomIndex = (b._right as AtomJS).index;
-    const m = ModelUtil.getMolecule(atoms[startAtomIndex], molecules);
-    if (m) {
-      m.bonds.push({ startAtom: atoms[startAtomIndex], endAtom: atoms[endAtomIndex] } as BondTS);
-    }
-  }
-  return complex;
-};
 
 const DynamicsViewer = React.memo(
   ({

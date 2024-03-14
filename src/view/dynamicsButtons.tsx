@@ -28,7 +28,7 @@ const DynamicsButtons = React.memo(() => {
       shape="square"
       style={{
         position: 'absolute',
-        top: '56px',
+        top: '64px',
         left: '6px',
         userSelect: 'none',
         zIndex: 13,
