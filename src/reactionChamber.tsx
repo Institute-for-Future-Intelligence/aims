@@ -190,16 +190,14 @@ const ReactionChamber = React.memo(() => {
         <Background />
         {viewerAxes && <Axes />}
         {projectType === ProjectType.DRUG_DISCOVERY ? (
-          protein && (
-            <DockingViewer
-              protein={protein}
-              style={viewerStyle}
-              material={viewerMaterial}
-              coloring={viewerColoring}
-              selector={viewerSelector}
-              setLoading={setLoading}
-            />
-          )
+          <DockingViewer
+            protein={protein}
+            style={viewerStyle}
+            material={viewerMaterial}
+            coloring={viewerColoring}
+            selector={viewerSelector}
+            setLoading={setLoading}
+          />
         ) : (
           <DynamicsViewer
             style={viewerStyle}

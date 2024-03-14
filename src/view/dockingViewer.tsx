@@ -94,11 +94,14 @@ const DockingViewer = React.memo(
       });
     }, [camera, raycaster, cameraRef, raycasterRef]);
 
+    // deal with protein
+
     useEffect(() => {
       if (!protein) {
         setProteinComplex(undefined);
         return;
       }
+      if (setLoading) setLoading(true);
       loadMolecule(protein, processProteinResult);
     }, [protein]);
 
@@ -170,8 +173,6 @@ const DockingViewer = React.memo(
       if (!proteinGroupRef.current || !mode) return;
       proteinGroupRef.current.children = [];
       if (!proteinComplex) return;
-      if (setLoading) setLoading(true);
-
       proteinGroupRef.current.position.set(0, 0, 0);
       const visual = new ComplexVisual(proteinComplex.name, proteinComplex);
       const reps = [
@@ -199,6 +200,8 @@ const DockingViewer = React.memo(
         });
     }, [proteinComplex, material, mode, colorer, selector]);
 
+    // deal with ligand
+
     useEffect(() => {
       if (!ligand) {
         setLigandComplex(undefined);
@@ -212,7 +215,12 @@ const DockingViewer = React.memo(
     };
 
     useEffect(() => {
-      if (!ligand || !ligandComplex || !ligandGroupRef.current) return;
+      if (!ligand || !ligandComplex) {
+        if (ligandGroupRef.current) {
+          ligandGroupRef.current.children.length = 0;
+        }
+        return;
+      }
       const visualLigand = new ComplexVisual(ligand.name, ligandComplex);
       visualLigand.resetReps([
         {
