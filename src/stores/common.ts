@@ -23,9 +23,6 @@ import { MolecularProperties } from '../models/MolecularProperties';
 import { User } from '../User';
 import { ProjectUtil } from '../project/ProjectUtil.ts';
 import { ProteinTS } from '../models/ProteinTS.ts';
-import Complex from '../lib/chem/Complex';
-import AtomJS from '../lib/chem/Atom';
-import { Vector3 } from 'three';
 
 enableMapSet();
 
@@ -44,14 +41,8 @@ export interface CommonStoreState {
   projectView: boolean;
 
   proteinData: ProteinTS | undefined;
-  ligandData: AtomTS[] | undefined;
-  updateLigandData: () => void;
 
   projectStateToOpen: ProjectState | null;
-
-  // cache parsed molecules to accelerate loading speed
-  parsedResultsMap: Map<string, Complex>;
-  setParsedResult: (name: string, result: Complex) => void;
 
   addMolecule: (molecule: MoleculeData) => boolean;
   removeMolecule: (molecule: MoleculeData) => void;
@@ -105,40 +96,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           projectView: true,
 
           proteinData: undefined,
-          ligandData: undefined,
-          updateLigandData() {
-            immerSet((state: CommonStoreState) => {
-              if (state.projectState.ligand) {
-                const result = state.parsedResultsMap.get(state.projectState.ligand.name);
-                if (result) {
-                  const atoms: AtomTS[] = [];
-                  for (let i = 0; i < result._atoms.length; i++) {
-                    const atom = result._atoms[i] as AtomJS;
-                    atoms.push({
-                      elementSymbol: Util.capitalizeFirstLetter(atom.element.name),
-                      position: (atom.position.clone() as Vector3).sub(
-                        state.proteinData?.centerOffset ?? new Vector3(),
-                      ),
-                    } as AtomTS);
-                  }
-                  state.ligandData = atoms;
-                } else {
-                  state.ligandData = undefined;
-                }
-              } else {
-                state.ligandData = undefined;
-              }
-            });
-          },
 
           projectStateToOpen: null,
-
-          parsedResultsMap: new Map<string, Complex>(),
-          setParsedResult(name: string, result: Complex) {
-            immerSet((state: CommonStoreState) => {
-              state.parsedResultsMap.set(name, result);
-            });
-          },
 
           addMolecule(molecule: MoleculeData) {
             let added = true;

@@ -99,7 +99,7 @@ const DynamicsViewer = React.memo(
       moleculesRef.current.length = 0;
       for (const [i, m] of testMolecules.entries()) {
         if (testMoleculeTransforms) {
-          loadMolecule(m, processResult, false, testMoleculeTransforms[i]);
+          loadMolecule(m, processResult, testMoleculeTransforms[i]);
         } else {
           loadMolecule(m, processResult);
         }
@@ -174,7 +174,6 @@ const DynamicsViewer = React.memo(
         });
     }, [complex, material, mode, colorer, selector, testMolecules, updateViewerFlag, pickedMoleculeIndex]);
 
-    // picker
     useEffect(() => {
       const picker = new Picker(groupRef.current, camera, gl.domElement);
       // @ts-expect-error ignore
@@ -185,15 +184,6 @@ const DynamicsViewer = React.memo(
         usePrimitiveStore.getState().set((state) => {
           state.pickedMoleculeIndex = pickedMoleculeIndex;
         });
-        // if (groupRef.current) {
-        //   const visual = groupRef.current.children[0] as ComplexVisual;
-        //   if (visual) {
-        //     console.log(event.obj.molecule===complex._molecules[pickedMoleculeIndex])
-        //     visual.resetSelectionMask();
-        //     visual.updateSelectionMask(event.obj);
-        //     visual.rebuildSelectionGeometry();
-        //   }
-        // }
       });
       return () => {
         picker.dispose();

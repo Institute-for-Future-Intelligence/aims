@@ -17,7 +17,7 @@ import {
   ImportOutlined,
   LineChartOutlined,
   LoadingOutlined,
-  LoginOutlined,
+  RightCircleOutlined,
   SettingOutlined,
   SortAscendingOutlined,
   SortDescendingOutlined,
@@ -363,7 +363,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   });
                 }}
               >
-                <LoginOutlined
+                <RightCircleOutlined
                   style={{ fontSize: '24px', color: 'gray' }}
                   title={t('projectPanel.ToggleDragAndDropMoleculeMode', lang)}
                 />

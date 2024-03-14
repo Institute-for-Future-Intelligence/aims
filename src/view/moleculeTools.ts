@@ -70,10 +70,8 @@ export const generateComplex = (molecules: MoleculeTS[]) => {
 export const loadMolecule = (
   moleculeData: MoleculeData,
   processResult: (result: any, moleculeData?: MoleculeData, transform?: MoleculeTransform) => void,
-  store?: boolean,
   transform?: MoleculeTransform,
 ) => {
-  const setParsedResult = useStore.getState().setParsedResult;
   const mol = getData(moleculeData.name);
   if (mol?.url) {
     fetch(mol.url).then((response) => {
@@ -93,13 +91,6 @@ export const loadMolecule = (
           else if (url.endsWith('.xyz')) parser = new XYZParser(text, options);
           else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
           if (parser) {
-            if (store) {
-              // have to parse twice to create a distinct copy for common store
-              // because deep copy using JSON does not work (circular references)
-              parser.parse().then((result) => {
-                setParsedResult(moleculeData.name, result);
-              });
-            }
             parser.parse().then((result) => {
               processResult(result, moleculeData, transform);
             });

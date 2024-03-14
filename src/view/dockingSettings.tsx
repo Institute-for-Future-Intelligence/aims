@@ -28,7 +28,6 @@ const DockingSettings = React.memo(() => {
   const rotationStep = useStore(Selector.rotationStep);
   const chamberViewerSelector = useStore(Selector.chamberViewerSelector);
   const setChanged = usePrimitiveStore(Selector.setChanged);
-  const updateLigandData = useStore(Selector.updateLigandData);
   const molecularContainer = useStore(Selector.molecularContainer);
 
   // onChange of a text area changes at every key typing, triggering the viewer to re-render each time.
@@ -74,7 +73,6 @@ const DockingSettings = React.memo(() => {
           }
         }
       });
-      updateLigandData();
       setChanged(true);
     };
 

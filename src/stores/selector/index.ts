@@ -15,8 +15,6 @@ export const language = (state: CommonStoreState) => state.language;
 
 export const locale = (state: CommonStoreState) => state.locale;
 
-export const waiting = (state: PrimitiveStoreState) => state.waiting;
-
 export const changed = (state: PrimitiveStoreState) => state.changed;
 
 export const setChanged = (state: PrimitiveStoreState) => state.setChanged;
@@ -77,8 +75,6 @@ export const numberOfColumns = (state: CommonStoreState) => state.projectState.n
 
 export const ligand = (state: CommonStoreState) => state.projectState.ligand;
 
-export const updateLigandData = (state: CommonStoreState) => state.updateLigandData;
-
 export const selectedProperty = (state: CommonStoreState) => state.projectState.selectedProperty;
 
 export const selectedMolecule = (state: CommonStoreState) => state.projectState.selectedMolecule;
@@ -101,12 +97,6 @@ export const removeMolecule = (state: CommonStoreState) => state.removeMolecule;
 
 export const molecularPropertiesMap = (state: CommonStoreState) => state.molecularPropertiesMap;
 
-export const parsedResultsMap = (state: CommonStoreState) => state.parsedResultsMap;
-
-export const navigationView = (state: CommonStoreState) => state.navigationView;
-
-export const selectedObject = (state: CommonStoreState) => state.selectedObject;
-
 export const selectNone = (state: CommonStoreState) => state.selectNone;
 
 export const undoManager = (state: CommonStoreState) => state.undoManager;
@@ -114,12 +104,6 @@ export const undoManager = (state: CommonStoreState) => state.undoManager;
 export const addUndoable = (state: CommonStoreState) => state.addUndoable;
 
 export const loggable = (state: CommonStoreState) => state.loggable;
-
-export const currentUndoable = (state: CommonStoreState) => state.currentUndoable;
-
-export const chemicalElements = (state: CommonStoreState) => state.chemicalElements;
-
-export const getChemicalElement = (state: CommonStoreState) => state.getChemicalElement;
 
 export const loadChemicalElements = (state: CommonStoreState) => state.loadChemicalElements;
 

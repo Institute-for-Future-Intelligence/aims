@@ -192,7 +192,7 @@ const ReactionChamber = React.memo(() => {
         {projectType === ProjectType.DRUG_DISCOVERY ? (
           protein && (
             <DockingViewer
-              moleculeData={protein}
+              protein={protein}
               style={viewerStyle}
               material={viewerMaterial}
               coloring={viewerColoring}

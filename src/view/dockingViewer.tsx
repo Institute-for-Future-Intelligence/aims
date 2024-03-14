@@ -29,11 +29,12 @@ import { loadMolecule, setProperties } from './moleculeTools.ts';
 import ModelContainer from './modelContainer.tsx';
 import Picker from '../lib/ui/Picker.js';
 import RCGroup from '../lib/gfx/RCGroup.js';
-import { MoleculeTS } from '../models/MoleculeTS.ts';
+import settings from '../lib/settings';
+
 extend({ RCGroup });
 
 export interface DockingViewerProps {
-  moleculeData: MoleculeData | null;
+  protein: MoleculeData | null;
   style: MolecularViewerStyle;
   material: MolecularViewerMaterial;
   coloring: MolecularViewerColoring;
@@ -47,7 +48,7 @@ export interface DockingViewerProps {
 
 const DockingViewer = React.memo(
   ({
-    moleculeData,
+    protein,
     style,
     material,
     coloring,
@@ -60,13 +61,12 @@ const DockingViewer = React.memo(
     const setCommonStore = useStore(Selector.set);
     const projectViewerMaterial = useStore(Selector.projectViewerMaterial);
     const projectViewerStyle = useStore(Selector.projectViewerStyle);
-    const parsedResultsMap = useStore(Selector.parsedResultsMap);
     const ligand = useStore(Selector.ligand);
-    const updateLigandData = useStore(Selector.updateLigandData);
     const ligandTransform =
       useStore.getState().projectState.ligandTransform ?? ({ x: 0, y: 0, z: 0, euler: [0, 0, 0] } as MoleculeTransform);
 
-    const [complex, setComplex] = useState<any>();
+    const [proteinComplex, setProteinComplex] = useState<any>();
+    const [ligandComplex, setLigandComplex] = useState<any>();
 
     const centerRef = useRef<Vector3>(new Vector3());
     const groupRef = useRef<RCGroup>(null);
@@ -74,7 +74,6 @@ const DockingViewer = React.memo(
     const ligandGroupRef = useRef<RCGroup>(null);
     const cameraRef = useRef<Camera | undefined>();
     const raycasterRef = useRef<Raycaster | undefined>();
-    const moleculesRef = useRef<MoleculeTS[]>([]);
 
     const { invalidate, camera, raycaster, gl } = useThree();
 
@@ -92,20 +91,19 @@ const DockingViewer = React.memo(
       useRefStore.setState({
         cameraRef: cameraRef,
         raycasterRef: raycasterRef,
-        moleculesRef: moleculesRef,
       });
-    }, [camera, raycaster, cameraRef, raycasterRef, moleculesRef]);
+    }, [camera, raycaster, cameraRef, raycasterRef]);
 
     useEffect(() => {
-      if (!moleculeData) {
-        setComplex(undefined);
+      if (!protein) {
+        setProteinComplex(undefined);
         return;
       }
-      loadMolecule(moleculeData, processResult);
-    }, [moleculeData?.name]);
+      loadMolecule(protein, processProteinResult);
+    }, [protein]);
 
-    const processResult = (result: any) => {
-      setComplex(result);
+    const processProteinResult = (result: any) => {
+      setProteinComplex(result);
       const name = result.name;
       const metadata = result.metadata;
       const atoms: AtomTS[] = [];
@@ -163,19 +161,19 @@ const DockingViewer = React.memo(
           centerOffset: centerRef.current.clone(),
         } as ProteinTS;
       });
-      if (moleculeData) {
-        setProperties(moleculeData, result._atoms.length, result._bonds.length);
+      if (protein) {
+        setProperties(protein, result._atoms.length, result._bonds.length);
       }
     };
 
     useEffect(() => {
       if (!proteinGroupRef.current || !mode) return;
       proteinGroupRef.current.children = [];
-      if (!complex) return;
+      if (!proteinComplex) return;
       if (setLoading) setLoading(true);
 
       proteinGroupRef.current.position.set(0, 0, 0);
-      const visual = new ComplexVisual(complex.name, complex);
+      const visual = new ComplexVisual(proteinComplex.name, proteinComplex);
       const reps = [
         {
           mode: mode,
@@ -199,44 +197,48 @@ const DockingViewer = React.memo(
         .finally(() => {
           if (setLoading) setLoading(false);
         });
-    }, [complex, material, mode, colorer, selector]);
+    }, [proteinComplex, material, mode, colorer, selector]);
 
     useEffect(() => {
-      if (!moleculeData) groupRef.current?.position.set(0, 0, 0);
-      if (ligandGroupRef.current) {
-        ligandGroupRef.current.children = [];
-        if (ligand) {
-          const complexLigand = parsedResultsMap.get(ligand.name);
-          if (complexLigand) {
-            const visualLigand = new ComplexVisual(ligand.name, complexLigand);
-            visualLigand.resetReps([
-              {
-                mode: STYLE_MAP.get(projectViewerStyle),
-                colorer: COLORING_MAP.get(MolecularViewerColoring.Element),
-                selector: 'all',
-                material: MATERIAL_MAP.get(projectViewerMaterial),
-              },
-            ]);
-            visualLigand.rebuild().then(() => {
-              if (!ligandGroupRef.current) return;
-              updateLigandData();
-              ligandGroupRef.current.add(visualLigand);
-              invalidate();
-            });
-          }
-          useRefStore.setState({ ligandRef: ligandGroupRef });
-        }
+      if (!ligand) {
+        setLigandComplex(undefined);
+        return;
       }
-    }, [ligand, parsedResultsMap, projectViewerStyle, projectViewerMaterial]);
+      loadMolecule(ligand, processLigandResult);
+    }, [ligand]);
 
-    // picker
+    const processLigandResult = (result: any) => {
+      setLigandComplex(result);
+    };
+
+    useEffect(() => {
+      if (!ligand || !ligandComplex || !ligandGroupRef.current) return;
+      const visualLigand = new ComplexVisual(ligand.name, ligandComplex);
+      visualLigand.resetReps([
+        {
+          mode: STYLE_MAP.get(projectViewerStyle),
+          colorer: COLORING_MAP.get(MolecularViewerColoring.Element),
+          selector: 'all',
+          material: MATERIAL_MAP.get(projectViewerMaterial),
+        },
+      ]);
+      visualLigand.rebuild().then(() => {
+        if (!ligandGroupRef.current) return;
+        ligandGroupRef.current.children.length = 0;
+        ligandGroupRef.current.add(visualLigand);
+        invalidate();
+      });
+      useRefStore.setState({ ligandRef: ligandGroupRef });
+    }, [ligand, ligandComplex, projectViewerStyle, projectViewerMaterial]);
+
     useEffect(() => {
       const picker = new Picker(groupRef.current, camera, gl.domElement);
       // @ts-expect-error ignore
+      settings.set('pick', 'molecule');
+      // @ts-expect-error ignore
       picker.addEventListener('newpick', (event) => {
-        console.log('pick', event.obj);
+        console.log('pick', event.obj.molecule);
       });
-
       return () => {
         picker.dispose();
       };

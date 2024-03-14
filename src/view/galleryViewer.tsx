@@ -88,7 +88,7 @@ const GalleryViewer = React.memo(
         setComplex(undefined);
         return;
       }
-      loadMolecule(moleculeData, processResult, true);
+      loadMolecule(moleculeData, processResult);
     }, [moleculeData?.name]);
 
     const processResult = (result: any) => {
