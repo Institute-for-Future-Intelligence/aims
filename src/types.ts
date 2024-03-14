@@ -65,8 +65,7 @@ export interface ProjectState {
   rotationStep: number;
   translationStep: number;
 
-  ligandRotation: number[]; // euler angles
-  ligandTranslation: number[]; // translation displacement along x, y, z axes
+  ligandTransform: MoleculeTransform;
   ligandVelocity: number[]; // velocity along x, y, z axes
   // ligandAcceleration: number[]; // acceleration along x, y, z axes
 

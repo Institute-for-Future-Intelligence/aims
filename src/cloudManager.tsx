@@ -13,7 +13,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { showError, showInfo } from './helpers';
-import { MolecularContainer, ProjectState } from './types';
+import { MolecularContainer, MoleculeTransform, ProjectState } from './types';
 import Spinner from './components/spinner';
 import { Util } from './Util';
 import MainToolBar from './mainToolBar';
@@ -377,8 +377,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             rotationStep: data.rotationStep ?? Util.toRadians(5),
             translationStep: data.translationStep ?? 1,
 
-            ligandRotation: data.ligandRotation ?? [0, 0, 0],
-            ligandTranslation: data.ligandTranslation ?? [0, 0, 0],
+            ligandTransform: data.ligandTransform ?? ({ x: 0, y: 0, z: 0, euler: [0, 0, 0] } as MoleculeTransform),
 
             spaceshipDisplayMode: data.spaceshipDisplayMode ?? SpaceshipDisplayMode.NONE,
             spaceshipSize: data.spaceshipSize ?? 1,

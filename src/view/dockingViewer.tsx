@@ -3,18 +3,18 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DirectionalLight, Vector3 } from 'three';
+import { DirectionalLight, Raycaster, Vector3 } from 'three';
 import { ProteinTS } from '../models/ProteinTS.ts';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
-import { MoleculeData } from '../types';
+import { MoleculeData, MoleculeTransform } from '../types';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
 import { AtomTS } from '../models/AtomTS';
 import { BondTS } from '../models/BondTS';
 import { Util } from '../Util';
 import ComplexVisual from '../lib/ComplexVisual';
-import { ThreeEvent, extend, useThree } from '@react-three/fiber';
+import { ThreeEvent, extend, useThree, Camera } from '@react-three/fiber';
 import {
   COLORING_MAP,
   MATERIAL_MAP,
@@ -29,6 +29,7 @@ import { loadMolecule, setProperties } from './moleculeTools.ts';
 import ModelContainer from './modelContainer.tsx';
 import Picker from '../lib/ui/Picker.js';
 import RCGroup from '../lib/gfx/RCGroup.js';
+import { MoleculeTS } from '../models/MoleculeTS.ts';
 extend({ RCGroup });
 
 export interface DockingViewerProps {
@@ -62,17 +63,20 @@ const DockingViewer = React.memo(
     const parsedResultsMap = useStore(Selector.parsedResultsMap);
     const ligand = useStore(Selector.ligand);
     const updateLigandData = useStore(Selector.updateLigandData);
-    const ligandRotation = useStore.getState().projectState.ligandRotation ?? [0, 0, 0];
-    const ligandTranslation = useStore.getState().projectState.ligandTranslation ?? [0, 0, 0];
+    const ligandTransform =
+      useStore.getState().projectState.ligandTransform ?? ({ x: 0, y: 0, z: 0, euler: [0, 0, 0] } as MoleculeTransform);
 
     const [complex, setComplex] = useState<any>();
 
+    const centerRef = useRef<Vector3>(new Vector3());
     const groupRef = useRef<RCGroup>(null);
     const proteinGroupRef = useRef<RCGroup>(null);
     const ligandGroupRef = useRef<RCGroup>(null);
-    const originalPositions = useRef<Vector3[]>([]);
+    const cameraRef = useRef<Camera | undefined>();
+    const raycasterRef = useRef<Raycaster | undefined>();
+    const moleculesRef = useRef<MoleculeTS[]>([]);
 
-    const { invalidate, camera, gl } = useThree();
+    const { invalidate, camera, raycaster, gl } = useThree();
 
     const mode = useMemo(() => {
       return STYLE_MAP.get(style);
@@ -83,16 +87,14 @@ const DockingViewer = React.memo(
     }, [coloring]);
 
     useEffect(() => {
-      if (ligand) {
-        originalPositions.current.length = 0;
-        const complex = parsedResultsMap.get(ligand.name);
-        if (complex) {
-          for (const a of complex._atoms) {
-            originalPositions.current.push(a.position.clone());
-          }
-        }
-      }
-    }, [ligand, parsedResultsMap]);
+      cameraRef.current = camera;
+      raycasterRef.current = raycaster;
+      useRefStore.setState({
+        cameraRef: cameraRef,
+        raycasterRef: raycasterRef,
+        moleculesRef: moleculesRef,
+      });
+    }, [camera, raycaster, cameraRef, raycasterRef, moleculesRef]);
 
     useEffect(() => {
       if (!moleculeData) {
@@ -107,27 +109,21 @@ const DockingViewer = React.memo(
       const name = result.name;
       const metadata = result.metadata;
       const atoms: AtomTS[] = [];
-      let cx = 0;
-      let cy = 0;
-      let cz = 0;
+      centerRef.current.set(0, 0, 0);
       const n = result._atoms.length;
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
-        cx += atom.position.x;
-        cy += atom.position.y;
-        cz += atom.position.z;
+        centerRef.current.add(atom.position);
       }
       if (n > 0) {
-        cx /= n;
-        cy /= n;
-        cz /= n;
+        centerRef.current.multiplyScalar(1 / n);
       }
-      groupRef.current?.position.set(-cx, -cy, -cz);
+      groupRef.current?.position.copy(centerRef.current.clone().negate());
       for (let i = 0; i < result._atoms.length; i++) {
         const atom = result._atoms[i] as AtomJS;
         atoms.push({
           elementSymbol: Util.capitalizeFirstLetter(atom.element.name),
-          position: new Vector3(atom.position.x - cx, atom.position.y - cy, atom.position.z - cz),
+          position: (atom.position as Vector3).clone().sub(centerRef.current),
         } as AtomTS);
       }
       const bonds: BondTS[] = [];
@@ -141,11 +137,11 @@ const DockingViewer = React.memo(
           new BondTS(
             {
               elementSymbol: elementSymbol1,
-              position: new Vector3(atom1.position.x - cx, atom1.position.y - cy, atom1.position.z - cz),
+              position: (atom1.position as Vector3).clone().sub(centerRef.current),
             } as AtomTS,
             {
               elementSymbol: elementSymbol2,
-              position: new Vector3(atom2.position.x - cx, atom2.position.y - cy, atom2.position.z - cz),
+              position: (atom2.position as Vector3).clone().sub(centerRef.current),
             } as AtomTS,
           ),
         );
@@ -164,7 +160,7 @@ const DockingViewer = React.memo(
           chains,
           structures,
           molecules,
-          centerOffset: new Vector3(cx, cy, cz),
+          centerOffset: centerRef.current.clone(),
         } as ProteinTS;
       });
       if (moleculeData) {
@@ -257,8 +253,12 @@ const DockingViewer = React.memo(
         <rCGroup
           name={'Ligand'}
           ref={ligandGroupRef}
-          position={[ligandTranslation[0], ligandTranslation[1], ligandTranslation[2]]}
-          rotation={[ligandRotation[0], ligandRotation[1], ligandRotation[2]]}
+          position={[
+            ligandTransform.x + centerRef.current.x,
+            ligandTransform.y + centerRef.current.y,
+            ligandTransform.z + centerRef.current.z,
+          ]}
+          rotation={[ligandTransform.euler[0], ligandTransform.euler[1], ligandTransform.euler[2]]}
         />
         <ModelContainer position={groupRef?.current?.position.clone().negate()} />
       </rCGroup>

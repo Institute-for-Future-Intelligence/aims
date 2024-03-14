@@ -16,6 +16,7 @@ import { Euler, Quaternion } from 'three';
 import { useStore } from './stores/common.ts';
 import { useRefStore } from './stores/commonRef.ts';
 import { invalidate } from '@react-three/fiber';
+import { MoleculeTransform } from './types.ts';
 
 let flyTimeout = -1;
 
@@ -76,9 +77,10 @@ const loop = (control: FlightControl) => {
     useStore.getState().set((state) => {
       if (state.proteinData && state.ligandData) {
         // make sure that these are initialized
-        if (!state.projectState.ligandTranslation) state.projectState.ligandTranslation = [0, 0, 0];
+        if (!state.projectState.ligandTransform) {
+          state.projectState.ligandTransform = { x: 0, y: 0, z: 0, euler: [0, 0, 0] } as MoleculeTransform;
+        }
         if (!state.projectState.ligandVelocity) state.projectState.ligandVelocity = [0, 0, 0];
-        if (!state.projectState.ligandRotation) state.projectState.ligandRotation = [0, 0, 0];
 
         // translation
         let dx = 0;
@@ -109,70 +111,71 @@ const loop = (control: FlightControl) => {
           ref.current.position.x += dx;
           ref.current.position.y += dy;
           ref.current.position.z += dz;
-          state.projectState.ligandTranslation[0] = ref.current.position.x;
-          state.projectState.ligandTranslation[1] = ref.current.position.y;
-          state.projectState.ligandTranslation[2] = ref.current.position.z;
+          state.projectState.ligandTransform.x = ref.current.position.x;
+          state.projectState.ligandTransform.y = ref.current.position.y;
+          state.projectState.ligandTransform.z = ref.current.position.z;
           invalidate();
         }
 
         // rotation
         switch (control) {
           case FlightControl.RotateAroundXClockwise: {
+            state.projectState.ligandTransform.euler[0] += rotationStep;
             const ref = useRefStore.getState().ligandRef;
             if (ref && ref.current) {
               ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_POS_X, rotationStep));
               invalidate();
-              saveEuler(state.projectState.ligandRotation, ref.current.rotation);
+              saveEuler(state.projectState.ligandTransform.euler, ref.current.rotation);
             }
             break;
           }
           case FlightControl.RotateAroundXCounterclockwise: {
-            state.projectState.ligandRotation[0] -= rotationStep;
+            state.projectState.ligandTransform.euler[0] -= rotationStep;
             const ref = useRefStore.getState().ligandRef;
             if (ref && ref.current) {
               ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_NEG_X, rotationStep));
               invalidate();
-              saveEuler(state.projectState.ligandRotation, ref.current.rotation);
+              saveEuler(state.projectState.ligandTransform.euler, ref.current.rotation);
             }
             break;
           }
           case FlightControl.RotateAroundYClockwise: {
-            state.projectState.ligandRotation[1] += rotationStep;
+            state.projectState.ligandTransform.euler[1] += rotationStep;
             const ref = useRefStore.getState().ligandRef;
             if (ref && ref.current) {
               ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_POS_Y, rotationStep));
               invalidate();
-              saveEuler(state.projectState.ligandRotation, ref.current.rotation);
+              saveEuler(state.projectState.ligandTransform.euler, ref.current.rotation);
             }
             break;
           }
           case FlightControl.RotateAroundYCounterclockwise: {
-            state.projectState.ligandRotation[1] -= rotationStep;
+            state.projectState.ligandTransform.euler[1] -= rotationStep;
             const ref = useRefStore.getState().ligandRef;
             if (ref && ref.current) {
               ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_NEG_Y, rotationStep));
               invalidate();
-              saveEuler(state.projectState.ligandRotation, ref.current.rotation);
+              saveEuler(state.projectState.ligandTransform.euler, ref.current.rotation);
             }
             break;
           }
           case FlightControl.RotateAroundZClockwise: {
-            state.projectState.ligandRotation[2] += rotationStep;
+            state.projectState.ligandTransform.euler[2] += rotationStep;
             const ref = useRefStore.getState().ligandRef;
             if (ref && ref.current) {
               ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_POS_Z, rotationStep));
               invalidate();
-              saveEuler(state.projectState.ligandRotation, ref.current.rotation);
+              saveEuler(state.projectState.ligandTransform.euler, ref.current.rotation);
             }
             break;
           }
           case FlightControl.RotateAroundZCounterclockwise: {
-            state.projectState.ligandRotation[2] -= rotationStep;
+            state.projectState.ligandTransform.euler[2] -= rotationStep;
             const ref = useRefStore.getState().ligandRef;
             if (ref && ref.current) {
               ref.current.applyQuaternion(new Quaternion().setFromAxisAngle(UNIT_VECTOR_NEG_Z, rotationStep));
               invalidate();
-              saveEuler(state.projectState.ligandRotation, ref.current.rotation);
+              saveEuler(state.projectState.ligandTransform.euler, ref.current.rotation);
             }
             break;
           }

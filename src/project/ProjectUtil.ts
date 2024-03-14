@@ -78,8 +78,7 @@ export class ProjectUtil {
       rotationStep: Util.toRadians(5),
       translationStep: 1,
 
-      ligandRotation: [0, 0, 0],
-      ligandTranslation: [0, 0, 0],
+      ligandTransform: { x: 0, y: 0, z: 0, euler: [0, 0, 0] } as MoleculeTransform,
 
       spaceshipDisplayMode: SpaceshipDisplayMode.NONE,
       spaceshipSize: 1,

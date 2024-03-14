@@ -8,7 +8,7 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import { showError, showInfo } from './helpers';
 import i18n from './i18n/i18n';
-import { MoleculeData, Range, ProjectState, MolecularContainer } from './types';
+import { MoleculeData, Range, ProjectState, MolecularContainer, MoleculeTransform } from './types';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
@@ -73,8 +73,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           rotationStep: data.rotationStep ?? Util.toRadians(5),
           translationStep: data.translationStep ?? 1,
 
-          ligandRotation: data.ligandRotation ?? [0, 0, 0],
-          ligandTranslation: data.ligandTranslation ?? [0, 0, 0],
+          ligandTransform: data.ligandTransform ?? ({ x: 0, y: 0, z: 0, euler: [0, 0, 0] } as MoleculeTransform),
 
           spaceshipDisplayMode: data.spaceshipDisplayMode ?? SpaceshipDisplayMode.NONE,
           spaceshipSize: data.spaceshipSize ?? 1,

@@ -151,7 +151,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const dotSizeScatterPlot = useStore(Selector.dotSizeScatterPlot);
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
-  const updateLigandData = useStore(Selector.updateLigandData);
   const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
   const dragAndDropMolecule = usePrimitiveStore(Selector.dragAndDropMolecule);
 
@@ -350,25 +349,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 <SettingOutlined style={{ fontSize: '24px', color: 'gray' }} />
               </Button>
             </Popover>
-            {selectedMolecule && projectType === ProjectType.DRUG_DISCOVERY && (
-              <Button
-                style={{ border: 'none', padding: '4px' }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCommonStore((state) => {
-                    state.projectState.ligand = selectedMolecule;
-                    updateLigandData();
-                  });
-                  setChanged(true);
-                }}
-              >
-                <LoginOutlined
-                  style={{ fontSize: '24px', color: 'gray' }}
-                  title={t('projectPanel.OutputSelectedMoleculeToTest', lang)}
-                />
-              </Button>
-            )}
-            {selectedMolecule && projectType === ProjectType.QSAR_MODELING && (
+            {selectedMolecule && (
               <Button
                 style={{
                   border: dragAndDropMolecule ? '1px solid gray' : 'none',

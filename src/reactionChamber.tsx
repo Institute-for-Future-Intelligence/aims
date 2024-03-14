@@ -77,14 +77,29 @@ const ReactionChamber = React.memo(() => {
     const point = getIntersection(e);
     if (point && selectedMolecule) {
       setCommonStore((state) => {
-        const m = { ...selectedMolecule };
-        state.projectState.testMolecules.push(m);
-        state.projectState.testMoleculeTransforms.push({
-          x: point.x,
-          y: point.y,
-          z: point.z,
-          euler: [0, 0, 0],
-        } as MoleculeTransform);
+        switch (state.projectState.type) {
+          case ProjectType.QSAR_MODELING: {
+            const m = { ...selectedMolecule };
+            state.projectState.testMolecules.push(m);
+            state.projectState.testMoleculeTransforms.push({
+              x: point.x,
+              y: point.y,
+              z: point.z,
+              euler: [0, 0, 0],
+            } as MoleculeTransform);
+            break;
+          }
+          case ProjectType.DRUG_DISCOVERY: {
+            state.projectState.ligand = { ...selectedMolecule };
+            state.projectState.ligandTransform = {
+              x: point.x,
+              y: point.y,
+              z: point.z,
+              euler: [0, 0, 0],
+            } as MoleculeTransform;
+            break;
+          }
+        }
       });
     }
   };
