@@ -17,10 +17,12 @@ import {
   FogCheckBox,
   MaterialRadioGroup,
   PasteMolecule,
+  RotateLigand,
   RotateMolecule,
   Screenshot,
   SpaceshipDisplayModeRadioGroup,
   StyleRadioGroup,
+  TranslateLigand,
   TranslateMolecule,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
@@ -193,7 +195,7 @@ export const createDefaultMenu = (
 
       if (pickedMolecule === ligand) {
         items.push({
-          key: 'translate-molecule-submenu',
+          key: 'translate-ligand-submenu',
           label: (
             <MenuItem stayAfterClick={true} hasPadding={false}>
               {i18n.t('molecularViewer.TranslateMolecule', lang)}
@@ -201,8 +203,8 @@ export const createDefaultMenu = (
           ),
           children: [
             {
-              key: 'translate-molecule-fields',
-              label: <TranslateMolecule />,
+              key: 'translate-ligand-fields',
+              label: <TranslateLigand />,
               style: { backgroundColor: 'white' },
             },
           ],
@@ -217,8 +219,8 @@ export const createDefaultMenu = (
           ),
           children: [
             {
-              key: 'rotate-molecule-fields',
-              label: <RotateMolecule />,
+              key: 'rotate-ligand-fields',
+              label: <RotateLigand />,
               style: { backgroundColor: 'white' },
             },
           ],

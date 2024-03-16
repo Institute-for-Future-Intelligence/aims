@@ -8,7 +8,7 @@ import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 
-const DynamicsButtons = React.memo(() => {
+const ToolBarButtons = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
@@ -155,4 +155,4 @@ const DynamicsButtons = React.memo(() => {
   );
 });
 
-export default DynamicsButtons;
+export default ToolBarButtons;

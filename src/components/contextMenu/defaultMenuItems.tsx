@@ -30,6 +30,191 @@ import { MoleculeTransform } from '../../types.ts';
 import { Util } from '../../Util.ts';
 import { ModelUtil } from '../../models/ModelUtil.ts';
 
+export const TranslateLigand = () => {
+  const setCommonStore = useStore(Selector.set);
+  const loggable = useStore(Selector.loggable);
+  const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
+  const molecularContainer = useStore(Selector.molecularContainer);
+  const ligand = useStore(Selector.ligand);
+  const ligandTransform = useStore(Selector.ligandTransform);
+  const step = useStore(Selector.translationStep);
+
+  const postTranslateLigand = () => {
+    usePrimitiveStore.getState().set((state) => {
+      state.updateViewerFlag = !state.updateViewerFlag;
+    });
+    setCommonStore((state) => {
+      if (loggable) {
+        state.actionInfo = {
+          name: 'Translate Ligand',
+          timestamp: new Date().getTime(),
+        };
+      }
+    });
+  };
+
+  return (
+    pickedIndex !== -1 &&
+    ligand && (
+      <Space direction={'vertical'} onClick={(e) => e.stopPropagation()}>
+        <InputNumber
+          style={{ width: '140px' }}
+          addonBefore={'X'}
+          addonAfter={'Å'}
+          min={-molecularContainer.lx / 2}
+          max={molecularContainer.lx / 2}
+          value={ligandTransform.x}
+          step={step}
+          precision={1}
+          onChange={(value) => {
+            if (value === null) return;
+            if (pickedIndex === -1 || !ligand) return;
+            const displacement = value - ligandTransform.x;
+            setCommonStore((state) => {
+              state.projectState.ligandTransform.x += displacement;
+            });
+            postTranslateLigand();
+          }}
+        />
+        <InputNumber
+          style={{ width: '140px' }}
+          addonBefore={'Y'}
+          addonAfter={'Å'}
+          min={-molecularContainer.ly / 2}
+          max={molecularContainer.ly / 2}
+          value={ligandTransform.y}
+          step={step}
+          precision={1}
+          onChange={(value) => {
+            if (value === null) return;
+            if (pickedIndex === -1 || !ligand) return;
+            const displacement = value - ligandTransform.y;
+            setCommonStore((state) => {
+              state.projectState.ligandTransform.y += displacement;
+              postTranslateLigand();
+            });
+          }}
+        />
+        <InputNumber
+          style={{ width: '140px' }}
+          addonBefore={'Z'}
+          addonAfter={'Å'}
+          min={-molecularContainer.lz / 2}
+          max={molecularContainer.lz / 2}
+          value={ligandTransform.z}
+          step={step}
+          precision={1}
+          onChange={(value) => {
+            if (value === null) return;
+            if (pickedIndex === -1 || !ligand) return;
+            const displacement = value - ligandTransform.z;
+            setCommonStore((state) => {
+              state.projectState.ligandTransform.z += displacement;
+              postTranslateLigand();
+            });
+          }}
+        />
+      </Space>
+    )
+  );
+};
+
+export const RotateLigand = () => {
+  const setCommonStore = useStore(Selector.set);
+  const loggable = useStore(Selector.loggable);
+  const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
+  const ligand = useStore(Selector.ligand);
+  const ligandTransform = useStore(Selector.ligandTransform);
+  const step = Util.toDegrees(useStore(Selector.rotationStep)) ?? 5;
+
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const euler = useMemo(() => {
+    if (pickedIndex === -1) return new Euler();
+    const angles = ligandTransform.euler;
+    if (!angles || angles.length !== 3) return new Euler();
+    return new Euler(angles[0], angles[1], angles[2]);
+  }, [ligandTransform, pickedIndex]);
+
+  const rotateLigand = (axis: string, degrees: number) => {
+    if (pickedIndex !== 1 || !ligand) return;
+    let matrix: Matrix4;
+    switch (axis) {
+      case 'x':
+        matrix = new Matrix4().makeRotationX(Util.toRadians(degrees));
+        break;
+      case 'y':
+        matrix = new Matrix4().makeRotationY(Util.toRadians(degrees));
+        break;
+      default:
+        matrix = new Matrix4().makeRotationZ(Util.toRadians(degrees));
+        break;
+    }
+    setCommonStore((state) => {
+      if (pickedIndex !== 1) return;
+      const m = state.projectState.ligandTransform;
+      if (m) {
+        matrix.multiply(new Matrix4().makeRotationFromEuler(euler));
+        const angle = new Euler().setFromRotationMatrix(matrix);
+        m.euler = [angle.x, angle.y, angle.z];
+      }
+      if (loggable) {
+        state.actionInfo = {
+          name: 'Rotate Ligand',
+          timestamp: new Date().getTime(),
+        };
+      }
+    });
+    usePrimitiveStore.getState().set((state) => {
+      state.updateViewerFlag = !state.updateViewerFlag;
+    });
+  };
+
+  return (
+    pickedIndex !== -1 && (
+      <Space direction={'vertical'} onClick={(e) => e.stopPropagation()}>
+        <Space direction={'horizontal'}>
+          <span>{t('molecularViewer.AboutXAxis', lang) + ':'}</span>
+          <Button onClick={() => rotateLigand('x', step)}>
+            <RotateLeftOutlined />
+          </Button>
+          <Button onClick={() => rotateLigand('x', -step)}>
+            <RotateRightOutlined />
+          </Button>
+        </Space>
+        <Space direction={'horizontal'}>
+          <span>{t('molecularViewer.AboutYAxis', lang) + ':'}</span>
+          <Button onClick={() => rotateLigand('y', step)}>
+            <RotateLeftOutlined />
+          </Button>
+          <Button onClick={() => rotateLigand('y', -step)}>
+            <RotateRightOutlined />
+          </Button>
+        </Space>
+        <Space direction={'horizontal'}>
+          <span>{t('molecularViewer.AboutZAxis', lang) + ':'}</span>
+          <Button onClick={() => rotateLigand('z', step)}>
+            <RotateLeftOutlined />
+          </Button>
+          <Button onClick={() => rotateLigand('z', -step)}>
+            <RotateRightOutlined />
+          </Button>
+        </Space>
+        <hr style={{ marginTop: '6px' }} />
+        <Space direction={'horizontal'}>
+          {t('molecularViewer.EulerAngle', lang) + ' (XYZ ' + t('molecularViewer.Order', lang) + '):'}
+        </Space>
+        <Space>
+          {'(' + Util.toDegrees(euler.x).toFixed(0) + '°, '}
+          {Util.toDegrees(euler.y).toFixed(0) + '°, '}
+          {Util.toDegrees(euler.z).toFixed(0) + '°)'}
+        </Space>
+      </Space>
+    )
+  );
+};
+
 export const TranslateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);

@@ -30,7 +30,7 @@ import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import DynamicsSettings from './view/dynamicsSettings.tsx';
 import DockingViewer from './view/dockingViewer.tsx';
-import DynamicsButtons from './view/dynamicsButtons.tsx';
+import ToolBarButtons from './view/toolBarButtons.tsx';
 import { useRefStore } from './stores/commonRef.ts';
 import { usePrimitiveStore } from './stores/commonPrimitive.ts';
 import { MoleculeTransform } from './types.ts';
@@ -223,7 +223,7 @@ const ReactionChamber = React.memo(() => {
       {projectType === ProjectType.QSAR_MODELING && (
         <DynamicsSettings molecules={moleculesRef?.current ? [...moleculesRef.current] : []} />
       )}
-      <DynamicsButtons />
+      <ToolBarButtons />
 
       {loading && canvasRef.current && (
         <Spin

@@ -75,6 +75,8 @@ export const numberOfColumns = (state: CommonStoreState) => state.projectState.n
 
 export const ligand = (state: CommonStoreState) => state.projectState.ligand;
 
+export const ligandTransform = (state: CommonStoreState) => state.projectState.ligandTransform;
+
 export const selectedProperty = (state: CommonStoreState) => state.projectState.selectedProperty;
 
 export const selectedMolecule = (state: CommonStoreState) => state.projectState.selectedMolecule;

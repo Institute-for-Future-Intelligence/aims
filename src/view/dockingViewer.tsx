@@ -61,6 +61,7 @@ const DockingViewer = React.memo(
     onPointerDown,
   }: DockingViewerProps) => {
     const setCommonStore = useStore(Selector.set);
+    const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
     const projectViewerMaterial = useStore(Selector.projectViewerMaterial);
     const projectViewerStyle = useStore(Selector.projectViewerStyle);
     const ligand = useStore(Selector.ligand);
@@ -240,7 +241,7 @@ const DockingViewer = React.memo(
         invalidate();
       });
       useRefStore.setState({ ligandRef: ligandGroupRef });
-    }, [ligand, ligandComplex, projectViewerStyle, projectViewerMaterial]);
+    }, [ligand, ligandComplex, projectViewerStyle, projectViewerMaterial, updateViewerFlag]);
 
     useEffect(() => {
       const picker = new Picker(groupRef.current, camera, gl.domElement);
@@ -248,10 +249,11 @@ const DockingViewer = React.memo(
       settings.set('pick', 'molecule');
       // @ts-expect-error ignore
       picker.addEventListener('newpick', (event) => {
-        // FIXME: For some reason, molecule for ligand returns null
+        // For some reason, "molecule" for a ligand may return null
         usePrimitiveStore.getState().set((state) => {
           const m = event.obj.molecule;
-          state.pickedMoleculeIndex = m !== undefined ? (m !== null ? 0 : 1) : -1;
+          // ligand has only one residue, protein has many
+          state.pickedMoleculeIndex = m !== undefined ? (m !== null && m.residues?.length > 1 ? 0 : 1) : -1;
         });
       });
       return () => {
@@ -284,8 +286,17 @@ const DockingViewer = React.memo(
             ligandTransform.z + centerRef.current.z,
           ]}
           rotation={[ligandTransform.euler[0], ligandTransform.euler[1], ligandTransform.euler[2]]}
-        >
-          {pickedMoleculeIndex === 1 && ligandComplex && (
+        />
+        {/*don't put this into the ligand group above as it will be reconstructed every update*/}
+        {pickedMoleculeIndex === 1 && ligandComplex && (
+          <group
+            position={[
+              ligandTransform.x + centerRef.current.x,
+              ligandTransform.y + centerRef.current.y,
+              ligandTransform.z + centerRef.current.z,
+            ]}
+            rotation={[ligandTransform.euler[0], ligandTransform.euler[1], ligandTransform.euler[2]]}
+          >
             <Instances limit={1000} range={1000}>
               <sphereGeometry args={[1, 16, 16]} />
               <meshStandardMaterial transparent opacity={0.5} />
@@ -300,8 +311,8 @@ const DockingViewer = React.memo(
                 );
               })}
             </Instances>
-          )}
-        </rCGroup>
+          </group>
+        )}
         <ModelContainer position={groupRef?.current?.position.clone().negate()} />
       </rCGroup>
     );
