@@ -8,6 +8,7 @@ import './style.css';
 import { createDefaultMenu } from './defaultMenu';
 import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
 import * as Selector from '../../stores/selector';
+import { useStore } from '../../stores/common.ts';
 
 export interface ContextMenuProps {
   [key: string]: any;
@@ -17,11 +18,12 @@ const DropdownContextMenu: React.FC<ContextMenuProps> = ({ children }) => {
   const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
   const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
+  const projectType = useStore(Selector.projectType);
 
   return (
     <Dropdown
       trigger={['contextMenu']}
-      menu={createDefaultMenu(pickedMoleculeIndex, copiedMoleculeIndex, selectedPlane)}
+      menu={createDefaultMenu(projectType, pickedMoleculeIndex, copiedMoleculeIndex, selectedPlane)}
       overlayClassName="my-overlay"
     >
       {children}

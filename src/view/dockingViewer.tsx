@@ -30,6 +30,8 @@ import ModelContainer from './modelContainer.tsx';
 import Picker from '../lib/ui/Picker.js';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import settings from '../lib/settings';
+import { Instance, Instances } from '@react-three/drei';
+import Element from '../lib/chem/Element';
 
 extend({ RCGroup });
 
@@ -64,6 +66,7 @@ const DockingViewer = React.memo(
     const ligand = useStore(Selector.ligand);
     const ligandTransform =
       useStore.getState().projectState.ligandTransform ?? ({ x: 0, y: 0, z: 0, euler: [0, 0, 0] } as MoleculeTransform);
+    const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
 
     const [proteinComplex, setProteinComplex] = useState<any>();
     const [ligandComplex, setLigandComplex] = useState<any>();
@@ -245,12 +248,24 @@ const DockingViewer = React.memo(
       settings.set('pick', 'molecule');
       // @ts-expect-error ignore
       picker.addEventListener('newpick', (event) => {
-        console.log('pick', event.obj.molecule);
+        // FIXME: For some reason, molecule for ligand returns null
+        usePrimitiveStore.getState().set((state) => {
+          const m = event.obj.molecule;
+          state.pickedMoleculeIndex = m !== undefined ? (m !== null ? 0 : 1) : -1;
+        });
       });
       return () => {
         picker.dispose();
       };
     }, []);
+
+    const skinnyStyle = useMemo(() => {
+      return (
+        projectViewerStyle === MolecularViewerStyle.BallAndStick ||
+        projectViewerStyle === MolecularViewerStyle.Stick ||
+        projectViewerStyle === MolecularViewerStyle.Wireframe
+      );
+    }, [projectViewerStyle]);
 
     return (
       <rCGroup
@@ -269,7 +284,24 @@ const DockingViewer = React.memo(
             ligandTransform.z + centerRef.current.z,
           ]}
           rotation={[ligandTransform.euler[0], ligandTransform.euler[1], ligandTransform.euler[2]]}
-        />
+        >
+          {pickedMoleculeIndex === 1 && ligandComplex && (
+            <Instances limit={1000} range={1000}>
+              <sphereGeometry args={[1, 16, 16]} />
+              <meshStandardMaterial transparent opacity={0.5} />
+              {ligandComplex._atoms.map((a: AtomJS, i: number) => {
+                return (
+                  <Instance
+                    key={i}
+                    scale={Element.getByName(a.element).radius * (skinnyStyle ? 0.6 : 2.4)}
+                    position={[a.position.x, a.position.y, a.position.z]}
+                    color={'yellow'}
+                  />
+                );
+              })}
+            </Instances>
+          )}
+        </rCGroup>
         <ModelContainer position={groupRef?.current?.position.clone().negate()} />
       </rCGroup>
     );

@@ -201,7 +201,7 @@ const DynamicsViewer = React.memo(
     const moleculeLengths = useMemo(() => {
       if (pickedMoleculeIndex !== -1 && moleculesRef.current) {
         const mol = moleculesRef.current[pickedMoleculeIndex];
-        return ModelUtil.getMoleculeLengths(mol);
+        if (mol) return ModelUtil.getMoleculeLengths(mol);
       }
       return [10, 10, 10];
     }, [pickedMoleculeIndex, moleculesRef]);

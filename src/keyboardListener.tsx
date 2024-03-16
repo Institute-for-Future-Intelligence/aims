@@ -93,7 +93,6 @@ const handleKeys = [
 const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProps) => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
-  const selectNone = useStore(Selector.selectNone);
   const language = useStore(Selector.language);
   const undoManager = useStore(Selector.undoManager);
   const addUndoable = useStore(Selector.addUndoable);
@@ -463,7 +462,6 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         }
         break;
       case 'esc': {
-        selectNone();
         break;
       }
     }

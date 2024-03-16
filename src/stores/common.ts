@@ -16,9 +16,6 @@ import elementsUrl from '../assets/elements.csv';
 import molecularPropertiesUrl from '../assets/molecular-properties.csv';
 import { ChemicalElement } from '../models/ChemicalElement';
 import Papa from 'papaparse';
-import { AtomTS } from '../models/AtomTS';
-import { BondTS } from '../models/BondTS';
-import { useRefStore } from './commonRef';
 import { MolecularProperties } from '../models/MolecularProperties';
 import { User } from '../User';
 import { ProjectUtil } from '../project/ProjectUtil.ts';
@@ -51,10 +48,6 @@ export interface CommonStoreState {
   setMolecularProperties: (name: string, properties: MolecularProperties) => void;
 
   navigationView: boolean;
-
-  selectedObject: AtomTS | BondTS | null;
-  selectedObjectIdSet: Set<string>;
-  selectNone: () => void;
 
   undoManager: UndoManager;
   addUndoable: (undoable: Undoable) => void;
@@ -133,16 +126,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           },
 
           navigationView: false,
-
-          selectedObject: null,
-          selectedObjectIdSet: new Set<string>(),
-          selectNone() {
-            immerSet((state: CommonStoreState) => {
-              state.selectedObjectIdSet.clear();
-              state.selectedObject = null;
-            });
-            useRefStore.getState().selectNone();
-          },
 
           undoManager: new UndoManager(),
           addUndoable(undoable: Undoable) {

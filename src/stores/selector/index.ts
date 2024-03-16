@@ -97,8 +97,6 @@ export const removeMolecule = (state: CommonStoreState) => state.removeMolecule;
 
 export const molecularPropertiesMap = (state: CommonStoreState) => state.molecularPropertiesMap;
 
-export const selectNone = (state: CommonStoreState) => state.selectNone;
-
 export const undoManager = (state: CommonStoreState) => state.undoManager;
 
 export const addUndoable = (state: CommonStoreState) => state.addUndoable;
