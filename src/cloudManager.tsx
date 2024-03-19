@@ -404,6 +404,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
 
             molecularContainer: data.molecularContainer ?? ({ lx: cl, ly: cl, lz: cl } as MolecularContainer),
             molecularContainerVisible: !!data.molecularContainerVisible,
+            vdwBondsVisible: !!data.vdwBondsVisible,
 
             testMolecules: data.testMolecules ?? [],
             testMoleculeTransforms: data.testMoleculeTransforms ?? [],

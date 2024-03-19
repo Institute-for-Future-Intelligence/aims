@@ -7,6 +7,7 @@ import { RefObject } from 'react';
 import { Group, Raycaster, Vector3 } from 'three';
 import { MoleculeTS } from '../models/MoleculeTS.ts';
 import { Camera } from '@react-three/fiber';
+import { VdwBond } from '../models/VdwBond.ts';
 
 export interface RefStoreState {
   selectNone: () => void;
@@ -17,6 +18,7 @@ export interface RefStoreState {
   planeXZRef: RefObject<any> | null;
   ligandRef: RefObject<Group> | null;
   moleculesRef: RefObject<MoleculeTS[]> | null;
+  vdwBondsRef: RefObject<VdwBond[]> | null;
   clickPointRef: RefObject<Vector3> | null;
 }
 
@@ -30,6 +32,7 @@ export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
     planeXZRef: null,
     ligandRef: null,
     moleculesRef: null,
+    vdwBondsRef: null,
     clickPointRef: null,
   };
 });

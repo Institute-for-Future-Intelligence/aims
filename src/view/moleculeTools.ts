@@ -21,6 +21,31 @@ import { AtomTS } from '../models/AtomTS.ts';
 import AtomJS from '../lib/chem/Atom';
 import { ModelUtil } from '../models/ModelUtil.ts';
 import { BondTS } from '../models/BondTS.ts';
+import { VdwBond } from '../models/VdwBond.ts';
+
+export const generateVdwLines = (molecules: MoleculeTS[], maxDistanceSquared: number) => {
+  const bonds: VdwBond[] = [];
+  const n = molecules.length;
+  for (let i = 0; i < n; i++) {
+    const mi = molecules[i];
+    for (const ai of mi.atoms) {
+      for (let j = 0; j < n; j++) {
+        if (j === i) continue;
+        const mj = molecules[j];
+        for (const aj of mj.atoms) {
+          if (computeDistanceSquared(ai, aj) < maxDistanceSquared) {
+            bonds.push({ startAtom: ai, endAtom: aj } as VdwBond);
+          }
+        }
+      }
+    }
+  }
+  return bonds;
+};
+
+export const computeDistanceSquared = (a: AtomTS, b: AtomTS) => {
+  return a.position.distanceToSquared(b.position);
+};
 
 export const generateComplex = (molecules: MoleculeTS[]) => {
   const complex = new Complex();

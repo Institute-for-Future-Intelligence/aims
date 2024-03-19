@@ -110,6 +110,7 @@ export const i18n_zh_tw = {
       Fog: '有霧',
       Axes: '顯示坐標軸',
       Container: '顯示容器',
+      VanDerWaalsBonds: '顯示范德華鍵',
       Style: '風格',
       Color: '顏色',
       BallAndStick: '球和棍',

@@ -17,7 +17,7 @@ import {
   STYLE_MAP,
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
-import { generateComplex, loadMolecule } from './moleculeTools.ts';
+import { generateComplex, generateVdwLines, loadMolecule } from './moleculeTools.ts';
 import { AtomTS } from '../models/AtomTS.ts';
 import { ModelUtil } from '../models/ModelUtil.ts';
 import Element from '../lib/chem/Element';
@@ -26,11 +26,12 @@ import { useStore } from '../stores/common.ts';
 import { MoleculeTS } from '../models/MoleculeTS.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import ModelContainer from './modelContainer.tsx';
-import { Instance, Instances } from '@react-three/drei';
+import { Instance, Instances, Line } from '@react-three/drei';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import Picker from '../lib/ui/Picker.js';
 import settings from '../lib/settings.js';
 import Movers from './movers.tsx';
+import { VdwBond } from '../models/VdwBond.ts';
 
 extend({ RCGroup });
 
@@ -61,10 +62,12 @@ const DynamicsViewer = React.memo(
     const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
     const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
     const viewerStyle = useStore(Selector.chamberViewerStyle);
+    const vdwBondsVisible = useStore(Selector.vdwBondsVisible);
 
     const [complex, setComplex] = useState<any>();
 
     const moleculesRef = useRef<MoleculeTS[]>([]);
+    const vdwBondsRef = useRef<VdwBond[]>([]);
     const groupRef = useRef<RCGroup>(null);
     const cameraRef = useRef<Camera | undefined>();
     const raycasterRef = useRef<Raycaster | undefined>();
@@ -80,6 +83,8 @@ const DynamicsViewer = React.memo(
       return COLORING_MAP.get(coloring);
     }, [coloring]);
 
+    const showMover = false; // temporarily disable 3D movers
+
     useEffect(() => {
       cameraRef.current = camera;
       raycasterRef.current = raycaster;
@@ -87,6 +92,7 @@ const DynamicsViewer = React.memo(
         cameraRef: cameraRef,
         raycasterRef: raycasterRef,
         moleculesRef: moleculesRef,
+        vdwBondsRef: vdwBondsRef,
       });
     }, [camera, raycaster, cameraRef, raycasterRef, moleculesRef]);
 
@@ -167,6 +173,7 @@ const DynamicsViewer = React.memo(
           usePrimitiveStore.getState().set((state) => {
             state.boundingSphereRadius = boundingSphere.radius;
           });
+          vdwBondsRef.current = generateVdwLines(moleculesRef.current, 1);
           invalidate();
         })
         .finally(() => {
@@ -230,7 +237,7 @@ const DynamicsViewer = React.memo(
             })}
           </Instances>
         )}
-        {pickedMoleculeIndex !== -1 && (
+        {pickedMoleculeIndex !== -1 && showMover && (
           <Movers
             center={[
               testMoleculeTransforms[pickedMoleculeIndex].x,
@@ -240,6 +247,21 @@ const DynamicsViewer = React.memo(
             length={moleculeLengths}
           />
         )}
+        {vdwBondsVisible &&
+          vdwBondsRef.current &&
+          vdwBondsRef.current.map((b, i) => {
+            return (
+              <Line
+                key={i}
+                color={'white'}
+                dashed={true}
+                lineWidth={2}
+                dashSize={0.02}
+                gapSize={0.04}
+                points={[b.startAtom.position, b.endAtom.position]}
+              />
+            );
+          })}
         <ModelContainer />
       </>
     );

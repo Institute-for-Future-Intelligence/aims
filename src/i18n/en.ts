@@ -110,6 +110,7 @@ export const i18n_en = {
       Fog: 'Fog',
       Axes: 'Axes',
       Container: 'Container',
+      VanDerWaalsBonds: 'Van der Waals Bonds',
       Style: 'Style',
       Color: 'Color',
       BallAndStick: 'Ball-and-Stick',

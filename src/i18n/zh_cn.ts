@@ -111,6 +111,7 @@ export const i18n_zh_cn = {
       Fog: '有雾',
       Axes: '显示坐标轴',
       Container: '显示容器',
+      VanDerWaalsBonds: '显示范德华键',
       Style: '风格',
       Color: '颜色',
       BallAndStick: '球和棍',

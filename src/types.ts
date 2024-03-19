@@ -96,6 +96,7 @@ export interface ProjectState {
   testMoleculeTransforms: MoleculeTransform[];
   molecularContainer: MolecularContainer;
   molecularContainerVisible: boolean;
+  vdwBondsVisible: boolean;
 
   temperature: number;
   pressure: number;

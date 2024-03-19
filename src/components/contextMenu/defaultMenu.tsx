@@ -24,6 +24,7 @@ import {
   StyleRadioGroup,
   TranslateLigand,
   TranslateMolecule,
+  VdwBondsCheckBox,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
 
@@ -122,6 +123,11 @@ export const createDefaultMenu = (
       items.push({
         key: 'molecular-viewer-container',
         label: <ContainerCheckBox />,
+      });
+
+      items.push({
+        key: 'molecular-viewer-vdw-bonds',
+        label: <VdwBondsCheckBox />,
       });
 
       items.push({
