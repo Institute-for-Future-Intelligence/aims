@@ -17,6 +17,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: MoleculeTS[] | 
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const testMolecules = useStore(Selector.testMolecules);
   const molecularContainer = useStore(Selector.molecularContainer);
+  const vdwBondCutoffRelative = useStore(Selector.vdwBondCutoffRelative) ?? 0.5;
   const temperature = useStore(Selector.temperature) ?? 300;
   const pressure = useStore(Selector.pressure) ?? 1;
 
@@ -102,6 +103,30 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: MoleculeTS[] | 
         </Row>
         <Row gutter={16} style={{ paddingBottom: '4px' }}>
           <Col span={12} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.VdwBondCutoffRelative', lang)}: </span>
+          </Col>
+          <Col span={12}>
+            <InputNumber
+              addonAfter={t('word.Relative', lang)}
+              min={0.2}
+              max={1}
+              style={{ width: '100%' }}
+              precision={2}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(vdwBondCutoffRelative.toFixed(2))}
+              step={0.1}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.vdwBondCutoffRelative = value;
+                });
+                setChanged(true);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={12} style={{ paddingTop: '5px' }}>
             <span>{t('experiment.Temperature', lang)}: </span>
           </Col>
           <Col span={12}>
@@ -150,7 +175,15 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: MoleculeTS[] | 
         </Row>
       </div>
     );
-  }, [lang, molecularContainer.lx, molecularContainer.ly, molecularContainer.lz, temperature, pressure]);
+  }, [
+    lang,
+    molecularContainer.lx,
+    molecularContainer.ly,
+    molecularContainer.lz,
+    temperature,
+    pressure,
+    vdwBondCutoffRelative,
+  ]);
 
   const createInfo = useMemo(() => {
     let atomCount = 0;

@@ -97,6 +97,7 @@ export interface ProjectState {
   molecularContainer: MolecularContainer;
   molecularContainerVisible: boolean;
   vdwBondsVisible: boolean;
+  vdwBondCutoffRelative: number;
 
   temperature: number;
   pressure: number;

@@ -49,6 +49,8 @@ export const molecularContainerVisible = (state: CommonStoreState) => state.proj
 
 export const vdwBondsVisible = (state: CommonStoreState) => state.projectState.vdwBondsVisible;
 
+export const vdwBondCutoffRelative = (state: CommonStoreState) => state.projectState.vdwBondCutoffRelative;
+
 export const pickedMoleculeIndex = (state: PrimitiveStoreState) => state.pickedMoleculeIndex;
 
 export const copiedMoleculeIndex = (state: PrimitiveStoreState) => state.copiedMoleculeIndex;

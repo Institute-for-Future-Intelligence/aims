@@ -35,6 +35,7 @@ import {
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import { ProjectUtil } from './project/ProjectUtil.ts';
 import { useTranslation } from 'react-i18next';
+import { vdwBondCutoffRelative } from './stores/selector';
 
 export interface CloudManagerProps {
   viewOnly: boolean;
@@ -405,6 +406,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             molecularContainer: data.molecularContainer ?? ({ lx: cl, ly: cl, lz: cl } as MolecularContainer),
             molecularContainerVisible: !!data.molecularContainerVisible,
             vdwBondsVisible: !!data.vdwBondsVisible,
+            vdwBondCutoffRelative: data.vdwBondCutoffRelative ?? 0.5,
 
             testMolecules: data.testMolecules ?? [],
             testMoleculeTransforms: data.testMoleculeTransforms ?? [],

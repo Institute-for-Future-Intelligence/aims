@@ -22,6 +22,7 @@ export const i18n_en = {
     },
 
     word: {
+      Relative: 'Relative',
       KeyboardKey: 'Key',
       None: 'None',
       Size: 'Size',
@@ -168,6 +169,7 @@ export const i18n_en = {
       ContainerLx: 'Container Lx',
       ContainerLy: 'Container Ly',
       ContainerLz: 'Container Lz',
+      VdwBondCutoffRelative: 'VDW Bond Cutoff',
       Temperature: 'Temperature',
       Pressure: 'Pressure',
       Protein: 'Protein',

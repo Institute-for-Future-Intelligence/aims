@@ -22,6 +22,7 @@ export const i18n_zh_tw = {
     },
 
     word: {
+      Relative: '相對',
       KeyboardKey: '鍵',
       None: '無',
       Size: '大小',
@@ -168,6 +169,7 @@ export const i18n_zh_tw = {
       ContainerLx: '容器Lx',
       ContainerLy: '容器Ly',
       ContainerLz: '容器Lz',
+      VdwBondCutoffRelative: '范德華鍵的長度閾值',
       Temperature: '温度',
       Pressure: '壓力',
       Protein: '蛋白質',

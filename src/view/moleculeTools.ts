@@ -23,17 +23,20 @@ import { ModelUtil } from '../models/ModelUtil.ts';
 import { BondTS } from '../models/BondTS.ts';
 import { VdwBond } from '../models/VdwBond.ts';
 
-export const generateVdwLines = (molecules: MoleculeTS[], maxDistanceSquared: number) => {
+export const generateVdwLines = (molecules: MoleculeTS[], maximumRelativeDistanceSquared: number) => {
   const bonds: VdwBond[] = [];
   const n = molecules.length;
   for (let i = 0; i < n; i++) {
     const mi = molecules[i];
     for (const ai of mi.atoms) {
+      const ei = Element.getByName(ai.elementSymbol);
       for (let j = 0; j < n; j++) {
         if (j === i) continue;
         const mj = molecules[j];
         for (const aj of mj.atoms) {
-          if (computeDistanceSquared(ai, aj) < maxDistanceSquared) {
+          const ej = Element.getByName(aj.elementSymbol);
+          const dij = ei.radius + ej.radius;
+          if (computeDistanceSquared(ai, aj) < maximumRelativeDistanceSquared * dij * dij) {
             bonds.push({ startAtom: ai, endAtom: aj } as VdwBond);
           }
         }

@@ -106,6 +106,7 @@ export class ProjectUtil {
       molecularContainer: { lx: 50, ly: 50, lz: 50 } as MolecularContainer,
       molecularContainerVisible: false,
       vdwBondsVisible: false,
+      vdwBondCutoffRelative: 0.5,
 
       testMolecules: new Array<MoleculeData>(),
       testMoleculeTransforms: new Array<MoleculeTransform>(),

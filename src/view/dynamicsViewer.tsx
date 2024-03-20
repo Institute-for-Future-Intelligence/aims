@@ -63,8 +63,10 @@ const DynamicsViewer = React.memo(
     const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
     const viewerStyle = useStore(Selector.chamberViewerStyle);
     const vdwBondsVisible = useStore(Selector.vdwBondsVisible);
+    const vdwBondCutoffRelative = useStore(Selector.vdwBondCutoffRelative) ?? 0.5;
 
     const [complex, setComplex] = useState<any>();
+    const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
     const moleculesRef = useRef<MoleculeTS[]>([]);
     const vdwBondsRef = useRef<VdwBond[]>([]);
@@ -86,6 +88,11 @@ const DynamicsViewer = React.memo(
     const showMover = false; // temporarily disable 3D movers
 
     useEffect(() => {
+      vdwBondsRef.current = generateVdwLines(moleculesRef.current, vdwBondCutoffRelative * vdwBondCutoffRelative);
+      setUpdateFlag(!updateFlag);
+    }, [vdwBondCutoffRelative]);
+
+    useEffect(() => {
       cameraRef.current = camera;
       raycasterRef.current = raycaster;
       useRefStore.setState({
@@ -94,7 +101,7 @@ const DynamicsViewer = React.memo(
         moleculesRef: moleculesRef,
         vdwBondsRef: vdwBondsRef,
       });
-    }, [camera, raycaster, cameraRef, raycasterRef, moleculesRef]);
+    }, [camera, raycaster, cameraRef, raycasterRef, moleculesRef, vdwBondsRef]);
 
     useEffect(() => {
       if (!testMolecules || testMolecules.length === 0) {
@@ -173,7 +180,8 @@ const DynamicsViewer = React.memo(
           usePrimitiveStore.getState().set((state) => {
             state.boundingSphereRadius = boundingSphere.radius;
           });
-          vdwBondsRef.current = generateVdwLines(moleculesRef.current, 1);
+          vdwBondsRef.current = generateVdwLines(moleculesRef.current, vdwBondCutoffRelative * vdwBondCutoffRelative);
+          setUpdateFlag(!updateFlag); // without this, the vdw bonds will not be drawn initially
           invalidate();
         })
         .finally(() => {
@@ -237,16 +245,6 @@ const DynamicsViewer = React.memo(
             })}
           </Instances>
         )}
-        {pickedMoleculeIndex !== -1 && showMover && (
-          <Movers
-            center={[
-              testMoleculeTransforms[pickedMoleculeIndex].x,
-              testMoleculeTransforms[pickedMoleculeIndex].y,
-              testMoleculeTransforms[pickedMoleculeIndex].z,
-            ]}
-            length={moleculeLengths}
-          />
-        )}
         {vdwBondsVisible &&
           vdwBondsRef.current &&
           vdwBondsRef.current.map((b, i) => {
@@ -263,6 +261,16 @@ const DynamicsViewer = React.memo(
             );
           })}
         <ModelContainer />
+        {pickedMoleculeIndex !== -1 && showMover && (
+          <Movers
+            center={[
+              testMoleculeTransforms[pickedMoleculeIndex].x,
+              testMoleculeTransforms[pickedMoleculeIndex].y,
+              testMoleculeTransforms[pickedMoleculeIndex].z,
+            ]}
+            length={moleculeLengths}
+          />
+        )}
       </>
     );
   },
