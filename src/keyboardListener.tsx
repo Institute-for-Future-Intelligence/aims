@@ -105,6 +105,8 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
   const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
+  const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
+  const cutMoleculeTransform = usePrimitiveStore(Selector.cutMoleculeTransform);
   const clickPointRef = useRefStore.getState().clickPointRef;
   const moleculesRef = useRefStore.getState().moleculesRef;
 
@@ -153,12 +155,9 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     });
   };
 
-  const onDelete = (cut: boolean) => {
+  const onDelete = () => {
     if (pickedMoleculeIndex !== -1) {
       usePrimitiveStore.getState().set((state) => {
-        if (cut) {
-          state.copiedMoleculeIndex = pickedMoleculeIndex;
-        }
         state.pickedMoleculeIndex = -1;
       });
       setCommonStore((state) => {
@@ -167,6 +166,26 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         if (loggable) {
           state.actionInfo = {
             name: 'Delete Selected Molecule',
+            timestamp: new Date().getTime(),
+          };
+        }
+      });
+    }
+  };
+
+  const onCut = () => {
+    if (pickedMoleculeIndex !== -1) {
+      usePrimitiveStore.getState().set((state) => {
+        state.cutMolecule = { ...testMolecules[pickedMoleculeIndex] };
+        state.cutMoleculeTransform = { ...testMoleculeTransforms[pickedMoleculeIndex] };
+        state.pickedMoleculeIndex = -1;
+      });
+      setCommonStore((state) => {
+        state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
+        state.projectState.testMoleculeTransforms.splice(pickedMoleculeIndex, 1);
+        if (loggable) {
+          state.actionInfo = {
+            name: 'Cut Selected Molecule',
             timestamp: new Date().getTime(),
           };
         }
@@ -192,7 +211,8 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
 
   const onPaste = () => {
     const p = clickPointRef?.current;
-    if (p && copiedMoleculeIndex !== -1) {
+    if (!p) return;
+    if (copiedMoleculeIndex !== -1) {
       setCommonStore((state) => {
         const m = { ...testMolecules[copiedMoleculeIndex] };
         const t = testMoleculeTransforms[copiedMoleculeIndex];
@@ -203,15 +223,30 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
           z: p.z,
           euler: t.euler ? [...t.euler] : [0, 0, 0],
         } as MoleculeTransform);
-      });
-      if (loggable) {
-        setCommonStore((state) => {
+        if (loggable) {
           state.actionInfo = {
-            name: 'Paste Selected Molecule',
+            name: 'Paste Copied Molecule',
             timestamp: new Date().getTime(),
           };
-        });
-      }
+        }
+      });
+    } else if (cutMolecule) {
+      setCommonStore((state) => {
+        const m = { ...cutMolecule };
+        state.projectState.testMolecules.push(m);
+        state.projectState.testMoleculeTransforms.push({
+          x: p.x,
+          y: p.y,
+          z: p.z,
+          euler: cutMoleculeTransform?.euler ? [...cutMoleculeTransform.euler] : [0, 0, 0],
+        } as MoleculeTransform);
+        if (loggable) {
+          state.actionInfo = {
+            name: 'Paste Cut Molecule',
+            timestamp: new Date().getTime(),
+          };
+        }
+      });
     }
   };
 
@@ -390,7 +425,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         break;
       case 'ctrl+x':
       case 'meta+x': // for Mac
-        onDelete(true);
+        onCut();
         break;
       case 'ctrl+v':
       case 'meta+v': // for Mac
@@ -428,7 +463,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       case 'alt+backspace':
       case 'backspace':
       case 'delete': {
-        onDelete(false);
+        onDelete();
         break;
       }
       case 'ctrl+z':

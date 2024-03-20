@@ -53,6 +53,10 @@ export const pickedMoleculeIndex = (state: PrimitiveStoreState) => state.pickedM
 
 export const copiedMoleculeIndex = (state: PrimitiveStoreState) => state.copiedMoleculeIndex;
 
+export const cutMolecule = (state: PrimitiveStoreState) => state.cutMolecule;
+
+export const cutMoleculeTransform = (state: PrimitiveStoreState) => state.cutMoleculeTransform;
+
 export const showAccountSettingsPanel = (state: PrimitiveStoreState) => state.showAccountSettingsPanel;
 
 export const userCount = (state: PrimitiveStoreState) => state.userCount;

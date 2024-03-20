@@ -27,11 +27,13 @@ import {
   VdwBondsCheckBox,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
+import { MoleculeData } from '../../types.ts';
 
 export const createDefaultMenu = (
   projectType: ProjectType,
   pickedMoleculeIndex: number,
   copiedMoleculeIndex: number,
+  cutMolecule: MoleculeData | null,
   selectedPlane: number,
 ) => {
   const lang = { lng: useStore.getState().language };
@@ -98,7 +100,7 @@ export const createDefaultMenu = (
         ],
       });
     } else {
-      if (copiedMoleculeIndex !== -1 && selectedPlane !== -1) {
+      if ((copiedMoleculeIndex !== -1 || cutMolecule) && selectedPlane !== -1) {
         items.push({
           key: 'molecule-paste',
           label: (

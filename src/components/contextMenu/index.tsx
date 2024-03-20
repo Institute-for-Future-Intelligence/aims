@@ -17,13 +17,14 @@ export interface ContextMenuProps {
 const DropdownContextMenu: React.FC<ContextMenuProps> = ({ children }) => {
   const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
+  const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
   const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
   const projectType = useStore(Selector.projectType);
 
   return (
     <Dropdown
       trigger={['contextMenu']}
-      menu={createDefaultMenu(projectType, pickedMoleculeIndex, copiedMoleculeIndex, selectedPlane)}
+      menu={createDefaultMenu(projectType, pickedMoleculeIndex, copiedMoleculeIndex, cutMolecule, selectedPlane)}
       overlayClassName="my-overlay"
     >
       {children}

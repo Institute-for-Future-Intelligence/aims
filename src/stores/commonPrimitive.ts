@@ -4,7 +4,7 @@
 
 import { createWithEqualityFn } from 'zustand/traditional';
 import { produce } from 'immer';
-import { MoleculeData } from '../types';
+import { MoleculeData, MoleculeTransform } from '../types';
 import { ProjectType } from '../constants';
 
 // avoid using undefined value in the store for now.
@@ -21,6 +21,8 @@ export interface PrimitiveStoreState {
 
   pickedMoleculeIndex: number;
   copiedMoleculeIndex: number;
+  cutMolecule: MoleculeData | null;
+  cutMoleculeTransform: MoleculeTransform | null;
 
   boundingSphereRadius: number;
 
@@ -107,6 +109,8 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
 
     pickedMoleculeIndex: -1,
     copiedMoleculeIndex: -1,
+    cutMolecule: null,
+    cutMoleculeTransform: null,
 
     boundingSphereRadius: 10,
 

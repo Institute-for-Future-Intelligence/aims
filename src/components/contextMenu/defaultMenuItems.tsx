@@ -439,6 +439,8 @@ export const RotateMolecule = () => {
 
 export const CutMolecule = () => {
   const setCommonStore = useStore(Selector.set);
+  const testMolecules = useStore(Selector.testMolecules);
+  const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
   const loggable = useStore(Selector.loggable);
 
   const { t } = useTranslation();
@@ -448,7 +450,8 @@ export const CutMolecule = () => {
     const pickedMoleculeIndex = usePrimitiveStore.getState().pickedMoleculeIndex;
     if (pickedMoleculeIndex === -1) return;
     usePrimitiveStore.getState().set((state) => {
-      state.copiedMoleculeIndex = pickedMoleculeIndex;
+      state.cutMolecule = { ...testMolecules[pickedMoleculeIndex] };
+      state.cutMoleculeTransform = { ...testMoleculeTransforms[pickedMoleculeIndex] };
       state.pickedMoleculeIndex = -1;
     });
     setCommonStore((state) => {
@@ -506,6 +509,8 @@ export const PasteMolecule = () => {
   const testMolecules = useStore(Selector.testMolecules);
   const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
   const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
+  const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
+  const cutMoleculeTransform = usePrimitiveStore(Selector.cutMoleculeTransform);
   const clickPointRef = useRefStore.getState().clickPointRef;
 
   const { t } = useTranslation();
@@ -513,7 +518,8 @@ export const PasteMolecule = () => {
 
   const pasteSelectedMolecule = () => {
     const p = clickPointRef?.current;
-    if (p && copiedMoleculeIndex !== -1) {
+    if (!p) return;
+    if (copiedMoleculeIndex !== -1) {
       setCommonStore((state) => {
         const m = { ...testMolecules[copiedMoleculeIndex] };
         const t = testMoleculeTransforms[copiedMoleculeIndex];
@@ -524,21 +530,41 @@ export const PasteMolecule = () => {
           z: p.z,
           euler: t.euler ? [...t.euler] : [0, 0, 0],
         } as MoleculeTransform);
-      });
-      if (loggable) {
-        setCommonStore((state) => {
+        if (loggable) {
           state.actionInfo = {
-            name: 'Paste Selected Molecule',
+            name: 'Paste Copied Molecule',
             timestamp: new Date().getTime(),
           };
-        });
-      }
+        }
+      });
+    } else if (cutMolecule) {
+      setCommonStore((state) => {
+        const m = { ...cutMolecule };
+        state.projectState.testMolecules.push(m);
+        state.projectState.testMoleculeTransforms.push({
+          x: p.x,
+          y: p.y,
+          z: p.z,
+          euler: cutMoleculeTransform?.euler ? [...cutMoleculeTransform.euler] : [0, 0, 0],
+        } as MoleculeTransform);
+        if (loggable) {
+          state.actionInfo = {
+            name: 'Paste Cut Molecule',
+            timestamp: new Date().getTime(),
+          };
+        }
+      });
     }
   };
 
   return (
     <MenuItem stayAfterClick={false} hasPadding={true} onClick={pasteSelectedMolecule}>
-      {t('word.Paste', lang) + (copiedMoleculeIndex !== -1 ? ' ' + testMolecules[copiedMoleculeIndex]?.name : '')}
+      {t('word.Paste', lang) +
+        (cutMolecule
+          ? ' ' + cutMolecule.name
+          : copiedMoleculeIndex !== -1
+            ? ' ' + testMolecules[copiedMoleculeIndex]?.name
+            : '')}
     </MenuItem>
   );
 };
