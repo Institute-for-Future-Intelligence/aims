@@ -3,7 +3,7 @@
  */
 
 import { useFrame, useThree } from '@react-three/fiber';
-import { DirectionalLight, Euler, Vector3 } from 'three';
+import { DirectionalLight, Euler, Vector3, WebGLCapabilities } from 'three';
 import { useStore } from './stores/common';
 import {
   DEFAULT_CAMERA_POSITION,
@@ -21,6 +21,7 @@ import { Object3DNode, extend } from '@react-three/fiber';
 import { UndoableCameraChange } from './undo/UndoableCameraChange';
 import { UndoableResetView } from './undo/UndoableResetView';
 import { PerspectiveCamera, TrackballControls } from '@react-three/drei';
+import capabilities from './lib/gfx/capabilities';
 
 extend({ MyTrackballControls });
 
@@ -213,6 +214,10 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
     saveCameraState();
     controlEndCalledRef.current = true;
   };
+
+  useEffect(() => {
+    capabilities.init(gl);
+  }, []);
 
   useEffect(() => {
     if (isFirstRender) return;
