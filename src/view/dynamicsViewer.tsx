@@ -18,12 +18,12 @@ import {
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { generateComplex, generateVdwLines, loadMolecule } from './moleculeTools.ts';
-import { AtomTS } from '../models/AtomTS.ts';
+import { Atom } from '../models/Atom.ts';
 import { ModelUtil } from '../models/ModelUtil.ts';
 import Element from '../lib/chem/Element';
 import * as Selector from '../stores/selector';
 import { useStore } from '../stores/common.ts';
-import { MoleculeTS } from '../models/MoleculeTS.ts';
+import { Molecule } from '../models/Molecule.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import ModelContainer from './modelContainer.tsx';
 import { Instance, Instances, Line } from '@react-three/drei';
@@ -68,7 +68,7 @@ const DynamicsViewer = React.memo(
     const [complex, setComplex] = useState<any>();
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
-    const moleculesRef = useRef<MoleculeTS[]>([]);
+    const moleculesRef = useRef<Molecule[]>([]);
     const vdwBondsRef = useRef<VdwBond[]>([]);
     const groupRef = useRef<RCGroup>(null);
     const cameraRef = useRef<Camera | undefined>();
@@ -120,12 +120,12 @@ const DynamicsViewer = React.memo(
     }, [testMolecules]);
 
     const processResult = (result: any, molecule?: MoleculeData, transform?: MoleculeTransform) => {
-      const mol = { name: molecule?.name, metadata: null, atoms: [], bonds: [] } as MoleculeTS;
+      const mol = new Molecule(molecule?.name ?? 'unknown', [], []);
       const n = result._atoms.length;
       const c = new Vector3();
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
-        const a = { elementSymbol: atom.element.name, position: atom.position, index: atom.index } as AtomTS;
+        const a = new Atom(atom.index, atom.element.name, atom.position);
         if (transform) {
           a.position.x += transform.x ?? 0;
           a.position.y += transform.y ?? 0;
@@ -256,7 +256,7 @@ const DynamicsViewer = React.memo(
                 lineWidth={2}
                 dashSize={0.02}
                 gapSize={0.04}
-                points={[b.startAtom.position, b.endAtom.position]}
+                points={[b.atom1.position, b.atom2.position]}
               />
             );
           })}

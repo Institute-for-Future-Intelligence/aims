@@ -5,7 +5,7 @@
 import { createWithEqualityFn } from 'zustand/traditional';
 import { RefObject } from 'react';
 import { Group, Raycaster, Vector3 } from 'three';
-import { MoleculeTS } from '../models/MoleculeTS.ts';
+import { Molecule } from '../models/Molecule.ts';
 import { Camera } from '@react-three/fiber';
 import { VdwBond } from '../models/VdwBond.ts';
 
@@ -17,7 +17,7 @@ export interface RefStoreState {
   planeYZRef: RefObject<any> | null;
   planeXZRef: RefObject<any> | null;
   ligandRef: RefObject<Group> | null;
-  moleculesRef: RefObject<MoleculeTS[]> | null;
+  moleculesRef: RefObject<Molecule[]> | null;
   vdwBondsRef: RefObject<VdwBond[]> | null;
   clickPointRef: RefObject<Vector3> | null;
 }

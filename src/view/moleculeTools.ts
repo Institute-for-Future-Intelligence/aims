@@ -12,18 +12,18 @@ import MOL2Parser from '../lib/io/parsers/MOL2Parser';
 import { MoleculeData, MoleculeTransform } from '../types.ts';
 import { useStore } from '../stores/common.ts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
-import { MoleculeTS } from '../models/MoleculeTS.ts';
+import { Molecule } from '../models/Molecule.ts';
 import Complex from '../lib/chem/Complex';
 import Element from '../lib/chem/Element';
-import Molecule from '../lib/chem/Molecule';
+import MoleculeJS from '../lib/chem/Molecule';
 import BondJS from '../lib/chem/Bond';
-import { AtomTS } from '../models/AtomTS.ts';
+import { Atom } from '../models/Atom.ts';
 import AtomJS from '../lib/chem/Atom';
 import { ModelUtil } from '../models/ModelUtil.ts';
-import { BondTS } from '../models/BondTS.ts';
+import { RadialBond } from '../models/RadialBond.ts';
 import { VdwBond } from '../models/VdwBond.ts';
 
-export const generateVdwLines = (molecules: MoleculeTS[], maximumRelativeDistanceSquared: number) => {
+export const generateVdwLines = (molecules: Molecule[], maximumRelativeDistanceSquared: number) => {
   const bonds: VdwBond[] = [];
   const n = molecules.length;
   for (let i = 0; i < n; i++) {
@@ -36,8 +36,8 @@ export const generateVdwLines = (molecules: MoleculeTS[], maximumRelativeDistanc
         for (const aj of mj.atoms) {
           const ej = Element.getByName(aj.elementSymbol);
           const dij = ei.radius + ej.radius;
-          if (computeDistanceSquared(ai, aj) < maximumRelativeDistanceSquared * dij * dij) {
-            bonds.push({ startAtom: ai, endAtom: aj } as VdwBond);
+          if (ai.distanceToSquared(aj) < maximumRelativeDistanceSquared * dij * dij) {
+            bonds.push(new VdwBond(ai, aj));
           }
         }
       }
@@ -46,11 +46,7 @@ export const generateVdwLines = (molecules: MoleculeTS[], maximumRelativeDistanc
   return bonds;
 };
 
-export const computeDistanceSquared = (a: AtomTS, b: AtomTS) => {
-  return a.position.distanceToSquared(b.position);
-};
-
-export const generateComplex = (molecules: MoleculeTS[]) => {
+export const generateComplex = (molecules: Molecule[]) => {
   const complex = new Complex();
   for (const [idx, mol] of molecules.entries()) {
     const chain = complex.addChain('MOL' + idx);
@@ -69,7 +65,7 @@ export const generateComplex = (molecules: MoleculeTS[]) => {
         0,
       );
     }
-    const molecule = new Molecule(complex, mol.name, idx + 1);
+    const molecule = new MoleculeJS(complex, mol.name, idx + 1);
     molecule.residues = [residue];
     complex._molecules.push(molecule);
   }
@@ -80,7 +76,7 @@ export const generateComplex = (molecules: MoleculeTS[]) => {
     serialAtomMap: false,
   });
   const bonds = complex.getBonds() as BondJS[];
-  const atoms: AtomTS[] = [];
+  const atoms: Atom[] = [];
   for (const m of molecules) {
     atoms.push(...m.atoms);
   }
@@ -89,7 +85,7 @@ export const generateComplex = (molecules: MoleculeTS[]) => {
     const endAtomIndex = (b._right as AtomJS).index;
     const m = ModelUtil.getMolecule(atoms[startAtomIndex], molecules);
     if (m) {
-      m.bonds.push({ startAtom: atoms[startAtomIndex], endAtom: atoms[endAtomIndex] } as BondTS);
+      m.bonds.push({ atom1: atoms[startAtomIndex], atom2: atoms[endAtomIndex] } as RadialBond);
     }
   }
   return complex;

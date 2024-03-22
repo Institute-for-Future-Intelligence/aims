@@ -4,14 +4,14 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DirectionalLight, Raycaster, Vector3 } from 'three';
-import { ProteinTS } from '../models/ProteinTS.ts';
+import { Protein } from '../models/Protein.ts';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { MoleculeData, MoleculeTransform } from '../types';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
-import { AtomTS } from '../models/AtomTS';
-import { BondTS } from '../models/BondTS';
+import { Atom } from '../models/Atom.ts';
+import { RadialBond } from '../models/RadialBond.ts';
 import { Util } from '../Util';
 import ComplexVisual from '../lib/ComplexVisual';
 import { ThreeEvent, extend, useThree, Camera } from '@react-three/fiber';
@@ -113,7 +113,7 @@ const DockingViewer = React.memo(
       setProteinComplex(result);
       const name = result.name;
       const metadata = result.metadata;
-      const atoms: AtomTS[] = [];
+      const atoms: Atom[] = [];
       centerRef.current.set(0, 0, 0);
       const n = result._atoms.length;
       for (let i = 0; i < n; i++) {
@@ -126,12 +126,15 @@ const DockingViewer = React.memo(
       groupRef.current?.position.copy(centerRef.current.clone().negate());
       for (let i = 0; i < result._atoms.length; i++) {
         const atom = result._atoms[i] as AtomJS;
-        atoms.push({
-          elementSymbol: Util.capitalizeFirstLetter(atom.element.name),
-          position: (atom.position as Vector3).clone().sub(centerRef.current),
-        } as AtomTS);
+        atoms.push(
+          new Atom(
+            i,
+            Util.capitalizeFirstLetter(atom.element.name),
+            (atom.position as Vector3).clone().sub(centerRef.current),
+          ),
+        );
       }
-      const bonds: BondTS[] = [];
+      const bonds: RadialBond[] = [];
       for (let i = 0; i < result._bonds.length; i++) {
         const bond = result._bonds[i] as BondJS;
         const atom1 = bond._left;
@@ -139,15 +142,9 @@ const DockingViewer = React.memo(
         const elementSymbol1 = atom1.element.name;
         const elementSymbol2 = atom2.element.name;
         bonds.push(
-          new BondTS(
-            {
-              elementSymbol: elementSymbol1,
-              position: (atom1.position as Vector3).clone().sub(centerRef.current),
-            } as AtomTS,
-            {
-              elementSymbol: elementSymbol2,
-              position: (atom2.position as Vector3).clone().sub(centerRef.current),
-            } as AtomTS,
+          new RadialBond(
+            new Atom(atom1.index, elementSymbol1, (atom1.position as Vector3).clone().sub(centerRef.current)),
+            new Atom(atom2.index, elementSymbol2, (atom2.position as Vector3).clone().sub(centerRef.current)),
           ),
         );
       }
@@ -166,7 +163,7 @@ const DockingViewer = React.memo(
           structures,
           molecules,
           centerOffset: centerRef.current.clone(),
-        } as ProteinTS;
+        } as Protein;
       });
       if (protein) {
         setProperties(protein, result._atoms.length, result._bonds.length);

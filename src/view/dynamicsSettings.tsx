@@ -8,10 +8,10 @@ import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { AimOutlined, ExperimentOutlined, InfoCircleOutlined } from '@ant-design/icons';
-import { MoleculeTS } from '../models/MoleculeTS.ts';
+import { Molecule } from '../models/Molecule.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
-const DynamicsSettings = React.memo(({ molecules }: { molecules: MoleculeTS[] | undefined | null }) => {
+const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | undefined | null }) => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const setChanged = usePrimitiveStore(Selector.setChanged);

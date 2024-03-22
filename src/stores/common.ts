@@ -19,7 +19,7 @@ import Papa from 'papaparse';
 import { MolecularProperties } from '../models/MolecularProperties';
 import { User } from '../User';
 import { ProjectUtil } from '../project/ProjectUtil.ts';
-import { ProteinTS } from '../models/ProteinTS.ts';
+import { Protein } from '../models/Protein.ts';
 
 enableMapSet();
 
@@ -37,7 +37,7 @@ export interface CommonStoreState {
   projectState: ProjectState;
   projectView: boolean;
 
-  proteinData: ProteinTS | undefined;
+  proteinData: Protein | undefined;
 
   projectStateToOpen: ProjectState | null;
 

@@ -10,7 +10,7 @@
  *
  */
 
-import { AtomTS } from './AtomTS.ts';
+import { Atom } from './Atom.ts';
 import { ChemicalElement } from './ChemicalElement.ts';
 import { Vector3 } from 'three';
 
@@ -24,8 +24,8 @@ const CUTOFF_RATIO_SQUARED = 200;
  */
 
 export const computeAcceleration = (
-  target: AtomTS[],
-  test: AtomTS[],
+  target: Atom[],
+  test: Atom[],
   elements: { [key: string]: ChemicalElement },
   translation: number[],
   velocity: number[],

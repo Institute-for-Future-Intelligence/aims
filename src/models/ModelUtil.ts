@@ -2,19 +2,19 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import { AtomTS } from './AtomTS.ts';
-import { MoleculeTS } from './MoleculeTS.ts';
+import { Atom } from './Atom.ts';
+import { Molecule } from './Molecule.ts';
 import { Vector3 } from 'three';
 
 export class ModelUtil {
-  static getMolecule(atom: AtomTS, molecules: MoleculeTS[]): MoleculeTS | null {
+  static getMolecule(atom: Atom, molecules: Molecule[]): Molecule | null {
     for (const m of molecules) {
       if (m.atoms.includes(atom)) return m;
     }
     return null;
   }
 
-  static getMoleculeCenter(molecule: MoleculeTS): Vector3 {
+  static getMoleculeCenter(molecule: Molecule): Vector3 {
     const c = new Vector3();
     for (const a of molecule.atoms) {
       c.add(a.position);
@@ -22,7 +22,7 @@ export class ModelUtil {
     return c.multiplyScalar(1 / molecule.atoms.length);
   }
 
-  static getMoleculeLengths(molecule: MoleculeTS): number[] {
+  static getMoleculeLengths(molecule: Molecule): number[] {
     let minX = Number.MAX_VALUE;
     let maxX = -Number.MAX_VALUE;
     let minY = Number.MAX_VALUE;
