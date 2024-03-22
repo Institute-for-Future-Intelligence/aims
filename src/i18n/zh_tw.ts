@@ -170,6 +170,8 @@ export const i18n_zh_tw = {
       ContainerLy: '容器Ly',
       ContainerLz: '容器Lz',
       VdwBondCutoffRelative: '范德華鍵的長度閾值',
+      TimeStep: '時間步長',
+      Femtosecond: '飛秒',
       Temperature: '温度',
       Pressure: '壓力',
       Protein: '蛋白質',

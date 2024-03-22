@@ -99,6 +99,7 @@ export interface ProjectState {
   vdwBondsVisible: boolean;
   vdwBondCutoffRelative: number;
 
+  timeStep: number;
   temperature: number;
   pressure: number;
 }

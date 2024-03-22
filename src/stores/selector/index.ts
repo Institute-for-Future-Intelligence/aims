@@ -39,6 +39,8 @@ export const temperature = (state: CommonStoreState) => state.projectState.tempe
 
 export const pressure = (state: CommonStoreState) => state.projectState.pressure;
 
+export const timeStep = (state: CommonStoreState) => state.projectState.timeStep;
+
 export const testMolecules = (state: CommonStoreState) => state.projectState.testMolecules;
 
 export const testMoleculeTransforms = (state: CommonStoreState) => state.projectState.testMoleculeTransforms;

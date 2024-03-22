@@ -171,6 +171,8 @@ export const i18n_zh_cn = {
       ContainerLy: '容器Ly',
       ContainerLz: '容器Lz',
       VdwBondCutoffRelative: '范德华键的长度阈值',
+      TimeStep: '时间步长',
+      Femtosecond: '飞秒',
       Temperature: '温度',
       Pressure: '压力',
       Protein: '蛋白质',

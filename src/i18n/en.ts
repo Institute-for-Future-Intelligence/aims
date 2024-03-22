@@ -170,6 +170,8 @@ export const i18n_en = {
       ContainerLy: 'Container Ly',
       ContainerLz: 'Container Lz',
       VdwBondCutoffRelative: 'VDW Bond Cutoff',
+      TimeStep: 'Time Step',
+      Femtosecond: 'Femtosecond',
       Temperature: 'Temperature',
       Pressure: 'Pressure',
       Protein: 'Protein',

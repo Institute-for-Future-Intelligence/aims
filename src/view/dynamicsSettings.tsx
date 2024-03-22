@@ -20,6 +20,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
   const vdwBondCutoffRelative = useStore(Selector.vdwBondCutoffRelative) ?? 0.5;
   const temperature = useStore(Selector.temperature) ?? 300;
   const pressure = useStore(Selector.pressure) ?? 1;
+  const timeStep = useStore(Selector.timeStep) ?? 0.5;
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -119,6 +120,30 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
                 if (value === null) return;
                 setCommonStore((state) => {
                   state.projectState.vdwBondCutoffRelative = value;
+                });
+                setChanged(true);
+              }}
+            />
+          </Col>
+        </Row>
+        <Row gutter={16} style={{ paddingBottom: '4px' }}>
+          <Col span={12} style={{ paddingTop: '5px' }}>
+            <span>{t('experiment.TimeStep', lang)}: </span>
+          </Col>
+          <Col span={12}>
+            <InputNumber
+              addonAfter={t('experiment.Femtosecond', lang)}
+              min={0.1}
+              max={2}
+              style={{ width: '100%' }}
+              precision={1}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={parseFloat(timeStep.toFixed(1))}
+              step={0.1}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.timeStep = value;
                 });
                 setChanged(true);
               }}

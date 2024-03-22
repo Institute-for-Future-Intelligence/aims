@@ -110,6 +110,8 @@ export class ProjectUtil {
 
       testMolecules: new Array<MoleculeData>(),
       testMoleculeTransforms: new Array<MoleculeTransform>(),
+
+      timeStep: 0.5,
       temperature: 300,
       pressure: 1,
     } as ProjectState;

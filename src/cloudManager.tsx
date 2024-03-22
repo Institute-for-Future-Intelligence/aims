@@ -410,6 +410,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
 
             testMolecules: data.testMolecules ?? [],
             testMoleculeTransforms: data.testMoleculeTransforms ?? [],
+
+            timeStep: data.timeStep ?? 0.5,
             temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,
             pressure: data.pressure !== undefined && data.pressure !== null ? data.pressure : 1,
 
