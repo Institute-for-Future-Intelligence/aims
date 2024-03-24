@@ -10,7 +10,7 @@ import { Atom } from './Atom.ts';
 import { BondType } from '../constants';
 
 export class RadialBond {
-  static DEFAULT_STRENGTH = 4.5;
+  static readonly DEFAULT_STRENGTH = 4.5;
 
   atom1: Atom;
   atom2: Atom;

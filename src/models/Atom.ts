@@ -5,17 +5,18 @@
 import { Vector3 } from 'three';
 import { Restraint } from './Restraint.ts';
 import { TWO_PI } from '../constants.ts';
+import { ForceCalculator } from './ForceCalculator.ts';
 
 export class Atom {
   index: number;
   elementSymbol: string;
   position: Vector3;
 
-  mass?: number;
-  sigma?: number; // van der Waals radius
-  epsilon?: number; // van der Waals energy
-  charge?: number;
-  damp?: number;
+  mass: number = 1;
+  sigma: number = 1; // van der Waals radius
+  epsilon: number = 0.1; // van der Waals energy
+  charge: number = 0;
+  damp: number = 0;
   restraint?: Restraint;
 
   displacement?: Vector3;
@@ -23,7 +24,7 @@ export class Atom {
   acceleration?: Vector3;
   force?: Vector3;
 
-  fixed?: boolean;
+  fixed: boolean = false;
 
   constructor(index: number, elementSymbol: string, position: Vector3, init?: boolean) {
     this.index = index;
@@ -91,5 +92,45 @@ export class Atom {
     this.force.x *= this.mass;
     this.force.y *= this.mass;
     this.force.z *= this.mass;
+  }
+
+  // Check if this atom is bonded with the target via a radial bond
+  isRBonded(a: Atom): boolean {
+    return false;
+  }
+
+  // Check if this atom is bonded with the target via an angular bond
+  isABonded(a: Atom): boolean {
+    return false;
+  }
+
+  // Check if this atom is bonded with the target via a torsional bond
+  isTBonded(a: Atom): boolean {
+    return false;
+  }
+
+  applyDamping() {
+    if (this.damp > 0 && this.force && this.velocity) {
+      const d = ForceCalculator.GF_CONVERSION_CONSTANT * this.damp;
+      this.force.x -= d * this.velocity.x;
+      this.force.y -= d * this.velocity.y;
+      this.force.z -= d * this.velocity.z;
+    }
+  }
+
+  // calculate force and return potential energy: v(r)=k*(ri-ri_0)^2/2
+  applyRestraint(): number {
+    let energy = 0;
+    if (this.restraint && this.force) {
+      const k = (this.restraint.strength * ForceCalculator.GF_CONVERSION_CONSTANT) / this.mass;
+      const dx = this.position.x - this.restraint.position.x;
+      const dy = this.position.y - this.restraint.position.y;
+      const dz = this.position.z - this.restraint.position.z;
+      this.force.x -= k * dx;
+      this.force.y -= k * dy;
+      this.force.z -= k * dz;
+      energy = 0.5 * this.restraint.strength * (dx * dx + dy * dy + dz * dz);
+    }
+    return energy;
   }
 }

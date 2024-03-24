@@ -9,7 +9,7 @@
 import { Atom } from './Atom.ts';
 
 export class AngularBond {
-  static DEFAULT_STRENGTH = 50;
+  static readonly DEFAULT_STRENGTH = 50;
 
   /* return the angle a1-a2-a3 (a2 is in the middle) */
   static getAngle(a1: Atom, a2: Atom, a3: Atom) {
