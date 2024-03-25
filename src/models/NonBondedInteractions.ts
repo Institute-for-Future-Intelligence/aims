@@ -69,8 +69,8 @@ export class NonBondedInteractions {
       a.force.set(0, 0, 0);
     }
 
-    // internal variables for reuse
     const rCutoffSq = this.rCutoff * this.rCutoff;
+    const rListSq = this.rList * this.rList;
     this.energy = 0;
     this.virialLJ = 0;
     this.virialEL = 0;
@@ -87,50 +87,48 @@ export class NonBondedInteractions {
         let fxi = this.atoms[i].force.x;
         let fyi = this.atoms[i].force.y;
         let fzi = this.atoms[i].force.z;
-
         for (let j = i + 1; j < atomCount; j++) {
           if (this.skipPair(i, j)) continue;
           const v = new Vector3().subVectors(this.atoms[i].position, this.atoms[j].position);
           let rsq = v.lengthSq();
           const sig = this.atoms[i].sigma * this.atoms[j].sigma;
-          if (rsq < this.rList * this.rList * sig) {
+          if (rsq < rListSq * sig) {
             this.neighborList[listIndex++] = j;
-          }
-          if (rsq < rCutoffSq * sig) {
-            let meanSig = 0.5 * (this.atoms[i].sigma + this.atoms[j].sigma);
-            meanSig *= meanSig;
-            let sr2 = meanSig / rsq;
-            /* check if this pair gets too close */
-            if (sr2 > 2.0) {
-              sr2 = 2.0;
-              rsq = 0.5 * meanSig;
+            if (rsq < rCutoffSq * sig) {
+              let meanSig = 0.5 * (this.atoms[i].sigma + this.atoms[j].sigma);
+              meanSig *= meanSig;
+              let sr2 = meanSig / rsq;
+              /* check if this pair gets too close */
+              if (sr2 > 2) {
+                sr2 = 2;
+                rsq = 0.5 * meanSig;
+              }
+              const sr6 = sr2 * sr2 * sr2;
+              const sr12 = sr6 * sr6;
+              // geometric mean is costly: 4*Math.sqrt(atom[i].epsilon*atom[j].epsilon); use arithmetic mean
+              const meanEps = 2 * (this.atoms[i].epsilon + this.atoms[j].epsilon);
+              const vij = meanEps * (sr12 - sr6); // Lennard-Jones potential
+              const wij = vij + sr12 * meanEps; // Lennard-Jones virial
+              this.energy += vij;
+              this.virialLJ += wij;
+              const fij = (wij / rsq) * SIX_TIMES_UNIT_FORCE;
+              const gx = fij * v.x;
+              const gy = fij * v.y;
+              const gz = fij * v.z;
+              fxi += gx;
+              fyi += gy;
+              fzi += gz;
+              this.atoms[j].force.x -= gx;
+              this.atoms[j].force.y -= gy;
+              this.atoms[j].force.z -= gz;
             }
-            const sr6 = sr2 * sr2 * sr2;
-            const sr12 = sr6 * sr6;
-            // geometric mean is costly: 4 * Math.sqrt(atom[i].epsilon * atom[j].epsilon)
-            // use arithmetic mean instead
-            const meanEps = 2.0 * (this.atoms[i].epsilon + this.atoms[j].epsilon);
-            const vij = (sr12 - sr6) * meanEps;
-            const wij = vij + sr12 * meanEps;
-            this.energy += vij;
-            this.virialLJ += wij;
-            const fij = (wij / rsq) * SIX_TIMES_UNIT_FORCE;
-            const gx = fij * v.x;
-            const gy = fij * v.y;
-            const gz = fij * v.z;
-            fxi += gx;
-            fyi += gy;
-            fzi += gz;
-            this.atoms[j].force.x -= gx;
-            this.atoms[j].force.y -= gy;
-            this.atoms[j].force.z -= gz;
           }
 
           if (Math.abs(this.atoms[i].charge) + Math.abs(this.atoms[j].charge) > ZERO_TOLERANCE) {
             if (!this.skipPair(i, j)) {
               const coulomb = (COULOMB_CONSTANT * this.atoms[i].charge * this.atoms[j].charge) / Math.sqrt(rsq);
-              this.energy += coulomb;
-              this.virialEL += coulomb;
+              this.energy += coulomb; // Coulomb potential
+              this.virialEL += coulomb; // Coulomb virial
               const fij = (coulomb / rsq) * GF_CONVERSION_CONSTANT;
               const gx = fij * v.x;
               const gy = fij * v.y;
@@ -145,11 +143,9 @@ export class NonBondedInteractions {
           }
         }
 
-        this.atoms[i].force.x = fxi;
-        this.atoms[i].force.y = fyi;
-        this.atoms[i].force.z = fzi;
+        this.atoms[i].force.set(fxi, fyi, fzi);
       }
-      if (atomCount > 0) this.pointer[atomCount - 1] = listIndex;
+      if (atomCount1 >= 0) this.pointer[atomCount1] = listIndex;
     } else {
       for (let i = 0; i < atomCount1; i++) {
         let fxi = this.atoms[i].force.x;
@@ -168,17 +164,16 @@ export class NonBondedInteractions {
               meanSig *= meanSig;
               let sr2 = meanSig / rsq;
               /* check if this pair gets too close */
-              if (sr2 > 2.0) {
-                sr2 = 2.0;
+              if (sr2 > 2) {
+                sr2 = 2;
                 rsq = 0.5 * meanSig;
               }
               const sr6 = sr2 * sr2 * sr2;
               const sr12 = sr6 * sr6;
-              // geometric mean is costly: 4 * Math.sqrt(atom[i].epsilon * atom[j].epsilon)
-              // use arithmetic mean instead
+              // geometric mean is costly: 4*Math.sqrt(atom[i].epsilon*atom[j].epsilon); use arithmetic mean
               const meanEps = 2.0 * (this.atoms[i].epsilon + this.atoms[j].epsilon);
-              const vij = (sr12 - sr6) * meanEps;
-              const wij = vij + sr12 * meanEps;
+              const vij = meanEps * (sr12 - sr6); // Lennard-Jones potential
+              const wij = vij + sr12 * meanEps; // Lennard-Jones virial
               this.energy += vij;
               this.virialLJ += wij;
               const fij = (wij / rsq) * SIX_TIMES_UNIT_FORCE;
