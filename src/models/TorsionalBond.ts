@@ -11,7 +11,7 @@
 
 import { Atom } from './Atom.ts';
 import { Vector3 } from 'three';
-import { ForceCalculator } from './ForceCalculator.ts';
+import { GF_CONVERSION_CONSTANT, MIN_SIN_THETA } from './physicalConstants.ts';
 
 export class TorsionalBond {
   static readonly DEFAULT_STRENGTH = 1;
@@ -82,9 +82,9 @@ export class TorsionalBond {
     const r43 = Math.sqrt(r43sq);
     const theta = v12.angleTo(v43);
     let sin = Math.sin(theta);
-    if (Math.abs(sin) < ForceCalculator.MIN_SIN_THETA) {
-      // avoid 0 or 180 degree disaster
-      sin = sin > 0 ? ForceCalculator.MIN_SIN_THETA : -ForceCalculator.MIN_SIN_THETA;
+    if (Math.abs(sin) < MIN_SIN_THETA) {
+      // avoid 0 or 180 degree disaster (don't use Math.sign as it still may get zero)
+      sin = sin > 0 ? MIN_SIN_THETA : -MIN_SIN_THETA;
     }
     const delta = this.periodicity * theta - this.dihedral;
     const a = v12.x * v43.x + v12.y * v43.y + v12.z * v43.z;
@@ -97,10 +97,10 @@ export class TorsionalBond {
     const fy4 = b * (v12.y - (a * v43.y) / r43sq);
     const fz4 = b * (v12.z - (a * v43.z) / r43sq);
 
-    const inverseMass1 = ForceCalculator.GF_CONVERSION_CONSTANT / this.atom1.mass;
-    const inverseMass2 = ForceCalculator.GF_CONVERSION_CONSTANT / this.atom2.mass;
-    const inverseMass3 = ForceCalculator.GF_CONVERSION_CONSTANT / this.atom3.mass;
-    const inverseMass4 = ForceCalculator.GF_CONVERSION_CONSTANT / this.atom4.mass;
+    const inverseMass1 = GF_CONVERSION_CONSTANT / this.atom1.mass;
+    const inverseMass2 = GF_CONVERSION_CONSTANT / this.atom2.mass;
+    const inverseMass3 = GF_CONVERSION_CONSTANT / this.atom3.mass;
+    const inverseMass4 = GF_CONVERSION_CONSTANT / this.atom4.mass;
     this.atom1.force.x += fx1 * inverseMass1;
     this.atom1.force.y += fy1 * inverseMass1;
     this.atom1.force.z += fz1 * inverseMass1;

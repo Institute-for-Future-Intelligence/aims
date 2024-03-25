@@ -5,7 +5,7 @@
 import { Vector3 } from 'three';
 import { Restraint } from './Restraint.ts';
 import { TWO_PI } from '../constants.ts';
-import { ForceCalculator } from './ForceCalculator.ts';
+import { GF_CONVERSION_CONSTANT } from './physicalConstants.ts';
 
 export class Atom {
   index: number;
@@ -22,7 +22,7 @@ export class Atom {
   displacement?: Vector3;
   velocity?: Vector3;
   acceleration?: Vector3;
-  force?: Vector3;
+  force: Vector3;
 
   fixed: boolean = false;
 
@@ -30,11 +30,11 @@ export class Atom {
     this.index = index;
     this.elementSymbol = elementSymbol;
     this.position = position;
+    this.force = new Vector3();
     if (init) {
       this.displacement = new Vector3();
       this.velocity = new Vector3();
       this.acceleration = new Vector3();
-      this.force = new Vector3();
     }
   }
 
@@ -111,7 +111,7 @@ export class Atom {
 
   applyDamping() {
     if (this.damp > 0 && this.force && this.velocity) {
-      const d = ForceCalculator.GF_CONVERSION_CONSTANT * this.damp;
+      const d = GF_CONVERSION_CONSTANT * this.damp;
       this.force.x -= d * this.velocity.x;
       this.force.y -= d * this.velocity.y;
       this.force.z -= d * this.velocity.z;
@@ -122,7 +122,7 @@ export class Atom {
   applyRestraint(): number {
     let energy = 0;
     if (this.restraint && this.force) {
-      const k = (this.restraint.strength * ForceCalculator.GF_CONVERSION_CONSTANT) / this.mass;
+      const k = (this.restraint.strength * GF_CONVERSION_CONSTANT) / this.mass;
       const dx = this.position.x - this.restraint.position.x;
       const dy = this.position.y - this.restraint.position.y;
       const dz = this.position.z - this.restraint.position.z;

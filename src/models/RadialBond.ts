@@ -8,7 +8,7 @@
 
 import { Atom } from './Atom.ts';
 import { BondType } from '../constants';
-import { ForceCalculator } from './ForceCalculator.ts';
+import { GF_CONVERSION_CONSTANT } from './physicalConstants.ts';
 
 export class RadialBond {
   static readonly DEFAULT_STRENGTH = 4.5;
@@ -51,7 +51,7 @@ export class RadialBond {
     const dy = this.atom2.position.y - this.atom1.position.y;
     const dz = this.atom2.position.z - this.atom1.position.z;
     let r = Math.hypot(dx, dy, dz);
-    const s = (this.strength * ForceCalculator.GF_CONVERSION_CONSTANT * (r - length)) / r;
+    const s = (this.strength * GF_CONVERSION_CONSTANT * (r - length)) / r;
     const inverseMass1 = 1 / this.atom1.mass;
     const inverseMass2 = 1 / this.atom2.mass;
     this.atom1.force.x += s * dx * inverseMass1;
