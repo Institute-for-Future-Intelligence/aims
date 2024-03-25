@@ -8,6 +8,7 @@
 
 import { Atom } from './Atom.ts';
 import { BondType } from '../constants';
+import { ForceCalculator } from './ForceCalculator.ts';
 
 export class RadialBond {
   static readonly DEFAULT_STRENGTH = 4.5;
@@ -40,5 +41,26 @@ export class RadialBond {
 
   getCurrentLengthSquared(): number {
     return this.atom1.position.distanceToSquared(this.atom2.position);
+  }
+
+  // v(r)=k*(rij-rij_0)^2/2
+  compute(): number {
+    if (this.atom1.fixed && this.atom2.fixed) return 0;
+    if (!this.atom1.force || !this.atom2.force) return 0;
+    const dx = this.atom2.position.x - this.atom1.position.x;
+    const dy = this.atom2.position.y - this.atom1.position.y;
+    const dz = this.atom2.position.z - this.atom1.position.z;
+    let r = Math.hypot(dx, dy, dz);
+    const s = (this.strength * ForceCalculator.GF_CONVERSION_CONSTANT * (r - length)) / r;
+    const inverseMass1 = 1 / this.atom1.mass;
+    const inverseMass2 = 1 / this.atom2.mass;
+    this.atom1.force.x += s * dx * inverseMass1;
+    this.atom1.force.y += s * dy * inverseMass1;
+    this.atom1.force.z += s * dz * inverseMass1;
+    this.atom2.force.x -= s * dx * inverseMass2;
+    this.atom2.force.y -= s * dy * inverseMass2;
+    this.atom2.force.z -= s * dz * inverseMass2;
+    r -= length;
+    return 0.5 * this.strength * r * r;
   }
 }
