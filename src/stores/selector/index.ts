@@ -99,6 +99,8 @@ export const enableRotate = (state: PrimitiveStoreState) => state.enableRotate;
 
 export const autoRotate = (state: PrimitiveStoreState) => state.autoRotate;
 
+export const startSimulation = (state: PrimitiveStoreState) => state.startSimulation;
+
 export const resetViewFlag = (state: PrimitiveStoreState) => state.resetViewFlag;
 
 export const zoomViewFlag = (state: PrimitiveStoreState) => state.zoomViewFlag;

@@ -34,6 +34,7 @@ import ToolBarButtons from './view/toolBarButtons.tsx';
 import { useRefStore } from './stores/commonRef.ts';
 import { usePrimitiveStore } from './stores/commonPrimitive.ts';
 import { MoleculeTransform } from './types.ts';
+import SimulationControls from './view/simulationControls.tsx';
 
 const ReactionChamber = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -224,6 +225,7 @@ const ReactionChamber = React.memo(() => {
         <DynamicsSettings molecules={moleculesRef?.current ? [...moleculesRef.current] : []} />
       )}
       <ToolBarButtons />
+      <SimulationControls />
 
       {loading && canvasRef.current && (
         <Spin

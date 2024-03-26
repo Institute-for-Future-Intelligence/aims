@@ -165,6 +165,10 @@ export const i18n_en = {
     },
 
     experiment: {
+      MolecularDynamics: 'Molecular Dynamics',
+      StartSimulation: 'Start Simulation',
+      PauseSimulation: 'Pause Simulation',
+      ResetSimulation: 'Reset Simulation',
       ExperimentSettings: 'Experiment Settings',
       ContainerLx: 'Container Lx',
       ContainerLy: 'Container Ly',
@@ -238,9 +242,9 @@ export const i18n_en = {
       SameColorForAllMolecules: 'Same color for all molecules',
       OneColorForEachMolecule: 'One color for each molecule',
       GraphScreenshot: 'Take a screenshot of the graph',
-      Elements: 'Elements',
+      ChemicalElements: 'Chemical Elements',
       AtomCount: 'Atom Count',
-      BondCount: 'Bond Count',
+      CovalentBondCount: 'Covalent Bond Count',
       ResidueCount: 'Residue Count',
       ChainCount: 'Chain Count',
       StructureCount: 'Structure Count',

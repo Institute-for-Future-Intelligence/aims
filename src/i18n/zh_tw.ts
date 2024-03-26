@@ -165,6 +165,10 @@ export const i18n_zh_tw = {
     },
 
     experiment: {
+      MolecularDynamics: '分子動力學',
+      StartSimulation: '運行',
+      PauseSimulation: '暫停',
+      ResetSimulation: '重置',
       ExperimentSettings: '實驗設定',
       ContainerLx: '容器Lx',
       ContainerLy: '容器Ly',
@@ -237,9 +241,9 @@ export const i18n_zh_tw = {
       SameColorForAllMolecules: '所有分子一個顏色',
       OneColorForEachMolecule: '每個分子一個顏色',
       GraphScreenshot: '圖形截屏',
-      Elements: '包含化學元素',
+      ChemicalElements: '包含化學元素',
       AtomCount: '原子數量',
-      BondCount: '化學鍵數量',
+      CovalentBondCount: '共價鍵數量',
       ResidueCount: '殘基數量',
       ChainCount: '鏈數量',
       StructureCount: '結構數量',

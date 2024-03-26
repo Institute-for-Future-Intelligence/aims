@@ -217,7 +217,10 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
     if (molecules) {
       for (const m of molecules) {
         atomCount += m.atoms.length;
-        bondCount += m.bonds.length;
+        if (m.atoms.length > 1) {
+          // prevent auto bond
+          bondCount += m.bonds.length;
+        }
         for (const a of m.atoms) {
           if (!elements.includes(a.elementSymbol)) elements.push(a.elementSymbol);
         }
@@ -236,12 +239,12 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
       },
       {
         key: '3',
-        label: t('projectPanel.BondCount', lang),
+        label: t('projectPanel.CovalentBondCount', lang),
         children: bondCount,
       },
       {
         key: '4',
-        label: t('projectPanel.Elements', lang),
+        label: t('projectPanel.ChemicalElements', lang),
         children: elements.join(', '),
       },
     ];
