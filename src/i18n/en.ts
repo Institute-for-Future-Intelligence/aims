@@ -22,6 +22,8 @@ export const i18n_en = {
     },
 
     word: {
+      Heat: 'Heat',
+      Cool: 'Cool',
       Relative: 'Relative',
       KeyboardKey: 'Key',
       None: 'None',

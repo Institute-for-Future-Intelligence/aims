@@ -3,7 +3,13 @@
  */
 
 import React, { useMemo } from 'react';
-import { RightOutlined, PauseOutlined, VerticalRightOutlined } from '@ant-design/icons';
+import {
+  RightOutlined,
+  PauseOutlined,
+  VerticalRightOutlined,
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+} from '@ant-design/icons';
 import { Button, Space } from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
@@ -13,8 +19,8 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   position: absolute;
-  left: calc(50% - 80px);
-  width: 160px;
+  left: calc(50% - 120px);
+  width: 240px;
   bottom: 6px;
   margin: 0;
   display: flex;
@@ -49,6 +55,8 @@ const SimulationControls = React.memo(() => {
 
   const resetSimulation = () => {};
 
+  const changeTemperature = (increment: number) => {};
+
   return (
     <Container>
       <Space direction={'horizontal'} style={{ color: 'antiquewhite', fontSize: '10px' }}>
@@ -57,11 +65,51 @@ const SimulationControls = React.memo(() => {
           icon={<VerticalRightOutlined />}
           onClick={resetSimulation}
           title={t('experiment.ResetSimulation', lang)}
+          // the following disables keyboard focus
+          onMouseDown={(e) => e.preventDefault()}
+          // the following disables the context menu
+          onContextMenu={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
         />
         <Button
           icon={start ? <PauseOutlined /> : <RightOutlined />}
           onClick={toggleSimulation}
           title={t(start ? 'experiment.PauseSimulation' : 'experiment.StartSimulation', lang)}
+          // the following disables keyboard focus
+          onMouseDown={(e) => e.preventDefault()}
+          // the following disables the context menu
+          onContextMenu={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+        />
+        <Button
+          style={{ background: 'lightsteelblue' }}
+          icon={<ArrowDownOutlined />}
+          onClick={() => changeTemperature(-10)}
+          title={t('word.Cool', lang)}
+          // the following disables keyboard focus
+          onMouseDown={(e) => e.preventDefault()}
+          // the following disables the context menu
+          onContextMenu={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+        />
+        <Button
+          style={{ background: 'lightcoral' }}
+          icon={<ArrowUpOutlined />}
+          onClick={() => changeTemperature(-10)}
+          title={t('word.Heat', lang)}
+          // the following disables keyboard focus
+          onMouseDown={(e) => e.preventDefault()}
+          // the following disables the context menu
+          onContextMenu={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
         />
       </Space>
     </Container>

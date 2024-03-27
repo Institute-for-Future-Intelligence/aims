@@ -22,6 +22,8 @@ export const i18n_zh_tw = {
     },
 
     word: {
+      Heat: '加熱',
+      Cool: '冷卻',
       Relative: '相對',
       KeyboardKey: '鍵',
       None: '無',
