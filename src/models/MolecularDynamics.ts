@@ -101,7 +101,6 @@ export class MolecularDynamics {
         this.potentialEnergy += tb.compute();
       }
     }
-    this.potentialEnergy /= this.atoms.length;
   }
 
   applyBoundary() {

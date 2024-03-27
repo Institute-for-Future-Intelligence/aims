@@ -53,7 +53,6 @@ const SimulationControls = React.memo(() => {
 
   useEffect(() => {
     if (startSimulation) {
-      init();
       requestRef.current = requestAnimationFrame(simulate);
       return () => {
         // this is called when the recursive call of requestAnimationFrame exits

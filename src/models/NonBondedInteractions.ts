@@ -74,6 +74,9 @@ export class NonBondedInteractions {
     this.virialLJ = 0;
     this.virialEL = 0;
 
+    // reuse this vector to store position difference between two atoms
+    const v = new Vector3();
+
     if (this.updateList) {
       // store the current positions for the next update check
       for (let i = 0; i < atomCount; i++) {
@@ -88,7 +91,7 @@ export class NonBondedInteractions {
         let fzi = this.atoms[i].force.z;
         for (let j = i + 1; j < atomCount; j++) {
           if (this.skipPair(i, j)) continue;
-          const v = new Vector3().subVectors(this.atoms[i].position, this.atoms[j].position);
+          v.subVectors(this.atoms[i].position, this.atoms[j].position);
           let rsq = v.lengthSq();
           const sig = this.atoms[i].sigma * this.atoms[j].sigma;
           if (rsq < rListSq * sig) {
@@ -156,7 +159,7 @@ export class NonBondedInteractions {
           for (let jList = jBeg; jList < jEnd; jList++) {
             const j = this.neighborList[jList];
             if (this.skipPair(i, j)) continue;
-            const v = new Vector3().subVectors(this.atoms[i].position, this.atoms[j].position);
+            v.subVectors(this.atoms[i].position, this.atoms[j].position);
             let rsq = v.lengthSq();
             if (rsq < rCutoffSq * this.atoms[i].sigma * this.atoms[j].sigma) {
               let meanSig = 0.5 * (this.atoms[i].sigma + this.atoms[j].sigma);
