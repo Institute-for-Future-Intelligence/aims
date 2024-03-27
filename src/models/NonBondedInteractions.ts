@@ -21,7 +21,6 @@ export class NonBondedInteractions {
   pairs: Pair[] = []; // export to draw vdw pairs (it is faster as it uses the neighbor list)
   virialLJ: number = 0;
   virialEL: number = 0;
-  energy: number = 0;
 
   private updateList: boolean = true;
   private neighborList: number[] = [];
@@ -71,7 +70,7 @@ export class NonBondedInteractions {
 
     const rCutoffSq = this.rCutoff * this.rCutoff;
     const rListSq = this.rList * this.rList;
-    this.energy = 0;
+    let energy = 0;
     this.virialLJ = 0;
     this.virialEL = 0;
 
@@ -109,7 +108,7 @@ export class NonBondedInteractions {
               const meanEps = 2 * (this.atoms[i].epsilon + this.atoms[j].epsilon);
               const vij = meanEps * (sr12 - sr6); // Lennard-Jones potential
               const wij = vij + sr12 * meanEps; // Lennard-Jones virial
-              this.energy += vij;
+              energy += vij;
               this.virialLJ += wij;
               const fij = (wij / rsq) * SIX_TIMES_UNIT_FORCE;
               const gx = fij * v.x;
@@ -127,7 +126,7 @@ export class NonBondedInteractions {
           if (Math.abs(this.atoms[i].charge) + Math.abs(this.atoms[j].charge) > ZERO_TOLERANCE) {
             if (!this.skipPair(i, j)) {
               const coulomb = (COULOMB_CONSTANT * this.atoms[i].charge * this.atoms[j].charge) / Math.sqrt(rsq);
-              this.energy += coulomb; // Coulomb potential
+              energy += coulomb; // Coulomb potential
               this.virialEL += coulomb; // Coulomb virial
               const fij = (coulomb / rsq) * GF_CONVERSION_CONSTANT;
               const gx = fij * v.x;
@@ -174,7 +173,7 @@ export class NonBondedInteractions {
               const meanEps = 2.0 * (this.atoms[i].epsilon + this.atoms[j].epsilon);
               const vij = meanEps * (sr12 - sr6); // Lennard-Jones potential
               const wij = vij + sr12 * meanEps; // Lennard-Jones virial
-              this.energy += vij;
+              energy += vij;
               this.virialLJ += wij;
               const fij = (wij / rsq) * SIX_TIMES_UNIT_FORCE;
               const gx = fij * v.x;
@@ -197,7 +196,7 @@ export class NonBondedInteractions {
               const v = new Vector3().subVectors(this.atoms[i].position, this.atoms[j].position);
               const rsq = v.lengthSq();
               const coulomb = (COULOMB_CONSTANT * this.atoms[i].charge * this.atoms[j].charge) / Math.sqrt(rsq);
-              this.energy += coulomb;
+              energy += coulomb;
               this.virialEL += coulomb;
               const fij = (coulomb / rsq) * GF_CONVERSION_CONSTANT;
               const fx = fij * v.x;
@@ -214,7 +213,6 @@ export class NonBondedInteractions {
         }
 
         this.atoms[i].force.set(fxi, fyi, fzi);
-        console.log(this.atoms[i].force);
       }
     }
 
@@ -226,7 +224,7 @@ export class NonBondedInteractions {
 
     this.virialLJ *= 3.0;
 
-    return this.energy;
+    return energy;
   }
 
   private expandPairs(increment?: number) {

@@ -130,6 +130,8 @@ const DynamicsViewer = React.memo(
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
         const a = new Atom(atom.index, atom.element.name, atom.position, true);
+        a.sigma = atom.element.radius * 2;
+        a.mass = atom.element.weight;
         if (transform) {
           a.position.x += transform.x ?? 0;
           a.position.y += transform.y ?? 0;

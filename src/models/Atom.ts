@@ -12,9 +12,9 @@ export class Atom {
   elementSymbol: string;
   position: Vector3;
 
-  mass: number = 1;
+  mass: number = 10;
   sigma: number = 1; // van der Waals radius
-  epsilon: number = 0.1; // van der Waals energy
+  epsilon: number = 0.5; // van der Waals energy
   charge: number = 0;
   damp: number = 0;
   restraint?: Restraint;

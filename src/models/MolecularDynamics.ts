@@ -12,6 +12,7 @@ import { TorsionalBond } from './TorsionalBond.ts';
 import { MolecularContainer } from '../types.ts';
 import { NonBondedInteractions } from './NonBondedInteractions.ts';
 import { Molecule } from './Molecule.ts';
+import { EV_CONVERTER } from './physicalConstants.ts';
 
 export class MolecularDynamics {
   atoms: Atom[];
@@ -54,23 +55,27 @@ export class MolecularDynamics {
 
   init(): void {
     for (const a of this.atoms) {
-      a.setRandomVelocity(0.5);
+      a.setRandomVelocity(0.1);
     }
   }
 
   move() {
     if (this.movableCount === 0) return;
     if (this.indexOfStep % 10 === 0) this.nonBondedInteractions.checkNeighborList();
-    const dt2 = this.timeStep * this.timeStep;
+    this.kineticEnergy = 0;
+    this.potentialEnergy = 0;
+    const dt2 = (this.timeStep * this.timeStep) / 2;
     const h = this.timeStep / 2;
+    for (const a of this.atoms) {
+      a.predict(this.timeStep, dt2);
+    }
     this.calculateForce();
     for (const a of this.atoms) {
-      // console.log(a.position, a.acceleration, a.velocity, a.force)
-      a.predict(this.timeStep, dt2);
       a.correct(h);
       this.kineticEnergy += a.getKineticEnergy();
     }
     this.applyBoundary();
+    this.kineticEnergy *= EV_CONVERTER;
     this.totalEnergy = this.kineticEnergy + this.potentialEnergy;
     this.indexOfStep++;
     if (this.indexOfStep % 10 == 0) {
@@ -79,7 +84,6 @@ export class MolecularDynamics {
   }
 
   calculateForce() {
-    this.potentialEnergy = 0;
     if (this.atoms.length === 0) return;
     this.potentialEnergy += this.nonBondedInteractions.compute();
     if (this.radialBonds.length > 0) {
