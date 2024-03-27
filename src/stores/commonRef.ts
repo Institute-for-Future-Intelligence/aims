@@ -8,6 +8,7 @@ import { Group, Raycaster, Vector3 } from 'three';
 import { Molecule } from '../models/Molecule.ts';
 import { Camera } from '@react-three/fiber';
 import { VdwBond } from '../models/VdwBond.ts';
+import { MolecularDynamics } from '../models/MolecularDynamics.ts';
 
 export interface RefStoreState {
   selectNone: () => void;
@@ -20,6 +21,7 @@ export interface RefStoreState {
   moleculesRef: RefObject<Molecule[]> | null;
   vdwBondsRef: RefObject<VdwBond[]> | null;
   clickPointRef: RefObject<Vector3> | null;
+  molecularDynamicsRef: RefObject<MolecularDynamics> | null;
 }
 
 export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
@@ -34,5 +36,6 @@ export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
     moleculesRef: null,
     vdwBondsRef: null,
     clickPointRef: null,
+    molecularDynamicsRef: null,
   };
 });

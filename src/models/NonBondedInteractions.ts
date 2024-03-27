@@ -24,9 +24,9 @@ export class NonBondedInteractions {
   energy: number = 0;
 
   private updateList: boolean = true;
-  private readonly neighborList: number[] = [];
-  private readonly pointer: number[] = [];
-  private readonly lastPositions: Vector3[] = [];
+  private neighborList: number[] = [];
+  private pointer: number[] = [];
+  private lastPositions: Vector3[] = [];
   private rList: number = this.rCutoff + 1; // radius to list neighbors
 
   constructor(atoms: Atom[]) {
@@ -36,7 +36,7 @@ export class NonBondedInteractions {
     for (let i = 0; i < n; i++) {
       this.lastPositions[i] = new Vector3();
     }
-    this.neighborList = new Array<number>((n * n) / 2);
+    this.neighborList = new Array<number>(Math.round((n * n) / 2));
     this.pointer = new Array<number>(n);
   }
 
@@ -214,6 +214,7 @@ export class NonBondedInteractions {
         }
 
         this.atoms[i].force.set(fxi, fyi, fzi);
+        console.log(this.atoms[i].force);
       }
     }
 

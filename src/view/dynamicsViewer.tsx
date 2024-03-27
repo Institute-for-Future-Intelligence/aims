@@ -32,6 +32,7 @@ import Picker from '../lib/ui/Picker.js';
 import settings from '../lib/settings.js';
 import Movers from './movers.tsx';
 import { VdwBond } from '../models/VdwBond.ts';
+import { MolecularDynamics } from '../models/MolecularDynamics.ts';
 
 extend({ RCGroup });
 
@@ -64,6 +65,7 @@ const DynamicsViewer = React.memo(
     const viewerStyle = useStore(Selector.chamberViewerStyle);
     const vdwBondsVisible = useStore(Selector.vdwBondsVisible);
     const vdwBondCutoffRelative = useStore(Selector.vdwBondCutoffRelative) ?? 0.5;
+    const molecularContainer = useStore(Selector.molecularContainer);
 
     const [complex, setComplex] = useState<any>();
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -74,6 +76,7 @@ const DynamicsViewer = React.memo(
     const cameraRef = useRef<Camera | undefined>();
     const raycasterRef = useRef<Raycaster | undefined>();
     const boundingBoxRef = useRef<Box3 | undefined>();
+    const molecularDynamicsRef = useRef<MolecularDynamics | null>(null);
 
     const { invalidate, camera, raycaster, gl } = useThree();
 
@@ -100,8 +103,9 @@ const DynamicsViewer = React.memo(
         raycasterRef: raycasterRef,
         moleculesRef: moleculesRef,
         vdwBondsRef: vdwBondsRef,
+        molecularDynamicsRef: molecularDynamicsRef,
       });
-    }, [camera, raycaster, cameraRef, raycasterRef, moleculesRef, vdwBondsRef]);
+    }, [camera, raycaster, cameraRef, raycasterRef, moleculesRef, vdwBondsRef, molecularDynamicsRef]);
 
     useEffect(() => {
       if (!testMolecules || testMolecules.length === 0) {
@@ -125,7 +129,7 @@ const DynamicsViewer = React.memo(
       const c = new Vector3();
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
-        const a = new Atom(atom.index, atom.element.name, atom.position);
+        const a = new Atom(atom.index, atom.element.name, atom.position, true);
         if (transform) {
           a.position.x += transform.x ?? 0;
           a.position.y += transform.y ?? 0;
@@ -150,6 +154,7 @@ const DynamicsViewer = React.memo(
       moleculesRef.current.push(mol);
       if (moleculesRef.current.length === testMolecules.length) {
         setComplex(generateComplex(moleculesRef.current));
+        molecularDynamicsRef.current = new MolecularDynamics(moleculesRef.current, molecularContainer);
       }
     };
 

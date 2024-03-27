@@ -2,7 +2,7 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import {
   RightOutlined,
   PauseOutlined,
@@ -16,6 +16,7 @@ import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import styled from 'styled-components';
+import { useRefStore } from '../stores/commonRef.ts';
 
 const Container = styled.div`
   position: absolute;
@@ -40,12 +41,51 @@ const Container = styled.div`
 const SimulationControls = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
-  const start = usePrimitiveStore(Selector.startSimulation);
+  const startSimulation = usePrimitiveStore(Selector.startSimulation);
+
+  const mdRef = useRefStore.getState().molecularDynamicsRef;
+  const requestRef = useRef<number>(0);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
+
+  useEffect(() => {
+    if (startSimulation) {
+      init();
+      requestRef.current = requestAnimationFrame(simulate);
+      return () => {
+        // this is called when the recursive call of requestAnimationFrame exits
+        cancelAnimationFrame(requestRef.current);
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startSimulation]);
+
+  const init = () => {
+    if (mdRef?.current) {
+      const md = mdRef.current;
+      md.init();
+    }
+  };
+
+  const simulate = () => {
+    if (startSimulation && mdRef?.current) {
+      const md = mdRef.current;
+      const movables = md.countMovables();
+      if (movables > 0) {
+        md.move();
+        if (md.indexOfStep % 5 === 0) {
+          usePrimitiveStore.getState().set((state) => {
+            state.updateViewerFlag = !state.updateViewerFlag;
+          });
+        }
+        // recursive call to the next step of the simulation
+        requestRef.current = requestAnimationFrame(simulate);
+      }
+    }
+  };
 
   const toggleSimulation = () => {
     usePrimitiveStore.getState().set((state) => {
@@ -53,7 +93,14 @@ const SimulationControls = React.memo(() => {
     });
   };
 
-  const resetSimulation = () => {};
+  const resetSimulation = () => {
+    if (mdRef?.current) {
+      mdRef.current.indexOfStep = 0;
+    }
+    usePrimitiveStore.getState().set((state) => {
+      state.startSimulation = false;
+    });
+  };
 
   const changeTemperature = (increment: number) => {};
 
@@ -74,9 +121,9 @@ const SimulationControls = React.memo(() => {
           }}
         />
         <Button
-          icon={start ? <PauseOutlined /> : <RightOutlined />}
+          icon={startSimulation ? <PauseOutlined /> : <RightOutlined />}
           onClick={toggleSimulation}
-          title={t(start ? 'experiment.PauseSimulation' : 'experiment.StartSimulation', lang)}
+          title={t(startSimulation ? 'experiment.PauseSimulation' : 'experiment.StartSimulation', lang)}
           // the following disables keyboard focus
           onMouseDown={(e) => e.preventDefault()}
           // the following disables the context menu

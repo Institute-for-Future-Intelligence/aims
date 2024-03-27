@@ -11,6 +11,7 @@ import { AngularBond } from './AngularBond.ts';
 import { TorsionalBond } from './TorsionalBond.ts';
 import { MolecularContainer } from '../types.ts';
 import { NonBondedInteractions } from './NonBondedInteractions.ts';
+import { Molecule } from './Molecule.ts';
 
 export class MolecularDynamics {
   atoms: Atom[];
@@ -27,18 +28,15 @@ export class MolecularDynamics {
   timeStep: number = 0.5;
   indexOfStep: number = 0;
 
-  constructor(
-    atoms: Atom[],
-    radialBonds: RadialBond[],
-    angularBonds: AngularBond[],
-    torsionalBonds: TorsionalBond[],
-    container: MolecularContainer,
-  ) {
-    this.atoms = atoms;
-    this.nonBondedInteractions = new NonBondedInteractions(atoms);
-    this.radialBonds = radialBonds;
-    this.angularBonds = angularBonds;
-    this.torsionalBonds = torsionalBonds;
+  constructor(molecules: Molecule[], container: MolecularContainer) {
+    this.atoms = [];
+    for (const m of molecules) {
+      this.atoms.push(...m.atoms);
+    }
+    this.nonBondedInteractions = new NonBondedInteractions(this.atoms);
+    this.radialBonds = [];
+    this.angularBonds = [];
+    this.torsionalBonds = [];
     this.container = container;
     this.potentialEnergy = 0;
     this.kineticEnergy = 0;
@@ -46,10 +44,17 @@ export class MolecularDynamics {
     this.movableCount = 0;
   }
 
-  countMovables() {
+  countMovables(): number {
     this.movableCount = 0;
     for (const a of this.atoms) {
       if (!a.fixed) this.movableCount++;
+    }
+    return this.movableCount;
+  }
+
+  init(): void {
+    for (const a of this.atoms) {
+      a.setRandomVelocity(0.5);
     }
   }
 
@@ -60,6 +65,7 @@ export class MolecularDynamics {
     const h = this.timeStep / 2;
     this.calculateForce();
     for (const a of this.atoms) {
+      // console.log(a.position, a.acceleration, a.velocity, a.force)
       a.predict(this.timeStep, dt2);
       a.correct(h);
       this.kineticEnergy += a.getKineticEnergy();
