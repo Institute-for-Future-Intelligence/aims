@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { AimOutlined, ExperimentOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { Molecule } from '../models/Molecule.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
+import { useRefStore } from '../stores/commonRef.ts';
 
 const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | undefined | null }) => {
   const setCommonStore = useStore(Selector.set);
@@ -21,6 +22,8 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
   const temperature = useStore(Selector.temperature) ?? 300;
   const pressure = useStore(Selector.pressure) ?? 1;
   const timeStep = useStore(Selector.timeStep) ?? 0.5;
+
+  const mdRef = useRefStore.getState().molecularDynamicsRef;
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -46,6 +49,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
               step={1}
               onChange={(value) => {
                 if (value === null) return;
+                if (mdRef?.current) mdRef.current.container.lx = value;
                 setCommonStore((state) => {
                   state.projectState.molecularContainer.lx = value;
                 });
@@ -70,6 +74,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
               step={1}
               onChange={(value) => {
                 if (value === null) return;
+                if (mdRef?.current) mdRef.current.container.ly = value;
                 setCommonStore((state) => {
                   state.projectState.molecularContainer.ly = value;
                 });
@@ -94,6 +99,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
               step={1}
               onChange={(value) => {
                 if (value === null) return;
+                if (mdRef?.current) mdRef.current.container.lz = value;
                 setCommonStore((state) => {
                   state.projectState.molecularContainer.lz = value;
                 });
@@ -134,7 +140,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
             <InputNumber
               addonAfter={t('experiment.Femtosecond', lang)}
               min={0.1}
-              max={2}
+              max={5}
               style={{ width: '100%' }}
               precision={1}
               // make sure that we round up the number as toDegrees may cause things like .999999999
@@ -142,6 +148,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
               step={0.1}
               onChange={(value) => {
                 if (value === null) return;
+                if (mdRef?.current) mdRef.current.timeStep = value;
                 setCommonStore((state) => {
                   state.projectState.timeStep = value;
                 });
@@ -208,6 +215,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
     temperature,
     pressure,
     vdwBondCutoffRelative,
+    timeStep,
   ]);
 
   const createInfo = useMemo(() => {

@@ -3,6 +3,16 @@
  *
  * See: https://en.wikipedia.org/wiki/Molecular_dynamics
  *
+ * Avogadro's constant = 6 x 10^23 per mole
+ * An electron volt (eV) = 1.6 x 10^-19 joules
+ * Boltzmann's constant = 1.38 x 10^-23 joules/kelvin
+ * Planck's constant (h-bar) = 6.583 x 10^-16 eV*s
+ * Coulomb's constant * electron charge ^2 = 14.4 eV*angstrom
+ * Unit of mass = g/mol (atomic mass unit)
+ * Unit of length = angstrom
+ * Unit of time = femtosecond (10^-15 second)
+ * Unit of temperature = kelvin
+ *
  */
 
 import { Atom } from './Atom.ts';
@@ -12,7 +22,9 @@ import { TorsionalBond } from './TorsionalBond.ts';
 import { MolecularContainer } from '../types.ts';
 import { NonBondedInteractions } from './NonBondedInteractions.ts';
 import { Molecule } from './Molecule.ts';
-import { EV_CONVERTER } from './physicalConstants.ts';
+import { EV_CONVERTER, VT_CONVERSION_CONSTANT } from './physicalConstants.ts';
+import { ZERO_TOLERANCE } from '../constants.ts';
+import { ModelUtil } from './ModelUtil.ts';
 
 export class MolecularDynamics {
   atoms: Atom[];
@@ -38,7 +50,7 @@ export class MolecularDynamics {
     this.radialBonds = [];
     this.angularBonds = [];
     this.torsionalBonds = [];
-    this.container = container;
+    this.container = { ...container };
     this.potentialEnergy = 0;
     this.kineticEnergy = 0;
     this.totalEnergy = 0;
@@ -56,6 +68,43 @@ export class MolecularDynamics {
   init(): void {
     for (const a of this.atoms) {
       a.setRandomVelocity(0.1);
+    }
+  }
+
+  // assign velocities to atoms according to the Boltzman-Maxwell distribution
+  assignTemperature(temperature: number) {
+    if (temperature < ZERO_TOLERANCE) temperature = 0;
+    const rtemp = Math.sqrt(temperature) * VT_CONVERSION_CONSTANT;
+    let sumVx = 0;
+    let sumVy = 0;
+    let sumVz = 0;
+    let sumMass = 0;
+    const n = this.atoms.length;
+    if (n > 0) {
+      for (let i = 0; i < n; i++) {
+        if (this.atoms[i].fixed) continue;
+        this.atoms[i].velocity.x = rtemp * ModelUtil.nextGaussian();
+        this.atoms[i].velocity.y = rtemp * ModelUtil.nextGaussian();
+        this.atoms[i].velocity.z = rtemp * ModelUtil.nextGaussian();
+        sumVx += this.atoms[i].velocity.x * this.atoms[i].mass;
+        sumVy += this.atoms[i].velocity.y * this.atoms[i].mass;
+        sumVz += this.atoms[i].velocity.z * this.atoms[i].mass;
+        sumMass += this.atoms[i].mass;
+      }
+    }
+    if (sumMass > ZERO_TOLERANCE) {
+      sumVx /= sumMass;
+      sumVy /= sumMass;
+      sumVz /= sumMass;
+      if (n > 1) {
+        for (let i = 0; i < n; i++) {
+          if (this.atoms[i].fixed) continue;
+          this.atoms[i].velocity.x -= sumVx;
+          this.atoms[i].velocity.y -= sumVy;
+          this.atoms[i].velocity.z -= sumVz;
+        }
+      }
+      // setTemperature(temperature);
     }
   }
 

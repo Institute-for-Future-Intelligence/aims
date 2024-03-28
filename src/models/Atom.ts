@@ -20,7 +20,7 @@ export class Atom {
   restraint?: Restraint;
 
   displacement?: Vector3;
-  velocity?: Vector3;
+  velocity: Vector3;
   acceleration?: Vector3;
   force: Vector3;
 
@@ -30,10 +30,10 @@ export class Atom {
     this.index = index;
     this.elementSymbol = elementSymbol;
     this.position = position;
+    this.velocity = new Vector3();
     this.force = new Vector3();
     if (init) {
       this.displacement = new Vector3();
-      this.velocity = new Vector3();
       this.acceleration = new Vector3();
     }
   }
