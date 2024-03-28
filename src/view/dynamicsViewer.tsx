@@ -41,7 +41,6 @@ export interface DynamicsViewerProps {
   style: MolecularViewerStyle;
   material: MolecularViewerMaterial;
   coloring: MolecularViewerColoring;
-  selector?: string;
   setLoading?: (loading: boolean) => void;
   onPointerOver?: () => void;
   onPointerLeave?: () => void;
@@ -49,16 +48,7 @@ export interface DynamicsViewerProps {
 }
 
 const DynamicsViewer = React.memo(
-  ({
-    style,
-    material,
-    coloring,
-    selector,
-    setLoading,
-    onPointerOver,
-    onPointerLeave,
-    onPointerDown,
-  }: DynamicsViewerProps) => {
+  ({ style, material, coloring, setLoading, onPointerOver, onPointerLeave, onPointerDown }: DynamicsViewerProps) => {
     const testMolecules = useStore(Selector.testMolecules);
     const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
     const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
@@ -78,6 +68,7 @@ const DynamicsViewer = React.memo(
     const raycasterRef = useRef<Raycaster | undefined>();
     const boundingBoxRef = useRef<Box3 | undefined>();
     const molecularDynamicsRef = useRef<MolecularDynamics | null>(null);
+    const visualRef = useRef<ComplexVisual | undefined>();
 
     const { invalidate, camera, raycaster, gl } = useThree();
 
@@ -165,26 +156,31 @@ const DynamicsViewer = React.memo(
       if (!groupRef.current || !mode) return;
       groupRef.current.children = [];
       if (!complex) return;
-      const visual = new ComplexVisual(complex.name, complex);
-      const reps = [];
-      // Don't change the selector below. We use 'chain' to identify molecules as there is no 'molecule' keyword
-      // according to https://lifescience.opensource.epam.com/miew/selectors.html
-      for (let i = 0; i < testMolecules.length; i++) {
-        reps.push({
-          mode: mode,
-          colorer: colorer,
-          selector: 'chain MOL' + i,
-          material: MATERIAL_MAP.get(material),
-        });
+      if (visualRef.current) {
+        visualRef.current.name = complex.name;
+        visualRef.current._complex = complex;
+      } else {
+        visualRef.current = new ComplexVisual(complex.name, complex);
+        const reps = [];
+        // Don't change the selector below. We use 'chain' to identify molecules as there is no 'molecule' keyword
+        // according to https://lifescience.opensource.epam.com/miew/selectors.html
+        for (let i = 0; i < testMolecules.length; i++) {
+          reps.push({
+            mode: mode,
+            colorer: colorer,
+            selector: 'chain MOL' + i,
+            material: MATERIAL_MAP.get(material),
+          });
+        }
+        visualRef.current.resetReps(reps);
       }
-      visual.resetReps(reps);
-      visual
-        .rebuildNow()
+      visualRef.current
+        .rebuildAlways()
         .then(() => {
-          if (!groupRef.current) return;
-          groupRef.current.add(visual, visual.getSelectionGeo());
-          const boundingSphere = visual.getBoundaries().boundingSphere;
-          boundingBoxRef.current = visual.getBoundaries().boundingBox;
+          if (!groupRef.current || !visualRef.current) return;
+          groupRef.current.add(visualRef.current, visualRef.current.getSelectionGeo());
+          const boundingSphere = visualRef.current.getBoundaries().boundingSphere;
+          boundingBoxRef.current = visualRef.current.getBoundaries().boundingBox;
           usePrimitiveStore.getState().set((state) => {
             state.boundingSphereRadius = boundingSphere.radius;
           });
@@ -195,7 +191,17 @@ const DynamicsViewer = React.memo(
         .finally(() => {
           if (setLoading) setLoading(false);
         });
-    }, [complex, material, mode, colorer, selector, testMolecules, updateViewerFlag, pickedMoleculeIndex]);
+      return () => {
+        visualRef.current?.release();
+      };
+    }, [complex, material, mode, colorer, testMolecules, updateViewerFlag, pickedMoleculeIndex]);
+
+    useEffect(() => {
+      visualRef.current = undefined;
+      usePrimitiveStore.getState().set((state) => {
+        state.updateViewerFlag = !state.updateViewerFlag;
+      });
+    }, [material, mode, colorer]);
 
     useEffect(() => {
       const picker = new Picker(groupRef.current, camera, gl.domElement);

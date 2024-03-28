@@ -705,6 +705,55 @@ class ComplexVisual extends Visual {
     });
   }
 
+  rebuildAlways() {
+    const self = this;
+
+    // Destroy current geometry
+    gfxutils.clearTree(this);
+
+    return new Promise((resolve) => {
+      // Nothing to do?
+      const complex = self._complex;
+      if (!complex) {
+        resolve();
+        return;
+      }
+
+      let errorOccured = false;
+      const reprList = self._reprList;
+      const palette = palettes.get(settings.now.palette) || palettes.first;
+      let hasGeometry = false;
+      for (let i = 0, n = reprList.length; i < n; ++i) {
+        const repr = reprList[i];
+        repr.colorer.palette = palette;
+
+        repr.reset();
+
+        try {
+          repr.buildGeometry(complex);
+        } catch (e) {
+          if (e instanceof utils.OutOfMemoryError) {
+            repr.needsRebuild = false;
+            repr.reset();
+            logger.error(`Not enough memory to build geometry for representation ${repr.index + 1}`);
+            errorOccured = true;
+          } else {
+            throw e;
+          }
+        }
+
+        hasGeometry = errorOccured || hasGeometry || gfxutils.groupHasGeometryToRender(repr.geo);
+
+        if (repr.geo) {
+          self.add(repr.geo);
+        }
+      }
+
+      self._reprListChanged = false;
+      resolve();
+    });
+  }
+
   setNeedsRebuild() {
     // invalidate all representations
     const reprList = this._reprList;
