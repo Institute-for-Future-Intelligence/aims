@@ -33,6 +33,7 @@ import settings from '../lib/settings.js';
 import Movers from './movers.tsx';
 import { VdwBond } from '../models/VdwBond.ts';
 import { MolecularDynamics } from '../models/MolecularDynamics.ts';
+import { LJ_SIGMA_CONVERTER } from '../models/physicalConstants.ts';
 
 extend({ RCGroup });
 
@@ -130,7 +131,7 @@ const DynamicsViewer = React.memo(
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
         const a = new Atom(atom.index, atom.element.name, atom.position, true);
-        a.sigma = atom.element.radius * 2;
+        a.sigma = atom.element.radius * LJ_SIGMA_CONVERTER;
         a.mass = atom.element.weight;
         if (transform) {
           a.position.x += transform.x ?? 0;

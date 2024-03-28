@@ -5,7 +5,7 @@
 import { Vector3 } from 'three';
 import { Restraint } from './Restraint.ts';
 import { TWO_PI } from '../constants.ts';
-import { GF_CONVERSION_CONSTANT } from './physicalConstants.ts';
+import { EV_CONVERTER, GF_CONVERSION_CONSTANT } from './physicalConstants.ts';
 
 export class Atom {
   index: number;
@@ -54,7 +54,7 @@ export class Atom {
 
   getKineticEnergy() {
     if (!this.velocity || !this.mass) return 0;
-    return 0.5 * this.mass * this.velocity.lengthSq();
+    return 0.5 * this.mass * this.velocity.lengthSq() * EV_CONVERTER;
   }
 
   /* predict new position using 2nd order Taylor expansion: dt2 = dt*dt/2 */
@@ -86,12 +86,8 @@ export class Atom {
     this.velocity.x += h * (this.force.x - this.acceleration.x);
     this.velocity.y += h * (this.force.y - this.acceleration.y);
     this.velocity.z += h * (this.force.z - this.acceleration.z);
-    this.acceleration.x = this.force.x;
-    this.acceleration.y = this.force.y;
-    this.acceleration.z = this.force.z;
-    this.force.x *= this.mass;
-    this.force.y *= this.mass;
-    this.force.z *= this.mass;
+    this.acceleration.copy(this.force);
+    this.force.multiplyScalar(this.mass);
   }
 
   // Check if this atom is bonded with the target via a radial bond

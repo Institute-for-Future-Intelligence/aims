@@ -51,6 +51,8 @@ const SimulationControls = React.memo(() => {
     return { lng: language };
   }, [language]);
 
+  const interval = 20;
+
   useEffect(() => {
     if (startSimulation) {
       requestRef.current = requestAnimationFrame(simulate);
@@ -74,12 +76,12 @@ const SimulationControls = React.memo(() => {
       const md = mdRef.current;
       const movables = md.countMovables();
       if (movables > 0) {
-        md.move();
-        if (md.indexOfStep % 5 === 0) {
-          usePrimitiveStore.getState().set((state) => {
-            state.updateViewerFlag = !state.updateViewerFlag;
-          });
+        for (let i = 0; i < interval; i++) {
+          md.move();
         }
+        usePrimitiveStore.getState().set((state) => {
+          state.updateViewerFlag = !state.updateViewerFlag;
+        });
         // recursive call to the next step of the simulation
         requestRef.current = requestAnimationFrame(simulate);
       }
@@ -101,7 +103,11 @@ const SimulationControls = React.memo(() => {
     });
   };
 
-  const changeTemperature = (increment: number) => {};
+  const changeTemperature = (percent: number) => {
+    if (mdRef?.current) {
+      mdRef.current.changeTemperature(percent);
+    }
+  };
 
   return (
     <Container>
@@ -134,7 +140,7 @@ const SimulationControls = React.memo(() => {
         <Button
           style={{ background: 'lightsteelblue' }}
           icon={<ArrowDownOutlined />}
-          onClick={() => changeTemperature(-10)}
+          onClick={() => changeTemperature(-20)}
           title={t('word.Cool', lang)}
           // the following disables keyboard focus
           onMouseDown={(e) => e.preventDefault()}
@@ -147,7 +153,7 @@ const SimulationControls = React.memo(() => {
         <Button
           style={{ background: 'lightcoral' }}
           icon={<ArrowUpOutlined />}
-          onClick={() => changeTemperature(-10)}
+          onClick={() => changeTemperature(20)}
           title={t('word.Heat', lang)}
           // the following disables keyboard focus
           onMouseDown={(e) => e.preventDefault()}
