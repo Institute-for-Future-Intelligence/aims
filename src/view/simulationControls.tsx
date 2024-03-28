@@ -42,9 +42,11 @@ const SimulationControls = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const startSimulation = usePrimitiveStore(Selector.startSimulation);
+  const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
   const requestRef = useRef<number>(0);
+  const requestResetRef = useRef<boolean>(false);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -64,6 +66,16 @@ const SimulationControls = React.memo(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startSimulation]);
 
+  useEffect(() => {
+    if (mdRef?.current) {
+      const md = mdRef.current;
+      md.reset();
+      usePrimitiveStore.getState().set((state) => {
+        state.updateViewerFlag = !state.updateViewerFlag;
+      });
+    }
+  }, [resetSimulation]);
+
   const init = () => {
     if (mdRef?.current) {
       const md = mdRef.current;
@@ -72,35 +84,47 @@ const SimulationControls = React.memo(() => {
   };
 
   const simulate = () => {
-    if (startSimulation && mdRef?.current) {
-      const md = mdRef.current;
-      const movables = md.countMovables();
-      if (movables > 0) {
-        for (let i = 0; i < interval; i++) {
-          md.move();
-        }
+    if (startSimulation) {
+      if (requestResetRef.current) {
+        requestResetRef.current = false;
         usePrimitiveStore.getState().set((state) => {
-          state.updateViewerFlag = !state.updateViewerFlag;
+          state.resetSimulation = true;
+          state.startSimulation = false;
         });
-        // recursive call to the next step of the simulation
-        requestRef.current = requestAnimationFrame(simulate);
+      } else {
+        const md = mdRef?.current;
+        if (md) {
+          const movables = md.countMovables();
+          if (movables > 0) {
+            for (let i = 0; i < interval; i++) {
+              md.move();
+            }
+            usePrimitiveStore.getState().set((state) => {
+              state.updateViewerFlag = !state.updateViewerFlag;
+            });
+            // recursive call to the next step of the simulation
+            requestRef.current = requestAnimationFrame(simulate);
+          }
+        }
       }
     }
   };
 
-  const toggleSimulation = () => {
+  const toggleSim = () => {
     usePrimitiveStore.getState().set((state) => {
       state.startSimulation = !state.startSimulation;
+      state.resetSimulation = false;
     });
   };
 
-  const resetSimulation = () => {
-    if (mdRef?.current) {
-      mdRef.current.indexOfStep = 0;
+  const resetSim = () => {
+    if (startSimulation) {
+      requestResetRef.current = true;
+    } else {
+      usePrimitiveStore.getState().set((state) => {
+        state.resetSimulation = true;
+      });
     }
-    usePrimitiveStore.getState().set((state) => {
-      state.startSimulation = false;
-    });
   };
 
   const changeTemperature = (percent: number) => {
@@ -115,7 +139,7 @@ const SimulationControls = React.memo(() => {
         <span>{t('experiment.MolecularDynamics', lang)}</span>
         <Button
           icon={<VerticalRightOutlined />}
-          onClick={resetSimulation}
+          onClick={resetSim}
           title={t('experiment.ResetSimulation', lang)}
           // the following disables keyboard focus
           onMouseDown={(e) => e.preventDefault()}
@@ -127,7 +151,7 @@ const SimulationControls = React.memo(() => {
         />
         <Button
           icon={startSimulation ? <PauseOutlined /> : <RightOutlined />}
-          onClick={toggleSimulation}
+          onClick={toggleSim}
           title={t(startSimulation ? 'experiment.PauseSimulation' : 'experiment.StartSimulation', lang)}
           // the following disables keyboard focus
           onMouseDown={(e) => e.preventDefault()}

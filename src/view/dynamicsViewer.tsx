@@ -145,6 +145,11 @@ const DynamicsViewer = React.memo(
           a.position.copy(p).add(c);
         }
       }
+      for (let i = 0; i < n; i++) {
+        const a = mol.atoms[i];
+        a.initialPosition?.copy(a.position);
+        a.initialVelocity?.copy(a.velocity);
+      }
       moleculesRef.current.push(mol);
       if (moleculesRef.current.length === testMolecules.length) {
         setComplex(generateComplex(moleculesRef.current));

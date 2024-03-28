@@ -27,6 +27,7 @@ export interface PrimitiveStoreState {
   boundingSphereRadius: number;
 
   startSimulation: boolean;
+  resetSimulation: boolean;
 
   enableRotate: boolean;
   autoRotate: boolean;
@@ -117,6 +118,7 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     boundingSphereRadius: 10,
 
     startSimulation: false,
+    resetSimulation: false,
 
     enableRotate: true,
     autoRotate: false,

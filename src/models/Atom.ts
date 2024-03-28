@@ -26,6 +26,9 @@ export class Atom {
 
   fixed: boolean = false;
 
+  initialPosition?: Vector3;
+  initialVelocity?: Vector3;
+
   constructor(index: number, elementSymbol: string, position: Vector3, init?: boolean) {
     this.index = index;
     this.elementSymbol = elementSymbol;
@@ -35,12 +38,23 @@ export class Atom {
     if (init) {
       this.displacement = new Vector3();
       this.acceleration = new Vector3();
+      this.initialPosition = new Vector3();
+      this.initialVelocity = new Vector3();
     }
   }
 
-  distanceToSquared = (target: Atom) => {
+  reset() {
+    if (this.initialPosition) {
+      this.position.copy(this.initialPosition);
+    }
+    if (this.initialVelocity) {
+      this.velocity.copy(this.initialVelocity);
+    }
+  }
+
+  distanceToSquared(target: Atom): number {
     return this.position.distanceToSquared(target.position);
-  };
+  }
 
   /* given the speed scalar, assign a velocity vector in a random direction */
   setRandomVelocity(speed: number) {

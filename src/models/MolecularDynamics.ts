@@ -68,6 +68,13 @@ export class MolecularDynamics {
     return this.movableCount;
   }
 
+  reset(): void {
+    this.indexOfStep = 0;
+    for (const a of this.atoms) {
+      a.reset();
+    }
+  }
+
   init(): void {
     for (const a of this.atoms) {
       a.setRandomVelocity(0.1);
