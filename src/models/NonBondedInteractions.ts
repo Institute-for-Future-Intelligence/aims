@@ -196,7 +196,7 @@ export class NonBondedInteractions {
         for (let j = i + 1; j < atomCount; j++) {
           if (Math.abs(this.atoms[i].charge) + Math.abs(this.atoms[j].charge) > ZERO_TOLERANCE) {
             if (!this.skipPair(i, j)) {
-              const v = new Vector3().subVectors(this.atoms[i].position, this.atoms[j].position);
+              v.subVectors(this.atoms[i].position, this.atoms[j].position);
               const rsq = v.lengthSq();
               const coulomb = (COULOMB_CONSTANT * this.atoms[i].charge * this.atoms[j].charge) / Math.sqrt(rsq);
               energy += coulomb;
