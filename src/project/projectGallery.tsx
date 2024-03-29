@@ -663,7 +663,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
         <Header>
           <span>
             {t('projectPanel.Project', lang)} :{' '}
-            {t(projectType === ProjectType.DRUG_DISCOVERY ? 'term.DrugDiscovery' : 'term.QSARModeling', lang)}
+            {t(projectType === ProjectType.DRUG_DISCOVERY ? 'term.DrugDiscovery' : 'term.MolecularModeling', lang)}
           </span>
           <span
             style={{ cursor: 'pointer' }}

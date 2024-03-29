@@ -44,7 +44,7 @@ export const createDefaultMenu = (
 
   const items: MenuProps['items'] = [];
 
-  if (projectType === ProjectType.QSAR_MODELING) {
+  if (projectType === ProjectType.MOLECULAR_MODELING) {
     const pickedMolecule = pickedMoleculeIndex !== -1 ? testMolecules[pickedMoleculeIndex] : null;
     if (pickedMolecule) {
       items.push({

@@ -111,7 +111,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={bondCountSelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>{t('projectPanel.BondCount', lang)}</span>
+        <span style={{ fontSize: '12px' }}>{t('projectPanel.CovalentBondCount', lang)}</span>
       </Checkbox>
       <br />
       <Checkbox

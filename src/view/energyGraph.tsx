@@ -28,7 +28,7 @@ const Container = styled.div`
   padding: 6px 6px 6px 6px;
   opacity: 80%;
   background: dimgray;
-  border: 2px solid antiquewhite;
+  border: 2px solid dimgray;
   border-radius: 10px;
   user-select: none;
   z-index: 10; // must be larger than that of the spinner so that this can be clicked
@@ -38,6 +38,7 @@ const EnergyGraph = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const language = useStore(Selector.language);
+  const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
   const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
   const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
 
@@ -50,7 +51,7 @@ const EnergyGraph = React.memo(() => {
 
   useEffect(() => {
     dataRef.current = [...energyTimeSeries.array];
-  }, [updateViewerFlag, energyTimeSeries]);
+  }, [updateViewerFlag, energyTimeSeries, resetSimulation]);
 
   return (
     <Container>

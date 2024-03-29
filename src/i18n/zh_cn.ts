@@ -65,6 +65,7 @@ export const i18n_zh_cn = {
     term: {
       DrugDiscovery: '药物发现',
       QSARModeling: '定量构效关系模型(QSAR/QSPR)',
+      MolecularModeling: '分子模拟',
       CommonMolecules: '普通分子',
       HydrocarbonMolecules: '烃分子',
       DrugMolecules: '药物分子',

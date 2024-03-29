@@ -109,7 +109,7 @@ export enum Language {
 
 export enum ProjectType {
   DRUG_DISCOVERY = 'Drug Discovery',
-  QSAR_MODELING = 'QSAR Modeling',
+  MOLECULAR_MODELING = 'Molecular Modeling',
 }
 
 export enum MoleculeType {

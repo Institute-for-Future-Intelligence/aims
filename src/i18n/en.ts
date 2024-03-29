@@ -65,6 +65,7 @@ export const i18n_en = {
     term: {
       DrugDiscovery: 'Drug Discovery',
       QSARModeling: 'QSAR/QSPR Modeling',
+      MolecularModeling: 'Molecular Modeling',
       CommonMolecules: 'Common Molecules',
       HydrocarbonMolecules: 'Hydrocarbon Molecules',
       DrugMolecules: 'Drug Molecules',

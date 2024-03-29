@@ -99,7 +99,7 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
     label: <ContainerCheckBox />,
   });
 
-  if (projectType === ProjectType.QSAR_MODELING) {
+  if (projectType === ProjectType.MOLECULAR_MODELING) {
     items.push({
       key: 'vdw-bonds-check-box',
       label: <VdwBondsCheckBox />,

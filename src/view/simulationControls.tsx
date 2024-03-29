@@ -9,6 +9,7 @@ import {
   VerticalRightOutlined,
   ArrowUpOutlined,
   ArrowDownOutlined,
+  FundOutlined,
 } from '@ant-design/icons';
 import { Button, Space } from 'antd';
 import { useStore } from '../stores/common';
@@ -22,8 +23,8 @@ import { EnergyData } from '../models/EnergyData.ts';
 
 const Container = styled.div`
   position: absolute;
-  left: calc(50% - 120px);
-  width: 240px;
+  left: calc(50% - 150px);
+  width: 300px;
   bottom: 6px;
   margin: 0;
   display: flex;
@@ -42,9 +43,12 @@ const Container = styled.div`
 
 const SimulationControls = React.memo(() => {
   const language = useStore(Selector.language);
+  const setCommonStore = useStore(Selector.set);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const startSimulation = usePrimitiveStore(Selector.startSimulation);
   const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
   const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
+  const energyGraphVisible = useStore(Selector.energyGraphVisible);
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
   const requestRef = useRef<number>(0);
@@ -72,6 +76,7 @@ const SimulationControls = React.memo(() => {
     if (mdRef?.current) {
       const md = mdRef.current;
       md.reset();
+      energyTimeSeries.clear();
       usePrimitiveStore.getState().set((state) => {
         state.updateViewerFlag = !state.updateViewerFlag;
       });
@@ -108,7 +113,7 @@ const SimulationControls = React.memo(() => {
               t: md.totalEnergy,
             } as EnergyData;
             energyTimeSeries.add(energyData);
-            console.log(energyData);
+            if (md.indexOfStep % 100 === 0) console.log(energyData);
             usePrimitiveStore.getState().set((state) => {
               state.updateViewerFlag = !state.updateViewerFlag;
             });
@@ -155,6 +160,17 @@ const SimulationControls = React.memo(() => {
     >
       <Space direction={'horizontal'} style={{ color: 'antiquewhite', fontSize: '10px' }}>
         <span>{t('experiment.MolecularDynamics', lang)}</span>
+        <Button
+          style={{ background: energyGraphVisible ? 'darkgray' : undefined }}
+          icon={<FundOutlined />}
+          onClick={() => {
+            setCommonStore((state) => {
+              state.projectState.energyGraphVisible = !state.projectState.energyGraphVisible;
+            });
+            setChanged(true);
+          }}
+          title={t('molecularViewer.EnergyGraph', lang)}
+        />
         <Button icon={<VerticalRightOutlined />} onClick={resetSim} title={t('experiment.ResetSimulation', lang)} />
         <Button
           icon={startSimulation ? <PauseOutlined /> : <RightOutlined />}

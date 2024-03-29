@@ -370,42 +370,42 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         startFlying(ship ? FlightControl.PitchUp : FlightControl.RotateAroundYCounterclockwise);
         break;
       case 'x':
-        if (projectType === ProjectType.QSAR_MODELING) {
+        if (projectType === ProjectType.MOLECULAR_MODELING) {
           onTranslation('x', 1);
         } else {
           startFlying(FlightControl.TranslateInPositiveX);
         }
         break;
       case 'shift+x':
-        if (projectType === ProjectType.QSAR_MODELING) {
+        if (projectType === ProjectType.MOLECULAR_MODELING) {
           onTranslation('x', -1);
         } else {
           startFlying(FlightControl.TranslateInNegativeX);
         }
         break;
       case 'y':
-        if (projectType === ProjectType.QSAR_MODELING) {
+        if (projectType === ProjectType.MOLECULAR_MODELING) {
           onTranslation('y', 1);
         } else {
           startFlying(FlightControl.TranslateInPositiveY);
         }
         break;
       case 'shift+y':
-        if (projectType === ProjectType.QSAR_MODELING) {
+        if (projectType === ProjectType.MOLECULAR_MODELING) {
           onTranslation('y', -1);
         } else {
           startFlying(FlightControl.TranslateInNegativeY);
         }
         break;
       case 'z':
-        if (projectType === ProjectType.QSAR_MODELING) {
+        if (projectType === ProjectType.MOLECULAR_MODELING) {
           onTranslation('z', 1);
         } else {
           startFlying(FlightControl.TranslateInPositiveZ);
         }
         break;
       case 'shift+z':
-        if (projectType === ProjectType.QSAR_MODELING) {
+        if (projectType === ProjectType.MOLECULAR_MODELING) {
           onTranslation('z', -1);
         } else {
           startFlying(FlightControl.TranslateInNegativeZ);

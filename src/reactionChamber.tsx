@@ -80,7 +80,7 @@ const ReactionChamber = React.memo(() => {
     if (point && selectedMolecule) {
       setCommonStore((state) => {
         switch (state.projectState.type) {
-          case ProjectType.QSAR_MODELING: {
+          case ProjectType.MOLECULAR_MODELING: {
             const m = { ...selectedMolecule };
             state.projectState.testMolecules.push(m);
             state.projectState.testMoleculeTransforms.push({
@@ -222,7 +222,7 @@ const ReactionChamber = React.memo(() => {
       </Canvas>
 
       {projectType === ProjectType.DRUG_DISCOVERY && <DockingSettings />}
-      {projectType === ProjectType.QSAR_MODELING && (
+      {projectType === ProjectType.MOLECULAR_MODELING && (
         <DynamicsSettings molecules={moleculesRef?.current ? [...moleculesRef.current] : []} />
       )}
       <ToolBarButtons />
