@@ -3,21 +3,15 @@
  */
 
 import React, { useEffect, useMemo, useRef } from 'react';
-import {
-  RightOutlined,
-  PauseOutlined,
-  VerticalRightOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined,
-} from '@ant-design/icons';
-import { Button, Space } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import styled from 'styled-components';
-import { useRefStore } from '../stores/commonRef.ts';
 import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { useDataStore } from '../stores/commonData.ts';
+import { EnergyData } from '../models/EnergyData.ts';
 
 const Container = styled.div`
   position: absolute;
@@ -35,72 +29,43 @@ const Container = styled.div`
   opacity: 80%;
   background: dimgray;
   border: 2px solid antiquewhite;
-  border-radius: 20px;
+  border-radius: 10px;
   user-select: none;
   z-index: 10; // must be larger than that of the spinner so that this can be clicked
 `;
 
-const data = [
-  {
-    name: '1',
-    k: 4000,
-    p: 2400,
-    t: 2400,
-  },
-  {
-    name: '2',
-    k: 3000,
-    p: 1398,
-    t: 2210,
-  },
-  {
-    name: '3',
-    k: 2000,
-    p: 9800,
-    t: 2290,
-  },
-  {
-    name: '4',
-    k: 2780,
-    p: 3908,
-    t: 2000,
-  },
-  {
-    name: '5',
-    k: 1890,
-    p: 4800,
-    t: 2181,
-  },
-  {
-    name: '6',
-    k: 2390,
-    p: 3800,
-    t: 2500,
-  },
-  {
-    name: '7',
-    k: 3490,
-    p: 4300,
-    t: 2100,
-  },
-];
-
 const EnergyGraph = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const language = useStore(Selector.language);
-
-  const mdRef = useRefStore.getState().molecularDynamicsRef;
+  const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
+  const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
 
+  const dataRef = useRef<Array<EnergyData>>([]);
+
+  useEffect(() => {
+    dataRef.current = [...energyTimeSeries.array];
+  }, [updateViewerFlag, energyTimeSeries]);
+
   return (
     <Container>
-      <ResponsiveContainer width="100%" height="100%">
+      <CloseOutlined
+        style={{ color: 'antiquewhite', position: 'absolute', top: '8px', right: '8px', cursor: 'pointer' }}
+        onClick={() => {
+          setCommonStore((state) => {
+            state.projectState.energyGraphVisible = false;
+          });
+          setChanged(true);
+        }}
+      />
+      <ResponsiveContainer width="100%" height="100%" style={{ padding: '20px 20px 20px 20px' }}>
         <LineChart
-          data={data}
+          data={dataRef.current}
           margin={{
             top: 10,
             right: 30,
@@ -110,7 +75,7 @@ const EnergyGraph = React.memo(() => {
         >
           <CartesianGrid strokeWidth={0.2} color={'white'} />
           <XAxis
-            dataKey="name"
+            dataKey="time"
             stroke={'white'}
             strokeWidth={2}
             fontSize={10}
@@ -123,13 +88,14 @@ const EnergyGraph = React.memo(() => {
             label={<Label value={t('word.Energy', lang) + ' (eV)'} fill={'white'} dx={-16} fontSize={12} angle={-90} />}
           />
           <Tooltip />
-          <Legend layout="horizontal" verticalAlign="top" align="center" />
+          <Legend layout="horizontal" verticalAlign="top" align="center" wrapperStyle={{ top: '4px' }} />
           <Line
             name={t('word.KineticEnergy', lang)}
             type="linear"
             dataKey="k"
             stroke="#FFA07A"
             strokeWidth={2}
+            dot={false}
             activeDot={{ r: 5 }}
           />
           <Line
@@ -138,6 +104,7 @@ const EnergyGraph = React.memo(() => {
             dataKey="p"
             stroke="#00BFFF"
             strokeWidth={2}
+            dot={false}
             activeDot={{ r: 5 }}
           />
           <Line
@@ -146,6 +113,7 @@ const EnergyGraph = React.memo(() => {
             dataKey="t"
             stroke="#00FF7F"
             strokeWidth={2}
+            dot={false}
             activeDot={{ r: 5 }}
           />
         </LineChart>

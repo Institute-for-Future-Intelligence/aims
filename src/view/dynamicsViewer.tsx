@@ -67,6 +67,7 @@ const DynamicsViewer = React.memo(
     const vdwBondsVisible = useStore(Selector.vdwBondsVisible);
     const vdwBondCutoffRelative = useStore(Selector.vdwBondCutoffRelative) ?? 0.5;
     const molecularContainer = useStore(Selector.molecularContainer);
+    const timeStep = useStore(Selector.timeStep);
 
     const [complex, setComplex] = useState<any>();
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -163,6 +164,7 @@ const DynamicsViewer = React.memo(
       if (moleculesRef.current.length === testMolecules.length) {
         setComplex(generateComplex(moleculesRef.current));
         molecularDynamicsRef.current = new MolecularDynamics(moleculesRef.current, molecularContainer);
+        molecularDynamicsRef.current.timeStep = timeStep;
       }
     };
 

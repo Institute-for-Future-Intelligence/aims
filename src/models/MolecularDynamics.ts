@@ -143,10 +143,8 @@ export class MolecularDynamics {
     percent *= 0.01;
     this.heatBath.increaseByPercentage(percent);
     this.updateKineticEnergy(); // ensure that we get the latest kinetic energy
-    let tmp = (this.kineticEnergy * UNIT_EV_OVER_KB) / this.atoms.length;
-    if (tmp < ZERO_TOLERANCE) {
+    if (this.kineticEnergy < ZERO_TOLERANCE) {
       this.assignTemperature(100);
-      tmp = 100;
     }
     const ratio = Math.max(0, 1 + percent);
     this.rescaleVelocities(Math.sqrt(ratio));
@@ -177,14 +175,6 @@ export class MolecularDynamics {
     this.applyBoundary();
     this.totalEnergy = this.kineticEnergy + this.potentialEnergy;
     this.indexOfStep++;
-    if (this.indexOfStep % 100 == 0) {
-      console.log(
-        this.indexOfStep,
-        this.kineticEnergy / this.movableCount,
-        this.potentialEnergy / this.movableCount,
-        this.totalEnergy / this.movableCount,
-      );
-    }
   }
 
   calculateForce() {

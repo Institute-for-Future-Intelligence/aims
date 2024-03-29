@@ -17,6 +17,8 @@ import { useTranslation } from 'react-i18next';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import styled from 'styled-components';
 import { useRefStore } from '../stores/commonRef.ts';
+import { useDataStore } from '../stores/commonData.ts';
+import { EnergyData } from '../models/EnergyData.ts';
 
 const Container = styled.div`
   position: absolute;
@@ -39,10 +41,10 @@ const Container = styled.div`
 `;
 
 const SimulationControls = React.memo(() => {
-  const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const startSimulation = usePrimitiveStore(Selector.startSimulation);
   const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
+  const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
   const requestRef = useRef<number>(0);
@@ -74,7 +76,7 @@ const SimulationControls = React.memo(() => {
         state.updateViewerFlag = !state.updateViewerFlag;
       });
     }
-  }, [resetSimulation]);
+  }, [resetSimulation, mdRef]);
 
   const init = () => {
     if (mdRef?.current) {
@@ -99,6 +101,14 @@ const SimulationControls = React.memo(() => {
             for (let i = 0; i < interval; i++) {
               md.move();
             }
+            const energyData = {
+              time: md.indexOfStep * md.timeStep,
+              k: md.kineticEnergy,
+              p: md.potentialEnergy,
+              t: md.totalEnergy,
+            } as EnergyData;
+            energyTimeSeries.add(energyData);
+            console.log(energyData);
             usePrimitiveStore.getState().set((state) => {
               state.updateViewerFlag = !state.updateViewerFlag;
             });

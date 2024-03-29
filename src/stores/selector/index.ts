@@ -4,6 +4,7 @@
 
 import { CommonStoreState } from '../common';
 import { PrimitiveStoreState } from '../commonPrimitive';
+import { DataStoreState } from '../commonData.ts';
 
 export const set = (state: CommonStoreState) => state.set;
 
@@ -236,3 +237,5 @@ export const spaceshipZ = (state: CommonStoreState) => state.projectState.spaces
 export const rotationStep = (state: CommonStoreState) => state.projectState.rotationStep;
 
 export const translationStep = (state: CommonStoreState) => state.projectState.translationStep;
+
+export const energyTimeSeries = (state: DataStoreState) => state.energyTimeSeries;

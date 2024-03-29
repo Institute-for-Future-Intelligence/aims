@@ -3,6 +3,8 @@
  *
  */
 
+export const DATA_QUEUE_LENGTH = 100;
+
 export const LJ_SIGMA_CONVERTER = 2 / Math.sqrt(Math.cbrt(2));
 
 // Coulomb's constant times the square of electron charge (ke^2), in eV*angstrom.
