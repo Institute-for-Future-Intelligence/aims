@@ -204,6 +204,7 @@ const ReactionChamber = React.memo(() => {
             style={viewerStyle}
             material={viewerMaterial}
             coloring={viewerColoring}
+            selector={viewerSelector}
             setLoading={setLoading}
           />
         )}
