@@ -24,7 +24,6 @@ import { DirectionalLight, Euler, Vector2, Vector3 } from 'three';
 import DockingSettings from './view/dockingSettings.tsx';
 import { ReactionChamberControls } from './controls';
 import Spaceship from './view/spaceship.tsx';
-import Background from './view/background.tsx';
 import Cockpit from './view/cockpit.tsx';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -35,6 +34,7 @@ import { useRefStore } from './stores/commonRef.ts';
 import { usePrimitiveStore } from './stores/commonPrimitive.ts';
 import { MoleculeTransform } from './types.ts';
 import SimulationControls from './view/simulationControls.tsx';
+import EnergyGraph from './view/energyGraph.tsx';
 
 const ReactionChamber = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -55,6 +55,7 @@ const ReactionChamber = React.memo(() => {
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
+  const energyGraphVisible = useStore(Selector.energyGraphVisible);
 
   const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -188,7 +189,7 @@ const ReactionChamber = React.memo(() => {
           shadow-camera-near={1}
           shadow-camera-far={DEFAULT_SHADOW_CAMERA_FAR}
         />
-        <Background />
+        {/*<Background />*/}
         {viewerAxes && <Axes />}
         {projectType === ProjectType.DRUG_DISCOVERY ? (
           <DockingViewer
@@ -226,6 +227,7 @@ const ReactionChamber = React.memo(() => {
       )}
       <ToolBarButtons />
       <SimulationControls />
+      {energyGraphVisible && <EnergyGraph />}
 
       {loading && canvasRef.current && (
         <Spin

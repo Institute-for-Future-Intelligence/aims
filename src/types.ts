@@ -100,6 +100,7 @@ export interface ProjectState {
   molecularContainerVisible: boolean;
   vdwBondsVisible: boolean;
   vdwBondCutoffRelative: number;
+  energyGraphVisible: boolean;
 
   timeStep: number;
   temperature: number;

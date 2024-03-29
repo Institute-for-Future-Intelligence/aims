@@ -116,7 +116,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
             <InputNumber
               addonAfter={t('word.Relative', lang)}
               min={0.2}
-              max={1}
+              max={2}
               style={{ width: '100%' }}
               precision={2}
               // make sure that we round up the number as toDegrees may cause things like .999999999

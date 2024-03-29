@@ -134,58 +134,34 @@ const SimulationControls = React.memo(() => {
   };
 
   return (
-    <Container>
+    <Container
+      // the following disables keyboard focus
+      onMouseDown={(e) => e.preventDefault()}
+      // the following disables the context menu
+      onContextMenu={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
+    >
       <Space direction={'horizontal'} style={{ color: 'antiquewhite', fontSize: '10px' }}>
         <span>{t('experiment.MolecularDynamics', lang)}</span>
-        <Button
-          icon={<VerticalRightOutlined />}
-          onClick={resetSim}
-          title={t('experiment.ResetSimulation', lang)}
-          // the following disables keyboard focus
-          onMouseDown={(e) => e.preventDefault()}
-          // the following disables the context menu
-          onContextMenu={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-          }}
-        />
+        <Button icon={<VerticalRightOutlined />} onClick={resetSim} title={t('experiment.ResetSimulation', lang)} />
         <Button
           icon={startSimulation ? <PauseOutlined /> : <RightOutlined />}
           onClick={toggleSim}
           title={t(startSimulation ? 'experiment.PauseSimulation' : 'experiment.StartSimulation', lang)}
-          // the following disables keyboard focus
-          onMouseDown={(e) => e.preventDefault()}
-          // the following disables the context menu
-          onContextMenu={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-          }}
         />
         <Button
           style={{ background: 'lightsteelblue' }}
           icon={<ArrowDownOutlined />}
           onClick={() => changeTemperature(-20)}
           title={t('word.Cool', lang)}
-          // the following disables keyboard focus
-          onMouseDown={(e) => e.preventDefault()}
-          // the following disables the context menu
-          onContextMenu={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-          }}
         />
         <Button
           style={{ background: 'lightcoral' }}
           icon={<ArrowUpOutlined />}
           onClick={() => changeTemperature(20)}
           title={t('word.Heat', lang)}
-          // the following disables keyboard focus
-          onMouseDown={(e) => e.preventDefault()}
-          // the following disables the context menu
-          onContextMenu={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-          }}
         />
       </Space>
     </Container>

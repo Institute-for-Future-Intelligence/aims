@@ -329,7 +329,7 @@ const DockingSettings = React.memo(() => {
       },
       {
         key: '3',
-        label: t('projectPanel.BondCount', lang),
+        label: t('projectPanel.CovalentBondCount', lang),
         children: proteinData?.bonds.length,
       },
       {
@@ -354,7 +354,7 @@ const DockingSettings = React.memo(() => {
       },
     ];
     return (
-      <div style={{ width: '300px' }}>
+      <div style={{ width: '340px' }}>
         {proteinData && (
           <span style={{ paddingTop: '10px', fontSize: '10px' }}>
             {proteinData?.metadata['classification']}

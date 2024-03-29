@@ -14,7 +14,6 @@ import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode }
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import dayjs from 'dayjs';
 import { Util } from './Util.ts';
-import { vdwBondCutoffRelative } from './stores/selector';
 
 export const fetchProject = async (userid: string, project: string, setProjectState: (ps: ProjectState) => void) => {
   const lang = { lng: useStore.getState().language };
@@ -105,6 +104,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           molecularContainerVisible: !!data.molecularContainerVisible,
           vdwBondsVisible: !!data.vdwBondsVisible,
           vdwBondCutoffRelative: data.vdwBondCutoffRelative ?? 0.5,
+          energyGraphVisible: !!data.energyGraphVisible,
 
           testMolecules: data.testMolecules ?? [],
           testMoleculeTransforms: data.testMoleculeTransforms ?? [],

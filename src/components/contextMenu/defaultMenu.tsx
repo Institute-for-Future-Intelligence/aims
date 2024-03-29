@@ -14,6 +14,7 @@ import {
   ContainerCheckBox,
   CopyMolecule,
   CutMolecule,
+  EnergyGraphCheckBox,
   FogCheckBox,
   MaterialRadioGroup,
   PasteMolecule,
@@ -130,6 +131,11 @@ export const createDefaultMenu = (
       items.push({
         key: 'molecular-viewer-vdw-bonds',
         label: <VdwBondsCheckBox />,
+      });
+
+      items.push({
+        key: 'molecular-viewer-energy-graph',
+        label: <EnergyGraphCheckBox />,
       });
 
       items.push({

@@ -12,11 +12,13 @@ import {
   BackgroundColor,
   ColoringRadioGroup,
   ContainerCheckBox,
+  EnergyGraphCheckBox,
   FogCheckBox,
   GalleryCheckBox,
   MaterialRadioGroup,
   SpaceshipDisplayModeRadioGroup,
   StyleRadioGroup,
+  VdwBondsCheckBox,
 } from '../contextMenu/defaultMenuItems';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
 import { ProjectType } from '../../constants.ts';
@@ -96,6 +98,18 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
     key: 'container-check-box',
     label: <ContainerCheckBox />,
   });
+
+  if (projectType === ProjectType.QSAR_MODELING) {
+    items.push({
+      key: 'vdw-bonds-check-box',
+      label: <VdwBondsCheckBox />,
+    });
+
+    items.push({
+      key: 'energy-graph-check-box',
+      label: <EnergyGraphCheckBox />,
+    });
+  }
 
   items.push({
     key: 'foggy-check-box',

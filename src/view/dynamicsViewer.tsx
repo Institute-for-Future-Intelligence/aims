@@ -193,8 +193,10 @@ const DynamicsViewer = React.memo(
           usePrimitiveStore.getState().set((state) => {
             state.boundingSphereRadius = boundingSphere.radius;
           });
-          vdwBondsRef.current = generateVdwLines(moleculesRef.current, vdwBondCutoffRelative * vdwBondCutoffRelative);
-          setUpdateFlag(!updateFlag); // without this, the vdw bonds will not be drawn initially
+          if (vdwBondsVisible) {
+            vdwBondsRef.current = generateVdwLines(moleculesRef.current, vdwBondCutoffRelative * vdwBondCutoffRelative);
+            setUpdateFlag(!updateFlag); // without this, the vdw bonds will not be drawn initially
+          }
           invalidate();
         })
         .finally(() => {

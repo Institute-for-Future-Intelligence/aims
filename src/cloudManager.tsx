@@ -35,7 +35,6 @@ import {
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import { ProjectUtil } from './project/ProjectUtil.ts';
 import { useTranslation } from 'react-i18next';
-import { vdwBondCutoffRelative } from './stores/selector';
 
 export interface CloudManagerProps {
   viewOnly: boolean;
@@ -176,7 +175,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     if (!projectState) return;
     setCommonStore((state) => {
       state.projectState = { ...projectState };
-      state.projectView = true;
     });
     usePrimitiveStore.getState().set((state) => {
       state.updateProjectsFlag = true;
@@ -409,6 +407,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             molecularContainerVisible: !!data.molecularContainerVisible,
             vdwBondsVisible: !!data.vdwBondsVisible,
             vdwBondCutoffRelative: data.vdwBondCutoffRelative ?? 0.5,
+            energyGraphVisible: !!data.energyGraphVisible,
 
             testMolecules: data.testMolecules ?? [],
             testMoleculeTransforms: data.testMoleculeTransforms ?? [],
@@ -588,7 +587,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             .set(ps)
             .then(() => {
               setCommonStore((state) => {
-                state.projectView = true;
                 state.projectState = ps;
               });
               setUpdateMyProjectsFlag(!updateMyProjectsFlag);
@@ -700,7 +698,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             .then(() => {
               setUpdateMyProjectsFlag(!updateMyProjectsFlag);
               setCommonStore((state) => {
-                state.projectView = true;
                 state.projectState.type = ps.type;
                 state.projectState.title = ps.title;
                 state.projectState.description = ps.description;
