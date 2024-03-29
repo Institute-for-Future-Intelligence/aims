@@ -62,6 +62,8 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           lineWidthScatterPlot: data.lineWidthScatterPlot,
           dotSizeScatterPlot: data.dotSizeScatterPlot,
 
+          hideGallery: !!data.hideGallery,
+
           chamberViewerPercentWidth: data.chamberViewerPercentWidth ?? 50,
           chamberViewerAxes: data.chamberViewerAxes ?? true,
           chamberViewerStyle: data.chamberViewerStyle ?? MolecularViewerStyle.BallAndStick,

@@ -799,6 +799,46 @@ export const FogCheckBox = () => {
   );
 };
 
+export const GalleryCheckBox = () => {
+  const hideGallery = useStore(Selector.hideGallery);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const showGallery = (checked: boolean) => {
+    useStore.getState().set((state) => {
+      state.projectState.hideGallery = !checked;
+    });
+    setChanged(true);
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Checkbox
+        checked={!hideGallery}
+        onChange={(e: CheckboxChangeEvent) => {
+          const checked = e.target.checked;
+          const undoableCheck = {
+            name: 'Show/Hide Gallery',
+            timestamp: Date.now(),
+            checked: checked,
+            undo: () => {
+              showGallery(!undoableCheck.checked);
+            },
+            redo: () => {
+              showGallery(undoableCheck.checked);
+            },
+          } as UndoableCheck;
+          useStore.getState().addUndoable(undoableCheck);
+          showGallery(checked);
+        }}
+      >
+        {t('menu.view.ShowGallery', lang)}
+      </Checkbox>
+    </MenuItem>
+  );
+};
+
 export const BackgroundColor = () => {
   const color = useStore(Selector.chamberViewerBackground);
   const setChanged = usePrimitiveStore(Selector.setChanged);

@@ -305,6 +305,7 @@ export const i18n_zh_cn = {
       },
       viewSubMenu: '视界',
       view: {
+        ShowGallery: '显示图库',
         ResetView: '重置视角',
         ZoomIn: '放大',
         ZoomOut: '缩小',

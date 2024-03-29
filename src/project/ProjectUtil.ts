@@ -66,6 +66,8 @@ export class ProjectUtil {
       cameraUp: DEFAULT_CAMERA_UP,
       panCenter: DEFAULT_PAN_CENTER,
 
+      hideGallery: false,
+
       chamberViewerPercentWidth: 50,
       chamberViewerAxes: true,
       chamberViewerStyle: MolecularViewerStyle.BallAndStick,

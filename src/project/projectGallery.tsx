@@ -232,9 +232,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return s;
   }, [numberOfColumns, viewWidth]);
 
-  const closeProject = () => {
+  const closeGallery = () => {
     setCommonStore((state) => {
-      state.projectView = false;
+      state.projectState.hideGallery = true;
     });
   };
 
@@ -668,10 +668,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           <span
             style={{ cursor: 'pointer' }}
             onMouseDown={() => {
-              closeProject();
+              closeGallery();
             }}
             onTouchStart={() => {
-              closeProject();
+              closeGallery();
             }}
           >
             <CloseOutlined title={t('word.Close', lang)} />

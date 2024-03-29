@@ -53,6 +53,8 @@ export interface ProjectState {
   cameraUp: number[];
   panCenter: number[];
 
+  hideGallery: boolean;
+
   chamberViewerPercentWidth: number;
   chamberViewerAxes: boolean;
   chamberViewerStyle: MolecularViewerStyle;

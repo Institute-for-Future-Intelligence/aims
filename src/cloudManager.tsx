@@ -366,6 +366,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             hiddenProperties: data.hiddenProperties ?? [],
             counter: data.counter ?? 0,
 
+            hideGallery: !!data.hideGallery,
+
             chamberViewerPercentWidth: data.chamberViewerPercentWidth ?? 50,
             chamberViewerAxes: data.chamberViewerAxes ?? true,
             chamberViewerStyle: data.chamberViewerStyle ?? MolecularViewerStyle.BallAndStick,

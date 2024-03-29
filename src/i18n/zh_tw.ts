@@ -304,6 +304,7 @@ export const i18n_zh_tw = {
       },
       viewSubMenu: '視界',
       view: {
+        ShowGallery: '顯示圖庫',
         ResetView: '重置視角',
         ZoomIn: '放大',
         ZoomOut: '縮小',

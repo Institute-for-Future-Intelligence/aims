@@ -29,7 +29,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
-  const projectView = useStore(Selector.projectView);
+  const hideGallery = useStore(Selector.hideGallery);
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
   const projectOwner = useStore(Selector.projectOwner);
   const projectTitle = useStore(Selector.projectTitle);
@@ -168,7 +168,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
           <img
             alt="IFI Logo"
             src={ifiLogo}
-            height={projectView ? '24px' : '40px'}
+            height={hideGallery ? '40px' : '24px'}
             style={{
               position: 'absolute',
               cursor: 'pointer',
@@ -184,11 +184,11 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
             style={{
               position: 'absolute',
               bottom: '4px',
-              left: projectView ? '24px' : '44px',
+              left: hideGallery ? '44px' : '24px',
               zIndex: 999,
               fontSize: '10px',
               userSelect: 'none',
-              color: projectView ? 'dimgray' : 'antiquewhite',
+              color: hideGallery ? 'antiquewhite' : 'dimgray',
             }}
           >
             &nbsp;&nbsp; &copy;{new Date().getFullYear()} {`${t('name.IFI', lang)}`}
@@ -217,20 +217,20 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
             // must specify the height again for the split pane to resize correctly with the window
             style={{ height: 'calc(100vh - 72px)', display: 'flex' }}
             pane1Style={{
-              width: projectView ? 100 - chamberViewerPercentWidth + '%' : '0',
-              minWidth: projectView ? '25%' : 0,
-              maxWidth: projectView ? '75%' : 0,
+              width: hideGallery ? 0 : 100 - chamberViewerPercentWidth + '%',
+              minWidth: hideGallery ? 0 : '25%',
+              maxWidth: hideGallery ? 0 : '75%',
             }}
-            pane2Style={{ width: projectView ? chamberViewerPercentWidth + '%' : '100%' }}
+            pane2Style={{ width: hideGallery ? '100%' : chamberViewerPercentWidth + '%' }}
             resizerStyle={{
               cursor: 'col-resize',
-              width: projectView ? '6px' : 0,
-              minWidth: projectView ? '6px' : 0,
-              maxWidth: projectView ? '6px' : 0,
+              width: hideGallery ? 0 : '6px',
+              minWidth: hideGallery ? 0 : '6px',
+              maxWidth: hideGallery ? 0 : '6px',
               backgroundImage: 'linear-gradient(to right, white, gray)',
             }}
           >
-            {projectView ? (
+            {!hideGallery ? (
               <Suspense fallback={<Loading />}>
                 <ProjectGallery relativeWidth={1 - chamberViewerPercentWidth * 0.01} />
               </Suspense>

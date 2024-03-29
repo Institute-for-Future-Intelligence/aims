@@ -35,7 +35,6 @@ export interface CommonStoreState {
   selectedFloatingWindow: string | null;
 
   projectState: ProjectState;
-  projectView: boolean;
 
   proteinData: Protein | undefined;
 
@@ -86,7 +85,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           selectedFloatingWindow: null,
 
           projectState: ProjectUtil.createDefaultProjectState(),
-          projectView: true,
 
           proteinData: undefined,
 

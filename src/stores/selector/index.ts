@@ -67,8 +67,6 @@ export const userCount = (state: PrimitiveStoreState) => state.userCount;
 
 export const selectedFloatingWindow = (state: CommonStoreState) => state.selectedFloatingWindow;
 
-export const projectView = (state: CommonStoreState) => state.projectView;
-
 export const cameraPosition = (state: CommonStoreState) => state.projectState.cameraPosition;
 
 export const cameraRotation = (state: CommonStoreState) => state.projectState.cameraRotation;
@@ -186,6 +184,8 @@ export const yLinesScatterPlot = (state: CommonStoreState) => state.projectState
 export const lineWidthScatterPlot = (state: CommonStoreState) => state.projectState.lineWidthScatterPlot;
 
 export const dotSizeScatterPlot = (state: CommonStoreState) => state.projectState.dotSizeScatterPlot;
+
+export const hideGallery = (state: CommonStoreState) => state.projectState.hideGallery;
 
 export const chamberViewerPercentWidth = (state: CommonStoreState) => state.projectState.chamberViewerPercentWidth;
 

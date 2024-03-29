@@ -13,6 +13,7 @@ import {
   ColoringRadioGroup,
   ContainerCheckBox,
   FogCheckBox,
+  GalleryCheckBox,
   MaterialRadioGroup,
   SpaceshipDisplayModeRadioGroup,
   StyleRadioGroup,
@@ -74,6 +75,11 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
         <LabelMark>({isMac ? '⌘' : 'Ctrl'}+[)</LabelMark>
       </MenuItem>
     ),
+  });
+
+  items.push({
+    key: 'gallery-check-box',
+    label: <GalleryCheckBox />,
   });
 
   items.push({

@@ -305,6 +305,7 @@ export const i18n_en = {
       },
       viewSubMenu: 'View',
       view: {
+        ShowGallery: 'Show Gallery',
         ResetView: 'Reset View',
         ZoomIn: 'Zoom In',
         ZoomOut: 'Zoom Out',
