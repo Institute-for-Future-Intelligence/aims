@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Box3, Raycaster, Vector3, Euler } from 'three';
+import { Box3, Raycaster, Vector3, Euler, Mesh } from 'three';
 import { MoleculeData, MoleculeTransform } from '../types.ts';
 import AtomJS from '../lib/chem/Atom';
 import ComplexVisual from '../lib/ComplexVisual';
@@ -200,6 +200,16 @@ const DynamicsViewer = React.memo(
         .finally(() => {
           if (setLoading) setLoading(false);
         });
+      return () => {
+        if (groupRef.current) {
+          groupRef.current.traverse((obj) => {
+            if (obj instanceof Mesh) {
+              obj.geometry.dispose();
+              obj.material.dispose();
+            }
+          });
+        }
+      };
     }, [complex, material, mode, colorer, selector, testMolecules, updateViewerFlag, pickedMoleculeIndex]);
 
     useEffect(() => {
