@@ -36,6 +36,8 @@ export interface CommonStoreState {
 
   projectState: ProjectState;
 
+  deleteAllAtoms: () => void;
+
   proteinData: Protein | undefined;
 
   projectStateToOpen: ProjectState | null;
@@ -85,6 +87,13 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           selectedFloatingWindow: null,
 
           projectState: ProjectUtil.createDefaultProjectState(),
+
+          deleteAllAtoms() {
+            immerSet((state: CommonStoreState) => {
+              state.projectState.testMolecules = [];
+              state.projectState.testMoleculeTransforms = [];
+            });
+          },
 
           proteinData: undefined,
 

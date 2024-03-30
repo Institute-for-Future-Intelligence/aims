@@ -64,7 +64,7 @@ const CoordinateSystemSettingsContent = React.memo(
             <span style={{ fontSize: '12px' }}>{t('projectPanel.AtomCount', lang)}</span>
           </Option>
           <Option key={'bondCount'} value={'bondCount'}>
-            <span style={{ fontSize: '12px' }}>{t('projectPanel.BondCount', lang)}</span>
+            <span style={{ fontSize: '12px' }}>{t('projectPanel.CovalentBondCount', lang)}</span>
           </Option>
           <Option key={'molecularMass'} value={'molecularMass'}>
             <span style={{ fontSize: '12px' }}>{t('projectPanel.MolecularMass', lang)}</span>

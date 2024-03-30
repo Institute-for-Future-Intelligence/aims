@@ -239,3 +239,5 @@ export const rotationStep = (state: CommonStoreState) => state.projectState.rota
 export const translationStep = (state: CommonStoreState) => state.projectState.translationStep;
 
 export const energyTimeSeries = (state: DataStoreState) => state.energyTimeSeries;
+
+export const delteAllAtoms = (state: CommonStoreState) => state.deleteAllAtoms;

@@ -208,6 +208,8 @@ export const i18n_en = {
       ShowXYPlane: 'Show X-Y plane',
       ShowYZPlane: 'Show Y-Z plane',
       ShowXZPlane: 'Show X-Z plane',
+      DeleteAllAtoms: 'Delete all atoms',
+      DoYouReallyWantToDeleteAllAtoms: 'Do you really want to delete all atoms',
     },
 
     projectListPanel: {

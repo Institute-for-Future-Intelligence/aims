@@ -3,7 +3,8 @@
  */
 
 import React, { useMemo } from 'react';
-import { FloatButton, InputNumber, Popover } from 'antd';
+import { ClearOutlined, QuestionCircleOutlined, WarningOutlined } from '@ant-design/icons';
+import { FloatButton, InputNumber, Modal, Popover } from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +18,8 @@ const ToolBarButtons = React.memo(() => {
   const xyPlanePosition = useStore(Selector.xyPlanePosition);
   const yzPlanePosition = useStore(Selector.yzPlanePosition);
   const xzPlanePosition = useStore(Selector.xzPlanePosition);
+  const deleteAllAtoms = useStore(Selector.delteAllAtoms);
+  const testMolecules = useStore(Selector.testMolecules);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -151,6 +154,30 @@ const ToolBarButtons = React.memo(() => {
           }}
         />
       </Popover>
+      <FloatButton
+        shape="square"
+        icon={<ClearOutlined style={{ color: testMolecules.length === 0 ? 'lightgray' : undefined }} />}
+        tooltip={t('experiment.DeleteAllAtoms', lang)}
+        onClick={() => {
+          if (testMolecules.length === 0) return;
+          Modal.confirm({
+            title: t('experiment.DoYouReallyWantToDeleteAllAtoms', lang) + '?',
+            icon: <QuestionCircleOutlined />,
+            okText: t('word.OK', lang),
+            cancelText: t('word.Cancel', lang),
+            onOk: () => {
+              deleteAllAtoms();
+            },
+          });
+        }}
+        // the following disables keyboard focus
+        onMouseDown={(e) => e.preventDefault()}
+        // the following disables the context menu
+        onContextMenu={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+      />
     </FloatButton.Group>
   );
 });

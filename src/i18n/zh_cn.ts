@@ -209,6 +209,8 @@ export const i18n_zh_cn = {
       ShowXYPlane: '显示X-Y平面',
       ShowYZPlane: '显示Y-Z平面',
       ShowXZPlane: '显示X-Z平面',
+      DeleteAllAtoms: '删除所有原子',
+      DoYouReallyWantToDeleteAllAtoms: '您确定删除所有原子吗',
     },
 
     projectListPanel: {
