@@ -7,6 +7,7 @@ import { Filter } from './Filter';
 import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import RCGroup from './lib/gfx/RCGroup';
+import { Molecule } from './models/Molecule.ts';
 
 declare module '@react-three/fiber' {
   interface ThreeElements {
@@ -94,7 +95,7 @@ export interface ProjectState {
   yzPlanePosition: number;
   xzPlanePosition: number;
 
-  testMolecules: MoleculeInterface[]; // molecules in the reaction chamber
+  testMolecules: Molecule[]; // molecules in the reaction chamber
   testMoleculeTransforms: MoleculeTransform[];
   molecularContainer: MolecularContainer;
   molecularContainerVisible: boolean;

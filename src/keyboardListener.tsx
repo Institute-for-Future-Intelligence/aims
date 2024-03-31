@@ -16,6 +16,7 @@ import { askToCreateProject, askToOpenProject, saveProject, saveProjectAs } from
 import { resetView, zoomView } from './components/mainMenu/viewMenu';
 import { startFlying, stopFlying } from './fly.ts';
 import { useRefStore } from './stores/commonRef.ts';
+import { Molecule } from './models/Molecule.ts';
 
 export interface KeyboardListenerProps {
   setNavigationView: (selected: boolean) => void;
@@ -232,7 +233,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       });
     } else if (cutMolecule) {
       setCommonStore((state) => {
-        const m = { ...cutMolecule };
+        const m = { ...(cutMolecule as Molecule) };
         state.projectState.testMolecules.push(m);
         state.projectState.testMoleculeTransforms.push({
           x: p.x,

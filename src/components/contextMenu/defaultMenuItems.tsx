@@ -29,6 +29,7 @@ import { useRefStore } from '../../stores/commonRef.ts';
 import { MoleculeTransform } from '../../types.ts';
 import { Util } from '../../Util.ts';
 import { ModelUtil } from '../../models/ModelUtil.ts';
+import { Molecule } from '../../models/Molecule.ts';
 
 export const TranslateLigand = () => {
   const setCommonStore = useStore(Selector.set);
@@ -246,7 +247,7 @@ export const TranslateMolecule = () => {
           addonAfter={'Å'}
           min={-molecularContainer.lx / 2}
           max={molecularContainer.lx / 2}
-          value={testMoleculeTransforms[pickedIndex].x}
+          value={testMoleculeTransforms[pickedIndex]?.x}
           step={0.1}
           precision={1}
           onChange={(value) => {
@@ -275,7 +276,7 @@ export const TranslateMolecule = () => {
           addonAfter={'Å'}
           min={-molecularContainer.ly / 2}
           max={molecularContainer.ly / 2}
-          value={testMoleculeTransforms[pickedIndex].y}
+          value={testMoleculeTransforms[pickedIndex]?.y}
           step={0.1}
           precision={1}
           onChange={(value) => {
@@ -304,7 +305,7 @@ export const TranslateMolecule = () => {
           addonAfter={'Å'}
           min={-molecularContainer.lz / 2}
           max={molecularContainer.lz / 2}
-          value={testMoleculeTransforms[pickedIndex].z}
+          value={testMoleculeTransforms[pickedIndex]?.z}
           step={0.1}
           precision={1}
           onChange={(value) => {
@@ -343,7 +344,7 @@ export const RotateMolecule = () => {
   const lang = useLanguage();
 
   const euler = useMemo(() => {
-    if (pickedIndex === -1) return new Euler();
+    if (pickedIndex === -1 || testMoleculeTransforms.length === 0) return new Euler();
     const angles = testMoleculeTransforms[pickedIndex].euler;
     if (!angles || angles.length !== 3) return new Euler();
     return new Euler(angles[0], angles[1], angles[2]);
@@ -374,7 +375,7 @@ export const RotateMolecule = () => {
       }
     }
     setCommonStore((state) => {
-      if (pickedIndex === -1) return;
+      if (pickedIndex === -1 || testMoleculeTransforms.length === 0) return;
       const m = state.projectState.testMoleculeTransforms[pickedIndex];
       if (m) {
         matrix.multiply(new Matrix4().makeRotationFromEuler(euler));
@@ -540,7 +541,7 @@ export const PasteMolecule = () => {
     } else if (cutMolecule) {
       setCommonStore((state) => {
         const m = { ...cutMolecule };
-        state.projectState.testMolecules.push(m);
+        state.projectState.testMolecules.push(m as Molecule);
         state.projectState.testMoleculeTransforms.push({
           x: p.x,
           y: p.y,

@@ -35,6 +35,7 @@ import { usePrimitiveStore } from './stores/commonPrimitive.ts';
 import { MoleculeTransform } from './types.ts';
 import SimulationControls from './view/simulationControls.tsx';
 import EnergyGraph from './view/energyGraph.tsx';
+import { Molecule } from './models/Molecule.ts';
 
 const ReactionChamber = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -82,7 +83,7 @@ const ReactionChamber = React.memo(() => {
         switch (state.projectState.type) {
           case ProjectType.MOLECULAR_MODELING: {
             const m = { ...selectedMolecule };
-            state.projectState.testMolecules.push(m);
+            state.projectState.testMolecules.push(m as Molecule);
             state.projectState.testMoleculeTransforms.push({
               x: point.x,
               y: point.y,
