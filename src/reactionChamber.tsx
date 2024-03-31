@@ -36,6 +36,7 @@ import { MoleculeTransform } from './types.ts';
 import SimulationControls from './view/simulationControls.tsx';
 import EnergyGraph from './view/energyGraph.tsx';
 import { Molecule } from './models/Molecule.ts';
+import { Atom } from './models/Atom.ts';
 
 const ReactionChamber = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -57,6 +58,7 @@ const ReactionChamber = React.memo(() => {
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
   const energyGraphVisible = useStore(Selector.energyGraphVisible);
+  const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
 
   const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -82,14 +84,16 @@ const ReactionChamber = React.memo(() => {
       setCommonStore((state) => {
         switch (state.projectState.type) {
           case ProjectType.MOLECULAR_MODELING: {
-            const m = { ...selectedMolecule };
-            state.projectState.testMolecules.push(m as Molecule);
-            state.projectState.testMoleculeTransforms.push({
-              x: point.x,
-              y: point.y,
-              z: point.z,
-              euler: [0, 0, 0],
-            } as MoleculeTransform);
+            const prop = molecularPropertiesMap.get(selectedMolecule.name);
+            if (prop?.atoms) {
+              const atoms: Atom[] = [];
+              for (const a of prop.atoms) {
+                atoms.push(new Atom(a.index, a.elementSymbol, a.position.clone(), true));
+              }
+              const m = new Molecule(selectedMolecule.name, atoms, []);
+              m.setCenter(point);
+              state.projectState.testMolecules.push(m);
+            }
             break;
           }
           case ProjectType.DRUG_DISCOVERY: {

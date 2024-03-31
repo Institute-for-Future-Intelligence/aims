@@ -9,7 +9,7 @@ import PDBParser from '../lib/io/parsers/PDBParser';
 import PubChemParser from '../lib/io/parsers/PubChemParser';
 import XYZParser from '../lib/io/parsers/XYZParser';
 import MOL2Parser from '../lib/io/parsers/MOL2Parser';
-import { MoleculeInterface, MoleculeTransform } from '../types.ts';
+import { MoleculeInterface } from '../types.ts';
 import { useStore } from '../stores/common.ts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { Molecule } from '../models/Molecule.ts';
@@ -93,8 +93,7 @@ export const generateComplex = (molecules: Molecule[]) => {
 
 export const loadMolecule = (
   molecule: MoleculeInterface,
-  processResult: (result: any, moleculeName?: string, transform?: MoleculeTransform) => void,
-  transform?: MoleculeTransform,
+  processResult: (result: any, molecule?: Molecule) => void,
 ) => {
   const mol = getData(molecule.name);
   if (mol?.url) {
@@ -116,7 +115,7 @@ export const loadMolecule = (
           else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
           if (parser) {
             parser.parse().then((result) => {
-              processResult(result, molecule.name, transform);
+              processResult(result, molecule as Molecule);
             });
           }
         }
@@ -125,11 +124,11 @@ export const loadMolecule = (
   }
 };
 
-export const setProperties = (molecule: MoleculeInterface, atomCount: number, bondCount: number) => {
+export const setProperties = (molecule: MoleculeInterface, atoms: Atom[], bondCount: number) => {
   const properties = useStore.getState().getProvidedMolecularProperties(molecule.name);
   if (properties) {
     useStore.getState().setMolecularProperties(molecule.name, {
-      atomCount,
+      atomCount: atoms.length,
       bondCount,
       molecularMass: properties.molecularMass,
       logP: properties.logP,
@@ -142,6 +141,7 @@ export const setProperties = (molecule: MoleculeInterface, atomCount: number, bo
       density: properties.density,
       boilingPoint: properties.boilingPoint,
       meltingPoint: properties.meltingPoint,
+      atoms,
     } as MolecularProperties);
   }
 };

@@ -35,6 +35,7 @@ import {
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import { ProjectUtil } from './project/ProjectUtil.ts';
 import { useTranslation } from 'react-i18next';
+import { useRefStore } from './stores/commonRef.ts';
 
 export interface CloudManagerProps {
   viewOnly: boolean;
@@ -64,6 +65,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   const showProjectsFlag = usePrimitiveStore(Selector.showProjectsFlag);
   const updateProjectsFlag = usePrimitiveStore(Selector.updateProjectsFlag);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const moleculesRef = useRefStore.getState().moleculesRef;
 
   const [processing, setProcessing] = useState(false);
   const [updateFlag, setUpdateFlag] = useState(false);
@@ -410,7 +412,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             energyGraphVisible: !!data.energyGraphVisible,
 
             testMolecules: data.testMolecules ?? [],
-            testMoleculeTransforms: data.testMoleculeTransforms ?? [],
 
             timeStep: data.timeStep ?? 0.5,
             temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,
@@ -617,6 +618,21 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     }
     setProcessing(true);
     const ps = JSON.parse(JSON.stringify(useStore.getState().projectState)) as ProjectState;
+    if (ps.type === ProjectType.MOLECULAR_MODELING && moleculesRef?.current) {
+      // update the saved positions and velocities of the molecules
+      for (const [i, m] of ps.testMolecules.entries()) {
+        const currentMol = moleculesRef.current[i];
+        for (const [j, a] of m.atoms.entries()) {
+          // cannot use Vector3 as it is not supported by Firestore
+          a.position.x = currentMol.atoms[j].position.x;
+          a.position.y = currentMol.atoms[j].position.y;
+          a.position.z = currentMol.atoms[j].position.z;
+          a.velocity.x = currentMol.atoms[j].velocity.x;
+          a.velocity.y = currentMol.atoms[j].velocity.y;
+          a.velocity.z = currentMol.atoms[j].velocity.z;
+        }
+      }
+    }
     ps.timestamp = new Date().getTime();
     ps.time = dayjs(new Date(ps.timestamp)).format('MM/DD/YYYY hh:mm A');
     ps.key = ps.timestamp.toString();

@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef } from 'react';
-import { ActionInfo, MoleculeTransform } from './types';
+import { ActionInfo } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { UndoableCheck } from './undo/UndoableCheck';
@@ -103,11 +103,9 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
   const testMolecules = useStore(Selector.testMolecules);
-  const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
   const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
   const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
-  const cutMoleculeTransform = usePrimitiveStore(Selector.cutMoleculeTransform);
   const clickPointRef = useRefStore.getState().clickPointRef;
   const moleculesRef = useRefStore.getState().moleculesRef;
 
@@ -163,7 +161,6 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       });
       setCommonStore((state) => {
         state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
-        state.projectState.testMoleculeTransforms.splice(pickedMoleculeIndex, 1);
         if (loggable) {
           state.actionInfo = {
             name: 'Delete Selected Molecule',
@@ -177,13 +174,11 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const onCut = () => {
     if (pickedMoleculeIndex !== -1) {
       usePrimitiveStore.getState().set((state) => {
-        state.cutMolecule = { ...testMolecules[pickedMoleculeIndex] };
-        state.cutMoleculeTransform = { ...testMoleculeTransforms[pickedMoleculeIndex] };
+        state.cutMolecule = Molecule.clone(testMolecules[pickedMoleculeIndex]);
         state.pickedMoleculeIndex = -1;
       });
       setCommonStore((state) => {
         state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
-        state.projectState.testMoleculeTransforms.splice(pickedMoleculeIndex, 1);
         if (loggable) {
           state.actionInfo = {
             name: 'Cut Selected Molecule',
@@ -215,15 +210,9 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     if (!p) return;
     if (copiedMoleculeIndex !== -1) {
       setCommonStore((state) => {
-        const m = { ...testMolecules[copiedMoleculeIndex] };
-        const t = testMoleculeTransforms[copiedMoleculeIndex];
+        const m = Molecule.clone(testMolecules[copiedMoleculeIndex]);
+        m.setCenter(p);
         state.projectState.testMolecules.push(m);
-        state.projectState.testMoleculeTransforms.push({
-          x: p.x,
-          y: p.y,
-          z: p.z,
-          euler: t.euler ? [...t.euler] : [0, 0, 0],
-        } as MoleculeTransform);
         if (loggable) {
           state.actionInfo = {
             name: 'Paste Copied Molecule',
@@ -233,14 +222,9 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       });
     } else if (cutMolecule) {
       setCommonStore((state) => {
-        const m = { ...(cutMolecule as Molecule) };
+        const m = Molecule.clone(cutMolecule);
+        m.setCenter(p);
         state.projectState.testMolecules.push(m);
-        state.projectState.testMoleculeTransforms.push({
-          x: p.x,
-          y: p.y,
-          z: p.z,
-          euler: cutMoleculeTransform?.euler ? [...cutMoleculeTransform.euler] : [0, 0, 0],
-        } as MoleculeTransform);
         if (loggable) {
           state.actionInfo = {
             name: 'Paste Cut Molecule',
@@ -264,10 +248,6 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
             break;
           }
         }
-        setCommonStore((state) => {
-          const m = state.projectState.testMoleculeTransforms[pickedMoleculeIndex];
-          if (m) m.x += displacement;
-        });
         break;
       case 'y':
         for (const [i, m] of moleculesRef.current.entries()) {
@@ -278,10 +258,6 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
             break;
           }
         }
-        setCommonStore((state) => {
-          const m = state.projectState.testMoleculeTransforms[pickedMoleculeIndex];
-          if (m) m.y += displacement;
-        });
         break;
       case 'z':
         for (const [i, m] of moleculesRef.current.entries()) {
@@ -292,10 +268,6 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
             break;
           }
         }
-        setCommonStore((state) => {
-          const m = state.projectState.testMoleculeTransforms[pickedMoleculeIndex];
-          if (m) m.z += displacement;
-        });
         break;
     }
     usePrimitiveStore.getState().set((state) => {

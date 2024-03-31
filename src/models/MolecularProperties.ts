@@ -2,6 +2,8 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
+import { Atom } from './Atom.ts';
+
 export interface MolecularProperties {
   formula: string;
   atomCount: number;
@@ -17,4 +19,5 @@ export interface MolecularProperties {
   density: number;
   boilingPoint: number;
   meltingPoint: number;
+  atoms?: Atom[];
 }

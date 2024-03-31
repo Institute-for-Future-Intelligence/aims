@@ -4,7 +4,6 @@
 
 import { Atom } from './Atom.ts';
 import { Molecule } from './Molecule.ts';
-import { Vector3 } from 'three';
 
 export class ModelUtil {
   static getMolecule(atom: Atom, molecules: Molecule[]): Molecule | null {
@@ -12,14 +11,6 @@ export class ModelUtil {
       if (m.atoms.includes(atom)) return m;
     }
     return null;
-  }
-
-  static getMoleculeCenter(molecule: Molecule): Vector3 {
-    const c = new Vector3();
-    for (const a of molecule.atoms) {
-      c.add(a.position);
-    }
-    return c.multiplyScalar(1 / molecule.atoms.length);
   }
 
   static getMoleculeLengths(molecule: Molecule): number[] {

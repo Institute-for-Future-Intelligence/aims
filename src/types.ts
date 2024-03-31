@@ -96,7 +96,6 @@ export interface ProjectState {
   xzPlanePosition: number;
 
   testMolecules: Molecule[]; // molecules in the reaction chamber
-  testMoleculeTransforms: MoleculeTransform[];
   molecularContainer: MolecularContainer;
   molecularContainerVisible: boolean;
   vdwBondsVisible: boolean;

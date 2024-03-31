@@ -19,6 +19,7 @@ import {
 } from '../constants.ts';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from '../view/displayOptions.ts';
 import { Util } from '../Util.ts';
+import { Molecule } from '../models/Molecule.ts';
 
 export class ProjectUtil {
   static createDefaultProjectState() {
@@ -111,8 +112,7 @@ export class ProjectUtil {
       vdwBondCutoffRelative: 0.5,
       energyGraphVisible: false,
 
-      testMolecules: new Array<MoleculeInterface>(),
-      testMoleculeTransforms: new Array<MoleculeTransform>(),
+      testMolecules: new Array<Molecule>(),
 
       timeStep: 0.5,
       temperature: 300,

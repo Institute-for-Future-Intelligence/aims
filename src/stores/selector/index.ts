@@ -44,8 +44,6 @@ export const timeStep = (state: CommonStoreState) => state.projectState.timeStep
 
 export const testMolecules = (state: CommonStoreState) => state.projectState.testMolecules;
 
-export const testMoleculeTransforms = (state: CommonStoreState) => state.projectState.testMoleculeTransforms;
-
 export const molecularContainer = (state: CommonStoreState) => state.projectState.molecularContainer;
 
 export const molecularContainerVisible = (state: CommonStoreState) => state.projectState.molecularContainerVisible;
@@ -61,8 +59,6 @@ export const pickedMoleculeIndex = (state: PrimitiveStoreState) => state.pickedM
 export const copiedMoleculeIndex = (state: PrimitiveStoreState) => state.copiedMoleculeIndex;
 
 export const cutMolecule = (state: PrimitiveStoreState) => state.cutMolecule;
-
-export const cutMoleculeTransform = (state: PrimitiveStoreState) => state.cutMoleculeTransform;
 
 export const showAccountSettingsPanel = (state: PrimitiveStoreState) => state.showAccountSettingsPanel;
 

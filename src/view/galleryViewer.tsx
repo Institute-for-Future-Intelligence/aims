@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DirectionalLight, Group, Sphere } from 'three';
+import { DirectionalLight, Group, Sphere, Vector3 } from 'three';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { MoleculeInterface } from '../types';
@@ -19,9 +19,10 @@ import {
   STYLE_MAP,
 } from './displayOptions';
 import { loadMolecule, setProperties } from './moleculeTools.ts';
+import { Atom } from '../models/Atom.ts';
 
 export interface GalleryViewerProps {
-  molecule: MoleculeInterface | null;
+  molecule: MoleculeInterface;
   style: MolecularViewerStyle;
   material: MolecularViewerMaterial;
   coloring: MolecularViewerColoring;
@@ -89,7 +90,7 @@ const GalleryViewer = React.memo(
         return;
       }
       loadMolecule(molecule, processResult);
-    }, [molecule?.name]);
+    }, [molecule]);
 
     const processResult = (result: any) => {
       setComplex(result);
@@ -110,10 +111,15 @@ const GalleryViewer = React.memo(
         cy /= n;
         cz /= n;
         groupRef.current?.position.set(-cx, -cy, -cz);
-      }
-
-      if (molecule) {
-        setProperties(molecule, result._atoms.length, result._bonds.length);
+        const atoms: Atom[] = [];
+        for (let i = 0; i < n; i++) {
+          const atom = result._atoms[i] as AtomJS;
+          const x = atom.position.x - cx;
+          const y = atom.position.y - cy;
+          const z = atom.position.z - cz;
+          atoms.push(new Atom(atom.index, atom.element.name, new Vector3(x, y, z)));
+        }
+        setProperties(molecule, atoms, result._bonds.length);
       }
     };
 

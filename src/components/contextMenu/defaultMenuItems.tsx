@@ -2,8 +2,8 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useMemo } from 'react';
-import { Euler, Matrix4 } from 'three';
+import React, { useMemo, useState } from 'react';
+import { Euler, Matrix4, Vector3 } from 'three';
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { useLanguage } from '../../hooks';
@@ -26,9 +26,7 @@ import {
 } from '../../view/displayOptions';
 import { SpaceshipDisplayMode } from '../../constants.ts';
 import { useRefStore } from '../../stores/commonRef.ts';
-import { MoleculeTransform } from '../../types.ts';
 import { Util } from '../../Util.ts';
-import { ModelUtil } from '../../models/ModelUtil.ts';
 import { Molecule } from '../../models/Molecule.ts';
 
 export const TranslateLigand = () => {
@@ -220,22 +218,48 @@ export const TranslateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
-  const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
   const molecularContainer = useStore(Selector.molecularContainer);
   const moleculesRef = useRefStore.getState().moleculesRef;
 
-  const postTranslateSelectedMolecule = () => {
-    usePrimitiveStore.getState().set((state) => {
-      state.updateViewerFlag = !state.updateViewerFlag;
-    });
-    setCommonStore((state) => {
-      if (loggable) {
-        state.actionInfo = {
-          name: 'Translate Selected Molecule',
-          timestamp: new Date().getTime(),
-        };
+  const [updateFlag, setUpdateFlag] = useState<boolean>(false);
+
+  const center = useMemo(() => {
+    if (moleculesRef?.current && pickedIndex >= 0) {
+      const m = moleculesRef.current[pickedIndex];
+      m.updateCenter();
+      return m.center;
+    }
+    return new Vector3();
+  }, [moleculesRef, pickedIndex, updateFlag]);
+
+  const translateSelectedMolecule = (displacement: Vector3) => {
+    if (pickedIndex === -1 || !moleculesRef?.current) return;
+    const m = moleculesRef.current[pickedIndex];
+    if (m) {
+      for (const a of m.atoms) {
+        a.position.add(displacement);
       }
-    });
+      setCommonStore((state) => {
+        const mol = state.projectState.testMolecules[pickedIndex];
+        if (mol) {
+          for (const a of mol.atoms) {
+            a.position.x += displacement.x;
+            a.position.y += displacement.y;
+            a.position.z += displacement.z;
+          }
+        }
+        if (loggable) {
+          state.actionInfo = {
+            name: 'Translate Selected Molecule',
+            timestamp: new Date().getTime(),
+          };
+        }
+      });
+      setUpdateFlag(!updateFlag);
+      usePrimitiveStore.getState().set((state) => {
+        state.updateViewerFlag = !state.updateViewerFlag;
+      });
+    }
   };
 
   return (
@@ -247,27 +271,12 @@ export const TranslateMolecule = () => {
           addonAfter={'Å'}
           min={-molecularContainer.lx / 2}
           max={molecularContainer.lx / 2}
-          value={testMoleculeTransforms[pickedIndex]?.x}
+          value={center.x}
           step={0.1}
           precision={1}
           onChange={(value) => {
             if (value === null) return;
-            if (pickedIndex === -1 || !moleculesRef?.current) return;
-            const displacement = value - testMoleculeTransforms[pickedIndex].x;
-            for (const [i, m] of moleculesRef.current.entries()) {
-              if (i === pickedIndex) {
-                for (const a of m.atoms) {
-                  a.position.x += displacement;
-                }
-                break;
-              }
-            }
-            setCommonStore((state) => {
-              if (pickedIndex === -1) return;
-              const m = state.projectState.testMoleculeTransforms[pickedIndex];
-              if (m) m.x += displacement;
-            });
-            postTranslateSelectedMolecule();
+            translateSelectedMolecule(new Vector3(value - center.x, 0, 0));
           }}
         />
         <InputNumber
@@ -276,27 +285,12 @@ export const TranslateMolecule = () => {
           addonAfter={'Å'}
           min={-molecularContainer.ly / 2}
           max={molecularContainer.ly / 2}
-          value={testMoleculeTransforms[pickedIndex]?.y}
+          value={center.y}
           step={0.1}
           precision={1}
           onChange={(value) => {
             if (value === null) return;
-            if (pickedIndex === -1 || !moleculesRef?.current) return;
-            const displacement = value - testMoleculeTransforms[pickedIndex].y;
-            for (const [i, m] of moleculesRef.current.entries()) {
-              if (i === pickedIndex) {
-                for (const a of m.atoms) {
-                  a.position.y += displacement;
-                }
-                break;
-              }
-            }
-            setCommonStore((state) => {
-              if (pickedIndex === -1) return;
-              const m = state.projectState.testMoleculeTransforms[pickedIndex];
-              if (m) m.y += displacement;
-            });
-            postTranslateSelectedMolecule();
+            translateSelectedMolecule(new Vector3(0, value - center.y, 0));
           }}
         />
         <InputNumber
@@ -305,27 +299,12 @@ export const TranslateMolecule = () => {
           addonAfter={'Å'}
           min={-molecularContainer.lz / 2}
           max={molecularContainer.lz / 2}
-          value={testMoleculeTransforms[pickedIndex]?.z}
+          value={center.z}
           step={0.1}
           precision={1}
           onChange={(value) => {
             if (value === null) return;
-            if (pickedIndex === -1 || !moleculesRef?.current) return;
-            const displacement = value - testMoleculeTransforms[pickedIndex].z;
-            for (const [i, m] of moleculesRef.current.entries()) {
-              if (i === pickedIndex) {
-                for (const a of m.atoms) {
-                  a.position.z += displacement;
-                }
-                break;
-              }
-            }
-            setCommonStore((state) => {
-              if (pickedIndex === -1) return;
-              const m = state.projectState.testMoleculeTransforms[pickedIndex];
-              if (m) m.z += displacement;
-            });
-            postTranslateSelectedMolecule();
+            translateSelectedMolecule(new Vector3(0, 0, value - center.z));
           }}
         />
       </Space>
@@ -335,63 +314,53 @@ export const TranslateMolecule = () => {
 
 export const RotateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
-  const loggable = useStore(Selector.loggable);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
-  const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
   const moleculesRef = useRefStore.getState().moleculesRef;
 
   const { t } = useTranslation();
   const lang = useLanguage();
 
-  const euler = useMemo(() => {
-    if (pickedIndex === -1 || testMoleculeTransforms.length === 0) return new Euler();
-    const angles = testMoleculeTransforms[pickedIndex].euler;
-    if (!angles || angles.length !== 3) return new Euler();
-    return new Euler(angles[0], angles[1], angles[2]);
-  }, [testMoleculeTransforms, pickedIndex]);
-
   const rotateSelectedMolecule = (axis: string, degrees: number) => {
     if (pickedIndex === -1 || !moleculesRef?.current) return;
-    let matrix: Matrix4;
-    switch (axis) {
-      case 'x':
-        matrix = new Matrix4().makeRotationX(Util.toRadians(degrees));
-        break;
-      case 'y':
-        matrix = new Matrix4().makeRotationY(Util.toRadians(degrees));
-        break;
-      default:
-        matrix = new Matrix4().makeRotationZ(Util.toRadians(degrees));
-        break;
-    }
-    for (const [i, m] of moleculesRef.current.entries()) {
-      if (i === pickedIndex) {
-        const c = ModelUtil.getMoleculeCenter(m);
-        for (const a of m.atoms) {
-          const p = a.position.clone().sub(c).applyMatrix4(matrix);
-          a.position.copy(p).add(c);
+    const m = moleculesRef.current[pickedIndex];
+    if (m) {
+      let matrix: Matrix4;
+      switch (axis) {
+        case 'x':
+          matrix = new Matrix4().makeRotationX(Util.toRadians(degrees));
+          break;
+        case 'y':
+          matrix = new Matrix4().makeRotationY(Util.toRadians(degrees));
+          break;
+        default:
+          matrix = new Matrix4().makeRotationZ(Util.toRadians(degrees));
+          break;
+      }
+      m.updateCenter();
+      for (const a of m.atoms) {
+        const p = a.position.clone().sub(m.center).applyMatrix4(matrix);
+        a.position.copy(p).add(m.center);
+      }
+      setCommonStore((state) => {
+        const mol = state.projectState.testMolecules[pickedIndex];
+        if (mol) {
+          for (const [i, a] of mol.atoms.entries()) {
+            a.position.x = m.atoms[i].position.x;
+            a.position.y = m.atoms[i].position.y;
+            a.position.z = m.atoms[i].position.z;
+          }
         }
-        break;
-      }
+        if (state.loggable) {
+          state.actionInfo = {
+            name: 'Rotate Selected Molecule',
+            timestamp: new Date().getTime(),
+          };
+        }
+      });
+      usePrimitiveStore.getState().set((state) => {
+        state.updateViewerFlag = !state.updateViewerFlag;
+      });
     }
-    setCommonStore((state) => {
-      if (pickedIndex === -1 || testMoleculeTransforms.length === 0) return;
-      const m = state.projectState.testMoleculeTransforms[pickedIndex];
-      if (m) {
-        matrix.multiply(new Matrix4().makeRotationFromEuler(euler));
-        const angle = new Euler().setFromRotationMatrix(matrix);
-        m.euler = [angle.x, angle.y, angle.z];
-      }
-      if (loggable) {
-        state.actionInfo = {
-          name: 'Rotate Selected Molecule',
-          timestamp: new Date().getTime(),
-        };
-      }
-    });
-    usePrimitiveStore.getState().set((state) => {
-      state.updateViewerFlag = !state.updateViewerFlag;
-    });
   };
 
   return (
@@ -424,15 +393,6 @@ export const RotateMolecule = () => {
             <RotateRightOutlined />
           </Button>
         </Space>
-        <hr style={{ marginTop: '6px' }} />
-        <Space direction={'horizontal'}>
-          {t('molecularViewer.EulerAngle', lang) + ' (XYZ ' + t('molecularViewer.Order', lang) + '):'}
-        </Space>
-        <Space>
-          {'(' + Util.toDegrees(euler.x).toFixed(0) + '°, '}
-          {Util.toDegrees(euler.y).toFixed(0) + '°, '}
-          {Util.toDegrees(euler.z).toFixed(0) + '°)'}
-        </Space>
       </Space>
     )
   );
@@ -441,7 +401,6 @@ export const RotateMolecule = () => {
 export const CutMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const testMolecules = useStore(Selector.testMolecules);
-  const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
   const loggable = useStore(Selector.loggable);
 
   const { t } = useTranslation();
@@ -451,13 +410,12 @@ export const CutMolecule = () => {
     const pickedMoleculeIndex = usePrimitiveStore.getState().pickedMoleculeIndex;
     if (pickedMoleculeIndex === -1) return;
     usePrimitiveStore.getState().set((state) => {
-      state.cutMolecule = { ...testMolecules[pickedMoleculeIndex] };
-      state.cutMoleculeTransform = { ...testMoleculeTransforms[pickedMoleculeIndex] };
+      const m = testMolecules[pickedMoleculeIndex];
+      state.cutMolecule = Molecule.clone(m);
       state.pickedMoleculeIndex = -1;
     });
     setCommonStore((state) => {
       state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
-      state.projectState.testMoleculeTransforms.splice(pickedMoleculeIndex, 1);
       if (loggable) {
         state.actionInfo = {
           name: 'Cut Selected Molecule',
@@ -508,10 +466,8 @@ export const PasteMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
   const testMolecules = useStore(Selector.testMolecules);
-  const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
   const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
   const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
-  const cutMoleculeTransform = usePrimitiveStore(Selector.cutMoleculeTransform);
   const clickPointRef = useRefStore.getState().clickPointRef;
 
   const { t } = useTranslation();
@@ -522,15 +478,9 @@ export const PasteMolecule = () => {
     if (!p) return;
     if (copiedMoleculeIndex !== -1) {
       setCommonStore((state) => {
-        const m = { ...testMolecules[copiedMoleculeIndex] };
-        const t = testMoleculeTransforms[copiedMoleculeIndex];
+        const m = Molecule.clone(testMolecules[copiedMoleculeIndex]);
+        m.setCenter(p);
         state.projectState.testMolecules.push(m);
-        state.projectState.testMoleculeTransforms.push({
-          x: p.x,
-          y: p.y,
-          z: p.z,
-          euler: t.euler ? [...t.euler] : [0, 0, 0],
-        } as MoleculeTransform);
         if (loggable) {
           state.actionInfo = {
             name: 'Paste Copied Molecule',
@@ -540,14 +490,9 @@ export const PasteMolecule = () => {
       });
     } else if (cutMolecule) {
       setCommonStore((state) => {
-        const m = { ...cutMolecule };
-        state.projectState.testMolecules.push(m as Molecule);
-        state.projectState.testMoleculeTransforms.push({
-          x: p.x,
-          y: p.y,
-          z: p.z,
-          euler: cutMoleculeTransform?.euler ? [...cutMoleculeTransform.euler] : [0, 0, 0],
-        } as MoleculeTransform);
+        const m = Molecule.clone(cutMolecule);
+        m.setCenter(p);
+        state.projectState.testMolecules.push(m);
         if (loggable) {
           state.actionInfo = {
             name: 'Paste Cut Molecule',

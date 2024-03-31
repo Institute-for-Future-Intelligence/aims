@@ -3,8 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Box3, Raycaster, Vector3, Euler, Mesh } from 'three';
-import { MoleculeTransform } from '../types.ts';
+import { Box3, Raycaster, Mesh } from 'three';
 import AtomJS from '../lib/chem/Atom';
 import ComplexVisual from '../lib/ComplexVisual';
 import { Camera, extend, ThreeEvent, useThree } from '@react-three/fiber';
@@ -60,7 +59,6 @@ const DynamicsViewer = React.memo(
     onPointerDown,
   }: DynamicsViewerProps) => {
     const testMolecules = useStore(Selector.testMolecules);
-    const testMoleculeTransforms = useStore(Selector.testMoleculeTransforms);
     const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
     const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
     const viewerStyle = useStore(Selector.chamberViewerStyle);
@@ -116,44 +114,24 @@ const DynamicsViewer = React.memo(
       }
       if (setLoading) setLoading(true);
       moleculesRef.current.length = 0;
-      for (const [i, m] of testMolecules.entries()) {
-        if (testMoleculeTransforms) {
-          loadMolecule(m, processResult, testMoleculeTransforms[i]);
-        } else {
-          loadMolecule(m, processResult);
-        }
+      for (const m of testMolecules) {
+        loadMolecule(m, processResult);
       }
     }, [testMolecules]);
 
-    const processResult = (result: any, moleculeName?: string, transform?: MoleculeTransform) => {
-      const mol = new Molecule(moleculeName ?? 'unknown', [], []);
+    const processResult = (result: any, molecule?: Molecule) => {
+      const mol = new Molecule(molecule?.name ?? 'unknown', [], []);
       const n = result._atoms.length;
-      const c = new Vector3();
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
         const a = new Atom(atom.index, atom.element.name, atom.position, true);
         a.sigma = atom.element.radius * LJ_SIGMA_CONVERTER;
         a.mass = atom.element.weight;
-        if (transform) {
-          a.position.x += transform.x ?? 0;
-          a.position.y += transform.y ?? 0;
-          a.position.z += transform.z ?? 0;
-          c.add(a.position);
+        if (molecule && molecule.atoms) {
+          a.position.copy(molecule.atoms[i].position);
+          a.velocity.copy(molecule.atoms[i].velocity);
         }
         mol.atoms.push(a);
-      }
-      if (transform) {
-        c.multiplyScalar(1 / n);
-        const euler = new Euler();
-        const angles = transform.euler;
-        if (angles && angles.length === 3) {
-          euler.set(angles[0], angles[1], angles[2]);
-        }
-        for (let i = 0; i < n; i++) {
-          const a = mol.atoms[i];
-          const p = a.position.clone().sub(c).applyEuler(euler);
-          a.position.copy(p).add(c);
-        }
       }
       for (let i = 0; i < n; i++) {
         const a = mol.atoms[i];
@@ -288,16 +266,7 @@ const DynamicsViewer = React.memo(
             );
           })}
         <ModelContainer />
-        {pickedMoleculeIndex !== -1 && showMover && (
-          <Movers
-            center={[
-              testMoleculeTransforms[pickedMoleculeIndex].x,
-              testMoleculeTransforms[pickedMoleculeIndex].y,
-              testMoleculeTransforms[pickedMoleculeIndex].z,
-            ]}
-            length={moleculeLengths}
-          />
-        )}
+        {pickedMoleculeIndex !== -1 && showMover && <Movers center={[0, 0, 0]} length={moleculeLengths} />}
       </>
     );
   },

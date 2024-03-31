@@ -43,6 +43,22 @@ export class Atom {
     }
   }
 
+  // for atom serialized from Firestore
+  static clone(atom: Atom): Atom {
+    const newAtom = new Atom(
+      atom.index,
+      atom.elementSymbol,
+      new Vector3(atom.position.x, atom.position.y, atom.position.z),
+    );
+    if (atom.displacement) {
+      newAtom.displacement = new Vector3();
+      newAtom.acceleration = new Vector3();
+      newAtom.initialPosition = new Vector3();
+      newAtom.initialVelocity = new Vector3();
+    }
+    return newAtom;
+  }
+
   reset() {
     if (this.initialPosition) {
       this.position.copy(this.initialPosition);

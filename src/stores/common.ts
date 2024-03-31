@@ -91,7 +91,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           deleteAllAtoms() {
             immerSet((state: CommonStoreState) => {
               state.projectState.testMolecules = [];
-              state.projectState.testMoleculeTransforms = [];
             });
           },
 

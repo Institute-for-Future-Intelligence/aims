@@ -107,7 +107,6 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           energyGraphVisible: !!data.energyGraphVisible,
 
           testMolecules: data.testMolecules ?? [],
-          testMoleculeTransforms: data.testMoleculeTransforms ?? [],
 
           timeStep: data.timeStep ?? 0.5,
           temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,
