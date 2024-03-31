@@ -26,7 +26,7 @@ import {
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
-import { DatumEntry, MoleculeData } from '../types.ts';
+import { DatumEntry, MoleculeInterface } from '../types.ts';
 import TextArea from 'antd/lib/input/TextArea';
 import ImportMoleculeModal from './ImportMoleculeModal.tsx';
 import { saveSvg, showError, showInfo } from '../helpers.ts';
@@ -174,7 +174,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const descriptionRef = useRef<string | null>(null);
   const descriptionChangedRef = useRef<boolean>(false);
   const descriptionExpandedRef = useRef<boolean>(false);
-  const sortedMoleculesRef = useRef<MoleculeData[]>([]); // store a sorted copy of molecules
+  const sortedMoleculesRef = useRef<MoleculeInterface[]>([]); // store a sorted copy of molecules
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -746,7 +746,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       viewWidth={viewWidth}
                       viewHeight={viewHeight}
                       selected={selected}
-                      moleculeData={mol}
+                      molecule={mol}
                       formula={prop?.formula}
                       style={viewerStyle}
                       material={viewerMaterial}

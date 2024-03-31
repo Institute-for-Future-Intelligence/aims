@@ -7,7 +7,7 @@ import { DirectionalLight, Raycaster, Vector3 } from 'three';
 import { Protein } from '../models/Protein.ts';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
-import { MoleculeData, MoleculeTransform } from '../types';
+import { MoleculeInterface, MoleculeTransform } from '../types';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
 import { Atom } from '../models/Atom.ts';
@@ -36,7 +36,7 @@ import Element from '../lib/chem/Element';
 extend({ RCGroup });
 
 export interface DockingViewerProps {
-  protein: MoleculeData | null;
+  protein: MoleculeInterface | null;
   style: MolecularViewerStyle;
   material: MolecularViewerMaterial;
   coloring: MolecularViewerColoring;

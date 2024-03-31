@@ -9,7 +9,7 @@ import PDBParser from '../lib/io/parsers/PDBParser';
 import PubChemParser from '../lib/io/parsers/PubChemParser';
 import XYZParser from '../lib/io/parsers/XYZParser';
 import MOL2Parser from '../lib/io/parsers/MOL2Parser';
-import { MoleculeData, MoleculeTransform } from '../types.ts';
+import { MoleculeInterface, MoleculeTransform } from '../types.ts';
 import { useStore } from '../stores/common.ts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { Molecule } from '../models/Molecule.ts';
@@ -92,11 +92,11 @@ export const generateComplex = (molecules: Molecule[]) => {
 };
 
 export const loadMolecule = (
-  moleculeData: MoleculeData,
-  processResult: (result: any, moleculeData?: MoleculeData, transform?: MoleculeTransform) => void,
+  molecule: MoleculeInterface,
+  processResult: (result: any, moleculeName?: string, transform?: MoleculeTransform) => void,
   transform?: MoleculeTransform,
 ) => {
-  const mol = getData(moleculeData.name);
+  const mol = getData(molecule.name);
   if (mol?.url) {
     fetch(mol.url).then((response) => {
       response.text().then((text) => {
@@ -116,7 +116,7 @@ export const loadMolecule = (
           else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
           if (parser) {
             parser.parse().then((result) => {
-              processResult(result, moleculeData, transform);
+              processResult(result, molecule.name, transform);
             });
           }
         }
@@ -125,10 +125,10 @@ export const loadMolecule = (
   }
 };
 
-export const setProperties = (moleculeData: MoleculeData, atomCount: number, bondCount: number) => {
-  const properties = useStore.getState().getProvidedMolecularProperties(moleculeData.name);
+export const setProperties = (molecule: MoleculeInterface, atomCount: number, bondCount: number) => {
+  const properties = useStore.getState().getProvidedMolecularProperties(molecule.name);
   if (properties) {
-    useStore.getState().setMolecularProperties(moleculeData.name, {
+    useStore.getState().setMolecularProperties(molecule.name, {
       atomCount,
       bondCount,
       molecularMass: properties.molecularMass,

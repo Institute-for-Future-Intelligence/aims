@@ -8,7 +8,7 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import { showError, showInfo } from './helpers';
 import i18n from './i18n/i18n';
-import { MoleculeData, Range, ProjectState, MolecularContainer, MoleculeTransform } from './types';
+import { MoleculeInterface, Range, ProjectState, MolecularContainer, MoleculeTransform } from './types';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
@@ -127,7 +127,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
     });
 };
 
-export const removeMoleculeFromProject = (userid: string, projectTitle: string, molecule: MoleculeData) => {
+export const removeMoleculeFromProject = (userid: string, projectTitle: string, molecule: MoleculeInterface) => {
   const lang = { lng: useStore.getState().language };
   return firebase
     .firestore()
@@ -470,8 +470,8 @@ export const updateNumberOfColumns = (userid: string, projectTitle: string, numb
     });
 };
 
-export const createMolecule = (type: ProjectType, name: string, url?: string): MoleculeData => {
-  const molecule = { name, url } as MoleculeData;
+export const createMolecule = (type: ProjectType, name: string, url?: string): MoleculeInterface => {
+  const molecule = { name, url } as MoleculeInterface;
   switch (type) {
     case ProjectType.DRUG_DISCOVERY:
       break;
@@ -526,7 +526,7 @@ export const copyMolecule = (original: string, copy: string, owner: string | nul
     });
 };
 
-export const updateMoleculeVisibility = (userid: string, projectTitle: string, molecule: MoleculeData) => {
+export const updateMoleculeVisibility = (userid: string, projectTitle: string, molecule: MoleculeInterface) => {
   const lang = { lng: useStore.getState().language };
   firebase
     .firestore()
@@ -539,7 +539,7 @@ export const updateMoleculeVisibility = (userid: string, projectTitle: string, m
       if (doc.exists) {
         const data = doc.data();
         if (data) {
-          const updatedMolecules: MoleculeData[] = [];
+          const updatedMolecules: MoleculeInterface[] = [];
           updatedMolecules.push(...data.molecules);
           // Get the index of the molecule to be modified by the visibility
           let index = -1;

@@ -4,7 +4,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Box3, Raycaster, Vector3, Euler, Mesh } from 'three';
-import { MoleculeData, MoleculeTransform } from '../types.ts';
+import { MoleculeTransform } from '../types.ts';
 import AtomJS from '../lib/chem/Atom';
 import ComplexVisual from '../lib/ComplexVisual';
 import { Camera, extend, ThreeEvent, useThree } from '@react-three/fiber';
@@ -125,8 +125,8 @@ const DynamicsViewer = React.memo(
       }
     }, [testMolecules]);
 
-    const processResult = (result: any, molecule?: MoleculeData, transform?: MoleculeTransform) => {
-      const mol = new Molecule(molecule?.name ?? 'unknown', [], []);
+    const processResult = (result: any, moleculeName?: string, transform?: MoleculeTransform) => {
+      const mol = new Molecule(moleculeName ?? 'unknown', [], []);
       const n = result._atoms.length;
       const c = new Vector3();
       for (let i = 0; i < n; i++) {

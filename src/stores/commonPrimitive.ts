@@ -4,7 +4,7 @@
 
 import { createWithEqualityFn } from 'zustand/traditional';
 import { produce } from 'immer';
-import { MoleculeData, MoleculeTransform } from '../types';
+import { MoleculeInterface, MoleculeTransform } from '../types';
 import { ProjectType } from '../constants';
 
 // avoid using undefined value in the store for now.
@@ -16,12 +16,12 @@ export interface PrimitiveStoreState {
   updateViewerFlag: boolean;
 
   dragAndDropMolecule: boolean;
-  hoveredMolecule: MoleculeData | null;
+  hoveredMolecule: MoleculeInterface | null;
   selectedPlane: number;
 
   pickedMoleculeIndex: number;
   copiedMoleculeIndex: number;
-  cutMolecule: MoleculeData | null;
+  cutMolecule: MoleculeInterface | null;
   cutMoleculeTransform: MoleculeTransform | null;
 
   boundingSphereRadius: number;

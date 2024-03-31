@@ -3,7 +3,7 @@
  */
 
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
-import { MoleculeData } from '../types.ts';
+import { MoleculeInterface } from '../types.ts';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from '../view/displayOptions.ts';
 import * as Selector from '../stores/selector';
 import { useStore } from '../stores/common.ts';
@@ -19,7 +19,7 @@ interface MolecularContainerProps {
   viewWidth: number;
   viewHeight: number;
   selected: boolean;
-  moleculeData: MoleculeData | null;
+  molecule: MoleculeInterface | null;
   formula: string;
   style: MolecularViewerStyle;
   material: MolecularViewerMaterial;
@@ -34,7 +34,7 @@ const ScissorBox = React.memo(
     viewWidth,
     viewHeight,
     selected,
-    moleculeData,
+    molecule,
     formula,
     style,
     material,
@@ -51,7 +51,7 @@ const ScissorBox = React.memo(
 
     const onPointerOver = () => {
       usePrimitiveStore.getState().set((state) => {
-        state.hoveredMolecule = moleculeData;
+        state.hoveredMolecule = molecule;
       });
       setScatterDataHoveredIndex(scatterDataIndex);
     };
@@ -66,7 +66,7 @@ const ScissorBox = React.memo(
     const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
       e.stopPropagation();
       useStore.getState().set((state) => {
-        state.projectState.selectedMolecule = moleculeData;
+        state.projectState.selectedMolecule = molecule;
       });
       setChanged(true);
     };
@@ -74,7 +74,7 @@ const ScissorBox = React.memo(
     const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
       useStore.getState().set((state) => {
-        state.projectState.selectedMolecule = moleculeData;
+        state.projectState.selectedMolecule = molecule;
       });
       setChanged(true);
     };
@@ -91,7 +91,7 @@ const ScissorBox = React.memo(
         />
         <ProjectGalleryControls disabled={dragAndDropMolecule} lightRef={lightRef} />
         <GalleryViewer
-          moleculeData={moleculeData}
+          molecule={molecule}
           style={style}
           material={material}
           coloring={MolecularViewerColoring.Element}
@@ -136,7 +136,7 @@ const ScissorBox = React.memo(
             }}
             onMouseDown={onMouseDown}
           >
-            {labelType === LabelType.FORMULA ? formula ?? moleculeData?.name : moleculeData?.name}
+            {labelType === LabelType.FORMULA ? formula ?? molecule?.name : molecule?.name}
           </div>
         </Html>
       </>

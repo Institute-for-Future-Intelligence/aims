@@ -4,11 +4,16 @@
 
 import { Atom } from './Atom.ts';
 import { RadialBond } from './RadialBond.ts';
+import { MoleculeInterface } from '../types.ts';
 
-export class Molecule {
+export class Molecule implements MoleculeInterface {
   name: string;
   atoms: Atom[];
   bonds: RadialBond[];
+  url?: string;
+  internal?: boolean;
+  invisible?: boolean;
+  excluded?: boolean;
   metadata?: any;
 
   constructor(name: string, atoms: Atom[], bonds: RadialBond[]) {

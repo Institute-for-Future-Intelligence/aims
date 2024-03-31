@@ -9,7 +9,7 @@ import { Util } from '../Util';
 import { VERSION } from '../constants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, MoleculeData, ProjectState } from '../types';
+import { ActionInfo, MoleculeInterface, ProjectState } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -42,8 +42,8 @@ export interface CommonStoreState {
 
   projectStateToOpen: ProjectState | null;
 
-  addMolecule: (molecule: MoleculeData) => boolean;
-  removeMolecule: (molecule: MoleculeData) => void;
+  addMolecule: (molecule: MoleculeInterface) => boolean;
+  removeMolecule: (molecule: MoleculeInterface) => void;
 
   molecularPropertiesMap: Map<string, MolecularProperties>;
   setMolecularProperties: (name: string, properties: MolecularProperties) => void;
@@ -99,7 +99,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
 
           projectStateToOpen: null,
 
-          addMolecule(molecule: MoleculeData) {
+          addMolecule(molecule: MoleculeInterface) {
             let added = true;
             immerSet((state: CommonStoreState) => {
               for (const m of state.projectState.molecules) {
@@ -114,7 +114,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             });
             return added;
           },
-          removeMolecule(molecule: MoleculeData) {
+          removeMolecule(molecule: MoleculeInterface) {
             immerSet((state: CommonStoreState) => {
               for (const [i, m] of state.projectState.molecules.entries()) {
                 if (m.name === molecule.name) {

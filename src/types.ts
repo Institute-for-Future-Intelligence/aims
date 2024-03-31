@@ -23,11 +23,11 @@ export interface ProjectState {
   type: ProjectType;
   title: string | null;
   description: string | null;
-  molecules: MoleculeData[]; // molecules in the project gallery
+  molecules: MoleculeInterface[]; // molecules in the project gallery
   numberOfColumns: number;
-  selectedMolecule: MoleculeData | null;
-  ligand: MoleculeData | null;
-  protein: MoleculeData | null;
+  selectedMolecule: MoleculeInterface | null;
+  ligand: MoleculeInterface | null;
+  protein: MoleculeInterface | null;
   selectedProperty: string | null;
   dataColoring: DataColoring;
   sortDescending: boolean | null;
@@ -94,7 +94,7 @@ export interface ProjectState {
   yzPlanePosition: number;
   xzPlanePosition: number;
 
-  testMolecules: MoleculeData[]; // molecules in the reaction chamber
+  testMolecules: MoleculeInterface[]; // molecules in the reaction chamber
   testMoleculeTransforms: MoleculeTransform[];
   molecularContainer: MolecularContainer;
   molecularContainerVisible: boolean;
@@ -123,10 +123,10 @@ export interface Range {
   maximum: number;
 }
 
-export interface MoleculeData {
+export interface MoleculeInterface {
   name: string;
-  internal?: boolean;
   url?: string;
+  internal?: boolean;
   invisible?: boolean;
   excluded?: boolean;
 }

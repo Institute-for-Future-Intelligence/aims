@@ -3,7 +3,7 @@
  */
 
 import i18n from '../i18n/i18n.ts';
-import { MolecularContainer, MoleculeData, MoleculeTransform, ProjectState, Range } from '../types.ts';
+import { MolecularContainer, MoleculeInterface, MoleculeTransform, ProjectState, Range } from '../types.ts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { Filter, FilterType } from '../Filter.ts';
 import {
@@ -28,7 +28,7 @@ export class ProjectUtil {
       type: ProjectType.DRUG_DISCOVERY,
       title: null,
       description: null,
-      molecules: new Array<MoleculeData>(),
+      molecules: new Array<MoleculeInterface>(),
       numberOfColumns: 3,
       selectedMolecule: null,
       ligand: null,
@@ -111,7 +111,7 @@ export class ProjectUtil {
       vdwBondCutoffRelative: 0.5,
       energyGraphVisible: false,
 
-      testMolecules: new Array<MoleculeData>(),
+      testMolecules: new Array<MoleculeInterface>(),
       testMoleculeTransforms: new Array<MoleculeTransform>(),
 
       timeStep: 0.5,

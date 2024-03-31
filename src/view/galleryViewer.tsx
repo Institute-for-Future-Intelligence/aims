@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DirectionalLight, Group, Sphere } from 'three';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
-import { MoleculeData } from '../types';
+import { MoleculeInterface } from '../types';
 import AtomJS from '../lib/chem/Atom';
 import ComplexVisual from '../lib/ComplexVisual';
 import { ThreeEvent, useThree } from '@react-three/fiber';
@@ -21,7 +21,7 @@ import {
 import { loadMolecule, setProperties } from './moleculeTools.ts';
 
 export interface GalleryViewerProps {
-  moleculeData: MoleculeData | null;
+  molecule: MoleculeInterface | null;
   style: MolecularViewerStyle;
   material: MolecularViewerMaterial;
   coloring: MolecularViewerColoring;
@@ -35,7 +35,7 @@ export interface GalleryViewerProps {
 
 const GalleryViewer = React.memo(
   ({
-    moleculeData,
+    molecule,
     style,
     material,
     coloring,
@@ -84,12 +84,12 @@ const GalleryViewer = React.memo(
     }, [coloring]);
 
     useEffect(() => {
-      if (!moleculeData) {
+      if (!molecule) {
         setComplex(undefined);
         return;
       }
-      loadMolecule(moleculeData, processResult);
-    }, [moleculeData?.name]);
+      loadMolecule(molecule, processResult);
+    }, [molecule?.name]);
 
     const processResult = (result: any) => {
       setComplex(result);
@@ -112,8 +112,8 @@ const GalleryViewer = React.memo(
         groupRef.current?.position.set(-cx, -cy, -cz);
       }
 
-      if (moleculeData) {
-        setProperties(moleculeData, result._atoms.length, result._bonds.length);
+      if (molecule) {
+        setProperties(molecule, result._atoms.length, result._bonds.length);
       }
     };
 

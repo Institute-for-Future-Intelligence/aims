@@ -28,13 +28,13 @@ import {
   VdwBondsCheckBox,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
-import { MoleculeData } from '../../types.ts';
+import { MoleculeInterface } from '../../types.ts';
 
 export const createDefaultMenu = (
   projectType: ProjectType,
   pickedMoleculeIndex: number,
   copiedMoleculeIndex: number,
-  cutMolecule: MoleculeData | null,
+  cutMolecule: MoleculeInterface | null,
   selectedPlane: number,
 ) => {
   const lang = { lng: useStore.getState().language };
