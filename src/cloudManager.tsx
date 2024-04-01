@@ -630,6 +630,11 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           a.velocity.x = currentMol.atoms[j].velocity.x;
           a.velocity.y = currentMol.atoms[j].velocity.y;
           a.velocity.z = currentMol.atoms[j].velocity.z;
+          // get rid of unnecessary variables
+          delete a.acceleration;
+          delete a.displacement;
+          delete a.initialPosition;
+          delete a.initialVelocity;
         }
       }
     }
