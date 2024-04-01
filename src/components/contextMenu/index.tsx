@@ -20,11 +20,23 @@ const DropdownContextMenu: React.FC<ContextMenuProps> = ({ children }) => {
   const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
   const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
   const projectType = useStore(Selector.projectType);
+  const testMolecules = useStore(Selector.testMolecules);
+  const ligand = useStore(Selector.ligand);
+  const protein = useStore(Selector.protein);
 
   return (
     <Dropdown
       trigger={['contextMenu']}
-      menu={createDefaultMenu(projectType, pickedMoleculeIndex, copiedMoleculeIndex, cutMolecule, selectedPlane)}
+      menu={createDefaultMenu(
+        projectType,
+        pickedMoleculeIndex,
+        copiedMoleculeIndex,
+        cutMolecule,
+        selectedPlane,
+        testMolecules,
+        ligand,
+        protein,
+      )}
       overlayClassName="my-overlay"
     >
       {children}

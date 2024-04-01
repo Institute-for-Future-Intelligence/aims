@@ -413,6 +413,7 @@ export const CutMolecule = () => {
       const m = testMolecules[pickedMoleculeIndex];
       state.cutMolecule = Molecule.clone(m);
       state.pickedMoleculeIndex = -1;
+      state.copiedMoleculeIndex = -1;
     });
     setCommonStore((state) => {
       state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
@@ -444,6 +445,7 @@ export const CopyMolecule = () => {
     if (pickedMoleculeIndex === -1) return;
     usePrimitiveStore.getState().set((state) => {
       state.copiedMoleculeIndex = state.pickedMoleculeIndex;
+      state.cutMolecule = null;
     });
     if (loggable) {
       setCommonStore((state) => {
@@ -476,6 +478,7 @@ export const PasteMolecule = () => {
   const pasteSelectedMolecule = () => {
     const p = clickPointRef?.current;
     if (!p) return;
+    console.log(copiedMoleculeIndex, cutMolecule);
     if (copiedMoleculeIndex !== -1) {
       setCommonStore((state) => {
         const m = Molecule.clone(testMolecules[copiedMoleculeIndex]);

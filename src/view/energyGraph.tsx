@@ -88,7 +88,7 @@ const EnergyGraph = React.memo(() => {
             fontSize={10}
             label={<Label value={t('word.Energy', lang) + ' (eV)'} fill={'white'} dx={-16} fontSize={12} angle={-90} />}
           />
-          <Tooltip />
+          <Tooltip formatter={(value: number) => value.toFixed(3) + ' eV'} />
           <Legend layout="horizontal" verticalAlign="top" align="center" wrapperStyle={{ top: '4px' }} />
           <Line
             name={t('word.KineticEnergy', lang)}

@@ -29,6 +29,7 @@ import {
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
+import { Molecule } from '../../models/Molecule.ts';
 
 export const createDefaultMenu = (
   projectType: ProjectType,
@@ -36,16 +37,17 @@ export const createDefaultMenu = (
   copiedMoleculeIndex: number,
   cutMolecule: MoleculeInterface | null,
   selectedPlane: number,
+  testMolecules: Molecule[],
+  ligand: MoleculeInterface | null,
+  protein: MoleculeInterface | null,
 ) => {
   const lang = { lng: useStore.getState().language };
-  const testMolecules = useStore.getState().projectState.testMolecules;
-  const ligand = useStore.getState().projectState.ligand;
-  const protein = useStore.getState().projectState.protein;
 
   const items: MenuProps['items'] = [];
 
   if (projectType === ProjectType.MOLECULAR_MODELING) {
     const pickedMolecule = pickedMoleculeIndex !== -1 ? testMolecules[pickedMoleculeIndex] : null;
+    console.log(pickedMoleculeIndex, testMolecules);
     if (pickedMolecule) {
       items.push({
         key: 'molecule-name',

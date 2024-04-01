@@ -231,7 +231,7 @@ const ReactionChamber = React.memo(() => {
         <DynamicsSettings molecules={moleculesRef?.current ? [...moleculesRef.current] : []} />
       )}
       <ToolBarButtons />
-      <SimulationControls />
+      {projectType === ProjectType.MOLECULAR_MODELING && <SimulationControls />}
       {energyGraphVisible && <EnergyGraph />}
 
       {loading && canvasRef.current && (

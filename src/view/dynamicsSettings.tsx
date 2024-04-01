@@ -90,7 +90,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
           <Col span={12}>
             <InputNumber
               addonAfter={'Å'}
-              min={10}
+              min={2}
               max={100}
               style={{ width: '100%' }}
               precision={1}
