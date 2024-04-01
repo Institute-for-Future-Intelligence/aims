@@ -9,7 +9,7 @@ export const LJ_SIGMA_CONVERTER = 2 / Math.sqrt(Math.cbrt(2));
 
 // Coulomb's constant times the square of electron charge (ke^2), in eV*angstrom.
 // see http://hyperphysics.phy-astr.gsu.edu/hbase/electric/elefor.html
-export const COULOMB_CONSTANT = 14.4;
+export const COULOMB_CONSTANT = 8.99 * 1.6;
 
 // converts energy gradient unit into force unit:
 // 1.6E-19 [J] / ( E-10 [m] x E-3 / 6E23 [kg] ) / ( E-10 / ( E-15 ) ^2 ) [m/s^2]

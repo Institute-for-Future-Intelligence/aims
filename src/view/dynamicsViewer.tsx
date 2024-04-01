@@ -130,6 +130,13 @@ const DynamicsViewer = React.memo(
         const a = new Atom(atom.index, atom.element.name, atom.position, true);
         a.sigma = atom.element.radius * LJ_SIGMA_CONVERTER;
         a.mass = atom.element.weight;
+        if (molecule.name === 'NaCl') {
+          // modify the force field for salt crystal (temporary solution)
+          if (atom.element.name === 'NA') a.charge = 1;
+          else if (atom.element.name === 'CL') a.charge = -1;
+          a.epsilon = 0.05;
+          a.sigma *= 0.75;
+        }
         if (molecule.atoms) {
           a.position.copy(molecule.atoms[i].position);
           a.velocity.copy(molecule.atoms[i].velocity);

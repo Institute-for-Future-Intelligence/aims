@@ -70,6 +70,7 @@ export const i18n_zh_cn = {
       HydrocarbonMolecules: '烃分子',
       DrugMolecules: '药物分子',
       Monatomic: '单原子',
+      Crystal: '晶体',
     },
 
     aboutUs: {

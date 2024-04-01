@@ -10,6 +10,8 @@ import monatomicUrl003 from './molecules/pdb/argon.pdb';
 import monatomicUrl004 from './molecules/pdb/krypton.pdb';
 import monatomicUrl005 from './molecules/pdb/xenon.pdb';
 
+import crystalUrl001 from './molecules/pdb/nacl.pdb';
+
 import commonMoleculeUrl001 from './molecules/sdf/dihydrogen.sdf';
 import commonMoleculeUrl002 from './molecules/sdf/dioxygen.sdf';
 import commonMoleculeUrl003 from './molecules/sdf/dinitrogen.sdf';
@@ -82,6 +84,8 @@ export const monatomicMolecules = [
   { url: monatomicUrl004, internal: true, name: 'Krypton' } as MoleculeInterface,
   { url: monatomicUrl005, internal: true, name: 'Xenon' } as MoleculeInterface,
 ];
+
+export const crystals = [{ url: crystalUrl001, internal: true, name: 'NaCl' } as MoleculeInterface];
 
 export const commonMolecules = [
   { url: commonMoleculeUrl001, internal: true, name: 'Dihydrogen' } as MoleculeInterface,
@@ -158,6 +162,9 @@ export const targetProteins = [
 
 export const getMolecule = (name: string) => {
   for (const m of monatomicMolecules) {
+    if (name === m.name) return m;
+  }
+  for (const m of crystals) {
     if (name === m.name) return m;
   }
   for (const m of commonMolecules) {

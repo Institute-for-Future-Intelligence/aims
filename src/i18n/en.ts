@@ -70,6 +70,7 @@ export const i18n_en = {
       HydrocarbonMolecules: 'Hydrocarbon Molecules',
       DrugMolecules: 'Drug Molecules',
       Monatomic: 'Monatomic',
+      Crystal: 'Crystal',
     },
 
     aboutUs: {

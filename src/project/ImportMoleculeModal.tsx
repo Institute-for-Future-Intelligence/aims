@@ -11,7 +11,13 @@ import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { ImportOutlined } from '@ant-design/icons';
 import { MoleculeType, ProjectType } from '../constants.ts';
-import { commonMolecules, drugMolecules, hydrocarbonMolecules, monatomicMolecules } from '../internalDatabase.ts';
+import {
+  commonMolecules,
+  crystals,
+  drugMolecules,
+  hydrocarbonMolecules,
+  monatomicMolecules,
+} from '../internalDatabase.ts';
 
 const { Option } = Select;
 
@@ -70,6 +76,7 @@ const ImportMoleculeModal = React.memo(
       if (moleculeType === MoleculeType.DRUG) return drugMolecules;
       if (moleculeType === MoleculeType.HYDROCARBON) return hydrocarbonMolecules;
       if (moleculeType === MoleculeType.MONATOMIC) return monatomicMolecules;
+      if (moleculeType === MoleculeType.CRYSTAL) return crystals;
       return commonMolecules;
     }, [moleculeType]);
 
@@ -120,6 +127,9 @@ const ImportMoleculeModal = React.memo(
                 case MoleculeType.MONATOMIC:
                   setName(monatomicMolecules[0].name);
                   break;
+                case MoleculeType.CRYSTAL:
+                  setName(crystals[0].name);
+                  break;
                 default:
                   setName(commonMolecules[0].name);
               }
@@ -136,6 +146,9 @@ const ImportMoleculeModal = React.memo(
             </Option>
             <Option key={MoleculeType.MONATOMIC} value={MoleculeType.MONATOMIC}>
               {`${t('term.Monatomic', lang)}`}
+            </Option>
+            <Option key={MoleculeType.CRYSTAL} value={MoleculeType.CRYSTAL}>
+              {`${t('term.Crystal', lang)}`}
             </Option>
           </Select>
         </Space>
