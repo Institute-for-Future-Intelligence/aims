@@ -36,6 +36,8 @@ import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle 
 import { ProjectUtil } from './project/ProjectUtil.ts';
 import { useTranslation } from 'react-i18next';
 import { useRefStore } from './stores/commonRef.ts';
+import { ModelUtil } from './models/ModelUtil.ts';
+import { useDataStore } from './stores/commonData.ts';
 
 export interface CloudManagerProps {
   viewOnly: boolean;
@@ -66,6 +68,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   const updateProjectsFlag = usePrimitiveStore(Selector.updateProjectsFlag);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const moleculesRef = useRefStore.getState().moleculesRef;
+  const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
 
   const [processing, setProcessing] = useState(false);
   const [updateFlag, setUpdateFlag] = useState(false);
@@ -182,6 +185,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       state.updateProjectsFlag = true;
       state.changed = false;
     });
+    resetProject();
   };
 
   const signIn = () => {
@@ -411,7 +415,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             vdwBondCutoffRelative: data.vdwBondCutoffRelative ?? 0.5,
             energyGraphVisible: !!data.energyGraphVisible,
 
-            testMolecules: data.testMolecules ?? [],
+            testMolecules: ModelUtil.reconstructMoleculesFromFirestore(data.testMolecules),
 
             timeStep: data.timeStep ?? 0.5,
             temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,
@@ -539,6 +543,13 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     });
   };
 
+  const resetProject = () => {
+    energyTimeSeries.clear();
+    usePrimitiveStore.getState().set((state) => {
+      state.resetSimulation = true;
+    });
+  };
+
   function createNewProject() {
     if (!user || !user.uid) return;
     const title = usePrimitiveStore.getState().projectTitle;
@@ -603,6 +614,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
                 });
               }
               setProcessing(false);
+              resetProject();
             });
         }
       }

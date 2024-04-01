@@ -56,6 +56,7 @@ const EnergyGraph = React.memo(() => {
   return (
     <Container>
       <CloseOutlined
+        title={t('word.Close', lang)}
         style={{ color: 'antiquewhite', position: 'absolute', top: '8px', right: '8px', cursor: 'pointer' }}
         onClick={() => {
           setCommonStore((state) => {
@@ -88,7 +89,11 @@ const EnergyGraph = React.memo(() => {
             fontSize={10}
             label={<Label value={t('word.Energy', lang) + ' (eV)'} fill={'white'} dx={-16} fontSize={12} angle={-90} />}
           />
-          <Tooltip formatter={(value: number) => value.toFixed(3) + ' eV'} />
+          <Tooltip
+            contentStyle={{ background: '#505050' }}
+            labelStyle={{ color: 'whitesmoke' }}
+            formatter={(value: number) => value.toFixed(3) + ' eV'}
+          />
           <Legend layout="horizontal" verticalAlign="top" align="center" wrapperStyle={{ top: '4px' }} />
           <Line
             name={t('word.KineticEnergy', lang)}

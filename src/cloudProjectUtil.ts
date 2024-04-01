@@ -14,6 +14,7 @@ import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode }
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import dayjs from 'dayjs';
 import { Util } from './Util.ts';
+import { ModelUtil } from './models/ModelUtil.ts';
 
 export const fetchProject = async (userid: string, project: string, setProjectState: (ps: ProjectState) => void) => {
   const lang = { lng: useStore.getState().language };
@@ -106,7 +107,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           vdwBondCutoffRelative: data.vdwBondCutoffRelative ?? 0.5,
           energyGraphVisible: !!data.energyGraphVisible,
 
-          testMolecules: data.testMolecules ?? [],
+          testMolecules: ModelUtil.reconstructMoleculesFromFirestore(data.testMolecules),
 
           timeStep: data.timeStep ?? 0.5,
           temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,

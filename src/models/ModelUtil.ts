@@ -6,6 +6,15 @@ import { Atom } from './Atom.ts';
 import { Molecule } from './Molecule.ts';
 
 export class ModelUtil {
+  static reconstructMoleculesFromFirestore(m: any) {
+    if (!m && !Array.isArray(m)) return [];
+    const array: Molecule[] = [];
+    for (const x of m) {
+      array.push(Molecule.clone(x));
+    }
+    return array;
+  }
+
   static getMolecule(atom: Atom, molecules: Molecule[]): Molecule | null {
     for (const m of molecules) {
       if (m.atoms.includes(atom)) return m;
