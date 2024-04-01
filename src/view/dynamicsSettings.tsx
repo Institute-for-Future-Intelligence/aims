@@ -8,11 +8,10 @@ import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { AimOutlined, ExperimentOutlined, InfoCircleOutlined } from '@ant-design/icons';
-import { Molecule } from '../models/Molecule.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 
-const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | undefined | null }) => {
+const DynamicsSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const setChanged = usePrimitiveStore(Selector.setChanged);
@@ -216,14 +215,15 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
     pressure,
     vdwBondCutoffRelative,
     timeStep,
+    mdRef,
   ]);
 
   const createInfo = useMemo(() => {
     let atomCount = 0;
     let bondCount = 0;
     const elements: string[] = [];
-    if (molecules) {
-      for (const m of molecules) {
+    if (testMolecules) {
+      for (const m of testMolecules) {
         atomCount += m.atoms.length;
         if (m.atoms.length > 1) {
           // prevent auto bond
@@ -268,7 +268,7 @@ const DynamicsSettings = React.memo(({ molecules }: { molecules: Molecule[] | un
         />
       </div>
     );
-  }, [lang, testMolecules, molecules]);
+  }, [lang, testMolecules]);
 
   return (
     <>

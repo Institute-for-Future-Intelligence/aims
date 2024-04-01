@@ -70,7 +70,6 @@ const ReactionChamber = React.memo(() => {
   const planeXYRef = useRefStore.getState().planeXYRef;
   const planeYZRef = useRefStore.getState().planeYZRef;
   const planeXZRef = useRefStore.getState().planeXZRef;
-  const moleculesRef = useRefStore.getState().moleculesRef;
 
   useEffect(() => {
     useRefStore.setState({
@@ -227,9 +226,7 @@ const ReactionChamber = React.memo(() => {
       </Canvas>
 
       {projectType === ProjectType.DRUG_DISCOVERY && <DockingSettings />}
-      {projectType === ProjectType.MOLECULAR_MODELING && (
-        <DynamicsSettings molecules={moleculesRef?.current ? [...moleculesRef.current] : []} />
-      )}
+      {projectType === ProjectType.MOLECULAR_MODELING && <DynamicsSettings />}
       <ToolBarButtons />
       {projectType === ProjectType.MOLECULAR_MODELING && <SimulationControls />}
       {energyGraphVisible && <EnergyGraph />}
