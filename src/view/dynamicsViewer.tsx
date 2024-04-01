@@ -77,6 +77,7 @@ const DynamicsViewer = React.memo(
     const raycasterRef = useRef<Raycaster | undefined>();
     const boundingBoxRef = useRef<Box3 | undefined>();
     const molecularDynamicsRef = useRef<MolecularDynamics | null>(null);
+    const moleculeMapRef = useRef<Map<Molecule, Molecule>>(new Map<Molecule, Molecule>());
 
     const { invalidate, camera, raycaster, gl } = useThree();
 
@@ -114,20 +115,22 @@ const DynamicsViewer = React.memo(
       }
       if (setLoading) setLoading(true);
       moleculesRef.current.length = 0;
+      moleculeMapRef.current.clear();
       for (const m of testMolecules) {
         loadMolecule(m, processResult);
       }
     }, [testMolecules]);
 
     const processResult = (result: any, molecule?: Molecule) => {
-      const mol = new Molecule(molecule?.name ?? 'unknown', [], []);
+      if (!molecule) return;
+      const mol = new Molecule(molecule.name ?? 'unknown', [], []);
       const n = result._atoms.length;
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
         const a = new Atom(atom.index, atom.element.name, atom.position, true);
         a.sigma = atom.element.radius * LJ_SIGMA_CONVERTER;
         a.mass = atom.element.weight;
-        if (molecule && molecule.atoms) {
+        if (molecule.atoms) {
           a.position.copy(molecule.atoms[i].position);
           a.velocity.copy(molecule.atoms[i].velocity);
         }
@@ -138,8 +141,15 @@ const DynamicsViewer = React.memo(
         a.initialPosition?.copy(a.position);
         a.initialVelocity?.copy(a.velocity);
       }
-      moleculesRef.current.push(mol);
-      if (moleculesRef.current.length === testMolecules.length) {
+      moleculeMapRef.current.set(molecule, mol);
+      if (moleculeMapRef.current.size === testMolecules.length) {
+        // store the new molecules in a map because this call is asynchronous so we cannot guarantee the order
+        // testMolecules and moleculesRef must have the same order
+        for (const m of testMolecules) {
+          const m2 = moleculeMapRef.current.get(m);
+          if (m2) moleculesRef.current.push(m2);
+        }
+        moleculeMapRef.current.clear();
         setComplex(generateComplex(moleculesRef.current));
         molecularDynamicsRef.current = new MolecularDynamics(moleculesRef.current, molecularContainer);
         molecularDynamicsRef.current.timeStep = timeStep;

@@ -115,7 +115,11 @@ export const loadMolecule = (
           else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
           if (parser) {
             parser.parse().then((result) => {
-              processResult(result, molecule as Molecule);
+              if (molecule) {
+                processResult(result, molecule as Molecule);
+              } else {
+                processResult(result);
+              }
             });
           }
         }

@@ -47,14 +47,13 @@ export const createDefaultMenu = (
 
   if (projectType === ProjectType.MOLECULAR_MODELING) {
     const pickedMolecule = pickedMoleculeIndex !== -1 ? testMolecules[pickedMoleculeIndex] : null;
-    console.log(pickedMoleculeIndex, testMolecules);
     if (pickedMolecule) {
       items.push({
         key: 'molecule-name',
         label: (
           <>
             <MenuItem stayAfterClick={false} hasPadding={false} fontWeight={'bold'} cursor={'default'}>
-              {pickedMolecule.name}
+              {pickedMolecule.name + ' (#' + pickedMoleculeIndex + ')'}
             </MenuItem>
             <hr />
           </>

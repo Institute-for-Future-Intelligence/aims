@@ -478,7 +478,6 @@ export const PasteMolecule = () => {
   const pasteSelectedMolecule = () => {
     const p = clickPointRef?.current;
     if (!p) return;
-    console.log(copiedMoleculeIndex, cutMolecule);
     if (copiedMoleculeIndex !== -1) {
       setCommonStore((state) => {
         const m = Molecule.clone(testMolecules[copiedMoleculeIndex]);
