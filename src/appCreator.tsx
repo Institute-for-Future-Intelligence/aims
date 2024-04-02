@@ -11,7 +11,6 @@ import * as Selector from './stores/selector';
 import { visitHomepage, visitIFI } from './helpers';
 import MainMenu from './mainMenu';
 import { VERSION } from './constants';
-import SplitPane from 'react-split-pane';
 import ShareLinks from './shareLinks';
 import ProjectGallery from './project/projectGallery.tsx';
 import ReactionChamber from './reactionChamber';
@@ -24,6 +23,7 @@ import { usePrimitiveStore } from './stores/commonPrimitive';
 import AccountSettingsPanel from './accountSettingsPanel';
 import CloudManager from './cloudManager';
 import { CloudTwoTone } from '@ant-design/icons';
+import SplitPane from './components/splitPane.tsx';
 
 const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
@@ -206,29 +206,14 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
       <DropdownContextMenu>
         {/* must specify the height here for the floating window to have correct boundary check*/}
         <div style={{ height: 'calc(100vh - 72px)' }}>
-          {/* @ts-expect-error: Explain what? */}
           <SplitPane
-            split={'vertical'}
+            hideGallery={!hideGallery}
+            defaultSize={!hideGallery ? 100 - chamberViewerPercentWidth : 0}
             onChange={throttle((size) => {
               setCommonStore((state) => {
-                state.projectState.chamberViewerPercentWidth = Math.round(100 - (size / window.innerWidth) * 100);
+                state.projectState.chamberViewerPercentWidth = 100 - size;
               });
-            }, 5)}
-            // must specify the height again for the split pane to resize correctly with the window
-            style={{ height: 'calc(100vh - 72px)', display: 'flex' }}
-            pane1Style={{
-              width: hideGallery ? 0 : 100 - chamberViewerPercentWidth + '%',
-              minWidth: hideGallery ? 0 : '25%',
-              maxWidth: hideGallery ? 0 : '75%',
-            }}
-            pane2Style={{ width: hideGallery ? '100%' : chamberViewerPercentWidth + '%' }}
-            resizerStyle={{
-              cursor: 'col-resize',
-              width: hideGallery ? 0 : '6px',
-              minWidth: hideGallery ? 0 : '6px',
-              maxWidth: hideGallery ? 0 : '6px',
-              backgroundImage: 'linear-gradient(to right, white, gray)',
-            }}
+            }, 50)}
           >
             {!hideGallery ? (
               <Suspense fallback={<Loading />}>
