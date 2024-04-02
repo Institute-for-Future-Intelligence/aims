@@ -110,6 +110,8 @@ export class ProjectUtil {
       molecularContainerVisible: false,
       vdwBondsVisible: false,
       vdwBondCutoffRelative: 0.5,
+      momentumVisible: false,
+      momentumScaleFactor: 1,
       energyGraphVisible: false,
 
       testMolecules: new Array<Molecule>(),

@@ -38,6 +38,7 @@ import { useTranslation } from 'react-i18next';
 import { useRefStore } from './stores/commonRef.ts';
 import { ModelUtil } from './models/ModelUtil.ts';
 import { useDataStore } from './stores/commonData.ts';
+import { Molecule } from './models/Molecule.ts';
 
 export interface CloudManagerProps {
   viewOnly: boolean;
@@ -413,6 +414,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             molecularContainerVisible: !!data.molecularContainerVisible,
             vdwBondsVisible: !!data.vdwBondsVisible,
             vdwBondCutoffRelative: data.vdwBondCutoffRelative ?? 0.5,
+            momentumVisible: !!data.momentumVisible,
+            momentumScaleFactor: data.momentumScaleFactor ?? 1,
             energyGraphVisible: !!data.energyGraphVisible,
 
             testMolecules: ModelUtil.reconstructMoleculesFromFirestore(data.testMolecules),
@@ -621,29 +624,40 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     });
   }
 
-  const updateMoleculeVariables = (ps: ProjectState) => {
+  const updateMolecularVariables = (testMolecules: Molecule[]) => {
+    if (moleculesRef?.current) {
+      // update properties of molecules in the remote state
+      for (const [i, m] of testMolecules.entries()) {
+        const currentMol = moleculesRef.current[i];
+        for (const [j, a] of m.atoms.entries()) {
+          // cannot use Vector3 as it is not supported by Firestore
+          const b = currentMol.atoms[j];
+          a.position.x = b.position.x;
+          a.position.y = b.position.y;
+          a.position.z = b.position.z;
+          a.velocity.x = b.velocity.x;
+          a.velocity.y = b.velocity.y;
+          a.velocity.z = b.velocity.z;
+          a.sigma = b.sigma;
+          a.epsilon = b.epsilon;
+          a.mass = b.mass;
+          a.charge = b.charge;
+          a.damp = b.damp;
+          a.fixed = b.fixed;
+        }
+      }
+    }
+  };
+
+  const updateProjectStateVariables = (ps: ProjectState) => {
     if (ps.type === ProjectType.MOLECULAR_MODELING) {
       if (moleculesRef?.current) {
-        // update properties of molecules
-        for (const [i, m] of ps.testMolecules.entries()) {
-          const currentMol = moleculesRef.current[i];
-          for (const [j, a] of m.atoms.entries()) {
-            // cannot use Vector3 as it is not supported by Firestore
-            const b = currentMol.atoms[j];
-            a.position.x = b.position.x;
-            a.position.y = b.position.y;
-            a.position.z = b.position.z;
-            a.velocity.x = b.velocity.x;
-            a.velocity.y = b.velocity.y;
-            a.velocity.z = b.velocity.z;
-            a.sigma = b.sigma;
-            a.epsilon = b.epsilon;
-            a.mass = b.mass;
-            a.charge = b.charge;
-            a.damp = b.damp;
-            a.fixed = b.fixed;
-          }
-        }
+        // update properties of molecules in the remote state
+        updateMolecularVariables(ps.testMolecules);
+        // update properties of molecules in the local state
+        setCommonStore((state) => {
+          updateMolecularVariables(state.projectState.testMolecules);
+        });
       }
       // get rid of unnecessary variables
       for (const m of ps.testMolecules) {
@@ -679,7 +693,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         }
       }
     }
-    updateMoleculeVariables(ps);
+    updateProjectStateVariables(ps);
     firebase
       .firestore()
       .collection('users')
@@ -738,7 +752,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           ps.owner = user.uid; // make sure the current user becomes the owner
           ps.type = usePrimitiveStore.getState().projectType;
           ps.description = usePrimitiveStore.getState().projectDescription ?? '';
-          updateMoleculeVariables(ps);
+          updateProjectStateVariables(ps);
           firebase
             .firestore()
             .collection('users')

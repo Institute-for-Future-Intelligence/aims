@@ -26,6 +26,7 @@ import {
   TranslateLigand,
   TranslateMolecule,
   VdwBondsCheckBox,
+  MomentumVectorCheckBox,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
@@ -132,6 +133,11 @@ export const createDefaultMenu = (
       items.push({
         key: 'molecular-viewer-vdw-bonds',
         label: <VdwBondsCheckBox />,
+      });
+
+      items.push({
+        key: 'molecular-viewer-momentum-vectors',
+        label: <MomentumVectorCheckBox />,
       });
 
       items.push({

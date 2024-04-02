@@ -120,6 +120,7 @@ export const i18n_en = {
       Axes: 'Axes',
       Container: 'Container',
       VanDerWaalsBonds: 'Van der Waals Bonds',
+      MomentumVectors: 'Momentum Vectors',
       EnergyGraph: 'Energy Graph',
       Style: 'Style',
       Color: 'Color',

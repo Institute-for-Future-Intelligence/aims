@@ -121,6 +121,7 @@ export const i18n_zh_cn = {
       Axes: '显示坐标轴',
       Container: '显示容器',
       VanDerWaalsBonds: '显示范德华键',
+      MomentumVectors: '显示动量矢量',
       EnergyGraph: '显示能量图',
       Style: '风格',
       Color: '颜色',

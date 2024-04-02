@@ -747,6 +747,46 @@ export const VdwBondsCheckBox = () => {
   );
 };
 
+export const MomentumVectorCheckBox = () => {
+  const visible = useStore(Selector.momentumVisible);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const setVisible = (checked: boolean) => {
+    useStore.getState().set((state) => {
+      state.projectState.momentumVisible = checked;
+    });
+    setChanged(true);
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Checkbox
+        checked={visible}
+        onChange={(e: CheckboxChangeEvent) => {
+          const checked = e.target.checked;
+          const undoableCheck = {
+            name: 'Show Momentum Vectors',
+            timestamp: Date.now(),
+            checked: checked,
+            undo: () => {
+              setVisible(!undoableCheck.checked);
+            },
+            redo: () => {
+              setVisible(undoableCheck.checked);
+            },
+          } as UndoableCheck;
+          useStore.getState().addUndoable(undoableCheck);
+          setVisible(checked);
+        }}
+      >
+        {t('molecularViewer.MomentumVectors', lang)}
+      </Checkbox>
+    </MenuItem>
+  );
+};
+
 export const FogCheckBox = () => {
   const foggy = useStore(Selector.chamberViewerFoggy);
   const setChanged = usePrimitiveStore(Selector.setChanged);

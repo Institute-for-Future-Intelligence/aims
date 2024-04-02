@@ -50,6 +50,7 @@ export class Atom {
       atom.elementSymbol,
       new Vector3(atom.position.x, atom.position.y, atom.position.z),
     );
+    newAtom.velocity.copy(atom.velocity);
     if (atom.displacement) {
       newAtom.displacement = new Vector3();
       newAtom.acceleration = new Vector3();

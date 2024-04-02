@@ -100,6 +100,8 @@ export interface ProjectState {
   molecularContainerVisible: boolean;
   vdwBondsVisible: boolean;
   vdwBondCutoffRelative: number;
+  momentumVisible: boolean;
+  momentumScaleFactor: number;
   energyGraphVisible: boolean;
 
   timeStep: number;

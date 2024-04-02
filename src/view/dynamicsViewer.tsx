@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Box3, Raycaster, Mesh } from 'three';
+import { Box3, Raycaster, Mesh, Euler, Quaternion, Vector3 } from 'three';
 import AtomJS from '../lib/chem/Atom';
 import ComplexVisual from '../lib/ComplexVisual';
 import { Camera, extend, ThreeEvent, useThree } from '@react-three/fiber';
@@ -33,6 +33,7 @@ import Movers from './movers.tsx';
 import { VdwBond } from '../models/VdwBond.ts';
 import { MolecularDynamics } from '../models/MolecularDynamics.ts';
 import { LJ_SIGMA_CONVERTER } from '../models/physicalConstants.ts';
+import { UNIT_VECTOR_POS_Y } from '../constants.ts';
 
 extend({ RCGroup });
 
@@ -64,6 +65,8 @@ const DynamicsViewer = React.memo(
     const viewerStyle = useStore(Selector.chamberViewerStyle);
     const vdwBondsVisible = useStore(Selector.vdwBondsVisible);
     const vdwBondCutoffRelative = useStore(Selector.vdwBondCutoffRelative) ?? 0.5;
+    const momentumVisible = useStore(Selector.momentumVisible);
+    const momentumScaleFactor = useStore(Selector.momentumScaleFactor) ?? 1;
     const molecularContainer = useStore(Selector.molecularContainer);
     const timeStep = useStore(Selector.timeStep);
 
@@ -264,6 +267,38 @@ const DynamicsViewer = React.memo(
                   color={'yellow'}
                 />
               );
+            })}
+          </Instances>
+        )}
+        {momentumVisible && (
+          <Instances limit={1000} range={1000}>
+            <cylinderGeometry args={[0.1, 0.1, 1, 8]} />
+            <meshStandardMaterial />
+            {moleculesRef.current.map((m, i) => {
+              const arr = [];
+              const quaternion = new Quaternion();
+              const normalized = new Vector3();
+              const euler = new Euler();
+              arr.push(
+                m.atoms.map((a, i) => {
+                  const radius = Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.25 : 1);
+                  const momentum = a.mass * a.velocity.length() * momentumScaleFactor;
+                  normalized.copy(a.velocity).normalize();
+                  quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
+                  euler.setFromQuaternion(quaternion);
+                  normalized.multiplyScalar(radius + momentum / 2);
+                  return (
+                    <Instance
+                      key={i}
+                      scale={[1, momentum, 1]}
+                      position={[a.position.x + normalized.x, a.position.y + normalized.y, a.position.z + normalized.z]}
+                      rotation={euler}
+                      color={'red'}
+                    />
+                  );
+                }),
+              );
+              return arr;
             })}
           </Instances>
         )}
