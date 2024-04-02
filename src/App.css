@@ -71,3 +71,7 @@
   width: calc(100% - var(--percentWidth));
   position: relative;
 }
+
+.drie-view > div {
+  transform: none !important;
+}

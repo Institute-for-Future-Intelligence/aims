@@ -55,14 +55,10 @@ export interface ProjectGalleryProps {
 
 const Container = styled.div`
   position: relative;
-  width: 100%;
-  height: 100%;
+  height: calc(100% - 20px);
   display: flex;
   justify-content: center;
-  align-self: center;
-  align-content: center;
-  align-items: center;
-  padding-bottom: 20px;
+  align-items: stretch;
   opacity: 100%;
   user-select: none;
   tab-index: -1; // set to be not focusable
@@ -73,11 +69,8 @@ const Container = styled.div`
 const ColumnWrapper = styled.div`
   background-color: #f8f8f8;
   position: relative;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
   border: none;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -687,7 +680,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             setUpdateFlag(!updateFlag);
           }}
         />
-        <div style={{ background: 'white', height: '100%' }}>
+        <div style={{ background: 'white', flexGrow: 1 }}>
           {sortedMoleculesRef.current.length === 0 && <Empty description={t('projectPanel.NoMolecule', lang)} />}
           {/* this div has no mouse listener to avoid deselecting a molecule when scrolling */}
           <div
@@ -704,10 +697,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 paddingLeft: '8px',
                 position: 'relative',
                 background: 'white',
-                display: 'grid',
-                columnGap: '5px',
-                rowGap: '5px',
-                gridTemplateColumns: gridTemplateColumns,
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignContent: 'flex-start',
+                gap: '5px',
               }}
               ref={containerRef}
               onMouseDown={() => {
@@ -723,6 +716,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 const selected = selectedMolecule?.name === mol.name;
                 return (
                   <View
+                    // import class name, change with css class together if needed
+                    className="drie-view"
                     key={index}
                     // @ts-expect-error: track is deprecated
                     track={null}

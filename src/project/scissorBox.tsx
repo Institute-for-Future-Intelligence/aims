@@ -90,23 +90,22 @@ const ScissorBox = React.memo(
           castShadow={false}
         />
         <ProjectGalleryControls disabled={dragAndDropMolecule} lightRef={lightRef} />
-        <GalleryViewer
-          molecule={molecule}
-          style={style}
-          material={material}
-          coloring={MolecularViewerColoring.Element}
-          lightRef={lightRef}
-          setLoading={setLoading}
-          onPointerOver={onPointerOver}
-          onPointerLeave={onPointerLeave}
-          onPointerDown={onPointerDown}
-        />
+        {molecule && (
+          <GalleryViewer
+            molecule={molecule}
+            style={style}
+            material={material}
+            coloring={MolecularViewerColoring.Element}
+            lightRef={lightRef}
+            setLoading={setLoading}
+            onPointerOver={onPointerOver}
+            onPointerLeave={onPointerLeave}
+            onPointerDown={onPointerDown}
+          />
+        )}
         <Html>
           <div
             style={{
-              position: 'relative',
-              left: -viewWidth / 2,
-              top: -viewHeight / 2,
               width: viewWidth,
               height: viewHeight,
             }}
@@ -114,21 +113,21 @@ const ScissorBox = React.memo(
             onPointerLeave={onPointerLeave}
             onMouseDown={onMouseDown}
             draggable={dragAndDropMolecule}
-            onDragStart={(e) => {
-              // TODO
-            }}
-            onDragEnd={(e) => {
-              // TODO
-            }}
+            // onDragStart={(e) => {
+            //   // TODO
+            // }}
+            // onDragEnd={(e) => {
+            //   // TODO
+            // }}
           />
         </Html>
         <Html>
           <div
             style={{
               position: 'relative',
-              left: 4 - viewWidth / 2 + 'px',
+              left: '4px',
+              bottom: (labelType === LabelType.FORMULA ? 26 : 16) - viewHeight + 2 + 'px',
               textAlign: 'left',
-              bottom: (labelType === LabelType.FORMULA ? 26 : 16) - viewHeight / 2 + 'px',
               color: 'gray',
               fontSize: labelType === LabelType.FORMULA ? '14px' : '10px',
               fontWeight: selected ? 'bold' : 'normal',
