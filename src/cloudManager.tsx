@@ -621,6 +621,42 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     });
   }
 
+  const updateMoleculeVariables = (ps: ProjectState) => {
+    if (ps.type === ProjectType.MOLECULAR_MODELING) {
+      if (moleculesRef?.current) {
+        // update properties of molecules
+        for (const [i, m] of ps.testMolecules.entries()) {
+          const currentMol = moleculesRef.current[i];
+          for (const [j, a] of m.atoms.entries()) {
+            // cannot use Vector3 as it is not supported by Firestore
+            const b = currentMol.atoms[j];
+            a.position.x = b.position.x;
+            a.position.y = b.position.y;
+            a.position.z = b.position.z;
+            a.velocity.x = b.velocity.x;
+            a.velocity.y = b.velocity.y;
+            a.velocity.z = b.velocity.z;
+            a.sigma = b.sigma;
+            a.epsilon = b.epsilon;
+            a.mass = b.mass;
+            a.charge = b.charge;
+            a.damp = b.damp;
+            a.fixed = b.fixed;
+          }
+        }
+      }
+      // get rid of unnecessary variables
+      for (const m of ps.testMolecules) {
+        for (const a of m.atoms) {
+          delete a.acceleration;
+          delete a.displacement;
+          delete a.initialPosition;
+          delete a.initialVelocity;
+        }
+      }
+    }
+  };
+
   function saveProject() {
     if (!user || !user.uid) return;
     const title = useStore.getState().projectState.title;
@@ -630,26 +666,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     }
     setProcessing(true);
     const ps = JSON.parse(JSON.stringify(useStore.getState().projectState)) as ProjectState;
-    if (ps.type === ProjectType.MOLECULAR_MODELING && moleculesRef?.current) {
-      // update the saved positions and velocities of the molecules
-      for (const [i, m] of ps.testMolecules.entries()) {
-        const currentMol = moleculesRef.current[i];
-        for (const [j, a] of m.atoms.entries()) {
-          // cannot use Vector3 as it is not supported by Firestore
-          a.position.x = currentMol.atoms[j].position.x;
-          a.position.y = currentMol.atoms[j].position.y;
-          a.position.z = currentMol.atoms[j].position.z;
-          a.velocity.x = currentMol.atoms[j].velocity.x;
-          a.velocity.y = currentMol.atoms[j].velocity.y;
-          a.velocity.z = currentMol.atoms[j].velocity.z;
-          // get rid of unnecessary variables
-          delete a.acceleration;
-          delete a.displacement;
-          delete a.initialPosition;
-          delete a.initialVelocity;
-        }
-      }
-    }
     ps.timestamp = new Date().getTime();
     ps.time = dayjs(new Date(ps.timestamp)).format('MM/DD/YYYY hh:mm A');
     ps.key = ps.timestamp.toString();
@@ -663,6 +679,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         }
       }
     }
+    updateMoleculeVariables(ps);
     firebase
       .firestore()
       .collection('users')
@@ -721,6 +738,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           ps.owner = user.uid; // make sure the current user becomes the owner
           ps.type = usePrimitiveStore.getState().projectType;
           ps.description = usePrimitiveStore.getState().projectDescription ?? '';
+          updateMoleculeVariables(ps);
           firebase
             .firestore()
             .collection('users')
