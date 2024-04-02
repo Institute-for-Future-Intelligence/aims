@@ -119,6 +119,7 @@ export const i18n_en = {
       Fog: 'Fog',
       Axes: 'Axes',
       Container: 'Container',
+      Mechanics: 'Mechanics',
       VanDerWaalsBonds: 'Van der Waals Bonds',
       MomentumVectors: 'Momentum Vectors',
       ForceVectors: 'Force Vectors',

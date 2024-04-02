@@ -51,6 +51,7 @@ export class Atom {
       new Vector3(atom.position.x, atom.position.y, atom.position.z),
     );
     newAtom.velocity.copy(atom.velocity);
+    newAtom.force.copy(atom.force);
     if (atom.displacement) {
       newAtom.displacement = new Vector3();
       newAtom.acceleration = new Vector3();

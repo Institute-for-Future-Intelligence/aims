@@ -119,6 +119,7 @@ export const i18n_zh_tw = {
       Fog: '有霧',
       Axes: '顯示坐標軸',
       Container: '顯示容器',
+      Mechanics: '力學',
       VanDerWaalsBonds: '顯示范德華鍵',
       MomentumVectors: '顯示動量向量',
       ForceVectors: '顯示力向量',

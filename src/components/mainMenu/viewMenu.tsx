@@ -12,10 +12,11 @@ import {
   BackgroundColor,
   ColoringRadioGroup,
   ContainerCheckBox,
-  EnergyGraphCheckBox,
   FogCheckBox,
+  ForceVectorCheckBox,
   GalleryCheckBox,
   MaterialRadioGroup,
+  MomentumVectorCheckBox,
   SpaceshipDisplayModeRadioGroup,
   StyleRadioGroup,
   VdwBondsCheckBox,
@@ -101,25 +102,25 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
 
   if (projectType === ProjectType.MOLECULAR_MODELING) {
     items.push({
-      key: 'vdw-bonds-check-box',
-      label: <VdwBondsCheckBox />,
-    });
-
-    items.push({
-      key: 'energy-graph-check-box',
-      label: <EnergyGraphCheckBox />,
+      key: 'molecular-viewer-mechanics-submenu',
+      label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Mechanics', lang)}</MenuItem>,
+      children: [
+        {
+          key: 'molecular-viewer-vdw-bonds',
+          label: <VdwBondsCheckBox />,
+          style: { backgroundColor: 'white' },
+        },
+        {
+          key: 'molecular-viewer-momentum-vectors',
+          label: <MomentumVectorCheckBox />,
+        },
+        {
+          key: 'molecular-viewer-force-vectors',
+          label: <ForceVectorCheckBox />,
+        },
+      ],
     });
   }
-
-  items.push({
-    key: 'foggy-check-box',
-    label: <FogCheckBox />,
-  });
-
-  items.push({
-    key: 'background-color',
-    label: <BackgroundColor />,
-  });
 
   if (projectType === ProjectType.DRUG_DISCOVERY) {
     items.push({
@@ -169,6 +170,16 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
         style: { backgroundColor: 'white' },
       },
     ],
+  });
+
+  items.push({
+    key: 'foggy-check-box',
+    label: <FogCheckBox />,
+  });
+
+  items.push({
+    key: 'background-color',
+    label: <BackgroundColor />,
   });
 
   return items;

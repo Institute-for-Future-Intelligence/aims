@@ -120,6 +120,7 @@ export const i18n_zh_cn = {
       Fog: '有雾',
       Axes: '显示坐标轴',
       Container: '显示容器',
+      Mechanics: '力学',
       VanDerWaalsBonds: '显示范德华键',
       MomentumVectors: '显示动量矢量',
       ForceVectors: '显示力矢量',

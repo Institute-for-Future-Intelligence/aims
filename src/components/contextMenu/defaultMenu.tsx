@@ -14,7 +14,6 @@ import {
   ContainerCheckBox,
   CopyMolecule,
   CutMolecule,
-  EnergyGraphCheckBox,
   FogCheckBox,
   MaterialRadioGroup,
   PasteMolecule,
@@ -132,28 +131,28 @@ export const createDefaultMenu = (
       });
 
       items.push({
-        key: 'molecular-viewer-vdw-bonds',
-        label: <VdwBondsCheckBox />,
-      });
-
-      items.push({
-        key: 'molecular-viewer-momentum-vectors',
-        label: <MomentumVectorCheckBox />,
-      });
-
-      items.push({
-        key: 'molecular-viewer-force-vectors',
-        label: <ForceVectorCheckBox />,
-      });
-
-      items.push({
-        key: 'molecular-viewer-energy-graph',
-        label: <EnergyGraphCheckBox />,
-      });
-
-      items.push({
         key: 'molecular-viewer-foggy',
         label: <FogCheckBox />,
+      });
+
+      items.push({
+        key: 'molecular-viewer-mechanics-submenu',
+        label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Mechanics', lang)}</MenuItem>,
+        children: [
+          {
+            key: 'molecular-viewer-vdw-bonds',
+            label: <VdwBondsCheckBox />,
+            style: { backgroundColor: 'white' },
+          },
+          {
+            key: 'molecular-viewer-momentum-vectors',
+            label: <MomentumVectorCheckBox />,
+          },
+          {
+            key: 'molecular-viewer-force-vectors',
+            label: <ForceVectorCheckBox />,
+          },
+        ],
       });
 
       items.push({
