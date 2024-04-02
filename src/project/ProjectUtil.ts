@@ -112,6 +112,8 @@ export class ProjectUtil {
       vdwBondCutoffRelative: 0.5,
       momentumVisible: false,
       momentumScaleFactor: 1,
+      forceVisible: false,
+      forceScaleFactor: 1,
       energyGraphVisible: false,
 
       testMolecules: new Array<Molecule>(),

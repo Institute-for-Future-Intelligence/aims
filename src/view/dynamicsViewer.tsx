@@ -32,7 +32,12 @@ import settings from '../lib/settings.js';
 import Movers from './movers.tsx';
 import { VdwBond } from '../models/VdwBond.ts';
 import { MolecularDynamics } from '../models/MolecularDynamics.ts';
-import { LJ_SIGMA_CONVERTER } from '../models/physicalConstants.ts';
+import {
+  KINETIC_ENERGY_COLOR,
+  LJ_SIGMA_CONVERTER,
+  POTENTIAL_ENERGY_COLOR,
+  VAN_DER_WAALS_COLOR,
+} from '../models/physicalConstants.ts';
 import { UNIT_VECTOR_POS_Y } from '../constants.ts';
 
 extend({ RCGroup });
@@ -67,6 +72,8 @@ const DynamicsViewer = React.memo(
     const vdwBondCutoffRelative = useStore(Selector.vdwBondCutoffRelative) ?? 0.5;
     const momentumVisible = useStore(Selector.momentumVisible);
     const momentumScaleFactor = useStore(Selector.momentumScaleFactor) ?? 1;
+    const forceVisible = useStore(Selector.forceVisible);
+    const forceScaleFactor = useStore(Selector.forceScaleFactor) ?? 1;
     const molecularContainer = useStore(Selector.molecularContainer);
     const timeStep = useStore(Selector.timeStep);
 
@@ -143,6 +150,7 @@ const DynamicsViewer = React.memo(
         if (molecule.atoms) {
           a.position.copy(molecule.atoms[i].position);
           a.velocity.copy(molecule.atoms[i].velocity);
+          a.force.copy(molecule.atoms[i].force);
         }
         mol.atoms.push(a);
       }
@@ -294,7 +302,7 @@ const DynamicsViewer = React.memo(
                       scale={[1, momentum, 1]}
                       position={[a.position.x + normalized.x, a.position.y + normalized.y, a.position.z + normalized.z]}
                       rotation={euler}
-                      color={'Crimson'}
+                      color={KINETIC_ENERGY_COLOR}
                     />
                   );
                 }),
@@ -327,7 +335,73 @@ const DynamicsViewer = React.memo(
                       scale={[1, 1, 1]}
                       position={[a.position.x + normalized.x, a.position.y + normalized.y, a.position.z + normalized.z]}
                       rotation={euler}
-                      color={'Crimson'}
+                      color={KINETIC_ENERGY_COLOR}
+                    />
+                  );
+                }),
+              );
+              return arr;
+            })}
+          </Instances>
+        )}
+        {/* draw arrow bodies of the force vectors */}
+        {forceVisible && (
+          <Instances limit={1000} range={1000}>
+            <cylinderGeometry args={[0.1, 0.1, 1, 8]} />
+            <meshStandardMaterial />
+            {moleculesRef.current.map((m, i) => {
+              const arr = [];
+              const quaternion = new Quaternion();
+              const normalized = new Vector3();
+              const euler = new Euler();
+              arr.push(
+                m.atoms.map((a, i) => {
+                  const radius = Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.25 : 1);
+                  const force = a.force.length() * forceScaleFactor * 1000;
+                  normalized.copy(a.force).normalize();
+                  quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
+                  euler.setFromQuaternion(quaternion);
+                  normalized.multiplyScalar(radius + force / 2);
+                  return (
+                    <Instance
+                      key={i}
+                      scale={[1, force, 1]}
+                      position={[a.position.x + normalized.x, a.position.y + normalized.y, a.position.z + normalized.z]}
+                      rotation={euler}
+                      color={POTENTIAL_ENERGY_COLOR}
+                    />
+                  );
+                }),
+              );
+              return arr;
+            })}
+          </Instances>
+        )}
+        {/* draw arrow heads of the force vectors */}
+        {forceVisible && (
+          <Instances limit={1000} range={1000}>
+            <coneGeometry args={[0.2, 0.4, 8, 2]} />
+            <meshStandardMaterial />
+            {moleculesRef.current.map((m, i) => {
+              const arr = [];
+              const quaternion = new Quaternion();
+              const normalized = new Vector3();
+              const euler = new Euler();
+              arr.push(
+                m.atoms.map((a, i) => {
+                  const radius = Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.25 : 1);
+                  const force = a.force.length() * forceScaleFactor * 1000;
+                  normalized.copy(a.force).normalize();
+                  quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
+                  euler.setFromQuaternion(quaternion);
+                  normalized.multiplyScalar(radius + force + 0.2);
+                  return (
+                    <Instance
+                      key={i}
+                      scale={[1, 1, 1]}
+                      position={[a.position.x + normalized.x, a.position.y + normalized.y, a.position.z + normalized.z]}
+                      rotation={euler}
+                      color={POTENTIAL_ENERGY_COLOR}
                     />
                   );
                 }),
@@ -342,7 +416,7 @@ const DynamicsViewer = React.memo(
             return (
               <Line
                 key={i}
-                color={'white'}
+                color={VAN_DER_WAALS_COLOR}
                 dashed={true}
                 lineWidth={2}
                 dashSize={0.02}

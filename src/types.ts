@@ -102,6 +102,8 @@ export interface ProjectState {
   vdwBondCutoffRelative: number;
   momentumVisible: boolean;
   momentumScaleFactor: number;
+  forceVisible: boolean;
+  forceScaleFactor: number;
   energyGraphVisible: boolean;
 
   timeStep: number;

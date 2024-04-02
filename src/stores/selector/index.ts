@@ -58,6 +58,10 @@ export const momentumVisible = (state: CommonStoreState) => state.projectState.m
 
 export const momentumScaleFactor = (state: CommonStoreState) => state.projectState.momentumScaleFactor;
 
+export const forceVisible = (state: CommonStoreState) => state.projectState.forceVisible;
+
+export const forceScaleFactor = (state: CommonStoreState) => state.projectState.forceScaleFactor;
+
 export const pickedMoleculeIndex = (state: PrimitiveStoreState) => state.pickedMoleculeIndex;
 
 export const copiedMoleculeIndex = (state: PrimitiveStoreState) => state.copiedMoleculeIndex;

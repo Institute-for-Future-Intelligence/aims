@@ -19,6 +19,7 @@ const DynamicsSettings = React.memo(() => {
   const molecularContainer = useStore(Selector.molecularContainer);
   const vdwBondCutoffRelative = useStore(Selector.vdwBondCutoffRelative) ?? 0.5;
   const momentumScaleFactor = useStore(Selector.momentumScaleFactor) ?? 1;
+  const forceScaleFactor = useStore(Selector.forceScaleFactor) ?? 1;
   const temperature = useStore(Selector.temperature) ?? 300;
   const pressure = useStore(Selector.pressure) ?? 1;
   const timeStep = useStore(Selector.timeStep) ?? 0.5;
@@ -240,6 +241,29 @@ const DynamicsSettings = React.memo(() => {
                 />
               </Col>
             </Row>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.ForceScaleFactor', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  min={0.1}
+                  max={10}
+                  style={{ width: '100%' }}
+                  precision={1}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={parseFloat(forceScaleFactor.toFixed(1))}
+                  step={0.1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    setCommonStore((state) => {
+                      state.projectState.forceScaleFactor = value;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
           </div>
         ),
       },
@@ -253,6 +277,7 @@ const DynamicsSettings = React.memo(() => {
       pressure,
       vdwBondCutoffRelative,
       momentumScaleFactor,
+      forceScaleFactor,
       timeStep,
       mdRef,
     ],

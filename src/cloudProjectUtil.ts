@@ -107,6 +107,8 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           vdwBondCutoffRelative: data.vdwBondCutoffRelative ?? 0.5,
           momentumVisible: !!data.momentumVisible,
           momentumScaleFactor: data.momentumScaleFactor ?? 1,
+          forceVisible: !!data.forceVisible,
+          forceScaleFactor: data.forceScaleFactor ?? 1,
           energyGraphVisible: !!data.energyGraphVisible,
 
           testMolecules: ModelUtil.reconstructMoleculesFromFirestore(data.testMolecules),

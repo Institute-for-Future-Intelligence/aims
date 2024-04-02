@@ -416,6 +416,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             vdwBondCutoffRelative: data.vdwBondCutoffRelative ?? 0.5,
             momentumVisible: !!data.momentumVisible,
             momentumScaleFactor: data.momentumScaleFactor ?? 1,
+            forceVisible: !!data.forceVisible,
+            forceScaleFactor: data.forceScaleFactor ?? 1,
             energyGraphVisible: !!data.energyGraphVisible,
 
             testMolecules: ModelUtil.reconstructMoleculesFromFirestore(data.testMolecules),
@@ -638,6 +640,9 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           a.velocity.x = b.velocity.x;
           a.velocity.y = b.velocity.y;
           a.velocity.z = b.velocity.z;
+          a.force.x = b.force.x;
+          a.force.y = b.force.y;
+          a.force.z = b.force.z;
           a.sigma = b.sigma;
           a.epsilon = b.epsilon;
           a.mass = b.mass;

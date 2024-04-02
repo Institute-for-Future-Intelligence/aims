@@ -3,6 +3,14 @@
  *
  */
 
+export const KINETIC_ENERGY_COLOR = '#FFA07A';
+
+export const POTENTIAL_ENERGY_COLOR = '#00BFFF';
+
+export const TOTAL_ENERGY_COLOR = '#00FF7F';
+
+export const VAN_DER_WAALS_COLOR = '#FFFFFF';
+
 export const DATA_QUEUE_LENGTH = 100;
 
 export const LJ_SIGMA_CONVERTER = 2 / Math.sqrt(Math.cbrt(2));

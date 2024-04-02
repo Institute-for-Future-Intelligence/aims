@@ -787,6 +787,46 @@ export const MomentumVectorCheckBox = () => {
   );
 };
 
+export const ForceVectorCheckBox = () => {
+  const visible = useStore(Selector.forceVisible);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const setVisible = (checked: boolean) => {
+    useStore.getState().set((state) => {
+      state.projectState.forceVisible = checked;
+    });
+    setChanged(true);
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Checkbox
+        checked={visible}
+        onChange={(e: CheckboxChangeEvent) => {
+          const checked = e.target.checked;
+          const undoableCheck = {
+            name: 'Show Force Vectors',
+            timestamp: Date.now(),
+            checked: checked,
+            undo: () => {
+              setVisible(!undoableCheck.checked);
+            },
+            redo: () => {
+              setVisible(undoableCheck.checked);
+            },
+          } as UndoableCheck;
+          useStore.getState().addUndoable(undoableCheck);
+          setVisible(checked);
+        }}
+      >
+        {t('molecularViewer.ForceVectors', lang)}
+      </Checkbox>
+    </MenuItem>
+  );
+};
+
 export const FogCheckBox = () => {
   const foggy = useStore(Selector.chamberViewerFoggy);
   const setChanged = usePrimitiveStore(Selector.setChanged);

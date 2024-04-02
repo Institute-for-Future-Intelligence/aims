@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import { CartesianGrid, Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useDataStore } from '../stores/commonData.ts';
 import { EnergyData } from '../models/EnergyData.ts';
+import { KINETIC_ENERGY_COLOR, POTENTIAL_ENERGY_COLOR, TOTAL_ENERGY_COLOR } from '../models/physicalConstants.ts';
 
 const Container = styled.div`
   position: absolute;
@@ -99,7 +100,7 @@ const EnergyGraph = React.memo(() => {
             name={t('word.KineticEnergy', lang)}
             type="linear"
             dataKey="k"
-            stroke="#FFA07A"
+            stroke={KINETIC_ENERGY_COLOR}
             strokeWidth={2}
             dot={false}
             activeDot={{ r: 5 }}
@@ -108,7 +109,7 @@ const EnergyGraph = React.memo(() => {
             name={t('word.PotentialEnergy', lang)}
             type="linear"
             dataKey="p"
-            stroke="#00BFFF"
+            stroke={POTENTIAL_ENERGY_COLOR}
             strokeWidth={2}
             dot={false}
             activeDot={{ r: 5 }}
@@ -117,7 +118,7 @@ const EnergyGraph = React.memo(() => {
             name={t('word.TotalEnergy', lang)}
             type="linear"
             dataKey="t"
-            stroke="#00FF7F"
+            stroke={TOTAL_ENERGY_COLOR}
             strokeWidth={2}
             dot={false}
             activeDot={{ r: 5 }}
