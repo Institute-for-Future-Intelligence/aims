@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { Col, Descriptions, DescriptionsProps, FloatButton, InputNumber, Popover, Row } from 'antd';
+import { Col, Descriptions, DescriptionsProps, FloatButton, InputNumber, Popover, Row, Tabs, TabsProps } from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +18,7 @@ const DynamicsSettings = React.memo(() => {
   const testMolecules = useStore(Selector.testMolecules);
   const molecularContainer = useStore(Selector.molecularContainer);
   const vdwBondCutoffRelative = useStore(Selector.vdwBondCutoffRelative) ?? 0.5;
+  const momentumScaleFactor = useStore(Selector.momentumScaleFactor) ?? 1;
   const temperature = useStore(Selector.temperature) ?? 300;
   const pressure = useStore(Selector.pressure) ?? 1;
   const timeStep = useStore(Selector.timeStep) ?? 0.5;
@@ -29,194 +30,237 @@ const DynamicsSettings = React.memo(() => {
     return { lng: language };
   }, [language]);
 
+  const items: TabsProps['items'] = useMemo(
+    () => [
+      {
+        key: '1',
+        label: t('experiment.Model', lang),
+        children: (
+          <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.ContainerLx', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  addonAfter={'Å'}
+                  min={10}
+                  max={100}
+                  style={{ width: '100%' }}
+                  precision={1}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={parseFloat(molecularContainer.lx.toFixed(1))}
+                  step={1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    if (mdRef?.current) mdRef.current.container.lx = value;
+                    setCommonStore((state) => {
+                      state.projectState.molecularContainer.lx = value;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.ContainerLy', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  addonAfter={'Å'}
+                  min={10}
+                  max={100}
+                  style={{ width: '100%' }}
+                  precision={1}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={parseFloat(molecularContainer.ly.toFixed(1))}
+                  step={1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    if (mdRef?.current) mdRef.current.container.ly = value;
+                    setCommonStore((state) => {
+                      state.projectState.molecularContainer.ly = value;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.ContainerLz', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  addonAfter={'Å'}
+                  min={2}
+                  max={100}
+                  style={{ width: '100%' }}
+                  precision={1}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={parseFloat(molecularContainer.lz.toFixed(1))}
+                  step={1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    if (mdRef?.current) mdRef.current.container.lz = value;
+                    setCommonStore((state) => {
+                      state.projectState.molecularContainer.lz = value;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.TimeStep', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  addonAfter={t('experiment.Femtosecond', lang)}
+                  min={0.1}
+                  max={5}
+                  style={{ width: '100%' }}
+                  precision={1}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={parseFloat(timeStep.toFixed(1))}
+                  step={0.1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    if (mdRef?.current) mdRef.current.timeStep = value;
+                    setCommonStore((state) => {
+                      state.projectState.timeStep = value;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.Temperature', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  addonAfter={'K'}
+                  min={10}
+                  max={1000}
+                  style={{ width: '100%' }}
+                  precision={1}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={parseFloat(temperature.toFixed(1))}
+                  step={1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    setCommonStore((state) => {
+                      state.projectState.temperature = value;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.Pressure', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  addonAfter={'atm'}
+                  min={0.01}
+                  max={100}
+                  style={{ width: '100%' }}
+                  precision={2}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={parseFloat(pressure.toFixed(2))}
+                  step={0.1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    setCommonStore((state) => {
+                      state.projectState.pressure = value;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
+          </div>
+        ),
+      },
+      {
+        key: '2',
+        label: t('experiment.Display', lang),
+        children: (
+          <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.VdwBondCutoffRelative', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  addonAfter={t('word.Relative', lang)}
+                  min={0.2}
+                  max={2}
+                  style={{ width: '100%' }}
+                  precision={2}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={parseFloat(vdwBondCutoffRelative.toFixed(2))}
+                  step={0.1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    setCommonStore((state) => {
+                      state.projectState.vdwBondCutoffRelative = value;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.MomentumScaleFactor', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  min={0.1}
+                  max={10}
+                  style={{ width: '100%' }}
+                  precision={1}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={parseFloat(momentumScaleFactor.toFixed(1))}
+                  step={0.1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    setCommonStore((state) => {
+                      state.projectState.momentumScaleFactor = value;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
+          </div>
+        ),
+      },
+    ],
+    [
+      lang,
+      molecularContainer.lx,
+      molecularContainer.ly,
+      molecularContainer.lz,
+      temperature,
+      pressure,
+      vdwBondCutoffRelative,
+      momentumScaleFactor,
+      timeStep,
+      mdRef,
+    ],
+  );
+
   const createContent = useMemo(() => {
-    return (
-      <div style={{ width: '360px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
-        <Row gutter={16} style={{ paddingBottom: '4px' }}>
-          <Col span={12} style={{ paddingTop: '5px' }}>
-            <span>{t('experiment.ContainerLx', lang)}: </span>
-          </Col>
-          <Col span={12}>
-            <InputNumber
-              addonAfter={'Å'}
-              min={10}
-              max={100}
-              style={{ width: '100%' }}
-              precision={1}
-              // make sure that we round up the number as toDegrees may cause things like .999999999
-              value={parseFloat(molecularContainer.lx.toFixed(1))}
-              step={1}
-              onChange={(value) => {
-                if (value === null) return;
-                if (mdRef?.current) mdRef.current.container.lx = value;
-                setCommonStore((state) => {
-                  state.projectState.molecularContainer.lx = value;
-                });
-                setChanged(true);
-              }}
-            />
-          </Col>
-        </Row>
-        <Row gutter={16} style={{ paddingBottom: '4px' }}>
-          <Col span={12} style={{ paddingTop: '5px' }}>
-            <span>{t('experiment.ContainerLy', lang)}: </span>
-          </Col>
-          <Col span={12}>
-            <InputNumber
-              addonAfter={'Å'}
-              min={10}
-              max={100}
-              style={{ width: '100%' }}
-              precision={1}
-              // make sure that we round up the number as toDegrees may cause things like .999999999
-              value={parseFloat(molecularContainer.ly.toFixed(1))}
-              step={1}
-              onChange={(value) => {
-                if (value === null) return;
-                if (mdRef?.current) mdRef.current.container.ly = value;
-                setCommonStore((state) => {
-                  state.projectState.molecularContainer.ly = value;
-                });
-                setChanged(true);
-              }}
-            />
-          </Col>
-        </Row>
-        <Row gutter={16} style={{ paddingBottom: '4px' }}>
-          <Col span={12} style={{ paddingTop: '5px' }}>
-            <span>{t('experiment.ContainerLz', lang)}: </span>
-          </Col>
-          <Col span={12}>
-            <InputNumber
-              addonAfter={'Å'}
-              min={2}
-              max={100}
-              style={{ width: '100%' }}
-              precision={1}
-              // make sure that we round up the number as toDegrees may cause things like .999999999
-              value={parseFloat(molecularContainer.lz.toFixed(1))}
-              step={1}
-              onChange={(value) => {
-                if (value === null) return;
-                if (mdRef?.current) mdRef.current.container.lz = value;
-                setCommonStore((state) => {
-                  state.projectState.molecularContainer.lz = value;
-                });
-                setChanged(true);
-              }}
-            />
-          </Col>
-        </Row>
-        <Row gutter={16} style={{ paddingBottom: '4px' }}>
-          <Col span={12} style={{ paddingTop: '5px' }}>
-            <span>{t('experiment.VdwBondCutoffRelative', lang)}: </span>
-          </Col>
-          <Col span={12}>
-            <InputNumber
-              addonAfter={t('word.Relative', lang)}
-              min={0.2}
-              max={2}
-              style={{ width: '100%' }}
-              precision={2}
-              // make sure that we round up the number as toDegrees may cause things like .999999999
-              value={parseFloat(vdwBondCutoffRelative.toFixed(2))}
-              step={0.1}
-              onChange={(value) => {
-                if (value === null) return;
-                setCommonStore((state) => {
-                  state.projectState.vdwBondCutoffRelative = value;
-                });
-                setChanged(true);
-              }}
-            />
-          </Col>
-        </Row>
-        <Row gutter={16} style={{ paddingBottom: '4px' }}>
-          <Col span={12} style={{ paddingTop: '5px' }}>
-            <span>{t('experiment.TimeStep', lang)}: </span>
-          </Col>
-          <Col span={12}>
-            <InputNumber
-              addonAfter={t('experiment.Femtosecond', lang)}
-              min={0.1}
-              max={5}
-              style={{ width: '100%' }}
-              precision={1}
-              // make sure that we round up the number as toDegrees may cause things like .999999999
-              value={parseFloat(timeStep.toFixed(1))}
-              step={0.1}
-              onChange={(value) => {
-                if (value === null) return;
-                if (mdRef?.current) mdRef.current.timeStep = value;
-                setCommonStore((state) => {
-                  state.projectState.timeStep = value;
-                });
-                setChanged(true);
-              }}
-            />
-          </Col>
-        </Row>
-        <Row gutter={16} style={{ paddingBottom: '4px' }}>
-          <Col span={12} style={{ paddingTop: '5px' }}>
-            <span>{t('experiment.Temperature', lang)}: </span>
-          </Col>
-          <Col span={12}>
-            <InputNumber
-              addonAfter={'K'}
-              min={10}
-              max={1000}
-              style={{ width: '100%' }}
-              precision={1}
-              // make sure that we round up the number as toDegrees may cause things like .999999999
-              value={parseFloat(temperature.toFixed(1))}
-              step={1}
-              onChange={(value) => {
-                if (value === null) return;
-                setCommonStore((state) => {
-                  state.projectState.temperature = value;
-                });
-                setChanged(true);
-              }}
-            />
-          </Col>
-        </Row>
-        <Row gutter={16} style={{ paddingBottom: '4px' }}>
-          <Col span={12} style={{ paddingTop: '5px' }}>
-            <span>{t('experiment.Pressure', lang)}: </span>
-          </Col>
-          <Col span={12}>
-            <InputNumber
-              addonAfter={'atm'}
-              min={0.01}
-              max={100}
-              style={{ width: '100%' }}
-              precision={2}
-              // make sure that we round up the number as toDegrees may cause things like .999999999
-              value={parseFloat(pressure.toFixed(2))}
-              step={0.1}
-              onChange={(value) => {
-                if (value === null) return;
-                setCommonStore((state) => {
-                  state.projectState.pressure = value;
-                });
-                setChanged(true);
-              }}
-            />
-          </Col>
-        </Row>
-      </div>
-    );
-  }, [
-    lang,
-    molecularContainer.lx,
-    molecularContainer.ly,
-    molecularContainer.lz,
-    temperature,
-    pressure,
-    vdwBondCutoffRelative,
-    timeStep,
-    mdRef,
-  ]);
+    return <Tabs defaultActiveKey="1" items={items} />;
+  }, [items]);
 
   const createInfo = useMemo(() => {
     let atomCount = 0;

@@ -175,6 +175,8 @@ export const i18n_zh_tw = {
     },
 
     experiment: {
+      Model: '模型',
+      Display: '顯示',
       MolecularDynamics: '分子動力學',
       StartSimulation: '運行',
       PauseSimulation: '暫停',
@@ -184,6 +186,7 @@ export const i18n_zh_tw = {
       ContainerLy: '容器Ly',
       ContainerLz: '容器Lz',
       VdwBondCutoffRelative: '范德華鍵的長度閾值',
+      MomentumScaleFactor: '動量向量的比例因子',
       TimeStep: '時間步長',
       Femtosecond: '飛秒',
       Temperature: '温度',

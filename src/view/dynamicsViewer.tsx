@@ -270,6 +270,7 @@ const DynamicsViewer = React.memo(
             })}
           </Instances>
         )}
+        {/* draw arrow bodies of the momentum vectors */}
         {momentumVisible && (
           <Instances limit={1000} range={1000}>
             <cylinderGeometry args={[0.1, 0.1, 1, 8]} />
@@ -293,7 +294,40 @@ const DynamicsViewer = React.memo(
                       scale={[1, momentum, 1]}
                       position={[a.position.x + normalized.x, a.position.y + normalized.y, a.position.z + normalized.z]}
                       rotation={euler}
-                      color={'red'}
+                      color={'Crimson'}
+                    />
+                  );
+                }),
+              );
+              return arr;
+            })}
+          </Instances>
+        )}
+        {/* draw arrow heads of the momentum vectors */}
+        {momentumVisible && (
+          <Instances limit={1000} range={1000}>
+            <coneGeometry args={[0.2, 0.4, 8, 2]} />
+            <meshStandardMaterial />
+            {moleculesRef.current.map((m, i) => {
+              const arr = [];
+              const quaternion = new Quaternion();
+              const normalized = new Vector3();
+              const euler = new Euler();
+              arr.push(
+                m.atoms.map((a, i) => {
+                  const radius = Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.25 : 1);
+                  const momentum = a.mass * a.velocity.length() * momentumScaleFactor;
+                  normalized.copy(a.velocity).normalize();
+                  quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
+                  euler.setFromQuaternion(quaternion);
+                  normalized.multiplyScalar(radius + momentum + 0.2);
+                  return (
+                    <Instance
+                      key={i}
+                      scale={[1, 1, 1]}
+                      position={[a.position.x + normalized.x, a.position.y + normalized.y, a.position.z + normalized.z]}
+                      rotation={euler}
+                      color={'Crimson'}
                     />
                   );
                 }),

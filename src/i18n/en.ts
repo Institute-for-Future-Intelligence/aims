@@ -175,6 +175,8 @@ export const i18n_en = {
     },
 
     experiment: {
+      Model: 'Model',
+      Display: 'Display',
       MolecularDynamics: 'Molecular Dynamics',
       StartSimulation: 'Start Simulation',
       PauseSimulation: 'Pause Simulation',
@@ -184,6 +186,7 @@ export const i18n_en = {
       ContainerLy: 'Container Ly',
       ContainerLz: 'Container Lz',
       VdwBondCutoffRelative: 'VDW Bond Cutoff',
+      MomentumScaleFactor: 'Momentum Scale Factor',
       TimeStep: 'Time Step',
       Femtosecond: 'Femtosecond',
       Temperature: 'Temperature',
