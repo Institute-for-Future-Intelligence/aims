@@ -161,7 +161,7 @@ const DynamicsViewer = React.memo(
       }
       moleculeMapRef.current.set(molecule, mol);
       if (moleculeMapRef.current.size === testMolecules.length) {
-        // store the new molecules in a map because this call is asynchronous so we cannot guarantee the order
+        // store the new molecules in a map because this call is asynchronous, so we cannot guarantee the order
         // testMolecules and moleculesRef must have the same order
         for (const m of testMolecules) {
           const m2 = moleculeMapRef.current.get(m);
@@ -283,18 +283,17 @@ const DynamicsViewer = React.memo(
           <Instances limit={1000} range={1000}>
             <cylinderGeometry args={[0.1, 0.1, 1, 8]} />
             <meshStandardMaterial />
-            {moleculesRef.current.map((m, i) => {
+            {moleculesRef.current.map((m) => {
               const arr = [];
               const quaternion = new Quaternion();
               const normalized = new Vector3();
-              const euler = new Euler();
               arr.push(
                 m.atoms.map((a, i) => {
                   const radius = Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.25 : 1);
                   const momentum = a.mass * a.velocity.length() * momentumScaleFactor;
                   normalized.copy(a.velocity).normalize();
                   quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
-                  euler.setFromQuaternion(quaternion);
+                  const euler = new Euler().setFromQuaternion(quaternion);
                   normalized.multiplyScalar(radius + momentum / 2);
                   return (
                     <Instance
@@ -316,23 +315,21 @@ const DynamicsViewer = React.memo(
           <Instances limit={1000} range={1000}>
             <coneGeometry args={[0.2, 0.4, 8, 2]} />
             <meshStandardMaterial />
-            {moleculesRef.current.map((m, i) => {
+            {moleculesRef.current.map((m) => {
               const arr = [];
               const quaternion = new Quaternion();
               const normalized = new Vector3();
-              const euler = new Euler();
               arr.push(
                 m.atoms.map((a, i) => {
                   const radius = Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.25 : 1);
                   const momentum = a.mass * a.velocity.length() * momentumScaleFactor;
                   normalized.copy(a.velocity).normalize();
                   quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
-                  euler.setFromQuaternion(quaternion);
+                  const euler = new Euler().setFromQuaternion(quaternion);
                   normalized.multiplyScalar(radius + momentum + 0.2);
                   return (
                     <Instance
                       key={i}
-                      scale={[1, 1, 1]}
                       position={[a.position.x + normalized.x, a.position.y + normalized.y, a.position.z + normalized.z]}
                       rotation={euler}
                       color={KINETIC_ENERGY_COLOR}
@@ -349,18 +346,17 @@ const DynamicsViewer = React.memo(
           <Instances limit={1000} range={1000}>
             <cylinderGeometry args={[0.1, 0.1, 1, 8]} />
             <meshStandardMaterial />
-            {moleculesRef.current.map((m, i) => {
+            {moleculesRef.current.map((m) => {
               const arr = [];
               const quaternion = new Quaternion();
               const normalized = new Vector3();
-              const euler = new Euler();
               arr.push(
                 m.atoms.map((a, i) => {
                   const radius = Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.25 : 1);
                   const force = a.force.length() * forceScaleFactor * 1000;
                   normalized.copy(a.force).normalize();
                   quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
-                  euler.setFromQuaternion(quaternion);
+                  const euler = new Euler().setFromQuaternion(quaternion);
                   normalized.multiplyScalar(radius + force / 2);
                   return (
                     <Instance
@@ -382,23 +378,21 @@ const DynamicsViewer = React.memo(
           <Instances limit={1000} range={1000}>
             <coneGeometry args={[0.2, 0.4, 8, 2]} />
             <meshStandardMaterial />
-            {moleculesRef.current.map((m, i) => {
+            {moleculesRef.current.map((m) => {
               const arr = [];
               const quaternion = new Quaternion();
               const normalized = new Vector3();
-              const euler = new Euler();
               arr.push(
                 m.atoms.map((a, i) => {
                   const radius = Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.25 : 1);
                   const force = a.force.length() * forceScaleFactor * 1000;
                   normalized.copy(a.force).normalize();
                   quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
-                  euler.setFromQuaternion(quaternion);
+                  const euler = new Euler().setFromQuaternion(quaternion);
                   normalized.multiplyScalar(radius + force + 0.2);
                   return (
                     <Instance
                       key={i}
-                      scale={[1, 1, 1]}
                       position={[a.position.x + normalized.x, a.position.y + normalized.y, a.position.z + normalized.z]}
                       rotation={euler}
                       color={POTENTIAL_ENERGY_COLOR}
