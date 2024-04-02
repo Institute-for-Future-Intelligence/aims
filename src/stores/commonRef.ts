@@ -4,11 +4,22 @@
 
 import { createWithEqualityFn } from 'zustand/traditional';
 import { RefObject } from 'react';
-import { Group, Raycaster, Vector3 } from 'three';
+import { Group, PerspectiveCamera, Raycaster, Vector2, Vector3, WebGLRenderer } from 'three';
 import { Molecule } from '../models/Molecule.ts';
-import { Camera } from '@react-three/fiber';
+import { Camera, invalidate } from '@react-three/fiber';
 import { VdwBond } from '../models/VdwBond.ts';
 import { MolecularDynamics } from '../models/MolecularDynamics.ts';
+
+const v = new Vector2();
+
+const resizeCanvas = (canvas: { gl: WebGLRenderer; camera: PerspectiveCamera }, percentSize: number) => {
+  const { gl, camera } = canvas;
+  gl.getSize(v);
+  const newWidth = (percentSize * document.body.clientWidth) / 100;
+  gl.setSize(newWidth, v.y);
+  camera.aspect = newWidth / v.y;
+  camera.updateProjectionMatrix();
+};
 
 export interface RefStoreState {
   selectNone: () => void;
@@ -22,6 +33,9 @@ export interface RefStoreState {
   vdwBondsRef: RefObject<VdwBond[]> | null;
   clickPointRef: RefObject<Vector3> | null;
   molecularDynamicsRef: RefObject<MolecularDynamics> | null;
+  chamberViewerCanvas: { gl: WebGLRenderer; camera: PerspectiveCamera } | null;
+  galleryViewerCanvas: { gl: WebGLRenderer; camera: PerspectiveCamera } | null;
+  resizeCanvases: (percentSize: number) => void;
 }
 
 export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
@@ -37,5 +51,19 @@ export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
     vdwBondsRef: null,
     clickPointRef: null,
     molecularDynamicsRef: null,
+    chamberViewerCanvas: null,
+    galleryViewerCanvas: null,
+    resizeCanvases(percentSize) {
+      const chamberViewerCanvas = get().chamberViewerCanvas;
+      const galleryViewerCanvas = get().galleryViewerCanvas;
+      if (chamberViewerCanvas) {
+        resizeCanvas(chamberViewerCanvas, 100 - percentSize);
+        invalidate();
+      }
+      if (galleryViewerCanvas) {
+        resizeCanvas(galleryViewerCanvas, percentSize);
+        invalidate();
+      }
+    },
   };
 });

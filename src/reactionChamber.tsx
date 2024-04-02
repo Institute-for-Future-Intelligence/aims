@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import {
   DEFAULT_CAMERA_POSITION,
   DEFAULT_CAMERA_UP,
@@ -20,7 +20,7 @@ import Axes from './view/axes';
 import DynamicsViewer from './view/dynamicsViewer.tsx';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import { DirectionalLight, Euler, Vector2, Vector3 } from 'three';
+import { DirectionalLight, Euler, PerspectiveCamera, Vector2, Vector3 } from 'three';
 import DockingSettings from './view/dockingSettings.tsx';
 import { ReactionChamberControls } from './controls';
 import Spaceship from './view/spaceship.tsx';
@@ -185,6 +185,7 @@ const ReactionChamber = React.memo(() => {
         onContextMenu={onContextMenu}
         onClick={() => canvasRef.current?.focus()}
       >
+        <ReSizer />
         <ReactionChamberControls lightRef={lightRef} />
         {/* FIXME: temporary solution to turn on/off fog without updating materials */}
         <fog attach="fog" args={viewerFoggy ? ['#000000', 50, 150] : ['#000000', 0.1, 0]} />
@@ -257,5 +258,19 @@ const ReactionChamber = React.memo(() => {
     </>
   );
 });
+
+const ReSizer = () => {
+  const { gl, camera } = useThree();
+
+  useEffect(() => {
+    if (gl && camera && camera instanceof PerspectiveCamera) {
+      useRefStore.setState({
+        chamberViewerCanvas: { camera: camera as PerspectiveCamera, gl: gl },
+      });
+    }
+  }, []);
+
+  return null;
+};
 
 export default ReactionChamber;

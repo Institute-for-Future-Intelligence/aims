@@ -24,6 +24,7 @@ import AccountSettingsPanel from './accountSettingsPanel';
 import CloudManager from './cloudManager';
 import { CloudTwoTone } from '@ant-design/icons';
 import SplitPane from './components/splitPane.tsx';
+import { useRefStore } from './stores/commonRef.ts';
 
 const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
@@ -213,6 +214,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
               setCommonStore((state) => {
                 state.projectState.chamberViewerPercentWidth = 100 - size;
               });
+              useRefStore.getState().resizeCanvases(size);
             }, 50)}
           >
             {!hideGallery ? (

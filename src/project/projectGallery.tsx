@@ -39,13 +39,15 @@ import { drugMolecules, getMolecule, commonMolecules } from '../internalDatabase
 import { CartesianGrid, Cell, Dot, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { View } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import ScissorBox from './scissorBox.tsx';
 import ProjectSettingsContent from './projectSettingsContent.tsx';
 import PropertiesSelectionContent from './propertiesSelectionContent.tsx';
 import CoordinateSystemSettingsContent from './coordinateSystemSettingsContent.tsx';
 import GraphSettingsContent from './graphSettingsContent.tsx';
 import { evaluate, MathExpression } from 'mathjs';
+import { useRefStore } from '../stores/commonRef.ts';
+import { PerspectiveCamera } from 'three';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1)
@@ -773,6 +775,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   }}
                 >
                   <View.Port />
+                  <Resizer />
                 </Canvas>
               )}
               {/*FIXME: This doesn't work properly yet */}
@@ -1146,5 +1149,19 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     </Container>
   );
 });
+
+const Resizer = () => {
+  const { gl, camera } = useThree();
+
+  useEffect(() => {
+    if (gl && camera && camera instanceof PerspectiveCamera) {
+      useRefStore.setState({
+        galleryViewerCanvas: { camera: camera as PerspectiveCamera, gl: gl },
+      });
+    }
+  }, []);
+
+  return null;
+};
 
 export default ProjectGallery;
