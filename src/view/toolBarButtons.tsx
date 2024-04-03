@@ -9,6 +9,7 @@ import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { ProjectType } from '../constants.ts';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 const ToolBarButtons = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -170,6 +171,9 @@ const ToolBarButtons = React.memo(() => {
               cancelText: t('word.Cancel', lang),
               onOk: () => {
                 deleteAllAtoms();
+                usePrimitiveStore.getState().set((state) => {
+                  state.updateViewerFlag = !state.updateViewerFlag;
+                });
               },
             });
           }}

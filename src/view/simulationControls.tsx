@@ -81,7 +81,7 @@ const SimulationControls = React.memo(() => {
         state.updateViewerFlag = !state.updateViewerFlag;
       });
     }
-  }, [resetSimulation, mdRef]);
+  }, [resetSimulation, mdRef, energyTimeSeries]);
 
   const init = () => {
     if (mdRef?.current) {

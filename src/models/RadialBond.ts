@@ -52,14 +52,14 @@ export class RadialBond {
     const dz = this.atom2.position.z - this.atom1.position.z;
     let r = Math.hypot(dx, dy, dz);
     const s = (this.strength * GF_CONVERSION_CONSTANT * (r - length)) / r;
-    const inverseMass1 = 1 / this.atom1.mass;
-    const inverseMass2 = 1 / this.atom2.mass;
-    this.atom1.force.x += s * dx * inverseMass1;
-    this.atom1.force.y += s * dy * inverseMass1;
-    this.atom1.force.z += s * dz * inverseMass1;
-    this.atom2.force.x -= s * dx * inverseMass2;
-    this.atom2.force.y -= s * dy * inverseMass2;
-    this.atom2.force.z -= s * dz * inverseMass2;
+    const inverseMass1 = s / this.atom1.mass;
+    const inverseMass2 = s / this.atom2.mass;
+    this.atom1.force.x += dx * inverseMass1;
+    this.atom1.force.y += dy * inverseMass1;
+    this.atom1.force.z += dz * inverseMass1;
+    this.atom2.force.x -= dx * inverseMass2;
+    this.atom2.force.y -= dy * inverseMass2;
+    this.atom2.force.z -= dz * inverseMass2;
     r -= length;
     return 0.5 * this.strength * r * r;
   }

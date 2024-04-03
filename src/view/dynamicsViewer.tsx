@@ -39,6 +39,7 @@ import {
   VAN_DER_WAALS_COLOR,
 } from '../models/physicalConstants.ts';
 import { UNIT_VECTOR_POS_Y } from '../constants.ts';
+import { useDataStore } from '../stores/commonData.ts';
 
 extend({ RCGroup });
 
@@ -88,6 +89,7 @@ const DynamicsViewer = React.memo(
     const boundingBoxRef = useRef<Box3 | undefined>();
     const molecularDynamicsRef = useRef<MolecularDynamics | null>(null);
     const moleculeMapRef = useRef<Map<Molecule, Molecule>>(new Map<Molecule, Molecule>());
+    const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
 
     const { invalidate, camera, raycaster, gl } = useThree();
 
@@ -119,13 +121,15 @@ const DynamicsViewer = React.memo(
     }, [camera, raycaster, cameraRef, raycasterRef, moleculesRef, vdwBondsRef, molecularDynamicsRef]);
 
     useEffect(() => {
+      moleculesRef.current.length = 0;
+      moleculeMapRef.current.clear();
       if (!testMolecules || testMolecules.length === 0) {
         setComplex(undefined);
+        molecularDynamicsRef.current = null;
+        energyTimeSeries.clear();
         return;
       }
       if (setLoading) setLoading(true);
-      moleculesRef.current.length = 0;
-      moleculeMapRef.current.clear();
       for (const m of testMolecules) {
         loadMolecule(m, processResult);
       }
