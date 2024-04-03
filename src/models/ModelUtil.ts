@@ -4,6 +4,7 @@
 
 import { Atom } from './Atom.ts';
 import { Molecule } from './Molecule.ts';
+import { UNIT_EV_OVER_KB } from './physicalConstants.ts';
 
 export class ModelUtil {
   static reconstructMoleculesFromFirestore(m: any) {
@@ -13,6 +14,10 @@ export class ModelUtil {
       array.push(Molecule.clone(x));
     }
     return array;
+  }
+
+  static convertToTemperatureFactor(ke: number): number {
+    return ke * UNIT_EV_OVER_KB * 0.01;
   }
 
   static getMolecule(atom: Atom, molecules: Molecule[]): Molecule | null {

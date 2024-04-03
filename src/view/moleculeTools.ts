@@ -61,7 +61,7 @@ export const generateComplex = (molecules: Molecule[]) => {
         i + 1,
         ' ',
         1,
-        1,
+        ModelUtil.convertToTemperatureFactor(a.getKineticEnergy()),
         0,
       );
     }

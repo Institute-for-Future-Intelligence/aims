@@ -178,6 +178,14 @@ const DynamicsViewer = React.memo(
       if (!groupRef.current || !mode) return;
       groupRef.current.children = [];
       if (!complex) return;
+      for (const [i, r] of complex._residues.entries()) {
+        const m = moleculesRef.current[i];
+        if (m) {
+          for (const [j, a] of r._atoms.entries()) {
+            a.temperature = ModelUtil.convertToTemperatureFactor(m.atoms[j].getKineticEnergy());
+          }
+        }
+      }
       const visual = new ComplexVisual(complex.name, complex);
       const reps = [];
       // Don't change the selector below. We use 'chain' to identify molecules as there is no 'molecule' keyword
