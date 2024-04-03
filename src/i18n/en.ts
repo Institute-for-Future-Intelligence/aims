@@ -190,6 +190,7 @@ export const i18n_en = {
       VdwBondCutoffRelative: 'VDW Bond Cutoff',
       MomentumScaleFactor: 'Momentum Scale Factor',
       ForceScaleFactor: 'Force Scale Factor',
+      KineticEnergyScaleFactor: 'Kinetic Energy Scale Factor',
       TimeStep: 'Time Step',
       Femtosecond: 'Femtosecond',
       Temperature: 'Temperature',

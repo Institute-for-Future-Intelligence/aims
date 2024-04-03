@@ -104,6 +104,7 @@ export interface ProjectState {
   momentumScaleFactor: number;
   forceVisible: boolean;
   forceScaleFactor: number;
+  kineticEnergyScaleFactor: number;
   energyGraphVisible: boolean;
 
   timeStep: number;

@@ -190,6 +190,7 @@ export const i18n_zh_tw = {
       VdwBondCutoffRelative: '范德華鍵的長度閾值',
       MomentumScaleFactor: '動量向量的比例因子',
       ForceScaleFactor: '力向量的比例因子',
+      KineticEnergyScaleFactor: '動能的比例因子',
       TimeStep: '時間步長',
       Femtosecond: '飛秒',
       Temperature: '温度',

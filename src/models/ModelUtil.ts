@@ -16,8 +16,8 @@ export class ModelUtil {
     return array;
   }
 
-  static convertToTemperatureFactor(ke: number): number {
-    return ke * UNIT_EV_OVER_KB * 0.01;
+  static convertToTemperatureFactor(ke: number, scale?: number): number {
+    return ke * UNIT_EV_OVER_KB * 0.01 * (scale ?? 1);
   }
 
   static getMolecule(atom: Atom, molecules: Molecule[]): Molecule | null {

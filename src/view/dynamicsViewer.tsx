@@ -75,6 +75,7 @@ const DynamicsViewer = React.memo(
     const momentumScaleFactor = useStore(Selector.momentumScaleFactor) ?? 1;
     const forceVisible = useStore(Selector.forceVisible);
     const forceScaleFactor = useStore(Selector.forceScaleFactor) ?? 1;
+    const kineticEnergyScaleFactor = useStore(Selector.kineticEnergyScaleFactor) ?? 1;
     const molecularContainer = useStore(Selector.molecularContainer);
     const timeStep = useStore(Selector.timeStep);
 
@@ -186,7 +187,10 @@ const DynamicsViewer = React.memo(
         const m = moleculesRef.current[i];
         if (m) {
           for (const [j, a] of r._atoms.entries()) {
-            a.temperature = ModelUtil.convertToTemperatureFactor(m.atoms[j].getKineticEnergy());
+            a.temperature = ModelUtil.convertToTemperatureFactor(
+              m.atoms[j].getKineticEnergy(),
+              kineticEnergyScaleFactor,
+            );
           }
         }
       }
@@ -232,7 +236,17 @@ const DynamicsViewer = React.memo(
           });
         }
       };
-    }, [complex, material, mode, colorer, selector, testMolecules, updateViewerFlag, pickedMoleculeIndex]);
+    }, [
+      complex,
+      material,
+      mode,
+      colorer,
+      selector,
+      testMolecules,
+      updateViewerFlag,
+      pickedMoleculeIndex,
+      kineticEnergyScaleFactor,
+    ]);
 
     useEffect(() => {
       const picker = new Picker(groupRef.current, camera, gl.domElement);
