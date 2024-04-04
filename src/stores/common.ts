@@ -20,6 +20,7 @@ import { MolecularProperties } from '../models/MolecularProperties';
 import { User } from '../User';
 import { ProjectUtil } from '../project/ProjectUtil.ts';
 import { Protein } from '../models/Protein.ts';
+import { ModelUtil } from '../models/ModelUtil.ts';
 
 enableMapSet();
 
@@ -229,6 +230,13 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           projectState: state.projectState,
           selectedFloatingWindow: state.selectedFloatingWindow,
         }),
+        merge: (persistedState: any, currentState: CommonStoreState) => {
+          const state = { ...currentState, ...persistedState } as CommonStoreState;
+          state.projectState.testMolecules = ModelUtil.reconstructMoleculesFromFirestore(
+            state.projectState.testMolecules,
+          );
+          return state;
+        },
       },
     ),
   ),
