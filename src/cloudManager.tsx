@@ -627,10 +627,10 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     });
   }
 
-  const updateMolecularVariables = (testMolecules: Molecule[], remote: boolean) => {
+  const updateMolecularVariables = (molecules: Molecule[], remote: boolean) => {
     if (moleculesRef?.current) {
       // update properties of molecules in the remote state
-      for (const [i, m] of testMolecules.entries()) {
+      for (const [i, m] of molecules.entries()) {
         const currentMol = moleculesRef.current[i];
         for (const [j, a] of m.atoms.entries()) {
           // cannot use Vector3 as it is not supported by Firestore

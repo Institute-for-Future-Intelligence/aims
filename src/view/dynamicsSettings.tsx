@@ -15,7 +15,6 @@ const DynamicsSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const setChanged = usePrimitiveStore(Selector.setChanged);
-  const testMolecules = useStore(Selector.testMolecules);
   const molecularContainer = useStore(Selector.molecularContainer);
   const vdwBondCutoffRelative = useStore(Selector.vdwBondCutoffRelative) ?? 0.5;
   const momentumScaleFactor = useStore(Selector.momentumScaleFactor) ?? 1;
@@ -24,6 +23,7 @@ const DynamicsSettings = React.memo(() => {
   const temperature = useStore(Selector.temperature) ?? 300;
   const pressure = useStore(Selector.pressure) ?? 1;
   const timeStep = useStore(Selector.timeStep) ?? 0.5;
+  const updateInfoFlag = usePrimitiveStore(Selector.updateInfoFlag);
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
 
@@ -316,23 +316,18 @@ const DynamicsSettings = React.memo(() => {
     let atomCount = 0;
     let bondCount = 0;
     const elements: string[] = [];
-    if (testMolecules) {
-      for (const m of testMolecules) {
-        atomCount += m.atoms.length;
-        if (m.atoms.length > 1) {
-          // prevent auto bond
-          bondCount += m.bonds.length;
-        }
-        for (const a of m.atoms) {
-          if (!elements.includes(a.elementSymbol)) elements.push(a.elementSymbol);
-        }
+    if (mdRef?.current) {
+      atomCount = mdRef.current.atoms.length;
+      bondCount = mdRef.current.radialBonds.length;
+      for (const a of mdRef.current.atoms) {
+        if (!elements.includes(a.elementSymbol)) elements.push(a.elementSymbol);
       }
     }
     const items: DescriptionsProps['items'] = [
       {
         key: '1',
         label: t('projectPanel.MoleculeCount', lang),
-        children: testMolecules.length,
+        children: mdRef?.current?.moleculeCount,
       },
       {
         key: '2',
@@ -362,7 +357,7 @@ const DynamicsSettings = React.memo(() => {
         />
       </div>
     );
-  }, [lang, testMolecules]);
+  }, [lang, mdRef, updateInfoFlag]);
 
   return (
     <>

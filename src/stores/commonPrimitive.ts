@@ -15,6 +15,7 @@ export interface PrimitiveStoreState {
   skipChange: boolean;
   setSkipChange: (b: boolean) => void;
   updateViewerFlag: boolean;
+  updateInfoFlag: boolean;
 
   dragAndDropMolecule: boolean;
   hoveredMolecule: MoleculeInterface | null;
@@ -105,6 +106,7 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
       });
     },
     updateViewerFlag: false,
+    updateInfoFlag: false,
 
     dragAndDropMolecule: false,
     hoveredMolecule: null,

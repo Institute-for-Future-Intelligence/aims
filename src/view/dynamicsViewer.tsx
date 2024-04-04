@@ -184,6 +184,9 @@ const DynamicsViewer = React.memo(
         setComplex(generateComplex(moleculesRef.current));
         molecularDynamicsRef.current = new MolecularDynamics(moleculesRef.current, molecularContainer);
         molecularDynamicsRef.current.timeStep = timeStep;
+        usePrimitiveStore.getState().set((state) => {
+          state.updateInfoFlag = !state.updateInfoFlag;
+        });
       }
     };
 

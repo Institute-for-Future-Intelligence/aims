@@ -38,12 +38,14 @@ export class MolecularDynamics {
   kineticEnergy: number; // total kinetic energy, not average
   totalEnergy: number; // not average
   movableCount: number;
+  moleculeCount: number;
 
   timeStep: number = 0.5;
   indexOfStep: number = 0;
   heatBath: HeatBath;
 
   constructor(molecules: Molecule[], container: MolecularContainer) {
+    this.moleculeCount = molecules.length;
     this.atoms = [];
     this.radialBonds = [];
     for (const m of molecules) {

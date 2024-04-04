@@ -33,7 +33,7 @@ export class Molecule implements MoleculeInterface {
     for (const [i, a] of molecule.atoms.entries()) {
       const clone = Atom.clone(a);
       map.set(i, clone);
-      newAtoms.push(a);
+      newAtoms.push(clone);
     }
     const newRadialBonds: RadialBond[] = [];
     for (const b of molecule.bonds) {
