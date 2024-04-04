@@ -22,6 +22,7 @@ import AtomJS from '../lib/chem/Atom';
 import { ModelUtil } from '../models/ModelUtil.ts';
 import { RadialBond } from '../models/RadialBond.ts';
 import { VdwBond } from '../models/VdwBond.ts';
+import Bond from '../lib/chem/Bond';
 
 export const generateVdwLines = (molecules: Molecule[], maximumRelativeDistanceSquared: number) => {
   const bonds: VdwBond[] = [];
@@ -68,9 +69,12 @@ export const generateComplex = (molecules: Molecule[]) => {
     const molecule = new MoleculeJS(complex, mol.name, idx + 1);
     molecule.residues = [residue];
     complex._molecules.push(molecule);
+    for (const b of mol.bonds) {
+      complex.addBond(residue._atoms[b.atom1.index], residue._atoms[b.atom2.index], 1, Bond.BondType.COVALENT, true);
+    }
   }
   complex.finalize({
-    needAutoBonding: true,
+    needAutoBonding: false,
     detectAromaticLoops: false,
     enableEditing: false,
     serialAtomMap: false,

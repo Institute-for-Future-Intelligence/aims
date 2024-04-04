@@ -25,7 +25,7 @@ import {
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { useRefStore } from '../stores/commonRef';
-import { loadMolecule, setProperties } from './moleculeTools.ts';
+import { loadMolecule } from './moleculeTools.ts';
 import ModelContainer from './modelContainer.tsx';
 import Picker from '../lib/ui/Picker.js';
 import RCGroup from '../lib/gfx/RCGroup.js';

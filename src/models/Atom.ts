@@ -70,6 +70,10 @@ export class Atom {
     }
   }
 
+  distanceTo(target: Atom): number {
+    return this.position.distanceTo(target.position);
+  }
+
   distanceToSquared(target: Atom): number {
     return this.position.distanceToSquared(target.position);
   }

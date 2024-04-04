@@ -11,7 +11,7 @@ import { BondType } from '../constants';
 import { GF_CONVERSION_CONSTANT } from './physicalConstants.ts';
 
 export class RadialBond {
-  static readonly DEFAULT_STRENGTH = 4.5;
+  static readonly DEFAULT_STRENGTH = 5;
 
   atom1: Atom;
   atom2: Atom;
@@ -23,7 +23,7 @@ export class RadialBond {
     this.atom1 = atom1;
     this.atom2 = atom2;
     this.strength = RadialBond.DEFAULT_STRENGTH;
-    this.length = 2;
+    this.length = atom1.distanceTo(atom2);
     this.type = BondType.SINGLE_BOND;
   }
 
