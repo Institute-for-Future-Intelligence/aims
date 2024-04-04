@@ -88,12 +88,14 @@ const ReactionChamber = React.memo(() => {
             if (prop?.atoms) {
               const atoms: Atom[] = [];
               for (const a of prop.atoms) {
-                atoms.push(Atom.clone(a));
+                const clone = Atom.clone(a);
+                clone.index = a.index;
+                atoms.push(clone);
               }
               const radialBonds: RadialBond[] = [];
               if (prop?.radialBonds) {
                 for (const b of prop.radialBonds) {
-                  radialBonds.push(new RadialBond(Atom.clone(b.atom1), Atom.clone(b.atom2)));
+                  radialBonds.push(new RadialBond(atoms[b.atom1.index], atoms[b.atom2.index]));
                 }
               }
               const m = new Molecule(selectedMolecule.name, atoms, radialBonds);

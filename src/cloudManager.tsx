@@ -627,7 +627,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     });
   }
 
-  const updateMolecularVariables = (testMolecules: Molecule[]) => {
+  const updateMolecularVariables = (testMolecules: Molecule[], remote: boolean) => {
     if (moleculesRef?.current) {
       // update properties of molecules in the remote state
       for (const [i, m] of testMolecules.entries()) {
@@ -651,6 +651,10 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           a.damp = b.damp;
           a.fixed = b.fixed;
         }
+        if (remote) {
+          // avoid serializing bonds as they will be reconstructed later
+          m.bonds = [];
+        }
       }
     }
   };
@@ -659,10 +663,10 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     if (ps.type === ProjectType.MOLECULAR_MODELING) {
       if (moleculesRef?.current) {
         // update properties of molecules in the remote state
-        updateMolecularVariables(ps.testMolecules);
+        updateMolecularVariables(ps.testMolecules, true);
         // update properties of molecules in the local state
         setCommonStore((state) => {
-          updateMolecularVariables(state.projectState.testMolecules);
+          updateMolecularVariables(state.projectState.testMolecules, false);
         });
       }
       // get rid of unnecessary variables
