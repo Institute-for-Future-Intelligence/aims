@@ -45,11 +45,12 @@ export class MolecularDynamics {
 
   constructor(molecules: Molecule[], container: MolecularContainer) {
     this.atoms = [];
+    this.radialBonds = [];
     for (const m of molecules) {
       this.atoms.push(...m.atoms);
+      this.radialBonds.push(...m.bonds);
     }
-    this.nonBondedInteractions = new NonBondedInteractions(this.atoms);
-    this.radialBonds = [];
+    this.nonBondedInteractions = new NonBondedInteractions(this.atoms, this.radialBonds);
     this.angularBonds = [];
     this.torsionalBonds = [];
     this.container = { ...container };

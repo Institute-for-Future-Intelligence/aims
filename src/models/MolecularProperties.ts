@@ -3,6 +3,7 @@
  */
 
 import { Atom } from './Atom.ts';
+import { RadialBond } from './RadialBond.ts';
 
 export interface MolecularProperties {
   formula: string;
@@ -20,4 +21,5 @@ export interface MolecularProperties {
   boilingPoint: number;
   meltingPoint: number;
   atoms?: Atom[];
+  radialBonds?: RadialBond[];
 }

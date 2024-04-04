@@ -75,19 +75,19 @@ export const generateComplex = (molecules: Molecule[]) => {
     enableEditing: false,
     serialAtomMap: false,
   });
-  const bonds = complex.getBonds() as BondJS[];
-  const atoms: Atom[] = [];
-  for (const m of molecules) {
-    atoms.push(...m.atoms);
-  }
-  for (const b of bonds) {
-    const startAtomIndex = (b._left as AtomJS).index;
-    const endAtomIndex = (b._right as AtomJS).index;
-    const m = ModelUtil.getMolecule(atoms[startAtomIndex], molecules);
-    if (m) {
-      m.bonds.push({ atom1: atoms[startAtomIndex], atom2: atoms[endAtomIndex] } as RadialBond);
-    }
-  }
+  // const bonds = complex.getBonds() as BondJS[];
+  // const atoms: Atom[] = [];
+  // for (const m of molecules) {
+  //   atoms.push(...m.atoms);
+  // }
+  // for (const b of bonds) {
+  //   const startAtomIndex = (b._left as AtomJS).index;
+  //   const endAtomIndex = (b._right as AtomJS).index;
+  //   const m = ModelUtil.getMolecule(atoms[startAtomIndex], molecules);
+  //   if (m) {
+  //     m.bonds.push({ atom1: atoms[startAtomIndex], atom2: atoms[endAtomIndex] } as RadialBond);
+  //   }
+  // }
   return complex;
 };
 
@@ -128,12 +128,12 @@ export const loadMolecule = (
   }
 };
 
-export const setProperties = (molecule: MoleculeInterface, atoms: Atom[], bondCount: number) => {
+export const setProperties = (molecule: MoleculeInterface, atoms: Atom[], radialBonds: RadialBond[]) => {
   const properties = useStore.getState().getProvidedMolecularProperties(molecule.name);
   if (properties) {
     useStore.getState().setMolecularProperties(molecule.name, {
       atomCount: atoms.length,
-      bondCount,
+      bondCount: radialBonds.length,
       molecularMass: properties.molecularMass,
       logP: properties.logP,
       hydrogenBondDonorCount: properties.hydrogenBondDonorCount,
@@ -146,6 +146,7 @@ export const setProperties = (molecule: MoleculeInterface, atoms: Atom[], bondCo
       boilingPoint: properties.boilingPoint,
       meltingPoint: properties.meltingPoint,
       atoms,
+      radialBonds,
     } as MolecularProperties);
   }
 };

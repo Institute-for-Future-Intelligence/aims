@@ -37,6 +37,7 @@ import SimulationControls from './view/simulationControls.tsx';
 import EnergyGraph from './view/energyGraph.tsx';
 import { Molecule } from './models/Molecule.ts';
 import { Atom } from './models/Atom.ts';
+import { RadialBond } from './models/RadialBond.ts';
 
 const ReactionChamber = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -87,9 +88,15 @@ const ReactionChamber = React.memo(() => {
             if (prop?.atoms) {
               const atoms: Atom[] = [];
               for (const a of prop.atoms) {
-                atoms.push(new Atom(a.index, a.elementSymbol, a.position.clone(), true));
+                atoms.push(Atom.clone(a));
               }
-              const m = new Molecule(selectedMolecule.name, atoms, []);
+              const radialBonds: RadialBond[] = [];
+              if (prop?.radialBonds) {
+                for (const b of prop.radialBonds) {
+                  radialBonds.push(new RadialBond(Atom.clone(b.atom1), Atom.clone(b.atom2)));
+                }
+              }
+              const m = new Molecule(selectedMolecule.name, atoms, radialBonds);
               m.setCenter(point);
               state.projectState.testMolecules.push(m);
             }

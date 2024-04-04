@@ -20,6 +20,7 @@ import {
 } from './displayOptions';
 import { loadMolecule, setProperties } from './moleculeTools.ts';
 import { Atom } from '../models/Atom.ts';
+import { RadialBond } from '../models/RadialBond.ts';
 
 export interface GalleryViewerProps {
   molecule: MoleculeInterface;
@@ -119,7 +120,11 @@ const GalleryViewer = React.memo(
           const z = atom.position.z - cz;
           atoms.push(new Atom(atom.index, atom.element.name, new Vector3(x, y, z)));
         }
-        setProperties(molecule, atoms, result._bonds.length);
+        const radialBonds: RadialBond[] = [];
+        for (const b of result._bonds) {
+          radialBonds.push(new RadialBond(atoms[b._left.index], atoms[b._right.index]));
+        }
+        setProperties(molecule, atoms, radialBonds);
       }
     };
 

@@ -13,6 +13,7 @@ import { Vector3 } from 'three';
 import { Pair } from './Pair.ts';
 import { ZERO_TOLERANCE } from '../constants.ts';
 import { COULOMB_CONSTANT, GF_CONVERSION_CONSTANT, SIX_TIMES_UNIT_FORCE } from './physicalConstants.ts';
+import { RadialBond } from './RadialBond.ts';
 
 export class NonBondedInteractions {
   atoms: Atom[] = [];
@@ -22,14 +23,17 @@ export class NonBondedInteractions {
   virialLJ: number = 0;
   virialEL: number = 0;
 
+  radialBonds: RadialBond[] = [];
+
   private updateList: boolean = true;
   private neighborList: number[] = [];
   private pointer: number[] = [];
   private lastPositions: Vector3[] = [];
   private rList: number = this.rCutoff + 1; // radius to list neighbors
 
-  constructor(atoms: Atom[]) {
+  constructor(atoms: Atom[], radialBonds: RadialBond[]) {
     this.atoms = atoms;
+    this.radialBonds = radialBonds;
     const n = atoms.length;
     this.lastPositions = new Array<Vector3>(n);
     for (let i = 0; i < n; i++) {
@@ -55,7 +59,14 @@ export class NonBondedInteractions {
     // skip if both atoms are fixed
     if (this.atoms[i].fixed && this.atoms[j].fixed) return true;
     // skip if the two atoms are bonded
-    return this.atoms[i].isRBonded(this.atoms[j]) || this.atoms[i].isABonded(this.atoms[j]);
+    for (const rb of this.radialBonds) {
+      if (
+        (rb.atom1 === this.atoms[i] && rb.atom2 === this.atoms[j]) ||
+        (rb.atom2 === this.atoms[i] && rb.atom1 === this.atoms[j])
+      )
+        return true;
+    }
+    return false;
   }
 
   compute(): number {

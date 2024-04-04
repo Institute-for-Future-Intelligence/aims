@@ -5,6 +5,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Box3, Raycaster, Mesh, Euler, Quaternion, Vector3 } from 'three';
 import AtomJS from '../lib/chem/Atom';
+import BondJS from '../lib/chem/Bond';
 import ComplexVisual from '../lib/ComplexVisual';
 import { Camera, extend, ThreeEvent, useThree } from '@react-three/fiber';
 import {
@@ -18,6 +19,7 @@ import {
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { generateComplex, generateVdwLines, loadMolecule } from './moleculeTools.ts';
 import { Atom } from '../models/Atom.ts';
+import { RadialBond } from '../models/RadialBond.ts';
 import { ModelUtil } from '../models/ModelUtil.ts';
 import Element from '../lib/chem/Element';
 import * as Selector from '../stores/selector';
@@ -158,6 +160,11 @@ const DynamicsViewer = React.memo(
           a.force.copy(molecule.atoms[i].force);
         }
         mol.atoms.push(a);
+      }
+      const k = result._bonds.length;
+      for (let i = 0; i < k; i++) {
+        const bond = result._bonds[i] as BondJS;
+        mol.bonds.push(new RadialBond(mol.atoms[bond._left.index], mol.atoms[bond._right.index]));
       }
       for (let i = 0; i < n; i++) {
         const a = mol.atoms[i];

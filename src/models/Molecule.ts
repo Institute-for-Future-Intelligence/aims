@@ -28,11 +28,19 @@ export class Molecule implements MoleculeInterface {
 
   // for molecule serialized from Firestore
   static clone(molecule: Molecule): Molecule {
+    const map = new Map<Atom, Atom>();
     const newAtoms: Atom[] = [];
     for (const a of molecule.atoms) {
-      newAtoms.push(Atom.clone(a));
+      const clone = Atom.clone(a);
+      map.set(a, clone);
+      newAtoms.push(a);
     }
     const newRadialBonds: RadialBond[] = [];
+    for (const b of molecule.bonds) {
+      const a1 = map.get(b.atom1);
+      const a2 = map.get(b.atom2);
+      if (a1 && a2) newRadialBonds.push(new RadialBond(a1, a2));
+    }
     return new Molecule(molecule.name, newAtoms, newRadialBonds);
   }
 

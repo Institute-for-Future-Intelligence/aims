@@ -165,9 +165,6 @@ const DockingViewer = React.memo(
           centerOffset: centerRef.current.clone(),
         } as Protein;
       });
-      if (protein) {
-        setProperties(protein, result._atoms.length, result._bonds.length);
-      }
     };
 
     useEffect(() => {
