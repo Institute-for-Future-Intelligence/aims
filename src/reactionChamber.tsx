@@ -92,13 +92,7 @@ const ReactionChamber = React.memo(() => {
                 clone.index = a.index;
                 atoms.push(clone);
               }
-              const radialBonds: RadialBond[] = [];
-              if (prop?.radialBonds) {
-                for (const b of prop.radialBonds) {
-                  radialBonds.push(new RadialBond(atoms[b.atom1.index], atoms[b.atom2.index]));
-                }
-              }
-              const m = new Molecule(selectedMolecule.name, atoms, radialBonds);
+              const m = new Molecule(selectedMolecule.name, atoms);
               m.setCenter(point);
               state.projectState.testMolecules.push(m);
             }

@@ -15,8 +15,9 @@ import crystalUrl001 from './molecules/pdb/nacl.pdb';
 import commonMoleculeUrl001 from './molecules/sdf/dihydrogen.sdf';
 import commonMoleculeUrl002 from './molecules/sdf/dioxygen.sdf';
 import commonMoleculeUrl003 from './molecules/sdf/dinitrogen.sdf';
-import commonMoleculeUrl004 from './molecules/pdb/water.pdb';
+import commonMoleculeUrl004 from './molecules/sdf/water.sdf';
 import commonMoleculeUrl005 from './molecules/sdf/carbon_dioxide.sdf';
+import commonMoleculeUrl006 from './molecules/sdf/ozone.sdf';
 import commonMoleculeUrl101 from './molecules/pdb/buckyball.pdb';
 import commonMoleculeUrl102 from './molecules/xyz/nanotube.xyz';
 import commonMoleculeUrl201 from './molecules/xyz/d_glucose.xyz';
@@ -93,6 +94,7 @@ export const commonMolecules = [
   { url: commonMoleculeUrl003, internal: true, name: 'Dinitrogen' } as MoleculeInterface,
   { url: commonMoleculeUrl004, internal: true, name: 'Water' } as MoleculeInterface,
   { url: commonMoleculeUrl005, internal: true, name: 'Carbon Dioxide' } as MoleculeInterface,
+  { url: commonMoleculeUrl006, internal: true, name: 'Ozone' } as MoleculeInterface,
   { url: commonMoleculeUrl101, internal: true, name: 'Buckminsterfullerene' } as MoleculeInterface,
   { url: commonMoleculeUrl102, internal: true, name: 'Carbon Nanotube' } as MoleculeInterface,
   { url: commonMoleculeUrl201, internal: true, name: 'D-Glucose' } as MoleculeInterface,

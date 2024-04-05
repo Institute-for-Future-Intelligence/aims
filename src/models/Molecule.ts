@@ -6,11 +6,15 @@ import { Atom } from './Atom.ts';
 import { RadialBond } from './RadialBond.ts';
 import { MoleculeInterface } from '../types.ts';
 import { Vector3 } from 'three';
+import { AngularBond } from './AngularBond.ts';
+import { TorsionalBond } from './TorsionalBond.ts';
 
 export class Molecule implements MoleculeInterface {
   name: string;
   atoms: Atom[];
   radialBonds: RadialBond[];
+  angularBonds: AngularBond[];
+  torsionalBonds: TorsionalBond[];
   center: Vector3;
 
   url?: string;
@@ -19,10 +23,12 @@ export class Molecule implements MoleculeInterface {
   excluded?: boolean;
   metadata?: any;
 
-  constructor(name: string, atoms: Atom[], radialBonds: RadialBond[]) {
+  constructor(name: string, atoms: Atom[]) {
     this.name = name;
     this.atoms = atoms;
-    this.radialBonds = radialBonds;
+    this.radialBonds = [];
+    this.angularBonds = [];
+    this.torsionalBonds = [];
     this.center = new Vector3();
   }
 
@@ -36,14 +42,37 @@ export class Molecule implements MoleculeInterface {
       newAtoms.push(clone);
     }
     const newRadialBonds: RadialBond[] = [];
-    if (molecule.radialBonds) {
+    if (molecule.radialBonds && molecule.radialBonds.length > 0) {
       for (const b of molecule.radialBonds) {
         const a1 = map.get(b.atom1.index);
         const a2 = map.get(b.atom2.index);
         if (a1 && a2) newRadialBonds.push(new RadialBond(a1, a2));
       }
     }
-    return new Molecule(molecule.name, newAtoms, newRadialBonds);
+    const newAngularBonds: AngularBond[] = [];
+    if (molecule.angularBonds && molecule.angularBonds.length > 0) {
+      for (const b of molecule.angularBonds) {
+        const a1 = map.get(b.atom1.index);
+        const a2 = map.get(b.atom2.index);
+        const a3 = map.get(b.atom3.index);
+        if (a1 && a2 && a3) newAngularBonds.push(new AngularBond(a1, a2, a3));
+      }
+    }
+    const newTorsionalBonds: TorsionalBond[] = [];
+    if (molecule.torsionalBonds && molecule.torsionalBonds.length > 0) {
+      for (const b of molecule.torsionalBonds) {
+        const a1 = map.get(b.atom1.index);
+        const a2 = map.get(b.atom2.index);
+        const a3 = map.get(b.atom3.index);
+        const a4 = map.get(b.atom4.index);
+        if (a1 && a2 && a3 && a4) newTorsionalBonds.push(new TorsionalBond(a1, a2, a3, a4));
+      }
+    }
+    const mol = new Molecule(molecule.name, newAtoms);
+    mol.radialBonds = newRadialBonds;
+    mol.angularBonds = newAngularBonds;
+    mol.torsionalBonds = newTorsionalBonds;
+    return mol;
   }
 
   updateCenter() {

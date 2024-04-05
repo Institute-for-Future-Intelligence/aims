@@ -314,11 +314,15 @@ const DynamicsSettings = React.memo(() => {
 
   const createInfo = useMemo(() => {
     let atomCount = 0;
-    let bondCount = 0;
+    let radialBondCount = 0;
+    let angularBondCount = 0;
+    let torsionalBondCount = 0;
     const elements: string[] = [];
     if (mdRef?.current) {
       atomCount = mdRef.current.atoms.length;
-      bondCount = mdRef.current.radialBonds.length;
+      radialBondCount = mdRef.current.radialBonds.length;
+      angularBondCount = mdRef.current.angularBonds.length;
+      torsionalBondCount = mdRef.current.torsionalBonds.length;
       for (const a of mdRef.current.atoms) {
         if (!elements.includes(a.elementSymbol)) elements.push(a.elementSymbol);
       }
@@ -336,11 +340,21 @@ const DynamicsSettings = React.memo(() => {
       },
       {
         key: '3',
-        label: t('projectPanel.CovalentBondCount', lang),
-        children: bondCount,
+        label: t('projectPanel.RadialBondCount', lang),
+        children: radialBondCount,
       },
       {
         key: '4',
+        label: t('projectPanel.AngularBondCount', lang),
+        children: angularBondCount,
+      },
+      {
+        key: '5',
+        label: t('projectPanel.TorsionalBondCount', lang),
+        children: torsionalBondCount,
+      },
+      {
+        key: '6',
         label: t('projectPanel.ChemicalElements', lang),
         children: elements.join(', '),
       },

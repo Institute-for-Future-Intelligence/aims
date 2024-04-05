@@ -20,6 +20,7 @@ import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { generateComplex, generateVdwLines, loadMolecule } from './moleculeTools.ts';
 import { Atom } from '../models/Atom.ts';
 import { RadialBond } from '../models/RadialBond.ts';
+import { AngularBond } from '../models/AngularBond.ts';
 import { ModelUtil } from '../models/ModelUtil.ts';
 import Element from '../lib/chem/Element';
 import * as Selector from '../stores/selector';
@@ -42,6 +43,7 @@ import {
 } from '../models/physicalConstants.ts';
 import { UNIT_VECTOR_POS_Y } from '../constants.ts';
 import { useDataStore } from '../stores/commonData.ts';
+import { Triple } from '../models/Triple.ts';
 
 extend({ RCGroup });
 
@@ -140,11 +142,11 @@ const DynamicsViewer = React.memo(
 
     const processResult = (result: any, molecule?: Molecule) => {
       if (!molecule) return;
-      const mol = new Molecule(molecule.name ?? 'unknown', [], []);
+      const mol = new Molecule(molecule.name ?? 'unknown', []);
       const n = result._atoms.length;
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
-        const a = new Atom(atom.index, atom.element.name, atom.position, true);
+        const a = new Atom(atom.index, atom.element.name, atom.position.clone(), true);
         a.sigma = atom.element.radius * LJ_SIGMA_CONVERTER;
         a.mass = atom.element.weight;
         if (molecule.name === 'NaCl') {
@@ -159,19 +161,32 @@ const DynamicsViewer = React.memo(
           a.velocity.copy(molecule.atoms[i].velocity);
           a.force.copy(molecule.atoms[i].force);
         }
-        mol.atoms.push(a);
-      }
-      const k = result._bonds.length;
-      molecule.radialBonds.length = 0;
-      for (let i = 0; i < k; i++) {
-        const bond = result._bonds[i] as BondJS;
-        mol.radialBonds.push(new RadialBond(mol.atoms[bond._left.index], mol.atoms[bond._right.index]));
-        molecule.radialBonds.push(new RadialBond(molecule.atoms[bond._left.index], molecule.atoms[bond._right.index]));
-      }
-      for (let i = 0; i < n; i++) {
-        const a = mol.atoms[i];
         a.initialPosition?.copy(a.position);
         a.initialVelocity?.copy(a.velocity);
+        mol.atoms.push(a);
+      }
+      molecule.radialBonds.length = 0;
+      const k = result._bonds.length;
+      for (let i = 0; i < k; i++) {
+        const bond = result._bonds[i] as BondJS;
+        const length = bond.calcLength();
+        const index1 = bond._left.index;
+        const index2 = bond._right.index;
+        mol.radialBonds.push(new RadialBond(mol.atoms[index1], mol.atoms[index2], length));
+        molecule.radialBonds.push(new RadialBond(molecule.atoms[index1], molecule.atoms[index2], length));
+      }
+      const sequences: Triple[] = ModelUtil.getAngularBondSequences(molecule);
+      if (sequences.length > 0) {
+        for (const t of sequences) {
+          const p1 = result._atoms[t.i1].position;
+          const p2 = result._atoms[t.i2].position;
+          const p3 = result._atoms[t.i3].position;
+          const angle = AngularBond.getAngleFromPositions(p1, p2, p3);
+          mol.angularBonds.push(new AngularBond(mol.atoms[t.i1], mol.atoms[t.i2], mol.atoms[t.i3], angle));
+          molecule.angularBonds.push(
+            new AngularBond(molecule.atoms[t.i1], molecule.atoms[t.i2], molecule.atoms[t.i3], angle),
+          );
+        }
       }
       moleculeMapRef.current.set(molecule, mol);
       if (moleculeMapRef.current.size === testMolecules.length) {

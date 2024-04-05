@@ -38,14 +38,15 @@ export class TorsionalBond {
   strength: number;
   dihedral: number; // equilibrium dihedral angle when the torsional force is zero
 
-  constructor(atom1: Atom, atom2: Atom, atom3: Atom, atom4: Atom) {
+  constructor(atom1: Atom, atom2: Atom, atom3: Atom, atom4: Atom, dihedral?: number) {
     this.atom1 = atom1;
     this.atom2 = atom2;
     this.atom3 = atom3;
     this.atom4 = atom4;
     this.periodicity = 1;
     this.strength = TorsionalBond.DEFAULT_STRENGTH;
-    this.dihedral = TorsionalBond.getDihedral(atom1, atom2, atom3, atom4);
+    // dihedral angle may be zero, so we have to check against the case of zero angle
+    this.dihedral = dihedral !== undefined ? dihedral : TorsionalBond.getDihedral(atom1, atom2, atom3, atom4);
   }
 
   containsAtom(atom: Atom): boolean {

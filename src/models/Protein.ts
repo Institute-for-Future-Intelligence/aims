@@ -18,8 +18,8 @@ export class Protein extends Molecule {
   molecules: MoleculeJS[];
   centerOffset: Vector3;
 
-  constructor(name: string, atoms: Atom[], bonds: RadialBond[]) {
-    super(name, atoms, bonds);
+  constructor(name: string, atoms: Atom[]) {
+    super(name, atoms);
     this.residues = [];
     this.chains = [];
     this.structures = [];

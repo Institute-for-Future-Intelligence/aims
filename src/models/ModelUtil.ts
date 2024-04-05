@@ -5,8 +5,22 @@
 import { Atom } from './Atom.ts';
 import { Molecule } from './Molecule.ts';
 import { UNIT_EV_OVER_KB } from './physicalConstants.ts';
+import { Triple } from './Triple.ts';
 
 export class ModelUtil {
+  static getAngularBondSequences(molecule: Molecule): Triple[] {
+    if (molecule.name === 'Water') {
+      return [{ i1: 1, i2: 0, i3: 2 }];
+    }
+    if (molecule.name === 'Carbon Dioxide') {
+      return [{ i1: 0, i2: 2, i3: 1 }];
+    }
+    if (molecule.name === 'Ozone') {
+      return [{ i1: 1, i2: 0, i3: 2 }];
+    }
+    return [];
+  }
+
   static reconstructMoleculesFromFirestore(m: any) {
     if (!m && !Array.isArray(m)) return [];
     const array: Molecule[] = [];

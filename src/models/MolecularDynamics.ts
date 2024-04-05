@@ -48,13 +48,15 @@ export class MolecularDynamics {
     this.moleculeCount = molecules.length;
     this.atoms = [];
     this.radialBonds = [];
+    this.angularBonds = [];
+    this.torsionalBonds = [];
     for (const m of molecules) {
       this.atoms.push(...m.atoms);
       this.radialBonds.push(...m.radialBonds);
+      this.angularBonds.push(...m.angularBonds);
+      this.torsionalBonds.push(...m.torsionalBonds);
     }
     this.nonBondedInteractions = new NonBondedInteractions(this.atoms, this.radialBonds);
-    this.angularBonds = [];
-    this.torsionalBonds = [];
     this.container = { ...container };
     this.potentialEnergy = 0;
     this.kineticEnergy = 0;

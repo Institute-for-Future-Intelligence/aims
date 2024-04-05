@@ -11,7 +11,7 @@ import { BondType } from '../constants';
 import { GF_CONVERSION_CONSTANT } from './physicalConstants.ts';
 
 export class RadialBond {
-  static readonly DEFAULT_STRENGTH = 5;
+  static readonly DEFAULT_STRENGTH = 10;
 
   atom1: Atom;
   atom2: Atom;
@@ -19,11 +19,11 @@ export class RadialBond {
   length: number; // equilibrium length when the radial force is zero
   type: BondType;
 
-  constructor(atom1: Atom, atom2: Atom) {
+  constructor(atom1: Atom, atom2: Atom, length?: number) {
     this.atom1 = atom1;
     this.atom2 = atom2;
     this.strength = RadialBond.DEFAULT_STRENGTH;
-    this.length = atom1.distanceTo(atom2);
+    this.length = length ?? atom1.distanceTo(atom2);
     this.type = BondType.SINGLE_BOND;
   }
 
@@ -51,7 +51,7 @@ export class RadialBond {
     const dy = this.atom2.position.y - this.atom1.position.y;
     const dz = this.atom2.position.z - this.atom1.position.z;
     let r = Math.hypot(dx, dy, dz);
-    const s = (this.strength * GF_CONVERSION_CONSTANT * (r - length)) / r;
+    const s = (this.strength * GF_CONVERSION_CONSTANT * (r - this.length)) / r;
     const inverseMass1 = s / this.atom1.mass;
     const inverseMass2 = s / this.atom2.mass;
     this.atom1.force.x += dx * inverseMass1;
@@ -60,7 +60,7 @@ export class RadialBond {
     this.atom2.force.x -= dx * inverseMass2;
     this.atom2.force.y -= dy * inverseMass2;
     this.atom2.force.z -= dz * inverseMass2;
-    r -= length;
+    r -= this.length;
     return 0.5 * this.strength * r * r;
   }
 }

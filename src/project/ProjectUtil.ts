@@ -146,7 +146,7 @@ export class ProjectUtil {
   static getTitles(hidden: string[], l: { lng: string }): string[] {
     const a: string[] = [];
     if (!hidden?.includes('atomCount')) a.push(i18n.t('projectPanel.AtomCount', l));
-    if (!hidden?.includes('bondCount')) a.push(i18n.t('projectPanel.CovalentBondCount', l));
+    if (!hidden?.includes('bondCount')) a.push(i18n.t('projectPanel.BondCount', l));
     if (!hidden?.includes('molecularMass')) a.push(i18n.t('projectPanel.MolecularMass', l));
     if (!hidden?.includes('logP')) a.push('log P');
     if (!hidden?.includes('hydrogenBondDonorCount')) a.push(i18n.t('projectPanel.HydrogenBondDonorCountShort', l));
@@ -164,7 +164,7 @@ export class ProjectUtil {
 
   static getPropertyName(property: string, l: { lng: string }): string | undefined {
     if (property === 'atomCount') return i18n.t('projectPanel.AtomCount', l);
-    if (property === 'bondCount') return i18n.t('projectPanel.CovalentBondCount', l);
+    if (property === 'bondCount') return i18n.t('projectPanel.BondCount', l);
     if (property === 'molecularMass') return i18n.t('projectPanel.MolecularMass', l);
     if (property === 'logP') return 'log P';
     if (property === 'hydrogenBondDonorCount') return i18n.t('projectPanel.HydrogenBondDonorCountShort', l);

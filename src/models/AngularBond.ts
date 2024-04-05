@@ -15,12 +15,17 @@ export class AngularBond {
 
   /* return the angle a1-a2-a3 (a2 is in the middle) */
   static getAngle(a1: Atom, a2: Atom, a3: Atom) {
-    const x21 = a2.position.x - a1.position.x;
-    const y21 = a2.position.y - a1.position.y;
-    const z21 = a2.position.z - a1.position.z;
-    const x23 = a2.position.x - a3.position.x;
-    const y23 = a2.position.y - a3.position.y;
-    const z23 = a2.position.z - a3.position.z;
+    return AngularBond.getAngleFromPositions(a1.position, a2.position, a3.position);
+  }
+
+  /* return the angle p1-p2-p3 (p2 is in the middle) */
+  static getAngleFromPositions(p1: Vector3, p2: Vector3, p3: Vector3) {
+    const x21 = p2.x - p1.x;
+    const y21 = p2.y - p1.y;
+    const z21 = p2.z - p1.z;
+    const x23 = p2.x - p3.x;
+    const y23 = p2.y - p3.y;
+    const z23 = p2.z - p3.z;
     const xx = y21 * z23 - z21 * y23;
     const yy = z21 * x23 - x21 * z23;
     const zz = x21 * y23 - y21 * x23;
@@ -33,12 +38,12 @@ export class AngularBond {
   strength: number;
   angle: number; // equilibrium angle when the angular force is zero
 
-  constructor(atom1: Atom, atom2: Atom, atom3: Atom) {
+  constructor(atom1: Atom, atom2: Atom, atom3: Atom, angle?: number) {
     this.atom1 = atom1;
     this.atom2 = atom2;
     this.atom3 = atom3;
     this.strength = AngularBond.DEFAULT_STRENGTH;
-    this.angle = AngularBond.getAngle(atom1, atom2, atom3);
+    this.angle = angle !== undefined ? angle : AngularBond.getAngle(atom1, atom2, atom3);
   }
 
   containsAtom(atom: Atom): boolean {
