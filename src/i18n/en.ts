@@ -262,6 +262,7 @@ export const i18n_en = {
       OneColorForEachMolecule: 'One color for each molecule',
       GraphScreenshot: 'Take a screenshot of the graph',
       ChemicalElements: 'Chemical Elements',
+      ChemicalComposition: 'Chemical Composition',
       AtomCount: 'Atom Count',
       BondCount: 'Bond Count',
       RadialBondCount: 'Radial Bond Count',

@@ -317,15 +317,33 @@ const DynamicsSettings = React.memo(() => {
     let radialBondCount = 0;
     let angularBondCount = 0;
     let torsionalBondCount = 0;
-    const elements: string[] = [];
+    let elementString: string = '';
+    let compositionString: string = '';
+    const elements: Map<string, number> = new Map<string, number>();
     if (mdRef?.current) {
       atomCount = mdRef.current.atoms.length;
       radialBondCount = mdRef.current.radialBonds.length;
       angularBondCount = mdRef.current.angularBonds.length;
       torsionalBondCount = mdRef.current.torsionalBonds.length;
       for (const a of mdRef.current.atoms) {
-        if (!elements.includes(a.elementSymbol)) elements.push(a.elementSymbol);
+        let count = elements.get(a.elementSymbol);
+        if (count === undefined) {
+          count = 1;
+        } else {
+          count++;
+        }
+        elements.set(a.elementSymbol, count);
       }
+      for (const e of elements.keys()) {
+        const elementCount = elements.get(e);
+        if (elementCount) {
+          elementString += e + '(' + elementCount + '), ';
+          compositionString += e + '(' + Math.round((100 * elementCount) / atomCount) + '%), ';
+        }
+      }
+      if (elementString.length > 2) elementString = elementString.substring(0, elementString.length - 2);
+      if (compositionString.length > 2)
+        compositionString = compositionString.substring(0, compositionString.length - 2);
     }
     const items: DescriptionsProps['items'] = [
       {
@@ -356,11 +374,16 @@ const DynamicsSettings = React.memo(() => {
       {
         key: '6',
         label: t('projectPanel.ChemicalElements', lang),
-        children: elements.join(', '),
+        children: elementString,
+      },
+      {
+        key: '7',
+        label: t('projectPanel.ChemicalComposition', lang),
+        children: compositionString,
       },
     ];
     return (
-      <div style={{ width: '200px' }}>
+      <div style={{ width: '300px' }}>
         <Descriptions
           style={{ paddingTop: '10px' }}
           contentStyle={{ fontSize: '12px' }}
