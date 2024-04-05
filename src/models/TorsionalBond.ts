@@ -14,16 +14,21 @@ import { Vector3 } from 'three';
 import { GF_CONVERSION_CONSTANT, MIN_SIN_THETA } from './physicalConstants.ts';
 
 export class TorsionalBond {
-  static readonly DEFAULT_STRENGTH = 1;
+  static readonly DEFAULT_STRENGTH = 10;
 
   /* return the dihedral angle between a2-a1 vector and a3-a4 vector (a2 and a3 are in the middle) */
   static getDihedral(a1: Atom, a2: Atom, a3: Atom, a4: Atom) {
-    const x21 = a2.position.x - a1.position.x;
-    const y21 = a2.position.y - a1.position.y;
-    const z21 = a2.position.z - a1.position.z;
-    const x34 = a3.position.x - a4.position.x;
-    const y34 = a3.position.y - a4.position.y;
-    const z34 = a3.position.z - a4.position.z;
+    return TorsionalBond.getDihedralFromPositions(a1.position, a2.position, a3.position, a4.position);
+  }
+
+  /* return the dihedral angle between p2-p1 vector and p3-p4 vector (p2 and p3 are in the middle) */
+  static getDihedralFromPositions(p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3) {
+    const x21 = p2.x - p1.x;
+    const y21 = p2.y - p1.y;
+    const z21 = p2.z - p1.z;
+    const x34 = p3.x - p4.x;
+    const y34 = p3.y - p4.y;
+    const z34 = p3.z - p4.z;
     const xx = y21 * z34 - z21 * y34;
     const yy = z21 * x34 - x21 * z34;
     const zz = x21 * y34 - y21 * x34;

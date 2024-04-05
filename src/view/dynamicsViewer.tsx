@@ -44,6 +44,10 @@ import {
 import { UNIT_VECTOR_POS_Y } from '../constants.ts';
 import { useDataStore } from '../stores/commonData.ts';
 import { Triple } from '../models/Triple.ts';
+import { getAngularBondDefinition } from '../models/AngularBondDefinition.ts';
+import { Quadruple } from '../models/Quadruple.ts';
+import { getTorsionalBondDefinition } from '../models/TorsionalBondDefinition.ts';
+import { TorsionalBond } from '../models/TorsionalBond.ts';
 
 extend({ RCGroup });
 
@@ -175,16 +179,38 @@ const DynamicsViewer = React.memo(
         mol.radialBonds.push(new RadialBond(mol.atoms[index1], mol.atoms[index2], length));
         molecule.radialBonds.push(new RadialBond(molecule.atoms[index1], molecule.atoms[index2], length));
       }
-      const sequences: Triple[] = ModelUtil.getAngularBondSequences(molecule);
-      if (sequences.length > 0) {
-        for (const t of sequences) {
-          const p1 = result._atoms[t.i1].position;
-          const p2 = result._atoms[t.i2].position;
-          const p3 = result._atoms[t.i3].position;
+      const aBonds: Triple[] = getAngularBondDefinition(molecule.name);
+      if (aBonds.length > 0) {
+        for (const x of aBonds) {
+          const p1 = result._atoms[x.i1].position;
+          const p2 = result._atoms[x.i2].position;
+          const p3 = result._atoms[x.i3].position;
           const angle = AngularBond.getAngleFromPositions(p1, p2, p3);
-          mol.angularBonds.push(new AngularBond(mol.atoms[t.i1], mol.atoms[t.i2], mol.atoms[t.i3], angle));
+          mol.angularBonds.push(new AngularBond(mol.atoms[x.i1], mol.atoms[x.i2], mol.atoms[x.i3], angle));
           molecule.angularBonds.push(
-            new AngularBond(molecule.atoms[t.i1], molecule.atoms[t.i2], molecule.atoms[t.i3], angle),
+            new AngularBond(molecule.atoms[x.i1], molecule.atoms[x.i2], molecule.atoms[x.i3], angle),
+          );
+        }
+      }
+      const tBonds: Quadruple[] = getTorsionalBondDefinition(molecule.name);
+      if (tBonds.length > 0) {
+        for (const x of tBonds) {
+          const p1 = result._atoms[x.i1].position;
+          const p2 = result._atoms[x.i2].position;
+          const p3 = result._atoms[x.i3].position;
+          const p4 = result._atoms[x.i4].position;
+          const dihedral = TorsionalBond.getDihedralFromPositions(p1, p2, p3, p4);
+          mol.torsionalBonds.push(
+            new TorsionalBond(mol.atoms[x.i1], mol.atoms[x.i2], mol.atoms[x.i3], mol.atoms[x.i4], dihedral),
+          );
+          molecule.torsionalBonds.push(
+            new TorsionalBond(
+              molecule.atoms[x.i1],
+              molecule.atoms[x.i2],
+              molecule.atoms[x.i3],
+              molecule.atoms[x.i4],
+              dihedral,
+            ),
           );
         }
       }
