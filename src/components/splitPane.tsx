@@ -3,6 +3,7 @@
  */
 import React, { useCallback, useEffect, useRef } from 'react';
 import { throttle } from 'lodash';
+import { useRefStore } from '../stores/commonRef';
 
 interface SplitPaneProps {
   hideGallery: boolean;
@@ -10,15 +11,16 @@ interface SplitPaneProps {
   defaultSize?: number; // left side: 0 - 100 %
   minWidth?: number; // left side: 0 - 100 %
   maxWidth?: number; // left side: 0 - 100 %
+  wait?: number; // throttle wait time
   onChange?: (size: number) => void;
 }
 
 const SplitPane = React.memo(
-  ({ hideGallery, defaultSize = 50, minWidth = 25, maxWidth = 75, children, onChange }: SplitPaneProps) => {
+  ({ hideGallery, defaultSize = 50, minWidth = 25, maxWidth = 75, children, wait = 50, onChange }: SplitPaneProps) => {
     const [leftChild, rightChild] = children;
     const pointerDownRef = useRef(false);
 
-    const setPercentWidth = (pos: number) => {
+    const updateCSSPercentWidth = (pos: number) => {
       const sp = document.querySelector('.split-pane') as any;
       if (sp) {
         sp.style.setProperty('--percentWidth', pos + '%');
@@ -34,17 +36,17 @@ const SplitPane = React.memo(
         if (!pointerDownRef.current) return;
 
         const percentWidth = Math.max(minWidth, Math.min(maxWidth, (e.clientX / window.innerWidth) * 100));
-        setPercentWidth(percentWidth);
+        updateCSSPercentWidth(percentWidth);
 
         if (onChange) {
           onChange(percentWidth);
         }
-      }, 50),
+      }, wait),
       [],
     );
 
     useEffect(() => {
-      setPercentWidth(defaultSize);
+      updateCSSPercentWidth(defaultSize);
     }, []);
 
     useEffect(() => {
@@ -57,9 +59,9 @@ const SplitPane = React.memo(
 
     useEffect(() => {
       if (!hideGallery) {
-        setPercentWidth(0);
+        updateCSSPercentWidth(0);
       } else {
-        setPercentWidth(defaultSize);
+        updateCSSPercentWidth(defaultSize);
       }
     }, [hideGallery]);
 

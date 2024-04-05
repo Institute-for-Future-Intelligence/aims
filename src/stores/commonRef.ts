@@ -12,15 +12,6 @@ import { MolecularDynamics } from '../models/MolecularDynamics.ts';
 
 const v = new Vector2();
 
-const resizeCanvas = (canvas: { gl: WebGLRenderer; camera: PerspectiveCamera }, percentSize: number) => {
-  const { gl, camera } = canvas;
-  gl.getSize(v);
-  const newWidth = (percentSize * document.body.clientWidth) / 100;
-  gl.setSize(newWidth, v.y);
-  camera.aspect = newWidth / v.y;
-  camera.updateProjectionMatrix();
-};
-
 export interface RefStoreState {
   selectNone: () => void;
   cameraRef: RefObject<Camera | undefined> | null;
@@ -34,8 +25,8 @@ export interface RefStoreState {
   clickPointRef: RefObject<Vector3> | null;
   molecularDynamicsRef: RefObject<MolecularDynamics> | null;
   chamberViewerCanvas: { gl: WebGLRenderer; camera: PerspectiveCamera } | null;
-  galleryViewerCanvas: { gl: WebGLRenderer; camera: PerspectiveCamera } | null;
-  resizeCanvases: (percentSize: number) => void;
+  galleryViewerCanvas: { gl: WebGLRenderer } | null;
+  resizeCanvases: (percentWidth: number) => void;
 }
 
 export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
@@ -53,16 +44,24 @@ export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
     molecularDynamicsRef: null,
     chamberViewerCanvas: null,
     galleryViewerCanvas: null,
-    resizeCanvases(percentSize) {
+    resizeCanvases(percentWidth) {
       const chamberViewerCanvas = get().chamberViewerCanvas;
       const galleryViewerCanvas = get().galleryViewerCanvas;
+
       if (chamberViewerCanvas) {
-        resizeCanvas(chamberViewerCanvas, 100 - percentSize);
+        const { gl, camera } = chamberViewerCanvas;
+        const newWidth = ((100 - percentWidth) * window.innerWidth) / 100;
+        gl.getSize(v);
+        gl.setSize(newWidth, v.y);
+        camera.aspect = newWidth / v.y;
+        camera.updateProjectionMatrix();
         invalidate();
       }
       if (galleryViewerCanvas) {
-        resizeCanvas(galleryViewerCanvas, percentSize);
-        invalidate();
+        const { gl } = galleryViewerCanvas;
+        const newWidth = (percentWidth * window.innerWidth) / 100;
+        gl.getSize(v);
+        gl.setSize(newWidth, v.y);
       }
     },
   };

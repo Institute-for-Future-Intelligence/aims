@@ -38,7 +38,6 @@ import { Filter, FilterType } from '../Filter.ts';
 import { drugMolecules, getMolecule, commonMolecules } from '../internalDatabase.ts';
 import { CartesianGrid, Cell, Dot, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
-import { View } from '@react-three/drei';
 import { Canvas, useThree } from '@react-three/fiber';
 import ScissorBox from './scissorBox.tsx';
 import ProjectSettingsContent from './projectSettingsContent.tsx';
@@ -47,10 +46,11 @@ import CoordinateSystemSettingsContent from './coordinateSystemSettingsContent.t
 import GraphSettingsContent from './graphSettingsContent.tsx';
 import { evaluate, MathExpression } from 'mathjs';
 import { useRefStore } from '../stores/commonRef.ts';
-import { PerspectiveCamera } from 'three';
+import { Vector2 } from 'three';
+import { View } from './View.tsx';
 
 export interface ProjectGalleryProps {
-  relativeWidth: number; // (0, 1)
+  relativeWidth: number; // (0, 1);
 }
 
 const Container = styled.div`
@@ -106,6 +106,8 @@ const PropertiesHeader = styled.div`
   font-size: 14px;
 `;
 
+const v = new Vector2();
+
 const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const setCommonStore = useStore(Selector.set);
   const user = useStore(Selector.user);
@@ -149,7 +151,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
   const dragAndDropMolecule = usePrimitiveStore(Selector.dragAndDropMolecule);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const [updateHiddenFlag, setUpdateHiddenFlag] = useState<boolean>(false);
   const [moleculeName, setMoleculeName] = useState<string>(
@@ -170,7 +172,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const descriptionChangedRef = useRef<boolean>(false);
   const descriptionExpandedRef = useRef<boolean>(false);
   const sortedMoleculesRef = useRef<MoleculeInterface[]>([]); // store a sorted copy of molecules
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null!);
 
   useEffect(() => {
     sortedMoleculesRef.current = [];
@@ -220,12 +222,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const totalWidth = Math.round(window.innerWidth * relativeWidth);
   const viewWidth = (totalWidth - gridGutter * (numberOfColumns + 2)) / numberOfColumns;
   const viewHeight = (viewWidth * 2) / 3;
-
-  const gridTemplateColumns = useMemo(() => {
-    let s = '';
-    for (let i = 0; i < numberOfColumns; i++) s += viewWidth + 'px ';
-    return s;
-  }, [numberOfColumns, viewWidth]);
 
   const closeGallery = () => {
     setCommonStore((state) => {
@@ -678,31 +674,40 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           onChange={(e) => {
             descriptionExpandedRef.current = e.length > 0;
             setUpdateFlag(!updateFlag);
+
+            const canvas = useRefStore.getState().galleryViewerCanvas;
+            if (canvas) {
+              const { gl } = canvas;
+              gl.getSize(v);
+              if (e.length > 0) {
+                gl.setSize(v.x, v.y - 82);
+              } else {
+                gl.setSize(v.x, v.y + 82);
+              }
+            }
           }}
         />
-        <div style={{ background: 'white', flexGrow: 1 }}>
+        <div style={{ background: 'white', flexGrow: 1, position: 'relative' }}>
           {sortedMoleculesRef.current.length === 0 && <Empty description={t('projectPanel.NoMolecule', lang)} />}
           {/* this div has no mouse listener to avoid deselecting a molecule when scrolling */}
-          <div
-            style={{
-              overflowX: 'hidden',
-              overflowY: 'auto',
-            }}
-          >
+          {sortedMoleculesRef.current.length > 0 && (
             <div
+              ref={containerRef}
               style={{
                 width: '100%',
                 height: totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80),
                 paddingTop: '8px',
                 paddingLeft: '8px',
-                position: 'relative',
+                paddingBottom: '8px',
                 background: 'white',
                 display: 'flex',
                 flexWrap: 'wrap',
                 alignContent: 'flex-start',
-                gap: '5px',
+                gap: '8px',
+                overflowX: 'hidden',
+                overflowY: 'auto',
+                scrollbarWidth: 'thin',
               }}
-              ref={containerRef}
               onMouseDown={() => {
                 setCommonStore((state) => {
                   state.projectState.selectedMolecule = null;
@@ -719,10 +724,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     // import class name, change with css class together if needed
                     className="drie-view"
                     key={index}
-                    // @ts-expect-error: track is deprecated
-                    track={null}
-                    index={1}
-                    visible={true}
                     style={{
                       position: 'relative',
                       height: viewHeight + 'px',
@@ -737,6 +738,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                           ? '1px dashed gray'
                           : '1px solid gray',
                       opacity: mol?.excluded ? 0.25 : 1,
+                      visibility: loading ? 'hidden' : 'visible',
                     }}
                   >
                     <ScissorBox
@@ -755,25 +757,22 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 );
               })}
 
-              {containerRef.current && (
-                <Canvas
-                  eventSource={containerRef.current}
-                  style={{
-                    position: 'absolute',
-                    borderBottom: '1px solid gray',
-                    borderBottomStyle: 'dashed',
-                    width: '100%',
-                    height:
-                      ((10 * numberOfColumns) / 2 + viewHeight) *
-                        Math.ceil(sortedMoleculesRef.current.length / numberOfColumns) +
-                      'px',
-                  }}
-                >
-                  <View.Port />
-                  <Resizer />
-                </Canvas>
-              )}
-              {/*FIXME: This doesn't work properly yet */}
+              <Canvas
+                eventSource={containerRef}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  borderBottom: '1px solid grey',
+                  borderBottomStyle: 'dashed',
+                  height: totalHeight / 2 - 80,
+                  visibility: loading ? 'hidden' : 'visible',
+                }}
+              >
+                <View.Port />
+                <Resizer />
+              </Canvas>
+
               {loading && (
                 <Spin
                   indicator={
@@ -782,340 +781,343 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                         position: 'absolute',
                         fontSize: 100,
                         right: totalWidth / 2 - 50,
-                        bottom: (totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80)) / 2 - 50,
+                        top: (totalHeight / 2 - (descriptionExpandedRef.current ? 160 : 80)) / 2 - 50,
                       }}
                     />
                   }
                 />
               )}
             </div>
-          </div>
-
-          {/*parallel coordinates*/}
-
-          {data.length > 0 && graphType === GraphType.PARALLEL_COORDINATES && (
-            <PropertiesHeader
-              // the following disables keyboard focus
-              onMouseDown={(e) => e.preventDefault()}
-            >
-              <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
-              <span>
-                <Popover
-                  title={
-                    <div onClick={(e) => e.stopPropagation()}>
-                      <CarryOutOutlined /> {t('projectPanel.ChooseProperties', lang)}
-                    </div>
-                  }
-                  onOpenChange={(visible) => {
-                    // TODO
-                  }}
-                  content={
-                    <PropertiesSelectionContent updateHiddenFlag={() => setUpdateHiddenFlag(!updateHiddenFlag)} />
-                  }
-                >
-                  <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                    <CarryOutOutlined style={{ fontSize: '24px', color: 'gray' }} />
-                  </Button>
-                </Popover>
-                <Popover
-                  title={
-                    <div onClick={(e) => e.stopPropagation()}>
-                      <BgColorsOutlined /> {t('projectPanel.ChooseDataColoring', lang)}
-                    </div>
-                  }
-                  content={
-                    <div>
-                      <Radio.Group
-                        onChange={(e) => {
-                          selectDataColoring(e.target.value);
-                        }}
-                        value={projectDataColoring ?? DataColoring.ALL}
-                      >
-                        <Radio style={{ fontSize: '12px' }} value={DataColoring.ALL}>
-                          {t('projectPanel.SameColorForAllMolecules', lang)}
-                        </Radio>
-                        <br />
-                        <Radio style={{ fontSize: '12px' }} value={DataColoring.INDIVIDUALS}>
-                          {t('projectPanel.OneColorForEachMolecule', lang)}
-                        </Radio>
-                      </Radio.Group>
-                    </div>
-                  }
-                >
-                  <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                    <BgColorsOutlined style={{ fontSize: '24px', color: 'gray' }} />
-                  </Button>
-                </Popover>
-                <Button
-                  style={{ border: 'none', paddingRight: '20px', background: 'white' }}
-                  onClick={() => {
-                    saveSvg('parallel-coordinates')
-                      .then(() => {
-                        showInfo(t('message.ScreenshotSaved', lang));
-                        if (loggable) {
-                          setCommonStore((state) => {
-                            state.actionInfo = {
-                              name: 'Take Screenshot of Property Space',
-                              timestamp: new Date().getTime(),
-                            };
-                          });
-                        }
-                      })
-                      .catch((reason) => {
-                        showError(reason);
-                      });
-                  }}
-                >
-                  <CameraOutlined
-                    style={{ fontSize: '24px', color: 'gray' }}
-                    title={t('projectPanel.GraphScreenshot', lang)}
-                  />
-                </Button>
-              </span>
-            </PropertiesHeader>
           )}
-          {data.length > 0 && graphType === GraphType.PARALLEL_COORDINATES && (
-            <ParallelCoordinates
-              id={'parallel-coordinates'}
-              width={relativeWidth * window.innerWidth}
-              height={totalHeight / 2 - 130}
-              data={data}
-              types={types}
-              minima={minima}
-              maxima={maxima}
-              steps={steps}
-              variables={variables}
-              titles={titles}
-              units={units}
-              digits={digits}
-              tickIntegers={tickIntegers}
-              filters={filters}
-              hover={(i: number) => {
-                usePrimitiveStore.getState().set((state) => {
-                  for (const [index, m] of projectMolecules.entries()) {
-                    if (index === i) {
-                      state.hoveredMolecule = m;
-                      break;
+
+          {/* plots */}
+          <div style={{ zIndex: 1, position: 'relative', backgroundColor: 'white' }}>
+            {/*parallel coordinates*/}
+
+            {data.length > 0 && graphType === GraphType.PARALLEL_COORDINATES && (
+              <PropertiesHeader
+                // the following disables keyboard focus
+                onMouseDown={(e) => e.preventDefault()}
+              >
+                <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
+                <span>
+                  <Popover
+                    title={
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <CarryOutOutlined /> {t('projectPanel.ChooseProperties', lang)}
+                      </div>
                     }
-                  }
-                });
-              }}
-              hoveredIndex={projectMolecules && hoveredMolecule ? projectMolecules.indexOf(hoveredMolecule) : -1}
-              selectedIndex={projectMolecules && selectedMolecule ? projectMolecules.indexOf(selectedMolecule) : -1}
-            />
-          )}
+                    onOpenChange={(visible) => {
+                      // TODO
+                    }}
+                    content={
+                      <PropertiesSelectionContent updateHiddenFlag={() => setUpdateHiddenFlag(!updateHiddenFlag)} />
+                    }
+                  >
+                    <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                      <CarryOutOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                    </Button>
+                  </Popover>
+                  <Popover
+                    title={
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <BgColorsOutlined /> {t('projectPanel.ChooseDataColoring', lang)}
+                      </div>
+                    }
+                    content={
+                      <div>
+                        <Radio.Group
+                          onChange={(e) => {
+                            selectDataColoring(e.target.value);
+                          }}
+                          value={projectDataColoring ?? DataColoring.ALL}
+                        >
+                          <Radio style={{ fontSize: '12px' }} value={DataColoring.ALL}>
+                            {t('projectPanel.SameColorForAllMolecules', lang)}
+                          </Radio>
+                          <br />
+                          <Radio style={{ fontSize: '12px' }} value={DataColoring.INDIVIDUALS}>
+                            {t('projectPanel.OneColorForEachMolecule', lang)}
+                          </Radio>
+                        </Radio.Group>
+                      </div>
+                    }
+                  >
+                    <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                      <BgColorsOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                    </Button>
+                  </Popover>
+                  <Button
+                    style={{ border: 'none', paddingRight: '20px', background: 'white' }}
+                    onClick={() => {
+                      saveSvg('parallel-coordinates')
+                        .then(() => {
+                          showInfo(t('message.ScreenshotSaved', lang));
+                          if (loggable) {
+                            setCommonStore((state) => {
+                              state.actionInfo = {
+                                name: 'Take Screenshot of Property Space',
+                                timestamp: new Date().getTime(),
+                              };
+                            });
+                          }
+                        })
+                        .catch((reason) => {
+                          showError(reason);
+                        });
+                    }}
+                  >
+                    <CameraOutlined
+                      style={{ fontSize: '24px', color: 'gray' }}
+                      title={t('projectPanel.GraphScreenshot', lang)}
+                    />
+                  </Button>
+                </span>
+              </PropertiesHeader>
+            )}
+            {data.length > 0 && graphType === GraphType.PARALLEL_COORDINATES && (
+              <ParallelCoordinates
+                id={'parallel-coordinates'}
+                width={relativeWidth * window.innerWidth}
+                height={totalHeight / 2 - 130}
+                data={data}
+                types={types}
+                minima={minima}
+                maxima={maxima}
+                steps={steps}
+                variables={variables}
+                titles={titles}
+                units={units}
+                digits={digits}
+                tickIntegers={tickIntegers}
+                filters={filters}
+                hover={(i: number) => {
+                  usePrimitiveStore.getState().set((state) => {
+                    for (const [index, m] of projectMolecules.entries()) {
+                      if (index === i) {
+                        state.hoveredMolecule = m;
+                        break;
+                      }
+                    }
+                  });
+                }}
+                hoveredIndex={projectMolecules && hoveredMolecule ? projectMolecules.indexOf(hoveredMolecule) : -1}
+                selectedIndex={projectMolecules && selectedMolecule ? projectMolecules.indexOf(selectedMolecule) : -1}
+              />
+            )}
 
-          {/*scatter plot*/}
+            {/*scatter plot*/}
 
-          {data.length > 0 && graphType === GraphType.SCATTER_PLOT && (
-            <PropertiesHeader>
-              <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Relationship', lang)}</span>
-              <span>
-                <Popover
-                  title={
-                    <div onClick={(e) => e.stopPropagation()}>
-                      <LineChartOutlined /> {t('projectPanel.CoordinateSystemSettings', lang)}
-                    </div>
-                  }
-                  content={
-                    <CoordinateSystemSettingsContent
-                      xAxisNameScatterPlot={xAxisNameScatterPlot}
-                      yAxisNameScatterPlot={yAxisNameScatterPlot}
-                      xFormula={xFormula}
-                      yFormula={yFormula}
-                      xMinScatterPlot={xMinScatterPlot}
-                      xMaxScatterPlot={xMaxScatterPlot}
-                      yMinScatterPlot={yMinScatterPlot}
-                      yMaxScatterPlot={yMaxScatterPlot}
+            {data.length > 0 && graphType === GraphType.SCATTER_PLOT && (
+              <PropertiesHeader>
+                <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Relationship', lang)}</span>
+                <span>
+                  <Popover
+                    title={
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <LineChartOutlined /> {t('projectPanel.CoordinateSystemSettings', lang)}
+                      </div>
+                    }
+                    content={
+                      <CoordinateSystemSettingsContent
+                        xAxisNameScatterPlot={xAxisNameScatterPlot}
+                        yAxisNameScatterPlot={yAxisNameScatterPlot}
+                        xFormula={xFormula}
+                        yFormula={yFormula}
+                        xMinScatterPlot={xMinScatterPlot}
+                        xMaxScatterPlot={xMaxScatterPlot}
+                        yMinScatterPlot={yMinScatterPlot}
+                        yMaxScatterPlot={yMaxScatterPlot}
+                      />
+                    }
+                  >
+                    <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                      <LineChartOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                    </Button>
+                  </Popover>
+                  <Popover
+                    title={
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <TableOutlined /> {t('projectPanel.ScatterPlotSettings', lang)}
+                      </div>
+                    }
+                    content={<GraphSettingsContent />}
+                  >
+                    <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                      <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                    </Button>
+                  </Popover>
+                  <Button
+                    style={{ border: 'none', paddingRight: '20px', background: 'white' }}
+                    onClick={() => {
+                      saveSvg('scatter-plot')
+                        .then(() => {
+                          showInfo(t('message.ScreenshotSaved', lang));
+                          if (loggable) {
+                            setCommonStore((state) => {
+                              state.actionInfo = {
+                                name: 'Take Screenshot of the Scatter Plot',
+                                timestamp: new Date().getTime(),
+                              };
+                            });
+                          }
+                        })
+                        .catch((reason) => {
+                          showError(reason);
+                        });
+                    }}
+                  >
+                    <CameraOutlined
+                      style={{ fontSize: '24px', color: 'gray' }}
+                      title={t('projectPanel.GraphScreenshot', lang)}
+                    />
+                  </Button>
+                </span>
+              </PropertiesHeader>
+            )}
+            {data.length > 0 && graphType === GraphType.SCATTER_PLOT && (
+              <ScatterChart
+                id={'scatter-plot'}
+                width={relativeWidth * window.innerWidth}
+                height={totalHeight / 2 - 130}
+                margin={{
+                  top: 10,
+                  right: 40,
+                  bottom: 20,
+                  left: 10,
+                }}
+                data={data}
+              >
+                <CartesianGrid
+                  strokeWidth="1"
+                  stroke={'gray'}
+                  horizontal={xLinesScatterPlot}
+                  vertical={yLinesScatterPlot}
+                />
+                <XAxis
+                  dataKey="x"
+                  fontSize={10}
+                  type="number"
+                  domain={[xMinScatterPlot, xMaxScatterPlot]}
+                  label={
+                    <Label
+                      value={
+                        ProjectUtil.getPropertyName(xAxisNameScatterPlot, lang) +
+                        (ProjectUtil.getUnit(xAxisNameScatterPlot) === ''
+                          ? ''
+                          : ' (' + ProjectUtil.getUnit(xAxisNameScatterPlot) + ')')
+                      }
+                      dy={10}
+                      fontSize={11}
                     />
                   }
-                >
-                  <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                    <LineChartOutlined style={{ fontSize: '24px', color: 'gray' }} />
-                  </Button>
-                </Popover>
-                <Popover
-                  title={
-                    <div onClick={(e) => e.stopPropagation()}>
-                      <TableOutlined /> {t('projectPanel.ScatterPlotSettings', lang)}
-                    </div>
+                  name={ProjectUtil.getPropertyName(xAxisNameScatterPlot, lang)}
+                  strokeWidth={1}
+                  stroke={'gray'}
+                />
+                <YAxis
+                  dataKey="y"
+                  fontSize={10}
+                  type="number"
+                  domain={[yMinScatterPlot, yMaxScatterPlot]}
+                  label={
+                    <Label
+                      value={
+                        ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang) +
+                        (ProjectUtil.getUnit(yAxisNameScatterPlot) === ''
+                          ? ''
+                          : ' (' + ProjectUtil.getUnit(yAxisNameScatterPlot) + ')')
+                      }
+                      dx={-10}
+                      fontSize={11}
+                      angle={-90}
+                    />
                   }
-                  content={<GraphSettingsContent />}
-                >
-                  <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                    <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
-                  </Button>
-                </Popover>
-                <Button
-                  style={{ border: 'none', paddingRight: '20px', background: 'white' }}
-                  onClick={() => {
-                    saveSvg('scatter-plot')
-                      .then(() => {
-                        showInfo(t('message.ScreenshotSaved', lang));
-                        if (loggable) {
-                          setCommonStore((state) => {
-                            state.actionInfo = {
-                              name: 'Take Screenshot of the Scatter Plot',
-                              timestamp: new Date().getTime(),
-                            };
-                          });
-                        }
-                      })
-                      .catch((reason) => {
-                        showError(reason);
+                  name={ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang)}
+                  strokeWidth={1}
+                  stroke={'gray'}
+                />
+                <Tooltip
+                  cursor={{ strokeDasharray: '3 3' }}
+                  content={({ active, payload }) => {
+                    if (!active || !payload) return null;
+                    return (
+                      <div
+                        style={{
+                          textAlign: 'left',
+                          fontSize: '12px',
+                          backgroundColor: 'white',
+                          padding: '10px',
+                          border: '1px solid gray',
+                          borderRadius: '8px',
+                        }}
+                      >
+                        {payload.map((p) => {
+                          return (
+                            <div key={p.name}>
+                              {p.name}: {p.value}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  }}
+                />
+                <Scatter
+                  name="All"
+                  data={scatterData}
+                  fill={'#8884d8'}
+                  line={true}
+                  strokeWidth={lineWidthScatterPlot}
+                  shape={<Dot r={dotSizeScatterPlot} />}
+                  onPointerOver={(e) => {
+                    setScatterDataHoveredIndex(scatterData.indexOf(e.payload));
+                  }}
+                  onClick={(e) => {
+                    const index = scatterData.indexOf(e.payload);
+                    if (index >= 0) {
+                      setCommonStore((state) => {
+                        state.projectState.selectedMolecule = sortedMoleculesRef.current[index];
                       });
+                    }
                   }}
                 >
-                  <CameraOutlined
-                    style={{ fontSize: '24px', color: 'gray' }}
-                    title={t('projectPanel.GraphScreenshot', lang)}
-                  />
-                </Button>
-              </span>
-            </PropertiesHeader>
-          )}
-          {data.length > 0 && graphType === GraphType.SCATTER_PLOT && (
-            <ScatterChart
-              id={'scatter-plot'}
-              width={relativeWidth * window.innerWidth}
-              height={totalHeight / 2 - 130}
-              margin={{
-                top: 10,
-                right: 40,
-                bottom: 20,
-                left: 10,
-              }}
-              data={data}
-            >
-              <CartesianGrid
-                strokeWidth="1"
-                stroke={'gray'}
-                horizontal={xLinesScatterPlot}
-                vertical={yLinesScatterPlot}
-              />
-              <XAxis
-                dataKey="x"
-                fontSize={10}
-                type="number"
-                domain={[xMinScatterPlot, xMaxScatterPlot]}
-                label={
-                  <Label
-                    value={
-                      ProjectUtil.getPropertyName(xAxisNameScatterPlot, lang) +
-                      (ProjectUtil.getUnit(xAxisNameScatterPlot) === ''
-                        ? ''
-                        : ' (' + ProjectUtil.getUnit(xAxisNameScatterPlot) + ')')
+                  {scatterData.map((entry, index) => {
+                    const selected = selectedMolecule
+                      ? index === sortedMoleculesRef.current.indexOf(selectedMolecule)
+                      : false;
+                    const hovered = index === scatterDataHoveredIndex;
+                    if (selected && hovered) {
+                      return (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill="#8884d8"
+                          stroke={'black'}
+                          strokeWidth={2}
+                          strokeDasharray={'2 2'}
+                        />
+                      );
                     }
-                    dy={10}
-                    fontSize={11}
-                  />
-                }
-                name={ProjectUtil.getPropertyName(xAxisNameScatterPlot, lang)}
-                strokeWidth={1}
-                stroke={'gray'}
-              />
-              <YAxis
-                dataKey="y"
-                fontSize={10}
-                type="number"
-                domain={[yMinScatterPlot, yMaxScatterPlot]}
-                label={
-                  <Label
-                    value={
-                      ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang) +
-                      (ProjectUtil.getUnit(yAxisNameScatterPlot) === ''
-                        ? ''
-                        : ' (' + ProjectUtil.getUnit(yAxisNameScatterPlot) + ')')
+                    if (hovered && !selected) {
+                      return (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill="#8884d8"
+                          stroke={'black'}
+                          strokeWidth={1}
+                          strokeDasharray={'2 2'}
+                        />
+                      );
                     }
-                    dx={-10}
-                    fontSize={11}
-                    angle={-90}
-                  />
-                }
-                name={ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang)}
-                strokeWidth={1}
-                stroke={'gray'}
-              />
-              <Tooltip
-                cursor={{ strokeDasharray: '3 3' }}
-                content={({ active, payload }) => {
-                  if (!active || !payload) return null;
-                  return (
-                    <div
-                      style={{
-                        textAlign: 'left',
-                        fontSize: '12px',
-                        backgroundColor: 'white',
-                        padding: '10px',
-                        border: '1px solid gray',
-                        borderRadius: '8px',
-                      }}
-                    >
-                      {payload.map((p) => {
-                        return (
-                          <div key={p.name}>
-                            {p.name}: {p.value}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                }}
-              />
-              <Scatter
-                name="All"
-                data={scatterData}
-                fill={'#8884d8'}
-                line={true}
-                strokeWidth={lineWidthScatterPlot}
-                shape={<Dot r={dotSizeScatterPlot} />}
-                onPointerOver={(e) => {
-                  setScatterDataHoveredIndex(scatterData.indexOf(e.payload));
-                }}
-                onClick={(e) => {
-                  const index = scatterData.indexOf(e.payload);
-                  if (index >= 0) {
-                    setCommonStore((state) => {
-                      state.projectState.selectedMolecule = sortedMoleculesRef.current[index];
-                    });
-                  }
-                }}
-              >
-                {scatterData.map((entry, index) => {
-                  const selected = selectedMolecule
-                    ? index === sortedMoleculesRef.current.indexOf(selectedMolecule)
-                    : false;
-                  const hovered = index === scatterDataHoveredIndex;
-                  if (selected && hovered) {
-                    return (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill="#8884d8"
-                        stroke={'black'}
-                        strokeWidth={2}
-                        strokeDasharray={'2 2'}
-                      />
-                    );
-                  }
-                  if (hovered && !selected) {
-                    return (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill="#8884d8"
-                        stroke={'black'}
-                        strokeWidth={1}
-                        strokeDasharray={'2 2'}
-                      />
-                    );
-                  }
-                  if (selected) {
-                    return <Cell key={`cell-${index}`} fill="#8884d8" stroke={'black'} strokeWidth={2} />;
-                  }
-                  return <Cell key={`cell-${index}`} fill="#8884d8" />;
-                })}
-              </Scatter>
-            </ScatterChart>
-          )}
+                    if (selected) {
+                      return <Cell key={`cell-${index}`} fill="#8884d8" stroke={'black'} strokeWidth={2} />;
+                    }
+                    return <Cell key={`cell-${index}`} fill="#8884d8" />;
+                  })}
+                </Scatter>
+              </ScatterChart>
+            )}
+          </div>
         </div>
         <ImportMoleculeModal
           importByName={() => {
@@ -1146,16 +1148,12 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
 });
 
 const Resizer = () => {
-  const { gl, camera } = useThree();
-
+  const { gl } = useThree();
   useEffect(() => {
-    if (gl && camera && camera instanceof PerspectiveCamera) {
-      useRefStore.setState({
-        galleryViewerCanvas: { camera: camera as PerspectiveCamera, gl: gl },
-      });
-    }
+    useRefStore.setState({
+      galleryViewerCanvas: { gl },
+    });
   }, []);
-
   return null;
 };
 
