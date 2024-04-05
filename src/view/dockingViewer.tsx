@@ -157,7 +157,7 @@ const DockingViewer = React.memo(
           name,
           metadata,
           atoms,
-          bonds,
+          radialBonds: bonds,
           residues,
           chains,
           structures,

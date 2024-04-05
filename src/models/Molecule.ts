@@ -10,7 +10,7 @@ import { Vector3 } from 'three';
 export class Molecule implements MoleculeInterface {
   name: string;
   atoms: Atom[];
-  bonds: RadialBond[];
+  radialBonds: RadialBond[];
   center: Vector3;
 
   url?: string;
@@ -19,10 +19,10 @@ export class Molecule implements MoleculeInterface {
   excluded?: boolean;
   metadata?: any;
 
-  constructor(name: string, atoms: Atom[], bonds: RadialBond[]) {
+  constructor(name: string, atoms: Atom[], radialBonds: RadialBond[]) {
     this.name = name;
     this.atoms = atoms;
-    this.bonds = bonds;
+    this.radialBonds = radialBonds;
     this.center = new Vector3();
   }
 
@@ -36,10 +36,12 @@ export class Molecule implements MoleculeInterface {
       newAtoms.push(clone);
     }
     const newRadialBonds: RadialBond[] = [];
-    for (const b of molecule.bonds) {
-      const a1 = map.get(b.atom1.index);
-      const a2 = map.get(b.atom2.index);
-      if (a1 && a2) newRadialBonds.push(new RadialBond(a1, a2));
+    if (molecule.radialBonds) {
+      for (const b of molecule.radialBonds) {
+        const a1 = map.get(b.atom1.index);
+        const a2 = map.get(b.atom2.index);
+        if (a1 && a2) newRadialBonds.push(new RadialBond(a1, a2));
+      }
     }
     return new Molecule(molecule.name, newAtoms, newRadialBonds);
   }

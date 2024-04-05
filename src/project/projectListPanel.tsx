@@ -191,6 +191,9 @@ const ProjectListPanel = React.memo(
     };
 
     const openProject = (record: ProjectState) => {
+      usePrimitiveStore.getState().set((state) => {
+        state.startSimulation = false;
+      });
       if (usePrimitiveStore.getState().changed) {
         Modal.confirm({
           title: t('message.DoYouWantToSaveChanges', lang),

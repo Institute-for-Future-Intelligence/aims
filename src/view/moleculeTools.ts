@@ -69,7 +69,7 @@ export const generateComplex = (molecules: Molecule[]) => {
     const molecule = new MoleculeJS(complex, mol.name, idx + 1);
     molecule.residues = [residue];
     complex._molecules.push(molecule);
-    for (const b of mol.bonds) {
+    for (const b of mol.radialBonds) {
       complex.addBond(residue._atoms[b.atom1.index], residue._atoms[b.atom2.index], 1, Bond.BondType.COVALENT, true);
     }
   }

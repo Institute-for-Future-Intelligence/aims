@@ -330,7 +330,7 @@ const DockingSettings = React.memo(() => {
       {
         key: '3',
         label: t('projectPanel.CovalentBondCount', lang),
-        children: proteinData?.bonds.length,
+        children: proteinData?.radialBonds.length,
       },
       {
         key: '4',

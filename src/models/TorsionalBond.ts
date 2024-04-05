@@ -45,7 +45,7 @@ export class TorsionalBond {
     this.atom4 = atom4;
     this.periodicity = 1;
     this.strength = TorsionalBond.DEFAULT_STRENGTH;
-    this.dihedral = 0;
+    this.dihedral = TorsionalBond.getDihedral(atom1, atom2, atom3, atom4);
   }
 
   containsAtom(atom: Atom): boolean {

@@ -38,7 +38,7 @@ export class AngularBond {
     this.atom2 = atom2;
     this.atom3 = atom3;
     this.strength = AngularBond.DEFAULT_STRENGTH;
-    this.angle = Math.PI;
+    this.angle = AngularBond.getAngle(atom1, atom2, atom3);
   }
 
   containsAtom(atom: Atom): boolean {

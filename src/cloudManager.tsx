@@ -653,7 +653,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         }
         if (remote) {
           // avoid serializing bonds as they will be reconstructed later
-          m.bonds = [];
+          m.radialBonds = [];
         }
       }
     }
@@ -797,6 +797,9 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   }
 
   function showMyProjectsList() {
+    usePrimitiveStore.getState().set((state) => {
+      state.startSimulation = false;
+    });
     listMyProjects(true);
   }
 

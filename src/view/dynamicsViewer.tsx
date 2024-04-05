@@ -164,8 +164,8 @@ const DynamicsViewer = React.memo(
       const k = result._bonds.length;
       for (let i = 0; i < k; i++) {
         const bond = result._bonds[i] as BondJS;
-        mol.bonds.push(new RadialBond(mol.atoms[bond._left.index], mol.atoms[bond._right.index]));
-        molecule.bonds.push(new RadialBond(molecule.atoms[bond._left.index], molecule.atoms[bond._right.index]));
+        mol.radialBonds.push(new RadialBond(mol.atoms[bond._left.index], mol.atoms[bond._right.index]));
+        molecule.radialBonds.push(new RadialBond(molecule.atoms[bond._left.index], molecule.atoms[bond._right.index]));
       }
       for (let i = 0; i < n; i++) {
         const a = mol.atoms[i];

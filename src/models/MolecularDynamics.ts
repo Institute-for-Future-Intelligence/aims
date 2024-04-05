@@ -50,7 +50,7 @@ export class MolecularDynamics {
     this.radialBonds = [];
     for (const m of molecules) {
       this.atoms.push(...m.atoms);
-      this.radialBonds.push(...m.bonds);
+      this.radialBonds.push(...m.radialBonds);
     }
     this.nonBondedInteractions = new NonBondedInteractions(this.atoms, this.radialBonds);
     this.angularBonds = [];
