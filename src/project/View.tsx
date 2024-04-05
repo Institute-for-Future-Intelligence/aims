@@ -84,7 +84,6 @@ function prepareSkissor(
   state: RootState,
   { left, bottom, width, height }: LegacyCanvasSize & { top: number; left: number } & { bottom: number; right: number },
 ) {
-  let autoClear;
   const aspect = width / height;
   if (isOrthographicCamera(state.camera)) {
     if (
@@ -100,7 +99,7 @@ function prepareSkissor(
     state.camera.aspect = aspect;
     state.camera.updateProjectionMatrix();
   }
-  autoClear = state.gl.autoClear;
+  const autoClear = state.gl.autoClear;
   state.gl.autoClear = false;
   state.gl.setViewport(left, bottom, width, height);
   state.gl.setScissor(left, bottom, width, height);
@@ -205,7 +204,7 @@ const CanvasView = React.forwardRef(
     const [ready, toggle] = React.useReducer(() => true, false);
 
     const compute = React.useCallback(
-      (event, state) => {
+      (event: any, state: any) => {
         if (rect.current && track && track.current && event.target === track.current) {
           const { width, height, left, top } = rect.current;
           const x = event.clientX - left;
@@ -245,9 +244,7 @@ const CanvasView = React.forwardRef(
               size: {
                 width: rect.current?.width,
                 height: rect.current?.height,
-                // @ts-ignore
                 top: rect.current?.top,
-                // @ts-ignore
                 left: rect.current?.left,
               },
             },
@@ -278,7 +275,7 @@ const HtmlView = React.forwardRef(
     React.useImperativeHandle(fref, () => ref.current);
     return (
       <>
-        {/** @ts-ignore */}
+        {/* @ts-expect-error ignore */}
         <El ref={ref} id={id} className={className} style={style} {...props} />
         <tracked.In>
           <CanvasView visible={visible} key={uuid} track={ref} frames={frames} index={index}>

@@ -2,10 +2,9 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { Suspense, useEffect, useMemo, useRef } from 'react';
+import React, { Suspense, useEffect, useMemo } from 'react';
 import './App.css';
 import ifiLogo from './assets/ifi-logo.png';
-import { throttle } from 'lodash';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { visitHomepage, visitIFI } from './helpers';
@@ -25,8 +24,6 @@ import CloudManager from './cloudManager';
 import { CloudTwoTone } from '@ant-design/icons';
 import SplitPane from './components/splitPane.tsx';
 import { useRefStore } from './stores/commonRef.ts';
-import { RootState } from '@react-three/fiber';
-import { Vector2 } from 'three';
 
 const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
