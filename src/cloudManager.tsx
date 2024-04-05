@@ -654,6 +654,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         if (remote) {
           // avoid serializing bonds as they will be reconstructed later
           m.radialBonds = [];
+          m.angularBonds = [];
+          m.torsionalBonds = [];
         }
       }
     }
