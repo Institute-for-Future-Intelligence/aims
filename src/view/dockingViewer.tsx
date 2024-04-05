@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DirectionalLight, Raycaster, Vector3 } from 'three';
+import { DirectionalLight, Mesh, Raycaster, Vector3 } from 'three';
 import { Protein } from '../models/Protein.ts';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
@@ -196,6 +196,16 @@ const DockingViewer = React.memo(
         .finally(() => {
           if (setLoading) setLoading(false);
         });
+      return () => {
+        if (proteinGroupRef.current) {
+          proteinGroupRef.current.traverse((obj) => {
+            if (obj instanceof Mesh) {
+              obj.geometry.dispose();
+              obj.material.dispose();
+            }
+          });
+        }
+      };
     }, [proteinComplex, material, mode, colorer, selector]);
 
     // deal with ligand
@@ -235,6 +245,17 @@ const DockingViewer = React.memo(
         invalidate();
       });
       useRefStore.setState({ ligandRef: ligandGroupRef });
+
+      return () => {
+        if (ligandGroupRef.current) {
+          ligandGroupRef.current.traverse((obj) => {
+            if (obj instanceof Mesh) {
+              obj.geometry.dispose();
+              obj.material.dispose();
+            }
+          });
+        }
+      };
     }, [ligand, ligandComplex, projectViewerStyle, projectViewerMaterial, updateViewerFlag]);
 
     useEffect(() => {

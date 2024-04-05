@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DirectionalLight, Group, Sphere, Vector3 } from 'three';
+import { DirectionalLight, Group, Mesh, Sphere, Vector3 } from 'three';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { MoleculeInterface } from '../types';
@@ -156,6 +156,16 @@ const GalleryViewer = React.memo(
         .finally(() => {
           if (setLoading) setLoading(false);
         });
+      return () => {
+        if (groupRef.current) {
+          groupRef.current.traverse((obj) => {
+            if (obj instanceof Mesh) {
+              obj.geometry.dispose();
+              obj.material.dispose();
+            }
+          });
+        }
+      };
     }, [complex, material, mode, colorer, selector]);
 
     return (
