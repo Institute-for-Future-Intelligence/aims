@@ -182,33 +182,33 @@ const DynamicsViewer = React.memo(
       const aBonds: Triple[] = getAngularBondDefinition(molecule.name);
       if (aBonds.length > 0) {
         for (const x of aBonds) {
-          const p1 = result._atoms[x.i1].position;
-          const p2 = result._atoms[x.i2].position;
-          const p3 = result._atoms[x.i3].position;
+          const p1 = result._atoms[x.i].position;
+          const p2 = result._atoms[x.j].position;
+          const p3 = result._atoms[x.k].position;
           const angle = AngularBond.getAngleFromPositions(p1, p2, p3);
-          mol.angularBonds.push(new AngularBond(mol.atoms[x.i1], mol.atoms[x.i2], mol.atoms[x.i3], angle));
+          mol.angularBonds.push(new AngularBond(mol.atoms[x.i], mol.atoms[x.j], mol.atoms[x.k], angle));
           molecule.angularBonds.push(
-            new AngularBond(molecule.atoms[x.i1], molecule.atoms[x.i2], molecule.atoms[x.i3], angle),
+            new AngularBond(molecule.atoms[x.i], molecule.atoms[x.j], molecule.atoms[x.k], angle),
           );
         }
       }
       const tBonds: Quadruple[] = getTorsionalBondDefinition(molecule.name);
       if (tBonds.length > 0) {
         for (const x of tBonds) {
-          const p1 = result._atoms[x.i1].position;
-          const p2 = result._atoms[x.i2].position;
-          const p3 = result._atoms[x.i3].position;
-          const p4 = result._atoms[x.i4].position;
+          const p1 = result._atoms[x.i].position;
+          const p2 = result._atoms[x.j].position;
+          const p3 = result._atoms[x.k].position;
+          const p4 = result._atoms[x.l].position;
           const dihedral = TorsionalBond.getDihedralFromPositions(p1, p2, p3, p4);
           mol.torsionalBonds.push(
-            new TorsionalBond(mol.atoms[x.i1], mol.atoms[x.i2], mol.atoms[x.i3], mol.atoms[x.i4], dihedral),
+            new TorsionalBond(mol.atoms[x.i], mol.atoms[x.j], mol.atoms[x.k], mol.atoms[x.l], dihedral),
           );
           molecule.torsionalBonds.push(
             new TorsionalBond(
-              molecule.atoms[x.i1],
-              molecule.atoms[x.i2],
-              molecule.atoms[x.i3],
-              molecule.atoms[x.i4],
+              molecule.atoms[x.i],
+              molecule.atoms[x.j],
+              molecule.atoms[x.k],
+              molecule.atoms[x.l],
               dihedral,
             ),
           );

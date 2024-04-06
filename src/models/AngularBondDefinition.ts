@@ -6,109 +6,194 @@ import { Triple } from './Triple.ts';
 
 export const getAngularBondDefinition = (name: string): Triple[] => {
   if (name === 'Water') {
-    return [{ i1: 1, i2: 0, i3: 2 }];
+    return [{ i: 1, j: 0, k: 2 }];
   }
+
   if (name === 'Carbon Dioxide') {
-    return [{ i1: 0, i2: 2, i3: 1 }];
+    return [{ i: 0, j: 2, k: 1 }];
   }
+
   if (name === 'Ozone') {
-    return [{ i1: 1, i2: 0, i3: 2 }];
+    return [{ i: 1, j: 0, k: 2 }];
   }
+
   if (name === 'Methane') {
     return [
-      { i1: 1, i2: 0, i3: 2 },
-      { i1: 2, i2: 0, i3: 3 },
-      { i1: 3, i2: 0, i3: 4 },
-      { i1: 4, i2: 0, i3: 1 },
+      { i: 1, j: 0, k: 2 },
+      { i: 2, j: 0, k: 3 },
+      { i: 3, j: 0, k: 4 },
+      { i: 4, j: 0, k: 1 },
     ];
   }
+
   if (name === 'Ethane') {
     return [
       // left CH3 group
-      { i1: 2, i2: 0, i3: 3 },
-      { i1: 3, i2: 0, i3: 4 },
-      { i1: 4, i2: 0, i3: 2 },
+      { i: 2, j: 0, k: 3 },
+      { i: 3, j: 0, k: 4 },
+      { i: 4, j: 0, k: 2 },
       // right CH3 group
-      { i1: 5, i2: 1, i3: 6 },
-      { i1: 6, i2: 1, i3: 7 },
-      { i1: 7, i2: 1, i3: 5 },
+      { i: 5, j: 1, k: 6 },
+      { i: 6, j: 1, k: 7 },
+      { i: 7, j: 1, k: 5 },
       // H-C-C angles
-      { i1: 2, i2: 0, i3: 1 },
-      { i1: 3, i2: 0, i3: 1 },
-      { i1: 4, i2: 0, i3: 1 },
+      { i: 2, j: 0, k: 1 },
+      { i: 3, j: 0, k: 1 },
+      { i: 4, j: 0, k: 1 },
       // C-C-H angles
-      { i1: 0, i2: 1, i3: 5 },
-      { i1: 0, i2: 1, i3: 6 },
-      { i1: 0, i2: 1, i3: 7 },
+      { i: 0, j: 1, k: 5 },
+      { i: 0, j: 1, k: 6 },
+      { i: 0, j: 1, k: 7 },
     ];
   }
+
   if (name === 'Propane') {
     return [
-      // C-C-C angles
-      { i1: 1, i2: 0, i3: 2 },
-      // left CH3 group
-      { i1: 5, i2: 1, i3: 6 },
-      { i1: 6, i2: 1, i3: 7 },
-      { i1: 7, i2: 1, i3: 5 },
-      // middle CH2 group
-      { i1: 3, i2: 0, i3: 4 },
-      // right CH3 group
-      { i1: 8, i2: 2, i3: 9 },
-      { i1: 9, i2: 2, i3: 10 },
-      { i1: 10, i2: 2, i3: 8 },
-      // H-C-C angles from left to middle
-      { i1: 5, i2: 1, i3: 0 },
-      { i1: 6, i2: 1, i3: 0 },
-      { i1: 7, i2: 1, i3: 0 },
-      // C-C-H angles from middle to right
-      { i1: 0, i2: 2, i3: 8 },
-      { i1: 0, i2: 2, i3: 9 },
-      { i1: 0, i2: 2, i3: 10 },
-      // C-C-H angles from left to middle
-      { i1: 1, i2: 0, i3: 3 },
-      { i1: 1, i2: 0, i3: 4 },
-      // H-C-C angles from middle to right
-      { i1: 3, i2: 0, i3: 2 },
-      { i1: 4, i2: 0, i3: 2 },
+      // C-C-C backbone
+      { i: 1, j: 0, k: 2 },
+
+      // CH3-1 terminal group
+      { i: 5, j: 1, k: 6 },
+      { i: 6, j: 1, k: 7 },
+      { i: 7, j: 1, k: 5 },
+
+      // CH2 group
+      { i: 3, j: 0, k: 4 },
+
+      // CH3-2 terminal group
+      { i: 8, j: 2, k: 9 },
+      { i: 9, j: 2, k: 10 },
+      { i: 10, j: 2, k: 8 },
+
+      // between CH3-1 and CH2
+      // H-C-C
+      { i: 5, j: 1, k: 0 },
+      { i: 6, j: 1, k: 0 },
+      { i: 7, j: 1, k: 0 },
+      // C-C-H
+      { i: 1, j: 0, k: 3 },
+      { i: 1, j: 0, k: 4 },
+
+      // between CH2 and CH3-2
+      // C-C-H
+      { i: 0, j: 2, k: 8 },
+      { i: 0, j: 2, k: 9 },
+      { i: 0, j: 2, k: 10 },
+      // H-C-C
+      { i: 3, j: 0, k: 2 },
+      { i: 4, j: 0, k: 2 },
     ];
   }
+
   if (name === 'Butane') {
     return [
-      // C-C-C angles
-      { i1: 2, i2: 0, i3: 1 },
-      { i1: 0, i2: 1, i3: 3 },
-      // left CH3 group
-      { i1: 8, i2: 2, i3: 9 },
-      { i1: 9, i2: 2, i3: 10 },
-      { i1: 10, i2: 2, i3: 8 },
-      // middle CH2 group
-      { i1: 4, i2: 0, i3: 5 },
-      // middle CH2 group
-      { i1: 7, i2: 1, i3: 6 },
-      // right CH3 group
-      { i1: 11, i2: 3, i3: 12 },
-      { i1: 12, i2: 3, i3: 13 },
-      { i1: 13, i2: 3, i3: 11 },
-      // H-C-C angles from left to middle
-      { i1: 8, i2: 2, i3: 0 },
-      { i1: 9, i2: 2, i3: 0 },
-      { i1: 10, i2: 2, i3: 0 },
-      // C-C-H angles from middle to right
-      { i1: 1, i2: 3, i3: 11 },
-      { i1: 1, i2: 3, i3: 12 },
-      { i1: 1, i2: 3, i3: 13 },
-      // C-C-H angles from left to middle
-      { i1: 2, i2: 0, i3: 4 },
-      { i1: 2, i2: 0, i3: 5 },
-      // H-C-C angles from middle to right
-      { i1: 6, i2: 1, i3: 3 },
-      { i1: 7, i2: 1, i3: 3 },
-      // C-C-H angles from middle to middle
-      { i1: 0, i2: 1, i3: 6 },
-      { i1: 0, i2: 1, i3: 7 },
-      // H-C-C angles from middle to middle
-      { i1: 4, i2: 0, i3: 1 },
-      { i1: 5, i2: 0, i3: 1 },
+      // C-C-C backbone
+      { i: 2, j: 0, k: 1 },
+      { i: 0, j: 1, k: 3 },
+
+      // CH3-1 terminal group
+      { i: 8, j: 2, k: 9 },
+      { i: 9, j: 2, k: 10 },
+      { i: 10, j: 2, k: 8 },
+
+      // CH2-1 group
+      { i: 4, j: 0, k: 5 },
+
+      // CH2-2 group
+      { i: 7, j: 1, k: 6 },
+
+      // CH3-2 group
+      { i: 11, j: 3, k: 12 },
+      { i: 12, j: 3, k: 13 },
+      { i: 13, j: 3, k: 11 },
+
+      // between CH3-1 to CH2-1
+      // H-C-C
+      { i: 8, j: 2, k: 0 },
+      { i: 9, j: 2, k: 0 },
+      { i: 10, j: 2, k: 0 },
+      // C-C-H
+      { i: 2, j: 0, k: 4 },
+      { i: 2, j: 0, k: 5 },
+
+      // between CH2-1 to CH2-2
+      // H-C-C
+      { i: 4, j: 0, k: 1 },
+      { i: 5, j: 0, k: 1 },
+      // C-C-H
+      { i: 0, j: 1, k: 6 },
+      { i: 0, j: 1, k: 7 },
+
+      // between CH-2 to CH3-2
+      // H-C-C
+      { i: 6, j: 1, k: 3 },
+      { i: 7, j: 1, k: 3 },
+      // C-C-H
+      { i: 1, j: 3, k: 11 },
+      { i: 1, j: 3, k: 12 },
+      { i: 1, j: 3, k: 13 },
+    ];
+  }
+
+  if (name === 'Pentane') {
+    return [
+      // backbone C-C-C
+      { i: 3, j: 1, k: 0 },
+      { i: 1, j: 0, k: 2 },
+      { i: 0, j: 2, k: 4 },
+
+      // CH3-1 terminal group
+      { i: 11, j: 3, k: 12 },
+      { i: 12, j: 3, k: 13 },
+      { i: 13, j: 3, k: 11 },
+
+      // CH2-1 group
+      { i: 7, j: 1, k: 8 },
+
+      // CH2-2 group
+      { i: 5, j: 0, k: 6 },
+
+      // CH2-3 group
+      { i: 9, j: 2, k: 10 },
+
+      // CH3-2 terminal group
+      { i: 14, j: 4, k: 15 },
+      { i: 15, j: 4, k: 16 },
+      { i: 16, j: 4, k: 14 },
+
+      // between CH3-1 and CH2-1
+      // H-C-C
+      { i: 11, j: 3, k: 1 },
+      { i: 12, j: 3, k: 1 },
+      { i: 13, j: 3, k: 1 },
+      // C-C-H
+      { i: 3, j: 1, k: 7 },
+      { i: 3, j: 1, k: 8 },
+
+      // between CH2-1 and CH2-2
+      // H-C-C
+      { i: 7, j: 1, k: 0 },
+      { i: 8, j: 1, k: 0 },
+      // C-C-H
+      { i: 1, j: 0, k: 5 },
+      { i: 1, j: 0, k: 6 },
+
+      // between CH2-2 and CH2-3
+      // H-C-C
+      { i: 5, j: 0, k: 2 },
+      { i: 6, j: 0, k: 2 },
+      // C-C-H
+      { i: 0, j: 2, k: 9 },
+      { i: 0, j: 2, k: 10 },
+
+      // between CH2-3 and CH3-2
+      // H-C-C
+      { i: 9, j: 2, k: 4 },
+      { i: 10, j: 2, k: 4 },
+      // C-C-H
+      { i: 2, j: 4, k: 14 },
+      { i: 2, j: 4, k: 15 },
+      { i: 2, j: 4, k: 16 },
     ];
   }
   return [];

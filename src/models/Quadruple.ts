@@ -3,8 +3,8 @@
  */
 
 export interface Quadruple {
-  i1: number;
-  i2: number;
-  i3: number;
-  i4: number;
+  i: number;
+  j: number;
+  k: number;
+  l: number;
 }
