@@ -280,7 +280,8 @@ const DockingViewer = React.memo(
       return (
         projectViewerStyle === MolecularViewerStyle.BallAndStick ||
         projectViewerStyle === MolecularViewerStyle.Stick ||
-        projectViewerStyle === MolecularViewerStyle.Wireframe
+        projectViewerStyle === MolecularViewerStyle.Wireframe ||
+        projectViewerStyle === MolecularViewerStyle.AtomIndex
       );
     }, [projectViewerStyle]);
 

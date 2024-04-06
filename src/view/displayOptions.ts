@@ -44,6 +44,7 @@ export const CHAMBER_COLORING_LABELS = [
 ];
 
 export enum MolecularViewerStyle {
+  AtomIndex = 'Atom Index',
   BallAndStick = 'Ball-and-Stick',
   Wireframe = 'Wireframe',
   Stick = 'Stick',
@@ -98,6 +99,7 @@ export const MATERIAL_LABELS = [
 export const STYLE_MAP = new Map(
   [
     { key: MolecularViewerStyle.BallAndStick, value: 'BS' },
+    { key: MolecularViewerStyle.AtomIndex, value: 'LN' },
     { key: MolecularViewerStyle.Wireframe, value: 'LN' },
     { key: MolecularViewerStyle.Stick, value: 'LC' },
     { key: MolecularViewerStyle.SpaceFilling, value: 'VW' },
@@ -114,6 +116,7 @@ export const STYLE_MAP = new Map(
 export const CHAMBER_STYLE_LABELS = [
   { value: MolecularViewerStyle.BallAndStick, label: 'molecularViewer.BallAndStick' },
   { value: MolecularViewerStyle.Wireframe, label: 'molecularViewer.Wireframe' },
+  { value: MolecularViewerStyle.AtomIndex, label: 'molecularViewer.AtomIndex' },
   { value: MolecularViewerStyle.Stick, label: 'molecularViewer.Stick' },
   { value: MolecularViewerStyle.SpaceFilling, label: 'molecularViewer.SpaceFilling' },
   { value: MolecularViewerStyle.Cartoon, label: 'molecularViewer.Cartoon' },

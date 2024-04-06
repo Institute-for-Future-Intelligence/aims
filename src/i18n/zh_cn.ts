@@ -129,6 +129,7 @@ export const i18n_zh_cn = {
       Color: '颜色',
       BallAndStick: '球和棍',
       Wireframe: '线框架',
+      AtomIndex: '原子指数',
       Stick: '棍',
       SpaceFilling: '空间填满',
       Cartoon: '卡通图',

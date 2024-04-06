@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Box3, Raycaster, Mesh, Euler, Quaternion, Vector3 } from 'three';
+import { Box3, Euler, Mesh, Quaternion, Raycaster, Vector3 } from 'three';
 import AtomJS from '../lib/chem/Atom';
 import BondJS from '../lib/chem/Bond';
 import ComplexVisual from '../lib/ComplexVisual';
@@ -28,7 +28,7 @@ import { useStore } from '../stores/common.ts';
 import { Molecule } from '../models/Molecule.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import ModelContainer from './modelContainer.tsx';
-import { Instance, Instances, Line } from '@react-three/drei';
+import { Billboard, Instance, Instances, Line, Text } from '@react-three/drei';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import Picker from '../lib/ui/Picker.js';
 import settings from '../lib/settings.js';
@@ -321,7 +321,8 @@ const DynamicsViewer = React.memo(
       return (
         viewerStyle === MolecularViewerStyle.BallAndStick ||
         viewerStyle === MolecularViewerStyle.Stick ||
-        viewerStyle === MolecularViewerStyle.Wireframe
+        viewerStyle === MolecularViewerStyle.Wireframe ||
+        viewerStyle === MolecularViewerStyle.AtomIndex
       );
     }, [viewerStyle]);
 
@@ -341,6 +342,17 @@ const DynamicsViewer = React.memo(
           onPointerLeave={onPointerLeave}
           onPointerDown={onPointerDown}
         />
+        {style === MolecularViewerStyle.AtomIndex &&
+          moleculesRef.current &&
+          moleculesRef.current[0]?.atoms.map((a, i) => {
+            return (
+              <Billboard position={[a.position.x, a.position.y, a.position.z]}>
+                <Text color="white" anchorX="center" anchorY="middle" fontSize={0.25}>
+                  {i}
+                </Text>
+              </Billboard>
+            );
+          })}
         {pickedMoleculeIndex !== -1 && moleculesRef.current && (
           <Instances limit={1000} range={1000}>
             <sphereGeometry args={[1, 16, 16]} />

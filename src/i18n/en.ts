@@ -128,6 +128,7 @@ export const i18n_en = {
       Color: 'Color',
       BallAndStick: 'Ball-and-Stick',
       Wireframe: 'Wireframe',
+      AtomIndex: 'Atom Index',
       Stick: 'Stick',
       SpaceFilling: 'Space-Filling',
       Cartoon: 'Cartoon',
