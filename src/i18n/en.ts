@@ -180,6 +180,7 @@ export const i18n_en = {
     experiment: {
       Model: 'Model',
       Display: 'Display',
+      Conditions: 'Conditions',
       MolecularDynamics: 'Molecular Dynamics',
       StartSimulation: 'Start Simulation',
       PauseSimulation: 'Pause Simulation',
@@ -194,6 +195,7 @@ export const i18n_en = {
       KineticEnergyScaleFactor: 'Kinetic Energy Scale Factor',
       TimeStep: 'Time Step',
       Femtosecond: 'Femtosecond',
+      ConstantTemperature: 'Constant Temperature',
       Temperature: 'Temperature',
       Pressure: 'Pressure',
       Protein: 'Protein',

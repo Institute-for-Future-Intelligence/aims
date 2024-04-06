@@ -40,7 +40,7 @@ export const xzPlanePosition = (state: CommonStoreState) => state.projectState.x
 
 export const temperature = (state: CommonStoreState) => state.projectState.temperature;
 
-export const pressure = (state: CommonStoreState) => state.projectState.pressure;
+export const constantTemperature = (state: CommonStoreState) => state.projectState.constantTemperature;
 
 export const timeStep = (state: CommonStoreState) => state.projectState.timeStep;
 

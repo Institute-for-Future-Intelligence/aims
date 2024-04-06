@@ -132,7 +132,6 @@ export class MolecularDynamics {
       tmp = kin * UNIT_EV_OVER_KB;
     }
     if (tmp > ZERO_TOLERANCE) this.rescaleVelocities(Math.sqrt(temperature / tmp));
-    this.heatBath.temperature = temperature;
   }
 
   rescaleVelocities(ratio: number) {
@@ -146,7 +145,12 @@ export class MolecularDynamics {
   changeTemperature(percent: number) {
     if (this.atoms.length === 0) return;
     percent *= 0.01;
+    const currentTemperature = this.heatBath.temperature;
     this.heatBath.increaseByPercentage(percent);
+    if (this.heatBath.temperature > HeatBath.MAXIMUM_TEMPERATURE) {
+      this.heatBath.temperature = currentTemperature;
+      return;
+    }
     this.updateKineticEnergy(); // ensure that we get the latest kinetic energy
     if (this.kineticEnergy < ZERO_TOLERANCE) {
       this.assignTemperature(100);
@@ -165,7 +169,6 @@ export class MolecularDynamics {
   move() {
     if (this.movableCount === 0) return;
     if (this.indexOfStep % 10 === 0) this.nonBondedInteractions.checkNeighborList();
-    this.kineticEnergy = 0;
     this.potentialEnergy = 0;
     const dt2 = (this.timeStep * this.timeStep) / 2;
     const h = this.timeStep / 2;
@@ -175,9 +178,12 @@ export class MolecularDynamics {
     this.calculateForce();
     for (const a of this.atoms) {
       a.correct(h);
-      this.kineticEnergy += a.getKineticEnergy();
+    }
+    if (this.heatBath.enabled) {
+      this.setTemperature(this.heatBath.temperature);
     }
     this.applyBoundary();
+    this.updateKineticEnergy();
     this.totalEnergy = this.kineticEnergy + this.potentialEnergy;
     this.indexOfStep++;
   }

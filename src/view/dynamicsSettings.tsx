@@ -3,7 +3,18 @@
  */
 
 import React, { useMemo } from 'react';
-import { Col, Descriptions, DescriptionsProps, FloatButton, InputNumber, Popover, Row, Tabs, TabsProps } from 'antd';
+import {
+  Col,
+  Descriptions,
+  DescriptionsProps,
+  FloatButton,
+  InputNumber,
+  Popover,
+  Row,
+  Switch,
+  Tabs,
+  TabsProps,
+} from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
@@ -20,8 +31,8 @@ const DynamicsSettings = React.memo(() => {
   const momentumScaleFactor = useStore(Selector.momentumScaleFactor) ?? 1;
   const forceScaleFactor = useStore(Selector.forceScaleFactor) ?? 1;
   const kineticEnergyScaleFactor = useStore(Selector.kineticEnergyScaleFactor) ?? 1;
+  const constantTemperature = useStore(Selector.constantTemperature) ?? false;
   const temperature = useStore(Selector.temperature) ?? 300;
-  const pressure = useStore(Selector.pressure) ?? 1;
   const timeStep = useStore(Selector.timeStep) ?? 0.5;
   const updateInfoFlag = usePrimitiveStore(Selector.updateInfoFlag);
 
@@ -139,59 +150,60 @@ const DynamicsSettings = React.memo(() => {
                 />
               </Col>
             </Row>
-            <Row gutter={16} style={{ paddingBottom: '4px' }}>
-              <Col span={12} style={{ paddingTop: '5px' }}>
-                <span>{t('experiment.Temperature', lang)}: </span>
-              </Col>
-              <Col span={12}>
-                <InputNumber
-                  addonAfter={'K'}
-                  min={10}
-                  max={1000}
-                  style={{ width: '100%' }}
-                  precision={1}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
-                  value={parseFloat(temperature.toFixed(1))}
-                  step={1}
-                  onChange={(value) => {
-                    if (value === null) return;
-                    setCommonStore((state) => {
-                      state.projectState.temperature = value;
-                    });
-                    setChanged(true);
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row gutter={16} style={{ paddingBottom: '4px' }}>
-              <Col span={12} style={{ paddingTop: '5px' }}>
-                <span>{t('experiment.Pressure', lang)}: </span>
-              </Col>
-              <Col span={12}>
-                <InputNumber
-                  addonAfter={'atm'}
-                  min={0.01}
-                  max={100}
-                  style={{ width: '100%' }}
-                  precision={2}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
-                  value={parseFloat(pressure.toFixed(2))}
-                  step={0.1}
-                  onChange={(value) => {
-                    if (value === null) return;
-                    setCommonStore((state) => {
-                      state.projectState.pressure = value;
-                    });
-                    setChanged(true);
-                  }}
-                />
-              </Col>
-            </Row>
           </div>
         ),
       },
       {
         key: '2',
+        label: t('experiment.Conditions', lang),
+        children: (
+          <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.ConstantTemperature', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <Switch
+                  checked={constantTemperature}
+                  onChange={(checked: boolean) => {
+                    setCommonStore((state) => {
+                      state.projectState.constantTemperature = checked;
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+            {constantTemperature && (
+              <Row gutter={16} style={{ paddingBottom: '4px' }}>
+                <Col span={12} style={{ paddingTop: '5px' }}>
+                  <span>{t('experiment.Temperature', lang)}: </span>
+                </Col>
+                <Col span={12}>
+                  <InputNumber
+                    addonAfter={'K'}
+                    min={10}
+                    max={5000}
+                    style={{ width: '100%' }}
+                    precision={1}
+                    // make sure that we round up the number as toDegrees may cause things like .999999999
+                    value={parseFloat(temperature.toFixed(1))}
+                    step={1}
+                    onChange={(value) => {
+                      if (value === null) return;
+                      setCommonStore((state) => {
+                        state.projectState.temperature = value;
+                      });
+                      setChanged(true);
+                    }}
+                  />
+                </Col>
+              </Row>
+            )}
+          </div>
+        ),
+      },
+      {
+        key: '3',
         label: t('experiment.Display', lang),
         children: (
           <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
@@ -297,8 +309,8 @@ const DynamicsSettings = React.memo(() => {
       molecularContainer.lx,
       molecularContainer.ly,
       molecularContainer.lz,
+      constantTemperature,
       temperature,
-      pressure,
       vdwBondCutoffRelative,
       momentumScaleFactor,
       forceScaleFactor,

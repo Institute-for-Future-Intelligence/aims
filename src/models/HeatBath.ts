@@ -5,7 +5,7 @@
 import { ZERO_TOLERANCE } from '../constants.ts';
 
 export class HeatBath {
-  static readonly MAXIMUM_TEMPERATURE = 10000;
+  static readonly MAXIMUM_TEMPERATURE = 5000;
 
   enabled: boolean = false;
   temperature: number;

@@ -159,6 +159,11 @@ const DynamicsViewer = React.memo(
           if (atom.element.name === 'NA') a.charge = 1;
           else if (atom.element.name === 'CL') a.charge = -1;
           a.epsilon = 0.05;
+        } else {
+          // temporary solution
+          if (a.elementSymbol === 'C' || a.elementSymbol === 'H') {
+            a.epsilon = 0.005;
+          }
         }
         if (molecule.atoms) {
           a.position.copy(molecule.atoms[i].position);

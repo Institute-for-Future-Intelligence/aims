@@ -20,11 +20,12 @@ import styled from 'styled-components';
 import { useRefStore } from '../stores/commonRef.ts';
 import { useDataStore } from '../stores/commonData.ts';
 import { EnergyData } from '../models/EnergyData.ts';
+import { HeatBath } from '../models/HeatBath.ts';
 
 const Container = styled.div`
   position: absolute;
   left: calc(50% - 150px);
-  width: 300px;
+  width: 220px;
   bottom: 6px;
   margin: 0;
   display: flex;
@@ -49,6 +50,8 @@ const SimulationControls = React.memo(() => {
   const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
   const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
   const energyGraphVisible = useStore(Selector.energyGraphVisible);
+  const temperature = useStore(Selector.temperature);
+  const constantTemperature = useStore(Selector.constantTemperature);
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
   const requestRef = useRef<number>(0);
@@ -62,7 +65,21 @@ const SimulationControls = React.memo(() => {
   const interval = 20;
 
   useEffect(() => {
+    if (mdRef?.current) {
+      const md = mdRef.current;
+      md.heatBath.enabled = constantTemperature;
+      if (constantTemperature) {
+        md.heatBath.temperature = temperature;
+      }
+    }
+  }, [constantTemperature, mdRef, temperature]);
+
+  useEffect(() => {
     if (startSimulation) {
+      if (mdRef?.current) {
+        mdRef.current.heatBath.enabled = constantTemperature;
+        mdRef.current.heatBath.temperature = temperature;
+      }
       requestRef.current = requestAnimationFrame(simulate);
       return () => {
         // this is called when the recursive call of requestAnimationFrame exits
@@ -82,13 +99,6 @@ const SimulationControls = React.memo(() => {
       });
     }
   }, [resetSimulation, mdRef, energyTimeSeries]);
-
-  const init = () => {
-    if (mdRef?.current) {
-      const md = mdRef.current;
-      md.init();
-    }
-  };
 
   const simulate = () => {
     if (startSimulation) {
@@ -146,6 +156,14 @@ const SimulationControls = React.memo(() => {
     if (mdRef?.current) {
       mdRef.current.changeTemperature(percent);
     }
+    if (constantTemperature) {
+      setCommonStore((state) => {
+        state.projectState.temperature *= 1 + percent * 0.01;
+        if (state.projectState.temperature > HeatBath.MAXIMUM_TEMPERATURE) {
+          state.projectState.temperature = HeatBath.MAXIMUM_TEMPERATURE;
+        }
+      });
+    }
   };
 
   return (
@@ -158,8 +176,7 @@ const SimulationControls = React.memo(() => {
         e.preventDefault();
       }}
     >
-      <Space direction={'horizontal'} style={{ color: 'antiquewhite', fontSize: '10px' }}>
-        <span>{t('experiment.MolecularDynamics', lang)}</span>
+      <Space direction={'horizontal'}>
         <Button
           style={{ background: energyGraphVisible ? 'darkgray' : undefined }}
           icon={<FundOutlined />}

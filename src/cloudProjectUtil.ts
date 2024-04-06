@@ -115,6 +115,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           testMolecules: ModelUtil.reconstructMoleculesFromFirestore(data.testMolecules),
 
           timeStep: data.timeStep ?? 0.5,
+          constantTemperature: !!data.constantTemperature,
           temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,
           pressure: data.pressure !== undefined && data.pressure !== null ? data.pressure : 1,
 

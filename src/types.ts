@@ -108,6 +108,7 @@ export interface ProjectState {
   energyGraphVisible: boolean;
 
   timeStep: number;
+  constantTemperature: boolean;
   temperature: number;
   pressure: number;
 }

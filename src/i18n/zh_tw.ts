@@ -180,6 +180,7 @@ export const i18n_zh_tw = {
     experiment: {
       Model: '模型',
       Display: '顯示',
+      Conditions: '條件',
       MolecularDynamics: '分子動力學',
       StartSimulation: '運行',
       PauseSimulation: '暫停',
@@ -194,6 +195,7 @@ export const i18n_zh_tw = {
       KineticEnergyScaleFactor: '動能的比例因子',
       TimeStep: '時間步長',
       Femtosecond: '飛秒',
+      ConstantTemperature: '恒温',
       Temperature: '温度',
       Pressure: '壓力',
       Protein: '蛋白質',
