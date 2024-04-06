@@ -151,14 +151,14 @@ const DynamicsViewer = React.memo(
       for (let i = 0; i < n; i++) {
         const atom = result._atoms[i] as AtomJS;
         const a = new Atom(atom.index, atom.element.name, atom.position.clone(), true);
-        a.sigma = atom.element.radius * LJ_SIGMA_CONVERTER;
+        // the vdw radius for viewer is too big to be used as the LJ radius; reduce it to 75%
+        a.sigma = atom.element.radius * LJ_SIGMA_CONVERTER * 0.75;
         a.mass = atom.element.weight;
         if (molecule.name === 'NaCl') {
           // modify the force field for salt crystal (temporary solution)
           if (atom.element.name === 'NA') a.charge = 1;
           else if (atom.element.name === 'CL') a.charge = -1;
           a.epsilon = 0.05;
-          a.sigma *= 0.75;
         }
         if (molecule.atoms) {
           a.position.copy(molecule.atoms[i].position);

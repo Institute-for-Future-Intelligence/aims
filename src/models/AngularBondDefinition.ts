@@ -12,6 +12,7 @@ import { Heptane } from './bonds/Heptane.ts';
 import { Octane } from './bonds/Octane.ts';
 import { Nonane } from './bonds/Nonane.ts';
 import { Decane } from './bonds/Decane.ts';
+import { Benzene } from './bonds/Benzene.ts';
 
 export const getAngularBondDefinition = (name: string): Triple[] => {
   if (name === 'Water') return [{ i: 1, j: 0, k: 2 }];
@@ -26,6 +27,7 @@ export const getAngularBondDefinition = (name: string): Triple[] => {
     ];
   }
 
+  if (name === 'Benzene') return Benzene.angularBondDefinition;
   if (name === 'Ethane') return Ethane.angularBondDefinition;
   if (name === 'Propane') return Propane.angularBondDefinition;
   if (name === 'Butane') return Butane.angularBondDefinition;

@@ -12,8 +12,10 @@ import { Heptane } from './bonds/Heptane.ts';
 import { Octane } from './bonds/Octane.ts';
 import { Nonane } from './bonds/Nonane.ts';
 import { Decane } from './bonds/Decane.ts';
+import { Benzene } from './bonds/Benzene.ts';
 
 export const getTorsionalBondDefinition = (name: string): Quadruple[] => {
+  if (name === 'Benzene') return Benzene.torsionalBondDefinition;
   if (name === 'Ethane') return Ethane.torsionalBondDefinition;
   if (name === 'Propane') return Propane.torsionalBondDefinition;
   if (name === 'Butane') return Butane.torsionalBondDefinition;
