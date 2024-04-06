@@ -42,5 +42,35 @@ export const getAngularBondDefinition = (name: string): Triple[] => {
       { i1: 0, i2: 1, i3: 7 },
     ];
   }
+  if (name === 'Propane') {
+    return [
+      // C-C-C angle
+      { i1: 1, i2: 0, i3: 2 },
+      // left CH3 group
+      { i1: 5, i2: 1, i3: 6 },
+      { i1: 6, i2: 1, i3: 7 },
+      { i1: 7, i2: 1, i3: 5 },
+      // middle CH2 gropu
+      { i1: 3, i2: 0, i3: 4 },
+      // right CH3 group
+      { i1: 8, i2: 2, i3: 9 },
+      { i1: 9, i2: 2, i3: 10 },
+      { i1: 10, i2: 2, i3: 8 },
+      // H-C-C angles from left to middle
+      { i1: 5, i2: 1, i3: 0 },
+      { i1: 6, i2: 1, i3: 0 },
+      { i1: 7, i2: 1, i3: 0 },
+      // C-C-H angles from middle to right
+      { i1: 0, i2: 2, i3: 8 },
+      { i1: 0, i2: 2, i3: 9 },
+      { i1: 0, i2: 2, i3: 10 },
+      // C-C-H angles from left to middle
+      { i1: 1, i2: 0, i3: 3 },
+      { i1: 1, i2: 0, i3: 4 },
+      // H-C-C angles from middle to right
+      { i1: 3, i2: 0, i3: 2 },
+      { i1: 4, i2: 0, i3: 2 },
+    ];
+  }
   return [];
 };

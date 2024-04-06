@@ -346,7 +346,7 @@ const DynamicsViewer = React.memo(
           moleculesRef.current &&
           moleculesRef.current[0]?.atoms.map((a, i) => {
             return (
-              <Billboard position={[a.position.x, a.position.y, a.position.z]}>
+              <Billboard key={i} position={[a.position.x, a.position.y, a.position.z]}>
                 <Text color="white" anchorX="center" anchorY="middle" fontSize={0.25}>
                   {i}
                 </Text>
