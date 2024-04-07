@@ -248,4 +248,6 @@ export const translationStep = (state: CommonStoreState) => state.projectState.t
 
 export const energyTimeSeries = (state: DataStoreState) => state.energyTimeSeries;
 
+export const currentTemperature = (state: PrimitiveStoreState) => state.currentTemperature;
+
 export const delteAllAtoms = (state: CommonStoreState) => state.deleteAllAtoms;

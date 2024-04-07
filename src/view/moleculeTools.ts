@@ -27,11 +27,11 @@ import Bond from '../lib/chem/Bond';
 export const generateVdwLines = (molecules: Molecule[], maximumRelativeDistanceSquared: number) => {
   const bonds: VdwBond[] = [];
   const n = molecules.length;
-  for (let i = 0; i < n; i++) {
+  for (let i = 0; i < n - 1; i++) {
     const mi = molecules[i];
     for (const ai of mi.atoms) {
       const ei = Element.getByName(ai.elementSymbol);
-      for (let j = 0; j < n; j++) {
+      for (let j = i + 1; j < n; j++) {
         if (j === i) continue;
         const mj = molecules[j];
         for (const aj of mj.atoms) {

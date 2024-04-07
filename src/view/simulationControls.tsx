@@ -125,6 +125,7 @@ const SimulationControls = React.memo(() => {
             energyTimeSeries.add(energyData);
             if (md.indexOfStep % 100 === 0) console.log(energyData);
             usePrimitiveStore.getState().set((state) => {
+              state.currentTemperature = md.getCurrentTemperature();
               state.updateViewerFlag = !state.updateViewerFlag;
             });
             // recursive call to the next step of the simulation

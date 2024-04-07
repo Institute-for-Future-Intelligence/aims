@@ -3,6 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
+import thermometer from '../assets/thermometer.png';
 import {
   Col,
   Descriptions,
@@ -35,6 +36,7 @@ const DynamicsSettings = React.memo(() => {
   const temperature = useStore(Selector.temperature) ?? 300;
   const timeStep = useStore(Selector.timeStep) ?? 0.5;
   const updateInfoFlag = usePrimitiveStore(Selector.updateInfoFlag);
+  const currentTemperature = usePrimitiveStore(Selector.currentTemperature);
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
 
@@ -457,6 +459,29 @@ const DynamicsSettings = React.memo(() => {
           {t('experiment.Molecules', lang)}
         </span>
       </Popover>
+      {mdRef?.current && (
+        <span
+          style={{
+            position: 'absolute',
+            top: '14px',
+            left: 'calc(50% - 20px)',
+            zIndex: 13,
+            fontSize: '14px',
+            userSelect: 'none',
+            color: 'lightgray',
+          }}
+        >
+          <img
+            src={thermometer}
+            style={{
+              width: '20px',
+              filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(251deg) brightness(102%) contrast(102%)',
+            }}
+            title={t('experiment.Temperature', lang)}
+          />{' '}
+          {Math.round(constantTemperature ? temperature : currentTemperature) + 'K'}
+        </span>
+      )}
     </>
   );
 });

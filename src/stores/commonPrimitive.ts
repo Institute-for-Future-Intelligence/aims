@@ -67,6 +67,8 @@ export interface PrimitiveStoreState {
   showAccountSettingsPanel: boolean;
   userCount: number;
 
+  currentTemperature: number;
+
   set: (fn: (state: PrimitiveStoreState) => void) => void;
   setPrimitiveStore: <K extends keyof PrimitiveStoreState, V extends PrimitiveStoreState[K]>(key: K, val: V) => void;
 }
@@ -171,5 +173,7 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
 
     showAccountSettingsPanel: false,
     userCount: 0,
+
+    currentTemperature: 300,
   };
 });

@@ -166,6 +166,11 @@ export class MolecularDynamics {
     }
   }
 
+  getCurrentTemperature(): number {
+    if (this.atoms.length === 0) return 0;
+    return (this.kineticEnergy * UNIT_EV_OVER_KB) / this.atoms.length;
+  }
+
   move() {
     if (this.movableCount === 0) return;
     if (this.indexOfStep % 10 === 0) this.nonBondedInteractions.checkNeighborList();
