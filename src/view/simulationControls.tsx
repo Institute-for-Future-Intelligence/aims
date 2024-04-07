@@ -24,7 +24,7 @@ import { HeatBath } from '../models/HeatBath.ts';
 
 const Container = styled.div`
   position: absolute;
-  left: calc(50% - 150px);
+  left: calc(50% - 110px);
   width: 220px;
   bottom: 6px;
   margin: 0;

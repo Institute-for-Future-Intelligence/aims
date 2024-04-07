@@ -224,12 +224,20 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           return viewOnly ? sessionStorage : localStorage;
         }),
         skipHydration: Util.isOpenFromURL(),
-        partialize: (state) => ({
-          language: state.language,
-          user: state.user,
-          projectState: state.projectState,
-          selectedFloatingWindow: state.selectedFloatingWindow,
-        }),
+        partialize: (state) => {
+          const ps = state.projectState;
+          for (const m of ps.testMolecules) {
+            m.radialBonds = [];
+            m.angularBonds = [];
+            m.torsionalBonds = [];
+          }
+          return {
+            language: state.language,
+            user: state.user,
+            projectState: ps,
+            selectedFloatingWindow: state.selectedFloatingWindow,
+          };
+        },
         merge: (persistedState: any, currentState: CommonStoreState) => {
           const state = { ...currentState, ...persistedState } as CommonStoreState;
           state.projectState.testMolecules = ModelUtil.reconstructMoleculesFromFirestore(
