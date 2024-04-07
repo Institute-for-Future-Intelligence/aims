@@ -162,7 +162,7 @@ const DynamicsViewer = React.memo(
         } else {
           // temporary solution
           if (a.elementSymbol === 'C' || a.elementSymbol === 'H') {
-            a.epsilon = 0.005;
+            a.epsilon = 0.01;
           }
         }
         if (molecule.atoms) {
