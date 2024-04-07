@@ -10,7 +10,7 @@ import { UndoableCheck } from './undo/UndoableCheck';
 import { showInfo } from './helpers';
 import i18n from './i18n/i18n';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { FlightControl, ProjectType, SpaceshipDisplayMode, UNDO_SHOW_INFO_DURATION } from './constants';
+import { FlightControl, PickMode, ProjectType, SpaceshipDisplayMode, UNDO_SHOW_INFO_DURATION } from './constants';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { askToCreateProject, askToOpenProject, saveProject, saveProjectAs } from './components/mainMenu/projectMenu';
 import { resetView, zoomView } from './components/mainMenu/viewMenu';
@@ -469,7 +469,10 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
           }
         }
         break;
-      case 'esc': {
+      case 'shift': {
+        usePrimitiveStore.getState().set((state) => {
+          state.pickMode = PickMode.ATOM;
+        });
         break;
       }
     }
@@ -495,6 +498,12 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       case 'up':
         stopFlying();
         break;
+      case 'shift': {
+        usePrimitiveStore.getState().set((state) => {
+          state.pickMode = PickMode.MOLECULE;
+        });
+        break;
+      }
     }
   };
 

@@ -120,6 +120,7 @@ export const i18n_en = {
       Axes: 'Axes',
       Container: 'Container',
       Mechanics: 'Mechanics',
+      Trajectory: 'Trajectory',
       VanDerWaalsBonds: 'Van der Waals Bonds',
       MomentumVectors: 'Momentum Vectors',
       ForceVectors: 'Force Vectors',
@@ -178,9 +179,9 @@ export const i18n_en = {
     },
 
     experiment: {
+      ElectricCharge: 'Electric Charge',
       Model: 'Model',
       Display: 'Display',
-      Conditions: 'Conditions',
       MolecularDynamics: 'Molecular Dynamics',
       StartSimulation: 'Start Simulation',
       PauseSimulation: 'Pause Simulation',

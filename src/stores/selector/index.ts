@@ -66,6 +66,10 @@ export const forceScaleFactor = (state: CommonStoreState) => state.projectState.
 
 export const kineticEnergyScaleFactor = (state: CommonStoreState) => state.projectState.kineticEnergyScaleFactor;
 
+export const pickMode = (state: PrimitiveStoreState) => state.pickMode;
+
+export const pickedAtom = (state: PrimitiveStoreState) => state.pickedAtom;
+
 export const pickedMoleculeIndex = (state: PrimitiveStoreState) => state.pickedMoleculeIndex;
 
 export const copiedMoleculeIndex = (state: PrimitiveStoreState) => state.copiedMoleculeIndex;

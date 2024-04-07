@@ -15,6 +15,7 @@ export interface ContextMenuProps {
 }
 
 const DropdownContextMenu: React.FC<ContextMenuProps> = ({ children }) => {
+  const pickedAtom = usePrimitiveStore(Selector.pickedAtom);
   const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
   const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
@@ -29,6 +30,7 @@ const DropdownContextMenu: React.FC<ContextMenuProps> = ({ children }) => {
       trigger={['contextMenu']}
       menu={createDefaultMenu(
         projectType,
+        pickedAtom,
         pickedMoleculeIndex,
         copiedMoleculeIndex,
         cutMolecule,

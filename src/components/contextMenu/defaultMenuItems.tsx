@@ -667,6 +667,46 @@ export const ContainerCheckBox = () => {
   );
 };
 
+export const TrajectoryCheckBox = () => {
+  const pickedAtom = usePrimitiveStore(Selector.pickedAtom);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const setTrajectory = (checked: boolean) => {
+    useStore.getState().set((state) => {
+      // TODO
+    });
+    setChanged(true);
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Checkbox
+        checked={!!pickedAtom}
+        onChange={(e: CheckboxChangeEvent) => {
+          const checked = e.target.checked;
+          const undoableCheck = {
+            name: 'Show Trajectory',
+            timestamp: Date.now(),
+            checked: checked,
+            undo: () => {
+              setTrajectory(!undoableCheck.checked);
+            },
+            redo: () => {
+              setTrajectory(undoableCheck.checked);
+            },
+          } as UndoableCheck;
+          useStore.getState().addUndoable(undoableCheck);
+          setTrajectory(checked);
+        }}
+      >
+        {t('molecularViewer.Trajectory', lang)}
+      </Checkbox>
+    </MenuItem>
+  );
+};
+
 export const VdwBondsCheckBox = () => {
   const visible = useStore(Selector.vdwBondsVisible);
   const setChanged = usePrimitiveStore(Selector.setChanged);

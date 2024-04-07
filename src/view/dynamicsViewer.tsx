@@ -28,7 +28,7 @@ import { useStore } from '../stores/common.ts';
 import { Molecule } from '../models/Molecule.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import ModelContainer from './modelContainer.tsx';
-import { Billboard, Instance, Instances, Line, Text } from '@react-three/drei';
+import { Billboard, Instance, Instances, Line, Sphere, Text } from '@react-three/drei';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import Picker from '../lib/ui/Picker.js';
 import settings from '../lib/settings.js';
@@ -41,7 +41,7 @@ import {
   POTENTIAL_ENERGY_COLOR,
   VAN_DER_WAALS_COLOR,
 } from '../models/physicalConstants.ts';
-import { UNIT_VECTOR_POS_Y } from '../constants.ts';
+import { PickMode, UNIT_VECTOR_POS_Y } from '../constants.ts';
 import { useDataStore } from '../stores/commonData.ts';
 import { Triple } from '../models/Triple.ts';
 import { getAngularBondDefinition } from '../models/AngularBondDefinition.ts';
@@ -75,6 +75,8 @@ const DynamicsViewer = React.memo(
   }: DynamicsViewerProps) => {
     const testMolecules = useStore(Selector.testMolecules);
     const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
+    const pickMode = usePrimitiveStore(Selector.pickMode);
+    const pickedAtom = usePrimitiveStore(Selector.pickedAtom);
     const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
     const viewerStyle = useStore(Selector.chamberViewerStyle);
     const vdwBondsVisible = useStore(Selector.vdwBondsVisible);
@@ -309,18 +311,34 @@ const DynamicsViewer = React.memo(
     useEffect(() => {
       const picker = new Picker(groupRef.current, camera, gl.domElement);
       // @ts-expect-error ignore
-      settings.set('pick', 'molecule');
+      settings.set('pick', pickMode);
       // @ts-expect-error ignore
       picker.addEventListener('newpick', (event) => {
-        const pickedMoleculeIndex = event.obj.molecule ? event.obj.molecule.index - 1 : -1;
-        usePrimitiveStore.getState().set((state) => {
-          state.pickedMoleculeIndex = pickedMoleculeIndex;
-        });
+        switch (pickMode) {
+          case PickMode.MOLECULE: {
+            const pickedMoleculeIndex = event.obj.molecule ? event.obj.molecule.index - 1 : -1;
+            usePrimitiveStore.getState().set((state) => {
+              state.pickedMoleculeIndex = pickedMoleculeIndex;
+              state.pickedAtom = null;
+            });
+            break;
+          }
+          case PickMode.ATOM: {
+            const pickedAtomIndex = event.obj.atom ? event.obj.atom.index : -1;
+            if (pickedAtomIndex !== -1) {
+              usePrimitiveStore.getState().set((state) => {
+                state.pickedAtom = molecularDynamicsRef.current?.atoms[pickedAtomIndex] ?? null;
+                state.pickedMoleculeIndex = -1;
+              });
+            }
+            break;
+          }
+        }
       });
       return () => {
         picker.dispose();
       };
-    }, []);
+    }, [pickMode]);
 
     const skinnyStyle = useMemo(() => {
       return (
@@ -373,6 +391,14 @@ const DynamicsViewer = React.memo(
               );
             })}
           </Instances>
+        )}
+        {pickedAtom && (
+          <Sphere
+            position={pickedAtom.position}
+            scale={Element.getByName(pickedAtom.elementSymbol).radius * (skinnyStyle ? 0.4 : 1.2)}
+          >
+            <meshStandardMaterial transparent opacity={0.5} color={'yellow'} />
+          </Sphere>
         )}
         {/* draw arrow bodies of the momentum vectors */}
         {momentumVisible && (

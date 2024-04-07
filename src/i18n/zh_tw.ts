@@ -120,6 +120,7 @@ export const i18n_zh_tw = {
       Axes: '顯示坐標軸',
       Container: '顯示容器',
       Mechanics: '力學',
+      Trajectory: '顯示運動軌跡',
       VanDerWaalsBonds: '顯示范德華鍵',
       MomentumVectors: '顯示動量向量',
       ForceVectors: '顯示力向量',
@@ -178,9 +179,9 @@ export const i18n_zh_tw = {
     },
 
     experiment: {
+      ElectricCharge: '電荷',
       Model: '模型',
       Display: '顯示',
-      Conditions: '條件',
       MolecularDynamics: '分子動力學',
       StartSimulation: '運行',
       PauseSimulation: '暫停',

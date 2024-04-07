@@ -4,9 +4,10 @@
 
 import { createWithEqualityFn } from 'zustand/traditional';
 import { produce } from 'immer';
-import { MoleculeInterface, MoleculeTransform } from '../types';
-import { ProjectType } from '../constants';
+import { MoleculeInterface } from '../types';
+import { PickMode, ProjectType } from '../constants';
 import { Molecule } from '../models/Molecule.ts';
+import { Atom } from '../models/Atom.ts';
 
 // avoid using undefined value in the store for now.
 export interface PrimitiveStoreState {
@@ -21,6 +22,8 @@ export interface PrimitiveStoreState {
   hoveredMolecule: MoleculeInterface | null;
   selectedPlane: number;
 
+  pickMode: PickMode;
+  pickedAtom: Atom | null;
   pickedMoleculeIndex: number;
   copiedMoleculeIndex: number;
   cutMolecule: Molecule | null;
@@ -114,6 +117,8 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     hoveredMolecule: null,
     selectedPlane: -1,
 
+    pickMode: PickMode.MOLECULE,
+    pickedAtom: null,
     pickedMoleculeIndex: -1,
     copiedMoleculeIndex: -1,
     cutMolecule: null,

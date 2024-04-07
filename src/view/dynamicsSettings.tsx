@@ -9,9 +9,11 @@ import {
   Descriptions,
   DescriptionsProps,
   FloatButton,
+  Image,
   InputNumber,
   Popover,
   Row,
+  Space,
   Switch,
   Tabs,
   TabsProps,
@@ -19,7 +21,7 @@ import {
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
-import { AimOutlined, ExperimentOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { AimOutlined, ExperimentOutlined, InfoCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 
@@ -157,55 +159,6 @@ const DynamicsSettings = React.memo(() => {
       },
       {
         key: '2',
-        label: t('experiment.Conditions', lang),
-        children: (
-          <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
-            <Row gutter={16} style={{ paddingBottom: '4px' }}>
-              <Col span={12} style={{ paddingTop: '5px' }}>
-                <span>{t('experiment.ConstantTemperature', lang)}: </span>
-              </Col>
-              <Col span={12}>
-                <Switch
-                  checked={constantTemperature}
-                  onChange={(checked: boolean) => {
-                    setCommonStore((state) => {
-                      state.projectState.constantTemperature = checked;
-                    });
-                  }}
-                />
-              </Col>
-            </Row>
-            {constantTemperature && (
-              <Row gutter={16} style={{ paddingBottom: '4px' }}>
-                <Col span={12} style={{ paddingTop: '5px' }}>
-                  <span>{t('experiment.Temperature', lang)}: </span>
-                </Col>
-                <Col span={12}>
-                  <InputNumber
-                    addonAfter={'K'}
-                    min={10}
-                    max={5000}
-                    style={{ width: '100%' }}
-                    precision={1}
-                    // make sure that we round up the number as toDegrees may cause things like .999999999
-                    value={parseFloat(temperature.toFixed(1))}
-                    step={1}
-                    onChange={(value) => {
-                      if (value === null) return;
-                      setCommonStore((state) => {
-                        state.projectState.temperature = value;
-                      });
-                      setChanged(true);
-                    }}
-                  />
-                </Col>
-              </Row>
-            )}
-          </div>
-        ),
-      },
-      {
-        key: '3',
         label: t('experiment.Display', lang),
         children: (
           <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
@@ -325,6 +278,41 @@ const DynamicsSettings = React.memo(() => {
   const createContent = useMemo(() => {
     return <Tabs defaultActiveKey="1" items={items} />;
   }, [items]);
+
+  const createThermometer = useMemo(() => {
+    return (
+      <Space direction={'horizontal'} style={{ width: '300px' }} onClick={(e) => e.stopPropagation()}>
+        <span>{t('experiment.ConstantTemperature', lang)}: </span>
+        <Switch
+          checked={constantTemperature}
+          onChange={(checked: boolean) => {
+            setCommonStore((state) => {
+              state.projectState.constantTemperature = checked;
+            });
+          }}
+        />
+        {constantTemperature && (
+          <InputNumber
+            addonAfter={'K'}
+            min={10}
+            max={5000}
+            style={{ width: '100px' }}
+            precision={1}
+            // make sure that we round up the number as toDegrees may cause things like .999999999
+            value={parseFloat(temperature.toFixed(1))}
+            step={1}
+            onChange={(value) => {
+              if (value === null) return;
+              setCommonStore((state) => {
+                state.projectState.temperature = value;
+              });
+              setChanged(true);
+            }}
+          />
+        )}
+      </Space>
+    );
+  }, [temperature, constantTemperature, lang]);
 
   const createInfo = useMemo(() => {
     let atomCount = 0;
@@ -460,27 +448,39 @@ const DynamicsSettings = React.memo(() => {
         </span>
       </Popover>
       {mdRef?.current && (
-        <span
-          style={{
-            position: 'absolute',
-            top: '14px',
-            left: 'calc(50% - 20px)',
-            zIndex: 13,
-            fontSize: '14px',
-            userSelect: 'none',
-            color: 'lightgray',
-          }}
+        <Popover
+          title={
+            <div onClick={(e) => e.stopPropagation()}>
+              <SettingOutlined /> {t('experiment.Temperature', lang)}
+            </div>
+          }
+          content={createThermometer}
         >
-          <img
-            src={thermometer}
+          <span
             style={{
-              width: '20px',
-              filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(251deg) brightness(102%) contrast(102%)',
+              position: 'absolute',
+              top: '14px',
+              left: 'calc(50% - 20px)',
+              zIndex: 13,
+              fontSize: '14px',
+              userSelect: 'none',
+              color: 'lightgray',
             }}
-            title={t('experiment.Temperature', lang)}
-          />{' '}
-          {Math.round(constantTemperature ? temperature : currentTemperature) + 'K'}
-        </span>
+          >
+            <Image
+              preview={false}
+              height={'20px'}
+              alt={'thermometer'}
+              src={thermometer}
+              style={{
+                cursor: 'pointer',
+                filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(251deg) brightness(102%) contrast(102%)',
+              }}
+              title={t('experiment.Temperature', lang)}
+            />{' '}
+            {Math.round(constantTemperature ? temperature : currentTemperature) + 'K'}
+          </span>
+        </Popover>
       )}
     </>
   );

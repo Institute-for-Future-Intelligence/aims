@@ -158,3 +158,8 @@ export enum SpaceshipDisplayMode {
   OUTSIDE_VIEW = 1,
   INSIDE_VIEW = 2,
 }
+
+export enum PickMode {
+  MOLECULE = 'molecule',
+  ATOM = 'atom',
+}
