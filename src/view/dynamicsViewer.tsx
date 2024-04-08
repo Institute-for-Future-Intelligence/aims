@@ -28,7 +28,7 @@ import { useStore } from '../stores/common.ts';
 import { Molecule } from '../models/Molecule.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import ModelContainer from './modelContainer.tsx';
-import { Billboard, Instance, Instances, Line, Sphere, Text } from '@react-three/drei';
+import { Billboard, Box, Instance, Instances, Line, Sphere, Text } from '@react-three/drei';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import Picker from '../lib/ui/Picker.js';
 import settings from '../lib/settings.js';
@@ -545,6 +545,42 @@ const DynamicsViewer = React.memo(
             })}
           </Instances>
         )}
+        {/* draw fixed atoms */}
+        {moleculesRef.current.map((m) => {
+          const arr = [];
+          arr.push(
+            m.atoms.map((a, i) => {
+              if (a.fixed) {
+                return (
+                  <group key={i}>
+                    <Box
+                      args={[0.2, 2, 0.2]}
+                      position={[a.position.x, a.position.y, a.position.z]}
+                      scale={Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.4 : 1.2)}
+                    >
+                      <meshStandardMaterial color={'gray'} />
+                    </Box>
+                    <Box
+                      args={[2, 0.2, 0.2]}
+                      position={[a.position.x, a.position.y, a.position.z]}
+                      scale={Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.4 : 1.2)}
+                    >
+                      <meshStandardMaterial color={'gray'} />
+                    </Box>
+                    <Box
+                      args={[0.2, 0.2, 2]}
+                      position={[a.position.x, a.position.y, a.position.z]}
+                      scale={Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.4 : 1.2)}
+                    >
+                      <meshStandardMaterial color={'gray'} />
+                    </Box>
+                  </group>
+                );
+              }
+            }),
+          );
+          return arr;
+        })}
         {vdwBondsVisible &&
           vdwBondsRef.current &&
           vdwBondsRef.current.map((b, i) => {

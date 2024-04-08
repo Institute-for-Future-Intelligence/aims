@@ -116,6 +116,7 @@ export class ProjectUtil {
       forceScaleFactor: 1,
       kineticEnergyScaleFactor: 1,
       energyGraphVisible: false,
+      trajectoryAtomIndices: new Array<number>(),
 
       testMolecules: new Array<Molecule>(),
 

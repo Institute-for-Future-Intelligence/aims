@@ -106,6 +106,7 @@ export interface ProjectState {
   forceScaleFactor: number;
   kineticEnergyScaleFactor: number;
   energyGraphVisible: boolean;
+  trajectoryAtomIndices: number[];
 
   timeStep: number;
   constantTemperature: boolean;
