@@ -21,6 +21,7 @@ import { User } from '../User';
 import { ProjectUtil } from '../project/ProjectUtil.ts';
 import { Protein } from '../models/Protein.ts';
 import { ModelUtil } from '../models/ModelUtil.ts';
+import { Atom } from '../models/Atom.ts';
 
 enableMapSet();
 
@@ -38,6 +39,8 @@ export interface CommonStoreState {
   projectState: ProjectState;
 
   deleteAllAtoms: () => void;
+  fixAtomByIndex: (index: number, fixed: boolean) => void;
+  getAtomByIndex: (index: number) => Atom | null;
 
   proteinData: Protein | undefined;
 
@@ -93,6 +96,36 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             immerSet((state: CommonStoreState) => {
               state.projectState.testMolecules = [];
             });
+          },
+          fixAtomByIndex(index: number, fixed: boolean) {
+            immerSet((state: CommonStoreState) => {
+              let i = 0;
+              loop1: for (const m of state.projectState.testMolecules) {
+                for (const a of m.atoms) {
+                  if (i === index) {
+                    a.fixed = fixed;
+                    break loop1;
+                  }
+                  i++;
+                }
+              }
+            });
+          },
+          getAtomByIndex(index: number) {
+            let atom = null;
+            immerSet((state: CommonStoreState) => {
+              let i = 0;
+              loop1: for (const m of state.projectState.testMolecules) {
+                for (const a of m.atoms) {
+                  if (i === index) {
+                    atom = a;
+                    break loop1;
+                  }
+                  i++;
+                }
+              }
+            });
+            return atom;
           },
 
           proteinData: undefined,

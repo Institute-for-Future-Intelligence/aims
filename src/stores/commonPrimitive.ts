@@ -23,7 +23,7 @@ export interface PrimitiveStoreState {
   selectedPlane: number;
 
   pickMode: PickMode;
-  pickedAtom: Atom | null;
+  pickedAtomIndex: number;
   pickedMoleculeIndex: number;
   copiedMoleculeIndex: number;
   cutMolecule: Molecule | null;
@@ -118,7 +118,7 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     selectedPlane: -1,
 
     pickMode: PickMode.MOLECULE,
-    pickedAtom: null,
+    pickedAtomIndex: -1,
     pickedMoleculeIndex: -1,
     copiedMoleculeIndex: -1,
     cutMolecule: null,

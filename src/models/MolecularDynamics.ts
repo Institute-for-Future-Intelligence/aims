@@ -90,6 +90,7 @@ export class MolecularDynamics {
   assignTemperature(temperature: number) {
     const n = this.atoms.length;
     if (n === 0) return;
+    if (this.movableCount === 0) return;
     if (temperature < 0) temperature = 0; // no negative temperature
     const tmp = Math.sqrt(temperature) * VT_CONVERSION_CONSTANT;
     let sumVx = 0;
@@ -107,7 +108,7 @@ export class MolecularDynamics {
       sumMass += a.mass;
     }
     // if more than one atom, ensure that the average velocity is zero
-    if (sumMass > ZERO_TOLERANCE && n > 1) {
+    if (sumMass > ZERO_TOLERANCE && this.movableCount > 1) {
       sumVx /= sumMass;
       sumVy /= sumMass;
       sumVz /= sumMass;
@@ -123,6 +124,7 @@ export class MolecularDynamics {
 
   setTemperature(temperature: number) {
     if (this.atoms.length === 0) return;
+    if (this.movableCount === 0) return;
     if (temperature < ZERO_TOLERANCE) temperature = 0;
     this.updateKineticEnergy(); // ensure that we get the latest kinetic energy
     const kin = this.kineticEnergy / this.atoms.length;

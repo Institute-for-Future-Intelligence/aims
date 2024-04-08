@@ -58,6 +58,9 @@ export class Atom {
       newAtom.initialPosition = new Vector3();
       newAtom.initialVelocity = new Vector3();
     }
+    newAtom.fixed = atom.fixed;
+    newAtom.damp = atom.damp;
+    newAtom.charge = atom.charge;
     return newAtom;
   }
 
@@ -124,21 +127,6 @@ export class Atom {
     this.velocity.z += h * (this.force.z - this.acceleration.z);
     this.acceleration.copy(this.force);
     this.force.multiplyScalar(this.mass);
-  }
-
-  // Check if this atom is bonded with the target via a radial bond
-  isRBonded(a: Atom): boolean {
-    return false;
-  }
-
-  // Check if this atom is bonded with the target via an angular bond
-  isABonded(a: Atom): boolean {
-    return false;
-  }
-
-  // Check if this atom is bonded with the target via a torsional bond
-  isTBonded(a: Atom): boolean {
-    return false;
   }
 
   applyDamping() {

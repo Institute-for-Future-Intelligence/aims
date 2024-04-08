@@ -668,7 +668,7 @@ export const ContainerCheckBox = () => {
 };
 
 export const TrajectoryCheckBox = () => {
-  const pickedAtom = usePrimitiveStore(Selector.pickedAtom);
+  const pickedAtom = usePrimitiveStore(Selector.pickedAtomIndex);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();
@@ -708,22 +708,29 @@ export const TrajectoryCheckBox = () => {
 };
 
 export const FixedCheckBox = () => {
-  const pickedAtom = usePrimitiveStore(Selector.pickedAtom);
+  const getAtomByIndex = useStore(Selector.getAtomByIndex);
+  const fixAtomByIndex = useStore(Selector.fixAtomByIndex);
+  const pickedAtomIndex = usePrimitiveStore(Selector.pickedAtomIndex);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const mdRef = useRefStore.getState().molecularDynamicsRef;
+
   const { t } = useTranslation();
   const lang = useLanguage();
 
   const setFixed = (checked: boolean) => {
-    useStore.getState().set((state) => {
-      if (pickedAtom) pickedAtom.fixed = checked;
-    });
-    setChanged(true);
+    if (pickedAtomIndex !== -1) {
+      fixAtomByIndex(pickedAtomIndex, checked);
+      setChanged(true);
+      if (mdRef?.current) {
+        mdRef.current.atoms[pickedAtomIndex].fixed = checked;
+      }
+    }
   };
 
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
-        checked={!!pickedAtom?.fixed}
+        checked={!!getAtomByIndex(pickedAtomIndex)?.fixed}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
           const undoableCheck = {

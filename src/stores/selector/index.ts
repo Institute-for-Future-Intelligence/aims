@@ -68,7 +68,7 @@ export const kineticEnergyScaleFactor = (state: CommonStoreState) => state.proje
 
 export const pickMode = (state: PrimitiveStoreState) => state.pickMode;
 
-export const pickedAtom = (state: PrimitiveStoreState) => state.pickedAtom;
+export const pickedAtomIndex = (state: PrimitiveStoreState) => state.pickedAtomIndex;
 
 export const pickedMoleculeIndex = (state: PrimitiveStoreState) => state.pickedMoleculeIndex;
 
@@ -255,3 +255,7 @@ export const energyTimeSeries = (state: DataStoreState) => state.energyTimeSerie
 export const currentTemperature = (state: PrimitiveStoreState) => state.currentTemperature;
 
 export const delteAllAtoms = (state: CommonStoreState) => state.deleteAllAtoms;
+
+export const getAtomByIndex = (state: CommonStoreState) => state.getAtomByIndex;
+
+export const fixAtomByIndex = (state: CommonStoreState) => state.fixAtomByIndex;

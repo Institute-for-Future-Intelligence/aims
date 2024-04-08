@@ -33,11 +33,10 @@ import {
 import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
 import { Molecule } from '../../models/Molecule.ts';
-import { Atom } from '../../models/Atom.ts';
 
 export const createDefaultMenu = (
   projectType: ProjectType,
-  pickedAtom: Atom | null,
+  pickedAtomIndex: number,
   pickedMoleculeIndex: number,
   copiedMoleculeIndex: number,
   cutMolecule: MoleculeInterface | null,
@@ -106,83 +105,86 @@ export const createDefaultMenu = (
           },
         ],
       });
-    } else if (pickedAtom) {
-      items.push({
-        key: 'atom-name',
-        label: (
-          <>
-            <MenuItem stayAfterClick={false} hasPadding={false} fontWeight={'bold'} cursor={'default'}>
-              {pickedAtom.elementSymbol + ' (#' + pickedAtom.index + ')'}
-            </MenuItem>
-            <hr />
-          </>
-        ),
-      });
+    } else if (pickedAtomIndex !== -1) {
+      const pickedAtom = useStore.getState().getAtomByIndex(pickedAtomIndex);
+      if (pickedAtom) {
+        items.push({
+          key: 'atom-name',
+          label: (
+            <>
+              <MenuItem stayAfterClick={false} hasPadding={false} fontWeight={'bold'} cursor={'default'}>
+                {pickedAtom.elementSymbol + ' (#' + pickedAtomIndex + ')'}
+              </MenuItem>
+              <hr />
+            </>
+          ),
+        });
 
-      items.push({
-        key: 'atom-mass',
-        label: (
-          <>
-            <MenuItem stayAfterClick={false} hasPadding={true}>
-              {i18n.t('experiment.AtomicMass', lang) + ': ' + pickedAtom.mass.toFixed(2)}
-            </MenuItem>
-          </>
-        ),
-      });
+        items.push({
+          key: 'atom-mass',
+          label: (
+            <>
+              <MenuItem stayAfterClick={false} hasPadding={true}>
+                {i18n.t('experiment.AtomicMass', lang) + ': ' + pickedAtom.mass.toFixed(2)}
+              </MenuItem>
+            </>
+          ),
+        });
 
-      items.push({
-        key: 'atom-sigma',
-        label: (
-          <>
-            <MenuItem stayAfterClick={false} hasPadding={true}>
-              {'σ: ' + pickedAtom.sigma.toFixed(3)}
-            </MenuItem>
-          </>
-        ),
-      });
+        items.push({
+          key: 'atom-sigma',
+          label: (
+            <>
+              <MenuItem stayAfterClick={false} hasPadding={true}>
+                {'σ: ' + pickedAtom.sigma.toFixed(3)}
+              </MenuItem>
+            </>
+          ),
+        });
 
-      items.push({
-        key: 'atom-epsilon',
-        label: (
-          <>
-            <MenuItem stayAfterClick={false} hasPadding={true}>
-              {'ε: ' + pickedAtom.epsilon.toFixed(3)}
-            </MenuItem>
-          </>
-        ),
-      });
+        items.push({
+          key: 'atom-epsilon',
+          label: (
+            <>
+              <MenuItem stayAfterClick={false} hasPadding={true}>
+                {'ε: ' + pickedAtom.epsilon.toFixed(3)}
+              </MenuItem>
+            </>
+          ),
+        });
 
-      items.push({
-        key: 'atom-charge',
-        label: (
-          <>
-            <MenuItem stayAfterClick={false} hasPadding={true}>
-              {i18n.t('experiment.ElectricCharge', lang) + ': ' + pickedAtom.charge.toPrecision(2)}
-            </MenuItem>
-          </>
-        ),
-      });
+        items.push({
+          key: 'atom-charge',
+          label: (
+            <>
+              <MenuItem stayAfterClick={false} hasPadding={true}>
+                {i18n.t('experiment.ElectricCharge', lang) + ': ' + pickedAtom.charge.toPrecision(2)}
+              </MenuItem>
+            </>
+          ),
+        });
 
-      items.push({
-        key: 'atom-damp',
-        label: (
-          <>
-            <MenuItem stayAfterClick={false} hasPadding={true}>
-              {i18n.t('experiment.DampingCoefficient', lang) + ': ' + pickedAtom.damp.toPrecision(2)}
-            </MenuItem>
-          </>
-        ),
-      });
+        items.push({
+          key: 'atom-damp',
+          label: (
+            <>
+              <MenuItem stayAfterClick={false} hasPadding={true}>
+                {i18n.t('experiment.DampingCoefficient', lang) + ': ' + pickedAtom.damp.toPrecision(2)}
+              </MenuItem>
+            </>
+          ),
+        });
 
-      items.push({
-        key: 'atom-fix',
-        label: <FixedCheckBox />,
-      });
+        items.push({
+          key: 'atom-fix',
+          label: <FixedCheckBox />,
+        });
 
-      items.push({
-        key: 'atom-trajectory',
-        label: <TrajectoryCheckBox />,
-      });
+        items.push({
+          key: 'atom-trajectory',
+          label: <TrajectoryCheckBox />,
+        });
+      }
     } else {
       if ((copiedMoleculeIndex !== -1 || cutMolecule) && selectedPlane !== -1) {
         items.push({

@@ -77,19 +77,6 @@ export const generateComplex = (molecules: Molecule[]) => {
     enableEditing: false,
     serialAtomMap: false,
   });
-  // const bonds = complex.getBonds() as BondJS[];
-  // const atoms: Atom[] = [];
-  // for (const m of molecules) {
-  //   atoms.push(...m.atoms);
-  // }
-  // for (const b of bonds) {
-  //   const startAtomIndex = (b._left as AtomJS).index;
-  //   const endAtomIndex = (b._right as AtomJS).index;
-  //   const m = ModelUtil.getMolecule(atoms[startAtomIndex], molecules);
-  //   if (m) {
-  //     m.bonds.push({ atom1: atoms[startAtomIndex], atom2: atoms[endAtomIndex] } as RadialBond);
-  //   }
-  // }
   return complex;
 };
 

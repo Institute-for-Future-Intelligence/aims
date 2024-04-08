@@ -76,7 +76,7 @@ const DynamicsViewer = React.memo(
     const testMolecules = useStore(Selector.testMolecules);
     const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
     const pickMode = usePrimitiveStore(Selector.pickMode);
-    const pickedAtom = usePrimitiveStore(Selector.pickedAtom);
+    const pickedAtomIndex = usePrimitiveStore(Selector.pickedAtomIndex);
     const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
     const viewerStyle = useStore(Selector.chamberViewerStyle);
     const vdwBondsVisible = useStore(Selector.vdwBondsVisible);
@@ -96,6 +96,7 @@ const DynamicsViewer = React.memo(
     const moleculesRef = useRef<Molecule[]>([]);
     const vdwBondsRef = useRef<VdwBond[]>([]);
     const atomIndexRef = useRef<number>(-1);
+    const pickedAtomRef = useRef<Atom | null>(null);
     const groupRef = useRef<RCGroup>(null);
     const cameraRef = useRef<Camera | undefined>();
     const raycasterRef = useRef<Raycaster | undefined>();
@@ -173,6 +174,7 @@ const DynamicsViewer = React.memo(
           a.position.copy(molecule.atoms[i].position);
           a.velocity.copy(molecule.atoms[i].velocity);
           a.force.copy(molecule.atoms[i].force);
+          a.fixed = molecule.atoms[i].fixed;
         }
         a.initialPosition?.copy(a.position);
         a.initialVelocity?.copy(a.velocity);
@@ -283,6 +285,8 @@ const DynamicsViewer = React.memo(
             vdwBondsRef.current = generateVdwLines(moleculesRef.current, vdwBondCutoffRelative * vdwBondCutoffRelative);
             setUpdateFlag(!updateFlag); // without this, the vdw bonds will not be drawn initially
           }
+          pickedAtomRef.current =
+            pickedAtomIndex !== -1 ? ModelUtil.getAtomByIndex(pickedAtomIndex, moleculesRef.current) : null;
           invalidate();
         })
         .finally(() => {
@@ -308,6 +312,8 @@ const DynamicsViewer = React.memo(
       updateViewerFlag,
       pickedMoleculeIndex,
       kineticEnergyScaleFactor,
+      pickedAtomIndex,
+      moleculesRef,
     ]);
 
     useEffect(() => {
@@ -318,21 +324,19 @@ const DynamicsViewer = React.memo(
       picker.addEventListener('newpick', (event) => {
         switch (pickMode) {
           case PickMode.MOLECULE: {
-            const pickedMoleculeIndex = event.obj.molecule ? event.obj.molecule.index - 1 : -1;
+            const pickedIndex = event.obj.molecule ? event.obj.molecule.index - 1 : -1;
             usePrimitiveStore.getState().set((state) => {
-              state.pickedMoleculeIndex = pickedMoleculeIndex;
-              state.pickedAtom = null;
+              state.pickedMoleculeIndex = pickedIndex;
+              state.pickedAtomIndex = -1;
             });
             break;
           }
           case PickMode.ATOM: {
-            const pickedAtomIndex = event.obj.atom ? event.obj.atom.index : -1;
-            if (pickedAtomIndex !== -1) {
-              usePrimitiveStore.getState().set((state) => {
-                state.pickedAtom = molecularDynamicsRef.current?.atoms[pickedAtomIndex] ?? null;
-                state.pickedMoleculeIndex = -1;
-              });
-            }
+            const pickedIndex = event.obj.atom ? event.obj.atom.index : -1;
+            usePrimitiveStore.getState().set((state) => {
+              state.pickedAtomIndex = pickedIndex;
+              state.pickedMoleculeIndex = -1;
+            });
             break;
           }
         }
@@ -402,10 +406,15 @@ const DynamicsViewer = React.memo(
             })}
           </Instances>
         )}
-        {pickedAtom && (
+        {pickedAtomRef.current && (
+          //   must use position.x, etc. in order for this to update in a molecular dynamics simulation
           <Sphere
-            position={pickedAtom.position}
-            scale={Element.getByName(pickedAtom.elementSymbol).radius * (skinnyStyle ? 0.4 : 1.2)}
+            position={[
+              pickedAtomRef.current.position.x,
+              pickedAtomRef.current.position.y,
+              pickedAtomRef.current.position.z,
+            ]}
+            scale={Element.getByName(pickedAtomRef.current.elementSymbol).radius * (skinnyStyle ? 0.4 : 1.2)}
           >
             <meshStandardMaterial transparent opacity={0.5} color={'yellow'} />
           </Sphere>

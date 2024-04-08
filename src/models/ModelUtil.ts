@@ -5,7 +5,6 @@
 import { Atom } from './Atom.ts';
 import { Molecule } from './Molecule.ts';
 import { UNIT_EV_OVER_KB } from './physicalConstants.ts';
-import { Triple } from './Triple.ts';
 
 export class ModelUtil {
   static reconstructMoleculesFromFirestore(m: any) {
@@ -15,6 +14,17 @@ export class ModelUtil {
       array.push(Molecule.clone(x));
     }
     return array;
+  }
+
+  static getAtomByIndex(index: number, molecules: Molecule[]): Atom | null {
+    let i = 0;
+    for (const m of molecules) {
+      for (const a of m.atoms) {
+        if (index === i) return a;
+        i++;
+      }
+    }
+    return null;
   }
 
   static convertToTemperatureFactor(ke: number, scale?: number): number {
