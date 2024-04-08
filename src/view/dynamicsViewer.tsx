@@ -88,12 +88,14 @@ const DynamicsViewer = React.memo(
     const kineticEnergyScaleFactor = useStore(Selector.kineticEnergyScaleFactor) ?? 1;
     const molecularContainer = useStore(Selector.molecularContainer);
     const timeStep = useStore(Selector.timeStep);
+    const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
 
     const [complex, setComplex] = useState<any>();
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
     const moleculesRef = useRef<Molecule[]>([]);
     const vdwBondsRef = useRef<VdwBond[]>([]);
+    const atomIndexRef = useRef<number>(-1);
     const groupRef = useRef<RCGroup>(null);
     const cameraRef = useRef<Camera | undefined>();
     const raycasterRef = useRef<Raycaster | undefined>();
@@ -144,7 +146,7 @@ const DynamicsViewer = React.memo(
       for (const m of testMolecules) {
         loadMolecule(m, processResult);
       }
-    }, [testMolecules]);
+    }, [testMolecules, resetSimulation]);
 
     const processResult = (result: any, molecule?: Molecule) => {
       if (!molecule) return;
@@ -367,14 +369,22 @@ const DynamicsViewer = React.memo(
         />
         {style === MolecularViewerStyle.AtomIndex &&
           moleculesRef.current &&
-          moleculesRef.current[0]?.atoms.map((a, i) => {
-            return (
-              <Billboard key={i} position={[a.position.x, a.position.y, a.position.z]}>
-                <Text color="white" anchorX="center" anchorY="middle" fontSize={0.25}>
-                  {i}
-                </Text>
-              </Billboard>
+          moleculesRef.current.map((m, i) => {
+            if (i === 0) atomIndexRef.current = -1;
+            const labels = [];
+            labels.push(
+              m.atoms.map((a) => {
+                atomIndexRef.current++;
+                return (
+                  <Billboard key={atomIndexRef.current} position={[a.position.x, a.position.y, a.position.z]}>
+                    <Text color="white" anchorX="center" anchorY="middle" fontSize={0.25}>
+                      {atomIndexRef.current}
+                    </Text>
+                  </Billboard>
+                );
+              }),
             );
+            return labels;
           })}
         {pickedMoleculeIndex !== -1 && moleculesRef.current && (
           <Instances limit={1000} range={1000}>

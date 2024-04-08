@@ -55,7 +55,7 @@ const SimulationControls = React.memo(() => {
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
   const requestRef = useRef<number>(0);
-  const requestResetRef = useRef<boolean>(false);
+  const askForResetRef = useRef<boolean>(false);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -84,13 +84,19 @@ const SimulationControls = React.memo(() => {
       return () => {
         // this is called when the recursive call of requestAnimationFrame exits
         cancelAnimationFrame(requestRef.current);
+        if (askForResetRef.current) {
+          askForResetRef.current = false;
+          usePrimitiveStore.getState().set((state) => {
+            state.resetSimulation = true;
+          });
+        }
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startSimulation]);
 
   useEffect(() => {
-    if (mdRef?.current) {
+    if (mdRef?.current && resetSimulation) {
       const md = mdRef.current;
       md.reset();
       energyTimeSeries.clear();
@@ -102,10 +108,8 @@ const SimulationControls = React.memo(() => {
 
   const simulate = () => {
     if (startSimulation) {
-      if (requestResetRef.current) {
-        requestResetRef.current = false;
+      if (askForResetRef.current) {
         usePrimitiveStore.getState().set((state) => {
-          state.resetSimulation = true;
           state.startSimulation = false;
         });
       } else {
@@ -145,7 +149,7 @@ const SimulationControls = React.memo(() => {
 
   const resetSim = () => {
     if (startSimulation) {
-      requestResetRef.current = true;
+      askForResetRef.current = true;
     } else {
       usePrimitiveStore.getState().set((state) => {
         state.resetSimulation = true;
