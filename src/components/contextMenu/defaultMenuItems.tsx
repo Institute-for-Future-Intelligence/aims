@@ -707,6 +707,46 @@ export const TrajectoryCheckBox = () => {
   );
 };
 
+export const FixedCheckBox = () => {
+  const pickedAtom = usePrimitiveStore(Selector.pickedAtom);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const setFixed = (checked: boolean) => {
+    useStore.getState().set((state) => {
+      if (pickedAtom) pickedAtom.fixed = checked;
+    });
+    setChanged(true);
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Checkbox
+        checked={!!pickedAtom?.fixed}
+        onChange={(e: CheckboxChangeEvent) => {
+          const checked = e.target.checked;
+          const undoableCheck = {
+            name: 'Fix Picked Atom',
+            timestamp: Date.now(),
+            checked: checked,
+            undo: () => {
+              setFixed(!undoableCheck.checked);
+            },
+            redo: () => {
+              setFixed(undoableCheck.checked);
+            },
+          } as UndoableCheck;
+          useStore.getState().addUndoable(undoableCheck);
+          setFixed(checked);
+        }}
+      >
+        {t('experiment.FixAtom', lang)}
+      </Checkbox>
+    </MenuItem>
+  );
+};
+
 export const VdwBondsCheckBox = () => {
   const visible = useStore(Selector.vdwBondsVisible);
   const setChanged = usePrimitiveStore(Selector.setChanged);

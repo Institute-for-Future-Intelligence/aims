@@ -179,6 +179,9 @@ export const i18n_zh_tw = {
     },
 
     experiment: {
+      FixAtom: '固定',
+      DampingCoefficient: '阻尼係數',
+      AtomicMass: '質量',
       ElectricCharge: '電荷',
       Model: '模型',
       Display: '顯示',

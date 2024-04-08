@@ -180,6 +180,9 @@ export const i18n_zh_cn = {
     },
 
     experiment: {
+      FixAtom: '固定',
+      DampingCoefficient: '阻尼系数',
+      AtomicMass: '质量',
       ElectricCharge: '电荷',
       Model: '模型',
       Display: '显示',

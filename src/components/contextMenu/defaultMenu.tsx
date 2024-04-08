@@ -28,6 +28,7 @@ import {
   MomentumVectorCheckBox,
   ForceVectorCheckBox,
   TrajectoryCheckBox,
+  FixedCheckBox,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
@@ -119,6 +120,17 @@ export const createDefaultMenu = (
       });
 
       items.push({
+        key: 'atom-mass',
+        label: (
+          <>
+            <MenuItem stayAfterClick={false} hasPadding={true}>
+              {i18n.t('experiment.AtomicMass', lang) + ': ' + pickedAtom.mass.toFixed(2)}
+            </MenuItem>
+          </>
+        ),
+      });
+
+      items.push({
         key: 'atom-sigma',
         label: (
           <>
@@ -149,6 +161,22 @@ export const createDefaultMenu = (
             </MenuItem>
           </>
         ),
+      });
+
+      items.push({
+        key: 'atom-damp',
+        label: (
+          <>
+            <MenuItem stayAfterClick={false} hasPadding={true}>
+              {i18n.t('experiment.DampingCoefficient', lang) + ': ' + pickedAtom.damp.toPrecision(2)}
+            </MenuItem>
+          </>
+        ),
+      });
+
+      items.push({
+        key: 'atom-fix',
+        label: <FixedCheckBox />,
       });
 
       items.push({
