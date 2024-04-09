@@ -161,7 +161,7 @@ export class MolecularDynamics {
     this.rescaleVelocities(Math.sqrt(ratio));
   }
 
-  private updateKineticEnergy() {
+  updateKineticEnergy() {
     this.kineticEnergy = 0;
     for (const a of this.atoms) {
       this.kineticEnergy += a.getKineticEnergy();

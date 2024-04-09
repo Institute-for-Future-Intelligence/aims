@@ -94,7 +94,9 @@ const SimulationControls = React.memo(() => {
       const md = mdRef.current;
       md.reset();
       energyTimeSeries.clear();
+      md.updateKineticEnergy();
       usePrimitiveStore.getState().set((state) => {
+        state.currentTemperature = md.getCurrentTemperature();
         state.updateViewerFlag = !state.updateViewerFlag;
       });
     }

@@ -237,8 +237,11 @@ const DynamicsViewer = React.memo(
         setComplex(generateComplex(moleculesRef.current));
         molecularDynamicsRef.current = new MolecularDynamics(moleculesRef.current, molecularContainer);
         molecularDynamicsRef.current.timeStep = timeStep;
+        molecularDynamicsRef.current.updateKineticEnergy();
         usePrimitiveStore.getState().set((state) => {
           state.updateInfoFlag = !state.updateInfoFlag;
+          if (molecularDynamicsRef.current)
+            state.currentTemperature = molecularDynamicsRef.current.getCurrentTemperature();
         });
       }
     };
