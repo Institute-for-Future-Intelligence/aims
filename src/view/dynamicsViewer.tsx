@@ -147,7 +147,7 @@ const DynamicsViewer = React.memo(
       for (const m of testMolecules) {
         loadMolecule(m, processResult);
       }
-    }, [testMolecules, resetSimulation]);
+    }, [testMolecules]);
 
     const processResult = (result: any, molecule?: Molecule) => {
       if (!molecule) return;

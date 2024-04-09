@@ -84,19 +84,13 @@ const SimulationControls = React.memo(() => {
       return () => {
         // this is called when the recursive call of requestAnimationFrame exits
         cancelAnimationFrame(requestRef.current);
-        if (askForResetRef.current) {
-          askForResetRef.current = false;
-          usePrimitiveStore.getState().set((state) => {
-            state.resetSimulation = true;
-          });
-        }
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startSimulation]);
 
   useEffect(() => {
-    if (mdRef?.current && resetSimulation) {
+    if (mdRef?.current) {
       const md = mdRef.current;
       md.reset();
       energyTimeSeries.clear();
@@ -104,13 +98,15 @@ const SimulationControls = React.memo(() => {
         state.updateViewerFlag = !state.updateViewerFlag;
       });
     }
-  }, [resetSimulation, mdRef, energyTimeSeries]);
+  }, [resetSimulation, mdRef]);
 
   const simulate = () => {
     if (startSimulation) {
       if (askForResetRef.current) {
+        askForResetRef.current = false;
         usePrimitiveStore.getState().set((state) => {
           state.startSimulation = false;
+          state.resetSimulation = true;
         });
       } else {
         const md = mdRef?.current;
@@ -193,7 +189,12 @@ const SimulationControls = React.memo(() => {
           }}
           title={t('molecularViewer.EnergyGraph', lang)}
         />
-        <Button icon={<VerticalRightOutlined />} onClick={resetSim} title={t('experiment.ResetSimulation', lang)} />
+        <Button
+          icon={<VerticalRightOutlined />}
+          onClick={resetSim}
+          disabled={startSimulation}
+          title={t('experiment.ResetSimulation', lang)}
+        />
         <Button
           icon={startSimulation ? <PauseOutlined /> : <RightOutlined />}
           onClick={toggleSim}
