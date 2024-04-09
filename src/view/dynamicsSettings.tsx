@@ -306,6 +306,10 @@ const DynamicsSettings = React.memo(() => {
               setCommonStore((state) => {
                 state.projectState.temperature = value;
               });
+              if (mdRef?.current) {
+                mdRef.current.setTemperature(value);
+                mdRef.current.heatBath.temperature = value;
+              }
               setChanged(true);
             }}
           />

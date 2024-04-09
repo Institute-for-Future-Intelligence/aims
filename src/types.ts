@@ -110,8 +110,8 @@ export interface ProjectState {
 
   timeStep: number;
   constantTemperature: boolean;
-  temperature: number;
-  pressure: number;
+  temperature: number; // if temperature is constant, what value
+  pressure: number; // if pressure is constant, what value (TODO)
 }
 
 export interface MolecularContainer {

@@ -87,16 +87,24 @@ const SimulationControls = React.memo(() => {
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startSimulation]);
+  }, [startSimulation, temperature, constantTemperature]);
 
   useEffect(() => {
-    if (mdRef?.current) {
+    if (mdRef?.current && resetSimulation) {
       const md = mdRef.current;
       md.reset();
       energyTimeSeries.clear();
+      // reset temperature settings and display
       md.updateKineticEnergy();
+      const currentTemperature = md.getCurrentTemperature();
+      if (md.heatBath.enabled) {
+        md.heatBath.temperature = currentTemperature;
+        setCommonStore((state) => {
+          state.projectState.temperature = currentTemperature;
+        });
+      }
       usePrimitiveStore.getState().set((state) => {
-        state.currentTemperature = md.getCurrentTemperature();
+        state.currentTemperature = currentTemperature;
         state.updateViewerFlag = !state.updateViewerFlag;
       });
     }
