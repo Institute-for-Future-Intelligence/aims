@@ -70,6 +70,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const moleculesRef = useRefStore.getState().moleculesRef;
   const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
+  const positionTimeSeriesMap = useDataStore(Selector.positionimeSeriesMap);
 
   const [processing, setProcessing] = useState(false);
   const [updateFlag, setUpdateFlag] = useState(false);
@@ -553,6 +554,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
 
   const resetProject = () => {
     energyTimeSeries.clear();
+    positionTimeSeriesMap.clear();
     usePrimitiveStore.getState().set((state) => {
       state.resetSimulation = true;
     });

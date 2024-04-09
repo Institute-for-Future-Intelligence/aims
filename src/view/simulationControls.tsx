@@ -21,6 +21,9 @@ import { useRefStore } from '../stores/commonRef.ts';
 import { useDataStore } from '../stores/commonData.ts';
 import { EnergyData } from '../models/EnergyData.ts';
 import { HeatBath } from '../models/HeatBath.ts';
+import { DataQueue } from '../models/DataQueue.ts';
+import { PositionData } from '../models/PositionData.ts';
+import { DATA_QUEUE_LENGTH } from '../models/physicalConstants.ts';
 
 const Container = styled.div`
   position: absolute;
@@ -49,9 +52,11 @@ const SimulationControls = React.memo(() => {
   const startSimulation = usePrimitiveStore(Selector.startSimulation);
   const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
   const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
+  const positionTimeSeriesMap = useDataStore(Selector.positionimeSeriesMap);
   const energyGraphVisible = useStore(Selector.energyGraphVisible);
   const temperature = useStore(Selector.temperature);
   const constantTemperature = useStore(Selector.constantTemperature);
+  const trajectoryAtomIndices = useStore(Selector.trajectoryAtomIndices);
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
   const requestRef = useRef<number>(0);
@@ -62,7 +67,8 @@ const SimulationControls = React.memo(() => {
     return { lng: language };
   }, [language]);
 
-  const interval = 20;
+  const runInterval = 20;
+  const recordInterval = 100;
 
   useEffect(() => {
     if (mdRef?.current) {
@@ -94,6 +100,9 @@ const SimulationControls = React.memo(() => {
       const md = mdRef.current;
       md.reset();
       energyTimeSeries.clear();
+      positionTimeSeriesMap.forEach((series) => {
+        series.clear();
+      });
       // reset temperature settings and display
       md.updateKineticEnergy();
       const currentTemperature = md.getCurrentTemperature();
@@ -123,17 +132,39 @@ const SimulationControls = React.memo(() => {
         if (md) {
           const movables = md.countMovables();
           if (movables > 0) {
-            for (let i = 0; i < interval; i++) {
+            for (let i = 0; i < runInterval; i++) {
               md.move();
             }
-            const energyData = {
-              time: md.indexOfStep * md.timeStep,
-              k: md.kineticEnergy,
-              p: md.potentialEnergy,
-              t: md.totalEnergy,
-            } as EnergyData;
-            energyTimeSeries.add(energyData);
-            if (md.indexOfStep % 100 === 0) console.log(energyData);
+            if (md.indexOfStep % recordInterval === 0) {
+              const time = md.timeStep * md.indexOfStep;
+              const energyData = {
+                time,
+                k: md.kineticEnergy,
+                p: md.potentialEnergy,
+                t: md.totalEnergy,
+              } as EnergyData;
+              energyTimeSeries.add(energyData);
+              if (trajectoryAtomIndices) {
+                for (const index of trajectoryAtomIndices) {
+                  const atom = md.atoms[index];
+                  if (atom) {
+                    const positionData = {
+                      time,
+                      x: atom.position.x,
+                      y: atom.position.y,
+                      z: atom.position.z,
+                    };
+                    let positionTimeSeries = positionTimeSeriesMap.get(index);
+                    if (!positionTimeSeries) {
+                      positionTimeSeries = new DataQueue<PositionData>(DATA_QUEUE_LENGTH);
+                      positionTimeSeriesMap.set(index, positionTimeSeries);
+                    }
+                    positionTimeSeries.add(positionData);
+                  }
+                }
+              }
+              console.log(energyData);
+            }
             usePrimitiveStore.getState().set((state) => {
               state.currentTemperature = md.getCurrentTemperature();
               state.updateViewerFlag = !state.updateViewerFlag;

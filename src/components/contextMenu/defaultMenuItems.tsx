@@ -271,7 +271,8 @@ export const TranslateMolecule = () => {
           addonAfter={'Å'}
           min={-molecularContainer.lx / 2}
           max={molecularContainer.lx / 2}
-          value={center.x}
+          // make sure that we round up the number as calculation may cause things like .999999999
+          value={parseFloat(center.x.toFixed(1))}
           step={0.1}
           precision={1}
           onChange={(value) => {
@@ -285,7 +286,8 @@ export const TranslateMolecule = () => {
           addonAfter={'Å'}
           min={-molecularContainer.ly / 2}
           max={molecularContainer.ly / 2}
-          value={center.y}
+          // make sure that we round up the number as calculation may cause things like .999999999
+          value={parseFloat(center.y.toFixed(1))}
           step={0.1}
           precision={1}
           onChange={(value) => {
@@ -299,7 +301,8 @@ export const TranslateMolecule = () => {
           addonAfter={'Å'}
           min={-molecularContainer.lz / 2}
           max={molecularContainer.lz / 2}
-          value={center.z}
+          // make sure that we round up the number as calculation may cause things like .999999999
+          value={parseFloat(center.z.toFixed(1))}
           step={0.1}
           precision={1}
           onChange={(value) => {

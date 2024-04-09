@@ -6,6 +6,7 @@ import { Vector3 } from 'three';
 import { Restraint } from './Restraint.ts';
 import { TWO_PI } from '../constants.ts';
 import { EV_CONVERTER, GF_CONVERSION_CONSTANT } from './physicalConstants.ts';
+import Element from '../lib/chem/Element';
 
 export class Atom {
   index: number;
@@ -41,6 +42,9 @@ export class Atom {
       this.initialPosition = new Vector3();
       this.initialVelocity = new Vector3();
     }
+    const elem = Element.getByName(elementSymbol);
+    this.mass = elem.weight;
+    this.sigma = elem.radius;
   }
 
   // for atom serialized from Firestore

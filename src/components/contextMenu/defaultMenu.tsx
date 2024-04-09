@@ -33,6 +33,7 @@ import {
 import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
 import { Molecule } from '../../models/Molecule.ts';
+import Element from '../../lib/chem/Element';
 
 export const createDefaultMenu = (
   projectType: ProjectType,
@@ -113,7 +114,7 @@ export const createDefaultMenu = (
           label: (
             <>
               <MenuItem stayAfterClick={false} hasPadding={false} fontWeight={'bold'} cursor={'default'}>
-                {pickedAtom.elementSymbol + ' (#' + pickedAtomIndex + ')'}
+                {Element.getByName(pickedAtom.elementSymbol).fullName + ' (#' + pickedAtomIndex + ')'}
               </MenuItem>
               <hr />
             </>
@@ -136,7 +137,7 @@ export const createDefaultMenu = (
           label: (
             <>
               <MenuItem stayAfterClick={false} hasPadding={true}>
-                {'σ: ' + pickedAtom.sigma.toFixed(3)}
+                {i18n.t('experiment.AtomicRadius', lang) + ': ' + pickedAtom.sigma.toFixed(3)}
               </MenuItem>
             </>
           ),

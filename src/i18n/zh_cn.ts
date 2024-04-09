@@ -183,6 +183,7 @@ export const i18n_zh_cn = {
       FixAtom: '固定',
       DampingCoefficient: '阻尼系数',
       AtomicMass: '质量',
+      AtomicRadius: '半径',
       ElectricCharge: '电荷',
       Model: '模型',
       Display: '显示',

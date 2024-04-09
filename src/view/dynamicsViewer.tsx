@@ -88,7 +88,7 @@ const DynamicsViewer = React.memo(
     const kineticEnergyScaleFactor = useStore(Selector.kineticEnergyScaleFactor) ?? 1;
     const molecularContainer = useStore(Selector.molecularContainer);
     const timeStep = useStore(Selector.timeStep);
-    const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
+    const positionTimeSeriesMap = useDataStore(Selector.positionimeSeriesMap);
 
     const [complex, setComplex] = useState<any>();
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -141,6 +141,7 @@ const DynamicsViewer = React.memo(
         setComplex(undefined);
         molecularDynamicsRef.current = null;
         energyTimeSeries.clear();
+        positionTimeSeriesMap.clear();
         return;
       }
       if (setLoading) setLoading(true);
@@ -598,6 +599,27 @@ const DynamicsViewer = React.memo(
                 points={[b.atom1.position, b.atom2.position]}
               />
             );
+          })}
+        {positionTimeSeriesMap &&
+          [...positionTimeSeriesMap.keys()].map((value, i) => {
+            const positionTimeSeries = positionTimeSeriesMap.get(value);
+            if (positionTimeSeries) {
+              const points = new Array<[number, number, number]>();
+              for (const p of positionTimeSeries.array) {
+                points.push([p.x, p.y, p.z]);
+              }
+              return (
+                <Line
+                  key={i}
+                  color={'gray'}
+                  dashed={true}
+                  lineWidth={2}
+                  dashSize={0.02}
+                  gapSize={0.1}
+                  points={points}
+                />
+              );
+            }
           })}
         <ModelContainer />
         {pickedMoleculeIndex !== -1 && showMover && <Movers center={[0, 0, 0]} length={moleculeLengths} />}
