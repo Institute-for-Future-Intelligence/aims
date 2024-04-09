@@ -741,6 +741,9 @@ export const FixedCheckBox = () => {
       if (mdRef?.current) {
         mdRef.current.atoms[pickedAtomIndex].fixed = checked;
       }
+      usePrimitiveStore.getState().set((state) => {
+        state.updateViewerFlag = !state.updateViewerFlag;
+      });
     }
   };
 

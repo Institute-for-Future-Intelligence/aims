@@ -21,7 +21,7 @@ import {
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
-import { AimOutlined, ExperimentOutlined, InfoCircleOutlined, FireOutlined } from '@ant-design/icons';
+import { AimOutlined, ExperimentOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 
@@ -453,11 +453,7 @@ const DynamicsSettings = React.memo(() => {
       </Popover>
       {mdRef?.current && (
         <Popover
-          title={
-            <div onClick={(e) => e.stopPropagation()}>
-              <FireOutlined /> {t('experiment.Temperature', lang)}
-            </div>
-          }
+          title={<div onClick={(e) => e.stopPropagation()}>🌡 {t('experiment.Temperature', lang)}</div>}
           content={createThermometer}
         >
           <span
