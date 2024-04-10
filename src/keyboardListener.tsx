@@ -78,6 +78,7 @@ const handleKeys = [
   'ctrl+b',
   'meta+b',
   'shift',
+  'alt',
   'esc',
   'ctrl+home',
   'ctrl+alt+h',
@@ -469,7 +470,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
           }
         }
         break;
-      case 'shift': {
+      case 'alt': {
         usePrimitiveStore.getState().set((state) => {
           state.pickMode = PickMode.ATOM;
         });
@@ -498,7 +499,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       case 'up':
         stopFlying();
         break;
-      case 'shift': {
+      case 'alt': {
         usePrimitiveStore.getState().set((state) => {
           state.pickMode = PickMode.MOLECULE;
         });

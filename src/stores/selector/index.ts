@@ -44,6 +44,10 @@ export const constantTemperature = (state: CommonStoreState) => state.projectSta
 
 export const timeStep = (state: CommonStoreState) => state.projectState.timeStep;
 
+export const refreshInterval = (state: CommonStoreState) => state.projectState.refreshInterval;
+
+export const collectInterval = (state: CommonStoreState) => state.projectState.collectInterval;
+
 export const testMolecules = (state: CommonStoreState) => state.projectState.testMolecules;
 
 export const molecularContainer = (state: CommonStoreState) => state.projectState.molecularContainer;

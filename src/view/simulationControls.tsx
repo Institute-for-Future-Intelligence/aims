@@ -57,6 +57,8 @@ const SimulationControls = React.memo(() => {
   const temperature = useStore(Selector.temperature);
   const constantTemperature = useStore(Selector.constantTemperature);
   const trajectoryAtomIndices = useStore(Selector.trajectoryAtomIndices);
+  const refreshInterval = useStore(Selector.refreshInterval) ?? 20;
+  const collectInterval = useStore(Selector.collectInterval) ?? 100;
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
   const requestRef = useRef<number>(0);
@@ -66,9 +68,6 @@ const SimulationControls = React.memo(() => {
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
-
-  const runInterval = 20;
-  const recordInterval = 100;
 
   useEffect(() => {
     if (mdRef?.current) {
@@ -132,10 +131,10 @@ const SimulationControls = React.memo(() => {
         if (md) {
           const movables = md.countMovables();
           if (movables > 0) {
-            for (let i = 0; i < runInterval; i++) {
+            for (let i = 0; i < refreshInterval; i++) {
               md.move();
             }
-            if (md.indexOfStep % recordInterval === 0) {
+            if (md.indexOfStep % collectInterval === 0) {
               const time = md.timeStep * md.indexOfStep;
               const energyData = {
                 time,

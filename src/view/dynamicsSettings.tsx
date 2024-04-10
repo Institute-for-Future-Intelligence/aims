@@ -37,6 +37,8 @@ const DynamicsSettings = React.memo(() => {
   const constantTemperature = useStore(Selector.constantTemperature) ?? false;
   const temperature = useStore(Selector.temperature) ?? 300;
   const timeStep = useStore(Selector.timeStep) ?? 0.5;
+  const refreshInterval = useStore(Selector.refreshInterval) ?? 20;
+  const collectInterval = useStore(Selector.collectInterval) ?? 100;
   const updateInfoFlag = usePrimitiveStore(Selector.updateInfoFlag);
   const currentTemperature = usePrimitiveStore(Selector.currentTemperature);
 
@@ -164,6 +166,52 @@ const DynamicsSettings = React.memo(() => {
           <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
             <Row gutter={16} style={{ paddingBottom: '4px' }}>
               <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.RefreshingInterval', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  addonAfter={t('experiment.Steps', lang)}
+                  min={1}
+                  max={50}
+                  style={{ width: '100%' }}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={Math.round(refreshInterval)}
+                  step={1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    setCommonStore((state) => {
+                      state.projectState.refreshInterval = value;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.CollectionInterval', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  addonAfter={t('experiment.Steps', lang)}
+                  min={10}
+                  max={200}
+                  style={{ width: '100%' }}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={Math.round(collectInterval)}
+                  step={1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    setCommonStore((state) => {
+                      state.projectState.collectInterval = value;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
                 <span>{t('experiment.VdwBondCutoffRelative', lang)}: </span>
               </Col>
               <Col span={12}>
@@ -192,6 +240,7 @@ const DynamicsSettings = React.memo(() => {
               </Col>
               <Col span={12}>
                 <InputNumber
+                  addonAfter={t('word.Dimensionless', lang)}
                   min={0.1}
                   max={10}
                   style={{ width: '100%' }}
@@ -215,6 +264,7 @@ const DynamicsSettings = React.memo(() => {
               </Col>
               <Col span={12}>
                 <InputNumber
+                  addonAfter={t('word.Dimensionless', lang)}
                   min={0.1}
                   max={10}
                   style={{ width: '100%' }}
@@ -238,6 +288,7 @@ const DynamicsSettings = React.memo(() => {
               </Col>
               <Col span={12}>
                 <InputNumber
+                  addonAfter={t('word.Dimensionless', lang)}
                   min={0.1}
                   max={10}
                   style={{ width: '100%' }}
@@ -271,6 +322,8 @@ const DynamicsSettings = React.memo(() => {
       forceScaleFactor,
       kineticEnergyScaleFactor,
       timeStep,
+      refreshInterval,
+      collectInterval,
       mdRef,
     ],
   );

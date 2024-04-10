@@ -109,6 +109,8 @@ export interface ProjectState {
   trajectoryAtomIndices: number[];
 
   timeStep: number;
+  refreshInterval: number;
+  collectInterval: number;
   constantTemperature: boolean;
   temperature: number; // if temperature is constant, what value
   pressure: number; // if pressure is constant, what value (TODO)

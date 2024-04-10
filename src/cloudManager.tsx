@@ -426,6 +426,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             testMolecules: ModelUtil.reconstructMoleculesFromFirestore(data.testMolecules),
 
             timeStep: data.timeStep ?? 0.5,
+            refreshInterval: data.refreshInterval ?? 20,
+            collectInterval: data.collectInterval ?? 100,
             constantTemperature: !!data.constantTemperature,
             temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,
             pressure: data.pressure !== undefined && data.pressure !== null ? data.pressure : 1,
