@@ -369,7 +369,7 @@ const DynamicsSettings = React.memo(() => {
         )}
       </Space>
     );
-  }, [temperature, constantTemperature, lang]);
+  }, [temperature, constantTemperature, lang, mdRef]);
 
   const createInfo = useMemo(() => {
     let atomCount = 0;
