@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { ClearOutlined, QuestionCircleOutlined, WarningOutlined } from '@ant-design/icons';
+import { ClearOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { FloatButton, InputNumber, Modal, Popover } from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
@@ -23,6 +23,7 @@ const ToolBarButtons = React.memo(() => {
   const projectType = useStore(Selector.projectType);
   const deleteAllAtoms = useStore(Selector.delteAllAtoms);
   const testMolecules = useStore(Selector.testMolecules);
+  const updateViewer = usePrimitiveStore(Selector.updateViewer);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -171,9 +172,7 @@ const ToolBarButtons = React.memo(() => {
               cancelText: t('word.Cancel', lang),
               onOk: () => {
                 deleteAllAtoms();
-                usePrimitiveStore.getState().set((state) => {
-                  state.updateViewerFlag = !state.updateViewerFlag;
-                });
+                updateViewer();
               },
             });
           }}

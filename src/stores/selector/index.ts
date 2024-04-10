@@ -22,6 +22,8 @@ export const setChanged = (state: PrimitiveStoreState) => state.setChanged;
 
 export const updateViewerFlag = (state: PrimitiveStoreState) => state.updateViewerFlag;
 
+export const updateViewer = (state: PrimitiveStoreState) => state.updateViewer;
+
 export const updateInfoFlag = (state: PrimitiveStoreState) => state.updateInfoFlag;
 
 export const selectedPlane = (state: PrimitiveStoreState) => state.selectedPlane;

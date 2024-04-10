@@ -16,6 +16,7 @@ export interface PrimitiveStoreState {
   skipChange: boolean;
   setSkipChange: (b: boolean) => void;
   updateViewerFlag: boolean;
+  updateViewer: () => void;
   updateInfoFlag: boolean;
 
   dragAndDropMolecule: boolean;
@@ -111,6 +112,11 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
       });
     },
     updateViewerFlag: false,
+    updateViewer() {
+      immerSet((state: PrimitiveStoreState) => {
+        state.updateViewerFlag = !state.updateViewerFlag;
+      });
+    },
     updateInfoFlag: false,
 
     dragAndDropMolecule: false,

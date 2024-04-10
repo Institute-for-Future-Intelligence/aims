@@ -103,6 +103,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
+  const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const testMolecules = useStore(Selector.testMolecules);
   const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
@@ -271,9 +272,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         }
         break;
     }
-    usePrimitiveStore.getState().set((state) => {
-      state.updateViewerFlag = !state.updateViewerFlag;
-    });
+    updateViewer();
     if (loggable) {
       setCommonStore((state) => {
         state.actionInfo = {

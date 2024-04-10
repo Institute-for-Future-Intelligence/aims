@@ -28,10 +28,12 @@ import { SpaceshipDisplayMode } from '../../constants.ts';
 import { useRefStore } from '../../stores/commonRef.ts';
 import { Util } from '../../Util.ts';
 import { Molecule } from '../../models/Molecule.ts';
+import { useDataStore } from '../../stores/commonData.ts';
 
 export const TranslateLigand = () => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
+  const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const molecularContainer = useStore(Selector.molecularContainer);
   const ligand = useStore(Selector.ligand);
@@ -39,9 +41,7 @@ export const TranslateLigand = () => {
   const step = useStore(Selector.translationStep);
 
   const postTranslateLigand = () => {
-    usePrimitiveStore.getState().set((state) => {
-      state.updateViewerFlag = !state.updateViewerFlag;
-    });
+    updateViewer();
     setCommonStore((state) => {
       if (loggable) {
         state.actionInfo = {
@@ -122,6 +122,7 @@ export const RotateLigand = () => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
+  const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const ligand = useStore(Selector.ligand);
   const ligandTransform = useStore(Selector.ligandTransform);
   const step = Util.toDegrees(useStore(Selector.rotationStep)) ?? 5;
@@ -165,9 +166,7 @@ export const RotateLigand = () => {
         };
       }
     });
-    usePrimitiveStore.getState().set((state) => {
-      state.updateViewerFlag = !state.updateViewerFlag;
-    });
+    updateViewer();
   };
 
   return (
@@ -217,6 +216,7 @@ export const RotateLigand = () => {
 export const TranslateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
+  const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const molecularContainer = useStore(Selector.molecularContainer);
   const moleculesRef = useRefStore.getState().moleculesRef;
@@ -256,9 +256,7 @@ export const TranslateMolecule = () => {
         }
       });
       setUpdateFlag(!updateFlag);
-      usePrimitiveStore.getState().set((state) => {
-        state.updateViewerFlag = !state.updateViewerFlag;
-      });
+      updateViewer();
     }
   };
 
@@ -317,6 +315,7 @@ export const TranslateMolecule = () => {
 
 export const RotateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
+  const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const moleculesRef = useRefStore.getState().moleculesRef;
 
@@ -360,9 +359,7 @@ export const RotateMolecule = () => {
           };
         }
       });
-      usePrimitiveStore.getState().set((state) => {
-        state.updateViewerFlag = !state.updateViewerFlag;
-      });
+      updateViewer();
     }
   };
 
@@ -673,7 +670,9 @@ export const ContainerCheckBox = () => {
 export const TrajectoryCheckBox = () => {
   const setCommonStore = useStore(Selector.set);
   const pickedAtomIndex = usePrimitiveStore(Selector.pickedAtomIndex);
+  const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const trajectoryAtomIndices = useStore(Selector.trajectoryAtomIndices) ?? [];
+  const positionTimeSeriesMap = useDataStore(Selector.positionimeSeriesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();
@@ -694,6 +693,10 @@ export const TrajectoryCheckBox = () => {
         }
       }
     });
+    if (positionTimeSeriesMap) {
+      positionTimeSeriesMap.delete(pickedAtomIndex);
+      updateViewer();
+    }
     setChanged(true);
   };
 
@@ -725,6 +728,7 @@ export const TrajectoryCheckBox = () => {
 };
 
 export const FixedCheckBox = () => {
+  const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const getAtomByIndex = useStore(Selector.getAtomByIndex);
   const fixAtomByIndex = useStore(Selector.fixAtomByIndex);
   const pickedAtomIndex = usePrimitiveStore(Selector.pickedAtomIndex);
@@ -741,9 +745,7 @@ export const FixedCheckBox = () => {
       if (mdRef?.current) {
         mdRef.current.atoms[pickedAtomIndex].fixed = checked;
       }
-      usePrimitiveStore.getState().set((state) => {
-        state.updateViewerFlag = !state.updateViewerFlag;
-      });
+      updateViewer();
     }
   };
 
