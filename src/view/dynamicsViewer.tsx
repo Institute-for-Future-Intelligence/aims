@@ -167,7 +167,7 @@ const DynamicsViewer = React.memo(
           a.epsilon = 0.05;
         } else {
           // temporary solution
-          if (a.elementSymbol === 'C' || a.elementSymbol === 'H') {
+          if (a.elementSymbol === 'C' || a.elementSymbol === 'H' || a.elementSymbol === 'O') {
             a.epsilon = 0.01;
           }
         }

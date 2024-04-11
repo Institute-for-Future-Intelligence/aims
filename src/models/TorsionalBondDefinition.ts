@@ -14,8 +14,14 @@ import { Nonane } from './bonds/Nonane.ts';
 import { Decane } from './bonds/Decane.ts';
 import { Benzene } from './bonds/Benzene.ts';
 import { Buckminsterfullerene } from './bonds/Buckminsterfullerene.ts';
+import { Ethanol } from './bonds/Ethanol.ts';
 
 export const getTorsionalBondDefinition = (name: string): Quadruple[] => {
+  // common molecules
+  if (name === 'Ethanol') return Ethanol.torsionalBondDefinition;
+  if (name === 'Buckminsterfullerene') return Buckminsterfullerene.torsionalBondDefinition;
+
+  // hydrocarbons
   if (name === 'Benzene') return Benzene.torsionalBondDefinition;
   if (name === 'Ethane') return Ethane.torsionalBondDefinition;
   if (name === 'Propane') return Propane.torsionalBondDefinition;
@@ -26,8 +32,6 @@ export const getTorsionalBondDefinition = (name: string): Quadruple[] => {
   if (name === 'Octane') return Octane.torsionalBondDefinition;
   if (name === 'Nonane') return Nonane.torsionalBondDefinition;
   if (name === 'Decane') return Decane.torsionalBondDefinition;
-
-  if (name === 'Buckminsterfullerene') return Buckminsterfullerene.torsionalBondDefinition;
 
   return [];
 };
