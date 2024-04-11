@@ -43,10 +43,6 @@ import {
 } from '../models/physicalConstants.ts';
 import { PickMode, UNIT_VECTOR_POS_Y } from '../constants.ts';
 import { useDataStore } from '../stores/commonData.ts';
-import { Triple } from '../models/Triple.ts';
-import { getAngularBondDefinition } from '../models/AngularBondDefinition.ts';
-import { Quadruple } from '../models/Quadruple.ts';
-import { getTorsionalBondDefinition } from '../models/TorsionalBondDefinition.ts';
 import { TorsionalBond } from '../models/TorsionalBond.ts';
 
 extend({ RCGroup });
@@ -73,6 +69,7 @@ const DynamicsViewer = React.memo(
     onPointerLeave,
     onPointerDown,
   }: DynamicsViewerProps) => {
+    const setCommonStore = useStore(Selector.set);
     const testMolecules = useStore(Selector.testMolecules);
     const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
     const pickMode = usePrimitiveStore(Selector.pickMode);
@@ -191,8 +188,16 @@ const DynamicsViewer = React.memo(
         mol.radialBonds.push(new RadialBond(mol.atoms[index1], mol.atoms[index2], length));
         molecule.radialBonds.push(new RadialBond(molecule.atoms[index1], molecule.atoms[index2], length));
       }
-      const aBonds: Triple[] = getAngularBondDefinition(molecule.name);
-      if (aBonds.length > 0) {
+      let aBonds = useStore.getState().angularBondsMap[mol.name];
+      if (!aBonds) {
+        aBonds = ModelUtil.generateAngularBonds(mol.atoms, mol.radialBonds);
+        setCommonStore((state) => {
+          if (aBonds) {
+            state.angularBondsMap[mol.name] = aBonds;
+          }
+        });
+      }
+      if (aBonds?.length > 0) {
         for (const x of aBonds) {
           const p1 = result._atoms[x.i].position;
           const p2 = result._atoms[x.j].position;
@@ -204,8 +209,16 @@ const DynamicsViewer = React.memo(
           );
         }
       }
-      const tBonds: Quadruple[] = getTorsionalBondDefinition(molecule.name);
-      if (tBonds.length > 0) {
+      let tBonds = useStore.getState().torsionalBondsMap[mol.name];
+      if (!tBonds && aBonds) {
+        tBonds = ModelUtil.generateTorsionalBonds(mol.atoms, mol.radialBonds, aBonds);
+        setCommonStore((state) => {
+          if (tBonds) {
+            state.torsionalBondsMap[mol.name] = tBonds;
+          }
+        });
+      }
+      if (tBonds?.length > 0) {
         for (const x of tBonds) {
           const p1 = result._atoms[x.i].position;
           const p2 = result._atoms[x.j].position;
@@ -316,6 +329,8 @@ const DynamicsViewer = React.memo(
       updateViewerFlag,
       pickedMoleculeIndex,
       kineticEnergyScaleFactor,
+      vdwBondsVisible,
+      vdwBondCutoffRelative,
       pickedAtomIndex,
       moleculesRef,
     ]);

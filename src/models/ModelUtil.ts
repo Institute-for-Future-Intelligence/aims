@@ -5,8 +5,67 @@
 import { Atom } from './Atom.ts';
 import { Molecule } from './Molecule.ts';
 import { UNIT_EV_OVER_KB } from './physicalConstants.ts';
+import { RadialBond } from './RadialBond.ts';
+import { Triple } from './Triple.ts';
+import { Quadruple } from './Quadruple.ts';
 
 export class ModelUtil {
+  static generateAngularBonds(atoms: Atom[], radialBonds: RadialBond[]): Triple[] {
+    const angularBonds: Triple[] = [];
+    for (const a of atoms) {
+      const bondedAtoms: Atom[] = [];
+      for (const r of radialBonds) {
+        if (r.atom1 === a) {
+          bondedAtoms.push(r.atom2);
+        } else if (r.atom2 === a) {
+          bondedAtoms.push(r.atom1);
+        }
+      }
+      const n = bondedAtoms.length;
+      if (n > 1) {
+        for (let p = 0; p < n - 1; p++) {
+          for (let q = p + 1; q < n; q++) {
+            angularBonds.push({ i: bondedAtoms[p].index, j: a.index, k: bondedAtoms[q].index });
+          }
+        }
+      }
+    }
+    return angularBonds;
+  }
+
+  static generateTorsionalBonds(atoms: Atom[], radialBonds: RadialBond[], aBonds: Triple[]): Quadruple[] {
+    const torsionalBonds: Quadruple[] = [];
+    for (const rBond of radialBonds) {
+      const bondedAtomsLeft: Atom[] = [];
+      const bondedAtomsRight: Atom[] = [];
+      for (const b of aBonds) {
+        if (rBond.atom1 === atoms[b.i] && rBond.atom2 === atoms[b.j]) {
+          bondedAtomsRight.push(atoms[b.k]);
+        } else if (rBond.atom1 === atoms[b.j] && rBond.atom2 === atoms[b.k]) {
+          bondedAtomsLeft.push(atoms[b.i]);
+        }
+      }
+      for (const b of aBonds) {
+        if (rBond.atom2 === atoms[b.i] && rBond.atom1 === atoms[b.j]) {
+          bondedAtomsLeft.push(atoms[b.k]);
+        } else if (rBond.atom2 === atoms[b.j] && rBond.atom1 === atoms[b.k]) {
+          bondedAtomsRight.push(atoms[b.i]);
+        }
+      }
+      for (const a of bondedAtomsLeft) {
+        for (const b of bondedAtomsRight) {
+          torsionalBonds.push({
+            i: a.index,
+            j: rBond.atom1.index,
+            k: rBond.atom2.index,
+            l: b.index,
+          });
+        }
+      }
+    }
+    return torsionalBonds;
+  }
+
   static reconstructMoleculesFromFirestore(m: any) {
     if (!m && !Array.isArray(m)) return [];
     const array: Molecule[] = [];

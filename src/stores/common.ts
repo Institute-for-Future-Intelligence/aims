@@ -22,6 +22,8 @@ import { ProjectUtil } from '../project/ProjectUtil.ts';
 import { Protein } from '../models/Protein.ts';
 import { ModelUtil } from '../models/ModelUtil.ts';
 import { Atom } from '../models/Atom.ts';
+import { Triple } from '../models/Triple.ts';
+import { Quadruple } from '../models/Quadruple.ts';
 
 enableMapSet();
 
@@ -41,6 +43,10 @@ export interface CommonStoreState {
   deleteAllAtoms: () => void;
   fixAtomByIndex: (index: number, fixed: boolean) => void;
   getAtomByIndex: (index: number) => Atom | null;
+
+  // have to use objects as local storage does not accept maps
+  angularBondsMap: { [key: string]: Triple[] };
+  torsionalBondsMap: { [key: string]: Quadruple[] };
 
   proteinData: Protein | undefined;
 
@@ -128,6 +134,9 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             });
             return atom;
           },
+
+          angularBondsMap: {},
+          torsionalBondsMap: {},
 
           proteinData: undefined,
 
@@ -270,6 +279,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             user: state.user,
             projectState: ps,
             selectedFloatingWindow: state.selectedFloatingWindow,
+            angularBondsMap: state.angularBondsMap,
+            torsionalBondsMap: state.torsionalBondsMap,
           };
         },
         merge: (persistedState: any, currentState: CommonStoreState) => {
