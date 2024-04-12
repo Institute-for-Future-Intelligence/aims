@@ -43,7 +43,7 @@ const ColumnWrapper = styled.div`
   right: 0;
   top: 0;
   width: 640px;
-  height: 520px;
+  height: 560px;
   min-width: 400px;
   max-width: 800px;
   min-height: 200px;
@@ -325,7 +325,7 @@ const ProjectListPanel = React.memo(
                 size={'small'}
                 style={{ width: '100%', direction: 'ltr', verticalAlign: 'top' }}
                 dataSource={projectsRef.current}
-                scroll={{ y: 360 }}
+                scroll={{ y: 400 }}
                 pagination={{
                   defaultPageSize: 10,
                   showSizeChanger: true,

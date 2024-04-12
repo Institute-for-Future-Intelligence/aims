@@ -51,6 +51,8 @@ import hydrocarbonMoleculeUrl023 from './molecules/sdf/tricosane.sdf';
 import hydrocarbonMoleculeUrl024 from './molecules/sdf/tetracosane.sdf';
 import hydrocarbonMoleculeUrl101 from './molecules/xyz/benzene.xyz';
 
+import biomoleculeUrl001 from './molecules/pdb/dna.pdb';
+
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
 import drugMoleculeUrl003 from './molecules/sdf/paxlovid.sdf';
@@ -131,6 +133,10 @@ export const hydrocarbonMolecules = [
   { url: hydrocarbonMoleculeUrl101, internal: true, name: 'Benzene' } as MoleculeInterface,
 ];
 
+export const biomolecules = [{ url: biomoleculeUrl001, internal: true, name: 'DNA' } as MoleculeInterface].sort(
+  (a, b) => a.name.localeCompare(b.name),
+);
+
 export const drugMolecules = [
   { url: drugMoleculeUrl001, internal: true, name: 'Aspirin' } as MoleculeInterface,
   { url: drugMoleculeUrl002, internal: true, name: 'Ibuprofen' } as MoleculeInterface,
@@ -173,6 +179,9 @@ export const getMolecule = (name: string) => {
     if (name === m.name) return m;
   }
   for (const m of hydrocarbonMolecules) {
+    if (name === m.name) return m;
+  }
+  for (const m of biomolecules) {
     if (name === m.name) return m;
   }
   for (const m of drugMolecules) {

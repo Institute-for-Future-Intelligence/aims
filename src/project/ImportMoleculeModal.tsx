@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { ImportOutlined } from '@ant-design/icons';
 import { MoleculeType, ProjectType } from '../constants.ts';
 import {
+  biomolecules,
   commonMolecules,
   crystals,
   drugMolecules,
@@ -77,6 +78,7 @@ const ImportMoleculeModal = React.memo(
       if (moleculeType === MoleculeType.HYDROCARBON) return hydrocarbonMolecules;
       if (moleculeType === MoleculeType.MONATOMIC) return monatomicMolecules;
       if (moleculeType === MoleculeType.CRYSTAL) return crystals;
+      if (moleculeType === MoleculeType.BIOMOLECULE) return biomolecules;
       return commonMolecules;
     }, [moleculeType]);
 
@@ -130,6 +132,9 @@ const ImportMoleculeModal = React.memo(
                 case MoleculeType.CRYSTAL:
                   setName(crystals[0].name);
                   break;
+                case MoleculeType.BIOMOLECULE:
+                  setName(biomolecules[0].name);
+                  break;
                 default:
                   setName(commonMolecules[0].name);
               }
@@ -140,6 +145,9 @@ const ImportMoleculeModal = React.memo(
             </Option>
             <Option key={MoleculeType.HYDROCARBON} value={MoleculeType.HYDROCARBON}>
               {`${t('term.HydrocarbonMolecules', lang)}`}
+            </Option>
+            <Option key={MoleculeType.BIOMOLECULE} value={MoleculeType.BIOMOLECULE}>
+              {`${t('term.Biomolecules', lang)}`}
             </Option>
             <Option key={MoleculeType.DRUG} value={MoleculeType.DRUG}>
               {`${t('term.DrugMolecules', lang)}`}

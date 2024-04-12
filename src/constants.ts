@@ -117,6 +117,7 @@ export enum MoleculeType {
   CRYSTAL = 'Crystal',
   COMMON = 'Common',
   HYDROCARBON = 'Hydrocarbon',
+  BIOMOLECULE = 'Biomolecule',
   DRUG = 'Drug',
 }
 

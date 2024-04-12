@@ -11,7 +11,7 @@ import { Vector3 } from 'three';
 import { GF_CONVERSION_CONSTANT, MIN_SIN_THETA } from './physicalConstants.ts';
 
 export class AngularBond {
-  static readonly DEFAULT_STRENGTH = 50;
+  static readonly DEFAULT_STRENGTH = 10;
 
   /* return the angle a1-a2-a3 (a2 is in the middle) */
   static getAngle(a1: Atom, a2: Atom, a3: Atom) {

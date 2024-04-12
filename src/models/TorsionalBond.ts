@@ -14,7 +14,7 @@ import { Vector3 } from 'three';
 import { GF_CONVERSION_CONSTANT, MIN_SIN_THETA } from './physicalConstants.ts';
 
 export class TorsionalBond {
-  static readonly DEFAULT_STRENGTH = 10;
+  static readonly DEFAULT_STRENGTH = 1;
 
   /* return the dihedral angle between a2-a1 vector and a3-a4 vector (a2 and a3 are in the middle) */
   static getDihedral(a1: Atom, a2: Atom, a3: Atom, a4: Atom) {

@@ -69,6 +69,7 @@ export const i18n_en = {
       MolecularModeling: 'Molecular Modeling',
       CommonMolecules: 'Common Molecules',
       HydrocarbonMolecules: 'Hydrocarbon Molecules',
+      Biomolecules: 'Biomolecules',
       DrugMolecules: 'Drug Molecules',
       Monatomic: 'Monatomic',
       Crystal: 'Crystal',
