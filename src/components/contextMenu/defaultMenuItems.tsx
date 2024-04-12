@@ -856,6 +856,46 @@ export const AngularBondsCheckBox = () => {
   );
 };
 
+export const TorsionalBondsCheckBox = () => {
+  const visible = useStore(Selector.torsionalBondsVisible);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const setVisible = (checked: boolean) => {
+    useStore.getState().set((state) => {
+      state.projectState.torsionalBondsVisible = checked;
+    });
+    setChanged(true);
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Checkbox
+        checked={visible}
+        onChange={(e: CheckboxChangeEvent) => {
+          const checked = e.target.checked;
+          const undoableCheck = {
+            name: 'Show Torsional Bonds',
+            timestamp: Date.now(),
+            checked: checked,
+            undo: () => {
+              setVisible(!undoableCheck.checked);
+            },
+            redo: () => {
+              setVisible(undoableCheck.checked);
+            },
+          } as UndoableCheck;
+          useStore.getState().addUndoable(undoableCheck);
+          setVisible(checked);
+        }}
+      >
+        {t('molecularViewer.TorsionalBonds', lang)}
+      </Checkbox>
+    </MenuItem>
+  );
+};
+
 export const MomentumVectorCheckBox = () => {
   const visible = useStore(Selector.momentumVisible);
   const setChanged = usePrimitiveStore(Selector.setChanged);

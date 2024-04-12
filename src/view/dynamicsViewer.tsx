@@ -28,7 +28,16 @@ import { useStore } from '../stores/common.ts';
 import { Molecule } from '../models/Molecule.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import ModelContainer from './modelContainer.tsx';
-import { Billboard, Instance, Instances, Line, QuadraticBezierLine, Sphere, Text } from '@react-three/drei';
+import {
+  Billboard,
+  CatmullRomLine,
+  Instance,
+  Instances,
+  Line,
+  QuadraticBezierLine,
+  Sphere,
+  Text,
+} from '@react-three/drei';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import Picker from '../lib/ui/Picker.js';
 import settings from '../lib/settings.js';
@@ -88,6 +97,8 @@ const DynamicsViewer = React.memo(
     const positionTimeSeriesMap = useDataStore(Selector.positionimeSeriesMap);
     const angularBondsMap = useStore(Selector.angularBondsMap);
     const angularBondsVisible = useStore(Selector.angularBondsVisible);
+    const torsionalBondsMap = useStore(Selector.torsionalBondsMap);
+    const torsionalBondsVisible = useStore(Selector.torsionalBondsVisible);
 
     const [complex, setComplex] = useState<any>();
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -663,6 +674,41 @@ const DynamicsViewer = React.memo(
               );
             }
             return angles;
+          })}
+        {torsionalBondsVisible &&
+          torsionalBondsMap &&
+          Object.keys(torsionalBondsMap).map((key) => {
+            const dihedrals = [];
+            const mol = getMolecule(key);
+            if (mol) {
+              dihedrals.push(
+                torsionalBondsMap[key].map((q, i) => {
+                  const pi = mol.atoms[q.i].position;
+                  const pj = mol.atoms[q.j].position;
+                  const pk = mol.atoms[q.k].position;
+                  const pl = mol.atoms[q.l].position;
+                  const points = new Array<[number, number, number]>();
+                  points.push([pi.x, pi.y, pi.z]);
+                  points.push([pj.x, pj.y, pj.z]);
+                  points.push([pk.x, pk.y, pk.z]);
+                  points.push([pl.x, pl.y, pl.z]);
+                  return (
+                    <CatmullRomLine
+                      key={i}
+                      curveType={'chordal'}
+                      dashed={true}
+                      dashSize={0.02}
+                      gapSize={0.01}
+                      color={'yellow'}
+                      lineWidth={1}
+                      tension={0.5}
+                      points={points}
+                    />
+                  );
+                }),
+              );
+            }
+            return dihedrals;
           })}
         <ModelContainer />
         {pickedMoleculeIndex !== -1 && showMover && <Movers center={[0, 0, 0]} length={moleculeLengths} />}

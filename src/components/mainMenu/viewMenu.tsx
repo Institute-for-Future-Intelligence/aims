@@ -20,6 +20,7 @@ import {
   MomentumVectorCheckBox,
   SpaceshipDisplayModeRadioGroup,
   StyleRadioGroup,
+  TorsionalBondsCheckBox,
   VdwBondsCheckBox,
 } from '../contextMenu/defaultMenuItems';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
@@ -113,6 +114,10 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
         {
           key: 'molecular-viewer-angular-bonds',
           label: <AngularBondsCheckBox />,
+        },
+        {
+          key: 'molecular-viewer-torsional-bonds',
+          label: <TorsionalBondsCheckBox />,
         },
         {
           key: 'molecular-viewer-momentum-vectors',

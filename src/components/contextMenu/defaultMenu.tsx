@@ -30,6 +30,7 @@ import {
   TrajectoryCheckBox,
   FixedCheckBox,
   AngularBondsCheckBox,
+  TorsionalBondsCheckBox,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
@@ -231,6 +232,10 @@ export const createDefaultMenu = (
           {
             key: 'molecular-viewer-angular-bonds',
             label: <AngularBondsCheckBox />,
+          },
+          {
+            key: 'molecular-viewer-torsional-bonds',
+            label: <TorsionalBondsCheckBox />,
           },
           {
             key: 'molecular-viewer-momentum-vectors',

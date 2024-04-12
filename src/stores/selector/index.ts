@@ -273,3 +273,7 @@ export const fixAtomByIndex = (state: CommonStoreState) => state.fixAtomByIndex;
 export const angularBondsMap = (state: CommonStoreState) => state.angularBondsMap;
 
 export const angularBondsVisible = (state: CommonStoreState) => state.projectState.angularBondsVisible;
+
+export const torsionalBondsMap = (state: CommonStoreState) => state.torsionalBondsMap;
+
+export const torsionalBondsVisible = (state: CommonStoreState) => state.projectState.torsionalBondsVisible;
