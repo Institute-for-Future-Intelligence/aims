@@ -37,7 +37,8 @@ import SimulationControls from './view/simulationControls.tsx';
 import EnergyGraph from './view/energyGraph.tsx';
 import { Molecule } from './models/Molecule.ts';
 import { Atom } from './models/Atom.ts';
-import { RadialBond } from './models/RadialBond.ts';
+import { VT_CONVERSION_CONSTANT } from './models/physicalConstants.ts';
+import { ModelUtil } from './models/ModelUtil.ts';
 
 const ReactionChamber = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -60,6 +61,9 @@ const ReactionChamber = React.memo(() => {
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
   const energyGraphVisible = useStore(Selector.energyGraphVisible);
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
+  const temperature = useStore(Selector.temperature);
+  const constantTemperature = useStore(Selector.constantTemperature);
+  const currentTemperature = usePrimitiveStore(Selector.currentTemperature);
 
   const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -90,6 +94,15 @@ const ReactionChamber = React.memo(() => {
               for (const a of prop.atoms) {
                 const clone = Atom.clone(a);
                 clone.index = a.index;
+                if (!clone.fixed) {
+                  // FIXME: Somehow when currentTemperature is used, the speed is set too low
+                  const speed =
+                    Math.sqrt(constantTemperature ? temperature : Math.max(1, currentTemperature)) *
+                    VT_CONVERSION_CONSTANT;
+                  clone.velocity.x = speed * (ModelUtil.nextGaussian() - 0.5);
+                  clone.velocity.y = speed * (ModelUtil.nextGaussian() - 0.5);
+                  clone.velocity.z = speed * (ModelUtil.nextGaussian() - 0.5);
+                }
                 atoms.push(clone);
               }
               const m = new Molecule(selectedMolecule.name, atoms);

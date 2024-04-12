@@ -2,19 +2,19 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import { Triple } from './Triple.ts';
-import { Pentane } from './bonds/Pentane.ts';
-import { Ethane } from './bonds/Ethane.ts';
-import { Propane } from './bonds/Propane.ts';
-import { Butane } from './bonds/Butane.ts';
-import { Hexane } from './bonds/Hexane.ts';
-import { Heptane } from './bonds/Heptane.ts';
-import { Octane } from './bonds/Octane.ts';
-import { Nonane } from './bonds/Nonane.ts';
-import { Decane } from './bonds/Decane.ts';
-import { Benzene } from './bonds/Benzene.ts';
-import { Buckminsterfullerene } from './bonds/Buckminsterfullerene.ts';
-import { Ethanol } from './bonds/Ethanol.ts';
+import { Triple } from '../Triple.ts';
+import { Pentane } from './Pentane.ts';
+import { Ethane } from './Ethane.ts';
+import { Propane } from './Propane.ts';
+import { Butane } from './Butane.ts';
+import { Hexane } from './Hexane.ts';
+import { Heptane } from './Heptane.ts';
+import { Octane } from './Octane.ts';
+import { Nonane } from './Nonane.ts';
+import { Decane } from './Decane.ts';
+import { Benzene } from './Benzene.ts';
+import { Buckminsterfullerene } from './Buckminsterfullerene.ts';
+import { Ethanol } from './Ethanol.ts';
 
 export const getAngularBondDefinition = (name: string): Triple[] => {
   if (name === 'Water') return [{ i: 1, j: 0, k: 2 }];
