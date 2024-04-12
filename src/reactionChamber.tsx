@@ -61,9 +61,6 @@ const ReactionChamber = React.memo(() => {
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
   const energyGraphVisible = useStore(Selector.energyGraphVisible);
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
-  const temperature = useStore(Selector.temperature);
-  const constantTemperature = useStore(Selector.constantTemperature);
-  const currentTemperature = usePrimitiveStore(Selector.currentTemperature);
 
   const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -95,6 +92,9 @@ const ReactionChamber = React.memo(() => {
                 const clone = Atom.clone(a);
                 clone.index = a.index;
                 if (!clone.fixed) {
+                  const temperature = useStore.getState().projectState.temperature;
+                  const constantTemperature = useStore.getState().projectState.constantTemperature;
+                  const currentTemperature = usePrimitiveStore.getState().currentTemperature;
                   // FIXME: Somehow when currentTemperature is used, the speed is set too low
                   const speed =
                     Math.sqrt(constantTemperature ? temperature : Math.max(1, currentTemperature)) *
