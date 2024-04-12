@@ -124,6 +124,8 @@ export const i18n_zh_cn = {
       Mechanics: '力学',
       Trajectory: '显示运动轨迹',
       VanDerWaalsBonds: '显示范德华键',
+      AngularBonds: '显示夹角共价键',
+      TorsionalBonds: '显示扭转共价键',
       MomentumVectors: '显示动量矢量',
       ForceVectors: '显示力矢量',
       EnergyGraph: '显示能量图',

@@ -7,6 +7,7 @@ import i18n from '../../i18n/i18n';
 import { useStore } from '../../stores/common';
 import { LabelMark, MenuItem } from '../menuItem';
 import {
+  AngularBondsCheckBox,
   AutoRotateCheckBox,
   AxesCheckBox,
   BackgroundColor,
@@ -108,7 +109,10 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
         {
           key: 'molecular-viewer-vdw-bonds',
           label: <VdwBondsCheckBox />,
-          style: { backgroundColor: 'white' },
+        },
+        {
+          key: 'molecular-viewer-angular-bonds',
+          label: <AngularBondsCheckBox />,
         },
         {
           key: 'molecular-viewer-momentum-vectors',

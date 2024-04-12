@@ -422,6 +422,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             kineticEnergyScaleFactor: data.kineticEnergyScaleFactor ?? 1,
             energyGraphVisible: !!data.energyGraphVisible,
             trajectoryAtomIndices: data.trajectoryAtomIndices ?? [],
+            angularBondsVisible: !!data.angularBondsVisible,
+            torsionalBondsVisible: !!data.torsionalBondsVisible,
 
             testMolecules: ModelUtil.reconstructMoleculesFromFirestore(data.testMolecules),
 

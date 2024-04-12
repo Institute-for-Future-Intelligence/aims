@@ -29,6 +29,7 @@ import {
   ForceVectorCheckBox,
   TrajectoryCheckBox,
   FixedCheckBox,
+  AngularBondsCheckBox,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
@@ -226,7 +227,10 @@ export const createDefaultMenu = (
           {
             key: 'molecular-viewer-vdw-bonds',
             label: <VdwBondsCheckBox />,
-            style: { backgroundColor: 'white' },
+          },
+          {
+            key: 'molecular-viewer-angular-bonds',
+            label: <AngularBondsCheckBox />,
           },
           {
             key: 'molecular-viewer-momentum-vectors',

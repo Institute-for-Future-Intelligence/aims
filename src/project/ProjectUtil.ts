@@ -117,6 +117,8 @@ export class ProjectUtil {
       kineticEnergyScaleFactor: 1,
       energyGraphVisible: false,
       trajectoryAtomIndices: new Array<number>(),
+      angularBondsVisible: false,
+      torsionalBondsVisible: false,
 
       testMolecules: new Array<Molecule>(),
 

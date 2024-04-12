@@ -123,6 +123,8 @@ export const i18n_zh_tw = {
       Mechanics: '力學',
       Trajectory: '顯示運動軌跡',
       VanDerWaalsBonds: '顯示范德華鍵',
+      AngularBonds: '顯示夹角共價鍵',
+      TorsionalBonds: '顯示扭轉共價鍵',
       MomentumVectors: '顯示動量向量',
       ForceVectors: '顯示力向量',
       EnergyGraph: '顯示能量圖',

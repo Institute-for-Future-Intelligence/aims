@@ -269,3 +269,7 @@ export const delteAllAtoms = (state: CommonStoreState) => state.deleteAllAtoms;
 export const getAtomByIndex = (state: CommonStoreState) => state.getAtomByIndex;
 
 export const fixAtomByIndex = (state: CommonStoreState) => state.fixAtomByIndex;
+
+export const angularBondsMap = (state: CommonStoreState) => state.angularBondsMap;
+
+export const angularBondsVisible = (state: CommonStoreState) => state.projectState.angularBondsVisible;

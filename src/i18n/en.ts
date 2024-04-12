@@ -123,6 +123,8 @@ export const i18n_en = {
       Mechanics: 'Mechanics',
       Trajectory: 'Trajectory',
       VanDerWaalsBonds: 'Van der Waals Bonds',
+      AngularBonds: 'Angular Bonds',
+      TorsionalBonds: 'Torsional Bonds',
       MomentumVectors: 'Momentum Vectors',
       ForceVectors: 'Force Vectors',
       EnergyGraph: 'Energy Graph',

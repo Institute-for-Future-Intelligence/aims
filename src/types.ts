@@ -107,6 +107,8 @@ export interface ProjectState {
   kineticEnergyScaleFactor: number;
   energyGraphVisible: boolean;
   trajectoryAtomIndices: number[];
+  angularBondsVisible: boolean;
+  torsionalBondsVisible: boolean;
 
   timeStep: number;
   refreshInterval: number;

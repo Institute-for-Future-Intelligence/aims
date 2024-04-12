@@ -86,6 +86,8 @@ const DynamicsViewer = React.memo(
     const molecularContainer = useStore(Selector.molecularContainer);
     const timeStep = useStore(Selector.timeStep);
     const positionTimeSeriesMap = useDataStore(Selector.positionimeSeriesMap);
+    const angularBondsMap = useStore(Selector.angularBondsMap);
+    const angularBondsVisible = useStore(Selector.angularBondsVisible);
 
     const [complex, setComplex] = useState<any>();
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -382,6 +384,13 @@ const DynamicsViewer = React.memo(
       return [10, 10, 10];
     }, [pickedMoleculeIndex, moleculesRef]);
 
+    const getMolecule = (name: string) => {
+      for (const m of testMolecules) {
+        if (m.name === name) return m;
+      }
+      return null;
+    };
+
     return (
       <>
         <rCGroup
@@ -617,6 +626,29 @@ const DynamicsViewer = React.memo(
                 />
               );
             }
+          })}
+        {angularBondsVisible &&
+          angularBondsMap &&
+          Object.keys(angularBondsMap).map((key) => {
+            const angles = [];
+            const mol = getMolecule(key);
+            if (mol) {
+              angles.push(
+                angularBondsMap[key].map((t, i) => {
+                  const atom = mol.atoms[t.j];
+                  const pi = mol.atoms[t.i].position;
+                  const pj = atom.position;
+                  const pk = mol.atoms[t.k].position;
+                  const vij = new Vector3().subVectors(pi, pj).normalize().multiplyScalar(0.5);
+                  const vkj = new Vector3().subVectors(pk, pj).normalize().multiplyScalar(0.5);
+                  const points = new Array<[number, number, number]>();
+                  points.push([pj.x + vij.x, pj.y + vij.y, pj.z + vij.z]);
+                  points.push([pj.x + vkj.x, pj.y + vkj.y, pj.z + vkj.z]);
+                  return <Line key={i} color={'yellow'} lineWidth={0.5} points={points} />;
+                }),
+              );
+            }
+            return angles;
           })}
         <ModelContainer />
         {pickedMoleculeIndex !== -1 && showMover && <Movers center={[0, 0, 0]} length={moleculeLengths} />}
