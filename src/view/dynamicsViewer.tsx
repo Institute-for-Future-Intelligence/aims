@@ -28,7 +28,7 @@ import { useStore } from '../stores/common.ts';
 import { Molecule } from '../models/Molecule.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import ModelContainer from './modelContainer.tsx';
-import { Billboard, Instance, Instances, Line, Sphere, Text } from '@react-three/drei';
+import { Billboard, Instance, Instances, Line, QuadraticBezierLine, Sphere, Text } from '@react-three/drei';
 import RCGroup from '../lib/gfx/RCGroup.js';
 import Picker from '../lib/ui/Picker.js';
 import settings from '../lib/settings.js';
@@ -639,12 +639,26 @@ const DynamicsViewer = React.memo(
                   const pi = mol.atoms[t.i].position;
                   const pj = atom.position;
                   const pk = mol.atoms[t.k].position;
-                  const vij = new Vector3().subVectors(pi, pj).normalize().multiplyScalar(0.5);
-                  const vkj = new Vector3().subVectors(pk, pj).normalize().multiplyScalar(0.5);
+                  const vij = new Vector3().subVectors(pi, pj).normalize().multiplyScalar(0.3);
+                  const vkj = new Vector3().subVectors(pk, pj).normalize().multiplyScalar(0.3);
+                  const mid = new Vector3().addVectors(vij, vkj);
                   const points = new Array<[number, number, number]>();
                   points.push([pj.x + vij.x, pj.y + vij.y, pj.z + vij.z]);
+                  points.push([pj.x + mid.x, pj.y + mid.y, pj.z + mid.z]);
                   points.push([pj.x + vkj.x, pj.y + vkj.y, pj.z + vkj.z]);
-                  return <Line key={i} color={'yellow'} lineWidth={0.5} points={points} />;
+                  return (
+                    <QuadraticBezierLine
+                      key={i}
+                      dashed={true}
+                      dashSize={0.02}
+                      gapSize={0.01}
+                      color={'yellow'}
+                      lineWidth={1}
+                      start={points[0]}
+                      mid={points[1]}
+                      end={points[2]}
+                    />
+                  );
                 }),
               );
             }
