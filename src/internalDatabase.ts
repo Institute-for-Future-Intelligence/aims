@@ -21,9 +21,8 @@ import commonMoleculeUrl006 from './molecules/sdf/ozone.sdf';
 import commonMoleculeUrl101 from './molecules/pdb/buckyball.pdb';
 import commonMoleculeUrl102 from './molecules/xyz/nanotube.xyz';
 import commonMoleculeUrl201 from './molecules/xyz/d_glucose.xyz';
-import commonMoleculeUrl202 from './molecules/pdb/cholesterol.pdb';
-import commonMoleculeUrl203 from './molecules/sdf/atp.sdf';
-import commonMoleculeUrl204 from './molecules/sdf/ethanol.sdf';
+import commonMoleculeUrl202 from './molecules/sdf/ethanol.sdf';
+import commonMoleculeUrl203 from './molecules/sdf/urea.sdf';
 
 import hydrocarbonMoleculeUrl001 from './molecules/pdb/methane.pdb';
 import hydrocarbonMoleculeUrl002 from './molecules/sdf/ethane.sdf';
@@ -51,7 +50,9 @@ import hydrocarbonMoleculeUrl023 from './molecules/sdf/tricosane.sdf';
 import hydrocarbonMoleculeUrl024 from './molecules/sdf/tetracosane.sdf';
 import hydrocarbonMoleculeUrl101 from './molecules/xyz/benzene.xyz';
 
-import biomoleculeUrl001 from './molecules/pdb/dna.pdb';
+import biomoleculeUrl001 from './molecules/pdb/cholesterol.pdb';
+import biomoleculeUrl002 from './molecules/sdf/atp.sdf';
+import biomoleculeUrl101 from './molecules/pdb/dna.pdb';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
@@ -100,9 +101,8 @@ export const commonMolecules = [
   { url: commonMoleculeUrl101, internal: true, name: 'Buckminsterfullerene' } as MoleculeInterface,
   { url: commonMoleculeUrl102, internal: true, name: 'Carbon Nanotube' } as MoleculeInterface,
   { url: commonMoleculeUrl201, internal: true, name: 'D-Glucose' } as MoleculeInterface,
-  { url: commonMoleculeUrl202, internal: true, name: 'Cholesterol' } as MoleculeInterface,
-  { url: commonMoleculeUrl203, internal: true, name: 'ATP' } as MoleculeInterface,
-  { url: commonMoleculeUrl204, internal: true, name: 'Ethanol' } as MoleculeInterface,
+  { url: commonMoleculeUrl202, internal: true, name: 'Ethanol' } as MoleculeInterface,
+  { url: commonMoleculeUrl203, internal: true, name: 'Urea' } as MoleculeInterface,
 ];
 
 export const hydrocarbonMolecules = [
@@ -133,9 +133,11 @@ export const hydrocarbonMolecules = [
   { url: hydrocarbonMoleculeUrl101, internal: true, name: 'Benzene' } as MoleculeInterface,
 ];
 
-export const biomolecules = [{ url: biomoleculeUrl001, internal: true, name: 'DNA' } as MoleculeInterface].sort(
-  (a, b) => a.name.localeCompare(b.name),
-);
+export const biomolecules = [
+  { url: biomoleculeUrl001, internal: true, name: 'Cholesterol' } as MoleculeInterface,
+  { url: biomoleculeUrl002, internal: true, name: 'ATP' } as MoleculeInterface,
+  { url: biomoleculeUrl101, internal: true, name: 'DNA' } as MoleculeInterface,
+];
 
 export const drugMolecules = [
   { url: drugMoleculeUrl001, internal: true, name: 'Aspirin' } as MoleculeInterface,
