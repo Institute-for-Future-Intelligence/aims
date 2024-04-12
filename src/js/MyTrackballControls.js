@@ -38,7 +38,7 @@ class MyTrackballControls extends EventDispatcher {
     this.minZoom = 0;
     this.maxZoom = Infinity;
 
-    this.keys = ['KeyA' /*A*/, 'KeyS' /*S*/, 'KeyD' /*D*/];
+    this.keys = ['KeyA' /*A*/, 'KeyS' /*S*/, 'ControlLeft' /*ControlLeft*/];
 
     this.mouseButtons = { LEFT: MOUSE.ROTATE, MIDDLE: MOUSE.DOLLY, RIGHT: MOUSE.PAN };
 
@@ -392,6 +392,8 @@ class MyTrackballControls extends EventDispatcher {
       if (scope.enabled === false) return;
 
       window.removeEventListener('keydown', keydown);
+
+      console.log('evt', event.code);
 
       if (_keyState !== STATE.NONE) {
         return;
