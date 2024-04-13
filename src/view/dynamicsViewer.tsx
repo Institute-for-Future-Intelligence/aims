@@ -387,6 +387,10 @@ const DynamicsViewer = React.memo(
       );
     }, [viewerStyle]);
 
+    const wireframeStyle = useMemo(() => {
+      return viewerStyle === MolecularViewerStyle.Wireframe || viewerStyle === MolecularViewerStyle.AtomIndex;
+    }, [viewerStyle]);
+
     const moleculeLengths = useMemo(() => {
       if (pickedMoleculeIndex !== -1 && moleculesRef.current) {
         const mol = moleculesRef.current[pickedMoleculeIndex];
@@ -646,6 +650,7 @@ const DynamicsViewer = React.memo(
           Object.keys(angularBondsMap).map((key) => {
             const angles = [];
             const molecules = getMolecules(key);
+            const scale = wireframeStyle ? 0.3 : 0.75;
             if (molecules.length > 0) {
               for (const mol of molecules) {
                 angles.push(
@@ -654,8 +659,8 @@ const DynamicsViewer = React.memo(
                     const pi = mol.atoms[t.i].position;
                     const pj = atom.position;
                     const pk = mol.atoms[t.k].position;
-                    const vij = new Vector3().subVectors(pi, pj).normalize().multiplyScalar(0.3);
-                    const vkj = new Vector3().subVectors(pk, pj).normalize().multiplyScalar(0.3);
+                    const vij = new Vector3().subVectors(pi, pj).normalize().multiplyScalar(scale);
+                    const vkj = new Vector3().subVectors(pk, pj).normalize().multiplyScalar(scale);
                     const mid = new Vector3().addVectors(vij, vkj);
                     const points = new Array<[number, number, number]>();
                     points.push([pj.x + vij.x, pj.y + vij.y, pj.z + vij.z]);
