@@ -505,35 +505,26 @@ const DynamicsSettings = React.memo(() => {
         </span>
       </Popover>
       {mdRef?.current && (
-        <Popover
-          title={<div onClick={(e) => e.stopPropagation()}>🌡 {t('experiment.Temperature', lang)}</div>}
-          content={createThermometer}
+        <Space
+          direction={'horizontal'}
+          style={{
+            position: 'absolute',
+            top: '14px',
+            left: 'calc(50% - 40px)',
+            zIndex: 13,
+            fontSize: '14px',
+            userSelect: 'none',
+            color: 'lightgray',
+          }}
         >
-          <span
-            style={{
-              position: 'absolute',
-              top: '14px',
-              left: 'calc(50% - 20px)',
-              zIndex: 13,
-              fontSize: '14px',
-              userSelect: 'none',
-              color: 'lightgray',
-            }}
+          <Popover
+            title={<div onClick={(e) => e.stopPropagation()}>🌡 {t('experiment.Temperature', lang)}</div>}
+            content={createThermometer}
           >
-            <Image
-              preview={false}
-              height={'20px'}
-              alt={'thermometer'}
-              src={thermometer}
-              style={{
-                cursor: 'pointer',
-                filter: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(251deg) brightness(102%) contrast(102%)',
-              }}
-              title={t('experiment.Temperature', lang)}
-            />{' '}
-            {Math.round(constantTemperature ? temperature : currentTemperature) + 'K'}
-          </span>
-        </Popover>
+            <span>🌡 {Math.round(constantTemperature ? temperature : currentTemperature) + 'K'}</span>
+          </Popover>
+          <span>🕖 {(mdRef.current.indexOfStep * timeStep).toFixed(0) + 'fs'}</span>
+        </Space>
       )}
     </>
   );

@@ -58,9 +58,16 @@ export class Atom {
     newAtom.force.copy(atom.force);
     if (atom.displacement) {
       newAtom.displacement = new Vector3();
+    }
+    if (atom.acceleration) {
       newAtom.acceleration = new Vector3();
+    }
+    if (atom.initialPosition) {
       newAtom.initialPosition = new Vector3();
+    }
+    if (atom.initialVelocity) {
       newAtom.initialVelocity = new Vector3();
+      newAtom.initialVelocity.copy(atom.initialVelocity);
     }
     newAtom.fixed = atom.fixed;
     newAtom.damp = atom.damp;

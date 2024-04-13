@@ -97,11 +97,12 @@ const ReactionChamber = React.memo(() => {
                   const currentTemperature = usePrimitiveStore.getState().currentTemperature;
                   // FIXME: Somehow when currentTemperature is used, the speed is set too low
                   const speed =
-                    Math.sqrt(constantTemperature ? temperature : Math.max(1, currentTemperature)) *
+                    Math.sqrt(constantTemperature ? temperature : Math.max(100, currentTemperature)) *
                     VT_CONVERSION_CONSTANT;
                   clone.velocity.x = speed * (ModelUtil.nextGaussian() - 0.5);
                   clone.velocity.y = speed * (ModelUtil.nextGaussian() - 0.5);
                   clone.velocity.z = speed * (ModelUtil.nextGaussian() - 0.5);
+                  clone.initialVelocity?.copy(clone.velocity);
                 }
                 atoms.push(clone);
               }

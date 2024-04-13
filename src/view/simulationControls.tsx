@@ -105,12 +105,12 @@ const SimulationControls = React.memo(() => {
       // reset temperature settings and display
       md.updateKineticEnergy();
       const currentTemperature = md.getCurrentTemperature();
-      if (md.heatBath.enabled) {
-        md.heatBath.temperature = currentTemperature;
-        setCommonStore((state) => {
-          state.projectState.temperature = currentTemperature;
-        });
-      }
+      // if (md.heatBath.enabled) {
+      //   md.heatBath.temperature = currentTemperature;
+      //   setCommonStore((state) => {
+      //     state.projectState.temperature = currentTemperature;
+      //   });
+      // }
       usePrimitiveStore.getState().set((state) => {
         state.currentTemperature = currentTemperature;
         state.updateViewerFlag = !state.updateViewerFlag;
