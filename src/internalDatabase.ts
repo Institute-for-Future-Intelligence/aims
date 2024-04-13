@@ -50,9 +50,15 @@ import hydrocarbonMoleculeUrl023 from './molecules/sdf/tricosane.sdf';
 import hydrocarbonMoleculeUrl024 from './molecules/sdf/tetracosane.sdf';
 import hydrocarbonMoleculeUrl101 from './molecules/xyz/benzene.xyz';
 
-import biomoleculeUrl001 from './molecules/pdb/cholesterol.pdb';
-import biomoleculeUrl002 from './molecules/sdf/atp.sdf';
-import biomoleculeUrl101 from './molecules/pdb/dna.pdb';
+import biomoleculeUrl001 from './molecules/sdf/atp.sdf';
+import biomoleculeUrl002 from './molecules/sdf/vitamin_a.sdf';
+import biomoleculeUrl003 from './molecules/sdf/vitamin_c.sdf';
+import biomoleculeUrl004 from './molecules/sdf/vitamin_d.sdf';
+import biomoleculeUrl101 from './molecules/pdb/cholesterol.pdb';
+import biomoleculeUrl102 from './molecules/sdf/oleic_acid.sdf';
+import biomoleculeUrl103 from './molecules/sdf/stearic_acid.sdf';
+import biomoleculeUrl104 from './molecules/sdf/elaidic_acid.sdf';
+import biomoleculeUrl201 from './molecules/pdb/dna.pdb';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
@@ -134,9 +140,15 @@ export const hydrocarbonMolecules = [
 ];
 
 export const biomolecules = [
-  { url: biomoleculeUrl001, internal: true, name: 'Cholesterol' } as MoleculeInterface,
-  { url: biomoleculeUrl002, internal: true, name: 'ATP' } as MoleculeInterface,
-  { url: biomoleculeUrl101, internal: true, name: 'DNA' } as MoleculeInterface,
+  { url: biomoleculeUrl001, internal: true, name: 'ATP' } as MoleculeInterface,
+  { url: biomoleculeUrl002, internal: true, name: 'Vitamin A' } as MoleculeInterface,
+  { url: biomoleculeUrl003, internal: true, name: 'Vitamin C' } as MoleculeInterface,
+  { url: biomoleculeUrl004, internal: true, name: 'Vitamin D' } as MoleculeInterface,
+  { url: biomoleculeUrl101, internal: true, name: 'Cholesterol' } as MoleculeInterface,
+  { url: biomoleculeUrl102, internal: true, name: 'Oleic Acid' } as MoleculeInterface,
+  { url: biomoleculeUrl103, internal: true, name: 'Stearic Acid' } as MoleculeInterface,
+  { url: biomoleculeUrl104, internal: true, name: 'Elaidic Acid' } as MoleculeInterface,
+  { url: biomoleculeUrl201, internal: true, name: 'DNA' } as MoleculeInterface,
 ];
 
 export const drugMolecules = [
