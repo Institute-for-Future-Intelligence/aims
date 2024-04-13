@@ -131,31 +131,6 @@ const DynamicsSettings = React.memo(() => {
                 />
               </Col>
             </Row>
-            <Row gutter={16} style={{ paddingBottom: '4px' }}>
-              <Col span={12} style={{ paddingTop: '5px' }}>
-                <span>{t('experiment.TimeStep', lang)}: </span>
-              </Col>
-              <Col span={12}>
-                <InputNumber
-                  addonAfter={t('experiment.Femtosecond', lang)}
-                  min={0.1}
-                  max={5}
-                  style={{ width: '100%' }}
-                  precision={1}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
-                  value={parseFloat(timeStep.toFixed(1))}
-                  step={0.1}
-                  onChange={(value) => {
-                    if (value === null) return;
-                    if (mdRef?.current) mdRef.current.timeStep = value;
-                    setCommonStore((state) => {
-                      state.projectState.timeStep = value;
-                    });
-                    setChanged(true);
-                  }}
-                />
-              </Col>
-            </Row>
           </div>
         ),
       },
@@ -371,6 +346,32 @@ const DynamicsSettings = React.memo(() => {
     );
   }, [temperature, constantTemperature, lang, mdRef]);
 
+  const createClock = useMemo(() => {
+    return (
+      <Space direction={'horizontal'} style={{ width: '280px' }} onClick={(e) => e.stopPropagation()}>
+        <span>{t('experiment.TimeStep', lang)}: </span>
+        <InputNumber
+          addonAfter={t('experiment.Femtosecond', lang)}
+          min={0.1}
+          max={5}
+          style={{ width: '200px' }}
+          precision={1}
+          // make sure that we round up the number as toDegrees may cause things like .999999999
+          value={parseFloat(timeStep.toFixed(1))}
+          step={0.1}
+          onChange={(value) => {
+            if (value === null) return;
+            if (mdRef?.current) mdRef.current.timeStep = value;
+            setCommonStore((state) => {
+              state.projectState.timeStep = value;
+            });
+            setChanged(true);
+          }}
+        />
+      </Space>
+    );
+  }, [timeStep, lang, mdRef]);
+
   const createInfo = useMemo(() => {
     let atomCount = 0;
     let radialBondCount = 0;
@@ -523,7 +524,12 @@ const DynamicsSettings = React.memo(() => {
           >
             <span>🌡 {Math.round(constantTemperature ? temperature : currentTemperature) + 'K'}</span>
           </Popover>
-          <span>🕖 {(mdRef.current.indexOfStep * timeStep).toFixed(0) + 'fs'}</span>
+          <Popover
+            title={<div onClick={(e) => e.stopPropagation()}>🕙 {t('word.Time', lang)}</div>}
+            content={createClock}
+          >
+            <span>🕖 {(mdRef.current.indexOfStep * timeStep).toFixed(0) + 'fs'}</span>
+          </Popover>
         </Space>
       )}
     </>

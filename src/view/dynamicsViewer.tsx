@@ -395,11 +395,14 @@ const DynamicsViewer = React.memo(
       return [10, 10, 10];
     }, [pickedMoleculeIndex, moleculesRef]);
 
-    const getMolecule = (name: string) => {
-      for (const m of testMolecules) {
-        if (m.name === name) return m;
+    const getMolecules = (name: string): Molecule[] => {
+      const molecules: Molecule[] = [];
+      for (const m of moleculesRef.current) {
+        if (m.name === name) {
+          molecules.push(m);
+        }
       }
-      return null;
+      return molecules;
     };
 
     return (
@@ -642,36 +645,38 @@ const DynamicsViewer = React.memo(
           angularBondsMap &&
           Object.keys(angularBondsMap).map((key) => {
             const angles = [];
-            const mol = getMolecule(key);
-            if (mol) {
-              angles.push(
-                angularBondsMap[key].map((t, i) => {
-                  const atom = mol.atoms[t.j];
-                  const pi = mol.atoms[t.i].position;
-                  const pj = atom.position;
-                  const pk = mol.atoms[t.k].position;
-                  const vij = new Vector3().subVectors(pi, pj).normalize().multiplyScalar(0.3);
-                  const vkj = new Vector3().subVectors(pk, pj).normalize().multiplyScalar(0.3);
-                  const mid = new Vector3().addVectors(vij, vkj);
-                  const points = new Array<[number, number, number]>();
-                  points.push([pj.x + vij.x, pj.y + vij.y, pj.z + vij.z]);
-                  points.push([pj.x + mid.x, pj.y + mid.y, pj.z + mid.z]);
-                  points.push([pj.x + vkj.x, pj.y + vkj.y, pj.z + vkj.z]);
-                  return (
-                    <QuadraticBezierLine
-                      key={i}
-                      dashed={true}
-                      dashSize={0.02}
-                      gapSize={0.01}
-                      color={'yellow'}
-                      lineWidth={1}
-                      start={points[0]}
-                      mid={points[1]}
-                      end={points[2]}
-                    />
-                  );
-                }),
-              );
+            const molecules = getMolecules(key);
+            if (molecules.length > 0) {
+              for (const mol of molecules) {
+                angles.push(
+                  angularBondsMap[key].map((t, i) => {
+                    const atom = mol.atoms[t.j];
+                    const pi = mol.atoms[t.i].position;
+                    const pj = atom.position;
+                    const pk = mol.atoms[t.k].position;
+                    const vij = new Vector3().subVectors(pi, pj).normalize().multiplyScalar(0.3);
+                    const vkj = new Vector3().subVectors(pk, pj).normalize().multiplyScalar(0.3);
+                    const mid = new Vector3().addVectors(vij, vkj);
+                    const points = new Array<[number, number, number]>();
+                    points.push([pj.x + vij.x, pj.y + vij.y, pj.z + vij.z]);
+                    points.push([pj.x + mid.x, pj.y + mid.y, pj.z + mid.z]);
+                    points.push([pj.x + vkj.x, pj.y + vkj.y, pj.z + vkj.z]);
+                    return (
+                      <QuadraticBezierLine
+                        key={i}
+                        dashed={true}
+                        dashSize={0.02}
+                        gapSize={0.01}
+                        color={'yellow'}
+                        lineWidth={1}
+                        start={points[0]}
+                        mid={points[1]}
+                        end={points[2]}
+                      />
+                    );
+                  }),
+                );
+              }
             }
             return angles;
           })}
@@ -679,34 +684,36 @@ const DynamicsViewer = React.memo(
           torsionalBondsMap &&
           Object.keys(torsionalBondsMap).map((key) => {
             const dihedrals = [];
-            const mol = getMolecule(key);
-            if (mol) {
-              dihedrals.push(
-                torsionalBondsMap[key].map((q, i) => {
-                  const pi = mol.atoms[q.i].position;
-                  const pj = mol.atoms[q.j].position;
-                  const pk = mol.atoms[q.k].position;
-                  const pl = mol.atoms[q.l].position;
-                  const points = new Array<[number, number, number]>();
-                  points.push([pi.x, pi.y, pi.z]);
-                  points.push([pj.x, pj.y, pj.z]);
-                  points.push([pk.x, pk.y, pk.z]);
-                  points.push([pl.x, pl.y, pl.z]);
-                  return (
-                    <CatmullRomLine
-                      key={i}
-                      curveType={'chordal'}
-                      dashed={true}
-                      dashSize={0.02}
-                      gapSize={0.01}
-                      color={'yellow'}
-                      lineWidth={1}
-                      tension={0.5}
-                      points={points}
-                    />
-                  );
-                }),
-              );
+            const molecules = getMolecules(key);
+            if (molecules.length > 0) {
+              for (const mol of molecules) {
+                dihedrals.push(
+                  torsionalBondsMap[key].map((q, i) => {
+                    const pi = mol.atoms[q.i].position;
+                    const pj = mol.atoms[q.j].position;
+                    const pk = mol.atoms[q.k].position;
+                    const pl = mol.atoms[q.l].position;
+                    const points = new Array<[number, number, number]>();
+                    points.push([pi.x, pi.y, pi.z]);
+                    points.push([pj.x, pj.y, pj.z]);
+                    points.push([pk.x, pk.y, pk.z]);
+                    points.push([pl.x, pl.y, pl.z]);
+                    return (
+                      <CatmullRomLine
+                        key={i}
+                        curveType={'chordal'}
+                        dashed={true}
+                        dashSize={0.02}
+                        gapSize={0.01}
+                        color={'yellow'}
+                        lineWidth={1}
+                        tension={0.5}
+                        points={points}
+                      />
+                    );
+                  }),
+                );
+              }
             }
             return dihedrals;
           })}
