@@ -60,7 +60,7 @@ const ReactionChamber = React.memo(() => {
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
   const energyGraphVisible = useStore(Selector.energyGraphVisible);
-  const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
+  const molecularStructureMap = useStore(Selector.molecularStructureMap);
 
   const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -85,10 +85,10 @@ const ReactionChamber = React.memo(() => {
       setCommonStore((state) => {
         switch (state.projectState.type) {
           case ProjectType.MOLECULAR_MODELING: {
-            const prop = molecularPropertiesMap.get(selectedMolecule.name);
-            if (prop?.atoms) {
+            const structure = molecularStructureMap.get(selectedMolecule.name);
+            if (structure?.atoms) {
               const atoms: Atom[] = [];
-              for (const a of prop.atoms) {
+              for (const a of structure.atoms) {
                 const clone = Atom.clone(a);
                 clone.index = a.index;
                 if (!clone.fixed) {

@@ -16,7 +16,7 @@ import elementsUrl from '../assets/elements.csv';
 import molecularPropertiesUrl from '../assets/molecular-properties.csv';
 import { ChemicalElement } from '../models/ChemicalElement';
 import Papa from 'papaparse';
-import { MolecularProperties } from '../models/MolecularProperties';
+import { MolecularProperties, MolecularStructure } from '../models/MolecularProperties';
 import { User } from '../User';
 import { ProjectUtil } from '../project/ProjectUtil.ts';
 import { Protein } from '../models/Protein.ts';
@@ -57,6 +57,8 @@ export interface CommonStoreState {
 
   molecularPropertiesMap: Map<string, MolecularProperties>;
   setMolecularProperties: (name: string, properties: MolecularProperties) => void;
+  molecularStructureMap: Map<string, MolecularStructure>;
+  setMolecularStructure: (name: string, structure: MolecularStructure) => void;
 
   navigationView: boolean;
 
@@ -172,6 +174,12 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           setMolecularProperties(name: string, properties: MolecularProperties) {
             immerSet((state: CommonStoreState) => {
               state.molecularPropertiesMap.set(name, properties);
+            });
+          },
+          molecularStructureMap: new Map<string, MolecularStructure>(),
+          setMolecularStructure(name: string, structure: MolecularStructure) {
+            immerSet((state: CommonStoreState) => {
+              state.molecularStructureMap.set(name, structure);
             });
           },
 

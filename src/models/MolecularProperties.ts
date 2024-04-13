@@ -20,6 +20,9 @@ export interface MolecularProperties {
   density: number;
   boilingPoint: number;
   meltingPoint: number;
-  atoms?: Atom[];
-  radialBonds?: RadialBond[];
+}
+
+export interface MolecularStructure {
+  atoms: Atom[];
+  radialBonds: RadialBond[];
 }

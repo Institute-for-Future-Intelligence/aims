@@ -11,7 +11,7 @@ import XYZParser from '../lib/io/parsers/XYZParser';
 import MOL2Parser from '../lib/io/parsers/MOL2Parser';
 import { MoleculeInterface } from '../types.ts';
 import { useStore } from '../stores/common.ts';
-import { MolecularProperties } from '../models/MolecularProperties.ts';
+import { MolecularProperties, MolecularStructure } from '../models/MolecularProperties.ts';
 import { Molecule } from '../models/Molecule.ts';
 import Complex from '../lib/chem/Complex';
 import Element from '../lib/chem/Element';
@@ -117,7 +117,7 @@ export const loadMolecule = (
   }
 };
 
-export const setProperties = (molecule: MoleculeInterface, atoms: Atom[], radialBonds: RadialBond[]) => {
+export const storeMoleculeData = (molecule: MoleculeInterface, atoms: Atom[], radialBonds: RadialBond[]) => {
   const properties = useStore.getState().getProvidedMolecularProperties(molecule.name);
   if (properties) {
     useStore.getState().setMolecularProperties(molecule.name, {
@@ -134,8 +134,7 @@ export const setProperties = (molecule: MoleculeInterface, atoms: Atom[], radial
       density: properties.density,
       boilingPoint: properties.boilingPoint,
       meltingPoint: properties.meltingPoint,
-      atoms,
-      radialBonds,
     } as MolecularProperties);
   }
+  useStore.getState().setMolecularStructure(molecule.name, { atoms, radialBonds } as MolecularStructure);
 };

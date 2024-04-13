@@ -18,7 +18,7 @@ import {
   MolecularViewerStyle,
   STYLE_MAP,
 } from './displayOptions';
-import { loadMolecule, setProperties } from './moleculeTools.ts';
+import { loadMolecule, storeMoleculeData } from './moleculeTools.ts';
 import { Atom } from '../models/Atom.ts';
 import { RadialBond } from '../models/RadialBond.ts';
 
@@ -124,7 +124,7 @@ const GalleryViewer = React.memo(
         for (const b of result._bonds) {
           radialBonds.push(new RadialBond(atoms[b._left.index], atoms[b._right.index]));
         }
-        setProperties(molecule, atoms, radialBonds);
+        storeMoleculeData(molecule, atoms, radialBonds);
       }
     };
 
