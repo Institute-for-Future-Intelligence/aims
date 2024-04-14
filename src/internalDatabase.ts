@@ -66,7 +66,12 @@ import biomoleculeUrl101 from './molecules/pdb/cholesterol.pdb';
 import biomoleculeUrl102 from './molecules/sdf/oleic_acid.sdf';
 import biomoleculeUrl103 from './molecules/sdf/stearic_acid.sdf';
 import biomoleculeUrl104 from './molecules/sdf/elaidic_acid.sdf';
-import biomoleculeUrl201 from './molecules/pdb/dna.pdb';
+import biomoleculeUrl201 from './molecules/sdf/adenine.sdf';
+import biomoleculeUrl202 from './molecules/sdf/cytosine.sdf';
+import biomoleculeUrl203 from './molecules/sdf/guanine.sdf';
+import biomoleculeUrl204 from './molecules/sdf/thymine.sdf';
+import biomoleculeUrl205 from './molecules/sdf/uracil.sdf';
+import biomoleculeUrl211 from './molecules/pdb/dna.pdb';
 import biomoleculeUrl301 from './molecules/pdb/alphahelix.pdb';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
@@ -167,7 +172,12 @@ export const biomolecules = [
   { url: biomoleculeUrl102, internal: true, name: 'Oleic Acid' } as MoleculeInterface,
   { url: biomoleculeUrl103, internal: true, name: 'Stearic Acid' } as MoleculeInterface,
   { url: biomoleculeUrl104, internal: true, name: 'Elaidic Acid' } as MoleculeInterface,
-  { url: biomoleculeUrl201, internal: true, name: 'DNA' } as MoleculeInterface,
+  { url: biomoleculeUrl201, internal: true, name: 'Adenine' } as MoleculeInterface,
+  { url: biomoleculeUrl202, internal: true, name: 'Cytosine' } as MoleculeInterface,
+  { url: biomoleculeUrl203, internal: true, name: 'Guanine' } as MoleculeInterface,
+  { url: biomoleculeUrl204, internal: true, name: 'Thymine' } as MoleculeInterface,
+  { url: biomoleculeUrl205, internal: true, name: 'Uracil' } as MoleculeInterface,
+  { url: biomoleculeUrl211, internal: true, name: 'DNA' } as MoleculeInterface,
   { url: biomoleculeUrl301, internal: true, name: 'Alpha Helix' } as MoleculeInterface,
 ];
 
