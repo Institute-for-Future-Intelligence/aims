@@ -11,6 +11,7 @@ import monatomicUrl004 from './molecules/pdb/krypton.pdb';
 import monatomicUrl005 from './molecules/pdb/xenon.pdb';
 
 import crystalUrl001 from './molecules/pdb/nacl.pdb';
+import crystalUrl002 from './molecules/xyz/gold.xyz';
 
 import commonMoleculeUrl001 from './molecules/sdf/dihydrogen.sdf';
 import commonMoleculeUrl002 from './molecules/sdf/dioxygen.sdf';
@@ -20,9 +21,12 @@ import commonMoleculeUrl005 from './molecules/sdf/carbon_dioxide.sdf';
 import commonMoleculeUrl006 from './molecules/sdf/ozone.sdf';
 import commonMoleculeUrl101 from './molecules/pdb/buckyball.pdb';
 import commonMoleculeUrl102 from './molecules/xyz/nanotube.xyz';
+import commonMoleculeUrl103 from './molecules/xyz/graphen.xyz';
+import commonMoleculeUrl104 from './molecules/xyz/diamond.xyz';
 import commonMoleculeUrl201 from './molecules/xyz/d_glucose.xyz';
 import commonMoleculeUrl202 from './molecules/sdf/ethanol.sdf';
 import commonMoleculeUrl203 from './molecules/sdf/urea.sdf';
+import commonMoleculeUrl301 from './molecules/pdb/zeolite.pdb';
 
 import hydrocarbonMoleculeUrl001 from './molecules/pdb/methane.pdb';
 import hydrocarbonMoleculeUrl002 from './molecules/sdf/ethane.sdf';
@@ -95,7 +99,10 @@ export const monatomicMolecules = [
   { url: monatomicUrl005, internal: true, name: 'Xenon' } as MoleculeInterface,
 ];
 
-export const crystals = [{ url: crystalUrl001, internal: true, name: 'NaCl' } as MoleculeInterface];
+export const crystals = [
+  { url: crystalUrl001, internal: true, name: 'NaCl' } as MoleculeInterface,
+  { url: crystalUrl002, internal: true, name: 'Gold' } as MoleculeInterface,
+];
 
 export const commonMolecules = [
   { url: commonMoleculeUrl001, internal: true, name: 'Dihydrogen' } as MoleculeInterface,
@@ -106,9 +113,12 @@ export const commonMolecules = [
   { url: commonMoleculeUrl006, internal: true, name: 'Ozone' } as MoleculeInterface,
   { url: commonMoleculeUrl101, internal: true, name: 'Buckminsterfullerene' } as MoleculeInterface,
   { url: commonMoleculeUrl102, internal: true, name: 'Carbon Nanotube' } as MoleculeInterface,
+  { url: commonMoleculeUrl103, internal: true, name: 'Graphene' } as MoleculeInterface,
+  { url: commonMoleculeUrl104, internal: true, name: 'Diamond' } as MoleculeInterface,
   { url: commonMoleculeUrl201, internal: true, name: 'D-Glucose' } as MoleculeInterface,
   { url: commonMoleculeUrl202, internal: true, name: 'Ethanol' } as MoleculeInterface,
   { url: commonMoleculeUrl203, internal: true, name: 'Urea' } as MoleculeInterface,
+  { url: commonMoleculeUrl301, internal: true, name: 'Zeolite' } as MoleculeInterface,
 ];
 
 export const hydrocarbonMolecules = [

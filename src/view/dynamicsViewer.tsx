@@ -17,7 +17,7 @@ import {
   STYLE_MAP,
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
-import { generateComplex, generateVdwLines, loadMolecule } from './moleculeTools.ts';
+import { generateComplex, generateVdwLines, isCrystal, loadMolecule } from './moleculeTools.ts';
 import { Atom } from '../models/Atom.ts';
 import { RadialBond } from '../models/RadialBond.ts';
 import { AngularBond } from '../models/AngularBond.ts';
@@ -170,13 +170,18 @@ const DynamicsViewer = React.memo(
         // the vdw radius for viewer is too big to be used as the LJ radius; reduce it to 75%
         a.sigma = atom.element.radius * LJ_SIGMA_CONVERTER * 0.75;
         a.mass = atom.element.weight;
+        // temporary solutions (these parameters should be set via UI)
         if (molecule.name === 'NaCl') {
           // modify the force field for salt crystal (temporary solution)
           if (atom.element.name === 'NA') a.charge = 1;
           else if (atom.element.name === 'CL') a.charge = -1;
           a.epsilon = 0.05;
+        } else if (molecule.name === 'Gold') {
+          if (atom.element.name === 'AU') {
+            a.epsilon = 3.81;
+            a.sigma /= 0.85;
+          }
         } else {
-          // temporary solution
           if (a.elementSymbol === 'C' || a.elementSymbol === 'H' || a.elementSymbol === 'O') {
             a.epsilon = 0.005;
           }
@@ -192,64 +197,66 @@ const DynamicsViewer = React.memo(
         mol.atoms.push(a);
       }
       molecule.radialBonds.length = 0;
-      const k = result._bonds.length;
-      for (let i = 0; i < k; i++) {
-        const bond = result._bonds[i] as BondJS;
-        const length = bond.calcLength();
-        const index1 = bond._left.index;
-        const index2 = bond._right.index;
-        mol.radialBonds.push(new RadialBond(mol.atoms[index1], mol.atoms[index2], length));
-        molecule.radialBonds.push(new RadialBond(molecule.atoms[index1], molecule.atoms[index2], length));
-      }
-      let aBonds = useStore.getState().angularBondsMap[mol.name];
-      if (!aBonds) {
-        aBonds = ModelUtil.generateAngularBonds(mol.atoms, mol.radialBonds);
-        setCommonStore((state) => {
-          if (aBonds) {
-            state.angularBondsMap[mol.name] = aBonds;
-          }
-        });
-      }
-      if (aBonds?.length > 0) {
-        for (const x of aBonds) {
-          const p1 = result._atoms[x.i].position;
-          const p2 = result._atoms[x.j].position;
-          const p3 = result._atoms[x.k].position;
-          const angle = AngularBond.getAngleFromPositions(p1, p2, p3);
-          mol.angularBonds.push(new AngularBond(mol.atoms[x.i], mol.atoms[x.j], mol.atoms[x.k], angle));
-          molecule.angularBonds.push(
-            new AngularBond(molecule.atoms[x.i], molecule.atoms[x.j], molecule.atoms[x.k], angle),
-          );
+      if (!isCrystal(molecule.name)) {
+        const k = result._bonds.length;
+        for (let i = 0; i < k; i++) {
+          const bond = result._bonds[i] as BondJS;
+          const length = bond.calcLength();
+          const index1 = bond._left.index;
+          const index2 = bond._right.index;
+          mol.radialBonds.push(new RadialBond(mol.atoms[index1], mol.atoms[index2], length));
+          molecule.radialBonds.push(new RadialBond(molecule.atoms[index1], molecule.atoms[index2], length));
         }
-      }
-      let tBonds = useStore.getState().torsionalBondsMap[mol.name];
-      if (!tBonds && aBonds) {
-        tBonds = ModelUtil.generateTorsionalBonds(mol.atoms, mol.radialBonds, aBonds);
-        setCommonStore((state) => {
-          if (tBonds) {
-            state.torsionalBondsMap[mol.name] = tBonds;
+        let aBonds = useStore.getState().angularBondsMap[mol.name];
+        if (!aBonds || aBonds.length === 0) {
+          aBonds = ModelUtil.generateAngularBonds(mol.atoms, mol.radialBonds);
+          setCommonStore((state) => {
+            if (aBonds) {
+              state.angularBondsMap[mol.name] = aBonds;
+            }
+          });
+        }
+        if (aBonds?.length > 0) {
+          for (const x of aBonds) {
+            const p1 = result._atoms[x.i].position;
+            const p2 = result._atoms[x.j].position;
+            const p3 = result._atoms[x.k].position;
+            const angle = AngularBond.getAngleFromPositions(p1, p2, p3);
+            mol.angularBonds.push(new AngularBond(mol.atoms[x.i], mol.atoms[x.j], mol.atoms[x.k], angle));
+            molecule.angularBonds.push(
+              new AngularBond(molecule.atoms[x.i], molecule.atoms[x.j], molecule.atoms[x.k], angle),
+            );
           }
-        });
-      }
-      if (tBonds?.length > 0) {
-        for (const x of tBonds) {
-          const p1 = result._atoms[x.i].position;
-          const p2 = result._atoms[x.j].position;
-          const p3 = result._atoms[x.k].position;
-          const p4 = result._atoms[x.l].position;
-          const dihedral = TorsionalBond.getDihedralFromPositions(p1, p2, p3, p4);
-          mol.torsionalBonds.push(
-            new TorsionalBond(mol.atoms[x.i], mol.atoms[x.j], mol.atoms[x.k], mol.atoms[x.l], dihedral),
-          );
-          molecule.torsionalBonds.push(
-            new TorsionalBond(
-              molecule.atoms[x.i],
-              molecule.atoms[x.j],
-              molecule.atoms[x.k],
-              molecule.atoms[x.l],
-              dihedral,
-            ),
-          );
+        }
+        let tBonds = useStore.getState().torsionalBondsMap[mol.name];
+        if ((!tBonds || tBonds.length === 0) && aBonds) {
+          tBonds = ModelUtil.generateTorsionalBonds(mol.atoms, mol.radialBonds, aBonds);
+          setCommonStore((state) => {
+            if (tBonds) {
+              state.torsionalBondsMap[mol.name] = tBonds;
+            }
+          });
+        }
+        if (tBonds?.length > 0) {
+          for (const x of tBonds) {
+            const p1 = result._atoms[x.i].position;
+            const p2 = result._atoms[x.j].position;
+            const p3 = result._atoms[x.k].position;
+            const p4 = result._atoms[x.l].position;
+            const dihedral = TorsionalBond.getDihedralFromPositions(p1, p2, p3, p4);
+            mol.torsionalBonds.push(
+              new TorsionalBond(mol.atoms[x.i], mol.atoms[x.j], mol.atoms[x.k], mol.atoms[x.l], dihedral),
+            );
+            molecule.torsionalBonds.push(
+              new TorsionalBond(
+                molecule.atoms[x.i],
+                molecule.atoms[x.j],
+                molecule.atoms[x.k],
+                molecule.atoms[x.l],
+                dihedral,
+              ),
+            );
+          }
         }
       }
       moleculeMapRef.current.set(molecule, mol);

@@ -22,6 +22,10 @@ import { RadialBond } from '../models/RadialBond.ts';
 import { VdwBond } from '../models/VdwBond.ts';
 import Bond from '../lib/chem/Bond';
 
+export const isCrystal = (name: string) => {
+  return name === 'Gold' || name === 'NaCl';
+};
+
 export const generateVdwLines = (molecules: Molecule[], maximumRelativeDistanceSquared: number) => {
   const bonds: VdwBond[] = [];
   const n = molecules.length;
@@ -80,43 +84,6 @@ export const generateComplex = (molecules: Molecule[]) => {
   return complex;
 };
 
-export const loadMolecule = (
-  molecule: MoleculeInterface,
-  processResult: (result: any, molecule?: Molecule) => void,
-) => {
-  const mol = getData(molecule.name);
-  if (mol?.url) {
-    fetch(mol.url).then((response) => {
-      response.text().then((text) => {
-        let url = mol.url;
-        if (url) {
-          if (url.includes('?')) {
-            // sometimes the url has an appendix (not sure who adds it)
-            url = url.substring(0, url.indexOf('?'));
-          }
-          let parser = null;
-          const options = {};
-          if (url.endsWith('.sdf')) parser = new SDFParser(text, options);
-          else if (url.endsWith('.cif')) parser = new CIFParser(text, options);
-          else if (url.endsWith('.pdb')) parser = new PDBParser(text, options);
-          else if (url.endsWith('.pcj')) parser = new PubChemParser(text, options);
-          else if (url.endsWith('.xyz')) parser = new XYZParser(text, options);
-          else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
-          if (parser) {
-            parser.parse().then((result) => {
-              if (molecule) {
-                processResult(result, molecule as Molecule);
-              } else {
-                processResult(result);
-              }
-            });
-          }
-        }
-      });
-    });
-  }
-};
-
 export const storeMoleculeData = (molecule: MoleculeInterface, atoms: Atom[], radialBonds: RadialBond[]) => {
   const properties = useStore.getState().getProvidedMolecularProperties(molecule.name);
   if (properties) {
@@ -137,4 +104,41 @@ export const storeMoleculeData = (molecule: MoleculeInterface, atoms: Atom[], ra
     } as MolecularProperties);
   }
   useStore.getState().setMolecularStructure(molecule.name, { atoms, radialBonds } as MolecularStructure);
+};
+
+export const loadMolecule = (
+  molecule: MoleculeInterface,
+  processResult: (result: any, molecule?: Molecule) => void,
+) => {
+  const mol = getData(molecule.name);
+  if (mol?.url) {
+    fetch(mol.url).then((response) => {
+      response.text().then((text) => {
+        let url = mol.url;
+        if (url) {
+          if (url.includes('?')) {
+            // sometimes the url has an appendix (not sure who adds it)
+            url = url.substring(0, url.indexOf('?'));
+          }
+          let parser = null;
+          const options = { autoBond: !isCrystal(molecule.name) };
+          if (url.endsWith('.sdf')) parser = new SDFParser(text, options);
+          else if (url.endsWith('.cif')) parser = new CIFParser(text, options);
+          else if (url.endsWith('.pdb')) parser = new PDBParser(text, options);
+          else if (url.endsWith('.pcj')) parser = new PubChemParser(text, options);
+          else if (url.endsWith('.xyz')) parser = new XYZParser(text, options);
+          else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
+          if (parser) {
+            parser.parse().then((result) => {
+              if (molecule) {
+                processResult(result, molecule as Molecule);
+              } else {
+                processResult(result);
+              }
+            });
+          }
+        }
+      });
+    });
+  }
 };
