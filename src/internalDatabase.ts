@@ -72,7 +72,12 @@ import biomoleculeUrl203 from './molecules/sdf/guanine.sdf';
 import biomoleculeUrl204 from './molecules/sdf/thymine.sdf';
 import biomoleculeUrl205 from './molecules/sdf/uracil.sdf';
 import biomoleculeUrl211 from './molecules/pdb/dna.pdb';
-import biomoleculeUrl301 from './molecules/pdb/alphahelix.pdb';
+import biomoleculeUrl301 from './molecules/sdf/alanine.sdf';
+import biomoleculeUrl302 from './molecules/sdf/arginine.sdf';
+import biomoleculeUrl303 from './molecules/sdf/asparagine.sdf';
+import biomoleculeUrl304 from './molecules/sdf/aspartic_acid.sdf';
+import biomoleculeUrl305 from './molecules/sdf/cysteine.sdf';
+import biomoleculeUrl331 from './molecules/pdb/alphahelix.pdb';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
@@ -178,7 +183,12 @@ export const biomolecules = [
   { url: biomoleculeUrl204, internal: true, name: 'Thymine' } as MoleculeInterface,
   { url: biomoleculeUrl205, internal: true, name: 'Uracil' } as MoleculeInterface,
   { url: biomoleculeUrl211, internal: true, name: 'DNA' } as MoleculeInterface,
-  { url: biomoleculeUrl301, internal: true, name: 'Alpha Helix' } as MoleculeInterface,
+  { url: biomoleculeUrl301, internal: true, name: 'Alanine' } as MoleculeInterface,
+  { url: biomoleculeUrl302, internal: true, name: 'Arginine' } as MoleculeInterface,
+  { url: biomoleculeUrl303, internal: true, name: 'Asparagine' } as MoleculeInterface,
+  { url: biomoleculeUrl304, internal: true, name: 'Aspartic Acid' } as MoleculeInterface,
+  { url: biomoleculeUrl305, internal: true, name: 'Cysteine' } as MoleculeInterface,
+  { url: biomoleculeUrl331, internal: true, name: 'Alpha Helix' } as MoleculeInterface,
 ];
 
 export const drugMolecules = [
