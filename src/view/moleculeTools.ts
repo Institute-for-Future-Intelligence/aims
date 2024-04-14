@@ -23,7 +23,7 @@ import { VdwBond } from '../models/VdwBond.ts';
 import Bond from '../lib/chem/Bond';
 
 export const isCrystal = (name: string) => {
-  return name === 'Gold' || name === 'NaCl';
+  return name === 'Gold' || name === 'Silver' || name === 'Iron' || name === 'NaCl' || name === 'CsCl';
 };
 
 export const generateVdwLines = (molecules: Molecule[], maximumRelativeDistanceSquared: number) => {

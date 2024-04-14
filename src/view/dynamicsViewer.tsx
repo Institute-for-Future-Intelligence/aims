@@ -171,14 +171,26 @@ const DynamicsViewer = React.memo(
         a.sigma = atom.element.radius * LJ_SIGMA_CONVERTER * 0.75;
         a.mass = atom.element.weight;
         // temporary solutions (these parameters should be set via UI)
-        if (molecule.name === 'NaCl') {
+        // cohesive energy from https://www.knowledgedoor.com/2/elements_handbook/cohesive_energy.html
+        if (molecule.name === 'NaCl' || molecule.name === 'CsCl') {
           // modify the force field for salt crystal (temporary solution)
           if (atom.element.name === 'NA') a.charge = 1;
+          else if (atom.element.name === 'CS') a.charge = 1;
           else if (atom.element.name === 'CL') a.charge = -1;
           a.epsilon = 0.05;
         } else if (molecule.name === 'Gold') {
           if (atom.element.name === 'AU') {
             a.epsilon = 3.81;
+            a.sigma /= 0.85;
+          }
+        } else if (molecule.name === 'Silver') {
+          if (atom.element.name === 'AG') {
+            a.epsilon = 2.95;
+            a.sigma /= 0.85;
+          }
+        } else if (molecule.name === 'Iron') {
+          if (atom.element.name === 'FE') {
+            a.epsilon = 4.28;
             a.sigma /= 0.85;
           }
         } else {
@@ -191,6 +203,7 @@ const DynamicsViewer = React.memo(
           a.velocity.copy(molecule.atoms[i].velocity);
           a.force.copy(molecule.atoms[i].force);
           a.fixed = molecule.atoms[i].fixed;
+          molecule.atoms[i].epsilon = a.epsilon;
         }
         a.initialPosition?.copy(a.position);
         a.initialVelocity?.copy(a.velocity);
@@ -459,7 +472,7 @@ const DynamicsViewer = React.memo(
             })}
           </Instances>
         )}
-        {pickedAtomRef.current && (
+        {pickedAtomRef.current && pickedAtomIndex !== -1 && (
           //   must use position.x, etc. in order for this to update in a molecular dynamics simulation
           <Sphere
             position={[

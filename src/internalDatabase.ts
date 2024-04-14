@@ -11,7 +11,13 @@ import monatomicUrl004 from './molecules/pdb/krypton.pdb';
 import monatomicUrl005 from './molecules/pdb/xenon.pdb';
 
 import crystalUrl001 from './molecules/pdb/nacl.pdb';
-import crystalUrl002 from './molecules/xyz/gold.xyz';
+import crystalUrl002 from './molecules/xyz/cscl.xyz';
+import crystalUrl003 from './molecules/xyz/gold.xyz';
+import crystalUrl004 from './molecules/xyz/silver.xyz';
+import crystalUrl005 from './molecules/xyz/iron.xyz';
+import crystalUrl101 from './molecules/pdb/zeolite.pdb';
+import crystalUrl102 from './molecules/xyz/diamond.xyz';
+import crystalUrl103 from './molecules/xyz/graphite.xyz';
 
 import commonMoleculeUrl001 from './molecules/sdf/dihydrogen.sdf';
 import commonMoleculeUrl002 from './molecules/sdf/dioxygen.sdf';
@@ -22,11 +28,9 @@ import commonMoleculeUrl006 from './molecules/sdf/ozone.sdf';
 import commonMoleculeUrl101 from './molecules/pdb/buckyball.pdb';
 import commonMoleculeUrl102 from './molecules/xyz/nanotube.xyz';
 import commonMoleculeUrl103 from './molecules/xyz/graphen.xyz';
-import commonMoleculeUrl104 from './molecules/xyz/diamond.xyz';
 import commonMoleculeUrl201 from './molecules/xyz/d_glucose.xyz';
 import commonMoleculeUrl202 from './molecules/sdf/ethanol.sdf';
 import commonMoleculeUrl203 from './molecules/sdf/urea.sdf';
-import commonMoleculeUrl301 from './molecules/pdb/zeolite.pdb';
 
 import hydrocarbonMoleculeUrl001 from './molecules/pdb/methane.pdb';
 import hydrocarbonMoleculeUrl002 from './molecules/sdf/ethane.sdf';
@@ -63,6 +67,7 @@ import biomoleculeUrl102 from './molecules/sdf/oleic_acid.sdf';
 import biomoleculeUrl103 from './molecules/sdf/stearic_acid.sdf';
 import biomoleculeUrl104 from './molecules/sdf/elaidic_acid.sdf';
 import biomoleculeUrl201 from './molecules/pdb/dna.pdb';
+import biomoleculeUrl301 from './molecules/pdb/alphahelix.pdb';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
@@ -101,7 +106,13 @@ export const monatomicMolecules = [
 
 export const crystals = [
   { url: crystalUrl001, internal: true, name: 'NaCl' } as MoleculeInterface,
-  { url: crystalUrl002, internal: true, name: 'Gold' } as MoleculeInterface,
+  { url: crystalUrl002, internal: true, name: 'CsCl' } as MoleculeInterface,
+  { url: crystalUrl003, internal: true, name: 'Gold' } as MoleculeInterface,
+  { url: crystalUrl004, internal: true, name: 'Silver' } as MoleculeInterface,
+  { url: crystalUrl005, internal: true, name: 'Iron' } as MoleculeInterface,
+  { url: crystalUrl101, internal: true, name: 'Zeolite' } as MoleculeInterface,
+  { url: crystalUrl102, internal: true, name: 'Diamond' } as MoleculeInterface,
+  { url: crystalUrl103, internal: true, name: 'Graphite' } as MoleculeInterface,
 ];
 
 export const commonMolecules = [
@@ -114,11 +125,9 @@ export const commonMolecules = [
   { url: commonMoleculeUrl101, internal: true, name: 'Buckminsterfullerene' } as MoleculeInterface,
   { url: commonMoleculeUrl102, internal: true, name: 'Carbon Nanotube' } as MoleculeInterface,
   { url: commonMoleculeUrl103, internal: true, name: 'Graphene' } as MoleculeInterface,
-  { url: commonMoleculeUrl104, internal: true, name: 'Diamond' } as MoleculeInterface,
   { url: commonMoleculeUrl201, internal: true, name: 'D-Glucose' } as MoleculeInterface,
   { url: commonMoleculeUrl202, internal: true, name: 'Ethanol' } as MoleculeInterface,
   { url: commonMoleculeUrl203, internal: true, name: 'Urea' } as MoleculeInterface,
-  { url: commonMoleculeUrl301, internal: true, name: 'Zeolite' } as MoleculeInterface,
 ];
 
 export const hydrocarbonMolecules = [
@@ -159,6 +168,7 @@ export const biomolecules = [
   { url: biomoleculeUrl103, internal: true, name: 'Stearic Acid' } as MoleculeInterface,
   { url: biomoleculeUrl104, internal: true, name: 'Elaidic Acid' } as MoleculeInterface,
   { url: biomoleculeUrl201, internal: true, name: 'DNA' } as MoleculeInterface,
+  { url: biomoleculeUrl301, internal: true, name: 'Alpha Helix' } as MoleculeInterface,
 ];
 
 export const drugMolecules = [

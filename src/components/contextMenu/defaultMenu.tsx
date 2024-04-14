@@ -150,7 +150,7 @@ export const createDefaultMenu = (
           label: (
             <>
               <MenuItem stayAfterClick={false} hasPadding={true}>
-                {'ε: ' + pickedAtom.epsilon.toFixed(3)}
+                {i18n.t('experiment.CohesiveEnergy', lang) + ': ' + pickedAtom.epsilon.toFixed(3)}
               </MenuItem>
             </>
           ),

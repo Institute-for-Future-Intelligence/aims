@@ -187,6 +187,7 @@ export const i18n_en = {
       DampingCoefficient: 'Damping Coefficient',
       AtomicMass: 'Atomic Mass',
       AtomicRadius: 'Atomic Radius',
+      CohesiveEnergy: 'Cohesive Energy',
       ElectricCharge: 'Electric Charge',
       Model: 'Model',
       Display: 'Display',

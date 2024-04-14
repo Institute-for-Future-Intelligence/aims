@@ -24,6 +24,7 @@ import { ModelUtil } from '../models/ModelUtil.ts';
 import { Atom } from '../models/Atom.ts';
 import { Triple } from '../models/Triple.ts';
 import { Quadruple } from '../models/Quadruple.ts';
+import { usePrimitiveStore } from './commonPrimitive.ts';
 
 enableMapSet();
 
@@ -104,6 +105,10 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             immerSet((state: CommonStoreState) => {
               state.projectState.testMolecules = [];
               state.projectState.trajectoryAtomIndices = [];
+            });
+            usePrimitiveStore.getState().set((state) => {
+              state.pickedMoleculeIndex = -1;
+              state.pickedAtomIndex = -1;
             });
           },
           fixAtomByIndex(index: number, fixed: boolean) {
