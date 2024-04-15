@@ -82,6 +82,18 @@ import biomoleculeUrl307 from './molecules/sdf/glutamine.sdf';
 import biomoleculeUrl308 from './molecules/sdf/glycine.sdf';
 import biomoleculeUrl309 from './molecules/sdf/histidine.sdf';
 import biomoleculeUrl310 from './molecules/sdf/isoleucine.sdf';
+import biomoleculeUrl311 from './molecules/sdf/leucine.sdf';
+import biomoleculeUrl312 from './molecules/sdf/lysine.sdf';
+import biomoleculeUrl313 from './molecules/sdf/methionine.sdf';
+import biomoleculeUrl314 from './molecules/sdf/phenylalanine.sdf';
+import biomoleculeUrl315 from './molecules/sdf/proline.sdf';
+import biomoleculeUrl316 from './molecules/sdf/pyrrolysine.sdf';
+import biomoleculeUrl317 from './molecules/sdf/selenocysteine.sdf';
+import biomoleculeUrl318 from './molecules/sdf/serine.sdf';
+import biomoleculeUrl319 from './molecules/sdf/threonine.sdf';
+import biomoleculeUrl320 from './molecules/sdf/tryptophan.sdf';
+import biomoleculeUrl321 from './molecules/sdf/tyrosine.sdf';
+import biomoleculeUrl322 from './molecules/sdf/valine.sdf';
 import biomoleculeUrl331 from './molecules/pdb/alphahelix.pdb';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
@@ -198,6 +210,18 @@ export const biomolecules = [
   { url: biomoleculeUrl308, internal: true, name: 'Glycine' } as MoleculeInterface,
   { url: biomoleculeUrl309, internal: true, name: 'Histidine' } as MoleculeInterface,
   { url: biomoleculeUrl310, internal: true, name: 'Isoleucine' } as MoleculeInterface,
+  { url: biomoleculeUrl311, internal: true, name: 'Leucine' } as MoleculeInterface,
+  { url: biomoleculeUrl312, internal: true, name: 'Lysine' } as MoleculeInterface,
+  { url: biomoleculeUrl313, internal: true, name: 'Methionine' } as MoleculeInterface,
+  { url: biomoleculeUrl314, internal: true, name: 'Phenylalanine' } as MoleculeInterface,
+  { url: biomoleculeUrl315, internal: true, name: 'Proline' } as MoleculeInterface,
+  { url: biomoleculeUrl316, internal: true, name: 'Pyrrolysine' } as MoleculeInterface,
+  { url: biomoleculeUrl317, internal: true, name: 'Selenocysteine' } as MoleculeInterface,
+  { url: biomoleculeUrl318, internal: true, name: 'Serine' } as MoleculeInterface,
+  { url: biomoleculeUrl319, internal: true, name: 'Threonine' } as MoleculeInterface,
+  { url: biomoleculeUrl320, internal: true, name: 'Tryptophan' } as MoleculeInterface,
+  { url: biomoleculeUrl321, internal: true, name: 'Tyrosine' } as MoleculeInterface,
+  { url: biomoleculeUrl322, internal: true, name: 'Valine' } as MoleculeInterface,
   { url: biomoleculeUrl331, internal: true, name: 'Alpha Helix' } as MoleculeInterface,
 ];
 
