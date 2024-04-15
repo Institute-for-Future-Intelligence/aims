@@ -385,11 +385,12 @@ const DynamicsViewer = React.memo(
           }
           case PickMode.ATOM: {
             const pickedIndex = event.obj.atom ? event.obj.atom.index : -1;
+            pickedAtomRef.current =
+              pickedIndex !== -1 ? ModelUtil.getAtomByIndex(pickedIndex, moleculesRef.current) : null;
             usePrimitiveStore.getState().set((state) => {
               state.pickedAtomIndex = pickedIndex;
               state.pickedMoleculeIndex = -1;
             });
-            setUpdateFlag(!updateFlag);
             break;
           }
         }
