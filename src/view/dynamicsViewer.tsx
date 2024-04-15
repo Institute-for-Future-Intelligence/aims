@@ -389,6 +389,7 @@ const DynamicsViewer = React.memo(
               state.pickedAtomIndex = pickedIndex;
               state.pickedMoleculeIndex = -1;
             });
+            setUpdateFlag(!updateFlag);
             break;
           }
         }

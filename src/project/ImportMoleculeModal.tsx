@@ -141,22 +141,22 @@ const ImportMoleculeModal = React.memo(
             }}
           >
             <Option key={MoleculeType.COMMON} value={MoleculeType.COMMON}>
-              {`${t('term.CommonMolecules', lang)}`}
+              {t('term.CommonMolecules', lang) + ' (' + commonMolecules.length + ')'}
             </Option>
             <Option key={MoleculeType.HYDROCARBON} value={MoleculeType.HYDROCARBON}>
-              {`${t('term.HydrocarbonMolecules', lang)}`}
+              {t('term.HydrocarbonMolecules', lang) + ' (' + hydrocarbonMolecules.length + ')'}
             </Option>
             <Option key={MoleculeType.BIOMOLECULE} value={MoleculeType.BIOMOLECULE}>
-              {`${t('term.Biomolecules', lang)}`}
+              {t('term.Biomolecules', lang) + ' (' + biomolecules.length + ')'}
             </Option>
             <Option key={MoleculeType.DRUG} value={MoleculeType.DRUG}>
-              {`${t('term.DrugMolecules', lang)}`}
+              {t('term.DrugMolecules', lang) + ' (' + drugMolecules.length + ')'}
             </Option>
             <Option key={MoleculeType.MONATOMIC} value={MoleculeType.MONATOMIC}>
-              {`${t('term.Monatomic', lang)}`}
+              {t('term.Monatomic', lang) + ' (' + monatomicMolecules.length + ')'}
             </Option>
             <Option key={MoleculeType.CRYSTAL} value={MoleculeType.CRYSTAL}>
-              {`${t('term.Crystal', lang)}`}
+              {t('term.Crystal', lang) + ' (' + crystals.length + ')'}
             </Option>
           </Select>
         </Space>
