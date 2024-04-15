@@ -77,6 +77,11 @@ import biomoleculeUrl302 from './molecules/sdf/arginine.sdf';
 import biomoleculeUrl303 from './molecules/sdf/asparagine.sdf';
 import biomoleculeUrl304 from './molecules/sdf/aspartic_acid.sdf';
 import biomoleculeUrl305 from './molecules/sdf/cysteine.sdf';
+import biomoleculeUrl306 from './molecules/sdf/glutamic_acid.sdf';
+import biomoleculeUrl307 from './molecules/sdf/glutamine.sdf';
+import biomoleculeUrl308 from './molecules/sdf/glycine.sdf';
+import biomoleculeUrl309 from './molecules/sdf/histidine.sdf';
+import biomoleculeUrl310 from './molecules/sdf/isoleucine.sdf';
 import biomoleculeUrl331 from './molecules/pdb/alphahelix.pdb';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
@@ -188,6 +193,11 @@ export const biomolecules = [
   { url: biomoleculeUrl303, internal: true, name: 'Asparagine' } as MoleculeInterface,
   { url: biomoleculeUrl304, internal: true, name: 'Aspartic Acid' } as MoleculeInterface,
   { url: biomoleculeUrl305, internal: true, name: 'Cysteine' } as MoleculeInterface,
+  { url: biomoleculeUrl306, internal: true, name: 'Glutamic Acid' } as MoleculeInterface,
+  { url: biomoleculeUrl307, internal: true, name: 'Glutamine' } as MoleculeInterface,
+  { url: biomoleculeUrl308, internal: true, name: 'Glycine' } as MoleculeInterface,
+  { url: biomoleculeUrl309, internal: true, name: 'Histidine' } as MoleculeInterface,
+  { url: biomoleculeUrl310, internal: true, name: 'Isoleucine' } as MoleculeInterface,
   { url: biomoleculeUrl331, internal: true, name: 'Alpha Helix' } as MoleculeInterface,
 ];
 
