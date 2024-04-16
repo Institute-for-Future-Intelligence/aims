@@ -53,6 +53,7 @@ import {
 import { PickMode, UNIT_VECTOR_POS_Y } from '../constants.ts';
 import { useDataStore } from '../stores/commonData.ts';
 import { TorsionalBond } from '../models/TorsionalBond.ts';
+import Residue from '../lib/chem/Residue';
 
 extend({ RCGroup });
 
@@ -104,6 +105,7 @@ const DynamicsViewer = React.memo(
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
     const moleculesRef = useRef<Molecule[]>([]);
+    const moleculeResidueMapRef = useRef<Map<Molecule, Residue[]>>(new Map<Molecule, Residue[]>());
     const vdwBondsRef = useRef<VdwBond[]>([]);
     const atomIndexRef = useRef<number>(-1);
     const pickedAtomRef = useRef<Atom | null>(null);
@@ -147,6 +149,7 @@ const DynamicsViewer = React.memo(
     useEffect(() => {
       moleculesRef.current.length = 0;
       moleculeMapRef.current.clear();
+      moleculeResidueMapRef.current.clear();
       if (!testMolecules || testMolecules.length === 0) {
         setComplex(undefined);
         molecularDynamicsRef.current = null;
@@ -273,6 +276,7 @@ const DynamicsViewer = React.memo(
         }
       }
       moleculeMapRef.current.set(molecule, mol);
+      moleculeResidueMapRef.current.set(mol, result._residues);
       if (moleculeMapRef.current.size === testMolecules.length) {
         // store the new molecules in a map because this call is asynchronous, so we cannot guarantee the order
         // testMolecules and moleculesRef must have the same order
@@ -281,7 +285,7 @@ const DynamicsViewer = React.memo(
           if (m2) moleculesRef.current.push(m2);
         }
         moleculeMapRef.current.clear();
-        setComplex(generateComplex(moleculesRef.current));
+        setComplex(generateComplex(moleculesRef.current, moleculeResidueMapRef.current));
         molecularDynamicsRef.current = new MolecularDynamics(moleculesRef.current, molecularContainer);
         molecularDynamicsRef.current.timeStep = timeStep;
         molecularDynamicsRef.current.updateKineticEnergy();
