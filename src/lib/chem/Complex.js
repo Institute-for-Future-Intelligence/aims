@@ -107,7 +107,7 @@ class Complex {
   }
 
   addResidueType(resName) {
-    const rt = this._residueTypes[resName] = new ResidueType(resName, 'Unknown', '');
+    const rt = (this._residueTypes[resName] = new ResidueType(resName, 'Unknown', ''));
     return rt;
   }
 
@@ -320,15 +320,15 @@ class Complex {
         currRes._component = comp;
 
         const nextRes = i === resCount - 1 ? null : residues[i + 1];
-        if (!nextRes
-          || !currRes.isConnected(nextRes)
-          || currRes._index !== nextRes._index - 1) {
+        if (!nextRes || !currRes.isConnected(nextRes) || currRes._index !== nextRes._index - 1) {
           // the last condition is broken and incorrect
           // the refactoring of the Component is required in order to fix this issue
-          comp.setSubDivs([{
-            start: currStart,
-            end: currRes._index,
-          }]);
+          comp.setSubDivs([
+            {
+              start: currStart,
+              end: currRes._index,
+            },
+          ]);
           if (nextRes) {
             currStart = nextRes._index;
             comp = addComp();
@@ -357,8 +357,7 @@ class Complex {
       currRes._component = comp;
 
       const nextRes = i === resCount - 1 ? null : residues[i + 1];
-      if (!nextRes
-        || !currRes.isConnected(nextRes)) {
+      if (!nextRes || !currRes.isConnected(nextRes)) {
         // wrap up this interval
         currSubDivs[currSubDivs.length] = {
           start: currStart,
@@ -412,10 +411,13 @@ class Complex {
   }
 
   setCurrentUnit(newUnit) {
-    if (newUnit !== null && newUnit !== undefined
-      && newUnit !== this._currentUnit
-      && newUnit >= 0
-      && newUnit < this.units.length) {
+    if (
+      newUnit !== null &&
+      newUnit !== undefined &&
+      newUnit !== this._currentUnit &&
+      newUnit >= 0 &&
+      newUnit < this.units.length
+    ) {
       this._currentUnit = newUnit;
       return true;
     }
@@ -442,6 +444,15 @@ class Complex {
     this.forEachSGroup((s) => {
       s._rebuildSGroupOnAtomChange();
     });
+  }
+
+  updateChains() {
+    const chains = this._chains;
+    for (const c of chains) {
+      if (c._residues.length > 1) {
+        c._finalize();
+      }
+    }
   }
 
   update() {
@@ -505,11 +516,9 @@ class Complex {
     for (i = 0, n = residues.length; i < n; ++i) {
       const res = residues[i];
       // This code is extremely dangerous for non-PDB formats
-      residueHash[this.getUnifiedSerial(
-        res.getChain().getName().charCodeAt(0),
-        res.getSequence(),
-        res.getICode().charCodeAt(0),
-      )] = res;
+      residueHash[
+        this.getUnifiedSerial(res.getChain().getName().charCodeAt(0), res.getSequence(), res.getICode().charCodeAt(0))
+      ] = res;
     }
 
     const { structures } = this;
@@ -568,7 +577,8 @@ class Complex {
 
     const marker = new AromaticLoopsMarker(this);
     marker.markCycles();
-    if (opts.detectAromaticLoops) { // TODO remove this condition clause, it is for debug purposes only!
+    if (opts.detectAromaticLoops) {
+      // TODO remove this condition clause, it is for debug purposes only!
       marker.detectCycles(); // TODO add conditional detection
     }
 
@@ -821,8 +831,7 @@ class Complex {
     /**
      * Simple function to do nothing.
      */
-    function doNothing() {
-    }
+    function doNothing() {}
 
     for (let i = 0; i < complexes.length; ++i) {
       const c = complexes[i];
@@ -863,9 +872,9 @@ class Complex {
   dssp() {
     const ssMap = new SecondaryStructureMap(this);
 
-    const structures = this.structures = [];
-    const helices = this._helices = [];
-    const sheets = this._sheets = [];
+    const structures = (this.structures = []);
+    const helices = (this._helices = []);
+    const sheets = (this._sheets = []);
 
     const getSheet = (index) => {
       let item = sheets[index];

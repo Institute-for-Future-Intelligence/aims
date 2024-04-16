@@ -319,6 +319,7 @@ const DynamicsViewer = React.memo(
           }
         }
       }
+      if (cartoonStyle) complex.updateChains();
       const visual = new ComplexVisual(complex.name, complex);
       const reps = [];
       // Don't change the selector below. We use 'chain' to identify molecules as there is no 'molecule' keyword
@@ -427,6 +428,14 @@ const DynamicsViewer = React.memo(
         viewerStyle === MolecularViewerStyle.Trace ||
         viewerStyle === MolecularViewerStyle.Tube ||
         viewerStyle === MolecularViewerStyle.AtomIndex
+      );
+    }, [viewerStyle]);
+
+    const cartoonStyle = useMemo(() => {
+      return (
+        viewerStyle === MolecularViewerStyle.Cartoon ||
+        viewerStyle === MolecularViewerStyle.Trace ||
+        viewerStyle === MolecularViewerStyle.Tube
       );
     }, [viewerStyle]);
 
