@@ -123,6 +123,10 @@ const DynamicsViewer = React.memo(
       return STYLE_MAP.get(style);
     }, [style]);
 
+    const specialMode = useMemo(() => {
+      return mode === 'CA' || mode === 'TR' || mode === 'TU';
+    }, [mode]);
+
     const colorer = useMemo(() => {
       return COLORING_MAP.get(coloring);
     }, [coloring]);
@@ -305,7 +309,7 @@ const DynamicsViewer = React.memo(
         const m = moleculesRef.current[iMol];
         if (m) {
           let iAtom = 0;
-          for (const [iResidue, r] of mol.residues.entries()) {
+          for (const r of mol.residues) {
             for (const a of r._atoms) {
               a.temperature = ModelUtil.convertToTemperatureFactor(
                 m.atoms[iAtom++].getKineticEnergy(),
@@ -320,8 +324,15 @@ const DynamicsViewer = React.memo(
       // Don't change the selector below. We use 'chain' to identify molecules as there is no 'molecule' keyword
       // according to https://lifescience.opensource.epam.com/miew/selectors.html
       for (let i = 0; i < testMolecules.length; i++) {
+        // revert the special mode to ball and stick when there is only one residue
+        // otherwise the molecule will not show up
+        const residues = moleculeResidueMapRef.current.get(moleculesRef.current[i]);
+        let revisedMode = mode;
+        if (residues && residues?.length < 2 && specialMode) {
+          revisedMode = 'BS';
+        }
         reps.push({
-          mode: mode,
+          mode: revisedMode,
           colorer: colorer,
           selector: 'chain MOL' + i,
           material: MATERIAL_MAP.get(material),
@@ -412,6 +423,9 @@ const DynamicsViewer = React.memo(
         viewerStyle === MolecularViewerStyle.BallAndStick ||
         viewerStyle === MolecularViewerStyle.Stick ||
         viewerStyle === MolecularViewerStyle.Wireframe ||
+        viewerStyle === MolecularViewerStyle.Cartoon ||
+        viewerStyle === MolecularViewerStyle.Trace ||
+        viewerStyle === MolecularViewerStyle.Tube ||
         viewerStyle === MolecularViewerStyle.AtomIndex
       );
     }, [viewerStyle]);
