@@ -301,14 +301,17 @@ const DynamicsViewer = React.memo(
       if (!groupRef.current || !mode) return;
       groupRef.current.children = [];
       if (!complex) return;
-      for (const [i, r] of complex._residues.entries()) {
-        const m = moleculesRef.current[i];
+      for (const [iMol, mol] of complex._molecules.entries()) {
+        const m = moleculesRef.current[iMol];
         if (m) {
-          for (const [j, a] of r._atoms.entries()) {
-            a.temperature = ModelUtil.convertToTemperatureFactor(
-              m.atoms[j].getKineticEnergy(),
-              kineticEnergyScaleFactor,
-            );
+          let iAtom = 0;
+          for (const [iResidue, r] of mol.residues.entries()) {
+            for (const a of r._atoms) {
+              a.temperature = ModelUtil.convertToTemperatureFactor(
+                m.atoms[iAtom++].getKineticEnergy(),
+                kineticEnergyScaleFactor,
+              );
+            }
           }
         }
       }
