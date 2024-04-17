@@ -14,6 +14,7 @@ import { useStore } from '../stores/common.ts';
 import { MolecularProperties, MolecularStructure } from '../models/MolecularProperties.ts';
 import { Molecule } from '../models/Molecule.ts';
 import Complex from '../lib/chem/Complex';
+import MoleculeJS from '../lib/chem/Molecule';
 import Element from '../lib/chem/Element';
 import { Atom } from '../models/Atom.ts';
 import { ModelUtil } from '../models/ModelUtil.ts';
@@ -68,6 +69,9 @@ export const joinComplexes = (molecules: Molecule[], complexes: Complex[]) => {
         chain._name = 'MOL' + idx;
       }
     }
+    const molecule = new MoleculeJS(complex, mol.name, idx + 1);
+    molecule.residues = complexes[idx].getResidues();
+    complex._molecules.push(molecule);
   }
   complex.finalize({ needAutoBonding: false, detectAromaticLoops: false, enableEditing: false });
   return complex;
