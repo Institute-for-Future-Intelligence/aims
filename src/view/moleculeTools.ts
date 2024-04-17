@@ -15,14 +15,10 @@ import { MolecularProperties, MolecularStructure } from '../models/MolecularProp
 import { Molecule } from '../models/Molecule.ts';
 import Complex from '../lib/chem/Complex';
 import Element from '../lib/chem/Element';
-import MoleculeJS from '../lib/chem/Molecule';
 import { Atom } from '../models/Atom.ts';
 import { ModelUtil } from '../models/ModelUtil.ts';
 import { RadialBond } from '../models/RadialBond.ts';
 import { VdwBond } from '../models/VdwBond.ts';
-import Bond from '../lib/chem/Bond';
-import AtomJS from '../lib/chem/Atom';
-import Residue from '../lib/chem/Residue';
 
 export const isCrystal = (name: string) => {
   return name === 'Gold' || name === 'Silver' || name === 'Iron' || name === 'NaCl' || name === 'CsCl';
@@ -51,70 +47,29 @@ export const generateVdwLines = (molecules: Molecule[], maximumRelativeDistanceS
   return bonds;
 };
 
-export const generateComplex = (molecules: Molecule[], residueMap: Map<Molecule, Residue[]>) => {
-  const complex = new Complex();
+export const joinComplexes = (molecules: Molecule[], complexes: Complex[]) => {
+  let complex;
+  if (complexes.length === 1) {
+    complex = complexes[0];
+  } else {
+    complex = new Complex();
+    complex.joinComplexes(complexes);
+  }
+  let i = 0;
   for (const [idx, mol] of molecules.entries()) {
-    const molecule = new MoleculeJS(complex, mol.name, idx + 1);
-    const chain = complex.addChain('MOL' + idx);
-    const originalResidues = residueMap.get(mol);
-    if (originalResidues) {
-      // reconstruct residues and atoms for new molecule
-      const residues: Residue[] = [];
-      const atoms: AtomJS[] = [];
-      for (const r of originalResidues) {
-        const res = chain.addResidue(r._type.name ?? 'UNK', r._sequence, ' ');
-        residues.push(res);
-        for (const a of r._atoms) {
-          res.addAtom(
-            a.name,
-            a.element,
-            mol.atoms[a.index].position, // this links to the current atom position vector
-            a.role,
-            a.het,
-            a.serial,
-            ' ',
-            a.occupancy,
-            ModelUtil.convertToTemperatureFactor(mol.atoms[a.index].getKineticEnergy()),
-            a.charge,
-          );
-        }
-        atoms.push(...res._atoms);
-      }
-      molecule.residues = residues;
-      for (const b of mol.radialBonds) {
-        complex.addBond(atoms[b.atom1.index], atoms[b.atom2.index], 1, Bond.BondType.COVALENT, true);
-      }
-    } else {
-      // old way, it may never be called, but we keep it here just in case
-      const residue = chain.addResidue(mol.name, idx, ' ');
-      for (const [i, a] of mol.atoms.entries()) {
-        residue.addAtom(
-          a.elementSymbol,
-          Element.getByName(a.elementSymbol),
-          a.position, // this links to the current atom position vector
-          undefined,
-          true,
-          i + 1,
-          ' ',
-          1,
-          ModelUtil.convertToTemperatureFactor(a.getKineticEnergy()),
-          0,
-        );
-      }
-      molecule.residues = [residue];
-      for (const b of mol.radialBonds) {
-        complex.addBond(residue._atoms[b.atom1.index], residue._atoms[b.atom2.index], 1, Bond.BondType.COVALENT, true);
+    for (const a of mol.atoms) {
+      const at = complex._atoms[i++];
+      at.position = a.position;
+      at.temperature = ModelUtil.convertToTemperatureFactor(a.getKineticEnergy());
+    }
+    const c = complexes[idx];
+    if (c) {
+      for (const chain of c._chains) {
+        chain._name = 'MOL' + idx;
       }
     }
-    complex._molecules.push(molecule);
   }
-  complex.finalize({
-    needAutoBonding: false,
-    detectAromaticLoops: false,
-    enableEditing: false,
-    serialAtomMap: false,
-  });
-  console.log(complex);
+  complex.finalize({ needAutoBonding: false, detectAromaticLoops: false, enableEditing: false });
   return complex;
 };
 

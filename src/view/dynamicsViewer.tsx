@@ -17,7 +17,7 @@ import {
   STYLE_MAP,
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
-import { generateComplex, generateVdwLines, isCrystal, loadMolecule } from './moleculeTools.ts';
+import { generateVdwLines, isCrystal, joinComplexes, loadMolecule } from './moleculeTools.ts';
 import { Atom } from '../models/Atom.ts';
 import { RadialBond } from '../models/RadialBond.ts';
 import { AngularBond } from '../models/AngularBond.ts';
@@ -53,7 +53,7 @@ import {
 import { PickMode, UNIT_VECTOR_POS_Y } from '../constants.ts';
 import { useDataStore } from '../stores/commonData.ts';
 import { TorsionalBond } from '../models/TorsionalBond.ts';
-import Residue from '../lib/chem/Residue';
+import Complex from '../lib/chem/Complex';
 
 extend({ RCGroup });
 
@@ -105,7 +105,7 @@ const DynamicsViewer = React.memo(
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
 
     const moleculesRef = useRef<Molecule[]>([]);
-    const moleculeResidueMapRef = useRef<Map<Molecule, Residue[]>>(new Map<Molecule, Residue[]>());
+    const complexesRef = useRef<Complex[]>([]);
     const vdwBondsRef = useRef<VdwBond[]>([]);
     const atomIndexRef = useRef<number>(-1);
     const pickedAtomRef = useRef<Atom | null>(null);
@@ -152,8 +152,8 @@ const DynamicsViewer = React.memo(
 
     useEffect(() => {
       moleculesRef.current.length = 0;
+      complexesRef.current.length = 0;
       moleculeMapRef.current.clear();
-      moleculeResidueMapRef.current.clear();
       if (!testMolecules || testMolecules.length === 0) {
         setComplex(undefined);
         molecularDynamicsRef.current = null;
@@ -169,6 +169,7 @@ const DynamicsViewer = React.memo(
 
     const processResult = (result: any, molecule?: Molecule) => {
       if (!molecule) return;
+      complexesRef.current.push(result as Complex);
       const mol = new Molecule(molecule.name ?? 'unknown', []);
       const n = result._atoms.length;
       for (let i = 0; i < n; i++) {
@@ -280,7 +281,6 @@ const DynamicsViewer = React.memo(
         }
       }
       moleculeMapRef.current.set(molecule, mol);
-      moleculeResidueMapRef.current.set(mol, result._residues);
       if (moleculeMapRef.current.size === testMolecules.length) {
         // store the new molecules in a map because this call is asynchronous, so we cannot guarantee the order
         // testMolecules and moleculesRef must have the same order
@@ -289,7 +289,7 @@ const DynamicsViewer = React.memo(
           if (m2) moleculesRef.current.push(m2);
         }
         moleculeMapRef.current.clear();
-        setComplex(generateComplex(moleculesRef.current, moleculeResidueMapRef.current));
+        setComplex(joinComplexes(moleculesRef.current, complexesRef.current));
         molecularDynamicsRef.current = new MolecularDynamics(moleculesRef.current, molecularContainer);
         molecularDynamicsRef.current.timeStep = timeStep;
         molecularDynamicsRef.current.updateKineticEnergy();
@@ -305,21 +305,23 @@ const DynamicsViewer = React.memo(
       if (!groupRef.current || !mode) return;
       groupRef.current.children = [];
       if (!complex) return;
-      for (const [iMol, mol] of complex._molecules.entries()) {
+      for (const [iMol, com] of complexesRef.current.entries()) {
         const m = moleculesRef.current[iMol];
         if (m) {
           let iAtom = 0;
-          for (const r of mol.residues) {
+          for (const r of com._residues) {
             for (const a of r._atoms) {
               a.temperature = ModelUtil.convertToTemperatureFactor(
-                m.atoms[iAtom++].getKineticEnergy(),
+                m.atoms[iAtom++]?.getKineticEnergy(),
                 kineticEnergyScaleFactor,
               );
             }
           }
         }
       }
-      if (cartoonStyle) complex.updateChains();
+      if (cartoonStyle) {
+        complex.finalize({ needAutoBonding: false, detectAromaticLoops: false, enableEditing: false });
+      }
       const visual = new ComplexVisual(complex.name, complex);
       const reps = [];
       // Don't change the selector below. We use 'chain' to identify molecules as there is no 'molecule' keyword
@@ -327,13 +329,9 @@ const DynamicsViewer = React.memo(
       for (let i = 0; i < testMolecules.length; i++) {
         // revert the special mode to ball and stick when there is only one residue
         // otherwise the molecule will not show up
-        const residues = moleculeResidueMapRef.current.get(moleculesRef.current[i]);
-        let revisedMode = mode;
-        if (residues && residues?.length < 2 && specialMode) {
-          revisedMode = 'BS';
-        }
+        const residues = complexesRef.current[i]?._residues;
         reps.push({
-          mode: revisedMode,
+          mode: residues && residues.length < 2 && specialMode ? 'BS' : mode,
           colorer: colorer,
           selector: 'chain MOL' + i,
           material: MATERIAL_MAP.get(material),
