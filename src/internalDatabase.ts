@@ -71,7 +71,7 @@ import biomoleculeUrl202 from './molecules/sdf/cytosine.sdf';
 import biomoleculeUrl203 from './molecules/sdf/guanine.sdf';
 import biomoleculeUrl204 from './molecules/sdf/thymine.sdf';
 import biomoleculeUrl205 from './molecules/sdf/uracil.sdf';
-import biomoleculeUrl211 from './molecules/pdb/dna.pdb';
+import biomoleculeUrl211 from './molecules/pdb/dna_h.pdb';
 import biomoleculeUrl301 from './molecules/sdf/alanine.sdf';
 import biomoleculeUrl302 from './molecules/sdf/arginine.sdf';
 import biomoleculeUrl303 from './molecules/sdf/asparagine.sdf';

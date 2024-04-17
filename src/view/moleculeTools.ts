@@ -62,7 +62,7 @@ export const generateComplex = (molecules: Molecule[], residueMap: Map<Molecule,
       const residues: Residue[] = [];
       const atoms: AtomJS[] = [];
       for (const r of originalResidues) {
-        const res = chain.addResidue(r._type.name, r._sequence, ' ');
+        const res = chain.addResidue(r._type.name ?? 'UNK', r._sequence, ' ');
         residues.push(res);
         for (const a of r._atoms) {
           res.addAtom(
@@ -114,6 +114,7 @@ export const generateComplex = (molecules: Molecule[], residueMap: Map<Molecule,
     enableEditing: false,
     serialAtomMap: false,
   });
+  console.log(complex);
   return complex;
 };
 
