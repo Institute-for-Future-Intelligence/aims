@@ -115,6 +115,7 @@ const DynamicsViewer = React.memo(
     const boundingBoxRef = useRef<Box3 | undefined>();
     const molecularDynamicsRef = useRef<MolecularDynamics | null>(null);
     const moleculeMapRef = useRef<Map<Molecule, Molecule>>(new Map<Molecule, Molecule>());
+    const complexMapRef = useRef<Map<Molecule, Complex>>(new Map<Molecule, Complex>());
     const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
 
     const { invalidate, camera, raycaster, gl } = useThree();
@@ -154,6 +155,7 @@ const DynamicsViewer = React.memo(
       moleculesRef.current.length = 0;
       complexesRef.current.length = 0;
       moleculeMapRef.current.clear();
+      complexMapRef.current.clear();
       if (!testMolecules || testMolecules.length === 0) {
         setComplex(undefined);
         molecularDynamicsRef.current = null;
@@ -169,7 +171,6 @@ const DynamicsViewer = React.memo(
 
     const processResult = (result: any, molecule?: Molecule) => {
       if (!molecule) return;
-      complexesRef.current.push(result as Complex);
       const mol = new Molecule(molecule.name ?? 'unknown', []);
       const n = result._atoms.length;
       for (let i = 0; i < n; i++) {
@@ -281,14 +282,18 @@ const DynamicsViewer = React.memo(
         }
       }
       moleculeMapRef.current.set(molecule, mol);
+      complexMapRef.current.set(molecule, result as Complex);
       if (moleculeMapRef.current.size === testMolecules.length) {
         // store the new molecules in a map because this call is asynchronous, so we cannot guarantee the order
         // testMolecules and moleculesRef must have the same order
         for (const m of testMolecules) {
           const m2 = moleculeMapRef.current.get(m);
           if (m2) moleculesRef.current.push(m2);
+          const c2 = complexMapRef.current.get(m);
+          if (c2) complexesRef.current.push(c2);
         }
         moleculeMapRef.current.clear();
+        complexMapRef.current.clear();
         setComplex(joinComplexes(moleculesRef.current, complexesRef.current));
         molecularDynamicsRef.current = new MolecularDynamics(moleculesRef.current, molecularContainer);
         molecularDynamicsRef.current.timeStep = timeStep;
