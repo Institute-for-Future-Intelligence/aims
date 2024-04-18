@@ -132,6 +132,38 @@ const DynamicsViewer = React.memo(
       return COLORING_MAP.get(coloring);
     }, [coloring]);
 
+    const skinnyStyle = useMemo(() => {
+      return (
+        viewerStyle === MolecularViewerStyle.BallAndStick ||
+        viewerStyle === MolecularViewerStyle.Stick ||
+        viewerStyle === MolecularViewerStyle.Wireframe ||
+        viewerStyle === MolecularViewerStyle.Cartoon ||
+        viewerStyle === MolecularViewerStyle.Trace ||
+        viewerStyle === MolecularViewerStyle.Tube ||
+        viewerStyle === MolecularViewerStyle.AtomIndex
+      );
+    }, [viewerStyle]);
+
+    const cartoonStyle = useMemo(() => {
+      return (
+        viewerStyle === MolecularViewerStyle.Cartoon ||
+        viewerStyle === MolecularViewerStyle.Trace ||
+        viewerStyle === MolecularViewerStyle.Tube
+      );
+    }, [viewerStyle]);
+
+    const wireframeStyle = useMemo(() => {
+      return viewerStyle === MolecularViewerStyle.Wireframe || viewerStyle === MolecularViewerStyle.AtomIndex;
+    }, [viewerStyle]);
+
+    const moleculeLengths = useMemo(() => {
+      if (pickedMoleculeIndex !== -1 && moleculesRef.current) {
+        const mol = moleculesRef.current[pickedMoleculeIndex];
+        if (mol) return ModelUtil.getMoleculeLengths(mol);
+      }
+      return [10, 10, 10];
+    }, [pickedMoleculeIndex, moleculesRef]);
+
     const showMover = false; // temporarily disable 3D movers
 
     useEffect(() => {
@@ -388,6 +420,8 @@ const DynamicsViewer = React.memo(
       vdwBondCutoffRelative,
       pickedAtomIndex,
       moleculesRef,
+      cartoonStyle,
+      specialMode,
     ]);
 
     useEffect(() => {
@@ -421,38 +455,6 @@ const DynamicsViewer = React.memo(
         picker.dispose();
       };
     }, [pickMode]);
-
-    const skinnyStyle = useMemo(() => {
-      return (
-        viewerStyle === MolecularViewerStyle.BallAndStick ||
-        viewerStyle === MolecularViewerStyle.Stick ||
-        viewerStyle === MolecularViewerStyle.Wireframe ||
-        viewerStyle === MolecularViewerStyle.Cartoon ||
-        viewerStyle === MolecularViewerStyle.Trace ||
-        viewerStyle === MolecularViewerStyle.Tube ||
-        viewerStyle === MolecularViewerStyle.AtomIndex
-      );
-    }, [viewerStyle]);
-
-    const cartoonStyle = useMemo(() => {
-      return (
-        viewerStyle === MolecularViewerStyle.Cartoon ||
-        viewerStyle === MolecularViewerStyle.Trace ||
-        viewerStyle === MolecularViewerStyle.Tube
-      );
-    }, [viewerStyle]);
-
-    const wireframeStyle = useMemo(() => {
-      return viewerStyle === MolecularViewerStyle.Wireframe || viewerStyle === MolecularViewerStyle.AtomIndex;
-    }, [viewerStyle]);
-
-    const moleculeLengths = useMemo(() => {
-      if (pickedMoleculeIndex !== -1 && moleculesRef.current) {
-        const mol = moleculesRef.current[pickedMoleculeIndex];
-        if (mol) return ModelUtil.getMoleculeLengths(mol);
-      }
-      return [10, 10, 10];
-    }, [pickedMoleculeIndex, moleculesRef]);
 
     const getMolecules = (name: string): Molecule[] => {
       const molecules: Molecule[] = [];
