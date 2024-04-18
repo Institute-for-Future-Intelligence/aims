@@ -72,6 +72,8 @@ import hydrocarbonMoleculeUrl113 from './molecules/sdf/cyclotridecane.sdf';
 import hydrocarbonMoleculeUrl114 from './molecules/sdf/cyclotetradecane.sdf';
 import hydrocarbonMoleculeUrl115 from './molecules/sdf/cyclopentadecane.sdf';
 import hydrocarbonMoleculeUrl201 from './molecules/sdf/ethylene.sdf';
+import hydrocarbonMoleculeUrl202 from './molecules/sdf/propylene.sdf';
+import hydrocarbonMoleculeUrl251 from './molecules/sdf/acetylene.sdf';
 import hydrocarbonMoleculeUrl301 from './molecules/xyz/benzene.xyz';
 import hydrocarbonMoleculeUrl302 from './molecules/sdf/biphenyl.sdf';
 import hydrocarbonMoleculeUrl303 from './molecules/sdf/toluene.sdf';
@@ -219,6 +221,8 @@ export const hydrocarbonMolecules = [
   { url: hydrocarbonMoleculeUrl114, internal: true, name: 'Cyclotetradecane' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl115, internal: true, name: 'Cyclopentadecane' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl201, internal: true, name: 'Ethylene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl202, internal: true, name: 'Propylene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl251, internal: true, name: 'Acetylene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl301, internal: true, name: 'Benzene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl302, internal: true, name: 'Biphenyl' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl303, internal: true, name: 'Toluene' } as MoleculeInterface,
