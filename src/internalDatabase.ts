@@ -58,8 +58,6 @@ import hydrocarbonMoleculeUrl021 from './molecules/sdf/heneicosane.sdf';
 import hydrocarbonMoleculeUrl022 from './molecules/sdf/docosane.sdf';
 import hydrocarbonMoleculeUrl023 from './molecules/sdf/tricosane.sdf';
 import hydrocarbonMoleculeUrl024 from './molecules/sdf/tetracosane.sdf';
-import hydrocarbonMoleculeUrl101 from './molecules/xyz/benzene.xyz';
-import hydrocarbonMoleculeUrl102 from './molecules/sdf/ethylene.sdf';
 import hydrocarbonMoleculeUrl103 from './molecules/sdf/cyclopropane.sdf';
 import hydrocarbonMoleculeUrl104 from './molecules/sdf/cyclobutane.sdf';
 import hydrocarbonMoleculeUrl105 from './molecules/sdf/cyclopentane.sdf';
@@ -73,6 +71,13 @@ import hydrocarbonMoleculeUrl112 from './molecules/sdf/cyclododecane.sdf';
 import hydrocarbonMoleculeUrl113 from './molecules/sdf/cyclotridecane.sdf';
 import hydrocarbonMoleculeUrl114 from './molecules/sdf/cyclotetradecane.sdf';
 import hydrocarbonMoleculeUrl115 from './molecules/sdf/cyclopentadecane.sdf';
+import hydrocarbonMoleculeUrl201 from './molecules/sdf/ethylene.sdf';
+import hydrocarbonMoleculeUrl301 from './molecules/xyz/benzene.xyz';
+import hydrocarbonMoleculeUrl302 from './molecules/sdf/biphenyl.sdf';
+import hydrocarbonMoleculeUrl303 from './molecules/sdf/toluene.sdf';
+import hydrocarbonMoleculeUrl304 from './molecules/sdf/durene.sdf';
+import hydrocarbonMoleculeUrl309 from './molecules/sdf/coronene.sdf';
+import hydrocarbonMoleculeUrl310 from './molecules/sdf/hexabenzocoronene.sdf';
 
 import biomoleculeUrl001 from './molecules/sdf/atp.sdf';
 import biomoleculeUrl002 from './molecules/sdf/vitamin_a.sdf';
@@ -200,8 +205,6 @@ export const hydrocarbonMolecules = [
   { url: hydrocarbonMoleculeUrl022, internal: true, name: 'Docosane' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl023, internal: true, name: 'Tricosane' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl024, internal: true, name: 'Tetracosane' } as MoleculeInterface,
-  { url: hydrocarbonMoleculeUrl101, internal: true, name: 'Benzene' } as MoleculeInterface,
-  { url: hydrocarbonMoleculeUrl102, internal: true, name: 'Ethylene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl103, internal: true, name: 'Cyclopropane' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl104, internal: true, name: 'Cyclobutane' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl105, internal: true, name: 'Cyclopentane' } as MoleculeInterface,
@@ -215,6 +218,13 @@ export const hydrocarbonMolecules = [
   { url: hydrocarbonMoleculeUrl113, internal: true, name: 'Cyclotridecane' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl114, internal: true, name: 'Cyclotetradecane' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl115, internal: true, name: 'Cyclopentadecane' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl201, internal: true, name: 'Ethylene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl301, internal: true, name: 'Benzene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl302, internal: true, name: 'Biphenyl' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl303, internal: true, name: 'Toluene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl304, internal: true, name: 'Durene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl309, internal: true, name: 'Coronene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl310, internal: true, name: 'Hexabenzocoronene' } as MoleculeInterface,
 ];
 
 export const biomolecules = [
