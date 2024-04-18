@@ -68,6 +68,11 @@ import hydrocarbonMoleculeUrl107 from './molecules/sdf/cycloheptane.sdf';
 import hydrocarbonMoleculeUrl108 from './molecules/sdf/cyclooctane.sdf';
 import hydrocarbonMoleculeUrl109 from './molecules/sdf/cyclononane.sdf';
 import hydrocarbonMoleculeUrl110 from './molecules/sdf/cyclodecane.sdf';
+import hydrocarbonMoleculeUrl111 from './molecules/sdf/cycloundecane.sdf';
+import hydrocarbonMoleculeUrl112 from './molecules/sdf/cyclododecane.sdf';
+import hydrocarbonMoleculeUrl113 from './molecules/sdf/cyclotridecane.sdf';
+import hydrocarbonMoleculeUrl114 from './molecules/sdf/cyclotetradecane.sdf';
+import hydrocarbonMoleculeUrl115 from './molecules/sdf/cyclopentadecane.sdf';
 
 import biomoleculeUrl001 from './molecules/sdf/atp.sdf';
 import biomoleculeUrl002 from './molecules/sdf/vitamin_a.sdf';
@@ -205,6 +210,11 @@ export const hydrocarbonMolecules = [
   { url: hydrocarbonMoleculeUrl108, internal: true, name: 'Cyclooctane' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl109, internal: true, name: 'Cyclononane' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl110, internal: true, name: 'Cyclodecane' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl111, internal: true, name: 'Cycloundecane' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl112, internal: true, name: 'Cyclododecane' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl113, internal: true, name: 'Cyclotridecane' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl114, internal: true, name: 'Cyclotetradecane' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl115, internal: true, name: 'Cyclopentadecane' } as MoleculeInterface,
 ];
 
 export const biomolecules = [
