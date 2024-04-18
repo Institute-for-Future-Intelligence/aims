@@ -26,7 +26,7 @@ export class ProjectUtil {
     return {
       owner: null,
       timestamp: -1,
-      type: ProjectType.DRUG_DISCOVERY,
+      type: ProjectType.MOLECULAR_MODELING,
       title: null,
       description: null,
       molecules: new Array<MoleculeInterface>(),

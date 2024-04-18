@@ -24,7 +24,9 @@ import commonMoleculeUrl002 from './molecules/sdf/dioxygen.sdf';
 import commonMoleculeUrl003 from './molecules/sdf/dinitrogen.sdf';
 import commonMoleculeUrl004 from './molecules/sdf/water.sdf';
 import commonMoleculeUrl005 from './molecules/sdf/carbon_dioxide.sdf';
-import commonMoleculeUrl006 from './molecules/sdf/ozone.sdf';
+import commonMoleculeUrl006 from './molecules/sdf/carbon_monoxide.sdf';
+import commonMoleculeUrl007 from './molecules/sdf/ozone.sdf';
+import commonMoleculeUrl008 from './molecules/sdf/ammonia.sdf';
 import commonMoleculeUrl101 from './molecules/pdb/buckyball.pdb';
 import commonMoleculeUrl102 from './molecules/xyz/nanotube.xyz';
 import commonMoleculeUrl103 from './molecules/xyz/graphen.xyz';
@@ -57,6 +59,15 @@ import hydrocarbonMoleculeUrl022 from './molecules/sdf/docosane.sdf';
 import hydrocarbonMoleculeUrl023 from './molecules/sdf/tricosane.sdf';
 import hydrocarbonMoleculeUrl024 from './molecules/sdf/tetracosane.sdf';
 import hydrocarbonMoleculeUrl101 from './molecules/xyz/benzene.xyz';
+import hydrocarbonMoleculeUrl102 from './molecules/sdf/ethylene.sdf';
+import hydrocarbonMoleculeUrl103 from './molecules/sdf/cyclopropane.sdf';
+import hydrocarbonMoleculeUrl104 from './molecules/sdf/cyclobutane.sdf';
+import hydrocarbonMoleculeUrl105 from './molecules/sdf/cyclopentane.sdf';
+import hydrocarbonMoleculeUrl106 from './molecules/sdf/cyclohexane.sdf';
+import hydrocarbonMoleculeUrl107 from './molecules/sdf/cycloheptane.sdf';
+import hydrocarbonMoleculeUrl108 from './molecules/sdf/cyclooctane.sdf';
+import hydrocarbonMoleculeUrl109 from './molecules/sdf/cyclononane.sdf';
+import hydrocarbonMoleculeUrl110 from './molecules/sdf/cyclodecane.sdf';
 
 import biomoleculeUrl001 from './molecules/sdf/atp.sdf';
 import biomoleculeUrl002 from './molecules/sdf/vitamin_a.sdf';
@@ -148,7 +159,9 @@ export const commonMolecules = [
   { url: commonMoleculeUrl003, internal: true, name: 'Dinitrogen' } as MoleculeInterface,
   { url: commonMoleculeUrl004, internal: true, name: 'Water' } as MoleculeInterface,
   { url: commonMoleculeUrl005, internal: true, name: 'Carbon Dioxide' } as MoleculeInterface,
-  { url: commonMoleculeUrl006, internal: true, name: 'Ozone' } as MoleculeInterface,
+  { url: commonMoleculeUrl006, internal: true, name: 'Carbon Monoxide' } as MoleculeInterface,
+  { url: commonMoleculeUrl007, internal: true, name: 'Ozone' } as MoleculeInterface,
+  { url: commonMoleculeUrl008, internal: true, name: 'Ammonia' } as MoleculeInterface,
   { url: commonMoleculeUrl101, internal: true, name: 'Buckminsterfullerene' } as MoleculeInterface,
   { url: commonMoleculeUrl102, internal: true, name: 'Carbon Nanotube' } as MoleculeInterface,
   { url: commonMoleculeUrl103, internal: true, name: 'Graphene' } as MoleculeInterface,
@@ -183,6 +196,15 @@ export const hydrocarbonMolecules = [
   { url: hydrocarbonMoleculeUrl023, internal: true, name: 'Tricosane' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl024, internal: true, name: 'Tetracosane' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl101, internal: true, name: 'Benzene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl102, internal: true, name: 'Ethylene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl103, internal: true, name: 'Cyclopropane' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl104, internal: true, name: 'Cyclobutane' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl105, internal: true, name: 'Cyclopentane' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl106, internal: true, name: 'Cyclohexane' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl107, internal: true, name: 'Cycloheptane' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl108, internal: true, name: 'Cyclooctane' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl109, internal: true, name: 'Cyclononane' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl110, internal: true, name: 'Cyclodecane' } as MoleculeInterface,
 ];
 
 export const biomolecules = [
