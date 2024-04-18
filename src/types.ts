@@ -140,6 +140,7 @@ export interface MoleculeInterface {
   internal?: boolean;
   invisible?: boolean;
   excluded?: boolean;
+  style?: MolecularViewerStyle;
 }
 
 export interface MoleculeTransform {

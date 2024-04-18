@@ -1098,7 +1098,60 @@ export const BackgroundColor = () => {
   );
 };
 
-export const StyleRadioGroup = () => {
+export const IndividualMoleculeStyleRadioGroup = () => {
+  const testMolecules = useStore(Selector.testMolecules);
+  const molecularViewerStyle = useStore(Selector.chamberViewerStyle);
+  const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const setStyle = (style: MolecularViewerStyle) => {
+    useStore.getState().set((state) => {
+      if (pickedMoleculeIndex !== -1) {
+        state.projectState.testMolecules[pickedMoleculeIndex].style = style;
+      }
+    });
+    usePrimitiveStore.getState().updateViewer();
+    setChanged(true);
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Radio.Group
+        value={testMolecules[pickedMoleculeIndex]?.style ?? molecularViewerStyle}
+        onChange={(e: RadioChangeEvent) => {
+          const oldValue = molecularViewerStyle;
+          const newValue = e.target.value;
+          const undoableChange = {
+            name: 'Select Style for Selected Molecule',
+            timestamp: Date.now(),
+            oldValue: oldValue,
+            newValue: newValue,
+            undo: () => {
+              setStyle(undoableChange.oldValue as MolecularViewerStyle);
+            },
+            redo: () => {
+              setStyle(undoableChange.newValue as MolecularViewerStyle);
+            },
+          } as UndoableChange;
+          useStore.getState().addUndoable(undoableChange);
+          setStyle(newValue);
+        }}
+      >
+        <Space direction="vertical">
+          {CHAMBER_STYLE_LABELS.map((radio, idx) => (
+            <Radio key={`${idx}-${radio.value}`} value={radio.value}>
+              {t(radio.label, lang)}
+            </Radio>
+          ))}
+        </Space>
+      </Radio.Group>
+    </MenuItem>
+  );
+};
+
+export const GlobalStyleRadioGroup = () => {
   const molecularViewerStyle = useStore(Selector.chamberViewerStyle);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
@@ -1107,6 +1160,9 @@ export const StyleRadioGroup = () => {
   const setStyle = (style: MolecularViewerStyle) => {
     useStore.getState().set((state) => {
       state.projectState.chamberViewerStyle = style;
+      for (const m of state.projectState.testMolecules) {
+        m.style = style;
+      }
     });
     setChanged(true);
   };

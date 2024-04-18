@@ -20,9 +20,22 @@ import { Atom } from '../models/Atom.ts';
 import { ModelUtil } from '../models/ModelUtil.ts';
 import { RadialBond } from '../models/RadialBond.ts';
 import { VdwBond } from '../models/VdwBond.ts';
+import { MolecularViewerStyle } from './displayOptions.ts';
 
 export const isCrystal = (name: string) => {
   return name === 'Gold' || name === 'Silver' || name === 'Iron' || name === 'NaCl' || name === 'CsCl';
+};
+
+export const isSkinny = (style: MolecularViewerStyle) => {
+  return (
+    style === MolecularViewerStyle.BallAndStick ||
+    style === MolecularViewerStyle.Stick ||
+    style === MolecularViewerStyle.Wireframe ||
+    style === MolecularViewerStyle.Cartoon ||
+    style === MolecularViewerStyle.Trace ||
+    style === MolecularViewerStyle.Tube ||
+    style === MolecularViewerStyle.AtomIndex
+  );
 };
 
 export const generateVdwLines = (molecules: Molecule[], maximumRelativeDistanceSquared: number) => {

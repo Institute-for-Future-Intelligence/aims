@@ -21,7 +21,7 @@ import {
   RotateMolecule,
   Screenshot,
   SpaceshipDisplayModeRadioGroup,
-  StyleRadioGroup,
+  GlobalStyleRadioGroup,
   TranslateLigand,
   TranslateMolecule,
   VdwBondsCheckBox,
@@ -31,6 +31,7 @@ import {
   FixedCheckBox,
   AngularBondsCheckBox,
   TorsionalBondsCheckBox,
+  IndividualMoleculeStyleRadioGroup,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
@@ -88,7 +89,6 @@ export const createDefaultMenu = (
           {
             key: 'translate-molecule-fields',
             label: <TranslateMolecule />,
-            style: { backgroundColor: 'white' },
           },
         ],
       });
@@ -104,7 +104,17 @@ export const createDefaultMenu = (
           {
             key: 'rotate-molecule-fields',
             label: <RotateMolecule />,
-            style: { backgroundColor: 'white' },
+          },
+        ],
+      });
+
+      items.push({
+        key: 'molecule-style-submenu',
+        label: <MenuItem hasPadding={false}>{i18n.t('molecularViewer.Style', lang)}</MenuItem>,
+        children: [
+          {
+            key: 'molecule-style-radio-group',
+            label: <IndividualMoleculeStyleRadioGroup />,
           },
         ],
       });
@@ -254,8 +264,7 @@ export const createDefaultMenu = (
         children: [
           {
             key: 'molecular-viewer-style-radio-group',
-            label: <StyleRadioGroup />,
-            style: { backgroundColor: 'white' },
+            label: <GlobalStyleRadioGroup />,
           },
         ],
       });
@@ -267,7 +276,6 @@ export const createDefaultMenu = (
           {
             key: 'molecular-viewer-material-radio-group',
             label: <MaterialRadioGroup />,
-            style: { backgroundColor: 'white' },
           },
         ],
       });
@@ -279,7 +287,6 @@ export const createDefaultMenu = (
           {
             key: 'molecular-viewer-coloring-radio-group',
             label: <ColoringRadioGroup />,
-            style: { backgroundColor: 'white' },
           },
         ],
       });
@@ -324,7 +331,6 @@ export const createDefaultMenu = (
             {
               key: 'translate-ligand-fields',
               label: <TranslateLigand />,
-              style: { backgroundColor: 'white' },
             },
           ],
         });
@@ -340,7 +346,6 @@ export const createDefaultMenu = (
             {
               key: 'rotate-ligand-fields',
               label: <RotateLigand />,
-              style: { backgroundColor: 'white' },
             },
           ],
         });
@@ -351,8 +356,7 @@ export const createDefaultMenu = (
           children: [
             {
               key: 'molecular-viewer-style-radio-group',
-              label: <StyleRadioGroup />,
-              style: { backgroundColor: 'white' },
+              label: <GlobalStyleRadioGroup />,
             },
           ],
         });
@@ -364,7 +368,6 @@ export const createDefaultMenu = (
             {
               key: 'molecular-viewer-material-radio-group',
               label: <MaterialRadioGroup />,
-              style: { backgroundColor: 'white' },
             },
           ],
         });
@@ -376,7 +379,6 @@ export const createDefaultMenu = (
             {
               key: 'molecular-viewer-coloring-radio-group',
               label: <ColoringRadioGroup />,
-              style: { backgroundColor: 'white' },
             },
           ],
         });
@@ -409,7 +411,6 @@ export const createDefaultMenu = (
           {
             key: 'spaceship-display-mode-radio-group',
             label: <SpaceshipDisplayModeRadioGroup />,
-            style: { backgroundColor: 'white' },
           },
         ],
       });

@@ -8,6 +8,7 @@ import { MoleculeInterface } from '../types.ts';
 import { Vector3 } from 'three';
 import { AngularBond } from './AngularBond.ts';
 import { TorsionalBond } from './TorsionalBond.ts';
+import { MolecularViewerStyle } from '../view/displayOptions.ts';
 
 export class Molecule implements MoleculeInterface {
   name: string;
@@ -21,6 +22,7 @@ export class Molecule implements MoleculeInterface {
   internal?: boolean;
   invisible?: boolean;
   excluded?: boolean;
+  style?: MolecularViewerStyle;
   metadata?: any;
 
   constructor(name: string, atoms: Atom[]) {
@@ -72,6 +74,7 @@ export class Molecule implements MoleculeInterface {
     mol.radialBonds = newRadialBonds;
     mol.angularBonds = newAngularBonds;
     mol.torsionalBonds = newTorsionalBonds;
+    mol.style = molecule.style;
     return mol;
   }
 

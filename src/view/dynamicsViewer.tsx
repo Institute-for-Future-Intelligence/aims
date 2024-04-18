@@ -17,7 +17,7 @@ import {
   STYLE_MAP,
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
-import { generateVdwLines, isCrystal, joinComplexes, loadMolecule } from './moleculeTools.ts';
+import { generateVdwLines, isCrystal, isSkinny, joinComplexes, loadMolecule } from './moleculeTools.ts';
 import { Atom } from '../models/Atom.ts';
 import { RadialBond } from '../models/RadialBond.ts';
 import { AngularBond } from '../models/AngularBond.ts';
@@ -133,15 +133,7 @@ const DynamicsViewer = React.memo(
     }, [coloring]);
 
     const skinnyStyle = useMemo(() => {
-      return (
-        viewerStyle === MolecularViewerStyle.BallAndStick ||
-        viewerStyle === MolecularViewerStyle.Stick ||
-        viewerStyle === MolecularViewerStyle.Wireframe ||
-        viewerStyle === MolecularViewerStyle.Cartoon ||
-        viewerStyle === MolecularViewerStyle.Trace ||
-        viewerStyle === MolecularViewerStyle.Tube ||
-        viewerStyle === MolecularViewerStyle.AtomIndex
-      );
+      return isSkinny(viewerStyle);
     }, [viewerStyle]);
 
     const cartoonStyle = useMemo(() => {
@@ -364,11 +356,14 @@ const DynamicsViewer = React.memo(
       // Don't change the selector below. We use 'chain' to identify molecules as there is no 'molecule' keyword
       // according to https://lifescience.opensource.epam.com/miew/selectors.html
       for (let i = 0; i < testMolecules.length; i++) {
+        const molMode = testMolecules[i].style
+          ? STYLE_MAP.get(testMolecules[i].style as MolecularViewerStyle)
+          : undefined;
         // revert the special mode to ball and stick when there is only one residue
         // otherwise the molecule will not show up
         const residues = complexesRef.current[i]?._residues;
         reps.push({
-          mode: residues && residues.length < 2 && specialMode ? 'BS' : mode,
+          mode: molMode ?? (residues && residues.length < 2 && specialMode ? 'BS' : mode),
           colorer: colorer,
           selector: 'chain MOL' + i,
           material: MATERIAL_MAP.get(material),
@@ -396,14 +391,17 @@ const DynamicsViewer = React.memo(
         .finally(() => {
           if (setLoading) setLoading(false);
         });
+      const children = groupRef.current?.children;
       return () => {
-        if (groupRef.current) {
-          groupRef.current.traverse((obj) => {
-            if (obj instanceof Mesh) {
-              obj.geometry.dispose();
-              obj.material.dispose();
-            }
-          });
+        if (children) {
+          for (const c of children) {
+            c.traverse((obj) => {
+              if (obj instanceof Mesh) {
+                obj.geometry.dispose();
+                obj.material.dispose();
+              }
+            });
+          }
         }
       };
     }, [
@@ -498,10 +496,13 @@ const DynamicsViewer = React.memo(
             <sphereGeometry args={[1, 16, 16]} />
             <meshStandardMaterial transparent opacity={0.5} />
             {moleculesRef.current[pickedMoleculeIndex]?.atoms.map((a, i) => {
+              let scaleFactor = skinnyStyle ? 0.4 : 1.2;
+              const style = testMolecules[pickedMoleculeIndex]?.style;
+              if (style && isSkinny(style)) scaleFactor = 0.4;
               return (
                 <Instance
                   key={i}
-                  scale={Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.4 : 1.2)}
+                  scale={Element.getByName(a.elementSymbol).radius * scaleFactor}
                   position={[a.position.x, a.position.y, a.position.z]}
                   color={'yellow'}
                 />
@@ -510,7 +511,7 @@ const DynamicsViewer = React.memo(
           </Instances>
         )}
         {pickedAtomRef.current && pickedAtomIndex !== -1 && (
-          //   must use position.x, etc. in order for this to update in a molecular dynamics simulation
+          // must use position.x, etc. in order for this to update in a molecular dynamics simulation
           <Sphere
             position={[
               pickedAtomRef.current.position.x,

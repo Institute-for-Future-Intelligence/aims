@@ -19,7 +19,7 @@ import {
   MaterialRadioGroup,
   MomentumVectorCheckBox,
   SpaceshipDisplayModeRadioGroup,
-  StyleRadioGroup,
+  GlobalStyleRadioGroup,
   TorsionalBondsCheckBox,
   VdwBondsCheckBox,
 } from '../contextMenu/defaultMenuItems';
@@ -139,7 +139,6 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
         {
           key: 'spaceship-display-mode-radio-group',
           label: <SpaceshipDisplayModeRadioGroup />,
-          style: { backgroundColor: 'white' },
         },
       ],
     });
@@ -151,8 +150,7 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
     children: [
       {
         key: 'molecular-viewer-style-radio-group',
-        label: <StyleRadioGroup />,
-        style: { backgroundColor: 'white' },
+        label: <GlobalStyleRadioGroup />,
       },
     ],
   });
@@ -164,7 +162,6 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
       {
         key: 'molecular-viewer-material-radio-group',
         label: <MaterialRadioGroup />,
-        style: { backgroundColor: 'white' },
       },
     ],
   });
@@ -176,7 +173,6 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
       {
         key: 'molecular-viewer-coloring-radio-group',
         label: <ColoringRadioGroup />,
-        style: { backgroundColor: 'white' },
       },
     ],
   });
