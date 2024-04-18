@@ -19,6 +19,7 @@ import { RotateLeftOutlined, RotateRightOutlined } from '@ant-design/icons';
 import {
   CHAMBER_COLORING_LABELS,
   CHAMBER_STYLE_LABELS,
+  INDIVIDUAL_MOLECULE_STYLE_LABELS,
   MATERIAL_LABELS,
   MolecularViewerColoring,
   MolecularViewerMaterial,
@@ -1140,7 +1141,7 @@ export const IndividualMoleculeStyleRadioGroup = () => {
         }}
       >
         <Space direction="vertical">
-          {CHAMBER_STYLE_LABELS.map((radio, idx) => (
+          {INDIVIDUAL_MOLECULE_STYLE_LABELS.map((radio, idx) => (
             <Radio key={`${idx}-${radio.value}`} value={radio.value}>
               {t(radio.label, lang)}
             </Radio>

@@ -129,6 +129,7 @@ export const i18n_en = {
       MomentumVectors: 'Momentum Vectors',
       ForceVectors: 'Force Vectors',
       EnergyGraph: 'Energy Graph',
+      GlobalStyle: 'Global Style',
       Style: 'Style',
       Color: 'Color',
       BallAndStick: 'Ball-and-Stick',

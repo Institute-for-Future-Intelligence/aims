@@ -146,7 +146,7 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
 
   items.push({
     key: 'display-style',
-    label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Style', lang)}</MenuItem>,
+    label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.GlobalStyle', lang)}</MenuItem>,
     children: [
       {
         key: 'molecular-viewer-style-radio-group',

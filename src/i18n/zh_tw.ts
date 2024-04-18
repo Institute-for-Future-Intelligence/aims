@@ -129,6 +129,7 @@ export const i18n_zh_tw = {
       MomentumVectors: '顯示動量向量',
       ForceVectors: '顯示力向量',
       EnergyGraph: '顯示能量圖',
+      GlobalStyle: '全域風格',
       Style: '風格',
       Color: '顏色',
       BallAndStick: '球和棍',

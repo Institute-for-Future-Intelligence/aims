@@ -260,7 +260,7 @@ export const createDefaultMenu = (
 
       items.push({
         key: 'molecular-viewer-style-submenu',
-        label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Style', lang)}</MenuItem>,
+        label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.GlobalStyle', lang)}</MenuItem>,
         children: [
           {
             key: 'molecular-viewer-style-radio-group',

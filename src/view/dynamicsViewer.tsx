@@ -498,7 +498,7 @@ const DynamicsViewer = React.memo(
             {moleculesRef.current[pickedMoleculeIndex]?.atoms.map((a, i) => {
               let scaleFactor = skinnyStyle ? 0.4 : 1.2;
               const style = testMolecules[pickedMoleculeIndex]?.style;
-              if (style && isSkinny(style)) scaleFactor = 0.4;
+              if (style) scaleFactor = isSkinny(style) ? 0.4 : 1.2;
               return (
                 <Instance
                   key={i}
@@ -528,13 +528,16 @@ const DynamicsViewer = React.memo(
           <Instances limit={1000} range={1000}>
             <cylinderGeometry args={[0.1, 0.1, 1, 8]} />
             <meshStandardMaterial />
-            {moleculesRef.current.map((m) => {
+            {moleculesRef.current.map((m, iMol) => {
+              let styleScaleFactor = skinnyStyle ? 0.25 : 1;
+              const style = testMolecules[iMol]?.style;
+              if (style) styleScaleFactor = isSkinny(style) ? 0.25 : 1;
               const arr = [];
               const quaternion = new Quaternion();
               const normalized = new Vector3();
               arr.push(
                 m.atoms.map((a, i) => {
-                  const radius = Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.25 : 1);
+                  const radius = Element.getByName(a.elementSymbol).radius * styleScaleFactor;
                   const momentum = a.mass * a.velocity.length() * momentumScaleFactor;
                   normalized.copy(a.velocity).normalize();
                   quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
@@ -560,13 +563,16 @@ const DynamicsViewer = React.memo(
           <Instances limit={1000} range={1000}>
             <coneGeometry args={[0.2, 0.4, 8, 2]} />
             <meshStandardMaterial />
-            {moleculesRef.current.map((m) => {
+            {moleculesRef.current.map((m, iMol) => {
+              let styleScaleFactor = skinnyStyle ? 0.25 : 1;
+              const style = testMolecules[iMol]?.style;
+              if (style) styleScaleFactor = isSkinny(style) ? 0.25 : 1;
               const arr = [];
               const quaternion = new Quaternion();
               const normalized = new Vector3();
               arr.push(
                 m.atoms.map((a, i) => {
-                  const radius = Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.25 : 1);
+                  const radius = Element.getByName(a.elementSymbol).radius * styleScaleFactor;
                   const momentum = a.mass * a.velocity.length() * momentumScaleFactor;
                   normalized.copy(a.velocity).normalize();
                   quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
@@ -591,13 +597,16 @@ const DynamicsViewer = React.memo(
           <Instances limit={1000} range={1000}>
             <cylinderGeometry args={[0.1, 0.1, 1, 8]} />
             <meshStandardMaterial />
-            {moleculesRef.current.map((m) => {
+            {moleculesRef.current.map((m, iMol) => {
+              let styleScaleFactor = skinnyStyle ? 0.25 : 1;
+              const style = testMolecules[iMol]?.style;
+              if (style) styleScaleFactor = isSkinny(style) ? 0.25 : 1;
               const arr = [];
               const quaternion = new Quaternion();
               const normalized = new Vector3();
               arr.push(
                 m.atoms.map((a, i) => {
-                  const radius = Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.25 : 1);
+                  const radius = Element.getByName(a.elementSymbol).radius * styleScaleFactor;
                   const force = a.force.length() * forceScaleFactor * 1000;
                   normalized.copy(a.force).normalize();
                   quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
@@ -623,13 +632,16 @@ const DynamicsViewer = React.memo(
           <Instances limit={1000} range={1000}>
             <coneGeometry args={[0.2, 0.4, 8, 2]} />
             <meshStandardMaterial />
-            {moleculesRef.current.map((m) => {
+            {moleculesRef.current.map((m, iMol) => {
+              let styleScaleFactor = skinnyStyle ? 0.25 : 1;
+              const style = testMolecules[iMol]?.style;
+              if (style) styleScaleFactor = isSkinny(style) ? 0.25 : 1;
               const arr = [];
               const quaternion = new Quaternion();
               const normalized = new Vector3();
               arr.push(
                 m.atoms.map((a, i) => {
-                  const radius = Element.getByName(a.elementSymbol).radius * (skinnyStyle ? 0.25 : 1);
+                  const radius = Element.getByName(a.elementSymbol).radius * styleScaleFactor;
                   const force = a.force.length() * forceScaleFactor * 1000;
                   normalized.copy(a.force).normalize();
                   quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
@@ -650,14 +662,17 @@ const DynamicsViewer = React.memo(
           </Instances>
         )}
         {/* draw fixed atoms */}
-        {moleculesRef.current.map((m) => {
+        {moleculesRef.current.map((m, iMol) => {
+          let styleScaleFactor = skinnyStyle ? 1 : 4;
+          const style = testMolecules[iMol]?.style;
+          if (style) styleScaleFactor = isSkinny(style) ? 1 : 4;
           const arr = [];
           arr.push(
             m.atoms.map((a, i) => {
               if (a.fixed) {
                 return (
                   <Billboard key={i} position={[a.position.x, a.position.y, a.position.z]}>
-                    <Text color="yellow" anchorX="center" anchorY="middle" fontSize={4 * (skinnyStyle ? 0.25 : 1)}>
+                    <Text color="yellow" anchorX="center" anchorY="middle" fontSize={styleScaleFactor}>
                       📌
                     </Text>
                   </Billboard>
