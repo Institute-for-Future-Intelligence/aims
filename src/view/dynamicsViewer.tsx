@@ -353,19 +353,56 @@ const DynamicsViewer = React.memo(
       }
       const visual = new ComplexVisual(complex.name, complex);
       const reps = [];
-      // Don't change the selector below. We use 'chain' to identify molecules as there is no 'molecule' keyword
-      // according to https://lifescience.opensource.epam.com/miew/selectors.html
-      for (let i = 0; i < testMolecules.length; i++) {
-        const molMode = testMolecules[i].style
-          ? STYLE_MAP.get(testMolecules[i].style as MolecularViewerStyle)
-          : undefined;
-        // revert the special mode to ball and stick when there is only one residue
-        // otherwise the molecule will not show up
-        const residues = complexesRef.current[i]?._residues;
+      const styleMap: Map<MolecularViewerStyle, string[]> = new Map<MolecularViewerStyle, string[]>();
+      const defaultMolArray: string[] = [];
+      for (const [i, m] of testMolecules.entries()) {
+        if (m.style) {
+          let arr = styleMap.get(m.style);
+          if (!arr) {
+            arr = ['MOL' + i];
+            styleMap.set(m.style, arr);
+          } else {
+            arr.push('MOL' + i);
+          }
+        } else {
+          defaultMolArray.push('MOL' + i);
+        }
+      }
+      if (styleMap.size > 0) {
+        // Don't change the selector below. We use 'chain' to identify molecules as there is no 'molecule' keyword
+        // according to https://lifescience.opensource.epam.com/miew/selectors.html
+        styleMap.forEach((value, key) => {
+          const molMode = STYLE_MAP.get(key as MolecularViewerStyle);
+          let selector = 'chain';
+          for (const name of value) {
+            selector += ' ' + name + ',';
+          }
+          selector = selector.substring(0, selector.length - 1);
+          reps.push({
+            mode: molMode ?? mode,
+            colorer: colorer,
+            selector: selector,
+            material: MATERIAL_MAP.get(material),
+          });
+        });
+        if (defaultMolArray.length > 0) {
+          let selector = 'chain';
+          for (const name of defaultMolArray) {
+            selector += ' ' + name + ',';
+          }
+          selector = selector.substring(0, selector.length - 1);
+          reps.push({
+            mode: mode,
+            colorer: colorer,
+            selector: selector,
+            material: MATERIAL_MAP.get(material),
+          });
+        }
+      } else {
         reps.push({
-          mode: molMode ?? (residues && residues.length < 2 && specialMode ? 'BS' : mode),
+          mode: mode,
           colorer: colorer,
-          selector: 'chain MOL' + i,
+          selector: 'all',
           material: MATERIAL_MAP.get(material),
         });
       }
