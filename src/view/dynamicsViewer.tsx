@@ -136,13 +136,6 @@ const DynamicsViewer = React.memo(
       return isSkinny(viewerStyle);
     }, [viewerStyle]);
 
-    const cartoonStyle = useMemo(() => {
-      for (const m of testMolecules) {
-        if (m.style && isCartoon(m.style)) return true;
-      }
-      return isCartoon(viewerStyle);
-    }, [viewerStyle, testMolecules]);
-
     const wireframeStyle = useMemo(() => {
       return viewerStyle === MolecularViewerStyle.Wireframe || viewerStyle === MolecularViewerStyle.AtomIndex;
     }, [viewerStyle]);
@@ -347,9 +340,7 @@ const DynamicsViewer = React.memo(
           }
         }
       }
-      if (cartoonStyle) {
-        complex.finalize({ needAutoBonding: false, detectAromaticLoops: false, enableEditing: false });
-      }
+      complex.finalize({ needAutoBonding: false, detectAromaticLoops: false, enableEditing: false });
       const visual = new ComplexVisual(complex.name, complex);
       const reps = [];
       const styleMap: Map<MolecularViewerStyle, string[]> = new Map<MolecularViewerStyle, string[]>();
@@ -454,7 +445,6 @@ const DynamicsViewer = React.memo(
       vdwBondCutoffRelative,
       pickedAtomIndex,
       moleculesRef,
-      cartoonStyle,
       specialMode,
     ]);
 
