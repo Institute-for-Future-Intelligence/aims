@@ -17,7 +17,7 @@ import {
   STYLE_MAP,
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
-import { generateVdwLines, isCrystal, isSkinny, joinComplexes, loadMolecule } from './moleculeTools.ts';
+import { generateVdwLines, isCartoon, isCrystal, isSkinny, joinComplexes, loadMolecule } from './moleculeTools.ts';
 import { Atom } from '../models/Atom.ts';
 import { RadialBond } from '../models/RadialBond.ts';
 import { AngularBond } from '../models/AngularBond.ts';
@@ -137,12 +137,11 @@ const DynamicsViewer = React.memo(
     }, [viewerStyle]);
 
     const cartoonStyle = useMemo(() => {
-      return (
-        viewerStyle === MolecularViewerStyle.Cartoon ||
-        viewerStyle === MolecularViewerStyle.Trace ||
-        viewerStyle === MolecularViewerStyle.Tube
-      );
-    }, [viewerStyle]);
+      for (const m of testMolecules) {
+        if (m.style && isCartoon(m.style)) return true;
+      }
+      return isCartoon(viewerStyle);
+    }, [viewerStyle, testMolecules]);
 
     const wireframeStyle = useMemo(() => {
       return viewerStyle === MolecularViewerStyle.Wireframe || viewerStyle === MolecularViewerStyle.AtomIndex;

@@ -38,6 +38,14 @@ export const isSkinny = (style: MolecularViewerStyle) => {
   );
 };
 
+export const isCartoon = (style: MolecularViewerStyle) => {
+  return (
+    style === MolecularViewerStyle.Cartoon ||
+    style === MolecularViewerStyle.Trace ||
+    style === MolecularViewerStyle.Tube
+  );
+};
+
 export const generateVdwLines = (molecules: Molecule[], maximumRelativeDistanceSquared: number) => {
   const bonds: VdwBond[] = [];
   const n = molecules.length;
