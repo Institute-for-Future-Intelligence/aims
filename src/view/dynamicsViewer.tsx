@@ -324,8 +324,19 @@ const DynamicsViewer = React.memo(
 
     useEffect(() => {
       if (!groupRef.current || !mode) return;
+      if (!complex || testMolecules.length === 0) {
+        groupRef.current.traverse((obj) => {
+          if (obj instanceof Mesh) {
+            obj.geometry.dispose();
+            obj.material.dispose();
+          }
+        });
+        groupRef.current.children = [];
+        invalidate();
+        return;
+      }
+
       groupRef.current.children = [];
-      if (!complex) return;
       for (const [iMol, com] of complexesRef.current.entries()) {
         const m = moleculesRef.current[iMol];
         if (m) {
@@ -418,18 +429,15 @@ const DynamicsViewer = React.memo(
         .finally(() => {
           if (setLoading) setLoading(false);
         });
-      const children = groupRef.current?.children;
       return () => {
-        if (children) {
-          for (const c of children) {
-            c.traverse((obj) => {
-              if (obj instanceof Mesh) {
-                obj.geometry.dispose();
-                obj.material.dispose();
-              }
-            });
+        if (!groupRef.current) return;
+        groupRef.current.traverse((obj) => {
+          if (obj instanceof Mesh) {
+            obj.geometry.dispose();
+            obj.material.dispose();
           }
-        }
+        });
+        groupRef.current.children = [];
       };
     }, [
       complex,
