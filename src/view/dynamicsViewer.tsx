@@ -429,15 +429,18 @@ const DynamicsViewer = React.memo(
         .finally(() => {
           if (setLoading) setLoading(false);
         });
+      const children = groupRef.current?.children;
       return () => {
-        if (!groupRef.current) return;
-        groupRef.current.traverse((obj) => {
-          if (obj instanceof Mesh) {
-            obj.geometry.dispose();
-            obj.material.dispose();
+        if (children) {
+          for (const c of children) {
+            c.traverse((obj) => {
+              if (obj instanceof Mesh) {
+                obj.geometry.dispose();
+                obj.material.dispose();
+              }
+            });
           }
-        });
-        groupRef.current.children = [];
+        }
       };
     }, [
       complex,
