@@ -17,7 +17,7 @@ import {
   STYLE_MAP,
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
-import { generateVdwLines, isCrystal, isSkinny, joinComplexes, loadMolecule } from './moleculeTools.ts';
+import { generateVdwLines, isCartoon, isCrystal, isSkinny, joinComplexes, loadMolecule } from './moleculeTools.ts';
 import { Atom } from '../models/Atom.ts';
 import { RadialBond } from '../models/RadialBond.ts';
 import { AngularBond } from '../models/AngularBond.ts';
@@ -135,6 +135,13 @@ const DynamicsViewer = React.memo(
     const skinnyStyle = useMemo(() => {
       return isSkinny(viewerStyle);
     }, [viewerStyle]);
+
+    const cartoonStyle = useMemo(() => {
+      for (const m of testMolecules) {
+        if (m.style && isCartoon(m.style)) return true;
+      }
+      return isCartoon(viewerStyle);
+    }, [viewerStyle, testMolecules, updateViewerFlag]);
 
     const wireframeStyle = useMemo(() => {
       return viewerStyle === MolecularViewerStyle.Wireframe || viewerStyle === MolecularViewerStyle.AtomIndex;
@@ -351,7 +358,9 @@ const DynamicsViewer = React.memo(
           }
         }
       }
-      complex.finalize({ needAutoBonding: false, detectAromaticLoops: false, enableEditing: false });
+      if (cartoonStyle) {
+        complex.updateCartoon();
+      }
       const visual = new ComplexVisual(complex.name, complex);
       const reps = [];
       const styleMap: Map<MolecularViewerStyle, string[]> = new Map<MolecularViewerStyle, string[]>();
@@ -457,6 +466,7 @@ const DynamicsViewer = React.memo(
       pickedAtomIndex,
       moleculesRef,
       specialMode,
+      cartoonStyle,
     ]);
 
     useEffect(() => {

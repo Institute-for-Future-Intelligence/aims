@@ -446,12 +446,16 @@ class Complex {
     });
   }
 
-  updateChains() {
+  updateCartoon() {
     const chains = this._chains;
     for (const c of chains) {
       if (c._residues.length > 1) {
         c._finalize();
       }
+    }
+    const residues = this._residues;
+    for (const r of residues) {
+      r._finalize();
     }
   }
 
