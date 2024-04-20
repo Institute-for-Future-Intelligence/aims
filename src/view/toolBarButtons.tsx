@@ -21,7 +21,7 @@ const ToolBarButtons = React.memo(() => {
   const yzPlanePosition = useStore(Selector.yzPlanePosition);
   const xzPlanePosition = useStore(Selector.xzPlanePosition);
   const projectType = useStore(Selector.projectType);
-  const deleteAllAtoms = useStore(Selector.delteAllAtoms);
+  const deleteAllAtoms = useStore(Selector.deleteAllAtoms);
   const testMolecules = useStore(Selector.testMolecules);
   const updateViewer = usePrimitiveStore(Selector.updateViewer);
 
@@ -172,7 +172,6 @@ const ToolBarButtons = React.memo(() => {
               cancelText: t('word.Cancel', lang),
               onOk: () => {
                 deleteAllAtoms();
-                updateViewer();
               },
             });
           }}

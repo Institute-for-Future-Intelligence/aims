@@ -266,7 +266,7 @@ export const positionimeSeriesMap = (state: DataStoreState) => state.positionTim
 
 export const currentTemperature = (state: PrimitiveStoreState) => state.currentTemperature;
 
-export const delteAllAtoms = (state: CommonStoreState) => state.deleteAllAtoms;
+export const deleteAllAtoms = (state: CommonStoreState) => state.deleteAllAtoms;
 
 export const getAtomByIndex = (state: CommonStoreState) => state.getAtomByIndex;
 

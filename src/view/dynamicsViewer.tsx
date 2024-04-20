@@ -17,7 +17,7 @@ import {
   STYLE_MAP,
 } from './displayOptions';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
-import { generateVdwLines, isCartoon, isCrystal, isSkinny, joinComplexes, loadMolecule } from './moleculeTools.ts';
+import { generateVdwLines, isCrystal, isSkinny, joinComplexes, loadMolecule } from './moleculeTools.ts';
 import { Atom } from '../models/Atom.ts';
 import { RadialBond } from '../models/RadialBond.ts';
 import { AngularBond } from '../models/AngularBond.ts';
