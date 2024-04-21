@@ -121,6 +121,7 @@ import biomoleculeUrl320 from './molecules/sdf/tryptophan.sdf';
 import biomoleculeUrl321 from './molecules/sdf/tyrosine.sdf';
 import biomoleculeUrl322 from './molecules/sdf/valine.sdf';
 import biomoleculeUrl331 from './molecules/pdb/alphahelix.pdb';
+import biomoleculeUrl332 from './molecules/pdb/betasheet.pdb';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
@@ -275,6 +276,7 @@ export const biomolecules = [
   { url: biomoleculeUrl321, internal: true, name: 'Tyrosine' } as MoleculeInterface,
   { url: biomoleculeUrl322, internal: true, name: 'Valine' } as MoleculeInterface,
   { url: biomoleculeUrl331, internal: true, name: 'Alpha Helix' } as MoleculeInterface,
+  { url: biomoleculeUrl332, internal: true, name: 'Beta Sheet' } as MoleculeInterface,
 ];
 
 export const drugMolecules = [

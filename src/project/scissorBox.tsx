@@ -123,6 +123,7 @@ const ScissorBox = React.memo(
         </Html>
         <Html>
           <div
+            title={labelType === LabelType.NAME ? formula ?? molecule?.name : molecule?.name}
             style={{
               position: 'relative',
               left: '4px',
