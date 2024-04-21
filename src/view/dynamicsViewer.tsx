@@ -313,7 +313,10 @@ const DynamicsViewer = React.memo(
           const m2 = moleculeMapRef.current.get(m);
           if (m2) moleculesRef.current.push(m2);
           const c2 = complexMapRef.current.get(m);
-          if (c2) complexesRef.current.push(c2);
+          if (c2) {
+            complexesRef.current.push(c2);
+            m.multipleResidues = c2._residues?.length > 1;
+          }
         }
         moleculeMapRef.current.clear();
         complexMapRef.current.clear();

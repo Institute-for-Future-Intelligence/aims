@@ -30,6 +30,7 @@ import { useRefStore } from '../../stores/commonRef.ts';
 import { Util } from '../../Util.ts';
 import { Molecule } from '../../models/Molecule.ts';
 import { useDataStore } from '../../stores/commonData.ts';
+import { isCartoon } from '../../view/moleculeTools.ts';
 
 export const TranslateLigand = () => {
   const setCommonStore = useStore(Selector.set);
@@ -1117,6 +1118,10 @@ export const IndividualMoleculeStyleRadioGroup = () => {
     setChanged(true);
   };
 
+  const multipleResidues = useMemo(() => {
+    return !!testMolecules[pickedMoleculeIndex]?.multipleResidues;
+  }, [testMolecules, pickedMoleculeIndex]);
+
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Radio.Group
@@ -1141,11 +1146,14 @@ export const IndividualMoleculeStyleRadioGroup = () => {
         }}
       >
         <Space direction="vertical">
-          {INDIVIDUAL_MOLECULE_STYLE_LABELS.map((radio, idx) => (
-            <Radio key={`${idx}-${radio.value}`} value={radio.value}>
-              {t(radio.label, lang)}
-            </Radio>
-          ))}
+          {INDIVIDUAL_MOLECULE_STYLE_LABELS.map((radio, idx) => {
+            if (!multipleResidues && isCartoon(radio.value)) return null;
+            return (
+              <Radio key={`${idx}-${radio.value}`} value={radio.value}>
+                {t(radio.label, lang)}
+              </Radio>
+            );
+          })}
         </Space>
       </Radio.Group>
     </MenuItem>
@@ -1153,6 +1161,7 @@ export const IndividualMoleculeStyleRadioGroup = () => {
 };
 
 export const GlobalStyleRadioGroup = () => {
+  const testMolecules = useStore(Selector.testMolecules);
   const molecularViewerStyle = useStore(Selector.chamberViewerStyle);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
@@ -1167,6 +1176,13 @@ export const GlobalStyleRadioGroup = () => {
     });
     setChanged(true);
   };
+
+  const multipleResidues = useMemo(() => {
+    for (const m of testMolecules) {
+      if (m.multipleResidues) return true;
+    }
+    return false;
+  }, [testMolecules]);
 
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
@@ -1192,11 +1208,14 @@ export const GlobalStyleRadioGroup = () => {
         }}
       >
         <Space direction="vertical">
-          {CHAMBER_STYLE_LABELS.map((radio, idx) => (
-            <Radio key={`${idx}-${radio.value}`} value={radio.value}>
-              {t(radio.label, lang)}
-            </Radio>
-          ))}
+          {CHAMBER_STYLE_LABELS.map((radio, idx) => {
+            if (!multipleResidues && isCartoon(radio.value)) return null;
+            return (
+              <Radio key={`${idx}-${radio.value}`} value={radio.value}>
+                {t(radio.label, lang)}
+              </Radio>
+            );
+          })}
         </Space>
       </Radio.Group>
     </MenuItem>

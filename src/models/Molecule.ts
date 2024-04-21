@@ -22,6 +22,7 @@ export class Molecule implements MoleculeInterface {
   internal?: boolean;
   invisible?: boolean;
   excluded?: boolean;
+  multipleResidues?: boolean;
   style?: MolecularViewerStyle;
   metadata?: any;
 
@@ -75,6 +76,7 @@ export class Molecule implements MoleculeInterface {
     mol.angularBonds = newAngularBonds;
     mol.torsionalBonds = newTorsionalBonds;
     mol.style = molecule.style;
+    mol.multipleResidues = molecule.multipleResidues;
     return mol;
   }
 
