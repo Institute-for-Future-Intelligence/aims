@@ -20,6 +20,7 @@ import { createProjectMenu } from './components/mainMenu/projectMenu';
 import { createViewMenu } from './components/mainMenu/viewMenu';
 import { createEditMenu } from './components/mainMenu/editMenu';
 import { Language } from './constants';
+import { createExamplesMenu } from './components/mainMenu/examplesMenu.tsx';
 
 const radioStyle = {
   display: 'block',
@@ -127,6 +128,13 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
       key: 'view-sub-menu',
       label: <MenuItem hasPadding={false}>{t('menu.viewSubMenu', lang)}</MenuItem>,
       children: createViewMenu(keyHome, isMac),
+    });
+
+    // examples menu
+    items.push({
+      key: 'examples-sub-menu',
+      label: <MenuItem hasPadding={false}>{t('menu.examplesSubMenu', lang)}</MenuItem>,
+      children: createExamplesMenu(viewOnly),
     });
 
     // language menu

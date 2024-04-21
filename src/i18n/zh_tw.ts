@@ -348,6 +348,13 @@ export const i18n_zh_tw = {
         ZoomOut: '縮小',
         AutoRotate: '自動旋轉',
       },
+      examplesSubMenu: '例子',
+      examples: {
+        nanotechnologySubMenu: '奈米科技',
+        nanotechnology: {
+          Buckyballs: '足球烯',
+        },
+      },
       languageSubMenu: '語言',
       AboutUs: '關於我們',
     },

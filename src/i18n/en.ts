@@ -349,6 +349,13 @@ export const i18n_en = {
         ZoomOut: 'Zoom Out',
         AutoRotate: 'Auto Rotate',
       },
+      examplesSubMenu: 'Examples',
+      examples: {
+        nanotechnologySubMenu: 'Nanotechnology',
+        nanotechnology: {
+          Buckyballs: 'Buckyballs',
+        },
+      },
       languageSubMenu: 'Language',
       AboutUs: 'About Us',
     },
