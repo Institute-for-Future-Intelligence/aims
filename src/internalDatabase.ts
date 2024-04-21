@@ -85,10 +85,13 @@ import biomoleculeUrl001 from './molecules/sdf/atp.sdf';
 import biomoleculeUrl002 from './molecules/sdf/vitamin_a.sdf';
 import biomoleculeUrl003 from './molecules/sdf/vitamin_c.sdf';
 import biomoleculeUrl004 from './molecules/sdf/vitamin_d.sdf';
+import biomoleculeUrl005 from './molecules/sdf/citric_acid.sdf';
 import biomoleculeUrl101 from './molecules/pdb/cholesterol.pdb';
 import biomoleculeUrl102 from './molecules/sdf/oleic_acid.sdf';
 import biomoleculeUrl103 from './molecules/sdf/stearic_acid.sdf';
 import biomoleculeUrl104 from './molecules/sdf/elaidic_acid.sdf';
+import biomoleculeUrl105 from './molecules/sdf/fumaric_acid.sdf';
+import biomoleculeUrl106 from './molecules/sdf/maleic_acid.sdf';
 import biomoleculeUrl201 from './molecules/sdf/adenine.sdf';
 import biomoleculeUrl202 from './molecules/sdf/cytosine.sdf';
 import biomoleculeUrl203 from './molecules/sdf/guanine.sdf';
@@ -236,10 +239,13 @@ export const biomolecules = [
   { url: biomoleculeUrl002, internal: true, name: 'Vitamin A' } as MoleculeInterface,
   { url: biomoleculeUrl003, internal: true, name: 'Vitamin C' } as MoleculeInterface,
   { url: biomoleculeUrl004, internal: true, name: 'Vitamin D' } as MoleculeInterface,
+  { url: biomoleculeUrl005, internal: true, name: 'Citric Acid' } as MoleculeInterface,
   { url: biomoleculeUrl101, internal: true, name: 'Cholesterol' } as MoleculeInterface,
   { url: biomoleculeUrl102, internal: true, name: 'Oleic Acid' } as MoleculeInterface,
   { url: biomoleculeUrl103, internal: true, name: 'Stearic Acid' } as MoleculeInterface,
   { url: biomoleculeUrl104, internal: true, name: 'Elaidic Acid' } as MoleculeInterface,
+  { url: biomoleculeUrl105, internal: true, name: 'Fumaric Acid' } as MoleculeInterface,
+  { url: biomoleculeUrl106, internal: true, name: 'Maleic Acid' } as MoleculeInterface,
   { url: biomoleculeUrl201, internal: true, name: 'Adenine' } as MoleculeInterface,
   { url: biomoleculeUrl202, internal: true, name: 'Cytosine' } as MoleculeInterface,
   { url: biomoleculeUrl203, internal: true, name: 'Guanine' } as MoleculeInterface,
