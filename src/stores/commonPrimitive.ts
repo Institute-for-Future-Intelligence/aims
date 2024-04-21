@@ -45,6 +45,7 @@ export interface PrimitiveStoreState {
   zoomView: (scale: number) => void;
 
   waiting: boolean;
+  setWaiting: (waiting: boolean) => void;
 
   // These stores the settings from newProjectDialog.tsx, because we don't want to overwrite
   // the local state in the common store yet. Don't be confused with commonStore's projectState,
@@ -154,6 +155,11 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     },
 
     waiting: false,
+    setWaiting(waiting: boolean) {
+      immerSet((state) => {
+        state.waiting = waiting;
+      });
+    },
 
     projectType: ProjectType.DRUG_DISCOVERY,
     projectTitle: null,

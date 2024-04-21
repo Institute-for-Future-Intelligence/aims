@@ -351,9 +351,33 @@ export const i18n_zh_cn = {
       },
       examplesSubMenu: '例子',
       examples: {
+        chemistrySubMenu: '化学',
+        chemistry: {
+          MonatomicMolecules: '单原子分子',
+          DiatomicMolecules: '双原子分子',
+          TriatomicMolecules: '三原子分子',
+          LinearAlkanes: '链烷烃',
+          Cycloalkanes: '环烷烃',
+        },
+        biologySubMenu: '生物',
+        biology: {
+          ProteinAlphaHelix: '蛋白质α螺旋',
+          DNADoubleHelix: 'DNA双螺旋',
+        },
+        materialsScienceSubMenu: '材料科学',
+        materialsScience: {
+          GoldCrystal: '黄金晶体',
+          SilverCrystal: '白银晶体',
+          IronCrystal: '铁晶体',
+          SaltCrystal: '食盐晶体',
+          DiamondCrystal: '钻石晶体',
+          Graphite: '石墨',
+          Zeolite: '沸石',
+        },
         nanotechnologySubMenu: '纳米技术',
         nanotechnology: {
           Buckyballs: '足球烯',
+          CarbonNanotube: '碳纳米管',
         },
       },
       languageSubMenu: '语言',

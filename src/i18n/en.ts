@@ -351,9 +351,33 @@ export const i18n_en = {
       },
       examplesSubMenu: 'Examples',
       examples: {
+        chemistrySubMenu: 'Chemistry',
+        chemistry: {
+          MonatomicMolecules: 'Monatomic Molecules',
+          DiatomicMolecules: 'Diatomic Molecules',
+          TriatomicMolecules: 'Triatomic Molecules',
+          LinearAlkanes: 'Linear Alkanes',
+          Cycloalkanes: 'Cycloalkanes',
+        },
+        biologySubMenu: 'Biology',
+        biology: {
+          ProteinAlphaHelix: 'Protein Alpha Helix',
+          DNADoubleHelix: 'DNA Double Helix',
+        },
+        materialsScienceSubMenu: 'Materials Science',
+        materialsScience: {
+          GoldCrystal: 'Gold Crystal',
+          SilverCrystal: 'Silver Crystal',
+          IronCrystal: 'Iron Crystal',
+          SaltCrystal: 'Salt Crystal',
+          DiamondCrystal: 'Diamond Crystal',
+          Graphite: 'Graphite',
+          Zeolite: 'Zeolite',
+        },
         nanotechnologySubMenu: 'Nanotechnology',
         nanotechnology: {
           Buckyballs: 'Buckyballs',
+          CarbonNanotube: 'Carbon Nanotube',
         },
       },
       languageSubMenu: 'Language',

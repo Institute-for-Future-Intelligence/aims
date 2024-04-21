@@ -59,6 +59,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   const setPrimitiveStore = usePrimitiveStore(Selector.setPrimitiveStore);
   const language = useStore(Selector.language);
   const user = useStore(Selector.user);
+  const waiting = usePrimitiveStore(Selector.waiting);
+  const setWaiting = usePrimitiveStore(Selector.setWaiting);
   const saveAccountSettingsFlag = usePrimitiveStore(Selector.saveAccountSettingsFlag);
   const showProjectListPanel = usePrimitiveStore(Selector.showProjectListPanel);
   const createProjectFlag = usePrimitiveStore(Selector.createProjectFlag);
@@ -72,7 +74,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
   const positionTimeSeriesMap = useDataStore(Selector.positionimeSeriesMap);
 
-  const [processing, setProcessing] = useState(false);
   const [updateFlag, setUpdateFlag] = useState(false);
   const [updateMyProjectsFlag, setUpdateMyProjectsFlag] = useState(false);
   const myProjectsRef = useRef<ProjectState[] | void>(); // Not sure why I need to use ref to store this
@@ -170,9 +171,9 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     if (userid) {
       const project = params.get('project');
       if (project) {
-        setProcessing(true);
+        setWaiting(true);
         fetchProject(userid, project, setProjectState).finally(() => {
-          setProcessing(false);
+          setWaiting(false);
         });
       }
     }
@@ -325,7 +326,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   // fetch owner's projects from the cloud
   const fetchMyProjects = async (silent: boolean) => {
     if (!user.uid) return;
-    if (!silent) setProcessing(true);
+    if (!silent) setWaiting(true);
     myProjectsRef.current = await firebase
       .firestore()
       .collection('users')
@@ -446,7 +447,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         showError(t('message.CannotOpenYourProjects', lang) + ': ' + error);
       })
       .finally(() => {
-        if (!silent) setProcessing(false);
+        if (!silent) setWaiting(false);
       });
   };
 
@@ -627,7 +628,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
                   setUpdateFlag(!updateFlag);
                 });
               }
-              setProcessing(false);
+              setWaiting(false);
               resetProject();
             });
         }
@@ -698,7 +699,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       showError(t('message.CannotSaveProjectWithoutTitle', lang));
       return;
     }
-    setProcessing(true);
+    setWaiting(true);
     const ps = JSON.parse(JSON.stringify(useStore.getState().projectState)) as ProjectState;
     ps.timestamp = new Date().getTime();
     ps.time = dayjs(new Date(ps.timestamp)).format('MM/DD/YYYY hh:mm A');
@@ -731,7 +732,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         if (saveAndThenOpenProjectFlag) {
           setProjectState(useStore.getState().projectStateToOpen);
         }
-        setProcessing(false);
+        setWaiting(false);
         setChanged(false);
       });
   }
@@ -798,7 +799,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
                   setUpdateFlag(!updateFlag);
                 });
               }
-              setProcessing(false);
+              setWaiting(false);
               setChanged(false);
             });
         }
@@ -838,10 +839,10 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   }
 
   return viewOnly ? (
-    <></>
+    <>{waiting && <Spinner />}</>
   ) : (
     <>
-      {processing && <Spinner />}
+      {waiting && <Spinner />}
       <MainToolBar signIn={signIn} signOut={signOut} />
       {showProjectListPanel && myProjectsRef.current && (
         <ProjectListPanel

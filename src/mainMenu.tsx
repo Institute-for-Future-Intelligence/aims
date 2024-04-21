@@ -62,7 +62,6 @@ const LabelContainer = styled.div`
 
 const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
-
   const user = useStore.getState().user;
   const language = useStore(Selector.language);
   const undoManager = useStore.getState().undoManager;
@@ -175,7 +174,6 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
             </Radio.Group>
           </MenuItem>
         ),
-        style: { backgroundColor: 'white' },
       },
     ];
     items.push({ key: 'language-sub-menu', label: t('menu.languageSubMenu', lang), children: languageMenuItems });
