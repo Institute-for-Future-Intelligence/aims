@@ -358,6 +358,7 @@ export const i18n_en = {
           TriatomicMolecules: 'Triatomic Molecules',
           LinearAlkanes: 'Linear Alkanes',
           Cycloalkanes: 'Cycloalkanes',
+          CisTransIsomerismOfFattyAcids: 'Cis-Trans Isomerism of Fatty Acids',
         },
         biologySubMenu: 'Biology',
         biology: {

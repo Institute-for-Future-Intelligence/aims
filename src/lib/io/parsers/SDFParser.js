@@ -5,12 +5,7 @@ import chem from '../../chem';
 import SDFStream from './SDFStream';
 import Assembly from '../../chem/Assembly';
 
-const {
-  Complex,
-  Element,
-  Bond,
-  Molecule,
-} = chem;
+const { Complex, Element, Bond, Molecule } = chem;
 
 const chargeMap = [0, 3, 2, 1, 0, -1, -2, -3];
 const orderMap = [0, 1, 2, 3, 1, 1, 1, 2];
@@ -131,13 +126,7 @@ export default class SDFParser extends Parser {
       if (atom1 > atom2) {
         [atom1, atom2] = [atom2, atom1];
       }
-      this._complex.addBond(
-        atom1,
-        atom2,
-        orderMap[bondType] || 1,
-        typeMap[bondType] || Bond.BondType.UNKNOWN,
-        true,
-      );
+      this._complex.addBond(atom1, atom2, orderMap[bondType] || 1, typeMap[bondType] || Bond.BondType.UNKNOWN, true);
     }
   }
 
@@ -267,7 +256,7 @@ export default class SDFParser extends Parser {
     }
 
     molecule.name = molecule.name || molecule.id;
-    if (molecule.name.match(/^\d+$/)) {
+    if (molecule.name?.match(/^\d+$/)) {
       molecule.name = `CID: ${molecule.name}`;
     }
 
@@ -288,14 +277,17 @@ export default class SDFParser extends Parser {
       metadata.molecules = [];
       for (let i = 0; i < molecules.length; i++) {
         metadata.molecules.push({
-          name: molecules[i].name, date: molecules[i].date, title: molecules[i].title, properties: molecules[i].props,
+          name: molecules[i].name,
+          date: molecules[i].date,
+          title: molecules[i].title,
+          properties: molecules[i].props,
         });
       }
     }
   }
 
   _finalize() {
-    const serialAtomMap = this._serialAtomMap = {};
+    const serialAtomMap = (this._serialAtomMap = {});
     const atoms = this._complex._atoms;
 
     for (let i = 0; i < atoms.length; i++) {
@@ -310,7 +302,10 @@ export default class SDFParser extends Parser {
     this._complex.units = this._complex.units.concat(this._assemblies);
     this._buildMolecules();
     this._complex.finalize({
-      needAutoBonding: false, detectAromaticLoops: false, enableEditing: false, serialAtomMap: this._serialAtomMap,
+      needAutoBonding: false,
+      detectAromaticLoops: false,
+      enableEditing: false,
+      serialAtomMap: this._serialAtomMap,
     });
   }
 
@@ -326,7 +321,7 @@ export default class SDFParser extends Parser {
   }
 
   parseSync() {
-    const result = this._complex = new Complex();
+    const result = (this._complex = new Complex());
     const stream = new SDFStream(this._data);
 
     this._format = this.defineFormat(this._data);

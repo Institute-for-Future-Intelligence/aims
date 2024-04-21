@@ -95,6 +95,14 @@ export const createExamplesMenu = (viewOnly: boolean) => {
             </MenuItem>
           ),
         },
+        {
+          key: 'Cis–Trans Isomerism of Fatty Acids',
+          label: (
+            <MenuItem onClick={() => loadProject('Cis–Trans Isomerism of Fatty Acids')}>
+              {i18n.t('menu.examples.chemistry.CisTransIsomerismOfFattyAcids', lang)}
+            </MenuItem>
+          ),
+        },
       ],
     },
     {
