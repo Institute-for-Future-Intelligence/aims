@@ -27,7 +27,7 @@ import commonMoleculeUrl005 from './molecules/sdf/carbon_dioxide.sdf';
 import commonMoleculeUrl006 from './molecules/sdf/carbon_monoxide.sdf';
 import commonMoleculeUrl007 from './molecules/sdf/ozone.sdf';
 import commonMoleculeUrl008 from './molecules/sdf/ammonia.sdf';
-import commonMoleculeUrl101 from './molecules/pdb/buckyball.pdb';
+import commonMoleculeUrl101 from './molecules/sdf/buckyball.sdf';
 import commonMoleculeUrl102 from './molecules/xyz/nanotube.xyz';
 import commonMoleculeUrl103 from './molecules/xyz/graphen.xyz';
 import commonMoleculeUrl201 from './molecules/xyz/d_glucose.xyz';
