@@ -146,6 +146,8 @@ export const addUndoable = (state: CommonStoreState) => state.addUndoable;
 
 export const loggable = (state: CommonStoreState) => state.loggable;
 
+export const logAction = (state: CommonStoreState) => state.logAction;
+
 export const loadChemicalElements = (state: CommonStoreState) => state.loadChemicalElements;
 
 export const getProvidedMolecularProperties = (state: CommonStoreState) => state.getProvidedMolecularProperties;

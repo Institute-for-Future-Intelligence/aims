@@ -82,6 +82,14 @@ const ImportMoleculeModal = React.memo(
       return commonMolecules;
     }, [moleculeType]);
 
+    const total =
+      commonMolecules.length +
+      hydrocarbonMolecules.length +
+      biomolecules.length +
+      drugMolecules.length +
+      monatomicMolecules.length +
+      crystals.length;
+
     return (
       <Modal
         width={480}
@@ -91,7 +99,7 @@ const ImportMoleculeModal = React.memo(
             onMouseOver={() => setDragEnabled(true)}
             onMouseOut={() => setDragEnabled(false)}
           >
-            <ImportOutlined /> {t('projectPanel.ImportMolecule', lang)}
+            <ImportOutlined /> {t('projectPanel.ImportMolecule', lang) + ' (' + total + ')'}
           </div>
         }
         open={isDialogVisible()}

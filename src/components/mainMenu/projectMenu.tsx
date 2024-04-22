@@ -35,14 +35,7 @@ export const askToCreateProject = () => {
 
 const createProject = () => {
   usePrimitiveStore.getState().setCreateProjectDialog(true);
-  if (useStore.getState().loggable) {
-    useStore.getState().set((state) => {
-      state.actionInfo = {
-        name: 'Create New Project',
-        timestamp: new Date().getTime(),
-      };
-    });
-  }
+  if (useStore.getState().loggable) useStore.getState().logAction('Create New Project');
 };
 
 export const askToOpenProject = () => {
@@ -72,12 +65,7 @@ const openProject = () => {
   });
   useStore.getState().set((state) => {
     state.selectedFloatingWindow = 'projectListPanel';
-    if (state.loggable) {
-      state.actionInfo = {
-        name: 'Open Project',
-        timestamp: new Date().getTime(),
-      };
-    }
+    if (state.loggable) state.logAction('Open Project');
   });
 };
 
@@ -85,26 +73,12 @@ export const saveProject = () => {
   usePrimitiveStore.getState().set((state) => {
     state.saveProjectFlag = true;
   });
-  if (useStore.getState().loggable) {
-    useStore.getState().set((state) => {
-      state.actionInfo = {
-        name: 'Save Project',
-        timestamp: new Date().getTime(),
-      };
-    });
-  }
+  if (useStore.getState().loggable) useStore.getState().logAction('Save Project');
 };
 
 export const saveProjectAs = () => {
   usePrimitiveStore.getState().setSaveProjectAsDialog(true);
-  if (useStore.getState().loggable) {
-    useStore.getState().set((state) => {
-      state.actionInfo = {
-        name: 'Save Project As',
-        timestamp: new Date().getTime(),
-      };
-    });
-  }
+  if (useStore.getState().loggable) useStore.getState().logAction('Save Project As');
 };
 
 export const createProjectMenu = (isMac: boolean) => {

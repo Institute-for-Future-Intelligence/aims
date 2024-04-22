@@ -14,8 +14,8 @@ import { useTranslation } from 'react-i18next';
 const { Option } = Select;
 
 const NewProjectDialog = React.memo(({ saveAs }: { saveAs: boolean }) => {
-  const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
   const language = useStore(Selector.language);
 
   const [projectType, setProjectType] = useState<ProjectType>(
@@ -70,14 +70,7 @@ const NewProjectDialog = React.memo(({ saveAs }: { saveAs: boolean }) => {
       state.projectTitle = projectTitle;
       state.projectDescription = projectDescription;
     });
-    if (loggable) {
-      setCommonStore((state) => {
-        state.actionInfo = {
-          name: saveAs ? 'Save Project as' : 'Create New Project',
-          timestamp: new Date().getTime(),
-        };
-      });
-    }
+    if (loggable) logAction(saveAs ? 'Save Project as' : 'Create New Project');
   };
 
   return (

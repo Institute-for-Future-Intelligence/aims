@@ -13,21 +13,13 @@ import { showInfo } from '../../helpers';
 export const createEditMenu = (undoManager: UndoManager, isMac: boolean) => {
   const lang = { lng: useStore.getState().language };
   const loggable = useStore.getState().loggable;
-
-  const setCommonStore = useStore.getState().set;
+  const logAction = useStore.getState().logAction;
 
   const handleUndo = () => {
     if (undoManager.hasUndo()) {
       const commandName = undoManager.undo();
       if (commandName) showInfo(i18n.t('menu.edit.Undo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
-      if (loggable) {
-        setCommonStore((state) => {
-          state.actionInfo = {
-            name: 'Undo',
-            timestamp: new Date().getTime(),
-          };
-        });
-      }
+      if (loggable) logAction('Undo');
     }
   };
 
@@ -35,14 +27,7 @@ export const createEditMenu = (undoManager: UndoManager, isMac: boolean) => {
     if (undoManager.hasRedo()) {
       const commandName = undoManager.redo();
       if (commandName) showInfo(i18n.t('menu.edit.Redo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
-      if (loggable) {
-        setCommonStore((state) => {
-          state.actionInfo = {
-            name: 'Redo',
-            timestamp: new Date().getTime(),
-          };
-        });
-      }
+      if (loggable) logAction('Redo');
     }
   };
 

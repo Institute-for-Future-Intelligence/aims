@@ -3,7 +3,6 @@
  */
 
 import React, { useEffect, useMemo, useRef } from 'react';
-import { ActionInfo } from './types';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { UndoableCheck } from './undo/UndoableCheck';
@@ -95,6 +94,7 @@ const handleKeys = [
 const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProps) => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
   const language = useStore(Selector.language);
   const undoManager = useStore(Selector.undoManager);
   const addUndoable = useStore(Selector.addUndoable);
@@ -163,12 +163,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       });
       setCommonStore((state) => {
         state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
-        if (loggable) {
-          state.actionInfo = {
-            name: 'Delete Selected Molecule',
-            timestamp: new Date().getTime(),
-          };
-        }
+        if (state.loggable) state.logAction('Delete Selected Molecule');
       });
     }
   };
@@ -181,12 +176,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       });
       setCommonStore((state) => {
         state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
-        if (loggable) {
-          state.actionInfo = {
-            name: 'Cut Selected Molecule',
-            timestamp: new Date().getTime(),
-          };
-        }
+        if (state.loggable) state.logAction('Cut Selected Molecule');
       });
     }
   };
@@ -196,14 +186,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       usePrimitiveStore.getState().set((state) => {
         state.copiedMoleculeIndex = state.pickedMoleculeIndex;
       });
-      if (loggable) {
-        setCommonStore((state) => {
-          state.actionInfo = {
-            name: 'Copy Selected Molecule',
-            timestamp: new Date().getTime(),
-          };
-        });
-      }
+      if (loggable) logAction('Copy Selected Molecule');
     }
   };
 
@@ -215,24 +198,14 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         const m = Molecule.clone(testMolecules[copiedMoleculeIndex]);
         m.setCenter(p);
         state.projectState.testMolecules.push(m);
-        if (loggable) {
-          state.actionInfo = {
-            name: 'Paste Copied Molecule',
-            timestamp: new Date().getTime(),
-          };
-        }
+        if (state.loggable) state.logAction('Paste Copied Molecule');
       });
     } else if (cutMolecule) {
       setCommonStore((state) => {
         const m = Molecule.clone(cutMolecule);
         m.setCenter(p);
         state.projectState.testMolecules.push(m);
-        if (loggable) {
-          state.actionInfo = {
-            name: 'Paste Cut Molecule',
-            timestamp: new Date().getTime(),
-          };
-        }
+        if (state.loggable) state.logAction('Paste Cut Molecule');
       });
     }
   };
@@ -273,14 +246,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         break;
     }
     updateViewer();
-    if (loggable) {
-      setCommonStore((state) => {
-        state.actionInfo = {
-          name: 'Move Selected Molecule',
-          timestamp: new Date().getTime(),
-        };
-      });
-    }
+    if (loggable) logAction('Move Selected Molecule');
   };
 
   const handleKeyDown = (key: string) => {
@@ -444,14 +410,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         if (undoManager.hasUndo()) {
           const commandName = undoManager.undo();
           if (commandName) showInfo(i18n.t('menu.edit.Undo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
-          if (loggable) {
-            setCommonStore((state) => {
-              state.actionInfo = {
-                name: 'Undo',
-                timestamp: new Date().getTime(),
-              } as ActionInfo;
-            });
-          }
+          if (loggable) logAction('Undo');
         }
         break;
       case 'ctrl+y':
@@ -459,14 +418,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         if (undoManager.hasRedo()) {
           const commandName = undoManager.redo();
           if (commandName) showInfo(i18n.t('menu.edit.Redo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
-          if (loggable) {
-            setCommonStore((state) => {
-              state.actionInfo = {
-                name: 'Redo',
-                timestamp: new Date().getTime(),
-              } as ActionInfo;
-            });
-          }
+          if (loggable) logAction('Redo');
         }
         break;
       case 'alt': {

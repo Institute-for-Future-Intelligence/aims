@@ -9,10 +9,11 @@ import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { UndoableChange } from '../undo/UndoableChange';
 import { targetProteins } from '../internalDatabase';
-import { AimOutlined, ExperimentOutlined, InfoCircleOutlined, RightOutlined } from '@ant-design/icons';
+import { AimOutlined, CameraOutlined, ExperimentOutlined, InfoCircleOutlined, RightOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { Util } from '../Util.ts';
 import { Undoable } from '../undo/Undoable.ts';
+import { screenshot, showError } from '../helpers.ts';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -20,6 +21,8 @@ const { TextArea } = Input;
 const DockingSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
+  const loggable = useStore.getState().loggable;
+  const logAction = useStore.getState().logAction;
   const addUndoable = useStore(Selector.addUndoable);
   const molecules = useStore(Selector.molecules);
   const ligand = useStore(Selector.ligand);
@@ -123,6 +126,7 @@ const DockingSettings = React.memo(() => {
                 } as UndoableChange;
                 addUndoable(undoableChange);
                 setLigand(newValue);
+                if (loggable) logAction('Select Ligand ' + newValue);
               }}
             >
               <Option key={`None`} value={'None'}>
@@ -162,6 +166,7 @@ const DockingSettings = React.memo(() => {
                 } as UndoableChange;
                 addUndoable(undoableChange);
                 setProtein(newValue);
+                if (loggable) logAction('Select Protein ' + newValue);
               }}
             >
               <Option key={`None`} value={'None'}>
@@ -193,6 +198,7 @@ const DockingSettings = React.memo(() => {
                 if (value === null) return;
                 setCommonStore((state) => {
                   state.projectState.molecularContainer.lx = value;
+                  if (loggable) state.logAction('Set Container Lx to ' + value.toFixed(1));
                 });
                 setChanged(true);
               }}
@@ -217,6 +223,7 @@ const DockingSettings = React.memo(() => {
                 if (value === null) return;
                 setCommonStore((state) => {
                   state.projectState.molecularContainer.ly = value;
+                  if (loggable) state.logAction('Set Container Ly to ' + value.toFixed(1));
                 });
                 setChanged(true);
               }}
@@ -241,6 +248,7 @@ const DockingSettings = React.memo(() => {
                 if (value === null) return;
                 setCommonStore((state) => {
                   state.projectState.molecularContainer.lz = value;
+                  if (loggable) state.logAction('Set Container Lz to ' + value.toFixed(1));
                 });
                 setChanged(true);
               }}
@@ -440,6 +448,32 @@ const DockingSettings = React.memo(() => {
           }
         />
       </Popover>
+      <FloatButton
+        shape="square"
+        type="primary"
+        style={{
+          position: 'absolute',
+          top: '8px',
+          left: leftIndent + 44 + 'px',
+          height: '20px',
+          zIndex: 13,
+        }}
+        description={
+          <span style={{ fontSize: '20px' }}>
+            <CameraOutlined />
+          </span>
+        }
+        tooltip={t('molecularViewer.TakeScreenshot', lang)}
+        onClick={() => {
+          screenshot('reaction-chamber')
+            .then(() => {
+              if (loggable) logAction('Take Screenshot of Reaction Chamber');
+            })
+            .catch((reason) => {
+              showError(reason);
+            });
+        }}
+      />
       {protein?.name ? (
         <Popover
           title={
@@ -453,7 +487,7 @@ const DockingSettings = React.memo(() => {
             style={{
               position: 'absolute',
               top: '14px',
-              left: leftIndent + 50 + 'px',
+              left: leftIndent + 96 + 'px',
               zIndex: 13,
               fontSize: '20px',
               userSelect: 'none',

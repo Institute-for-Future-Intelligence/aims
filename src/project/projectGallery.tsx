@@ -114,6 +114,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const user = useStore(Selector.user);
   const language = useStore(Selector.language);
   const loggable = useStore.getState().loggable;
+  const logAction = useStore.getState().logAction;
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const hoveredMolecule = usePrimitiveStore(Selector.hoveredMolecule);
   const addMolecule = useStore(Selector.addMolecule);
@@ -865,14 +866,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       saveSvg('parallel-coordinates')
                         .then(() => {
                           showInfo(t('message.ScreenshotSaved', lang));
-                          if (loggable) {
-                            setCommonStore((state) => {
-                              state.actionInfo = {
-                                name: 'Take Screenshot of Property Space',
-                                timestamp: new Date().getTime(),
-                              };
-                            });
-                          }
+                          if (loggable) logAction('Take Screenshot of Property Space');
                         })
                         .catch((reason) => {
                           showError(reason);
@@ -965,14 +959,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       saveSvg('scatter-plot')
                         .then(() => {
                           showInfo(t('message.ScreenshotSaved', lang));
-                          if (loggable) {
-                            setCommonStore((state) => {
-                              state.actionInfo = {
-                                name: 'Take Screenshot of the Scatter Plot',
-                                timestamp: new Date().getTime(),
-                              };
-                            });
-                          }
+                          if (loggable) logAction('Take Screenshot of the Scatter Plot');
                         })
                         .catch((reason) => {
                           showError(reason);

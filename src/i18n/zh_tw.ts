@@ -262,7 +262,7 @@ export const i18n_zh_tw = {
       ProjectSettings: '專案設定',
       DisplayWindowSize: '展示視窗大小',
       OutputSelectedMoleculeToTest: '把選中的分子加到實驗中',
-      ToggleDragAndDropMoleculeMode: '切換到拖放分子的模式',
+      ToggleDragAndDropMoleculeMode: '按下此按鈕然後拖曳一個分子到右邊視窗的X-Y，Y-Z，或X-Z平面上。',
       NumberOfColumns: '列數',
       ImportMolecule: '輸入分子',
       MoleculeType: '分子類别',

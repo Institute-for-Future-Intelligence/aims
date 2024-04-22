@@ -19,14 +19,17 @@ import {
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
-import { ExperimentOutlined, EyeOutlined, ProfileOutlined, RightOutlined } from '@ant-design/icons';
+import { CameraOutlined, ExperimentOutlined, EyeOutlined, ProfileOutlined, RightOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import { Undoable } from '../undo/Undoable.ts';
+import { screenshot, showError } from '../helpers.ts';
 
 const DynamicsSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
+  const loggable = useStore.getState().loggable;
+  const logAction = useStore.getState().logAction;
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const molecularContainer = useStore(Selector.molecularContainer);
   const vdwBondCutoffRelative = useStore(Selector.vdwBondCutoffRelative) ?? 0.5;
@@ -64,6 +67,7 @@ const DynamicsSettings = React.memo(() => {
     } as Undoable;
     useStore.getState().addUndoable(undoable);
     showGallery(true);
+    if (loggable) logAction('Show Gallery');
   };
 
   const modelItems: TabsProps['items'] = useMemo(
@@ -92,6 +96,7 @@ const DynamicsSettings = React.memo(() => {
                     if (mdRef?.current) mdRef.current.container.lx = value;
                     setCommonStore((state) => {
                       state.projectState.molecularContainer.lx = value;
+                      if (state.loggable) state.logAction('Set Container Lx to ' + value.toFixed(1));
                     });
                     setChanged(true);
                   }}
@@ -117,6 +122,7 @@ const DynamicsSettings = React.memo(() => {
                     if (mdRef?.current) mdRef.current.container.ly = value;
                     setCommonStore((state) => {
                       state.projectState.molecularContainer.ly = value;
+                      if (state.loggable) state.logAction('Set Container Ly to ' + value.toFixed(1));
                     });
                     setChanged(true);
                   }}
@@ -142,6 +148,7 @@ const DynamicsSettings = React.memo(() => {
                     if (mdRef?.current) mdRef.current.container.lz = value;
                     setCommonStore((state) => {
                       state.projectState.molecularContainer.lz = value;
+                      if (state.loggable) state.logAction('Set Container Lz to ' + value.toFixed(1));
                     });
                     setChanged(true);
                   }}
@@ -184,6 +191,7 @@ const DynamicsSettings = React.memo(() => {
                     if (value === null) return;
                     setCommonStore((state) => {
                       state.projectState.vdwBondCutoffRelative = value;
+                      if (state.loggable) state.logAction('Set VDW Bond Cutoff to ' + value.toFixed(2));
                     });
                     setChanged(true);
                   }}
@@ -208,6 +216,7 @@ const DynamicsSettings = React.memo(() => {
                     if (value === null) return;
                     setCommonStore((state) => {
                       state.projectState.momentumScaleFactor = value;
+                      if (state.loggable) state.logAction('Set Momentum Scale Factor to ' + value.toFixed(1));
                     });
                     setChanged(true);
                   }}
@@ -232,6 +241,7 @@ const DynamicsSettings = React.memo(() => {
                     if (value === null) return;
                     setCommonStore((state) => {
                       state.projectState.forceScaleFactor = value;
+                      if (state.loggable) state.logAction('Set Force Scale Factor to ' + value.toFixed(1));
                     });
                     setChanged(true);
                   }}
@@ -256,6 +266,7 @@ const DynamicsSettings = React.memo(() => {
                     if (value === null) return;
                     setCommonStore((state) => {
                       state.projectState.kineticEnergyScaleFactor = value;
+                      if (state.loggable) state.logAction('Set Kinetic Energy Scale Factor to ' + value.toFixed(1));
                     });
                     setChanged(true);
                   }}
@@ -287,6 +298,7 @@ const DynamicsSettings = React.memo(() => {
                     if (value === null) return;
                     setCommonStore((state) => {
                       state.projectState.refreshInterval = value;
+                      if (state.loggable) state.logAction('Set Refresh Interval to ' + value.toFixed(0));
                     });
                     setChanged(true);
                   }}
@@ -310,6 +322,7 @@ const DynamicsSettings = React.memo(() => {
                     if (value === null) return;
                     setCommonStore((state) => {
                       state.projectState.collectInterval = value;
+                      if (state.loggable) state.logAction('Set Collection Interval to ' + value.toFixed(0));
                     });
                     setChanged(true);
                   }}
@@ -345,6 +358,7 @@ const DynamicsSettings = React.memo(() => {
           onChange={(checked: boolean) => {
             setCommonStore((state) => {
               state.projectState.constantTemperature = checked;
+              if (state.loggable) state.logAction('Set Constant Temperature to ' + checked);
             });
           }}
         />
@@ -362,6 +376,7 @@ const DynamicsSettings = React.memo(() => {
               if (value === null) return;
               setCommonStore((state) => {
                 state.projectState.temperature = value;
+                if (state.loggable) state.logAction('Set Temperature to ' + value.toFixed(1));
               });
               if (mdRef?.current) {
                 mdRef.current.setTemperature(value);
@@ -393,6 +408,7 @@ const DynamicsSettings = React.memo(() => {
             if (mdRef?.current) mdRef.current.timeStep = value;
             setCommonStore((state) => {
               state.projectState.timeStep = value;
+              if (state.loggable) state.logAction('Set Time Step to ' + value.toFixed(1));
             });
             setChanged(true);
           }}
@@ -583,6 +599,32 @@ const DynamicsSettings = React.memo(() => {
           }
         />
       </Popover>
+      <FloatButton
+        shape="square"
+        type="primary"
+        style={{
+          position: 'absolute',
+          top: '8px',
+          left: leftIndent + 132 + 'px',
+          height: '20px',
+          zIndex: 13,
+        }}
+        description={
+          <span style={{ fontSize: '20px' }}>
+            <CameraOutlined />
+          </span>
+        }
+        tooltip={t('molecularViewer.TakeScreenshot', lang)}
+        onClick={() => {
+          screenshot('reaction-chamber')
+            .then(() => {
+              if (loggable) logAction('Take Screenshot of Reaction Chamber');
+            })
+            .catch((reason) => {
+              showError(reason);
+            });
+        }}
+      />
       {mdRef?.current && (
         <Space
           direction={'horizontal'}

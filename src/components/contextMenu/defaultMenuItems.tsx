@@ -35,6 +35,7 @@ import { isCartoon } from '../../view/moleculeTools.ts';
 export const TranslateLigand = () => {
   const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
   const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const molecularContainer = useStore(Selector.molecularContainer);
@@ -44,14 +45,7 @@ export const TranslateLigand = () => {
 
   const postTranslateLigand = () => {
     updateViewer();
-    setCommonStore((state) => {
-      if (loggable) {
-        state.actionInfo = {
-          name: 'Translate Ligand',
-          timestamp: new Date().getTime(),
-        };
-      }
-    });
+    if (loggable) logAction('Translate Ligand');
   };
 
   return (
@@ -122,7 +116,6 @@ export const TranslateLigand = () => {
 
 export const RotateLigand = () => {
   const setCommonStore = useStore(Selector.set);
-  const loggable = useStore(Selector.loggable);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const ligand = useStore(Selector.ligand);
@@ -161,12 +154,7 @@ export const RotateLigand = () => {
         const angle = new Euler().setFromRotationMatrix(matrix);
         m.euler = [angle.x, angle.y, angle.z];
       }
-      if (loggable) {
-        state.actionInfo = {
-          name: 'Rotate Ligand',
-          timestamp: new Date().getTime(),
-        };
-      }
+      if (state.loggable) state.logAction('Rotate Ligand');
     });
     updateViewer();
   };
@@ -217,7 +205,6 @@ export const RotateLigand = () => {
 
 export const TranslateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
-  const loggable = useStore(Selector.loggable);
   const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const molecularContainer = useStore(Selector.molecularContainer);
@@ -250,12 +237,7 @@ export const TranslateMolecule = () => {
             a.position.z += displacement.z;
           }
         }
-        if (loggable) {
-          state.actionInfo = {
-            name: 'Translate Selected Molecule',
-            timestamp: new Date().getTime(),
-          };
-        }
+        if (state.loggable) state.logAction('Translate Selected Molecule');
       });
       setUpdateFlag(!updateFlag);
       updateViewer();
@@ -354,12 +336,7 @@ export const RotateMolecule = () => {
             a.position.z = m.atoms[i].position.z;
           }
         }
-        if (state.loggable) {
-          state.actionInfo = {
-            name: 'Rotate Selected Molecule',
-            timestamp: new Date().getTime(),
-          };
-        }
+        if (state.loggable) state.logAction('Rotate Selected Molecule');
       });
       updateViewer();
     }
@@ -403,7 +380,6 @@ export const RotateMolecule = () => {
 export const CutMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const testMolecules = useStore(Selector.testMolecules);
-  const loggable = useStore(Selector.loggable);
 
   const { t } = useTranslation();
   const lang = useLanguage();
@@ -419,12 +395,7 @@ export const CutMolecule = () => {
     });
     setCommonStore((state) => {
       state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
-      if (loggable) {
-        state.actionInfo = {
-          name: 'Cut Selected Molecule',
-          timestamp: new Date().getTime(),
-        };
-      }
+      if (state.loggable) state.logAction('Cut Selected Molecule');
     });
   };
 
@@ -436,8 +407,8 @@ export const CutMolecule = () => {
 };
 
 export const CopyMolecule = () => {
-  const setCommonStore = useStore(Selector.set);
   const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
 
   const { t } = useTranslation();
   const lang = useLanguage();
@@ -449,14 +420,7 @@ export const CopyMolecule = () => {
       state.copiedMoleculeIndex = state.pickedMoleculeIndex;
       state.cutMolecule = null;
     });
-    if (loggable) {
-      setCommonStore((state) => {
-        state.actionInfo = {
-          name: 'Copy Selected Molecule',
-          timestamp: new Date().getTime(),
-        };
-      });
-    }
+    if (loggable) logAction('Copy Selected Molecule');
   };
 
   return (
@@ -468,7 +432,6 @@ export const CopyMolecule = () => {
 
 export const PasteMolecule = () => {
   const setCommonStore = useStore(Selector.set);
-  const loggable = useStore(Selector.loggable);
   const testMolecules = useStore(Selector.testMolecules);
   const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
   const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
@@ -485,24 +448,14 @@ export const PasteMolecule = () => {
         const m = Molecule.clone(testMolecules[copiedMoleculeIndex]);
         m.setCenter(p);
         state.projectState.testMolecules.push(m);
-        if (loggable) {
-          state.actionInfo = {
-            name: 'Paste Copied Molecule',
-            timestamp: new Date().getTime(),
-          };
-        }
+        if (state.loggable) state.logAction('Paste Copied Molecule');
       });
     } else if (cutMolecule) {
       setCommonStore((state) => {
         const m = Molecule.clone(cutMolecule);
         m.setCenter(p);
         state.projectState.testMolecules.push(m);
-        if (loggable) {
-          state.actionInfo = {
-            name: 'Paste Cut Molecule',
-            timestamp: new Date().getTime(),
-          };
-        }
+        if (state.loggable) state.logAction('Paste Cut Molecule');
       });
     }
   };
@@ -560,22 +513,15 @@ export const AutoRotateCheckBox = ({ isMac }: { isMac?: boolean }) => {
 };
 
 export const Screenshot = () => {
-  const setCommonStore = useStore(Selector.set);
   const loggable = useStore.getState().loggable;
+  const logAction = useStore.getState().logAction;
   const { t } = useTranslation();
   const lang = useLanguage();
 
   const takeScreenshot = () => {
     screenshot('reaction-chamber')
       .then(() => {
-        if (loggable) {
-          setCommonStore((state) => {
-            state.actionInfo = {
-              name: 'Take Screenshot of Reaction Chamber',
-              timestamp: new Date().getTime(),
-            };
-          });
-        }
+        if (loggable) logAction('Take Screenshot of Reaction Chamber');
       })
       .catch((reason) => {
         showError(reason);

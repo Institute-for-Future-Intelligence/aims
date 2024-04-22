@@ -36,14 +36,7 @@ export const createExamplesMenu = (viewOnly: boolean) => {
       fetchProject(owner, title, setProjectState).finally(() => {
         setWaiting(false);
       });
-      if (useStore.getState().loggable) {
-        setCommonStore((state) => {
-          state.actionInfo = {
-            name: 'Open Example: ' + title,
-            timestamp: new Date().getTime(),
-          };
-        });
-      }
+      if (useStore.getState().loggable) useStore.getState().logAction('Open Example: ' + title);
       if (!viewOnly) {
         window.history.pushState({}, document.title, HOME_URL);
       }

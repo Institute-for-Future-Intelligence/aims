@@ -67,6 +67,7 @@ export interface CommonStoreState {
   addUndoable: (undoable: Undoable) => void;
   loggable: boolean;
   actionInfo: ActionInfo | undefined;
+  logAction: (name: string) => void;
   currentUndoable: Undoable | undefined;
 
   chemicalElements: { [key: string]: ChemicalElement };
@@ -201,6 +202,11 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           },
           loggable: false,
           actionInfo: undefined,
+          logAction(name: string) {
+            immerSet((state: CommonStoreState) => {
+              state.actionInfo = { name, timestamp: new Date().getTime() };
+            });
+          },
           currentUndoable: undefined,
 
           chemicalElements: {},
