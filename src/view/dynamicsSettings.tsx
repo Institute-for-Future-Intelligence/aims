@@ -3,13 +3,11 @@
  */
 
 import React, { useMemo } from 'react';
-import thermometer from '../assets/thermometer.png';
 import {
   Col,
   Descriptions,
   DescriptionsProps,
   FloatButton,
-  Image,
   InputNumber,
   Popover,
   Row,
@@ -21,7 +19,7 @@ import {
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
-import { AimOutlined, ExperimentOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { ExperimentOutlined, EyeOutlined, ProfileOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 
@@ -49,11 +47,11 @@ const DynamicsSettings = React.memo(() => {
     return { lng: language };
   }, [language]);
 
-  const items: TabsProps['items'] = useMemo(
+  const modelItems: TabsProps['items'] = useMemo(
     () => [
       {
         key: '1',
-        label: t('experiment.Model', lang),
+        label: t('experiment.Boundary', lang),
         children: (
           <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
             <Row gutter={16} style={{ paddingBottom: '4px' }}>
@@ -134,57 +132,21 @@ const DynamicsSettings = React.memo(() => {
           </div>
         ),
       },
+    ],
+    [lang, molecularContainer.lx, molecularContainer.ly, molecularContainer.lz, mdRef],
+  );
+
+  const createModelSettings = useMemo(() => {
+    return <Tabs defaultActiveKey="1" items={modelItems} />;
+  }, [modelItems]);
+
+  const displayItems: TabsProps['items'] = useMemo(
+    () => [
       {
-        key: '2',
-        label: t('experiment.Display', lang),
+        key: '1',
+        label: t('molecularViewer.Mechanics', lang),
         children: (
           <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
-            <Row gutter={16} style={{ paddingBottom: '4px' }}>
-              <Col span={12} style={{ paddingTop: '5px' }}>
-                <span>{t('experiment.RefreshingInterval', lang)}: </span>
-              </Col>
-              <Col span={12}>
-                <InputNumber
-                  addonAfter={t('experiment.Steps', lang)}
-                  min={1}
-                  max={50}
-                  style={{ width: '100%' }}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
-                  value={Math.round(refreshInterval)}
-                  step={1}
-                  onChange={(value) => {
-                    if (value === null) return;
-                    setCommonStore((state) => {
-                      state.projectState.refreshInterval = value;
-                    });
-                    setChanged(true);
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row gutter={16} style={{ paddingBottom: '4px' }}>
-              <Col span={12} style={{ paddingTop: '5px' }}>
-                <span>{t('experiment.CollectionInterval', lang)}: </span>
-              </Col>
-              <Col span={12}>
-                <InputNumber
-                  addonAfter={t('experiment.Steps', lang)}
-                  min={10}
-                  max={200}
-                  style={{ width: '100%' }}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
-                  value={Math.round(collectInterval)}
-                  step={1}
-                  onChange={(value) => {
-                    if (value === null) return;
-                    setCommonStore((state) => {
-                      state.projectState.collectInterval = value;
-                    });
-                    setChanged(true);
-                  }}
-                />
-              </Col>
-            </Row>
             <Row gutter={16} style={{ paddingBottom: '4px' }}>
               <Col span={12} style={{ paddingTop: '5px' }}>
                 <span>{t('experiment.VdwBondCutoffRelative', lang)}: </span>
@@ -284,28 +246,76 @@ const DynamicsSettings = React.memo(() => {
           </div>
         ),
       },
+      {
+        key: '2',
+        label: t('experiment.Intervals', lang),
+        children: (
+          <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.RefreshingInterval', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  addonAfter={t('experiment.Steps', lang)}
+                  min={1}
+                  max={50}
+                  style={{ width: '100%' }}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={Math.round(refreshInterval)}
+                  step={1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    setCommonStore((state) => {
+                      state.projectState.refreshInterval = value;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.CollectionInterval', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  addonAfter={t('experiment.Steps', lang)}
+                  min={10}
+                  max={200}
+                  style={{ width: '100%' }}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={Math.round(collectInterval)}
+                  step={1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    setCommonStore((state) => {
+                      state.projectState.collectInterval = value;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
+          </div>
+        ),
+      },
     ],
     [
       lang,
-      molecularContainer.lx,
-      molecularContainer.ly,
-      molecularContainer.lz,
-      constantTemperature,
-      temperature,
       vdwBondCutoffRelative,
       momentumScaleFactor,
       forceScaleFactor,
       kineticEnergyScaleFactor,
-      timeStep,
       refreshInterval,
       collectInterval,
       mdRef,
     ],
   );
 
-  const createContent = useMemo(() => {
-    return <Tabs defaultActiveKey="1" items={items} />;
-  }, [items]);
+  const createDisplaySettings = useMemo(() => {
+    return <Tabs defaultActiveKey="1" items={displayItems} />;
+  }, [displayItems]);
 
   const createThermometer = useMemo(() => {
     return (
@@ -372,7 +382,7 @@ const DynamicsSettings = React.memo(() => {
     );
   }, [timeStep, lang, mdRef]);
 
-  const createInfo = useMemo(() => {
+  const createContent = useMemo(() => {
     let atomCount = 0;
     let radialBondCount = 0;
     let angularBondCount = 0;
@@ -461,10 +471,10 @@ const DynamicsSettings = React.memo(() => {
       <Popover
         title={
           <div onClick={(e) => e.stopPropagation()}>
-            <AimOutlined /> {t('experiment.ExperimentSettings', lang)}
+            <ExperimentOutlined /> {t('experiment.ExperimentSettings', lang)}
           </div>
         }
-        content={createContent}
+        content={createModelSettings}
       >
         <FloatButton
           shape="square"
@@ -486,24 +496,52 @@ const DynamicsSettings = React.memo(() => {
       <Popover
         title={
           <div onClick={(e) => e.stopPropagation()}>
-            <InfoCircleOutlined /> {t('experiment.Information', lang)}
+            <EyeOutlined /> {t('experiment.DisplaySettings', lang)}
           </div>
         }
-        content={createInfo}
+        content={createDisplaySettings}
       >
-        <span
+        <FloatButton
+          shape="square"
+          type="primary"
           style={{
             position: 'absolute',
-            top: '14px',
-            left: '56px',
+            top: '8px',
+            left: '50px',
+            height: '20px',
             zIndex: 13,
-            fontSize: '20px',
-            userSelect: 'none',
-            color: 'lightgray',
           }}
-        >
-          {t('experiment.Molecules', lang)}
-        </span>
+          description={
+            <span style={{ fontSize: '20px' }}>
+              <EyeOutlined />
+            </span>
+          }
+        />
+      </Popover>
+      <Popover
+        title={
+          <div onClick={(e) => e.stopPropagation()}>
+            <ProfileOutlined /> {t('experiment.Content', lang)}
+          </div>
+        }
+        content={createContent}
+      >
+        <FloatButton
+          shape="square"
+          type="primary"
+          style={{
+            position: 'absolute',
+            top: '8px',
+            left: '94px',
+            height: '20px',
+            zIndex: 13,
+          }}
+          description={
+            <span style={{ fontSize: '20px' }}>
+              <ProfileOutlined />
+            </span>
+          }
+        />
       </Popover>
       {mdRef?.current && (
         <Space

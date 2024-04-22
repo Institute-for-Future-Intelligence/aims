@@ -56,12 +56,13 @@ export const createDefaultMenu = (
   if (projectType === ProjectType.MOLECULAR_MODELING) {
     const pickedMolecule = pickedMoleculeIndex !== -1 ? testMolecules[pickedMoleculeIndex] : null;
     if (pickedMolecule) {
+      const prop = useStore.getState().getProvidedMolecularProperties(pickedMolecule.name);
       items.push({
         key: 'molecule-name',
         label: (
           <>
             <MenuItem stayAfterClick={false} hasPadding={false} fontWeight={'bold'} cursor={'default'}>
-              {pickedMolecule.name + ' (#' + pickedMoleculeIndex + ')'}
+              {pickedMolecule.name + (prop?.formula ? ' ' + prop.formula : '') + ' (#' + pickedMoleculeIndex + ')'}
             </MenuItem>
             <hr />
           </>
