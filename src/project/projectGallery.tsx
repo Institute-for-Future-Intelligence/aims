@@ -48,6 +48,7 @@ import { evaluate, MathExpression } from 'mathjs';
 import { useRefStore } from '../stores/commonRef.ts';
 import { Vector2 } from 'three';
 import { View } from './View.tsx';
+import { Undoable } from '../undo/Undoable.ts';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);
@@ -223,10 +224,21 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const viewWidth = (totalWidth - gridGutter * (numberOfColumns + 2)) / numberOfColumns;
   const viewHeight = (viewWidth * 2) / 3;
 
-  const closeGallery = () => {
+  const hideGallery = (hide: boolean) => {
     setCommonStore((state) => {
-      state.projectState.hideGallery = true;
+      state.projectState.hideGallery = hide;
     });
+  };
+
+  const closeGallery = () => {
+    const undoable = {
+      name: 'Hide Gallery',
+      timestamp: Date.now(),
+      undo: () => hideGallery(false),
+      redo: () => hideGallery(true),
+    } as Undoable;
+    useStore.getState().addUndoable(undoable);
+    hideGallery(true);
   };
 
   const descriptionItems: CollapseProps['items'] = [

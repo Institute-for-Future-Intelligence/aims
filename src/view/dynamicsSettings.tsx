@@ -19,9 +19,10 @@ import {
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
-import { ExperimentOutlined, EyeOutlined, ProfileOutlined } from '@ant-design/icons';
+import { ExperimentOutlined, EyeOutlined, ProfileOutlined, RightOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useRefStore } from '../stores/commonRef.ts';
+import { Undoable } from '../undo/Undoable.ts';
 
 const DynamicsSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -39,6 +40,7 @@ const DynamicsSettings = React.memo(() => {
   const collectInterval = useStore(Selector.collectInterval) ?? 100;
   const updateInfoFlag = usePrimitiveStore(Selector.updateInfoFlag);
   const currentTemperature = usePrimitiveStore(Selector.currentTemperature);
+  const hideGallery = useStore(Selector.hideGallery);
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
 
@@ -46,6 +48,23 @@ const DynamicsSettings = React.memo(() => {
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
+
+  const showGallery = (show: boolean) => {
+    setCommonStore((state) => {
+      state.projectState.hideGallery = !show;
+    });
+  };
+
+  const openGallery = () => {
+    const undoable = {
+      name: 'Show Gallery',
+      timestamp: Date.now(),
+      undo: () => showGallery(false),
+      redo: () => showGallery(true),
+    } as Undoable;
+    useStore.getState().addUndoable(undoable);
+    showGallery(true);
+  };
 
   const modelItems: TabsProps['items'] = useMemo(
     () => [
@@ -466,8 +485,29 @@ const DynamicsSettings = React.memo(() => {
     );
   }, [lang, mdRef, updateInfoFlag]);
 
+  const leftIndent = hideGallery ? 50 : 8;
+
   return (
     <>
+      {hideGallery && (
+        <FloatButton
+          shape="square"
+          style={{
+            position: 'absolute',
+            top: '8px',
+            left: '6px',
+            height: '20px',
+            zIndex: 13,
+          }}
+          tooltip={t('menu.view.ShowGallery', lang)}
+          onClick={() => openGallery()}
+          description={
+            <span style={{ fontSize: '20px' }}>
+              <RightOutlined />
+            </span>
+          }
+        />
+      )}
       <Popover
         title={
           <div onClick={(e) => e.stopPropagation()}>
@@ -482,7 +522,7 @@ const DynamicsSettings = React.memo(() => {
           style={{
             position: 'absolute',
             top: '8px',
-            left: '6px',
+            left: leftIndent + 'px',
             height: '20px',
             zIndex: 13,
           }}
@@ -507,7 +547,7 @@ const DynamicsSettings = React.memo(() => {
           style={{
             position: 'absolute',
             top: '8px',
-            left: '50px',
+            left: leftIndent + 44 + 'px',
             height: '20px',
             zIndex: 13,
           }}
@@ -532,7 +572,7 @@ const DynamicsSettings = React.memo(() => {
           style={{
             position: 'absolute',
             top: '8px',
-            left: '94px',
+            left: leftIndent + 88 + 'px',
             height: '20px',
             zIndex: 13,
           }}

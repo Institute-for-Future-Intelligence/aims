@@ -9,9 +9,10 @@ import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { UndoableChange } from '../undo/UndoableChange';
 import { targetProteins } from '../internalDatabase';
-import { AimOutlined, ExperimentOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { AimOutlined, ExperimentOutlined, InfoCircleOutlined, RightOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { Util } from '../Util.ts';
+import { Undoable } from '../undo/Undoable.ts';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -29,6 +30,7 @@ const DockingSettings = React.memo(() => {
   const chamberViewerSelector = useStore(Selector.chamberViewerSelector);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const molecularContainer = useStore(Selector.molecularContainer);
+  const hideGallery = useStore(Selector.hideGallery);
 
   // onChange of a text area changes at every key typing, triggering the viewer to re-render each time.
   // So we store the intermediate result here
@@ -42,6 +44,23 @@ const DockingSettings = React.memo(() => {
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
+
+  const showGallery = (show: boolean) => {
+    setCommonStore((state) => {
+      state.projectState.hideGallery = !show;
+    });
+  };
+
+  const openGallery = () => {
+    const undoable = {
+      name: 'Show Gallery',
+      timestamp: Date.now(),
+      undo: () => showGallery(false),
+      redo: () => showGallery(true),
+    } as Undoable;
+    useStore.getState().addUndoable(undoable);
+    showGallery(true);
+  };
 
   const createContent = useMemo(() => {
     const setProtein = (targetName: string) => {
@@ -373,8 +392,29 @@ const DockingSettings = React.memo(() => {
     );
   }, [lang, proteinData]);
 
+  const leftIndent = hideGallery ? 50 : 8;
+
   return (
     <>
+      {hideGallery && (
+        <FloatButton
+          shape="square"
+          style={{
+            position: 'absolute',
+            top: '8px',
+            left: '6px',
+            height: '20px',
+            zIndex: 13,
+          }}
+          tooltip={t('menu.view.ShowGallery', lang)}
+          onClick={() => openGallery()}
+          description={
+            <span style={{ fontSize: '20px' }}>
+              <RightOutlined />
+            </span>
+          }
+        />
+      )}
       <Popover
         title={
           <div onClick={(e) => e.stopPropagation()}>
@@ -389,7 +429,7 @@ const DockingSettings = React.memo(() => {
           style={{
             position: 'absolute',
             top: '8px',
-            left: '6px',
+            left: leftIndent + 'px',
             height: '20px',
             zIndex: 13,
           }}
@@ -413,7 +453,7 @@ const DockingSettings = React.memo(() => {
             style={{
               position: 'absolute',
               top: '14px',
-              left: '56px',
+              left: leftIndent + 50 + 'px',
               zIndex: 13,
               fontSize: '20px',
               userSelect: 'none',
