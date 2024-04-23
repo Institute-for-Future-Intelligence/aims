@@ -18,6 +18,7 @@ export interface PrimitiveStoreState {
   updateViewerFlag: boolean;
   updateViewer: () => void;
   updateInfoFlag: boolean;
+  updateInfo: () => void;
 
   dragAndDropMolecule: boolean;
   hoveredMolecule: MoleculeInterface | null;
@@ -119,6 +120,11 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
       });
     },
     updateInfoFlag: false,
+    updateInfo() {
+      immerSet((state: PrimitiveStoreState) => {
+        state.updateInfoFlag = !state.updateInfoFlag;
+      });
+    },
 
     dragAndDropMolecule: false,
     hoveredMolecule: null,

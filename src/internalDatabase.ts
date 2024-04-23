@@ -18,6 +18,7 @@ import crystalUrl005 from './molecules/xyz/iron.xyz';
 import crystalUrl101 from './molecules/pdb/zeolite.pdb';
 import crystalUrl102 from './molecules/xyz/diamond.xyz';
 import crystalUrl103 from './molecules/xyz/graphite.xyz';
+import crystalUrl201 from './molecules/xyz/ice.xyz';
 
 import commonMoleculeUrl001 from './molecules/sdf/dihydrogen.sdf';
 import commonMoleculeUrl002 from './molecules/sdf/dioxygen.sdf';
@@ -167,6 +168,7 @@ export const crystals = [
   { url: crystalUrl101, internal: true, name: 'Zeolite' } as MoleculeInterface,
   { url: crystalUrl102, internal: true, name: 'Diamond' } as MoleculeInterface,
   { url: crystalUrl103, internal: true, name: 'Graphite' } as MoleculeInterface,
+  { url: crystalUrl201, internal: true, name: 'Ice' } as MoleculeInterface,
 ];
 
 export const commonMolecules = [

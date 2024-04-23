@@ -18,7 +18,6 @@ export class Atom {
   epsilon: number = 0.05; // van der Waals energy
   charge: number = 0;
   damp: number = 0;
-  restraint?: Restraint;
 
   displacement?: Vector3;
   velocity: Vector3;
@@ -147,21 +146,5 @@ export class Atom {
       this.force.y -= d * this.velocity.y;
       this.force.z -= d * this.velocity.z;
     }
-  }
-
-  // calculate force and return potential energy: v(r)=k*(ri-ri_0)^2/2
-  applyRestraint(): number {
-    let energy = 0;
-    if (this.restraint && this.force) {
-      const k = (this.restraint.strength * GF_CONVERSION_CONSTANT) / this.mass;
-      const dx = this.position.x - this.restraint.position.x;
-      const dy = this.position.y - this.restraint.position.y;
-      const dz = this.position.z - this.restraint.position.z;
-      this.force.x -= k * dx;
-      this.force.y -= k * dy;
-      this.force.z -= k * dz;
-      energy = 0.5 * this.restraint.strength * (dx * dx + dy * dy + dz * dz);
-    }
-    return energy;
   }
 }

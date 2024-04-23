@@ -30,6 +30,8 @@ export const updateViewer = (state: PrimitiveStoreState) => state.updateViewer;
 
 export const updateInfoFlag = (state: PrimitiveStoreState) => state.updateInfoFlag;
 
+export const updateInfo = (state: PrimitiveStoreState) => state.updateInfo;
+
 export const selectedPlane = (state: PrimitiveStoreState) => state.selectedPlane;
 
 export const xyPlaneVisible = (state: CommonStoreState) => state.projectState.xyPlaneVisible;

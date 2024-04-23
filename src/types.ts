@@ -8,6 +8,7 @@ import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode }
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import RCGroup from './lib/gfx/RCGroup';
 import { Molecule } from './models/Molecule.ts';
+import { Vector3 } from 'three';
 
 declare module '@react-three/fiber' {
   interface ThreeElements {
@@ -141,6 +142,15 @@ export interface MoleculeInterface {
   invisible?: boolean;
   excluded?: boolean;
   style?: MolecularViewerStyle;
+}
+
+export interface DamperInterface {
+  friction: number;
+}
+
+export interface RestraintInterface {
+  strength: number;
+  position: Vector3;
 }
 
 export interface MoleculeTransform {

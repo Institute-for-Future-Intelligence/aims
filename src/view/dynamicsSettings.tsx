@@ -454,7 +454,7 @@ const DynamicsSettings = React.memo(() => {
       {
         key: '1',
         label: t('projectPanel.MoleculeCount', lang),
-        children: mdRef?.current?.moleculeCount,
+        children: mdRef?.current?.moleculeCount ?? 0,
       },
       {
         key: '2',

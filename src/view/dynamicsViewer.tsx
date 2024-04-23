@@ -82,6 +82,7 @@ const DynamicsViewer = React.memo(
     const setCommonStore = useStore(Selector.set);
     const testMolecules = useStore(Selector.testMolecules);
     const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
+    const updateInfo = usePrimitiveStore(Selector.updateInfo);
     const pickMode = usePrimitiveStore(Selector.pickMode);
     const pickedAtomIndex = usePrimitiveStore(Selector.pickedAtomIndex);
     const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
@@ -181,9 +182,17 @@ const DynamicsViewer = React.memo(
       complexMapRef.current.clear();
       if (!testMolecules || testMolecules.length === 0) {
         setComplex(undefined);
-        molecularDynamicsRef.current = null;
+        if (molecularDynamicsRef.current) {
+          molecularDynamicsRef.current.atoms.length = 0;
+          molecularDynamicsRef.current.radialBonds.length = 0;
+          molecularDynamicsRef.current.angularBonds.length = 0;
+          molecularDynamicsRef.current.torsionalBonds.length = 0;
+          molecularDynamicsRef.current = null;
+        }
+        updateInfo();
         energyTimeSeries.clear();
         positionTimeSeriesMap.clear();
+        vdwBondsRef.current.length = 0;
         return;
       }
       if (setLoading) setLoading(true);
