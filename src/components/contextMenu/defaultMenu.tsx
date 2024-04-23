@@ -37,6 +37,7 @@ import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
 import { Molecule } from '../../models/Molecule.ts';
 import Element from '../../lib/chem/Element';
+import { ModelUtil } from '../../models/ModelUtil.ts';
 
 export const createDefaultMenu = (
   projectType: ProjectType,
@@ -50,6 +51,7 @@ export const createDefaultMenu = (
   protein: MoleculeInterface | null,
 ) => {
   const lang = { lng: useStore.getState().language };
+  const dampers = useStore.getState().projectState.dampers ?? [];
 
   const items: MenuProps['items'] = [];
 
@@ -183,7 +185,9 @@ export const createDefaultMenu = (
           label: (
             <>
               <MenuItem stayAfterClick={false} hasPadding={true}>
-                {i18n.t('experiment.DampingCoefficient', lang) + ': ' + pickedAtom.damp.toPrecision(2)}
+                {i18n.t('experiment.DampingCoefficient', lang) +
+                  ': ' +
+                  ModelUtil.getDamp(pickedAtomIndex, dampers).toPrecision(2)}
               </MenuItem>
             </>
           ),

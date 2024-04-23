@@ -20,6 +20,8 @@ import {
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from '../view/displayOptions.ts';
 import { Util } from '../Util.ts';
 import { Molecule } from '../models/Molecule.ts';
+import { Restraint } from '../models/Restraint.ts';
+import { Damper } from '../models/Damper.ts';
 
 export class ProjectUtil {
   static createDefaultProjectState() {
@@ -119,6 +121,8 @@ export class ProjectUtil {
       trajectoryAtomIndices: new Array<number>(),
       angularBondsVisible: false,
       torsionalBondsVisible: false,
+      restraints: new Array<Restraint>(),
+      dampers: new Array<Damper>(),
 
       testMolecules: new Array<Molecule>(),
 

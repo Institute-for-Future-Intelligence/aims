@@ -221,12 +221,12 @@ export class MolecularDynamics {
     }
     if (this.restraints.length > 0) {
       for (const r of this.restraints) {
-        this.potentialEnergy += r.compute();
+        this.potentialEnergy += r.compute(this.atoms);
       }
     }
     if (this.dampers.length > 0) {
       for (const d of this.dampers) {
-        d.compute();
+        d.compute(this.atoms);
       }
     }
   }

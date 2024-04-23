@@ -8,20 +8,21 @@ import { GF_CONVERSION_CONSTANT } from './physicalConstants.ts';
 export class Damper {
   static DEFAULT_FRICTION = 1;
 
-  atom: Atom;
-  friction: number;
+  indexOfAtom: number = -1;
+  friction: number = 0;
 
-  constructor(atom: Atom, strength: number) {
-    this.atom = atom;
+  constructor(indexOfAtom: number, strength: number) {
+    this.indexOfAtom = indexOfAtom;
     this.friction = strength;
   }
 
-  compute() {
-    if (this.friction > 0) {
+  compute(atoms: Atom[]) {
+    if (this.friction > 0 && this.indexOfAtom >= 0 && this.indexOfAtom < atoms.length) {
       const d = GF_CONVERSION_CONSTANT * this.friction;
-      this.atom.force.x -= d * this.atom.velocity.x;
-      this.atom.force.y -= d * this.atom.velocity.y;
-      this.atom.force.z -= d * this.atom.velocity.z;
+      const a = atoms[this.indexOfAtom];
+      a.force.x -= d * a.velocity.x;
+      a.force.y -= d * a.velocity.y;
+      a.force.z -= d * a.velocity.z;
     }
   }
 }

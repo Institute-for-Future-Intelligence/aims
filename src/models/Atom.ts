@@ -3,9 +3,8 @@
  */
 
 import { Vector3 } from 'three';
-import { Restraint } from './Restraint.ts';
 import { TWO_PI } from '../constants.ts';
-import { EV_CONVERTER, GF_CONVERSION_CONSTANT } from './physicalConstants.ts';
+import { EV_CONVERTER } from './physicalConstants.ts';
 import Element from '../lib/chem/Element';
 
 export class Atom {
@@ -17,7 +16,6 @@ export class Atom {
   sigma: number = 1; // van der Waals radius
   epsilon: number = 0.05; // van der Waals energy
   charge: number = 0;
-  damp: number = 0;
 
   displacement?: Vector3;
   velocity: Vector3;
@@ -69,7 +67,6 @@ export class Atom {
       newAtom.initialVelocity.copy(atom.initialVelocity);
     }
     newAtom.fixed = atom.fixed;
-    newAtom.damp = atom.damp;
     newAtom.charge = atom.charge;
     return newAtom;
   }
@@ -137,14 +134,5 @@ export class Atom {
     this.velocity.z += h * (this.force.z - this.acceleration.z);
     this.acceleration.copy(this.force);
     this.force.multiplyScalar(this.mass);
-  }
-
-  applyDamping() {
-    if (this.damp > 0 && this.force && this.velocity) {
-      const d = GF_CONVERSION_CONSTANT * this.damp;
-      this.force.x -= d * this.velocity.x;
-      this.force.y -= d * this.velocity.y;
-      this.force.z -= d * this.velocity.z;
-    }
   }
 }

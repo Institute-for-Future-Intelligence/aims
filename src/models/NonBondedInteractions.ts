@@ -232,7 +232,6 @@ export class NonBondedInteractions {
 
     for (let i = 0; i < atomCount; i++) {
       if (this.atoms[i].fixed) continue;
-      this.atoms[i].applyDamping();
       this.atoms[i].force.multiplyScalar(1 / this.atoms[i].mass);
     }
 

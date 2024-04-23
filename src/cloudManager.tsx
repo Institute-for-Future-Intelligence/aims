@@ -425,6 +425,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             trajectoryAtomIndices: data.trajectoryAtomIndices ?? [],
             angularBondsVisible: !!data.angularBondsVisible,
             torsionalBondsVisible: !!data.torsionalBondsVisible,
+            restraints: data.restraints ?? [],
+            dampers: data.dampers ?? [],
 
             testMolecules: ModelUtil.reconstructMoleculesFromFirestore(data.testMolecules),
 
@@ -657,7 +659,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           a.epsilon = b.epsilon;
           a.mass = b.mass;
           a.charge = b.charge;
-          a.damp = b.damp;
           a.fixed = b.fixed;
         }
         if (remote) {

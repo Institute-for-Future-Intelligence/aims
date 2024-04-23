@@ -287,3 +287,7 @@ export const angularBondsVisible = (state: CommonStoreState) => state.projectSta
 export const torsionalBondsMap = (state: CommonStoreState) => state.torsionalBondsMap;
 
 export const torsionalBondsVisible = (state: CommonStoreState) => state.projectState.torsionalBondsVisible;
+
+export const restraints = (state: CommonStoreState) => state.projectState.restraints;
+
+export const dampers = (state: CommonStoreState) => state.projectState.dampers;
