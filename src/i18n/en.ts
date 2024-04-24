@@ -185,6 +185,7 @@ export const i18n_en = {
 
     experiment: {
       FixAtom: 'Fix',
+      Restraint: 'Restraint',
       DampingCoefficient: 'Damping Coefficient',
       AtomicMass: 'Atomic Mass',
       AtomicRadius: 'Atomic Radius',

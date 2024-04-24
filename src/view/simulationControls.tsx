@@ -42,7 +42,7 @@ const Container = styled.div`
   border: 2px solid gray;
   border-radius: 10px;
   user-select: none;
-  z-index: 10000; // must be larger than that of the spinner so that this can be clicked
+  z-index: 10; // must be larger than that of the spinner so that this can be clicked
 `;
 
 const SimulationControls = React.memo(() => {

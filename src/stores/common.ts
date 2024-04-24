@@ -106,6 +106,8 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             immerSet((state: CommonStoreState) => {
               state.projectState.testMolecules = [];
               state.projectState.trajectoryAtomIndices = [];
+              state.projectState.restraints = [];
+              state.projectState.dampers = [];
             });
             usePrimitiveStore.getState().set((state) => {
               state.pickedMoleculeIndex = -1;

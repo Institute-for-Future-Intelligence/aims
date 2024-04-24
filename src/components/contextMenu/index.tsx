@@ -22,6 +22,7 @@ const DropdownContextMenu: React.FC<ContextMenuProps> = ({ children }) => {
   const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
   const projectType = useStore(Selector.projectType);
   const testMolecules = useStore(Selector.testMolecules);
+  const restraints = useStore(Selector.restraints);
   const ligand = useStore(Selector.ligand);
   const protein = useStore(Selector.protein);
 
@@ -36,6 +37,7 @@ const DropdownContextMenu: React.FC<ContextMenuProps> = ({ children }) => {
         cutMolecule,
         selectedPlane,
         testMolecules,
+        restraints,
         ligand,
         protein,
       )}

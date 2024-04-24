@@ -4,7 +4,7 @@
 
 import { useStore } from '../../stores/common';
 import i18n from '../../i18n/i18n';
-import type { MenuProps } from 'antd';
+import { InputNumber, MenuProps } from 'antd';
 import { MenuItem } from '../menuItem';
 import {
   AutoRotateCheckBox,
@@ -38,6 +38,9 @@ import { MoleculeInterface } from '../../types.ts';
 import { Molecule } from '../../models/Molecule.ts';
 import Element from '../../lib/chem/Element';
 import { ModelUtil } from '../../models/ModelUtil.ts';
+import React from 'react';
+import { Restraint } from '../../models/Restraint.ts';
+import { useRefStore } from '../../stores/commonRef.ts';
 
 export const createDefaultMenu = (
   projectType: ProjectType,
@@ -47,11 +50,11 @@ export const createDefaultMenu = (
   cutMolecule: MoleculeInterface | null,
   selectedPlane: number,
   testMolecules: Molecule[],
+  restraints: Restraint[],
   ligand: MoleculeInterface | null,
   protein: MoleculeInterface | null,
 ) => {
   const lang = { lng: useStore.getState().language };
-  const dampers = useStore.getState().projectState.dampers ?? [];
 
   const items: MenuProps['items'] = [];
 
@@ -121,6 +124,65 @@ export const createDefaultMenu = (
           },
         ],
       });
+
+      let iAtom = 0;
+      let nAtom = 0;
+      for (const [i, m] of testMolecules.entries()) {
+        if (i < pickedMoleculeIndex) {
+          iAtom += m.atoms.length;
+        } else {
+          nAtom = m.atoms.length;
+          break;
+        }
+      }
+      let res: Restraint | null = null;
+      if (restraints && restraints.length > 0) {
+        for (const r of restraints) {
+          if (r.indexOfAtom === iAtom) {
+            res = r;
+            break;
+          }
+        }
+      }
+      items.push({
+        key: 'molecule-restraint',
+        label: (
+          <MenuItem stayAfterClick={true}>
+            <span style={{ paddingRight: '10px' }}>{i18n.t('experiment.Restraint', lang) + ': '}</span>
+            <InputNumber
+              addonAfter={'eV/Å²'}
+              min={0}
+              max={100}
+              precision={2}
+              // make sure that we round up the number as toDegrees may cause things like .999999999
+              value={res ? parseFloat(res.strength.toFixed(2)) : 0}
+              step={0.01}
+              onChange={(value) => {
+                if (value === null) return;
+                if (res) {
+                  useStore.getState().set((state) => {
+                    for (const r of state.projectState.restraints) {
+                      if (r.indexOfAtom >= iAtom && r.indexOfAtom < iAtom + nAtom) {
+                        r.strength = value;
+                      }
+                    }
+                  });
+                } else {
+                  const mdRef = useRefStore.getState().molecularDynamicsRef;
+                  useStore.getState().set((state) => {
+                    if (mdRef?.current) {
+                      for (let i = 0; i < nAtom; i++) {
+                        const j = i + iAtom;
+                        state.projectState.restraints.push(new Restraint(j, value, mdRef.current.atoms[j].position));
+                      }
+                    }
+                  });
+                }
+              }}
+            />
+          </MenuItem>
+        ),
+      });
     } else if (pickedAtomIndex !== -1) {
       const pickedAtom = useStore.getState().getAtomByIndex(pickedAtomIndex);
       if (pickedAtom) {
@@ -141,7 +203,7 @@ export const createDefaultMenu = (
           label: (
             <>
               <MenuItem stayAfterClick={false} hasPadding={true}>
-                {i18n.t('experiment.AtomicMass', lang) + ': ' + pickedAtom.mass.toFixed(2)}
+                {i18n.t('experiment.AtomicMass', lang) + ': ' + pickedAtom.mass.toFixed(2) + ' g/mol'}
               </MenuItem>
             </>
           ),
@@ -152,7 +214,7 @@ export const createDefaultMenu = (
           label: (
             <>
               <MenuItem stayAfterClick={false} hasPadding={true}>
-                {i18n.t('experiment.AtomicRadius', lang) + ': ' + pickedAtom.sigma.toFixed(3)}
+                {i18n.t('experiment.AtomicRadius', lang) + ': ' + pickedAtom.sigma.toFixed(3) + ' Å'}
               </MenuItem>
             </>
           ),
@@ -163,23 +225,26 @@ export const createDefaultMenu = (
           label: (
             <>
               <MenuItem stayAfterClick={false} hasPadding={true}>
-                {i18n.t('experiment.CohesiveEnergy', lang) + ': ' + pickedAtom.epsilon.toFixed(3)}
+                {i18n.t('experiment.CohesiveEnergy', lang) + ': ' + pickedAtom.epsilon.toFixed(3) + ' eV'}
               </MenuItem>
             </>
           ),
         });
 
+        const charge = pickedAtom.charge;
         items.push({
           key: 'atom-charge',
           label: (
             <>
               <MenuItem stayAfterClick={false} hasPadding={true}>
-                {i18n.t('experiment.ElectricCharge', lang) + ': ' + pickedAtom.charge.toPrecision(2)}
+                {i18n.t('experiment.ElectricCharge', lang) + ': ' + (charge !== 0 ? charge.toPrecision(2) : 0) + ' e'}
               </MenuItem>
             </>
           ),
         });
 
+        const dampers = useStore.getState().projectState.dampers;
+        const damp = dampers && dampers.length > 0 ? ModelUtil.getDamp(pickedAtomIndex, dampers) : 0;
         items.push({
           key: 'atom-damp',
           label: (
@@ -187,7 +252,8 @@ export const createDefaultMenu = (
               <MenuItem stayAfterClick={false} hasPadding={true}>
                 {i18n.t('experiment.DampingCoefficient', lang) +
                   ': ' +
-                  ModelUtil.getDamp(pickedAtomIndex, dampers).toPrecision(2)}
+                  (damp > 0 ? damp.toPrecision(2) : 0) +
+                  ' eV⋅fs/Å²'}
               </MenuItem>
             </>
           ),
