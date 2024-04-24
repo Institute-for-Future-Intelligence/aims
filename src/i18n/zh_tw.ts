@@ -187,6 +187,7 @@ export const i18n_zh_tw = {
       FixAtom: '固定',
       Restraint: '彈性約束',
       DampingCoefficient: '阻尼係數',
+      AtomicCoordinates: '座標',
       AtomicMass: '質量',
       AtomicRadius: '半徑',
       CohesiveEnergy: '凝聚能',

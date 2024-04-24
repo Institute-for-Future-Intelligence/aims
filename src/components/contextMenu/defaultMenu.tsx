@@ -160,21 +160,36 @@ export const createDefaultMenu = (
               onChange={(value) => {
                 if (value === null) return;
                 if (res) {
-                  useStore.getState().set((state) => {
-                    for (const r of state.projectState.restraints) {
-                      if (r.indexOfAtom >= iAtom && r.indexOfAtom < iAtom + nAtom) {
-                        r.strength = value;
+                  if (value > 0) {
+                    useStore.getState().set((state) => {
+                      for (const r of state.projectState.restraints) {
+                        if (r.indexOfAtom >= iAtom && r.indexOfAtom < iAtom + nAtom) {
+                          r.strength = value;
+                        }
                       }
-                    }
-                  });
+                    });
+                  } else {
+                    useStore.getState().set((state) => {
+                      state.projectState.restraints = state.projectState.restraints.filter(
+                        (r) => r.indexOfAtom < iAtom || r.indexOfAtom >= iAtom + nAtom,
+                      );
+                      const mdRef = useRefStore.getState().molecularDynamicsRef;
+                      if (mdRef?.current) {
+                        mdRef.current.restraints = [...state.projectState.restraints];
+                      }
+                    });
+                  }
                 } else {
                   const mdRef = useRefStore.getState().molecularDynamicsRef;
                   useStore.getState().set((state) => {
                     if (mdRef?.current) {
                       for (let i = 0; i < nAtom; i++) {
                         const j = i + iAtom;
-                        state.projectState.restraints.push(new Restraint(j, value, mdRef.current.atoms[j].position));
+                        state.projectState.restraints.push(
+                          new Restraint(j, value, mdRef.current.atoms[j].position.clone()),
+                        );
                       }
+                      mdRef.current.restraints = [...state.projectState.restraints];
                     }
                   });
                 }
@@ -197,6 +212,28 @@ export const createDefaultMenu = (
             </>
           ),
         });
+
+        const mdRef = useRefStore.getState().molecularDynamicsRef;
+        if (mdRef?.current) {
+          const p = mdRef.current.atoms[pickedAtomIndex].position;
+          items.push({
+            key: 'atom-coordinates',
+            label: (
+              <>
+                <MenuItem stayAfterClick={false} hasPadding={true}>
+                  {i18n.t('experiment.AtomicCoordinates', lang) +
+                    ': (' +
+                    p.x.toFixed(2) +
+                    ', ' +
+                    p.y.toFixed(2) +
+                    ', ' +
+                    p.z.toFixed(2) +
+                    ') Å'}
+                </MenuItem>
+              </>
+            ),
+          });
+        }
 
         items.push({
           key: 'atom-mass',

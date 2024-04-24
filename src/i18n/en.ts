@@ -187,6 +187,7 @@ export const i18n_en = {
       FixAtom: 'Fix',
       Restraint: 'Restraint',
       DampingCoefficient: 'Damping Coefficient',
+      AtomicCoordinates: 'Coordinates',
       AtomicMass: 'Atomic Mass',
       AtomicRadius: 'Atomic Radius',
       CohesiveEnergy: 'Cohesive Energy',
