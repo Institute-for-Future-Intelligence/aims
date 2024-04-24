@@ -138,8 +138,8 @@ const ReactionChamber = React.memo(() => {
   const getIntersection = (e: React.MouseEvent) => {
     const rect = (e.target as HTMLDivElement).getBoundingClientRect();
     if (canvasRef.current && cameraRef?.current && raycasterRef?.current) {
-      const x = ((e.clientX - rect.left) / canvasRef.current.width) * 2 - 1;
-      const y = -((e.clientY - rect.top) / canvasRef.current.height) * 2 + 1;
+      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
       const planes = [];
       if (xyPlaneVisible && planeXYRef?.current) planes.push(planeXYRef.current);
       if (yzPlaneVisible && planeYZRef?.current) planes.push(planeYZRef.current);
