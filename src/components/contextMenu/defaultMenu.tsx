@@ -28,11 +28,12 @@ import {
   MomentumVectorCheckBox,
   ForceVectorCheckBox,
   TrajectoryCheckBox,
-  FixedCheckBox,
+  FixAtomCheckBox,
   AngularBondsCheckBox,
   TorsionalBondsCheckBox,
   IndividualMoleculeStyleRadioGroup,
-  RestrainMolecule,
+  RestrainMoleculeInputField,
+  RestrainAtomInputField,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
@@ -126,7 +127,7 @@ export const createDefaultMenu = (
 
       items.push({
         key: 'molecule-restraint',
-        label: <RestrainMolecule />,
+        label: <RestrainMoleculeInputField />,
       });
     } else if (pickedAtomIndex !== -1) {
       const pickedAtom = useStore.getState().getAtomByIndex(pickedAtomIndex);
@@ -228,12 +229,17 @@ export const createDefaultMenu = (
 
         items.push({
           key: 'atom-fix',
-          label: <FixedCheckBox />,
+          label: <FixAtomCheckBox />,
         });
 
         items.push({
           key: 'atom-trajectory',
           label: <TrajectoryCheckBox />,
+        });
+
+        items.push({
+          key: 'atom-restraint',
+          label: <RestrainAtomInputField />,
         });
       }
     } else {

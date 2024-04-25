@@ -473,7 +473,7 @@ export const PasteMolecule = () => {
   );
 };
 
-export const RestrainMolecule = () => {
+export const RestrainMoleculeInputField = () => {
   const setCommonStore = useStore(Selector.set);
   const testMolecules = useStore(Selector.testMolecules);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
@@ -762,7 +762,7 @@ export const TrajectoryCheckBox = () => {
   );
 };
 
-export const FixedCheckBox = () => {
+export const FixAtomCheckBox = () => {
   const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const getAtomByIndex = useStore(Selector.getAtomByIndex);
   const fixAtomByIndex = useStore(Selector.fixAtomByIndex);
@@ -808,6 +808,76 @@ export const FixedCheckBox = () => {
       >
         {t('experiment.FixAtom', lang)}
       </Checkbox>
+    </MenuItem>
+  );
+};
+
+export const RestrainAtomInputField = () => {
+  const getAtomByIndex = useStore(Selector.getAtomByIndex);
+  const restrainAtomByIndex = useStore(Selector.restrainAtomByIndex);
+  const pickedIndex = usePrimitiveStore(Selector.pickedAtomIndex);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const updateViewer = usePrimitiveStore(Selector.updateViewer);
+  const mdRef = useRefStore.getState().molecularDynamicsRef;
+
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const [value, setValue] = useState<number>(0);
+
+  const restraint = useMemo(() => {
+    if (pickedIndex !== -1) {
+      const a = getAtomByIndex(pickedIndex);
+      if (a) return a.restraint;
+    }
+    return null;
+  }, [pickedIndex]);
+
+  useEffect(() => {
+    setValue(restraint?.strength ?? 0);
+  }, [restraint]);
+
+  const setStrength = (strength: number) => {
+    if (pickedIndex !== -1) {
+      restrainAtomByIndex(pickedIndex, strength);
+      setChanged(true);
+      if (mdRef?.current) {
+        const a = mdRef.current.atoms[pickedIndex];
+        if (a) {
+          if (a.restraint) {
+            if (strength > 0) {
+              a.restraint.strength = strength;
+            } else {
+              a.restraint = undefined;
+            }
+          } else {
+            if (strength > 0) {
+              a.restraint = new Restraint(strength, a.position.clone());
+            }
+          }
+        }
+      }
+      updateViewer();
+    }
+  };
+
+  return (
+    <MenuItem stayAfterClick={true} hasPadding={true}>
+      <span style={{ paddingRight: '10px' }}>{t('experiment.Restraint', lang) + ': '}</span>
+      <InputNumber
+        addonAfter={'eV/Å²'}
+        min={0}
+        max={100}
+        precision={2}
+        // make sure that we round up the number as toDegrees may cause things like .999999999
+        value={parseFloat(value.toFixed(2))}
+        step={0.01}
+        onChange={(s) => {
+          if (s === null) return;
+          setValue(s);
+          setStrength(s);
+        }}
+      />
     </MenuItem>
   );
 };

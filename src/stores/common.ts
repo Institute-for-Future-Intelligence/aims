@@ -22,6 +22,7 @@ import { ProjectUtil } from '../project/ProjectUtil.ts';
 import { Protein } from '../models/Protein.ts';
 import { ModelUtil } from '../models/ModelUtil.ts';
 import { Atom } from '../models/Atom.ts';
+import { Restraint } from '../models/Restraint.ts';
 import { Triple } from '../models/Triple.ts';
 import { Quadruple } from '../models/Quadruple.ts';
 import { usePrimitiveStore } from './commonPrimitive.ts';
@@ -43,6 +44,7 @@ export interface CommonStoreState {
 
   deleteAllAtoms: () => void;
   fixAtomByIndex: (index: number, fixed: boolean) => void;
+  restrainAtomByIndex: (index: number, strength: number) => void;
   getAtomByIndex: (index: number) => Atom | null;
 
   // have to use objects as local storage does not accept maps
@@ -120,6 +122,30 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                 for (const a of m.atoms) {
                   if (i === index) {
                     a.fixed = fixed;
+                    break loop1;
+                  }
+                  i++;
+                }
+              }
+            });
+          },
+          restrainAtomByIndex(index: number, strength: number) {
+            immerSet((state: CommonStoreState) => {
+              let i = 0;
+              loop1: for (const m of state.projectState.testMolecules) {
+                for (const a of m.atoms) {
+                  if (i === index) {
+                    if (a.restraint) {
+                      if (strength > 0) {
+                        a.restraint.strength = strength;
+                      } else {
+                        a.restraint = undefined;
+                      }
+                    } else {
+                      if (strength > 0) {
+                        a.restraint = new Restraint(strength, a.position.clone());
+                      }
+                    }
                     break loop1;
                   }
                   i++;
