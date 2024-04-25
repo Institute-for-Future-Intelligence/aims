@@ -651,9 +651,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           a.velocity.x = b.velocity.x;
           a.velocity.y = b.velocity.y;
           a.velocity.z = b.velocity.z;
-          a.force.x = b.force.x;
-          a.force.y = b.force.y;
-          a.force.z = b.force.z;
           a.sigma = b.sigma;
           a.epsilon = b.epsilon;
           a.mass = b.mass;
@@ -683,10 +680,12 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       // get rid of unnecessary variables
       for (const m of ps.testMolecules) {
         for (const a of m.atoms) {
+          delete a.force;
           delete a.acceleration;
           delete a.displacement;
           delete a.initialPosition;
           delete a.initialVelocity;
+          if (!a.fixed) delete a.fixed;
           if (a.restraint && a.restraint.strength === 0) delete a.restraint;
         }
       }

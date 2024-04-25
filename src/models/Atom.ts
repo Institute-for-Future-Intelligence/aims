@@ -9,22 +9,24 @@ import Element from '../lib/chem/Element';
 import { Restraint } from './Restraint.ts';
 
 export class Atom {
+  // essential variables that should be persisted
   index: number;
   elementSymbol: string;
   position: Vector3;
+  velocity: Vector3;
 
+  // variables that can be created
   mass: number = 10;
   sigma: number = 1; // van der Waals radius
   epsilon: number = 0.05; // van der Waals energy
   charge: number = 0;
 
   displacement?: Vector3;
-  velocity: Vector3;
   acceleration?: Vector3;
-  force: Vector3;
-  restraint?: Restraint;
+  force?: Vector3;
 
-  fixed: boolean = false;
+  restraint?: Restraint;
+  fixed?: boolean;
 
   initialPosition?: Vector3;
   initialVelocity?: Vector3;
@@ -54,7 +56,7 @@ export class Atom {
       new Vector3(atom.position.x, atom.position.y, atom.position.z),
     );
     newAtom.velocity.copy(atom.velocity);
-    newAtom.force.copy(atom.force);
+    newAtom.force = new Vector3();
     if (atom.displacement) {
       newAtom.displacement = new Vector3();
     }
@@ -119,9 +121,11 @@ export class Atom {
       const dx = this.position.x - this.restraint.position.x;
       const dy = this.position.y - this.restraint.position.y;
       const dz = this.position.z - this.restraint.position.z;
-      this.force.x -= k * dx;
-      this.force.y -= k * dy;
-      this.force.z -= k * dz;
+      if (this.force) {
+        this.force.x -= k * dx;
+        this.force.y -= k * dy;
+        this.force.z -= k * dz;
+      }
       return 0.5 * this.restraint.strength * (dx * dx + dy * dy + dz * dz);
     }
     return 0;

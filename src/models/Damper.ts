@@ -20,9 +20,11 @@ export class Damper {
     if (this.friction > 0 && this.indexOfAtom >= 0 && this.indexOfAtom < atoms.length) {
       const d = GF_CONVERSION_CONSTANT * this.friction;
       const a = atoms[this.indexOfAtom];
-      a.force.x -= d * a.velocity.x;
-      a.force.y -= d * a.velocity.y;
-      a.force.z -= d * a.velocity.z;
+      if (a.force) {
+        a.force.x -= d * a.velocity.x;
+        a.force.y -= d * a.velocity.y;
+        a.force.z -= d * a.velocity.z;
+      }
     }
   }
 }

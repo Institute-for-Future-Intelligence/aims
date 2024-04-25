@@ -242,7 +242,7 @@ const DynamicsViewer = React.memo(
         if (molecule.atoms) {
           a.position.copy(molecule.atoms[i].position);
           a.velocity.copy(molecule.atoms[i].velocity);
-          a.force.copy(molecule.atoms[i].force);
+          a.force?.copy(molecule.atoms[i].force as Vector3);
           a.fixed = molecule.atoms[i].fixed;
           a.restraint = molecule.atoms[i].restraint?.clone();
           molecule.atoms[i].epsilon = a.epsilon;
@@ -667,8 +667,8 @@ const DynamicsViewer = React.memo(
               arr.push(
                 m.atoms.map((a, i) => {
                   const radius = Element.getByName(a.elementSymbol).radius * styleScaleFactor;
-                  const force = a.force.length() * forceScaleFactor * 1000;
-                  normalized.copy(a.force).normalize();
+                  const force = (a.force as Vector3).length() * forceScaleFactor * 1000;
+                  normalized.copy(a.force as Vector3).normalize();
                   quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
                   const euler = new Euler().setFromQuaternion(quaternion);
                   normalized.multiplyScalar(radius + force / 2);
@@ -702,8 +702,8 @@ const DynamicsViewer = React.memo(
               arr.push(
                 m.atoms.map((a, i) => {
                   const radius = Element.getByName(a.elementSymbol).radius * styleScaleFactor;
-                  const force = a.force.length() * forceScaleFactor * 1000;
-                  normalized.copy(a.force).normalize();
+                  const force = (a.force as Vector3).length() * forceScaleFactor * 1000;
+                  normalized.copy(a.force as Vector3).normalize();
                   quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
                   const euler = new Euler().setFromQuaternion(quaternion);
                   normalized.multiplyScalar(radius + force + 0.2);
