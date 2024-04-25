@@ -58,15 +58,6 @@ export class TorsionalBond {
     return this.atom1 === atom || this.atom2 === atom || this.atom3 === atom || this.atom4 === atom;
   }
 
-  containsAtomIndex(index: number): boolean {
-    return (
-      this.atom1.index === index ||
-      this.atom2.index === index ||
-      this.atom3.index === index ||
-      this.atom4.index === index
-    );
-  }
-
   getCurrentDihedral(): number {
     return TorsionalBond.getDihedral(this.atom1, this.atom2, this.atom3, this.atom4);
   }

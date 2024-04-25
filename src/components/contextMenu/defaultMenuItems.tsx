@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Euler, Matrix4, Vector3 } from 'three';
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
@@ -31,6 +31,7 @@ import { Util } from '../../Util.ts';
 import { Molecule } from '../../models/Molecule.ts';
 import { useDataStore } from '../../stores/commonData.ts';
 import { isCartoon } from '../../view/moleculeTools.ts';
+import { Restraint } from '../../models/Restraint.ts';
 
 export const TranslateLigand = () => {
   const setCommonStore = useStore(Selector.set);
@@ -468,6 +469,88 @@ export const PasteMolecule = () => {
           : copiedMoleculeIndex !== -1
             ? ' ' + testMolecules[copiedMoleculeIndex]?.name
             : '')}
+    </MenuItem>
+  );
+};
+
+export const RestrainMolecule = () => {
+  const setCommonStore = useStore(Selector.set);
+  const testMolecules = useStore(Selector.testMolecules);
+  const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
+  const moleculesRef = useRefStore.getState().moleculesRef;
+
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const [value, setValue] = useState<number>(0);
+
+  const restraint = useMemo(() => {
+    if (pickedIndex !== -1) return testMolecules[pickedIndex].atoms[0].restraint;
+    return null;
+  }, [pickedIndex, testMolecules]);
+
+  useEffect(() => {
+    setValue(restraint?.strength ?? 0);
+  }, [restraint]);
+
+  const setRestraint = (value: number) => {
+    const mol = moleculesRef?.current ? moleculesRef.current[pickedIndex] : null;
+    if (restraint) {
+      if (value > 0) {
+        setCommonStore((state) => {
+          if (mol === null) return;
+          const testMolecule = state.projectState.testMolecules[pickedIndex];
+          if (testMolecule) {
+            for (let i = 0; i < testMolecule.atoms.length; i++) {
+              if (testMolecule.atoms[i].restraint) (testMolecule.atoms[i].restraint as Restraint).strength = value;
+              if (mol.atoms[i].restraint) (mol.atoms[i].restraint as Restraint).strength = value;
+            }
+          }
+        });
+      } else {
+        setCommonStore((state) => {
+          if (mol === null) return;
+          const testMolecule = state.projectState.testMolecules[pickedIndex];
+          if (testMolecule) {
+            for (let i = 0; i < testMolecule.atoms.length; i++) {
+              testMolecule.atoms[i].restraint = undefined;
+              mol.atoms[i].restraint = undefined;
+            }
+          }
+        });
+      }
+    } else {
+      setCommonStore((state) => {
+        if (mol === null) return;
+        const testMolecule = state.projectState.testMolecules[pickedIndex];
+        if (testMolecule) {
+          for (let i = 0; i < testMolecule.atoms.length; i++) {
+            const r = new Restraint(value, mol.atoms[i].position.clone());
+            testMolecule.atoms[i].restraint = r;
+            mol.atoms[i].restraint = r;
+          }
+        }
+      });
+    }
+  };
+
+  return (
+    <MenuItem stayAfterClick={true}>
+      <span style={{ paddingRight: '10px' }}>{t('experiment.Restraint', lang) + ': '}</span>
+      <InputNumber
+        addonAfter={'eV/Å²'}
+        min={0}
+        max={100}
+        precision={2}
+        // make sure that we round up the number as toDegrees may cause things like .999999999
+        value={parseFloat(value.toFixed(2))}
+        step={0.01}
+        onChange={(s) => {
+          if (s === null) return;
+          setValue(s);
+          setRestraint(s);
+        }}
+      />
     </MenuItem>
   );
 };

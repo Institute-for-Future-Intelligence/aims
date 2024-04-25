@@ -31,10 +31,6 @@ export class RadialBond {
     return this.atom1 === atom || this.atom2 === atom;
   }
 
-  containsAtomIndex(index: number): boolean {
-    return this.atom1.index === index || this.atom2.index === index;
-  }
-
   getCurrentLength(): number {
     return this.atom1.position.distanceTo(this.atom2.position);
   }

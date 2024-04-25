@@ -4,7 +4,7 @@
 
 import { useStore } from '../../stores/common';
 import i18n from '../../i18n/i18n';
-import { InputNumber, MenuProps } from 'antd';
+import { MenuProps } from 'antd';
 import { MenuItem } from '../menuItem';
 import {
   AutoRotateCheckBox,
@@ -32,6 +32,7 @@ import {
   AngularBondsCheckBox,
   TorsionalBondsCheckBox,
   IndividualMoleculeStyleRadioGroup,
+  RestrainMolecule,
 } from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
@@ -39,7 +40,6 @@ import { Molecule } from '../../models/Molecule.ts';
 import Element from '../../lib/chem/Element';
 import { ModelUtil } from '../../models/ModelUtil.ts';
 import React from 'react';
-import { Restraint } from '../../models/Restraint.ts';
 import { useRefStore } from '../../stores/commonRef.ts';
 
 export const createDefaultMenu = (
@@ -124,69 +124,9 @@ export const createDefaultMenu = (
         ],
       });
 
-      let res: Restraint | undefined = undefined;
-      if (pickedMoleculeIndex !== -1) {
-        res = useStore.getState().projectState.testMolecules[pickedMoleculeIndex].atoms[0].restraint;
-      }
       items.push({
         key: 'molecule-restraint',
-        label: (
-          <MenuItem stayAfterClick={true}>
-            <span style={{ paddingRight: '10px' }}>{i18n.t('experiment.Restraint', lang) + ': '}</span>
-            <InputNumber
-              addonAfter={'eV/Å²'}
-              min={0}
-              max={100}
-              precision={2}
-              // make sure that we round up the number as toDegrees may cause things like .999999999
-              value={res ? parseFloat(res.strength.toFixed(2)) : 0}
-              step={0.01}
-              onChange={(value) => {
-                if (value === null) return;
-                const moleculesRef = useRefStore.getState().moleculesRef;
-                const mol = moleculesRef?.current ? moleculesRef.current[pickedMoleculeIndex] : null;
-                if (res) {
-                  if (value > 0) {
-                    useStore.getState().set((state) => {
-                      if (mol === null) return;
-                      const testMolecule = state.projectState.testMolecules[pickedMoleculeIndex];
-                      if (testMolecule) {
-                        for (let i = 0; i < testMolecule.atoms.length; i++) {
-                          if (testMolecule.atoms[i].restraint)
-                            (testMolecule.atoms[i].restraint as Restraint).strength = value;
-                          if (mol.atoms[i].restraint) (mol.atoms[i].restraint as Restraint).strength = value;
-                        }
-                      }
-                    });
-                  } else {
-                    useStore.getState().set((state) => {
-                      if (mol === null) return;
-                      const testMolecule = state.projectState.testMolecules[pickedMoleculeIndex];
-                      if (testMolecule) {
-                        for (let i = 0; i < testMolecule.atoms.length; i++) {
-                          testMolecule.atoms[i].restraint = undefined;
-                          mol.atoms[i].restraint = undefined;
-                        }
-                      }
-                    });
-                  }
-                } else {
-                  useStore.getState().set((state) => {
-                    if (mol === null) return;
-                    const testMolecule = state.projectState.testMolecules[pickedMoleculeIndex];
-                    if (testMolecule) {
-                      for (let i = 0; i < testMolecule.atoms.length; i++) {
-                        const r = new Restraint(value, mol.atoms[i].position.clone());
-                        testMolecule.atoms[i].restraint = r;
-                        mol.atoms[i].restraint = r;
-                      }
-                    }
-                  });
-                }
-              }}
-            />
-          </MenuItem>
-        ),
+        label: <RestrainMolecule />,
       });
     } else if (pickedAtomIndex !== -1) {
       const pickedAtom = useStore.getState().getAtomByIndex(pickedAtomIndex);

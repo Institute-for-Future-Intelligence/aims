@@ -50,10 +50,6 @@ export class AngularBond {
     return this.atom1 === atom || this.atom2 === atom || this.atom3 === atom;
   }
 
-  containsAtomIndex(index: number): boolean {
-    return this.atom1.index === index || this.atom2.index === index || this.atom3.index === index;
-  }
-
   getCurrentAngle(): number {
     return AngularBond.getAngle(this.atom1, this.atom2, this.atom3);
   }
