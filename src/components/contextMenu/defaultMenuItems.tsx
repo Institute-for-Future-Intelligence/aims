@@ -487,6 +487,7 @@ export const AutoRotateCheckBox = ({ isMac }: { isMac?: boolean }) => {
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
+        style={{ width: '100%' }}
         checked={autoRotate}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
@@ -551,6 +552,7 @@ export const AxesCheckBox = () => {
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
+        style={{ width: '100%' }}
         checked={axes}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
@@ -591,6 +593,7 @@ export const ContainerCheckBox = () => {
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
+        style={{ width: '100%' }}
         checked={visible}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
@@ -651,6 +654,7 @@ export const TrajectoryCheckBox = () => {
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
+        style={{ width: '100%' }}
         checked={trajectoryAtomIndices.includes(pickedAtomIndex)}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
@@ -700,6 +704,7 @@ export const FixedCheckBox = () => {
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
+        style={{ width: '100%' }}
         checked={!!getAtomByIndex(pickedAtomIndex)?.fixed}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
@@ -740,6 +745,7 @@ export const VdwBondsCheckBox = () => {
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
+        style={{ width: '100%' }}
         checked={visible}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
@@ -780,6 +786,7 @@ export const AngularBondsCheckBox = () => {
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
+        style={{ width: '100%' }}
         checked={visible}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
@@ -820,6 +827,7 @@ export const TorsionalBondsCheckBox = () => {
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
+        style={{ width: '100%' }}
         checked={visible}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
@@ -860,6 +868,7 @@ export const MomentumVectorCheckBox = () => {
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
+        style={{ width: '100%' }}
         checked={visible}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
@@ -900,6 +909,7 @@ export const ForceVectorCheckBox = () => {
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
+        style={{ width: '100%' }}
         checked={visible}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
@@ -940,6 +950,7 @@ export const FogCheckBox = () => {
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
+        style={{ width: '100%' }}
         checked={foggy}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
@@ -980,6 +991,7 @@ export const GalleryCheckBox = () => {
   return (
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
+        style={{ width: '100%' }}
         checked={!hideGallery}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
@@ -1095,7 +1107,7 @@ export const IndividualMoleculeStyleRadioGroup = () => {
           {INDIVIDUAL_MOLECULE_STYLE_LABELS.map((radio, idx) => {
             if (!multipleResidues && isCartoon(radio.value)) return null;
             return (
-              <Radio key={`${idx}-${radio.value}`} value={radio.value}>
+              <Radio key={`${idx}-${radio.value}`} value={radio.value} style={{ width: '100%' }}>
                 {t(radio.label, lang)}
               </Radio>
             );
@@ -1157,7 +1169,7 @@ export const GlobalStyleRadioGroup = () => {
           {CHAMBER_STYLE_LABELS.map((radio, idx) => {
             if (!multipleResidues && isCartoon(radio.value)) return null;
             return (
-              <Radio key={`${idx}-${radio.value}`} value={radio.value}>
+              <Radio key={`${idx}-${radio.value}`} value={radio.value} style={{ width: '100%' }}>
                 {t(radio.label, lang)}
               </Radio>
             );
@@ -1206,7 +1218,7 @@ export const MaterialRadioGroup = () => {
       >
         <Space direction="vertical">
           {MATERIAL_LABELS.map((radio, idx) => (
-            <Radio key={`${idx}-${radio.value}`} value={radio.value}>
+            <Radio key={`${idx}-${radio.value}`} value={radio.value} style={{ width: '100%' }}>
               {t(radio.label, lang)}
             </Radio>
           ))}
@@ -1254,7 +1266,7 @@ export const ColoringRadioGroup = () => {
       >
         <Space direction="vertical">
           {CHAMBER_COLORING_LABELS.map((radio, idx) => (
-            <Radio key={`${idx}-${radio.value}`} value={radio.value}>
+            <Radio key={`${idx}-${radio.value}`} value={radio.value} style={{ width: '100%' }}>
               {t(radio.label, lang)}
             </Radio>
           ))}
@@ -1301,13 +1313,21 @@ export const SpaceshipDisplayModeRadioGroup = () => {
         }}
       >
         <Space direction="vertical">
-          <Radio key={SpaceshipDisplayMode.NONE} value={SpaceshipDisplayMode.NONE}>
+          <Radio key={SpaceshipDisplayMode.NONE} value={SpaceshipDisplayMode.NONE} style={{ width: '100%' }}>
             {t('word.None', lang)}
           </Radio>
-          <Radio key={SpaceshipDisplayMode.OUTSIDE_VIEW} value={SpaceshipDisplayMode.OUTSIDE_VIEW}>
+          <Radio
+            key={SpaceshipDisplayMode.OUTSIDE_VIEW}
+            value={SpaceshipDisplayMode.OUTSIDE_VIEW}
+            style={{ width: '100%' }}
+          >
             {t('spaceship.OutsideView', lang)}
           </Radio>
-          <Radio key={SpaceshipDisplayMode.INSIDE_VIEW} value={SpaceshipDisplayMode.INSIDE_VIEW}>
+          <Radio
+            key={SpaceshipDisplayMode.INSIDE_VIEW}
+            value={SpaceshipDisplayMode.INSIDE_VIEW}
+            style={{ width: '100%' }}
+          >
             {t('spaceship.InsideView', lang)}
           </Radio>
         </Space>

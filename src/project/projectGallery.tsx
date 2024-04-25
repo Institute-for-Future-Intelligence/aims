@@ -845,11 +845,11 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                           }}
                           value={projectDataColoring ?? DataColoring.ALL}
                         >
-                          <Radio style={{ fontSize: '12px' }} value={DataColoring.ALL}>
+                          <Radio style={{ fontSize: '12px', width: '100%' }} value={DataColoring.ALL}>
                             {t('projectPanel.SameColorForAllMolecules', lang)}
                           </Radio>
                           <br />
-                          <Radio style={{ fontSize: '12px' }} value={DataColoring.INDIVIDUALS}>
+                          <Radio style={{ fontSize: '12px', width: '100%' }} value={DataColoring.INDIVIDUALS}>
                             {t('projectPanel.OneColorForEachMolecule', lang)}
                           </Radio>
                         </Radio.Group>

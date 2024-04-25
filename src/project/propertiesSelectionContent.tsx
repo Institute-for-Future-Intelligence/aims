@@ -93,6 +93,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
   return (
     <div>
       <Checkbox
+        style={{ width: '100%' }}
         onChange={(e) => {
           atomCountSelectionRef.current = e.target.checked;
           selectProperty(atomCountSelectionRef.current, 'atomCount');
@@ -104,6 +105,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
       </Checkbox>
       <br />
       <Checkbox
+        style={{ width: '100%' }}
         onChange={(e) => {
           bondCountSelectionRef.current = e.target.checked;
           selectProperty(bondCountSelectionRef.current, 'bondCount');
@@ -115,6 +117,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
       </Checkbox>
       <br />
       <Checkbox
+        style={{ width: '100%' }}
         onChange={(e) => {
           massSelectionRef.current = e.target.checked;
           selectProperty(massSelectionRef.current, 'molecularMass');
@@ -126,6 +129,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
       </Checkbox>
       <br />
       <Checkbox
+        style={{ width: '100%' }}
         onChange={(e) => {
           logPSelectionRef.current = e.target.checked;
           selectProperty(logPSelectionRef.current, 'logP');
@@ -137,6 +141,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
       </Checkbox>
       <br />
       <Checkbox
+        style={{ width: '100%' }}
         onChange={(e) => {
           hBondDonorCountSelectionRef.current = e.target.checked;
           selectProperty(hBondDonorCountSelectionRef.current, 'hydrogenBondDonorCount');
@@ -148,6 +153,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
       </Checkbox>
       <br />
       <Checkbox
+        style={{ width: '100%' }}
         onChange={(e) => {
           hBondAcceptorCountSelectionRef.current = e.target.checked;
           selectProperty(hBondAcceptorCountSelectionRef.current, 'hydrogenBondAcceptorCount');
@@ -159,6 +165,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
       </Checkbox>
       <br />
       <Checkbox
+        style={{ width: '100%' }}
         onChange={(e) => {
           rotatableBondCountSelectionRef.current = e.target.checked;
           selectProperty(rotatableBondCountSelectionRef.current, 'rotatableBondCount');
@@ -170,6 +177,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
       </Checkbox>
       <br />
       <Checkbox
+        style={{ width: '100%' }}
         onChange={(e) => {
           polarSurfaceAreaSelectionRef.current = e.target.checked;
           selectProperty(polarSurfaceAreaSelectionRef.current, 'polarSurfaceArea');
@@ -181,6 +189,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
       </Checkbox>
       <br />
       <Checkbox
+        style={{ width: '100%' }}
         onChange={(e) => {
           heavyAtomCountSelectionRef.current = e.target.checked;
           selectProperty(heavyAtomCountSelectionRef.current, 'heavyAtomCount');
@@ -192,6 +201,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
       </Checkbox>
       <br />
       <Checkbox
+        style={{ width: '100%' }}
         onChange={(e) => {
           complexitySelectionRef.current = e.target.checked;
           selectProperty(complexitySelectionRef.current, 'complexity');
@@ -203,6 +213,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
       </Checkbox>
       <br />
       <Checkbox
+        style={{ width: '100%' }}
         onChange={(e) => {
           densitySelectionRef.current = e.target.checked;
           selectProperty(densitySelectionRef.current, 'density');
@@ -214,6 +225,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
       </Checkbox>
       <br />
       <Checkbox
+        style={{ width: '100%' }}
         onChange={(e) => {
           boilingPointSelectionRef.current = e.target.checked;
           selectProperty(boilingPointSelectionRef.current, 'boilingPoint');
@@ -225,6 +237,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
       </Checkbox>
       <br />
       <Checkbox
+        style={{ width: '100%' }}
         onChange={(e) => {
           meltingPointSelectionRef.current = e.target.checked;
           selectProperty(meltingPointSelectionRef.current, 'meltingPoint');

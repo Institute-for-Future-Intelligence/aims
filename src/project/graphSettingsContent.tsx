@@ -38,6 +38,7 @@ const GraphSettingsContent = React.memo(() => {
       <Space style={{ fontSize: '12px', paddingBottom: '8px' }}>
         <Space>{t('projectPanel.GridLines', lang) + ':'}</Space>
         <Checkbox
+          style={{ width: '100%' }}
           onChange={(e) => {
             const checked = e.target.checked;
             setCommonStore((state) => {
@@ -56,6 +57,7 @@ const GraphSettingsContent = React.memo(() => {
           <span style={{ fontSize: '12px' }}>{t('projectPanel.HorizontalLines', lang)}</span>
         </Checkbox>
         <Checkbox
+          style={{ width: '100%' }}
           onChange={(e) => {
             const checked = e.target.checked;
             setCommonStore((state) => {

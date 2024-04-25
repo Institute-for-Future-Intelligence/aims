@@ -22,7 +22,8 @@ import { createEditMenu } from './components/mainMenu/editMenu';
 import { Language } from './constants';
 import { createExamplesMenu } from './components/mainMenu/examplesMenu.tsx';
 
-const radioStyle = {
+const languageRadioStyle = {
+  width: '100%',
   display: 'block',
   height: '30px',
   paddingLeft: '10px',
@@ -162,13 +163,13 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
                 });
               }}
             >
-              <Radio style={radioStyle} value={'en'}>
+              <Radio style={languageRadioStyle} value={'en'}>
                 {Language.English}
               </Radio>
-              <Radio style={radioStyle} value={'zh_cn'}>
+              <Radio style={languageRadioStyle} value={'zh_cn'}>
                 {Language.ChineseSimplified}
               </Radio>
-              <Radio style={radioStyle} value={'zh_tw'}>
+              <Radio style={languageRadioStyle} value={'zh_tw'}>
                 {Language.ChineseTraditional}
               </Radio>
             </Radio.Group>
