@@ -4,8 +4,9 @@
 
 import { Vector3 } from 'three';
 import { TWO_PI } from '../constants.ts';
-import { EV_CONVERTER } from './physicalConstants.ts';
+import { EV_CONVERTER, GF_CONVERSION_CONSTANT } from './physicalConstants.ts';
 import Element from '../lib/chem/Element';
+import { Restraint } from './Restraint.ts';
 
 export class Atom {
   index: number;
@@ -21,6 +22,7 @@ export class Atom {
   velocity: Vector3;
   acceleration?: Vector3;
   force: Vector3;
+  restraint?: Restraint;
 
   fixed: boolean = false;
 
@@ -44,8 +46,8 @@ export class Atom {
     this.sigma = elem.radius;
   }
 
-  // for atom serialized from Firestore
-  static clone(atom: Atom): Atom {
+  // for atom serialized from Firestore, set full to be true
+  static clone(atom: Atom, full?: boolean): Atom {
     const newAtom = new Atom(
       atom.index,
       atom.elementSymbol,
@@ -68,6 +70,13 @@ export class Atom {
     }
     newAtom.fixed = atom.fixed;
     newAtom.charge = atom.charge;
+    if (full) {
+      if (atom.restraint) {
+        // cannot use Vector3.clone() as the object from Firestore is not actually a Vector3
+        const p = new Vector3(atom.restraint.position.x, atom.restraint.position.y, atom.restraint.position.z);
+        newAtom.restraint = new Restraint(atom.restraint.strength, p);
+      }
+    }
     return newAtom;
   }
 
@@ -101,6 +110,21 @@ export class Atom {
   getKineticEnergy() {
     if (!this.velocity || !this.mass) return 0;
     return 0.5 * this.mass * this.velocity.lengthSq() * EV_CONVERTER;
+  }
+
+  // calculate force and return potential energy: v(r)=k*(ri-ri_0)^2/2
+  computeRestraint(): number {
+    if (this.restraint && this.restraint.strength > 0) {
+      const k = (this.restraint.strength * GF_CONVERSION_CONSTANT) / this.mass;
+      const dx = this.position.x - this.restraint.position.x;
+      const dy = this.position.y - this.restraint.position.y;
+      const dz = this.position.z - this.restraint.position.z;
+      this.force.x -= k * dx;
+      this.force.y -= k * dy;
+      this.force.z -= k * dz;
+      return 0.5 * this.restraint.strength * (dx * dx + dy * dy + dz * dz);
+    }
+    return 0;
   }
 
   /* predict new position using 2nd order Taylor expansion: dt2 = dt*dt/2 */

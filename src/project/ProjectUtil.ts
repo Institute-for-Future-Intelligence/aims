@@ -121,7 +121,6 @@ export class ProjectUtil {
       trajectoryAtomIndices: new Array<number>(),
       angularBondsVisible: false,
       torsionalBondsVisible: false,
-      restraints: new Array<Restraint>(),
       dampers: new Array<Damper>(),
 
       testMolecules: new Array<Molecule>(),

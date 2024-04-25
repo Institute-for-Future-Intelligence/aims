@@ -72,7 +72,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const moleculesRef = useRefStore.getState().moleculesRef;
   const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
-  const positionTimeSeriesMap = useDataStore(Selector.positionimeSeriesMap);
+  const positionTimeSeriesMap = useDataStore(Selector.positionTimeSeriesMap);
 
   const [updateFlag, setUpdateFlag] = useState(false);
   const [updateMyProjectsFlag, setUpdateMyProjectsFlag] = useState(false);
@@ -283,7 +283,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           .doc(user.uid)
           .set({
             uid: user.uid,
-            noLogging: !!user.noLogging,
+            noLogging: user.noLogging,
             schoolID: user.schoolID ?? SchoolID.UNKNOWN,
             classID: user.classID ?? ClassID.UNKNOWN,
             since: dayjs(new Date()).format('MM/DD/YYYY hh:mm A'),
@@ -425,7 +425,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             trajectoryAtomIndices: data.trajectoryAtomIndices ?? [],
             angularBondsVisible: !!data.angularBondsVisible,
             torsionalBondsVisible: !!data.torsionalBondsVisible,
-            restraints: data.restraints ?? [],
             dampers: data.dampers ?? [],
 
             testMolecules: ModelUtil.reconstructMoleculesFromFirestore(data.testMolecules),
@@ -688,6 +687,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           delete a.displacement;
           delete a.initialPosition;
           delete a.initialVelocity;
+          if (a.restraint && a.restraint.strength === 0) delete a.restraint;
         }
       }
     }

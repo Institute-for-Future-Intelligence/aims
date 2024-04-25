@@ -71,7 +71,7 @@ export class ModelUtil {
     if (!m && !Array.isArray(m)) return [];
     const array: Molecule[] = [];
     for (const x of m) {
-      array.push(Molecule.clone(x));
+      array.push(Molecule.clone(x, true));
     }
     return array;
   }

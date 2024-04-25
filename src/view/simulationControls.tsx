@@ -52,7 +52,7 @@ const SimulationControls = React.memo(() => {
   const startSimulation = usePrimitiveStore(Selector.startSimulation);
   const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
   const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
-  const positionTimeSeriesMap = useDataStore(Selector.positionimeSeriesMap);
+  const positionTimeSeriesMap = useDataStore(Selector.positionTimeSeriesMap);
   const energyGraphVisible = useStore(Selector.energyGraphVisible);
   const temperature = useStore(Selector.temperature);
   const constantTemperature = useStore(Selector.constantTemperature);

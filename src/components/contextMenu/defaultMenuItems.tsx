@@ -620,7 +620,7 @@ export const TrajectoryCheckBox = () => {
   const pickedAtomIndex = usePrimitiveStore(Selector.pickedAtomIndex);
   const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const trajectoryAtomIndices = useStore(Selector.trajectoryAtomIndices) ?? [];
-  const positionTimeSeriesMap = useDataStore(Selector.positionimeSeriesMap);
+  const positionTimeSeriesMap = useDataStore(Selector.positionTimeSeriesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
   const lang = useLanguage();

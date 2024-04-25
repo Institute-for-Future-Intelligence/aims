@@ -35,12 +35,12 @@ export class Molecule implements MoleculeInterface {
     this.center = new Vector3();
   }
 
-  // for molecule serialized from Firestore
-  static clone(molecule: Molecule): Molecule {
+  // for molecule serialized from Firestore, set full to be true
+  static clone(molecule: Molecule, full?: boolean): Molecule {
     const map = new Map<number, Atom>();
     const newAtoms: Atom[] = [];
     for (const [i, a] of molecule.atoms.entries()) {
-      const clone = Atom.clone(a);
+      const clone = Atom.clone(a, full);
       map.set(i, clone);
       newAtoms.push(clone);
     }

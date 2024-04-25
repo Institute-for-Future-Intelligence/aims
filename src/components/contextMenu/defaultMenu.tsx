@@ -50,7 +50,6 @@ export const createDefaultMenu = (
   cutMolecule: MoleculeInterface | null,
   selectedPlane: number,
   testMolecules: Molecule[],
-  restraints: Restraint[],
   ligand: MoleculeInterface | null,
   protein: MoleculeInterface | null,
 ) => {
@@ -125,24 +124,9 @@ export const createDefaultMenu = (
         ],
       });
 
-      let iAtom = 0;
-      let nAtom = 0;
-      for (const [i, m] of testMolecules.entries()) {
-        if (i < pickedMoleculeIndex) {
-          iAtom += m.atoms.length;
-        } else {
-          nAtom = m.atoms.length;
-          break;
-        }
-      }
-      let res: Restraint | null = null;
-      if (restraints && restraints.length > 0) {
-        for (const r of restraints) {
-          if (r.indexOfAtom === iAtom) {
-            res = r;
-            break;
-          }
-        }
+      let res: Restraint | undefined = undefined;
+      if (pickedMoleculeIndex !== -1) {
+        res = useStore.getState().projectState.testMolecules[pickedMoleculeIndex].atoms[0].restraint;
       }
       items.push({
         key: 'molecule-restraint',
@@ -159,37 +143,43 @@ export const createDefaultMenu = (
               step={0.01}
               onChange={(value) => {
                 if (value === null) return;
+                const moleculesRef = useRefStore.getState().moleculesRef;
+                const mol = moleculesRef?.current ? moleculesRef.current[pickedMoleculeIndex] : null;
                 if (res) {
                   if (value > 0) {
                     useStore.getState().set((state) => {
-                      for (const r of state.projectState.restraints) {
-                        if (r.indexOfAtom >= iAtom && r.indexOfAtom < iAtom + nAtom) {
-                          r.strength = value;
+                      if (mol === null) return;
+                      const testMolecule = state.projectState.testMolecules[pickedMoleculeIndex];
+                      if (testMolecule) {
+                        for (let i = 0; i < testMolecule.atoms.length; i++) {
+                          if (testMolecule.atoms[i].restraint)
+                            (testMolecule.atoms[i].restraint as Restraint).strength = value;
+                          if (mol.atoms[i].restraint) (mol.atoms[i].restraint as Restraint).strength = value;
                         }
                       }
                     });
                   } else {
                     useStore.getState().set((state) => {
-                      state.projectState.restraints = state.projectState.restraints.filter(
-                        (r) => r.indexOfAtom < iAtom || r.indexOfAtom >= iAtom + nAtom,
-                      );
-                      const mdRef = useRefStore.getState().molecularDynamicsRef;
-                      if (mdRef?.current) {
-                        mdRef.current.restraints = [...state.projectState.restraints];
+                      if (mol === null) return;
+                      const testMolecule = state.projectState.testMolecules[pickedMoleculeIndex];
+                      if (testMolecule) {
+                        for (let i = 0; i < testMolecule.atoms.length; i++) {
+                          testMolecule.atoms[i].restraint = undefined;
+                          mol.atoms[i].restraint = undefined;
+                        }
                       }
                     });
                   }
                 } else {
-                  const mdRef = useRefStore.getState().molecularDynamicsRef;
                   useStore.getState().set((state) => {
-                    if (mdRef?.current) {
-                      for (let i = 0; i < nAtom; i++) {
-                        const j = i + iAtom;
-                        state.projectState.restraints.push(
-                          new Restraint(j, value, mdRef.current.atoms[j].position.clone()),
-                        );
+                    if (mol === null) return;
+                    const testMolecule = state.projectState.testMolecules[pickedMoleculeIndex];
+                    if (testMolecule) {
+                      for (let i = 0; i < testMolecule.atoms.length; i++) {
+                        const r = new Restraint(value, mol.atoms[i].position.clone());
+                        testMolecule.atoms[i].restraint = r;
+                        mol.atoms[i].restraint = r;
                       }
-                      mdRef.current.restraints = [...state.projectState.restraints];
                     }
                   });
                 }

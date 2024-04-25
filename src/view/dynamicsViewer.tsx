@@ -95,9 +95,8 @@ const DynamicsViewer = React.memo(
     const forceScaleFactor = useStore(Selector.forceScaleFactor) ?? 1;
     const kineticEnergyScaleFactor = useStore(Selector.kineticEnergyScaleFactor) ?? 1;
     const molecularContainer = useStore(Selector.molecularContainer);
-    const restraints = useStore(Selector.restraints);
     const timeStep = useStore(Selector.timeStep);
-    const positionTimeSeriesMap = useDataStore(Selector.positionimeSeriesMap);
+    const positionTimeSeriesMap = useDataStore(Selector.positionTimeSeriesMap);
     const angularBondsMap = useStore(Selector.angularBondsMap);
     const angularBondsVisible = useStore(Selector.angularBondsVisible);
     const torsionalBondsMap = useStore(Selector.torsionalBondsMap);
@@ -245,6 +244,7 @@ const DynamicsViewer = React.memo(
           a.velocity.copy(molecule.atoms[i].velocity);
           a.force.copy(molecule.atoms[i].force);
           a.fixed = molecule.atoms[i].fixed;
+          a.restraint = molecule.atoms[i].restraint?.clone();
           molecule.atoms[i].epsilon = a.epsilon;
         }
         a.initialPosition?.copy(a.position);
@@ -331,7 +331,7 @@ const DynamicsViewer = React.memo(
         moleculeMapRef.current.clear();
         complexMapRef.current.clear();
         setComplex(joinComplexes(moleculesRef.current, complexesRef.current));
-        molecularDynamicsRef.current = new MolecularDynamics(moleculesRef.current, molecularContainer, restraints);
+        molecularDynamicsRef.current = new MolecularDynamics(moleculesRef.current, molecularContainer);
         molecularDynamicsRef.current.timeStep = timeStep;
         molecularDynamicsRef.current.updateKineticEnergy();
         usePrimitiveStore.getState().set((state) => {

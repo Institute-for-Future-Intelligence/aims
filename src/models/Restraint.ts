@@ -5,13 +5,16 @@
 import { Vector3 } from 'three';
 
 export class Restraint {
-  indexOfAtom: number = -1;
-  strength: number = 0;
+  strength: number;
   position: Vector3;
 
-  constructor(indexOfAtom: number, strength: number, position: Vector3) {
-    this.indexOfAtom = indexOfAtom;
+  constructor(strength: number, position: Vector3) {
     this.strength = strength;
     this.position = position;
+  }
+
+  clone(): Restraint {
+    // just in case: don't use Vector3.clone() as the object from Firestore is not actually a Vector3
+    return new Restraint(this.strength, new Vector3(this.position.x, this.position.y, this.position.z));
   }
 }

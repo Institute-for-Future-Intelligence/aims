@@ -22,11 +22,10 @@ import { TorsionalBond } from './TorsionalBond.ts';
 import { MolecularContainer } from '../types.ts';
 import { NonBondedInteractions } from './NonBondedInteractions.ts';
 import { Molecule } from './Molecule.ts';
-import { GF_CONVERSION_CONSTANT, UNIT_EV_OVER_KB, VT_CONVERSION_CONSTANT } from './physicalConstants.ts';
+import { UNIT_EV_OVER_KB, VT_CONVERSION_CONSTANT } from './physicalConstants.ts';
 import { ZERO_TOLERANCE } from '../constants.ts';
 import { ModelUtil } from './ModelUtil.ts';
 import { HeatBath } from './HeatBath.ts';
-import { Restraint } from './Restraint.ts';
 import { Damper } from './Damper.ts';
 
 export class MolecularDynamics {
@@ -35,7 +34,6 @@ export class MolecularDynamics {
   radialBonds: RadialBond[];
   angularBonds: AngularBond[];
   torsionalBonds: TorsionalBond[];
-  restraints: Restraint[];
   dampers: Damper[];
   container: MolecularContainer;
   potentialEnergy: number; // total potential energy, not average
@@ -48,13 +46,12 @@ export class MolecularDynamics {
   indexOfStep: number = 0;
   heatBath: HeatBath;
 
-  constructor(molecules: Molecule[], container: MolecularContainer, restraints: Restraint[]) {
+  constructor(molecules: Molecule[], container: MolecularContainer) {
     this.moleculeCount = molecules.length;
     this.atoms = [];
     this.radialBonds = [];
     this.angularBonds = [];
     this.torsionalBonds = [];
-    this.restraints = [...restraints];
     this.dampers = [];
     for (const m of molecules) {
       this.atoms.push(...m.atoms);
@@ -219,11 +216,9 @@ export class MolecularDynamics {
         this.potentialEnergy += tb.compute();
       }
     }
-    if (this.restraints.length > 0) {
-      for (const r of this.restraints) {
-        if (r.strength > 0 && r.indexOfAtom >= 0 && r.indexOfAtom < this.atoms.length) {
-          this.potentialEnergy += this.computeRestraint(r);
-        }
+    for (const a of this.atoms) {
+      if (a.restraint) {
+        this.potentialEnergy += a.computeRestraint();
       }
     }
     if (this.dampers.length > 0) {
@@ -231,19 +226,6 @@ export class MolecularDynamics {
         d.compute(this.atoms);
       }
     }
-  }
-
-  // calculate force and return potential energy: v(r)=k*(ri-ri_0)^2/2
-  computeRestraint(r: Restraint): number {
-    const a = this.atoms[r.indexOfAtom];
-    const k = (r.strength * GF_CONVERSION_CONSTANT) / a.mass;
-    const dx = a.position.x - r.position.x;
-    const dy = a.position.y - r.position.y;
-    const dz = a.position.z - r.position.z;
-    a.force.x -= k * dx;
-    a.force.y -= k * dy;
-    a.force.z -= k * dz;
-    return 0.5 * r.strength * (dx * dx + dy * dy + dz * dz);
   }
 
   applyBoundary() {

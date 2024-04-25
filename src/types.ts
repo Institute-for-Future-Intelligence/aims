@@ -8,7 +8,6 @@ import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode }
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import RCGroup from './lib/gfx/RCGroup';
 import { Molecule } from './models/Molecule.ts';
-import { Restraint } from './models/Restraint.ts';
 import { Damper } from './models/Damper.ts';
 
 declare module '@react-three/fiber' {
@@ -111,7 +110,6 @@ export interface ProjectState {
   trajectoryAtomIndices: number[];
   angularBondsVisible: boolean;
   torsionalBondsVisible: boolean;
-  restraints: Restraint[];
   dampers: Damper[];
 
   timeStep: number;
