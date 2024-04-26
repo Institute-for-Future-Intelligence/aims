@@ -280,6 +280,8 @@ export const fixAtomByIndex = (state: CommonStoreState) => state.fixAtomByIndex;
 
 export const restrainAtomByIndex = (state: CommonStoreState) => state.restrainAtomByIndex;
 
+export const dampAtomByIndex = (state: CommonStoreState) => state.dampAtomByIndex;
+
 export const setAtomTrajectoryByIndex = (state: CommonStoreState) => state.setAtomTrajectoryByIndex;
 
 export const angularBondsMap = (state: CommonStoreState) => state.angularBondsMap;

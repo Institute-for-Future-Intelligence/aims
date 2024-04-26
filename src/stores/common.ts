@@ -45,6 +45,7 @@ export interface CommonStoreState {
   deleteAllAtoms: () => void;
   fixAtomByIndex: (index: number, fixed: boolean) => void;
   restrainAtomByIndex: (index: number, strength: number) => void;
+  dampAtomByIndex: (index: number, damp: number) => void;
   setAtomTrajectoryByIndex: (index: number, visible: boolean) => void;
   getAtomByIndex: (index: number) => Atom | null;
 
@@ -146,6 +147,20 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                         a.restraint = new Restraint(strength, a.position.clone());
                       }
                     }
+                    break loop1;
+                  }
+                  i++;
+                }
+              }
+            });
+          },
+          dampAtomByIndex(index: number, damp: number) {
+            immerSet((state: CommonStoreState) => {
+              let i = 0;
+              loop1: for (const m of state.projectState.testMolecules) {
+                for (const a of m.atoms) {
+                  if (i === index) {
+                    a.damp = damp;
                     break loop1;
                   }
                   i++;

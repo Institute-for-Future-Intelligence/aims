@@ -217,6 +217,9 @@ export class MolecularDynamics {
       if (a.restraint) {
         this.potentialEnergy += a.computeRestraint();
       }
+      if (a.damp) {
+        a.computeDamp();
+      }
     }
   }
 

@@ -16,6 +16,7 @@ import {
   AngularBondsCheckBox,
   CopyMolecule,
   CutMolecule,
+  DampAtomInputField,
   FixAtomCheckBox,
   ForceVectorCheckBox,
   IndividualMoleculeStyleRadioGroup,
@@ -210,21 +211,6 @@ export const createDefaultMenu = (
           ),
         });
 
-        const damp = pickedAtom.damp ?? 0;
-        items.push({
-          key: 'atom-damp',
-          label: (
-            <>
-              <MenuItem stayAfterClick={false} hasPadding={true}>
-                {i18n.t('experiment.DampingCoefficient', lang) +
-                  ': ' +
-                  (damp > 0 ? damp.toPrecision(2) : 0) +
-                  ' eV⋅fs/Å²'}
-              </MenuItem>
-            </>
-          ),
-        });
-
         items.push({
           key: 'atom-fix',
           label: <FixAtomCheckBox />,
@@ -238,6 +224,11 @@ export const createDefaultMenu = (
         items.push({
           key: 'atom-restraint',
           label: <RestrainAtomInputField />,
+        });
+
+        items.push({
+          key: 'atom-damp',
+          label: <DampAtomInputField />,
         });
       }
     } else {

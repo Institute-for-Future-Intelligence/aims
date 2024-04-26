@@ -79,6 +79,7 @@ export class Atom {
         const p = new Vector3(atom.restraint.position.x, atom.restraint.position.y, atom.restraint.position.z);
         newAtom.restraint = new Restraint(atom.restraint.strength, p);
       }
+      newAtom.damp = atom.damp;
       newAtom.trajectory = atom.trajectory;
     }
     return newAtom;

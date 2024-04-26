@@ -528,12 +528,13 @@ export const RestrainAtomInputField = () => {
 
   return (
     <MenuItem stayAfterClick={true} hasPadding={true}>
-      <span style={{ paddingRight: '10px' }}>{t('experiment.Restraint', lang) + ': '}</span>
       <InputNumber
+        addonBefore={t('experiment.Restraint', lang) + ':'}
         addonAfter={'eV/Å²'}
         min={0}
         max={100}
         precision={2}
+        style={{ width: '250px' }}
         // make sure that we round up the number as toDegrees may cause things like .999999999
         value={parseFloat(value.toFixed(2))}
         step={0.01}
@@ -541,6 +542,65 @@ export const RestrainAtomInputField = () => {
           if (s === null) return;
           setValue(s);
           setStrength(s);
+        }}
+      />
+    </MenuItem>
+  );
+};
+
+export const DampAtomInputField = () => {
+  const getAtomByIndex = useStore(Selector.getAtomByIndex);
+  const dampAtomByIndex = useStore(Selector.dampAtomByIndex);
+  const pickedIndex = usePrimitiveStore(Selector.pickedAtomIndex);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const updateViewer = usePrimitiveStore(Selector.updateViewer);
+  const mdRef = useRefStore.getState().molecularDynamicsRef;
+
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const [value, setValue] = useState<number>(0);
+
+  const damp = useMemo(() => {
+    if (pickedIndex !== -1) {
+      const a = getAtomByIndex(pickedIndex);
+      if (a) return a.damp ?? 0;
+    }
+    return 0;
+  }, [pickedIndex]);
+
+  useEffect(() => {
+    setValue(damp);
+  }, [damp]);
+
+  const setDamp = (damp: number) => {
+    if (pickedIndex !== -1) {
+      dampAtomByIndex(pickedIndex, damp);
+      setChanged(true);
+      if (mdRef?.current) {
+        const a = mdRef.current.atoms[pickedIndex];
+        if (a) a.damp = damp;
+      }
+      updateViewer();
+    }
+  };
+
+  return (
+    <MenuItem stayAfterClick={true} hasPadding={true}>
+      <InputNumber
+        addonBefore={t('experiment.DampingCoefficient', lang) + ':'}
+        addonAfter={'eV⋅fs/Å²'}
+        min={0}
+        max={5}
+        precision={2}
+        style={{ width: '250px' }}
+        // make sure that we round up the number as toDegrees may cause things like .999999999
+        value={parseFloat(value.toFixed(2))}
+        step={0.01}
+        onChange={(s) => {
+          if (s === null) return;
+          setValue(s);
+          setDamp(s);
         }}
       />
     </MenuItem>
