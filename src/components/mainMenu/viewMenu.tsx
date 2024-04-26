@@ -6,25 +6,27 @@ import { MenuProps } from 'antd';
 import i18n from '../../i18n/i18n';
 import { useStore } from '../../stores/common';
 import { LabelMark, MenuItem } from '../menuItem';
+import { usePrimitiveStore } from '../../stores/commonPrimitive';
+import { ProjectType } from '../../constants.ts';
 import {
-  AngularBondsCheckBox,
   AutoRotateCheckBox,
   AxesCheckBox,
   BackgroundColor,
   ColoringRadioGroup,
   ContainerCheckBox,
   FogCheckBox,
-  ForceVectorCheckBox,
   GalleryCheckBox,
-  MaterialRadioGroup,
-  MomentumVectorCheckBox,
-  SpaceshipDisplayModeRadioGroup,
   GlobalStyleRadioGroup,
+  MaterialRadioGroup,
+} from '../contextMenu/sharedMenuItems.tsx';
+import {
+  AngularBondsCheckBox,
+  ForceVectorCheckBox,
+  MomentumVectorCheckBox,
   TorsionalBondsCheckBox,
   VdwBondsCheckBox,
-} from '../contextMenu/defaultMenuItems';
-import { usePrimitiveStore } from '../../stores/commonPrimitive';
-import { ProjectType } from '../../constants.ts';
+} from '../contextMenu/molecularModelingMenuItems.tsx';
+import { SpaceshipDisplayModeRadioGroup } from '../contextMenu/drugDiscoveryMenuItems.tsx';
 
 export const resetView = () => {
   usePrimitiveStore.getState().resetView();

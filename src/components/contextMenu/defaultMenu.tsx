@@ -6,41 +6,41 @@ import { useStore } from '../../stores/common';
 import i18n from '../../i18n/i18n';
 import { MenuProps } from 'antd';
 import { MenuItem } from '../menuItem';
-import {
-  AutoRotateCheckBox,
-  AxesCheckBox,
-  BackgroundColor,
-  ColoringRadioGroup,
-  ContainerCheckBox,
-  CopyMolecule,
-  CutMolecule,
-  FogCheckBox,
-  MaterialRadioGroup,
-  PasteMolecule,
-  RotateLigand,
-  RotateMolecule,
-  Screenshot,
-  SpaceshipDisplayModeRadioGroup,
-  GlobalStyleRadioGroup,
-  TranslateLigand,
-  TranslateMolecule,
-  VdwBondsCheckBox,
-  MomentumVectorCheckBox,
-  ForceVectorCheckBox,
-  TrajectoryCheckBox,
-  FixAtomCheckBox,
-  AngularBondsCheckBox,
-  TorsionalBondsCheckBox,
-  IndividualMoleculeStyleRadioGroup,
-  RestrainMoleculeInputField,
-  RestrainAtomInputField,
-} from './defaultMenuItems';
 import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
 import { Molecule } from '../../models/Molecule.ts';
 import Element from '../../lib/chem/Element';
 import React from 'react';
 import { useRefStore } from '../../stores/commonRef.ts';
+import {
+  AngularBondsCheckBox,
+  CopyMolecule,
+  CutMolecule,
+  FixAtomCheckBox,
+  ForceVectorCheckBox,
+  IndividualMoleculeStyleRadioGroup,
+  MomentumVectorCheckBox,
+  PasteMolecule,
+  RestrainAtomInputField,
+  RestrainMoleculeInputField,
+  RotateMolecule,
+  TorsionalBondsCheckBox,
+  TrajectoryCheckBox,
+  TranslateMolecule,
+  VdwBondsCheckBox,
+} from './molecularModelingMenuItems.tsx';
+import {
+  AutoRotateCheckBox,
+  AxesCheckBox,
+  BackgroundColor,
+  ColoringRadioGroup,
+  ContainerCheckBox,
+  FogCheckBox,
+  GlobalStyleRadioGroup,
+  MaterialRadioGroup,
+  Screenshot,
+} from './sharedMenuItems.tsx';
+import { RotateLigand, SpaceshipDisplayModeRadioGroup, TranslateLigand } from './drugDiscoveryMenuItems.tsx';
 
 export const createDefaultMenu = (
   projectType: ProjectType,

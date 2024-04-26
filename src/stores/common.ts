@@ -112,6 +112,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             usePrimitiveStore.getState().set((state) => {
               state.pickedMoleculeIndex = -1;
               state.pickedAtomIndex = -1;
+              state.startSimulation = false;
             });
           },
           fixAtomByIndex(index: number, fixed: boolean) {
