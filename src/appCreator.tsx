@@ -150,7 +150,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
             zIndex: 999,
             fontSize: '8px',
             userSelect: 'none',
-            color: 'dimgray',
+            color: hideGallery ? 'antiquewhite' : 'dimgray',
           }}
         >
           <img

@@ -338,6 +338,8 @@ const DynamicsViewer = React.memo(
         molecularDynamicsRef.current.timeStep = timeStep;
         molecularDynamicsRef.current.updateKineticEnergy();
         usePrimitiveStore.getState().set((state) => {
+          state.pickedMoleculeIndex = -1;
+          state.pickedAtomIndex = -1;
           state.updateInfoFlag = !state.updateInfoFlag;
           if (molecularDynamicsRef.current)
             state.currentTemperature = molecularDynamicsRef.current.getCurrentTemperature();
