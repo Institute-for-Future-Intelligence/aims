@@ -50,7 +50,7 @@ import {
   POTENTIAL_ENERGY_COLOR,
   VAN_DER_WAALS_COLOR,
 } from '../models/physicalConstants.ts';
-import { PickMode, UNIT_VECTOR_POS_Y } from '../constants.ts';
+import { PickMode, UNIT_VECTOR_POS_Y, UNIT_VECTOR_POS_Z } from '../constants.ts';
 import { useDataStore } from '../stores/commonData.ts';
 import { TorsionalBond } from '../models/TorsionalBond.ts';
 import Complex from '../lib/chem/Complex';
@@ -242,7 +242,8 @@ const DynamicsViewer = React.memo(
         if (molecule.atoms) {
           a.position.copy(molecule.atoms[i].position);
           a.velocity.copy(molecule.atoms[i].velocity);
-          a.force?.copy(molecule.atoms[i].force as Vector3);
+          const force = molecule.atoms[i].force;
+          if (force && a.force) a.force.copy(force);
           a.fixed = molecule.atoms[i].fixed;
           a.restraint = molecule.atoms[i].restraint?.clone();
           molecule.atoms[i].epsilon = a.epsilon;
@@ -667,8 +668,8 @@ const DynamicsViewer = React.memo(
               arr.push(
                 m.atoms.map((a, i) => {
                   const radius = Element.getByName(a.elementSymbol).radius * styleScaleFactor;
-                  const force = (a.force as Vector3).length() * forceScaleFactor * 1000;
-                  normalized.copy(a.force as Vector3).normalize();
+                  const force = (a.force ?? UNIT_VECTOR_POS_Z).length() * forceScaleFactor * 1000;
+                  normalized.copy(a.force ?? UNIT_VECTOR_POS_Z).normalize();
                   quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
                   const euler = new Euler().setFromQuaternion(quaternion);
                   normalized.multiplyScalar(radius + force / 2);
@@ -702,8 +703,8 @@ const DynamicsViewer = React.memo(
               arr.push(
                 m.atoms.map((a, i) => {
                   const radius = Element.getByName(a.elementSymbol).radius * styleScaleFactor;
-                  const force = (a.force as Vector3).length() * forceScaleFactor * 1000;
-                  normalized.copy(a.force as Vector3).normalize();
+                  const force = (a.force ?? UNIT_VECTOR_POS_Z).length() * forceScaleFactor * 1000;
+                  normalized.copy(a.force ?? UNIT_VECTOR_POS_Z).normalize();
                   quaternion.setFromUnitVectors(UNIT_VECTOR_POS_Y, normalized);
                   const euler = new Euler().setFromQuaternion(quaternion);
                   normalized.multiplyScalar(radius + force + 0.2);

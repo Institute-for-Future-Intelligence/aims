@@ -131,10 +131,11 @@ export class NonBondedInteractions {
               fxi += gx;
               fyi += gy;
               fzi += gz;
-              if (this.atoms[j].force) {
-                (this.atoms[j].force as Vector3).x -= gx;
-                (this.atoms[j].force as Vector3).y -= gy;
-                (this.atoms[j].force as Vector3).z -= gz;
+              const force = this.atoms[j].force;
+              if (force) {
+                force.x -= gx;
+                force.y -= gy;
+                force.z -= gz;
               }
             }
           }
@@ -151,9 +152,12 @@ export class NonBondedInteractions {
               fxi += gx;
               fyi += gy;
               fzi += gz;
-              (this.atoms[j].force as Vector3).x -= gx;
-              (this.atoms[j].force as Vector3).y -= gy;
-              (this.atoms[j].force as Vector3).z -= gz;
+              const force = this.atoms[j].force;
+              if (force) {
+                force.x -= gx;
+                force.y -= gy;
+                force.z -= gz;
+              }
             }
           }
         }
@@ -163,9 +167,9 @@ export class NonBondedInteractions {
       if (atomCount1 >= 0) this.pointer[atomCount1] = listIndex;
     } else {
       for (let i = 0; i < atomCount1; i++) {
-        let fxi = (this.atoms[i].force as Vector3).x;
-        let fyi = (this.atoms[i].force as Vector3).y;
-        let fzi = (this.atoms[i].force as Vector3).z;
+        let fxi = this.atoms[i].force?.x ?? 0;
+        let fyi = this.atoms[i].force?.y ?? 0;
+        let fzi = this.atoms[i].force?.z ?? 0;
         const jBeg = this.pointer[i];
         const jEnd = this.pointer[i + 1];
         if (jBeg < jEnd) {
@@ -198,9 +202,12 @@ export class NonBondedInteractions {
               fxi += gx;
               fyi += gy;
               fzi += gz;
-              (this.atoms[j].force as Vector3).x -= gx;
-              (this.atoms[j].force as Vector3).y -= gy;
-              (this.atoms[j].force as Vector3).z -= gz;
+              const force = this.atoms[j].force;
+              if (force) {
+                force.x -= gx;
+                force.y -= gy;
+                force.z -= gz;
+              }
             }
           }
         }
@@ -221,9 +228,12 @@ export class NonBondedInteractions {
               fxi += fx;
               fyi += fy;
               fzi += fz;
-              (this.atoms[j].force as Vector3).x -= fx;
-              (this.atoms[j].force as Vector3).y -= fy;
-              (this.atoms[j].force as Vector3).z -= fz;
+              const force = this.atoms[j].force;
+              if (force) {
+                force.x -= fx;
+                force.y -= fy;
+                force.z -= fz;
+              }
             }
           }
         }
