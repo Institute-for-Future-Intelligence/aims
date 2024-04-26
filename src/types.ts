@@ -35,7 +35,6 @@ export interface ProjectState {
   ranges: Range[] | null;
   filters: Filter[] | null;
   hiddenProperties: string[] | null;
-  counter: number;
   xAxisNameScatterPlot: string | null;
   yAxisNameScatterPlot: string | null;
   xFormula: string | null;

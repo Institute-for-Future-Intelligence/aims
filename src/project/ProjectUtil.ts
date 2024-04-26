@@ -48,7 +48,6 @@ export class ProjectUtil {
         'boilingPoint',
         'meltingPoint',
       ],
-      counter: 0,
       xAxisNameScatterPlot: 'atomCount',
       yAxisNameScatterPlot: 'bondCount',
       xFormula: 'x',

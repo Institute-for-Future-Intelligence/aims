@@ -46,7 +46,6 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           ranges: data.ranges,
           filters: data.filters,
           hiddenProperties: data.hiddenProperties,
-          counter: data.counter ?? 0,
           selectedProperty: data.selectedProperty,
           sortDescending: data.sortDescending,
           xAxisNameScatterPlot: data.xAxisNameScatterPlot,

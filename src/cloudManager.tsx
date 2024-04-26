@@ -371,7 +371,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             ranges: data.ranges ?? [],
             filters: data.filters ?? [],
             hiddenProperties: data.hiddenProperties ?? [],
-            counter: data.counter ?? 0,
 
             hideGallery: !!data.hideGallery,
 
@@ -696,6 +695,28 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           if (a.restraint && a.restraint.strength === 0) delete a.restraint;
         }
       }
+      // skip false or null
+      if (!ps.hideGallery) delete (ps as any).hideGallery;
+      if (!ps.description) delete (ps as any).description;
+      if (!ps.selectedMolecule) delete (ps as any).selectedMolecule;
+      if (!ps.selectedProperty) delete (ps as any).selectedProperty;
+      if (!ps.sortDescending) delete (ps as any).sortDescending;
+      if (!ps.xLinesScatterPlot) delete (ps as any).xLinesScatterPlot;
+      if (!ps.yLinesScatterPlot) delete (ps as any).yLinesScatterPlot;
+      if (!ps.angularBondsVisible) delete (ps as any).angularBondsVisible;
+      if (!ps.torsionalBondsVisible) delete (ps as any).torsionalBondsVisible;
+      if (!ps.chamberViewerAxes) delete (ps as any).chamberViewerAxes;
+      if (!ps.chamberViewerFoggy) delete (ps as any).chamberViewerFoggy;
+      if (!ps.xyPlaneVisible) delete (ps as any).xyPlaneVisible;
+      if (!ps.yzPlaneVisible) delete (ps as any).yzPlaneVisible;
+      if (!ps.xzPlaneVisible) delete (ps as any).xzPlaneVisible;
+      if (!ps.molecularContainerVisible) delete (ps as any).molecularContainerVisible;
+      if (!ps.momentumVisible) delete (ps as any).momentumVisible;
+      if (!ps.forceVisible) delete (ps as any).forceVisible;
+      if (!ps.vdwBondsVisible) delete (ps as any).vdwBondsVisible;
+      if (!ps.energyGraphVisible) delete (ps as any).energyGraphVisible;
+      if (!ps.constantTemperature) delete (ps as any).constantTemperature;
+
       // not needed in this type of project
       delete (ps as any).protein;
       delete (ps as any).ligand;
@@ -724,13 +745,15 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     ps.timestamp = new Date().getTime();
     ps.time = dayjs(new Date(ps.timestamp)).format('MM/DD/YYYY hh:mm A');
     ps.key = ps.timestamp.toString();
-    if (myProjectsRef.current) {
-      for (const p of myProjectsRef.current) {
-        if (p.title === ps.title) {
-          p.timestamp = ps.timestamp;
-          p.time = ps.time;
-          p.key = ps.key;
-          break;
+    if (!saveAndThenOpenProjectFlag) {
+      if (myProjectsRef.current) {
+        for (const p of myProjectsRef.current) {
+          if (p.title === ps.title) {
+            p.timestamp = ps.timestamp;
+            p.time = ps.time;
+            p.key = ps.key;
+            break;
+          }
         }
       }
     }
