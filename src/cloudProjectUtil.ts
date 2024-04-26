@@ -111,10 +111,8 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           forceScaleFactor: data.forceScaleFactor ?? 1,
           kineticEnergyScaleFactor: data.kineticEnergyScaleFactor ?? 1,
           energyGraphVisible: !!data.energyGraphVisible,
-          trajectoryAtomIndices: data.trajectoryAtomIndices ?? [],
           angularBondsVisible: !!data.angularBondsVisible,
           torsionalBondsVisible: !!data.torsionalBondsVisible,
-          dampers: data.dampers ?? [],
 
           testMolecules: ModelUtil.reconstructMoleculesFromFirestore(data.testMolecules),
 

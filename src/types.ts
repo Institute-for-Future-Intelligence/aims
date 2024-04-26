@@ -8,7 +8,6 @@ import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode }
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import RCGroup from './lib/gfx/RCGroup';
 import { Molecule } from './models/Molecule.ts';
-import { Damper } from './models/Damper.ts';
 
 declare module '@react-three/fiber' {
   interface ThreeElements {
@@ -107,10 +106,8 @@ export interface ProjectState {
   forceScaleFactor: number;
   kineticEnergyScaleFactor: number;
   energyGraphVisible: boolean;
-  trajectoryAtomIndices: number[];
   angularBondsVisible: boolean;
   torsionalBondsVisible: boolean;
-  dampers: Damper[];
 
   timeStep: number;
   refreshInterval: number;

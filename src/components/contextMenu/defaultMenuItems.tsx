@@ -702,31 +702,23 @@ export const ContainerCheckBox = () => {
 };
 
 export const TrajectoryCheckBox = () => {
-  const setCommonStore = useStore(Selector.set);
   const pickedAtomIndex = usePrimitiveStore(Selector.pickedAtomIndex);
+  const getAtomByIndex = useStore(Selector.getAtomByIndex);
   const updateViewer = usePrimitiveStore(Selector.updateViewer);
-  const trajectoryAtomIndices = useStore(Selector.trajectoryAtomIndices) ?? [];
+  const setAtomTrajectoryByIndex = useStore(Selector.setAtomTrajectoryByIndex);
   const positionTimeSeriesMap = useDataStore(Selector.positionTimeSeriesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const mdRef = useRefStore.getState().molecularDynamicsRef;
+
   const { t } = useTranslation();
   const lang = useLanguage();
 
-  // TODO: The trajectoryAtomIndices array needs to be updated when we insert or remove molecules
   const setTrajectory = (checked: boolean) => {
     if (pickedAtomIndex === -1) return;
-    const index = trajectoryAtomIndices.indexOf(pickedAtomIndex);
-    setCommonStore((state) => {
-      if (checked) {
-        if (index === -1) {
-          if (!state.projectState.trajectoryAtomIndices) state.projectState.trajectoryAtomIndices = [];
-          state.projectState.trajectoryAtomIndices.push(pickedAtomIndex);
-        }
-      } else {
-        if (index >= 0 && state.projectState.trajectoryAtomIndices) {
-          state.projectState.trajectoryAtomIndices.splice(index, 1);
-        }
-      }
-    });
+    setAtomTrajectoryByIndex(pickedAtomIndex, checked);
+    if (mdRef?.current) {
+      mdRef.current.atoms[pickedAtomIndex].trajectory = checked;
+    }
     if (positionTimeSeriesMap) {
       positionTimeSeriesMap.delete(pickedAtomIndex);
       updateViewer();
@@ -738,7 +730,7 @@ export const TrajectoryCheckBox = () => {
     <MenuItem stayAfterClick={false} hasPadding={false}>
       <Checkbox
         style={{ width: '100%' }}
-        checked={trajectoryAtomIndices.includes(pickedAtomIndex)}
+        checked={!!getAtomByIndex(pickedAtomIndex)?.trajectory}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
           const undoableCheck = {

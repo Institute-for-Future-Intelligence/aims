@@ -23,6 +23,8 @@ export class Atom {
 
   restraint?: Restraint;
   fixed?: boolean;
+  trajectory?: boolean;
+  damp?: number;
 
   displacement?: Vector3;
   acceleration?: Vector3;
@@ -77,6 +79,7 @@ export class Atom {
         const p = new Vector3(atom.restraint.position.x, atom.restraint.position.y, atom.restraint.position.z);
         newAtom.restraint = new Restraint(atom.restraint.strength, p);
       }
+      newAtom.trajectory = atom.trajectory;
     }
     return newAtom;
   }
@@ -128,6 +131,17 @@ export class Atom {
       return 0.5 * this.restraint.strength * (dx * dx + dy * dy + dz * dz);
     }
     return 0;
+  }
+
+  computeDamp() {
+    if (this.damp) {
+      const d = GF_CONVERSION_CONSTANT * this.damp;
+      if (this.force) {
+        this.force.x -= d * this.velocity.x;
+        this.force.y -= d * this.velocity.y;
+        this.force.z -= d * this.velocity.z;
+      }
+    }
   }
 
   /* predict new position using 2nd order Taylor expansion: dt2 = dt*dt/2 */

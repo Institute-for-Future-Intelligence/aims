@@ -64,8 +64,6 @@ export const molecularContainerVisible = (state: CommonStoreState) => state.proj
 
 export const energyGraphVisible = (state: CommonStoreState) => state.projectState.energyGraphVisible;
 
-export const trajectoryAtomIndices = (state: CommonStoreState) => state.projectState.trajectoryAtomIndices;
-
 export const vdwBondsVisible = (state: CommonStoreState) => state.projectState.vdwBondsVisible;
 
 export const vdwBondCutoffRelative = (state: CommonStoreState) => state.projectState.vdwBondCutoffRelative;
@@ -281,6 +279,8 @@ export const getAtomByIndex = (state: CommonStoreState) => state.getAtomByIndex;
 export const fixAtomByIndex = (state: CommonStoreState) => state.fixAtomByIndex;
 
 export const restrainAtomByIndex = (state: CommonStoreState) => state.restrainAtomByIndex;
+
+export const setAtomTrajectoryByIndex = (state: CommonStoreState) => state.setAtomTrajectoryByIndex;
 
 export const angularBondsMap = (state: CommonStoreState) => state.angularBondsMap;
 

@@ -422,10 +422,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             forceScaleFactor: data.forceScaleFactor ?? 1,
             kineticEnergyScaleFactor: data.kineticEnergyScaleFactor ?? 1,
             energyGraphVisible: !!data.energyGraphVisible,
-            trajectoryAtomIndices: data.trajectoryAtomIndices ?? [],
             angularBondsVisible: !!data.angularBondsVisible,
             torsionalBondsVisible: !!data.torsionalBondsVisible,
-            dampers: data.dampers ?? [],
 
             testMolecules: ModelUtil.reconstructMoleculesFromFirestore(data.testMolecules),
 
@@ -691,6 +689,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           delete (a as any).epsilon;
           delete (a as any).charge;
           if (!a.fixed) delete a.fixed;
+          if (!a.damp) delete a.damp;
+          if (!a.trajectory) delete a.trajectory;
           if (a.restraint && a.restraint.strength === 0) delete a.restraint;
         }
       }

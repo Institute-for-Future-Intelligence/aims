@@ -45,6 +45,7 @@ export interface CommonStoreState {
   deleteAllAtoms: () => void;
   fixAtomByIndex: (index: number, fixed: boolean) => void;
   restrainAtomByIndex: (index: number, strength: number) => void;
+  setAtomTrajectoryByIndex: (index: number, visible: boolean) => void;
   getAtomByIndex: (index: number) => Atom | null;
 
   // have to use objects as local storage does not accept maps
@@ -107,8 +108,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           deleteAllAtoms() {
             immerSet((state: CommonStoreState) => {
               state.projectState.testMolecules = [];
-              state.projectState.trajectoryAtomIndices = [];
-              state.projectState.dampers = [];
             });
             usePrimitiveStore.getState().set((state) => {
               state.pickedMoleculeIndex = -1;
@@ -146,6 +145,20 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                         a.restraint = new Restraint(strength, a.position.clone());
                       }
                     }
+                    break loop1;
+                  }
+                  i++;
+                }
+              }
+            });
+          },
+          setAtomTrajectoryByIndex(index: number, visible: boolean) {
+            immerSet((state: CommonStoreState) => {
+              let i = 0;
+              loop1: for (const m of state.projectState.testMolecules) {
+                for (const a of m.atoms) {
+                  if (i === index) {
+                    a.trajectory = visible;
                     break loop1;
                   }
                   i++;

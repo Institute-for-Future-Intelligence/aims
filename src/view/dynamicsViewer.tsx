@@ -245,6 +245,8 @@ const DynamicsViewer = React.memo(
           const force = molecule.atoms[i].force;
           if (force && a.force) a.force.copy(force);
           a.fixed = molecule.atoms[i].fixed;
+          a.damp = molecule.atoms[i].damp;
+          a.trajectory = molecule.atoms[i].trajectory;
           a.restraint = molecule.atoms[i].restraint?.clone();
           molecule.atoms[i].epsilon = a.epsilon;
         }

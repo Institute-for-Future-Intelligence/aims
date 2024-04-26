@@ -8,7 +8,6 @@ import { UNIT_EV_OVER_KB } from './physicalConstants.ts';
 import { RadialBond } from './RadialBond.ts';
 import { Triple } from './Triple.ts';
 import { Quadruple } from './Quadruple.ts';
-import { Damper } from './Damper.ts';
 
 export class ModelUtil {
   static generateAngularBonds(atoms: Atom[], radialBonds: RadialBond[]): Triple[] {
@@ -74,13 +73,6 @@ export class ModelUtil {
       array.push(Molecule.clone(x, true));
     }
     return array;
-  }
-
-  static getDamp(index: number, dampers: Damper[]) {
-    for (const d of dampers) {
-      if (d.indexOfAtom === index) return d.friction;
-    }
-    return 0;
   }
 
   static getAtomByIndex(index: number, molecules: Molecule[]): Atom | null {

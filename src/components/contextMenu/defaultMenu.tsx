@@ -39,7 +39,6 @@ import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
 import { Molecule } from '../../models/Molecule.ts';
 import Element from '../../lib/chem/Element';
-import { ModelUtil } from '../../models/ModelUtil.ts';
 import React from 'react';
 import { useRefStore } from '../../stores/commonRef.ts';
 
@@ -211,8 +210,7 @@ export const createDefaultMenu = (
           ),
         });
 
-        const dampers = useStore.getState().projectState.dampers;
-        const damp = dampers && dampers.length > 0 ? ModelUtil.getDamp(pickedAtomIndex, dampers) : 0;
+        const damp = pickedAtom.damp ?? 0;
         items.push({
           key: 'atom-damp',
           label: (

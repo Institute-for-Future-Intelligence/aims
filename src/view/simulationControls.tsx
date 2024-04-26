@@ -56,7 +56,6 @@ const SimulationControls = React.memo(() => {
   const energyGraphVisible = useStore(Selector.energyGraphVisible);
   const temperature = useStore(Selector.temperature);
   const constantTemperature = useStore(Selector.constantTemperature);
-  const trajectoryAtomIndices = useStore(Selector.trajectoryAtomIndices);
   const refreshInterval = useStore(Selector.refreshInterval) ?? 20;
   const collectInterval = useStore(Selector.collectInterval) ?? 100;
 
@@ -143,23 +142,20 @@ const SimulationControls = React.memo(() => {
                 t: md.totalEnergy,
               } as EnergyData;
               energyTimeSeries.add(energyData);
-              if (trajectoryAtomIndices) {
-                for (const index of trajectoryAtomIndices) {
-                  const atom = md.atoms[index];
-                  if (atom) {
-                    const positionData = {
-                      time,
-                      x: atom.position.x,
-                      y: atom.position.y,
-                      z: atom.position.z,
-                    };
-                    let positionTimeSeries = positionTimeSeriesMap.get(index);
-                    if (!positionTimeSeries) {
-                      positionTimeSeries = new DataQueue<PositionData>(DATA_QUEUE_LENGTH);
-                      positionTimeSeriesMap.set(index, positionTimeSeries);
-                    }
-                    positionTimeSeries.add(positionData);
+              for (const [index, atom] of md.atoms.entries()) {
+                if (atom.trajectory) {
+                  const positionData = {
+                    time,
+                    x: atom.position.x,
+                    y: atom.position.y,
+                    z: atom.position.z,
+                  };
+                  let positionTimeSeries = positionTimeSeriesMap.get(index);
+                  if (!positionTimeSeries) {
+                    positionTimeSeries = new DataQueue<PositionData>(DATA_QUEUE_LENGTH);
+                    positionTimeSeriesMap.set(index, positionTimeSeries);
                   }
+                  positionTimeSeries.add(positionData);
                 }
               }
               console.log(energyData);

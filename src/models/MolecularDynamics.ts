@@ -26,7 +26,6 @@ import { UNIT_EV_OVER_KB, VT_CONVERSION_CONSTANT } from './physicalConstants.ts'
 import { ZERO_TOLERANCE } from '../constants.ts';
 import { ModelUtil } from './ModelUtil.ts';
 import { HeatBath } from './HeatBath.ts';
-import { Damper } from './Damper.ts';
 
 export class MolecularDynamics {
   atoms: Atom[];
@@ -34,7 +33,6 @@ export class MolecularDynamics {
   radialBonds: RadialBond[];
   angularBonds: AngularBond[];
   torsionalBonds: TorsionalBond[];
-  dampers: Damper[];
   container: MolecularContainer;
   potentialEnergy: number; // total potential energy, not average
   kineticEnergy: number; // total kinetic energy, not average
@@ -52,7 +50,6 @@ export class MolecularDynamics {
     this.radialBonds = [];
     this.angularBonds = [];
     this.torsionalBonds = [];
-    this.dampers = [];
     for (const m of molecules) {
       this.atoms.push(...m.atoms);
       this.radialBonds.push(...m.radialBonds);
@@ -219,11 +216,6 @@ export class MolecularDynamics {
     for (const a of this.atoms) {
       if (a.restraint) {
         this.potentialEnergy += a.computeRestraint();
-      }
-    }
-    if (this.dampers.length > 0) {
-      for (const d of this.dampers) {
-        d.compute(this.atoms);
       }
     }
   }
