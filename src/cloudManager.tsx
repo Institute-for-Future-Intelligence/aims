@@ -694,6 +694,19 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           if (a.restraint && a.restraint.strength === 0) delete a.restraint;
         }
       }
+      // not needed in this type of project
+      delete (ps as any).protein;
+      delete (ps as any).ligand;
+      delete (ps as any).ligandTransform;
+      delete (ps as any).ligandVelocity;
+      delete (ps as any).spaceshipDisplayMode;
+      delete (ps as any).spaceshipX;
+      delete (ps as any).spaceshipY;
+      delete (ps as any).spaceshipZ;
+      delete (ps as any).spaceshipSize;
+      delete (ps as any).spaceshipPitch;
+      delete (ps as any).spaceshipRoll;
+      delete (ps as any).spaceshipYaw;
     }
   };
 
