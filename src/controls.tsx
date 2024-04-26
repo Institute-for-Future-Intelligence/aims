@@ -211,8 +211,20 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   const onControlEnd = () => {
     if (usePrimitiveStore.getState().autoRotate) return;
     setFrameLoop('demand');
-    saveCameraState();
-    controlEndCalledRef.current = true;
+    const cameraPositionSame =
+      cameraPosition &&
+      cameraPosition[0] === camera.position.x &&
+      cameraPosition[1] === camera.position.y &&
+      cameraPosition[2] === camera.position.z;
+    const cameraRotationSame =
+      cameraRotation &&
+      cameraRotation[0] === camera.rotation.x &&
+      cameraRotation[1] === camera.rotation.y &&
+      cameraRotation[2] === camera.rotation.z;
+    if (!cameraPositionSame || !cameraRotationSame) {
+      saveCameraState();
+      controlEndCalledRef.current = true;
+    }
   };
 
   useEffect(() => {

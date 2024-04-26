@@ -662,9 +662,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           delete (m as any).torsionalBonds;
           delete (m as any).center;
           delete (m as any).multipleResidues;
-          // m.radialBonds = [];
-          // m.angularBonds = [];
-          // m.torsionalBonds = [];
         }
       }
     }
