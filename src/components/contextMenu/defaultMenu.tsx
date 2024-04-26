@@ -199,7 +199,7 @@ export const createDefaultMenu = (
           ),
         });
 
-        const charge = pickedAtom.charge;
+        const charge = pickedAtom.charge ?? 0;
         items.push({
           key: 'atom-charge',
           label: (

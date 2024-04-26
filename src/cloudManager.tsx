@@ -685,6 +685,11 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           delete a.displacement;
           delete a.initialPosition;
           delete a.initialVelocity;
+          delete (a as any).index;
+          delete (a as any).mass;
+          delete (a as any).sigma;
+          delete (a as any).epsilon;
+          delete (a as any).charge;
           if (!a.fixed) delete a.fixed;
           if (a.restraint && a.restraint.strength === 0) delete a.restraint;
         }

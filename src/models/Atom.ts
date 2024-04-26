@@ -10,24 +10,23 @@ import { Restraint } from './Restraint.ts';
 
 export class Atom {
   // essential variables that should be persisted
-  index: number;
   elementSymbol: string;
   position: Vector3;
   velocity: Vector3;
 
-  // variables that can be created
+  // the rest of the variables that can be created later (no need to save)
+  index: number;
   mass: number = 10;
   sigma: number = 1; // van der Waals radius
   epsilon: number = 0.05; // van der Waals energy
   charge: number = 0;
 
-  displacement?: Vector3;
-  acceleration?: Vector3;
-  force?: Vector3;
-
   restraint?: Restraint;
   fixed?: boolean;
 
+  displacement?: Vector3;
+  acceleration?: Vector3;
+  force?: Vector3;
   initialPosition?: Vector3;
   initialVelocity?: Vector3;
 
