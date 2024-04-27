@@ -238,17 +238,13 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
       return;
     }
     camera.position.fromArray(cameraPosition);
-  }, [cameraPosition]);
+    camera.rotation.set(cameraRotation[0], cameraRotation[1], cameraRotation[2], Euler.DEFAULT_ORDER);
+  }, [cameraPosition, cameraRotation]);
 
   useEffect(() => {
     if (isFirstRender) return;
     camera.up.fromArray(cameraUp);
   }, [cameraUp]);
-
-  useEffect(() => {
-    if (isFirstRender) return;
-    camera.rotation.set(cameraRotation[0], cameraRotation[1], cameraRotation[2], Euler.DEFAULT_ORDER);
-  }, [cameraRotation]);
 
   useEffect(() => {
     if (isFirstRender) return;
