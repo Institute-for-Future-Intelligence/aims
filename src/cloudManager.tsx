@@ -349,7 +349,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             description: data.description ?? '',
             dataColoring: data.dataColoring ?? DataColoring.ALL,
             selectedProperty: data.selectedProperty ?? null,
-            sortDescending: data.sortDescending ?? 'false',
+            sortDescending: data.sortDescending ?? false,
             xAxisNameScatterPlot: data.xAxisNameScatterPlot ?? 'atomCount',
             yAxisNameScatterPlot: data.yAxisNameScatterPlot ?? 'bondCount',
             xFormula: data.xFormula ?? 'x',

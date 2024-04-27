@@ -282,6 +282,10 @@ export const restrainAtomByIndex = (state: CommonStoreState) => state.restrainAt
 
 export const dampAtomByIndex = (state: CommonStoreState) => state.dampAtomByIndex;
 
+export const chargeAtomByIndex = (state: CommonStoreState) => state.chargeAtomByIndex;
+
+export const setAtomEpsilonByIndex = (state: CommonStoreState) => state.setAtomEpsilonByIndex;
+
 export const setAtomTrajectoryByIndex = (state: CommonStoreState) => state.setAtomTrajectoryByIndex;
 
 export const angularBondsMap = (state: CommonStoreState) => state.angularBondsMap;

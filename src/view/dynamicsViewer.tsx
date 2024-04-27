@@ -249,6 +249,7 @@ const DynamicsViewer = React.memo(
           a.trajectory = molecule.atoms[i].trajectory;
           a.restraint = molecule.atoms[i].restraint?.clone();
           molecule.atoms[i].epsilon = a.epsilon;
+          molecule.atoms[i].charge = a.charge;
         }
         a.initialPosition?.copy(a.position);
         a.initialVelocity?.copy(a.velocity);

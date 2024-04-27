@@ -46,6 +46,8 @@ export interface CommonStoreState {
   fixAtomByIndex: (index: number, fixed: boolean) => void;
   restrainAtomByIndex: (index: number, strength: number) => void;
   dampAtomByIndex: (index: number, damp: number) => void;
+  chargeAtomByIndex: (index: number, charge: number) => void;
+  setAtomEpsilonByIndex: (index: number, epsilon: number) => void;
   setAtomTrajectoryByIndex: (index: number, visible: boolean) => void;
   getAtomByIndex: (index: number) => Atom | null;
 
@@ -161,6 +163,34 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                 for (const a of m.atoms) {
                   if (i === index) {
                     a.damp = damp;
+                    break loop1;
+                  }
+                  i++;
+                }
+              }
+            });
+          },
+          chargeAtomByIndex(index: number, charge: number) {
+            immerSet((state: CommonStoreState) => {
+              let i = 0;
+              loop1: for (const m of state.projectState.testMolecules) {
+                for (const a of m.atoms) {
+                  if (i === index) {
+                    a.charge = charge;
+                    break loop1;
+                  }
+                  i++;
+                }
+              }
+            });
+          },
+          setAtomEpsilonByIndex(index: number, epsilon: number) {
+            immerSet((state: CommonStoreState) => {
+              let i = 0;
+              loop1: for (const m of state.projectState.testMolecules) {
+                for (const a of m.atoms) {
+                  if (i === index) {
+                    a.epsilon = epsilon;
                     break loop1;
                   }
                   i++;

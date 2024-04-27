@@ -191,7 +191,7 @@ export const i18n_en = {
       AtomicMass: 'Atomic Mass',
       AtomicRadius: 'Atomic Radius',
       CohesiveEnergy: 'Cohesive Energy',
-      ElectricCharge: 'Electric Charge',
+      ElectricCharge: 'Charge',
       Model: 'Model',
       Display: 'Display',
       MolecularDynamics: 'Molecular Dynamics',

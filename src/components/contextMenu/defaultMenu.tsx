@@ -4,7 +4,7 @@
 
 import { useStore } from '../../stores/common';
 import i18n from '../../i18n/i18n';
-import { MenuProps } from 'antd';
+import { MenuProps, Space } from 'antd';
 import { MenuItem } from '../menuItem';
 import { ProjectType } from '../../constants.ts';
 import { MoleculeInterface } from '../../types.ts';
@@ -14,6 +14,8 @@ import React from 'react';
 import { useRefStore } from '../../stores/commonRef.ts';
 import {
   AngularBondsCheckBox,
+  AtomEpsilonInputField,
+  ChargeAtomInputField,
   CopyMolecule,
   CutMolecule,
   DampAtomInputField,
@@ -139,7 +141,6 @@ export const createDefaultMenu = (
               <MenuItem stayAfterClick={false} hasPadding={false} fontWeight={'bold'} cursor={'default'}>
                 {Element.getByName(pickedAtom.elementSymbol).fullName + ' (#' + pickedAtomIndex + ')'}
               </MenuItem>
-              <hr />
             </>
           ),
         });
@@ -151,7 +152,7 @@ export const createDefaultMenu = (
             key: 'atom-coordinates',
             label: (
               <>
-                <MenuItem stayAfterClick={false} hasPadding={true}>
+                <MenuItem stayAfterClick={false} hasPadding={false}>
                   {i18n.t('experiment.AtomicCoordinates', lang) +
                     ': (' +
                     p.x.toFixed(2) +
@@ -170,7 +171,7 @@ export const createDefaultMenu = (
           key: 'atom-mass',
           label: (
             <>
-              <MenuItem stayAfterClick={false} hasPadding={true}>
+              <MenuItem stayAfterClick={false} hasPadding={false}>
                 {i18n.t('experiment.AtomicMass', lang) + ': ' + pickedAtom.mass.toFixed(2) + ' g/mol'}
               </MenuItem>
             </>
@@ -181,44 +182,32 @@ export const createDefaultMenu = (
           key: 'atom-sigma',
           label: (
             <>
-              <MenuItem stayAfterClick={false} hasPadding={true}>
+              <MenuItem stayAfterClick={false} hasPadding={false}>
                 {i18n.t('experiment.AtomicRadius', lang) + ': ' + pickedAtom.sigma.toFixed(3) + ' Å'}
               </MenuItem>
-            </>
-          ),
-        });
-
-        items.push({
-          key: 'atom-epsilon',
-          label: (
-            <>
-              <MenuItem stayAfterClick={false} hasPadding={true}>
-                {i18n.t('experiment.CohesiveEnergy', lang) + ': ' + pickedAtom.epsilon.toFixed(3) + ' eV'}
-              </MenuItem>
-            </>
-          ),
-        });
-
-        const charge = pickedAtom.charge ?? 0;
-        items.push({
-          key: 'atom-charge',
-          label: (
-            <>
-              <MenuItem stayAfterClick={false} hasPadding={true}>
-                {i18n.t('experiment.ElectricCharge', lang) + ': ' + (charge !== 0 ? charge.toPrecision(2) : 0) + ' e'}
-              </MenuItem>
+              <hr style={{ marginTop: '10px', marginBottom: '6px' }} />
             </>
           ),
         });
 
         items.push({
           key: 'atom-fix',
-          label: <FixAtomCheckBox />,
+          label: (
+            <Space>
+              <TrajectoryCheckBox />
+              <FixAtomCheckBox />
+            </Space>
+          ),
         });
 
         items.push({
-          key: 'atom-trajectory',
-          label: <TrajectoryCheckBox />,
+          key: 'atom-epsilon',
+          label: <AtomEpsilonInputField />,
+        });
+
+        items.push({
+          key: 'atom-charge',
+          label: <ChargeAtomInputField />,
         });
 
         items.push({

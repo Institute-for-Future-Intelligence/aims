@@ -527,7 +527,7 @@ export const RestrainAtomInputField = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={true} hasPadding={true}>
+    <MenuItem stayAfterClick={true} hasPadding={false}>
       <InputNumber
         addonBefore={t('experiment.Restraint', lang) + ':'}
         addonAfter={'eV/Å²'}
@@ -586,7 +586,7 @@ export const DampAtomInputField = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={true} hasPadding={true}>
+    <MenuItem stayAfterClick={true} hasPadding={false}>
       <InputNumber
         addonBefore={t('experiment.DampingCoefficient', lang) + ':'}
         addonAfter={'eV⋅fs/Å²'}
@@ -601,6 +601,122 @@ export const DampAtomInputField = () => {
           if (s === null) return;
           setValue(s);
           setDamp(s);
+        }}
+      />
+    </MenuItem>
+  );
+};
+
+export const ChargeAtomInputField = () => {
+  const getAtomByIndex = useStore(Selector.getAtomByIndex);
+  const chargeAtomByIndex = useStore(Selector.chargeAtomByIndex);
+  const pickedIndex = usePrimitiveStore(Selector.pickedAtomIndex);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const updateViewer = usePrimitiveStore(Selector.updateViewer);
+  const mdRef = useRefStore.getState().molecularDynamicsRef;
+
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const [value, setValue] = useState<number>(0);
+
+  const charge = useMemo(() => {
+    if (pickedIndex !== -1) {
+      const a = getAtomByIndex(pickedIndex);
+      if (a) return a.charge ?? 0;
+    }
+    return 0;
+  }, [pickedIndex]);
+
+  useEffect(() => {
+    setValue(charge);
+  }, [charge]);
+
+  const setCharge = (charge: number) => {
+    if (pickedIndex !== -1) {
+      chargeAtomByIndex(pickedIndex, charge);
+      setChanged(true);
+      if (mdRef?.current) {
+        const a = mdRef.current.atoms[pickedIndex];
+        if (a) a.charge = charge;
+      }
+      updateViewer();
+    }
+  };
+
+  return (
+    <MenuItem stayAfterClick={true} hasPadding={false}>
+      <InputNumber
+        addonBefore={t('experiment.ElectricCharge', lang) + ':'}
+        addonAfter={'e'}
+        min={-5}
+        max={5}
+        precision={2}
+        style={{ width: '250px' }}
+        // make sure that we round up the number as toDegrees may cause things like .999999999
+        value={parseFloat(value.toFixed(2))}
+        step={0.01}
+        onChange={(s) => {
+          if (s === null) return;
+          setValue(s);
+          setCharge(s);
+        }}
+      />
+    </MenuItem>
+  );
+};
+
+export const AtomEpsilonInputField = () => {
+  const getAtomByIndex = useStore(Selector.getAtomByIndex);
+  const setAtomEpsilonByIndex = useStore(Selector.setAtomEpsilonByIndex);
+  const pickedIndex = usePrimitiveStore(Selector.pickedAtomIndex);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const mdRef = useRefStore.getState().molecularDynamicsRef;
+
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const [value, setValue] = useState<number>(0);
+
+  const epsilon = useMemo(() => {
+    if (pickedIndex !== -1) {
+      const a = getAtomByIndex(pickedIndex);
+      if (a) return a.epsilon ?? 0.05;
+    }
+    return 0;
+  }, [pickedIndex]);
+
+  useEffect(() => {
+    setValue(epsilon);
+  }, [epsilon]);
+
+  const setEpsilon = (epsilon: number) => {
+    if (pickedIndex !== -1) {
+      setAtomEpsilonByIndex(pickedIndex, epsilon);
+      setChanged(true);
+      if (mdRef?.current) {
+        const a = mdRef.current.atoms[pickedIndex];
+        if (a) a.epsilon = epsilon;
+      }
+    }
+  };
+
+  return (
+    <MenuItem stayAfterClick={true} hasPadding={false}>
+      <InputNumber
+        addonBefore={t('experiment.CohesiveEnergy', lang) + ':'}
+        addonAfter={'eV'}
+        min={0}
+        max={5}
+        precision={3}
+        style={{ width: '250px' }}
+        // make sure that we round up the number as toDegrees may cause things like .999999999
+        value={parseFloat(value.toFixed(3))}
+        step={0.01}
+        onChange={(s) => {
+          if (s === null) return;
+          setValue(s);
+          setEpsilon(s);
         }}
       />
     </MenuItem>
