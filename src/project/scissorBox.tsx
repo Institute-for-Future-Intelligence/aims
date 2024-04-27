@@ -21,6 +21,8 @@ interface MolecularContainerProps {
   selected: boolean;
   molecule: MoleculeInterface | null;
   formula: string;
+  smiles: string;
+  inChI: string;
   style: MolecularViewerStyle;
   material: MolecularViewerMaterial;
   selector?: string;
@@ -36,6 +38,8 @@ const ScissorBox = React.memo(
     selected,
     molecule,
     formula,
+    smiles,
+    inChI,
     style,
     material,
     setLoading,
@@ -123,7 +127,13 @@ const ScissorBox = React.memo(
         </Html>
         <Html>
           <div
-            title={labelType === LabelType.NAME ? formula ?? molecule?.name : molecule?.name}
+            title={
+              (labelType === LabelType.NAME ? formula ?? molecule?.name : molecule?.name) +
+              '\nSMILES: ' +
+              smiles +
+              '\n' +
+              inChI
+            }
             style={{
               position: 'relative',
               left: '4px',

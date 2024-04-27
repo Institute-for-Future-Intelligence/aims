@@ -760,6 +760,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       selected={selected}
                       molecule={mol}
                       formula={prop?.formula}
+                      smiles={prop?.smiles}
+                      inChI={prop?.inChI}
                       style={viewerStyle}
                       material={viewerMaterial}
                       setLoading={setLoading}
