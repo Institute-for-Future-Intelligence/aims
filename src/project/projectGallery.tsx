@@ -285,7 +285,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 >
                   <ImportOutlined
                     style={{ fontSize: '24px', color: 'gray' }}
-                    title={t('projectPanel.ImportMolecule', lang)}
+                    title={t('projectPanel.ImportMoleculeIntoGallery', lang)}
                   />
                 </Button>
                 {selectedMolecule && (
@@ -303,7 +303,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   >
                     <DeleteOutlined
                       style={{ fontSize: '24px', color: 'gray' }}
-                      title={t('projectPanel.RemoveSelectedMolecule', lang)}
+                      title={t('projectPanel.RemoveSelectedMoleculeFromGallery', lang)}
                     />
                   </Button>
                 )}
@@ -335,7 +335,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             <Popover
               title={
                 <div onClick={(e) => e.stopPropagation()}>
-                  <SettingOutlined /> {t('projectPanel.ProjectSettings', lang)}
+                  <SettingOutlined /> {t('projectPanel.GallerySettings', lang)}
                 </div>
               }
               content={

@@ -20,6 +20,8 @@ export interface MolecularProperties {
   density: number;
   boilingPoint: number;
   meltingPoint: number;
+  smiles: string;
+  inChI: string;
 }
 
 export interface MolecularStructure {

@@ -91,7 +91,7 @@ const ProjectSettingsContent = React.memo(
       <div style={{ width: '320px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
           <Col span={10} style={{ paddingTop: '5px' }}>
-            <span style={{ fontSize: '12px' }}>{t('projectPanel.NumberOfColumns', lang)}: </span>
+            <span>{t('projectPanel.NumberOfColumns', lang)}: </span>
           </Col>
           <Col span={14}>
             <InputNumber

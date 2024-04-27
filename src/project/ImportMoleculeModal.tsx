@@ -99,7 +99,7 @@ const ImportMoleculeModal = React.memo(
             onMouseOver={() => setDragEnabled(true)}
             onMouseOut={() => setDragEnabled(false)}
           >
-            <ImportOutlined /> {t('projectPanel.ImportMolecule', lang) + ' (' + total + ')'}
+            <ImportOutlined /> {t('projectPanel.ImportMoleculeIntoGallery', lang) + ' (' + total + ')'}
           </div>
         }
         open={isDialogVisible()}

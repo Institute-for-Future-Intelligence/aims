@@ -352,7 +352,10 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                         density: token[10].trim() === 'NA' ? Number.NaN : parseFloat(token[10].trim()),
                         boilingPoint: token[11].trim() === 'NA' ? Number.NaN : parseFloat(token[11].trim()),
                         meltingPoint: token[12].trim() === 'NA' ? Number.NaN : parseFloat(token[12].trim()),
+                        smiles: token[13]?.trim(),
+                        inChI: token[14]?.trim(),
                       } as MolecularProperties;
+                      // console.log(token[0].trim(), molProp.smiles, molProp.inChI)
                       immerSet((state: CommonStoreState) => {
                         state.providedMolecularProperties[token[0].trim()] = molProp;
                       });

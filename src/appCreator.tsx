@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { Suspense, useEffect, useMemo } from 'react';
+import React, { Suspense, useEffect, useMemo, useRef } from 'react';
 import './App.css';
 import ifiLogo from './assets/ifi-logo.png';
 import { useStore } from './stores/common';
@@ -50,29 +50,34 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [cameraPosition, panCenter]);
 
+  const firstLoadRef = useRef<boolean>(true);
+
   useEffect(() => {
-    loadChemicalElements();
-    loadProvidedMolecularProperties();
-    setCommonStore((state) => {
-      // make sure the selected molecule is in the same array of molecules
-      if (state.projectState.selectedMolecule) {
-        for (const m of state.projectState.molecules) {
-          if (m.name === state.projectState.selectedMolecule.name) {
-            state.projectState.selectedMolecule = m;
-            break;
+    if (firstLoadRef.current) {
+      loadChemicalElements();
+      loadProvidedMolecularProperties();
+      setCommonStore((state) => {
+        // make sure the selected molecule is in the same array of molecules
+        if (state.projectState.selectedMolecule) {
+          for (const m of state.projectState.molecules) {
+            if (m.name === state.projectState.selectedMolecule.name) {
+              state.projectState.selectedMolecule = m;
+              break;
+            }
           }
         }
-      }
-      // make sure the test molecule is in the same array of molecules
-      if (state.projectState.ligand) {
-        for (const m of state.projectState.molecules) {
-          if (m.name === state.projectState.ligand.name) {
-            state.projectState.ligand = m;
-            break;
+        // make sure the test molecule is in the same array of molecules
+        if (state.projectState.ligand) {
+          for (const m of state.projectState.molecules) {
+            if (m.name === state.projectState.ligand.name) {
+              state.projectState.ligand = m;
+              break;
+            }
           }
         }
-      }
-    });
+      });
+      firstLoadRef.current = false;
+    }
     // eslint-disable-next-line
   }, []);
 
