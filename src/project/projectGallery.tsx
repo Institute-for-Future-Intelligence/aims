@@ -3,6 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { getMolecule, commonMolecules, drugMolecules, findSimilarMolecules } from '../internalDatabase.ts';
 import { DataColoring, GraphType, ProjectType } from '../constants.ts';
 import styled from 'styled-components';
 import { Button, Collapse, CollapseProps, Empty, Popover, Radio, Spin } from 'antd';
@@ -22,6 +23,7 @@ import {
   SortAscendingOutlined,
   SortDescendingOutlined,
   TableOutlined,
+  DiffOutlined,
 } from '@ant-design/icons';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
@@ -35,7 +37,6 @@ import { ProjectUtil } from './ProjectUtil.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { updateDataColoring } from '../cloudProjectUtil.ts';
 import { Filter, FilterType } from '../Filter.ts';
-import { drugMolecules, getMolecule, commonMolecules } from '../internalDatabase.ts';
 import { CartesianGrid, Cell, Dot, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { Canvas, useThree } from '@react-three/fiber';
@@ -49,6 +50,7 @@ import { useRefStore } from '../stores/commonRef.ts';
 import { Vector2 } from 'three';
 import { View } from './View.tsx';
 import { Undoable } from '../undo/Undoable.ts';
+import FindMoleculeModal from './findMoleculeModal.tsx';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);
@@ -159,7 +161,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const [moleculeName, setMoleculeName] = useState<string>(
     projectType === ProjectType.DRUG_DISCOVERY ? drugMolecules[0].name : commonMolecules[0].name,
   );
-  const [moleculeNameDialogVisible, setMoleculeNameDialogVisible] = useState(false);
+  const [importMoleculeDialogVisible, setImportMoleculeDialogVisible] = useState(false);
+  const [findMoleculeDialogVisible, setFindMoleculeDialogVisible] = useState(false);
   const [scatterDataHoveredIndex, setScatterDataHoveredIndex] = useState<number>(-1);
 
   const { t } = useTranslation();
@@ -175,6 +178,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const descriptionExpandedRef = useRef<boolean>(false);
   const sortedMoleculesRef = useRef<MoleculeInterface[]>([]); // store a sorted copy of molecules
   const containerRef = useRef<HTMLDivElement>(null!);
+  const similarMoleculesRef = useRef<MoleculeInterface[]>([]);
 
   useEffect(() => {
     sortedMoleculesRef.current = [];
@@ -276,11 +280,29 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     )}
                   </Button>
                 )}
+                {selectedMolecule && (
+                  <Button
+                    style={{ border: 'none', padding: '4px' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      similarMoleculesRef.current = findSimilarMolecules(
+                        selectedMolecule,
+                        getProvidedMolecularProperties,
+                      );
+                      setFindMoleculeDialogVisible(true);
+                    }}
+                  >
+                    <DiffOutlined
+                      style={{ fontSize: '24px', color: 'gray' }}
+                      title={t('projectPanel.FindMoleculesSimilarToSelectedOne', lang)}
+                    />
+                  </Button>
+                )}
                 <Button
                   style={{ border: 'none', padding: '4px' }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setMoleculeNameDialogVisible(true);
+                    setImportMoleculeDialogVisible(true);
                   }}
                 >
                   <ImportOutlined
@@ -1120,6 +1142,14 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             )}
           </div>
         </div>
+        {selectedMolecule && (
+          <FindMoleculeModal
+            molecule={selectedMolecule}
+            similarMolecules={similarMoleculesRef.current}
+            setDialogVisible={setFindMoleculeDialogVisible}
+            isDialogVisible={() => findMoleculeDialogVisible}
+          />
+        )}
         <ImportMoleculeModal
           importByName={() => {
             const m = getMolecule(moleculeName);
@@ -1140,8 +1170,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           }}
           setName={setMoleculeName}
           getName={() => moleculeName}
-          setDialogVisible={setMoleculeNameDialogVisible}
-          isDialogVisible={() => moleculeNameDialogVisible}
+          setDialogVisible={setImportMoleculeDialogVisible}
+          isDialogVisible={() => importMoleculeDialogVisible}
         />
       </ColumnWrapper>
     </Container>

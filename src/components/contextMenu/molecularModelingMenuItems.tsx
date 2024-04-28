@@ -355,8 +355,8 @@ export const RestrainMoleculeInputField = () => {
 
   return (
     <MenuItem stayAfterClick={true}>
-      <span style={{ paddingRight: '10px' }}>{t('experiment.Restraint', lang) + ': '}</span>
       <InputNumber
+        addonBefore={t('experiment.Restraint', lang) + ':'}
         addonAfter={'eV/Å²'}
         min={0}
         max={100}

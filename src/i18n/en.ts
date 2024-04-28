@@ -22,6 +22,7 @@ export const i18n_en = {
     },
 
     word: {
+      Total: 'Total',
       Heat: 'Heat',
       Cool: 'Cool',
       Relative: 'Relative',
@@ -269,7 +270,11 @@ export const i18n_en = {
       ToggleDragAndDropMoleculeMode:
         'To add a molecule to the container on the right, click this button\nand then drag-and-drop it to the X-Y, Y-Z, or X-Z plane.',
       NumberOfColumns: 'Columns',
+      FindMoleculesSimilarToSelectedOne: 'Find molecules similar to the selected one',
+      SimilarMolecules: 'Similar Molecules',
       ImportMoleculeIntoGallery: 'Import a molecule into gallery',
+      SelectMolecule: 'Select a Molecule',
+      TotalMolecules: 'Total Molecules',
       MoleculeType: 'Molecule Type',
       MolecularName: 'Molecular Name',
       MoleculeAlreadyAdded: 'Molecule already added',

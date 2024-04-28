@@ -48,6 +48,7 @@ export const isCartoon = (style: MolecularViewerStyle) => {
 
 export const generateVdwLines = (molecules: Molecule[], maximumRelativeDistanceSquared: number) => {
   const bonds: VdwBond[] = [];
+  // intermolecular
   const n = molecules.length;
   for (let i = 0; i < n - 1; i++) {
     const mi = molecules[i];
@@ -66,6 +67,21 @@ export const generateVdwLines = (molecules: Molecule[], maximumRelativeDistanceS
       }
     }
   }
+  // intramolecular
+  // for (const m of molecules) {
+  //   const atoms = m.atoms;
+  //   const n=atoms.length;
+  //   for(let i=0;i<n-1;i++){
+  //     const ei = Element.getByName(atoms[i].elementSymbol);
+  //     for(let j=i+1;j<n;j++){
+  //       const ej = Element.getByName(atoms[j].elementSymbol);
+  //       const dij = ei.radius + ej.radius;
+  //       if (atoms[i].distanceToSquared(atoms[j]) < maximumRelativeDistanceSquared * dij * dij) {
+  //         bonds.push(new VdwBond(atoms[i], atoms[j]));
+  //       }
+  //     }
+  //   }
+  // }
   return bonds;
 };
 

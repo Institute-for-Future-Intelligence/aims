@@ -10,6 +10,7 @@
     "antd": "^5.12.5",
     "d3-brush": "^3.0.0",
     "dayjs": "^1.10.7",
+    "fastest-levenshtein": "^1.0.16",
     "file-saver": "^2.0.5",
     "firebase": "^8.10.0",
     "html2canvas": "^1.4.1",

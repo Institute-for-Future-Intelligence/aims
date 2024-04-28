@@ -160,6 +160,9 @@ import proteinUrl003 from './proteins/1aid.pdb';
 import proteinUrl004 from './proteins/7qo7.pdb';
 import proteinUrl005 from './proteins/2fom.pdb';
 
+import { MolecularProperties } from './models/MolecularProperties.ts';
+import { closest } from 'fastest-levenshtein';
+
 export const monatomicMolecules = [
   { url: monatomicUrl001, internal: true, name: 'Helium' } as MoleculeInterface,
   { url: monatomicUrl002, internal: true, name: 'Neon' } as MoleculeInterface,
@@ -363,4 +366,51 @@ export const getData = (name: string) => {
   const mol = getMolecule(name);
   if (mol) return mol;
   return getProtein(name);
+};
+
+export const findSimilarMolecules = (
+  molecule: MoleculeInterface,
+  getProvidedMolecularProperties: (name: string) => MolecularProperties,
+) => {
+  const prop = getProvidedMolecularProperties(molecule.name);
+  const similar: MoleculeInterface[] = [];
+  const smiles: Map<string, string> = new Map<string, string>();
+  for (const m of commonMolecules) {
+    if (m.name === molecule.name) continue;
+    const p = getProvidedMolecularProperties(m.name);
+    if (p?.smiles) {
+      smiles.set(m.name, p.smiles);
+    }
+  }
+  for (const m of hydrocarbonMolecules) {
+    if (m.name === molecule.name) continue;
+    const p = getProvidedMolecularProperties(m.name);
+    if (p?.smiles) {
+      smiles.set(m.name, p.smiles);
+    }
+  }
+  for (const m of biomolecules) {
+    if (m.name === molecule.name) continue;
+    const p = getProvidedMolecularProperties(m.name);
+    if (p?.smiles) {
+      smiles.set(m.name, p.smiles);
+    }
+  }
+  for (const m of drugMolecules) {
+    if (m.name === molecule.name) continue;
+    const p = getProvidedMolecularProperties(m.name);
+    if (p?.smiles) {
+      smiles.set(m.name, p.smiles);
+    }
+  }
+  const c = closest(prop.smiles, Array.from(smiles.values()));
+  let name = null;
+  for (const key of smiles.keys()) {
+    if (smiles.get(key) === c) {
+      name = key;
+      break;
+    }
+  }
+  if (name) console.log(name, getProvidedMolecularProperties(name).formula);
+  return similar;
 };

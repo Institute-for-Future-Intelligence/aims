@@ -20,4 +20,7 @@ export default defineConfig({
     host: true,
   },
   base: '/aims',
+  optimizeDeps: {
+    exclude: ['fastest-levenshtein'],
+  },
 });

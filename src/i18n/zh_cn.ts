@@ -22,6 +22,7 @@ export const i18n_zh_cn = {
     },
 
     word: {
+      Total: '总数',
       Heat: '加热',
       Cool: '冷却',
       Relative: '相对',
@@ -268,7 +269,11 @@ export const i18n_zh_cn = {
       OutputSelectedMoleculeToTest: '把选中的分子加到实验中',
       ToggleDragAndDropMoleculeMode: '按下此按钮然后拖放一个分子到右边窗口的X-Y，Y-Z，或X-Z平面上。',
       NumberOfColumns: '列数',
+      FindMoleculesSimilarToSelectedOne: '查找类似选中分子的其它分子',
+      SimilarMolecules: '类似的分子',
       ImportMoleculeIntoGallery: '输入分子到图库',
+      SelectMolecule: '选择分子',
+      TotalMolecules: '分子总数',
       MoleculeType: '分子类别',
       MolecularName: '分子名称',
       MoleculeAlreadyAdded: '项目已经有此分子',

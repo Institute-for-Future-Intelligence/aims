@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo, useRef, useState } from 'react';
-import { Button, Modal, Select, Space } from 'antd';
+import { Button, Flex, Modal, Select, Space } from 'antd';
 import i18n from '../i18n/i18n.ts';
 import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react-draggable';
 import { useStore } from '../stores/common.ts';
@@ -99,11 +99,16 @@ const ImportMoleculeModal = React.memo(
             onMouseOver={() => setDragEnabled(true)}
             onMouseOut={() => setDragEnabled(false)}
           >
-            <ImportOutlined /> {t('projectPanel.ImportMoleculeIntoGallery', lang) + ' (' + total + ')'}
+            <ImportOutlined /> {t('projectPanel.SelectMolecule', lang)}
           </div>
         }
         open={isDialogVisible()}
         footer={[
+          <Flex justify={'right'}>
+            <Space style={{ paddingBottom: '16px', paddingRight: '4px', fontSize: '10px' }}>
+              {t('projectPanel.TotalMolecules', lang) + ': ' + total}
+            </Space>
+          </Flex>,
           <Button key="Cancel" onClick={onCancel}>
             {t('word.Cancel', lang)}
           </Button>,
@@ -120,7 +125,7 @@ const ImportMoleculeModal = React.memo(
       >
         <Space direction={'horizontal'} style={{ paddingBottom: '10px' }}>
           <Space direction={'horizontal'} style={{ width: '120px' }}>
-            {i18n.t('projectPanel.MoleculeType', lang)}:
+            {i18n.t('projectPanel.MoleculeType', lang) + ':'}
           </Space>
           <Select
             style={{ width: '300px' }}
@@ -170,7 +175,7 @@ const ImportMoleculeModal = React.memo(
         </Space>
         <Space direction={'horizontal'}>
           <Space direction={'horizontal'} style={{ width: '120px' }}>
-            {i18n.t('projectPanel.MolecularName', lang)}:
+            {i18n.t('projectPanel.MolecularName', lang) + ':'}
           </Space>
           <Select
             style={{ width: '300px' }}
