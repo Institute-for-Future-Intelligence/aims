@@ -129,10 +129,8 @@ const ScissorBox = React.memo(
           <div
             title={
               (labelType === LabelType.NAME ? formula ?? molecule?.name : molecule?.name) +
-              '\nSMILES: ' +
-              smiles +
-              '\n' +
-              inChI
+              (smiles ? '\nSMILES: ' + smiles : '') +
+              (inChI ? '\n' + inChI : '')
             }
             style={{
               position: 'relative',

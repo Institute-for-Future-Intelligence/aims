@@ -355,7 +355,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                         smiles: token[13]?.trim(),
                         inChI: token[14]?.trim(),
                       } as MolecularProperties;
-                      // console.log(token[0].trim(), molProp.smiles, molProp.inChI)
                       immerSet((state: CommonStoreState) => {
                         state.providedMolecularProperties[token[0].trim()] = molProp;
                       });
