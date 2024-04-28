@@ -89,6 +89,12 @@ export const createExamplesMenu = (viewOnly: boolean) => {
           ),
         },
         {
+          key: 'Acenes',
+          label: (
+            <MenuItem onClick={() => loadProject('Acenes')}>{i18n.t('menu.examples.chemistry.Acenes', lang)}</MenuItem>
+          ),
+        },
+        {
           key: 'Cis–Trans Isomerism of Fatty Acids',
           label: (
             <MenuItem onClick={() => loadProject('Cis–Trans Isomerism of Fatty Acids')}>

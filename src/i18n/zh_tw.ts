@@ -364,6 +364,7 @@ export const i18n_zh_tw = {
           TriatomicMolecules: '三原子分子',
           LinearAlkanes: '鏈烷烴',
           Cycloalkanes: '環烷烴',
+          Acenes: '並苯',
           CisTransIsomerismOfFattyAcids: '油酸的順反異構',
         },
         biologySubMenu: '生物',

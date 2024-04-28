@@ -135,10 +135,10 @@ const ScissorBox = React.memo(
             style={{
               position: 'relative',
               left: '4px',
-              bottom: (labelType === LabelType.FORMULA ? 26 : 16) - viewHeight + 2 + 'px',
+              bottom: (labelType === LabelType.FORMULA ? 20 : 16) - viewHeight + 2 + 'px',
               textAlign: 'left',
               color: 'gray',
-              fontSize: labelType === LabelType.FORMULA ? '14px' : '10px',
+              fontSize: labelType === LabelType.FORMULA ? '12px' : '10px',
               fontWeight: selected ? 'bold' : 'normal',
               width: viewWidth - 14 + 'px',
             }}

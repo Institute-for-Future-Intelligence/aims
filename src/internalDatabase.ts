@@ -28,6 +28,8 @@ import commonMoleculeUrl005 from './molecules/sdf/carbon_dioxide.sdf';
 import commonMoleculeUrl006 from './molecules/sdf/carbon_monoxide.sdf';
 import commonMoleculeUrl007 from './molecules/sdf/ozone.sdf';
 import commonMoleculeUrl008 from './molecules/sdf/ammonia.sdf';
+import commonMoleculeUrl009 from './molecules/sdf/hydrogen_peroxide.sdf';
+import commonMoleculeUrl010 from './molecules/sdf/acetic_acid.sdf';
 import commonMoleculeUrl101 from './molecules/sdf/buckyball.sdf';
 import commonMoleculeUrl102 from './molecules/xyz/nanotube.xyz';
 import commonMoleculeUrl103 from './molecules/xyz/graphen.xyz';
@@ -81,6 +83,13 @@ import hydrocarbonMoleculeUrl303 from './molecules/sdf/toluene.sdf';
 import hydrocarbonMoleculeUrl304 from './molecules/sdf/durene.sdf';
 import hydrocarbonMoleculeUrl309 from './molecules/sdf/coronene.sdf';
 import hydrocarbonMoleculeUrl310 from './molecules/sdf/hexabenzocoronene.sdf';
+import hydrocarbonMoleculeUrl351 from './molecules/sdf/anthracene.sdf';
+import hydrocarbonMoleculeUrl352 from './molecules/sdf/tetracene.sdf';
+import hydrocarbonMoleculeUrl353 from './molecules/sdf/pentacene.sdf';
+import hydrocarbonMoleculeUrl354 from './molecules/sdf/hexacene.sdf';
+import hydrocarbonMoleculeUrl355 from './molecules/sdf/heptacene.sdf';
+import hydrocarbonMoleculeUrl356 from './molecules/sdf/octacene.sdf';
+import hydrocarbonMoleculeUrl357 from './molecules/sdf/nonacene.sdf';
 
 import biomoleculeUrl001 from './molecules/sdf/atp.sdf';
 import biomoleculeUrl002 from './molecules/sdf/vitamin_a.sdf';
@@ -180,6 +189,8 @@ export const commonMolecules = [
   { url: commonMoleculeUrl006, internal: true, name: 'Carbon Monoxide' } as MoleculeInterface,
   { url: commonMoleculeUrl007, internal: true, name: 'Ozone' } as MoleculeInterface,
   { url: commonMoleculeUrl008, internal: true, name: 'Ammonia' } as MoleculeInterface,
+  { url: commonMoleculeUrl009, internal: true, name: 'Hydrogen Peroxide' } as MoleculeInterface,
+  { url: commonMoleculeUrl010, internal: true, name: 'Acetic Acid' } as MoleculeInterface,
   { url: commonMoleculeUrl101, internal: true, name: 'Buckminsterfullerene' } as MoleculeInterface,
   { url: commonMoleculeUrl102, internal: true, name: 'Carbon Nanotube' } as MoleculeInterface,
   { url: commonMoleculeUrl103, internal: true, name: 'Graphene' } as MoleculeInterface,
@@ -235,6 +246,13 @@ export const hydrocarbonMolecules = [
   { url: hydrocarbonMoleculeUrl304, internal: true, name: 'Durene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl309, internal: true, name: 'Coronene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl310, internal: true, name: 'Hexabenzocoronene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl351, internal: true, name: 'Anthracene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl352, internal: true, name: 'Tetracene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl353, internal: true, name: 'Pentacene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl354, internal: true, name: 'Hexacene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl355, internal: true, name: 'Heptacene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl356, internal: true, name: 'Octacene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl357, internal: true, name: 'Nonacene' } as MoleculeInterface,
 ];
 
 export const biomolecules = [
