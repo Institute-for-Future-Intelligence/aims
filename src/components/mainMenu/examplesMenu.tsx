@@ -204,6 +204,20 @@ export const createExamplesMenu = (viewOnly: boolean) => {
         },
       ],
     },
+    {
+      key: 'biotechnology',
+      label: <MenuItem>{i18n.t('menu.examples.biotechnologySubMenu', lang)}</MenuItem>,
+      children: [
+        {
+          key: 'HIV-1 Protease Inhibitor',
+          label: (
+            <MenuItem onClick={() => loadProject('HIV-1 Protease Inhibitor')}>
+              {i18n.t('menu.examples.biotechnology.HIV1ProteaseInhibitor', lang)}
+            </MenuItem>
+          ),
+        },
+      ],
+    },
   ];
 
   return items;

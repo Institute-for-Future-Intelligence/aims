@@ -388,6 +388,10 @@ export const i18n_en = {
           Buckyballs: 'Buckyballs',
           CarbonNanotube: 'Carbon Nanotube',
         },
+        biotechnologySubMenu: 'Biotechnology',
+        biotechnology: {
+          HIV1ProteaseInhibitor: 'HIV-1 Protease Inhibitor',
+        },
       },
       languageSubMenu: 'Language',
       AboutUs: 'About Us',

@@ -386,6 +386,10 @@ export const i18n_zh_tw = {
           Buckyballs: '足球烯',
           CarbonNanotube: '碳奈米管',
         },
+        biotechnologySubMenu: '生物科技',
+        biotechnology: {
+          HIV1ProteaseInhibitor: '一型愛滋病毒蛋白酶抑制劑',
+        },
       },
       languageSubMenu: '語言',
       AboutUs: '關於我們',
