@@ -7,6 +7,7 @@ import { MolecularContainer, MoleculeInterface, MoleculeTransform, ProjectState,
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { Filter, FilterType } from '../Filter.ts';
 import {
+  ChemicalNotation,
   DataColoring,
   DEFAULT_CAMERA_POSITION,
   DEFAULT_CAMERA_ROTATION,
@@ -60,6 +61,8 @@ export class ProjectUtil {
       yLinesScatterPlot: false,
       lineWidthScatterPlot: 1,
       dotSizeScatterPlot: 4,
+      searchChemicalNotation: ChemicalNotation.INCHI,
+      notationSearchThreshold: 5,
 
       cameraPosition: DEFAULT_CAMERA_POSITION,
       cameraRotation: DEFAULT_CAMERA_ROTATION,

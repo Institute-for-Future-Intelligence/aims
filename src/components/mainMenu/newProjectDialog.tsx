@@ -105,7 +105,12 @@ const NewProjectDialog = React.memo(({ saveAs }: { saveAs: boolean }) => {
       maskClosable={false}
       destroyOnClose={false}
       modalRender={(modal) => (
-        <Draggable disabled={!dragEnabled} bounds={bounds} onStart={(event, uiData) => onStart(event, uiData)}>
+        <Draggable
+          nodeRef={dragRef}
+          disabled={!dragEnabled}
+          bounds={bounds}
+          onStart={(event, uiData) => onStart(event, uiData)}
+        >
           <div ref={dragRef}>{modal}</div>
         </Draggable>
       )}

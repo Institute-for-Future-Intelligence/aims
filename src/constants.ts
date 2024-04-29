@@ -164,3 +164,8 @@ export enum PickMode {
   MOLECULE = 'molecule',
   ATOM = 'atom',
 }
+
+export enum ChemicalNotation {
+  SMILES = 'Smiles',
+  INCHI = 'InChI',
+}

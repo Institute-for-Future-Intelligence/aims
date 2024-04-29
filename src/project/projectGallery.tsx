@@ -3,8 +3,8 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { getMolecule, commonMolecules, drugMolecules, findSimilarMolecules } from '../internalDatabase.ts';
-import { DataColoring, GraphType, ProjectType } from '../constants.ts';
+import { commonMolecules, drugMolecules, findSimilarMolecules, getMolecule } from '../internalDatabase.ts';
+import { ChemicalNotation, DataColoring, GraphType, ProjectType } from '../constants.ts';
 import styled from 'styled-components';
 import { Button, Collapse, CollapseProps, Empty, Popover, Radio, Spin } from 'antd';
 import {
@@ -13,6 +13,7 @@ import {
   CarryOutOutlined,
   CloseOutlined,
   DeleteOutlined,
+  DiffOutlined,
   EditFilled,
   EditOutlined,
   ImportOutlined,
@@ -23,7 +24,6 @@ import {
   SortAscendingOutlined,
   SortDescendingOutlined,
   TableOutlined,
-  DiffOutlined,
 } from '@ant-design/icons';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
@@ -150,9 +150,12 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const yLinesScatterPlot = useStore(Selector.yLinesScatterPlot);
   const lineWidthScatterPlot = useStore(Selector.lineWidthScatterPlot);
   const dotSizeScatterPlot = useStore(Selector.dotSizeScatterPlot);
+  const searchChemicalNotation = useStore(Selector.searchChemicalNotation) ?? ChemicalNotation.INCHI;
+  const notationSearchThreshold = useStore(Selector.notationSearchThreshold) ?? 5;
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
+  const providedMolecularProperties = useStore(Selector.providedMolecularProperties);
   const dragAndDropMolecule = usePrimitiveStore(Selector.dragAndDropMolecule);
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -178,7 +181,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const descriptionExpandedRef = useRef<boolean>(false);
   const sortedMoleculesRef = useRef<MoleculeInterface[]>([]); // store a sorted copy of molecules
   const containerRef = useRef<HTMLDivElement>(null!);
-  const similarMoleculesRef = useRef<MoleculeInterface[]>([]);
+  const similarMoleculesRef = useRef<{ name: string; formula: string; distance: number }[]>([]);
 
   useEffect(() => {
     sortedMoleculesRef.current = [];
@@ -286,8 +289,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     onClick={(e) => {
                       e.stopPropagation();
                       similarMoleculesRef.current = findSimilarMolecules(
+                        searchChemicalNotation,
+                        notationSearchThreshold,
                         selectedMolecule,
-                        getProvidedMolecularProperties,
+                        providedMolecularProperties,
                       );
                       setFindMoleculeDialogVisible(true);
                     }}
@@ -1144,7 +1149,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
         </div>
         {selectedMolecule && (
           <FindMoleculeModal
-            molecule={selectedMolecule}
+            moleculeName={selectedMolecule.name}
+            moleculeFormula={getProvidedMolecularProperties(selectedMolecule.name)?.formula}
             similarMolecules={similarMoleculesRef.current}
             setDialogVisible={setFindMoleculeDialogVisible}
             isDialogVisible={() => findMoleculeDialogVisible}

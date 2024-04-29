@@ -21,6 +21,7 @@ import ProjectListPanel from './project/projectListPanel.tsx';
 import { fetchProject } from './cloudProjectUtil';
 import { ClassID, SchoolID, User } from './User';
 import {
+  ChemicalNotation,
   DataColoring,
   DEFAULT_CAMERA_POSITION,
   DEFAULT_CAMERA_ROTATION,
@@ -362,6 +363,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             yLinesScatterPlot: !!data.yLinesScatterPlot,
             lineWidthScatterPlot: data.lineWidthScatterPlot !== undefined ? data.lineWidthScatterPlot : 1,
             dotSizeScatterPlot: data.dotSizeScatterPlot !== undefined ? data.dotSizeScatterPlot : 4,
+            searchChemicalNotation: data.searchChemicalNotation ?? ChemicalNotation.INCHI,
+            notationSearchThreshold: data.notationSearchThreshold !== undefined ? data.notationSearchThreshold : 5,
             type: data.type ?? ProjectType.DRUG_DISCOVERY,
             molecules: data.molecules ?? [],
             numberOfColumns: data.numberOfColumns ?? 3,

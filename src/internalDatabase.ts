@@ -161,7 +161,8 @@ import proteinUrl004 from './proteins/7qo7.pdb';
 import proteinUrl005 from './proteins/2fom.pdb';
 
 import { MolecularProperties } from './models/MolecularProperties.ts';
-import { closest } from 'fastest-levenshtein';
+import { distance } from 'fastest-levenshtein';
+import { ChemicalNotation } from './constants.ts';
 
 export const monatomicMolecules = [
   { url: monatomicUrl001, internal: true, name: 'Helium' } as MoleculeInterface,
@@ -369,48 +370,32 @@ export const getData = (name: string) => {
 };
 
 export const findSimilarMolecules = (
+  type: ChemicalNotation,
+  threshold: number,
   molecule: MoleculeInterface,
-  getProvidedMolecularProperties: (name: string) => MolecularProperties,
-) => {
-  const prop = getProvidedMolecularProperties(molecule.name);
-  const similar: MoleculeInterface[] = [];
-  const smiles: Map<string, string> = new Map<string, string>();
-  for (const m of commonMolecules) {
-    if (m.name === molecule.name) continue;
-    const p = getProvidedMolecularProperties(m.name);
-    if (p?.smiles) {
-      smiles.set(m.name, p.smiles);
-    }
-  }
-  for (const m of hydrocarbonMolecules) {
-    if (m.name === molecule.name) continue;
-    const p = getProvidedMolecularProperties(m.name);
-    if (p?.smiles) {
-      smiles.set(m.name, p.smiles);
-    }
-  }
-  for (const m of biomolecules) {
-    if (m.name === molecule.name) continue;
-    const p = getProvidedMolecularProperties(m.name);
-    if (p?.smiles) {
-      smiles.set(m.name, p.smiles);
-    }
-  }
-  for (const m of drugMolecules) {
-    if (m.name === molecule.name) continue;
-    const p = getProvidedMolecularProperties(m.name);
-    if (p?.smiles) {
-      smiles.set(m.name, p.smiles);
-    }
-  }
-  const c = closest(prop.smiles, Array.from(smiles.values()));
-  let name = null;
-  for (const key of smiles.keys()) {
-    if (smiles.get(key) === c) {
-      name = key;
+  providedMolecularProperties: { [key: string]: MolecularProperties },
+): { name: string; formula: string; distance: number }[] => {
+  const prop = providedMolecularProperties[molecule.name];
+  const selectedNames: { name: string; formula: string; distance: number }[] = [];
+  switch (type) {
+    case ChemicalNotation.SMILES:
+      for (const [key, value] of Object.entries(providedMolecularProperties)) {
+        if (key === molecule.name || !value.smiles) continue;
+        const d = distance(value.smiles, prop.smiles);
+        if (d <= threshold) {
+          selectedNames.push({ name: key, formula: value.formula, distance: d });
+        }
+      }
       break;
-    }
+    case ChemicalNotation.INCHI:
+      for (const [key, value] of Object.entries(providedMolecularProperties)) {
+        if (key === molecule.name || !value.inChI) continue;
+        const d = distance(value.inChI, prop.inChI);
+        if (d <= threshold) {
+          selectedNames.push({ name: key, formula: value.formula, distance: d });
+        }
+      }
+      break;
   }
-  if (name) console.log(name, getProvidedMolecularProperties(name).formula);
-  return similar;
+  return selectedNames;
 };

@@ -10,7 +10,7 @@ import { showError, showInfo } from './helpers';
 import i18n from './i18n/i18n';
 import { MoleculeInterface, Range, ProjectState, MolecularContainer, MoleculeTransform } from './types';
 import { usePrimitiveStore } from './stores/commonPrimitive';
-import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
+import { ChemicalNotation, DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import dayjs from 'dayjs';
 import { Util } from './Util.ts';
@@ -58,8 +58,10 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           yMaxScatterPlot: data.yMaxScatterPlot !== undefined ? data.yMaxScatterPlot : 100,
           xLinesScatterPlot: !!data.xLinesScatterPlot,
           yLinesScatterPlot: !!data.yLinesScatterPlot,
-          lineWidthScatterPlot: data.lineWidthScatterPlot,
-          dotSizeScatterPlot: data.dotSizeScatterPlot,
+          lineWidthScatterPlot: data.lineWidthScatterPlot !== undefined ? data.lineWidthScatterPlot : 1,
+          dotSizeScatterPlot: data.dotSizeScatterPlot !== undefined ? data.dotSizeScatterPlot : 4,
+          searchChemicalNotation: data.searchChemicalNotation ?? ChemicalNotation.INCHI,
+          notationSearchThreshold: data.notationSearchThreshold !== undefined ? data.notationSearchThreshold : 5,
 
           hideGallery: !!data.hideGallery,
 

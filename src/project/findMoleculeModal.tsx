@@ -3,25 +3,27 @@
  */
 
 import React, { useMemo, useRef, useState } from 'react';
-import { Button, Modal, Space } from 'antd';
+import { Button, Checkbox, Modal, Space } from 'antd';
 import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react-draggable';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { DiffOutlined } from '@ant-design/icons';
-import { MoleculeInterface } from '../types.ts';
+import { ChemicalNotation } from '../constants.ts';
 
 export interface FindMoleculeModalProps {
-  molecule: MoleculeInterface;
-  similarMolecules: MoleculeInterface[];
+  moleculeName: string;
+  moleculeFormula: string;
+  similarMolecules: { name: string; formula: string; distance: number }[];
   setDialogVisible: (visible: boolean) => void;
   isDialogVisible: () => boolean;
 }
 
 const FindMoleculeModal = React.memo(
-  ({ molecule, similarMolecules, setDialogVisible, isDialogVisible }: FindMoleculeModalProps) => {
+  ({ moleculeName, moleculeFormula, similarMolecules, setDialogVisible, isDialogVisible }: FindMoleculeModalProps) => {
     const language = useStore(Selector.language);
-    const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
+    const searchChemicalNotation = useStore(Selector.searchChemicalNotation) ?? ChemicalNotation.INCHI;
+    const notationSearchThreshold = useStore(Selector.notationSearchThreshold) ?? 5;
 
     const [dragEnabled, setDragEnabled] = useState<boolean>(false);
     const [bounds, setBounds] = useState<DraggableBounds>({ left: 0, top: 0, bottom: 0, right: 0 } as DraggableBounds);
@@ -76,14 +78,36 @@ const FindMoleculeModal = React.memo(
         ]}
         onCancel={onCancel}
         modalRender={(modal) => (
-          <Draggable disabled={!dragEnabled} bounds={bounds} onStart={(event, uiData) => onStart(event, uiData)}>
+          <Draggable
+            nodeRef={dragRef}
+            disabled={!dragEnabled}
+            bounds={bounds}
+            onStart={(event, uiData) => onStart(event, uiData)}
+          >
             <div ref={dragRef}>{modal}</div>
           </Draggable>
         )}
       >
-        <Space direction={'horizontal'} style={{ paddingBottom: '10px' }}>
-          {similarMolecules.length}
+        <Space style={{ paddingBottom: '10px' }}>
+          {moleculeName +
+            ': ' +
+            moleculeFormula +
+            ', Notation: ' +
+            searchChemicalNotation +
+            ', Threshold: ' +
+            notationSearchThreshold}
         </Space>
+        {similarMolecules.length === 0 ? (
+          <div>No similar molecules were found.</div>
+        ) : (
+          similarMolecules.map((value) => {
+            return (
+              <div key={value.name}>
+                <Checkbox checked={true}>{value.name + ' (' + value.formula + '): ' + value.distance}</Checkbox>
+              </div>
+            );
+          })
+        )}
       </Modal>
     );
   },

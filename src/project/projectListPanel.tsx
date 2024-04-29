@@ -238,7 +238,12 @@ const ProjectListPanel = React.memo(
             setNewTitle(undefined);
           }}
           modalRender={(modal) => (
-            <Draggable disabled={!dragEnabled} bounds={bounds} onStart={(event, uiData) => onStart(event, uiData)}>
+            <Draggable
+              nodeRef={dragRef}
+              disabled={!dragEnabled}
+              bounds={bounds}
+              onStart={(event, uiData) => onStart(event, uiData)}
+            >
               <div ref={dragRef}>{modal}</div>
             </Draggable>
           )}

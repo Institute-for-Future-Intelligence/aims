@@ -4,7 +4,7 @@
 
 import { Object3DNode } from '@react-three/fiber';
 import { Filter } from './Filter';
-import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
+import { ChemicalNotation, DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import RCGroup from './lib/gfx/RCGroup';
 import { Molecule } from './models/Molecule.ts';
@@ -47,6 +47,8 @@ export interface ProjectState {
   yLinesScatterPlot: boolean;
   lineWidthScatterPlot: number;
   dotSizeScatterPlot: number;
+  searchChemicalNotation: ChemicalNotation;
+  notationSearchThreshold: number;
 
   cameraPosition: number[];
   cameraRotation: number[];

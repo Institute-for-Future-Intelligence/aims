@@ -150,6 +150,8 @@ export const logAction = (state: CommonStoreState) => state.logAction;
 
 export const loadChemicalElements = (state: CommonStoreState) => state.loadChemicalElements;
 
+export const providedMolecularProperties = (state: CommonStoreState) => state.providedMolecularProperties;
+
 export const getProvidedMolecularProperties = (state: CommonStoreState) => state.getProvidedMolecularProperties;
 
 export const loadProvidedMolecularProperties = (state: CommonStoreState) => state.loadProvidedMolecularProperties;
@@ -215,6 +217,10 @@ export const yLinesScatterPlot = (state: CommonStoreState) => state.projectState
 export const lineWidthScatterPlot = (state: CommonStoreState) => state.projectState.lineWidthScatterPlot;
 
 export const dotSizeScatterPlot = (state: CommonStoreState) => state.projectState.dotSizeScatterPlot;
+
+export const searchChemicalNotation = (state: CommonStoreState) => state.projectState.searchChemicalNotation;
+
+export const notationSearchThreshold = (state: CommonStoreState) => state.projectState.notationSearchThreshold;
 
 export const hideGallery = (state: CommonStoreState) => state.projectState.hideGallery;
 

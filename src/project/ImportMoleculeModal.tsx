@@ -104,7 +104,7 @@ const ImportMoleculeModal = React.memo(
         }
         open={isDialogVisible()}
         footer={[
-          <Flex justify={'right'}>
+          <Flex key="note" justify={'right'}>
             <Space style={{ paddingBottom: '16px', paddingRight: '4px', fontSize: '10px' }}>
               {t('projectPanel.TotalMolecules', lang) + ': ' + total}
             </Space>
@@ -118,7 +118,12 @@ const ImportMoleculeModal = React.memo(
         ]}
         onCancel={onCancel}
         modalRender={(modal) => (
-          <Draggable disabled={!dragEnabled} bounds={bounds} onStart={(event, uiData) => onStart(event, uiData)}>
+          <Draggable
+            nodeRef={dragRef}
+            disabled={!dragEnabled}
+            bounds={bounds}
+            onStart={(event, uiData) => onStart(event, uiData)}
+          >
             <div ref={dragRef}>{modal}</div>
           </Draggable>
         )}
