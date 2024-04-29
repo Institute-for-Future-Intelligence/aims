@@ -60,8 +60,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           yLinesScatterPlot: !!data.yLinesScatterPlot,
           lineWidthScatterPlot: data.lineWidthScatterPlot !== undefined ? data.lineWidthScatterPlot : 1,
           dotSizeScatterPlot: data.dotSizeScatterPlot !== undefined ? data.dotSizeScatterPlot : 4,
-          searchChemicalNotation: data.searchChemicalNotation ?? ChemicalNotation.INCHI,
-          notationSearchThreshold: data.notationSearchThreshold !== undefined ? data.notationSearchThreshold : 5,
+          numberOfMostSimilarMolecules: data.numberOfMostSimilarMolecules ?? 5,
 
           hideGallery: !!data.hideGallery,
 

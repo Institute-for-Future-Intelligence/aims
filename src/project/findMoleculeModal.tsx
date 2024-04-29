@@ -14,16 +14,23 @@ import { ChemicalNotation } from '../constants.ts';
 export interface FindMoleculeModalProps {
   moleculeName: string;
   moleculeFormula: string;
-  similarMolecules: { name: string; formula: string; distance: number }[];
+  similarMoleculesByInChI: { name: string; formula: string; distance: number }[];
+  similarMoleculesBySmiles: { name: string; formula: string; distance: number }[];
   setDialogVisible: (visible: boolean) => void;
   isDialogVisible: () => boolean;
 }
 
 const FindMoleculeModal = React.memo(
-  ({ moleculeName, moleculeFormula, similarMolecules, setDialogVisible, isDialogVisible }: FindMoleculeModalProps) => {
+  ({
+    moleculeName,
+    moleculeFormula,
+    similarMoleculesByInChI,
+    similarMoleculesBySmiles,
+    setDialogVisible,
+    isDialogVisible,
+  }: FindMoleculeModalProps) => {
     const language = useStore(Selector.language);
-    const searchChemicalNotation = useStore(Selector.searchChemicalNotation) ?? ChemicalNotation.INCHI;
-    const notationSearchThreshold = useStore(Selector.notationSearchThreshold) ?? 5;
+    const numberOfMostSimilarMolecules = useStore(Selector.numberOfMostSimilarMolecules) ?? 5;
 
     const [dragEnabled, setDragEnabled] = useState<boolean>(false);
     const [bounds, setBounds] = useState<DraggableBounds>({ left: 0, top: 0, bottom: 0, right: 0 } as DraggableBounds);
@@ -57,14 +64,15 @@ const FindMoleculeModal = React.memo(
 
     return (
       <Modal
-        width={480}
+        width={600}
         title={
           <div
             style={{ width: '100%', cursor: 'move' }}
             onMouseOver={() => setDragEnabled(true)}
             onMouseOut={() => setDragEnabled(false)}
           >
-            <DiffOutlined /> {t('projectPanel.SimilarMolecules', lang)}
+            <DiffOutlined />{' '}
+            {t('projectPanel.SimilarMolecules', lang) + ': ' + moleculeName + ' (' + moleculeFormula + ')'}
           </div>
         }
         open={isDialogVisible()}
@@ -88,26 +96,36 @@ const FindMoleculeModal = React.memo(
           </Draggable>
         )}
       >
-        <Space style={{ paddingBottom: '10px' }}>
-          {moleculeName +
-            ': ' +
-            moleculeFormula +
-            ', Notation: ' +
-            searchChemicalNotation +
-            ', Threshold: ' +
-            notationSearchThreshold}
+        <Space direction={'horizontal'} style={{ width: '100%', paddingTop: '20px', paddingBottom: '10px' }}>
+          <Space direction={'vertical'} style={{ paddingRight: '10px' }}>
+            <span>{t('projectPanel.UseDescriptor', lang) + ': '}InChI</span>
+            {similarMoleculesByInChI.length === 0 ? (
+              <div>{t('message.NoSimilarMoleculesWereFound', lang)}</div>
+            ) : (
+              similarMoleculesByInChI.map((value) => {
+                return (
+                  <div key={value.name}>
+                    <Checkbox>{value.name + ' (' + value.formula + '), d=' + value.distance}</Checkbox>
+                  </div>
+                );
+              })
+            )}
+          </Space>
+          <Space direction={'vertical'}>
+            <span>{t('projectPanel.UseDescriptor', lang) + ': '}SMILES</span>
+            {similarMoleculesBySmiles.length === 0 ? (
+              <div>{t('message.NoSimilarMoleculesWereFound', lang)}</div>
+            ) : (
+              similarMoleculesBySmiles.map((value) => {
+                return (
+                  <div key={value.name}>
+                    <Checkbox>{value.name + ' (' + value.formula + '), d=' + value.distance}</Checkbox>
+                  </div>
+                );
+              })
+            )}
+          </Space>
         </Space>
-        {similarMolecules.length === 0 ? (
-          <div>No similar molecules were found.</div>
-        ) : (
-          similarMolecules.map((value) => {
-            return (
-              <div key={value.name}>
-                <Checkbox checked={true}>{value.name + ' (' + value.formula + '): ' + value.distance}</Checkbox>
-              </div>
-            );
-          })
-        )}
       </Modal>
     );
   },

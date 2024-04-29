@@ -117,6 +117,7 @@ export const i18n_zh_cn = {
       DoYouWantToSaveChanges: '您要保存当前项目吗？',
       ThisCannotBeUndone: '这个操作一旦执行就不能撤销。',
       ToSaveYourWorkPleaseSignIn: '为了保存您的项目，请先登录。',
+      NoSimilarMoleculesWereFound: '没找到类似的分子。',
     },
 
     molecularViewer: {
@@ -271,6 +272,8 @@ export const i18n_zh_cn = {
       NumberOfColumns: '列数',
       FindMoleculesSimilarToSelectedOne: '查找类似选中分子的其它分子',
       SimilarMolecules: '类似的分子',
+      UseDescriptor: '采用描述符',
+      LevenshteinDistance: '莱文斯坦距离',
       ImportMoleculeIntoGallery: '输入分子到图库',
       SelectMolecule: '选择分子',
       TotalMolecules: '分子总数',

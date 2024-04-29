@@ -116,6 +116,7 @@ export const i18n_zh_tw = {
       DoYouWantToSaveChanges: '您要保存當前專案嗎？',
       ThisCannotBeUndone: '這個操作一旦執行就不能撤銷。',
       ToSaveYourWorkPleaseSignIn: '為了保存您的專案，請先登錄。',
+      NoSimilarMoleculesWereFound: '沒找到類似的分子。',
     },
 
     molecularViewer: {
@@ -270,6 +271,8 @@ export const i18n_zh_tw = {
       NumberOfColumns: '列數',
       FindMoleculesSimilarToSelectedOne: '找出類似選中分子的其它分子',
       SimilarMolecules: '類似的分子',
+      UseDescriptor: '採用描述符',
+      LevenshteinDistance: '萊文斯坦距離',
       ImportMoleculeIntoGallery: '輸入分子到圖庫',
       SelectMolecule: '選取分子',
       TotalMolecules: '分子總數',

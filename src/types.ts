@@ -47,8 +47,7 @@ export interface ProjectState {
   yLinesScatterPlot: boolean;
   lineWidthScatterPlot: number;
   dotSizeScatterPlot: number;
-  searchChemicalNotation: ChemicalNotation;
-  notationSearchThreshold: number;
+  numberOfMostSimilarMolecules: number;
 
   cameraPosition: number[];
   cameraRotation: number[];

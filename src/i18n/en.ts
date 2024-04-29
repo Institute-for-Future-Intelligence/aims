@@ -116,6 +116,7 @@ export const i18n_en = {
       DoYouWantToSaveChanges: 'Do you want to save changes?',
       ThisCannotBeUndone: 'This cannot be undone.',
       ToSaveYourWorkPleaseSignIn: 'To save your work, please sign in.',
+      NoSimilarMoleculesWereFound: 'No similar molecules were found.',
     },
 
     molecularViewer: {
@@ -272,6 +273,8 @@ export const i18n_en = {
       NumberOfColumns: 'Columns',
       FindMoleculesSimilarToSelectedOne: 'Find molecules similar to the selected one',
       SimilarMolecules: 'Similar Molecules',
+      UseDescriptor: 'Use descriptor',
+      LevenshteinDistance: 'Levenshtein Distance',
       ImportMoleculeIntoGallery: 'Import a molecule into gallery',
       SelectMolecule: 'Select a Molecule',
       TotalMolecules: 'Total Molecules',

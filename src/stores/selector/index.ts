@@ -218,9 +218,8 @@ export const lineWidthScatterPlot = (state: CommonStoreState) => state.projectSt
 
 export const dotSizeScatterPlot = (state: CommonStoreState) => state.projectState.dotSizeScatterPlot;
 
-export const searchChemicalNotation = (state: CommonStoreState) => state.projectState.searchChemicalNotation;
-
-export const notationSearchThreshold = (state: CommonStoreState) => state.projectState.notationSearchThreshold;
+export const numberOfMostSimilarMolecules = (state: CommonStoreState) =>
+  state.projectState.numberOfMostSimilarMolecules;
 
 export const hideGallery = (state: CommonStoreState) => state.projectState.hideGallery;
 

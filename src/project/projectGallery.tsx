@@ -150,8 +150,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const yLinesScatterPlot = useStore(Selector.yLinesScatterPlot);
   const lineWidthScatterPlot = useStore(Selector.lineWidthScatterPlot);
   const dotSizeScatterPlot = useStore(Selector.dotSizeScatterPlot);
-  const searchChemicalNotation = useStore(Selector.searchChemicalNotation) ?? ChemicalNotation.INCHI;
-  const notationSearchThreshold = useStore(Selector.notationSearchThreshold) ?? 5;
+  const numberOfMostSimilarMolecules = useStore(Selector.numberOfMostSimilarMolecules) ?? 5;
   const molecularPropertiesMap = useStore(Selector.molecularPropertiesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
@@ -181,7 +180,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const descriptionExpandedRef = useRef<boolean>(false);
   const sortedMoleculesRef = useRef<MoleculeInterface[]>([]); // store a sorted copy of molecules
   const containerRef = useRef<HTMLDivElement>(null!);
-  const similarMoleculesRef = useRef<{ name: string; formula: string; distance: number }[]>([]);
+  const similarMoleculesByInChIRef = useRef<{ name: string; formula: string; distance: number }[]>([]);
+  const similarMoleculesBySmilesRef = useRef<{ name: string; formula: string; distance: number }[]>([]);
 
   useEffect(() => {
     sortedMoleculesRef.current = [];
@@ -288,9 +288,15 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     style={{ border: 'none', padding: '4px' }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      similarMoleculesRef.current = findSimilarMolecules(
-                        searchChemicalNotation,
-                        notationSearchThreshold,
+                      similarMoleculesByInChIRef.current = findSimilarMolecules(
+                        ChemicalNotation.INCHI,
+                        numberOfMostSimilarMolecules,
+                        selectedMolecule,
+                        providedMolecularProperties,
+                      );
+                      similarMoleculesBySmilesRef.current = findSimilarMolecules(
+                        ChemicalNotation.SMILES,
+                        numberOfMostSimilarMolecules,
                         selectedMolecule,
                         providedMolecularProperties,
                       );
@@ -1151,7 +1157,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           <FindMoleculeModal
             moleculeName={selectedMolecule.name}
             moleculeFormula={getProvidedMolecularProperties(selectedMolecule.name)?.formula}
-            similarMolecules={similarMoleculesRef.current}
+            similarMoleculesByInChI={similarMoleculesByInChIRef.current}
+            similarMoleculesBySmiles={similarMoleculesBySmilesRef.current}
             setDialogVisible={setFindMoleculeDialogVisible}
             isDialogVisible={() => findMoleculeDialogVisible}
           />

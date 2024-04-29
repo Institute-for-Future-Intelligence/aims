@@ -61,8 +61,7 @@ export class ProjectUtil {
       yLinesScatterPlot: false,
       lineWidthScatterPlot: 1,
       dotSizeScatterPlot: 4,
-      searchChemicalNotation: ChemicalNotation.INCHI,
-      notationSearchThreshold: 5,
+      numberOfMostSimilarMolecules: 5,
 
       cameraPosition: DEFAULT_CAMERA_POSITION,
       cameraRotation: DEFAULT_CAMERA_ROTATION,

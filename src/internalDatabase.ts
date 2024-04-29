@@ -371,14 +371,15 @@ export const getData = (name: string) => {
 
 export const findSimilarMolecules = (
   type: ChemicalNotation,
-  threshold: number,
+  numberOfMostSimilarMolecules: number,
   molecule: MoleculeInterface,
   providedMolecularProperties: { [key: string]: MolecularProperties },
 ): { name: string; formula: string; distance: number }[] => {
   const prop = providedMolecularProperties[molecule.name];
   const selectedNames: { name: string; formula: string; distance: number }[] = [];
   switch (type) {
-    case ChemicalNotation.SMILES:
+    case ChemicalNotation.SMILES: {
+      const threshold = prop.heavyAtomCount * 2;
       for (const [key, value] of Object.entries(providedMolecularProperties)) {
         if (key === molecule.name || !value.smiles) continue;
         const d = distance(value.smiles, prop.smiles);
@@ -387,7 +388,9 @@ export const findSimilarMolecules = (
         }
       }
       break;
-    case ChemicalNotation.INCHI:
+    }
+    case ChemicalNotation.INCHI: {
+      const threshold = prop.heavyAtomCount * 5;
       for (const [key, value] of Object.entries(providedMolecularProperties)) {
         if (key === molecule.name || !value.inChI) continue;
         const d = distance(value.inChI, prop.inChI);
@@ -396,6 +399,10 @@ export const findSimilarMolecules = (
         }
       }
       break;
+    }
   }
-  return selectedNames;
+  selectedNames.sort((a, b) => a.distance - b.distance);
+  return selectedNames.length > numberOfMostSimilarMolecules
+    ? selectedNames.slice(0, numberOfMostSimilarMolecules)
+    : selectedNames;
 };
