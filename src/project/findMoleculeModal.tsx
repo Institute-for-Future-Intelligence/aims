@@ -9,7 +9,6 @@ import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { DiffOutlined } from '@ant-design/icons';
-import { ChemicalNotation } from '../constants.ts';
 
 export interface FindMoleculeModalProps {
   moleculeName: string;
@@ -30,11 +29,12 @@ const FindMoleculeModal = React.memo(
     isDialogVisible,
   }: FindMoleculeModalProps) => {
     const language = useStore(Selector.language);
-    const numberOfMostSimilarMolecules = useStore(Selector.numberOfMostSimilarMolecules) ?? 5;
 
+    const [updateFlag, setUpdateFlag] = useState<boolean>(false);
     const [dragEnabled, setDragEnabled] = useState<boolean>(false);
     const [bounds, setBounds] = useState<DraggableBounds>({ left: 0, top: 0, bottom: 0, right: 0 } as DraggableBounds);
     const dragRef = useRef<HTMLDivElement | null>(null);
+    const selectionRef = useRef<string[]>([]);
 
     const { t } = useTranslation();
     const lang = useMemo(() => {
@@ -62,6 +62,20 @@ const FindMoleculeModal = React.memo(
       setDialogVisible(false);
     };
 
+    const selectMolecule = (checked: boolean, name: string) => {
+      if (checked) {
+        if (!selectionRef.current.includes(name)) {
+          selectionRef.current.push(name);
+        }
+      } else {
+        const index = selectionRef.current.indexOf(name);
+        if (index !== -1) {
+          selectionRef.current.splice(index, 1);
+        }
+      }
+      setUpdateFlag(!updateFlag);
+    };
+
     return (
       <Modal
         width={600}
@@ -72,7 +86,7 @@ const FindMoleculeModal = React.memo(
             onMouseOut={() => setDragEnabled(false)}
           >
             <DiffOutlined />{' '}
-            {t('projectPanel.SimilarMolecules', lang) + ': ' + moleculeName + ' (' + moleculeFormula + ')'}
+            {t('projectPanel.SimilarMolecules', lang) + ' ' + moleculeName + ' (' + moleculeFormula + ')'}
           </div>
         }
         open={isDialogVisible()}
@@ -80,8 +94,8 @@ const FindMoleculeModal = React.memo(
           <Button key="Cancel" onClick={onCancel}>
             {t('word.Cancel', lang)}
           </Button>,
-          <Button key="OK" type="primary" onClick={onOk}>
-            {t('word.OK', lang)}
+          <Button key="OK" type="primary" onClick={onOk} disabled={selectionRef.current.length === 0}>
+            {t('word.Import', lang)}
           </Button>,
         ]}
         onCancel={onCancel}
@@ -98,28 +112,32 @@ const FindMoleculeModal = React.memo(
       >
         <Space direction={'horizontal'} style={{ width: '100%', paddingTop: '20px', paddingBottom: '10px' }}>
           <Space direction={'vertical'} style={{ paddingRight: '10px' }}>
-            <span>{t('projectPanel.UseDescriptor', lang) + ': '}InChI</span>
+            <span>InChI {t('word.Results', lang)}</span>
             {similarMoleculesByInChI.length === 0 ? (
               <div>{t('message.NoSimilarMoleculesWereFound', lang)}</div>
             ) : (
               similarMoleculesByInChI.map((value) => {
                 return (
                   <div key={value.name}>
-                    <Checkbox>{value.name + ' (' + value.formula + '), d=' + value.distance}</Checkbox>
+                    <Checkbox onChange={(e) => selectMolecule(e.target.checked, value.name)}>
+                      {value.name + ' (' + value.formula + '), d=' + value.distance}
+                    </Checkbox>
                   </div>
                 );
               })
             )}
           </Space>
           <Space direction={'vertical'}>
-            <span>{t('projectPanel.UseDescriptor', lang) + ': '}SMILES</span>
+            <span>SMILES {t('word.Results', lang)}</span>
             {similarMoleculesBySmiles.length === 0 ? (
               <div>{t('message.NoSimilarMoleculesWereFound', lang)}</div>
             ) : (
               similarMoleculesBySmiles.map((value) => {
                 return (
                   <div key={value.name}>
-                    <Checkbox>{value.name + ' (' + value.formula + '), d=' + value.distance}</Checkbox>
+                    <Checkbox onChange={(e) => selectMolecule(e.target.checked, value.name)}>
+                      {value.name + ' (' + value.formula + '), d=' + value.distance}
+                    </Checkbox>
                   </div>
                 );
               })

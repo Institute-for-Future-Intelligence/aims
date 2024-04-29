@@ -22,6 +22,8 @@ export const i18n_en = {
     },
 
     word: {
+      Results: 'Results',
+      Import: 'Import',
       Total: 'Total',
       Heat: 'Heat',
       Cool: 'Cool',
@@ -271,11 +273,12 @@ export const i18n_en = {
       ToggleDragAndDropMoleculeMode:
         'To add a molecule to the container on the right, click this button\nand then drag-and-drop it to the X-Y, Y-Z, or X-Z plane.',
       NumberOfColumns: 'Columns',
-      FindMoleculesSimilarToSelectedOne: 'Find molecules similar to the selected one',
-      SimilarMolecules: 'Similar Molecules',
-      UseDescriptor: 'Use descriptor',
+      FindMoleculesSimilarToSelectedOneToImportIntoGallery:
+        'Find molecules similar to the selected one to import into gallery',
+      SimilarMolecules: 'Molecules Similar to',
+      Descriptor: 'Descriptor',
       LevenshteinDistance: 'Levenshtein Distance',
-      ImportMoleculeIntoGallery: 'Import a molecule into gallery',
+      SelectMoleculeToImportIntoGallery: 'Select a molecule to import into gallery',
       SelectMolecule: 'Select a Molecule',
       TotalMolecules: 'Total Molecules',
       MoleculeType: 'Molecule Type',

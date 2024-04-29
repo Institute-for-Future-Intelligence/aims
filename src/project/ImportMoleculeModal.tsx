@@ -113,7 +113,7 @@ const ImportMoleculeModal = React.memo(
             {t('word.Cancel', lang)}
           </Button>,
           <Button key="OK" type="primary" onClick={onOk} disabled={!getName()}>
-            {t('word.OK', lang)}
+            {t('word.Import', lang)}
           </Button>,
         ]}
         onCancel={onCancel}

@@ -305,7 +305,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   >
                     <DiffOutlined
                       style={{ fontSize: '24px', color: 'gray' }}
-                      title={t('projectPanel.FindMoleculesSimilarToSelectedOne', lang)}
+                      title={t('projectPanel.FindMoleculesSimilarToSelectedOneToImportIntoGallery', lang)}
                     />
                   </Button>
                 )}
@@ -318,7 +318,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 >
                   <ImportOutlined
                     style={{ fontSize: '24px', color: 'gray' }}
-                    title={t('projectPanel.ImportMoleculeIntoGallery', lang)}
+                    title={t('projectPanel.SelectMoleculeToImportIntoGallery', lang)}
                   />
                 </Button>
                 {selectedMolecule && (
