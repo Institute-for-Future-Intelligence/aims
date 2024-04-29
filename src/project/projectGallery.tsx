@@ -120,6 +120,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const hoveredMolecule = usePrimitiveStore(Selector.hoveredMolecule);
   const addMolecule = useStore(Selector.addMolecule);
+  const addMolecules = useStore(Selector.addMolecules);
   const removeMolecule = useStore(Selector.removeMolecule);
   const numberOfColumns = useStore(Selector.numberOfColumns) ?? 3;
   const viewerStyle = useStore(Selector.projectViewerStyle);
@@ -1161,6 +1162,16 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             similarMoleculesBySmiles={similarMoleculesBySmilesRef.current}
             setDialogVisible={setFindMoleculeDialogVisible}
             isDialogVisible={() => findMoleculeDialogVisible}
+            importByNames={(names: string[]) => {
+              const molecules: MoleculeInterface[] = [];
+              for (const name of names) {
+                const m = getMolecule(name);
+                if (m) molecules.push(m);
+              }
+              addMolecules(molecules);
+              setUpdateFlag(!updateFlag);
+              setChanged(true);
+            }}
           />
         )}
         <ImportMoleculeModal

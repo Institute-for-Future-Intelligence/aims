@@ -15,6 +15,7 @@ export interface FindMoleculeModalProps {
   moleculeFormula: string;
   similarMoleculesByInChI: { name: string; formula: string; distance: number }[];
   similarMoleculesBySmiles: { name: string; formula: string; distance: number }[];
+  importByNames: (names: string[]) => void;
   setDialogVisible: (visible: boolean) => void;
   isDialogVisible: () => boolean;
 }
@@ -25,6 +26,7 @@ const FindMoleculeModal = React.memo(
     moleculeFormula,
     similarMoleculesByInChI,
     similarMoleculesBySmiles,
+    importByNames,
     setDialogVisible,
     isDialogVisible,
   }: FindMoleculeModalProps) => {
@@ -55,6 +57,7 @@ const FindMoleculeModal = React.memo(
     };
 
     const onOk = () => {
+      importByNames(selectionRef.current);
       setDialogVisible(false);
     };
 

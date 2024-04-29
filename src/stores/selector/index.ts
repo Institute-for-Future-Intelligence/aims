@@ -134,6 +134,8 @@ export const zoomViewFlag = (state: PrimitiveStoreState) => state.zoomViewFlag;
 
 export const addMolecule = (state: CommonStoreState) => state.addMolecule;
 
+export const addMolecules = (state: CommonStoreState) => state.addMolecules;
+
 export const removeMolecule = (state: CommonStoreState) => state.removeMolecule;
 
 export const molecularPropertiesMap = (state: CommonStoreState) => state.molecularPropertiesMap;
