@@ -76,6 +76,8 @@ import hydrocarbonMoleculeUrl114 from './molecules/sdf/cyclotetradecane.sdf';
 import hydrocarbonMoleculeUrl115 from './molecules/sdf/cyclopentadecane.sdf';
 import hydrocarbonMoleculeUrl201 from './molecules/sdf/ethylene.sdf';
 import hydrocarbonMoleculeUrl202 from './molecules/sdf/propylene.sdf';
+import hydrocarbonMoleculeUrl203 from './molecules/sdf/cis-2-butene.sdf';
+import hydrocarbonMoleculeUrl204 from './molecules/sdf/trans-2-butene.sdf';
 import hydrocarbonMoleculeUrl251 from './molecules/sdf/acetylene.sdf';
 import hydrocarbonMoleculeUrl301 from './molecules/xyz/benzene.xyz';
 import hydrocarbonMoleculeUrl302 from './molecules/sdf/biphenyl.sdf';
@@ -243,6 +245,8 @@ export const hydrocarbonMolecules = [
   { url: hydrocarbonMoleculeUrl115, internal: true, name: 'Cyclopentadecane' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl201, internal: true, name: 'Ethylene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl202, internal: true, name: 'Propylene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl203, internal: true, name: 'cis-2-Butene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl204, internal: true, name: 'trans-2-Butene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl251, internal: true, name: 'Acetylene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl301, internal: true, name: 'Benzene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl302, internal: true, name: 'Biphenyl' } as MoleculeInterface,
@@ -373,14 +377,14 @@ export const findSimilarMolecules = (
   type: ChemicalNotation,
   numberOfMostSimilarMolecules: number,
   molecule: MoleculeInterface,
-  providedMolecularProperties: { [key: string]: MolecularProperties },
+  molecularProperties: { [key: string]: MolecularProperties },
 ): { name: string; formula: string; distance: number }[] => {
-  const prop = providedMolecularProperties[molecule.name];
+  const prop = molecularProperties[molecule.name];
   const selectedNames: { name: string; formula: string; distance: number }[] = [];
   switch (type) {
     case ChemicalNotation.SMILES: {
       const threshold = prop.heavyAtomCount * 2;
-      for (const [key, value] of Object.entries(providedMolecularProperties)) {
+      for (const [key, value] of Object.entries(molecularProperties)) {
         if (key === molecule.name || !value.smiles) continue;
         const d = distance(value.smiles, prop.smiles);
         if (d <= threshold) {
@@ -391,7 +395,7 @@ export const findSimilarMolecules = (
     }
     case ChemicalNotation.INCHI: {
       const threshold = prop.heavyAtomCount * 5;
-      for (const [key, value] of Object.entries(providedMolecularProperties)) {
+      for (const [key, value] of Object.entries(molecularProperties)) {
         if (key === molecule.name || !value.inChI) continue;
         const d = distance(value.inChI, prop.inChI);
         if (d <= threshold) {

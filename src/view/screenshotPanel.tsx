@@ -29,7 +29,7 @@ export const ScreenshotPanel = React.memo(() => {
             });
         }}
       >
-        {t('experiment.JustReactionChamber', lang)}
+        {t('experiment.ReactionChamber', lang)}
       </Button>
       <Button
         onClick={() => {
