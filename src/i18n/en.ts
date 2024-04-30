@@ -188,6 +188,8 @@ export const i18n_en = {
     },
 
     experiment: {
+      WholeApp: 'Whole App',
+      JustReactionChamber: 'Just Reaction Chamber',
       FixAtom: 'Fix',
       Restraint: 'Restraint',
       DampingCoefficient: 'Damping',

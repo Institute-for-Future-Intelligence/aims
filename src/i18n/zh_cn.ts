@@ -189,6 +189,8 @@ export const i18n_zh_cn = {
     },
 
     experiment: {
+      WholeApp: '截屏整个应用',
+      JustReactionChamber: '只截屏反应室',
       FixAtom: '固定',
       Restraint: '弹性约束',
       DampingCoefficient: '阻尼系数',

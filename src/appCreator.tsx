@@ -100,7 +100,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   console.log('x');
 
   return (
-    <div className="App">
+    <div className="App" id={'whole-app'}>
       <div
         style={{
           backgroundColor: 'lightblue',

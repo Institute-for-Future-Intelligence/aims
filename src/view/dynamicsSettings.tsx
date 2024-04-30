@@ -23,7 +23,7 @@ import { CameraOutlined, ExperimentOutlined, EyeOutlined, ProfileOutlined, Right
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import { Undoable } from '../undo/Undoable.ts';
-import { screenshot, showError } from '../helpers.ts';
+import ScreenshotPanel from './screenshotPanel.tsx';
 
 const DynamicsSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -599,32 +599,31 @@ const DynamicsSettings = React.memo(() => {
           }
         />
       </Popover>
-      <FloatButton
-        shape="square"
-        type="primary"
-        style={{
-          position: 'absolute',
-          top: '8px',
-          left: leftIndent + 132 + 'px',
-          height: '20px',
-          zIndex: 13,
-        }}
-        description={
-          <span style={{ fontSize: '20px' }}>
-            <CameraOutlined />
-          </span>
+      <Popover
+        title={
+          <div onClick={(e) => e.stopPropagation()}>
+            <CameraOutlined /> {t('molecularViewer.TakeScreenshot', lang)}
+          </div>
         }
-        tooltip={t('molecularViewer.TakeScreenshot', lang)}
-        onClick={() => {
-          screenshot('reaction-chamber')
-            .then(() => {
-              if (loggable) logAction('Take Screenshot of Reaction Chamber');
-            })
-            .catch((reason) => {
-              showError(reason);
-            });
-        }}
-      />
+        content={<ScreenshotPanel />}
+      >
+        <FloatButton
+          shape="square"
+          type="primary"
+          style={{
+            position: 'absolute',
+            top: '8px',
+            left: leftIndent + 132 + 'px',
+            height: '20px',
+            zIndex: 13,
+          }}
+          description={
+            <span style={{ fontSize: '20px' }}>
+              <CameraOutlined />
+            </span>
+          }
+        />
+      </Popover>
       {mdRef?.current && (
         <Space
           direction={'horizontal'}

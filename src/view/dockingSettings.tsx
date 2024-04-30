@@ -13,7 +13,7 @@ import { AimOutlined, CameraOutlined, ExperimentOutlined, InfoCircleOutlined, Ri
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { Util } from '../Util.ts';
 import { Undoable } from '../undo/Undoable.ts';
-import { screenshot, showError } from '../helpers.ts';
+import ScreenshotPanel from './screenshotPanel.tsx';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -448,32 +448,31 @@ const DockingSettings = React.memo(() => {
           }
         />
       </Popover>
-      <FloatButton
-        shape="square"
-        type="primary"
-        style={{
-          position: 'absolute',
-          top: '8px',
-          left: leftIndent + 44 + 'px',
-          height: '20px',
-          zIndex: 13,
-        }}
-        description={
-          <span style={{ fontSize: '20px' }}>
-            <CameraOutlined />
-          </span>
+      <Popover
+        title={
+          <div onClick={(e) => e.stopPropagation()}>
+            <CameraOutlined /> {t('molecularViewer.TakeScreenshot', lang)}
+          </div>
         }
-        tooltip={t('molecularViewer.TakeScreenshot', lang)}
-        onClick={() => {
-          screenshot('reaction-chamber')
-            .then(() => {
-              if (loggable) logAction('Take Screenshot of Reaction Chamber');
-            })
-            .catch((reason) => {
-              showError(reason);
-            });
-        }}
-      />
+        content={<ScreenshotPanel />}
+      >
+        <FloatButton
+          shape="square"
+          type="primary"
+          style={{
+            position: 'absolute',
+            top: '8px',
+            left: leftIndent + 44 + 'px',
+            height: '20px',
+            zIndex: 13,
+          }}
+          description={
+            <span style={{ fontSize: '20px' }}>
+              <CameraOutlined />
+            </span>
+          }
+        />
+      </Popover>
       {protein?.name ? (
         <Popover
           title={

@@ -188,6 +188,8 @@ export const i18n_zh_tw = {
     },
 
     experiment: {
+      WholeApp: '截圖整個應用',
+      JustReactionChamber: '只截圖反應室',
       FixAtom: '固定',
       Restraint: '彈性約束',
       DampingCoefficient: '阻尼係數',
