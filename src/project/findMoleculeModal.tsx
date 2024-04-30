@@ -81,7 +81,7 @@ const FindMoleculeModal = React.memo(
 
     return (
       <Modal
-        width={600}
+        width={640}
         title={
           <div
             style={{ width: '100%', cursor: 'move' }}
@@ -89,7 +89,7 @@ const FindMoleculeModal = React.memo(
             onMouseOut={() => setDragEnabled(false)}
           >
             <DiffOutlined />{' '}
-            {t('projectPanel.SimilarMolecules', lang) + ' ' + moleculeName + ' (' + moleculeFormula + ')'}
+            {t('projectPanel.MostSimilarMolecules', lang) + ' ' + moleculeName + ' (' + moleculeFormula + ')'}
           </div>
         }
         open={isDialogVisible()}
@@ -123,7 +123,11 @@ const FindMoleculeModal = React.memo(
                 return (
                   <div key={value.name}>
                     <Checkbox onChange={(e) => selectMolecule(e.target.checked, value.name)}>
-                      {value.name + ' (' + value.formula + '), d=' + value.distance}
+                      {value.name + ' (' + value.formula + ')'}{' '}
+                      <span style={{ fontSize: '10px' }}>
+                        <i>D</i>
+                        <sub>L</sub>={value.distance}
+                      </span>
                     </Checkbox>
                   </div>
                 );
@@ -139,7 +143,11 @@ const FindMoleculeModal = React.memo(
                 return (
                   <div key={value.name}>
                     <Checkbox onChange={(e) => selectMolecule(e.target.checked, value.name)}>
-                      {value.name + ' (' + value.formula + '), d=' + value.distance}
+                      {value.name + ' (' + value.formula + ')'}{' '}
+                      <span style={{ fontSize: '10px' }}>
+                        <i>D</i>
+                        <sub>L</sub>={value.distance}
+                      </span>
                     </Checkbox>
                   </div>
                 );

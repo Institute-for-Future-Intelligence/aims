@@ -273,9 +273,9 @@ export const i18n_en = {
       ToggleDragAndDropMoleculeMode:
         'To add a molecule to the container on the right, click this button\nand then drag-and-drop it to the X-Y, Y-Z, or X-Z plane.',
       NumberOfColumns: 'Columns',
-      FindMoleculesSimilarToSelectedOneToImportIntoGallery:
-        'Find molecules similar to the selected one to import into gallery',
-      SimilarMolecules: 'Molecules Similar to',
+      FindMoleculesMostSimilarToSelectedOneToImportIntoGallery:
+        'Find molecules most similar to the selected one to import into gallery',
+      MostSimilarMolecules: 'Molecules Most Similar to',
       Descriptor: 'Descriptor',
       LevenshteinDistance: 'Levenshtein Distance',
       SelectMoleculeToImportIntoGallery: 'Select a molecule to import into gallery',
