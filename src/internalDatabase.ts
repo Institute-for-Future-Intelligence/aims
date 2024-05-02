@@ -155,6 +155,12 @@ import drugMoleculeUrl017 from './molecules/sdf/thorazine.sdf';
 import drugMoleculeUrl018 from './molecules/sdf/zidovudine.sdf';
 import drugMoleculeUrl019 from './molecules/sdf/lipitor.sdf';
 import drugMoleculeUrl020 from './molecules/sdf/metformin.sdf';
+import drugMoleculeUrl021 from './molecules/sdf/molnupiravir.sdf';
+import drugMoleculeUrl022 from './molecules/sdf/oseltamivir.sdf';
+import drugMoleculeUrl023 from './molecules/sdf/artemisinin.sdf';
+import drugMoleculeUrl024 from './molecules/sdf/umifenovir.sdf';
+import drugMoleculeUrl025 from './molecules/sdf/paracetamol.sdf';
+import drugMoleculeUrl026 from './molecules/sdf/chlorpheniramine.sdf';
 
 import proteinUrl001 from './proteins/1crn.pdb';
 import proteinUrl002 from './proteins/1a3n.pdb';
@@ -328,6 +334,12 @@ export const drugMolecules = [
   { url: drugMoleculeUrl018, internal: true, name: 'Zidovudine' } as MoleculeInterface,
   { url: drugMoleculeUrl019, internal: true, name: 'Lipitor' } as MoleculeInterface,
   { url: drugMoleculeUrl020, internal: true, name: 'Metformin' } as MoleculeInterface,
+  { url: drugMoleculeUrl021, internal: true, name: 'Molnupiravir' } as MoleculeInterface,
+  { url: drugMoleculeUrl022, internal: true, name: 'Oseltamivir' } as MoleculeInterface,
+  { url: drugMoleculeUrl023, internal: true, name: 'Artemisinin' } as MoleculeInterface,
+  { url: drugMoleculeUrl024, internal: true, name: 'Umifenovir' } as MoleculeInterface,
+  { url: drugMoleculeUrl025, internal: true, name: 'Paracetamol' } as MoleculeInterface,
+  { url: drugMoleculeUrl026, internal: true, name: 'Chlorpheniramine' } as MoleculeInterface,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const targetProteins = [
