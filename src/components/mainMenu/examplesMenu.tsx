@@ -95,6 +95,14 @@ export const createExamplesMenu = (viewOnly: boolean) => {
           ),
         },
         {
+          key: 'Bu-2-ene Isomers',
+          label: (
+            <MenuItem onClick={() => loadProject('Bu-2-ene Isomers')}>
+              {i18n.t('menu.examples.chemistry.Bu2EneIsomers', lang)}
+            </MenuItem>
+          ),
+        },
+        {
           key: 'Cis–Trans Isomerism of Fatty Acids',
           label: (
             <MenuItem onClick={() => loadProject('Cis–Trans Isomerism of Fatty Acids')}>
@@ -175,6 +183,14 @@ export const createExamplesMenu = (viewOnly: boolean) => {
           label: (
             <MenuItem onClick={() => loadProject('Graphite')}>
               {i18n.t('menu.examples.materialsScience.Graphite', lang)}
+            </MenuItem>
+          ),
+        },
+        {
+          key: 'Graphenes',
+          label: (
+            <MenuItem onClick={() => loadProject('Graphenes')}>
+              {i18n.t('menu.examples.materialsScience.Graphenes', lang)}
             </MenuItem>
           ),
         },
