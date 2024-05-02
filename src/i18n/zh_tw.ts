@@ -119,6 +119,8 @@ export const i18n_zh_tw = {
       ThisCannotBeUndone: '這個操作一旦執行就不能撤銷。',
       ToSaveYourWorkPleaseSignIn: '為了保存您的專案，請先登錄。',
       NoSimilarMoleculesWereFound: '沒找到類似的分子。',
+      TurnOnXYZPlanesForDroppingMolecule: '被拖分子只能被釋放到X-Y，Y-Z或X-Z平面上。請先打開至少一個。',
+      NoPlaneToPaste: '沒有可貼上的平面',
     },
 
     molecularViewer: {
@@ -271,7 +273,7 @@ export const i18n_zh_tw = {
       GallerySettings: '圖庫設定',
       DisplayWindowSize: '展示視窗大小',
       OutputSelectedMoleculeToTest: '把選中的分子加到實驗中',
-      ToggleDragAndDropMoleculeMode: '按下此按鈕然後拖曳一個分子到右邊視窗的X-Y，Y-Z，或X-Z平面上。',
+      ToggleDragAndDropMoleculeMode: '按下此按鈕然後拖曳一個分子到右邊反應室的X-Y，Y-Z，或X-Z平面上。',
       NumberOfColumns: '列數',
       FindMoleculesMostSimilarToSelectedOneToImportIntoGallery: '找出最類似選中分子的其它分子輸入到圖庫',
       MostSimilarMolecules: '最類似於',

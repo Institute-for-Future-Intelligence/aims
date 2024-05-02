@@ -119,6 +119,9 @@ export const i18n_en = {
       ThisCannotBeUndone: 'This cannot be undone.',
       ToSaveYourWorkPleaseSignIn: 'To save your work, please sign in.',
       NoSimilarMoleculesWereFound: 'No similar molecules were found.',
+      TurnOnXYZPlanesForDroppingMolecule:
+        'Turn on at least one of the X-Y, Y-Z, or X-Z planes for dropping the dragged molecule.',
+      NoPlaneToPaste: 'No Plane to Paste',
     },
 
     molecularViewer: {
@@ -273,7 +276,7 @@ export const i18n_en = {
       DisplayWindowSize: 'Display Window Size',
       OutputSelectedMoleculeToTest: 'Output selected molecule to test',
       ToggleDragAndDropMoleculeMode:
-        'To add a molecule to the container on the right, click this button\nand then drag-and-drop it to the X-Y, Y-Z, or X-Z plane.',
+        'To add a molecule to the reaction chamber on the right, click this button\nand then drag-and-drop it to the X-Y, Y-Z, or X-Z plane.',
       NumberOfColumns: 'Columns',
       FindMoleculesMostSimilarToSelectedOneToImportIntoGallery:
         'Find molecules most similar to the selected one to import into gallery',

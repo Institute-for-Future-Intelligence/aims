@@ -221,16 +221,30 @@ export const createDefaultMenu = (
         });
       }
     } else {
-      if ((copiedMoleculeIndex !== -1 || cutMolecule) && selectedPlane !== -1) {
-        items.push({
-          key: 'molecule-paste',
-          label: (
-            <>
-              <PasteMolecule />
-              <hr style={{ marginLeft: '24px' }} />
-            </>
-          ),
-        });
+      if (copiedMoleculeIndex !== -1 || cutMolecule) {
+        if (selectedPlane !== -1) {
+          items.push({
+            key: 'molecule-paste',
+            label: (
+              <>
+                <PasteMolecule />
+                <hr style={{ marginLeft: '24px' }} />
+              </>
+            ),
+          });
+        } else {
+          items.push({
+            key: 'molecule-nowhere-to-paste',
+            label: (
+              <>
+                <MenuItem stayAfterClick={false} hasPadding={true}>
+                  {i18n.t('message.NoPlaneToPaste', lang)}
+                </MenuItem>
+                <hr style={{ marginLeft: '24px' }} />
+              </>
+            ),
+          });
+        }
       }
 
       items.push({

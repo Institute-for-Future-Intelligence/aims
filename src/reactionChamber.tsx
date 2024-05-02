@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import {
   DEFAULT_CAMERA_POSITION,
@@ -39,9 +39,12 @@ import { Molecule } from './models/Molecule.ts';
 import { Atom } from './models/Atom.ts';
 import { VT_CONVERSION_CONSTANT } from './models/physicalConstants.ts';
 import { ModelUtil } from './models/ModelUtil.ts';
+import { showInfo } from './helpers.ts';
+import { useTranslation } from 'react-i18next';
 
 const ReactionChamber = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
+  const language = useStore(Selector.language);
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const viewerStyle = useStore(Selector.chamberViewerStyle);
   const viewerMaterial = useStore(Selector.chamberViewerMaterial);
@@ -72,6 +75,11 @@ const ReactionChamber = React.memo(() => {
   const planeXYRef = useRefStore.getState().planeXYRef;
   const planeYZRef = useRefStore.getState().planeYZRef;
   const planeXZRef = useRefStore.getState().planeXZRef;
+
+  const { t } = useTranslation();
+  const lang = useMemo(() => {
+    return { lng: language };
+  }, [language]);
 
   useEffect(() => {
     useRefStore.setState({
@@ -124,6 +132,10 @@ const ReactionChamber = React.memo(() => {
           }
         }
       });
+    } else {
+      if (!point) {
+        showInfo(t('message.TurnOnXYZPlanesForDroppingMolecule', lang));
+      }
     }
   };
 
