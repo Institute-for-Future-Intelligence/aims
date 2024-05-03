@@ -349,6 +349,8 @@ export const i18n_zh_cn = {
       SortScatterPlotData: '数据排序',
       SortDataByXValue: '按X值',
       SortDataByYValue: '按Y值',
+      RegressionAnalysis: '回归分析',
+      PolynomialRegressionDegree: '多项式回归度',
     },
 
     menu: {

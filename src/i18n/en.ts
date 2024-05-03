@@ -352,6 +352,8 @@ export const i18n_en = {
       SortScatterPlotData: 'Sort Data',
       SortDataByXValue: 'By X',
       SortDataByYValue: 'By Y',
+      RegressionAnalysis: 'Regression Analysis',
+      PolynomialRegressionDegree: 'Polynomial Regression Degree',
     },
 
     menu: {

@@ -19,6 +19,7 @@
     "immer": "^10.0.3",
     "lodash": "^4.17.21",
     "mathjs": "^12.4.0",
+    "ml-regression-polynomial": "^3.0.0",
     "papaparse": "^5.4.1",
     "platform": "^1.3.6",
     "react": "^18.2.0",

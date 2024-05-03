@@ -17,7 +17,7 @@ import {
   EditFilled,
   EditOutlined,
   ImportOutlined,
-  LineChartOutlined,
+  DotChartOutlined,
   LoadingOutlined,
   RightCircleOutlined,
   SettingOutlined,
@@ -51,6 +51,8 @@ import { Vector2 } from 'three';
 import { View } from './View.tsx';
 import { Undoable } from '../undo/Undoable.ts';
 import FindMoleculeModal from './findMoleculeModal.tsx';
+import RegressionImage from '../assets/regression.png';
+import RegressionContent from './regressionContent.tsx';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);
@@ -968,7 +970,20 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   <Popover
                     title={
                       <div onClick={(e) => e.stopPropagation()}>
-                        <LineChartOutlined /> {t('projectPanel.CoordinateSystemSettings', lang)}
+                        <img src={RegressionImage} width={'16px'} alt={'regression'} />{' '}
+                        {t('projectPanel.RegressionAnalysis', lang)}
+                      </div>
+                    }
+                    content={<RegressionContent />}
+                  >
+                    <Button style={{ border: 'none', paddingRight: 0, background: 'white', verticalAlign: 'top' }}>
+                      <img src={RegressionImage} alt={'regression'} />
+                    </Button>
+                  </Popover>
+                  <Popover
+                    title={
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <TableOutlined /> {t('projectPanel.CoordinateSystemSettings', lang)}
                       </div>
                     }
                     content={
@@ -985,19 +1000,19 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     }
                   >
                     <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                      <LineChartOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                      <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
                     </Button>
                   </Popover>
                   <Popover
                     title={
                       <div onClick={(e) => e.stopPropagation()}>
-                        <TableOutlined /> {t('projectPanel.ScatterPlotSettings', lang)}
+                        <DotChartOutlined /> {t('projectPanel.ScatterPlotSettings', lang)}
                       </div>
                     }
                     content={<GraphSettingsContent />}
                   >
                     <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                      <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                      <DotChartOutlined style={{ fontSize: '24px', color: 'gray' }} />
                     </Button>
                   </Popover>
                   <Button

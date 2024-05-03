@@ -348,6 +348,8 @@ export const i18n_zh_tw = {
       SortScatterPlotData: '數據排序',
       SortDataByXValue: '按X值',
       SortDataByYValue: '按Y值',
+      RegressionAnalysis: '回歸分析',
+      PolynomialRegressionDegree: '多項式迴歸度',
     },
 
     menu: {
