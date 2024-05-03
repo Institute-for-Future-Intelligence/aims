@@ -1048,10 +1048,12 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   label={
                     <Label
                       value={
-                        ProjectUtil.getPropertyName(xAxisNameScatterPlot, lang) +
-                        (ProjectUtil.getUnit(xAxisNameScatterPlot) === ''
-                          ? ''
-                          : ' (' + ProjectUtil.getUnit(xAxisNameScatterPlot) + ')')
+                        !xFormula || xFormula === 'x'
+                          ? ProjectUtil.getPropertyName(xAxisNameScatterPlot, lang) +
+                            (ProjectUtil.getUnit(xAxisNameScatterPlot) === ''
+                              ? ''
+                              : ' (' + ProjectUtil.getUnit(xAxisNameScatterPlot) + ')')
+                          : xFormula
                       }
                       dy={10}
                       fontSize={11}
@@ -1069,16 +1071,19 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   label={
                     <Label
                       value={
-                        ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang) +
-                        (ProjectUtil.getUnit(yAxisNameScatterPlot) === ''
-                          ? ''
-                          : ' (' + ProjectUtil.getUnit(yAxisNameScatterPlot) + ')')
+                        !yFormula || yFormula === 'y'
+                          ? ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang) +
+                            (ProjectUtil.getUnit(yAxisNameScatterPlot) === ''
+                              ? ''
+                              : ' (' + ProjectUtil.getUnit(yAxisNameScatterPlot) + ')')
+                          : yFormula
                       }
-                      dx={-10}
+                      dx={-16}
                       fontSize={11}
                       angle={-90}
                     />
                   }
+                  tickFormatter={(value) => (value > 10000 ? Number(value.toFixed(1)).toExponential(1) : value)}
                   name={ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang)}
                   strokeWidth={1}
                   stroke={'gray'}

@@ -2,7 +2,7 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Col, Input, InputNumber, Row, Select } from 'antd';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
@@ -56,6 +56,14 @@ const CoordinateSystemSettingsContent = React.memo(
 
     const [xFormulaTemp, setXFormulaTemp] = useState<string | null>(xFormula);
     const [yFormulaTemp, setYFormulaTemp] = useState<string | null>(yFormula);
+
+    useEffect(() => {
+      setXFormulaTemp(xFormula);
+    }, [xFormula]);
+
+    useEffect(() => {
+      setYFormulaTemp(yFormula);
+    }, [yFormula]);
 
     const createAxisOptions = () => {
       return (
