@@ -61,6 +61,7 @@ export class ProjectUtil {
       yLinesScatterPlot: false,
       lineWidthScatterPlot: 1,
       dotSizeScatterPlot: 4,
+      sortDataScatterPlot: 'None',
       numberOfMostSimilarMolecules: 5,
 
       cameraPosition: DEFAULT_CAMERA_POSITION,

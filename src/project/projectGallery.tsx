@@ -141,6 +141,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const hiddenProperties = useStore(Selector.hiddenProperties);
   const xAxisNameScatterPlot = useStore(Selector.xAxisNameScatterPlot) ?? 'atomCount';
   const yAxisNameScatterPlot = useStore(Selector.yAxisNameScatterPlot) ?? 'bondCount';
+  const sortDataScatterPlot = useStore(Selector.sortDataScatterPlot) ?? 'None';
   const xFormula = useStore(Selector.xFormula);
   const yFormula = useStore(Selector.yFormula);
   const xMinScatterPlot = useStore(Selector.xMinScatterPlot) ?? 0;
@@ -687,8 +688,18 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
         }
       }
     }
+    if (sortDataScatterPlot === 'X') return data.sort((a, b) => a.x - b.x);
+    if (sortDataScatterPlot === 'Y') return data.sort((a, b) => a.y - b.y);
     return data;
-  }, [xAxisNameScatterPlot, yAxisNameScatterPlot, xFormula, yFormula, projectMolecules, molecularPropertiesMap]);
+  }, [
+    sortDataScatterPlot,
+    xAxisNameScatterPlot,
+    yAxisNameScatterPlot,
+    xFormula,
+    yFormula,
+    projectMolecules,
+    molecularPropertiesMap,
+  ]);
 
   return (
     <Container
@@ -1102,7 +1113,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   name="All"
                   data={scatterData}
                   fill={'#8884d8'}
-                  line={true}
+                  line={lineWidthScatterPlot > 0}
                   strokeWidth={lineWidthScatterPlot}
                   shape={<Dot r={dotSizeScatterPlot} />}
                   onPointerOver={(e) => {

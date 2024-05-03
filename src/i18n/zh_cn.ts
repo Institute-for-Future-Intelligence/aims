@@ -346,6 +346,9 @@ export const i18n_zh_cn = {
       VerticalLines: '竖直线',
       SymbolSize: '符号大小',
       LineWidth: '线宽',
+      SortScatterPlotData: '数据排序',
+      SortDataByXValue: '按X值',
+      SortDataByYValue: '按Y值',
     },
 
     menu: {

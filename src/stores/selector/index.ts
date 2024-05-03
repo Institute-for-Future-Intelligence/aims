@@ -220,6 +220,8 @@ export const lineWidthScatterPlot = (state: CommonStoreState) => state.projectSt
 
 export const dotSizeScatterPlot = (state: CommonStoreState) => state.projectState.dotSizeScatterPlot;
 
+export const sortDataScatterPlot = (state: CommonStoreState) => state.projectState.sortDataScatterPlot;
+
 export const numberOfMostSimilarMolecules = (state: CommonStoreState) =>
   state.projectState.numberOfMostSimilarMolecules;
 

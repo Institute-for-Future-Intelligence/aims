@@ -47,6 +47,7 @@ export interface ProjectState {
   yLinesScatterPlot: boolean;
   lineWidthScatterPlot: number;
   dotSizeScatterPlot: number;
+  sortDataScatterPlot: string;
   numberOfMostSimilarMolecules: number;
 
   cameraPosition: number[];

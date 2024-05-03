@@ -173,7 +173,7 @@ export const i18n_en = {
       Sequence: 'Sequence',
       Conformation: 'Conformation',
       Molecule: 'Molecule',
-      TakeScreenshot: 'Take Screenshot',
+      TakeScreenshot: 'Take a Screenshot',
       TranslateMolecule: 'Translate',
       RotateMolecule: 'Rotate',
       AboutXAxis: 'About X Axis',
@@ -349,6 +349,9 @@ export const i18n_en = {
       VerticalLines: 'Vertical',
       SymbolSize: 'Symbol Size',
       LineWidth: 'Line Width',
+      SortScatterPlotData: 'Sort Data',
+      SortDataByXValue: 'By X',
+      SortDataByYValue: 'By Y',
     },
 
     menu: {
