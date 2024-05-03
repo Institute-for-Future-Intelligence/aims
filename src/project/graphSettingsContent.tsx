@@ -48,12 +48,15 @@ const GraphSettingsContent = React.memo(() => {
               switch (state.projectState.sortDataScatterPlot) {
                 case 'None':
                   state.projectState.selectedProperty = null;
+                  state.projectState.sortDescending = false;
                   break;
                 case 'X':
                   state.projectState.selectedProperty = xAxisNameScatterPlot;
+                  state.projectState.sortDescending = true;
                   break;
                 case 'Y':
                   state.projectState.selectedProperty = yAxisNameScatterPlot;
+                  state.projectState.sortDescending = true;
                   break;
               }
             });

@@ -344,7 +344,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 )}
               </>
             }
-            {selectedProperty && (
+            {selectedProperty && graphType === GraphType.PARALLEL_COORDINATES && (
               <Button
                 style={{ border: 'none', padding: '4px' }}
                 onClick={(e) => {

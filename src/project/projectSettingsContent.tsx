@@ -48,9 +48,7 @@ const ProjectSettingsContent = React.memo(
     const setGraphType = (graphType: GraphType) => {
       useStore.getState().set((state) => {
         state.projectState.graphType = graphType;
-        if (graphType === GraphType.SCATTER_PLOT) {
-          state.projectState.selectedProperty = null;
-        }
+        state.projectState.selectedProperty = null;
       });
       setChanged(true);
     };
