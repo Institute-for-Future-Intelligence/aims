@@ -564,6 +564,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     positionTimeSeriesMap.clear();
     usePrimitiveStore.getState().set((state) => {
       state.resetSimulation = true;
+      state.regressionAnalysis = false;
     });
   };
 

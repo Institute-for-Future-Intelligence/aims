@@ -740,7 +740,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     usePrimitiveStore.getState().set((state) => {
       state.regressionAnalysis = false;
     });
-  }, [regressionDegree, xFormula, yFormula, xAxisNameScatterPlot, yAxisNameScatterPlot]);
+  }, [projectTitle, regressionDegree, xFormula, yFormula, xAxisNameScatterPlot, yAxisNameScatterPlot]);
 
   return (
     <Container
@@ -1095,7 +1095,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   left: 10,
                 }}
               >
-                {regressionAnalysis && <Legend wrapperStyle={{ bottom: '10px', fontSize: '12px' }} />}
+                {regressionAnalysis && <Legend wrapperStyle={{ bottom: '10px', fontSize: '11px' }} />}
                 <CartesianGrid
                   strokeWidth="1"
                   stroke={'gray'}
