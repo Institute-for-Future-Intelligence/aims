@@ -353,6 +353,8 @@ export const i18n_zh_cn = {
       RegressionModel: '回归模型',
       RawData: '原始数据',
       PolynomialRegressionDegree: '多项式回归度',
+      ClickToIncludeMolecule: '按这里把此分子加入下图分析',
+      ClickToExcludeMolecule: '按这里把此分子从下图分析排除',
     },
 
     menu: {

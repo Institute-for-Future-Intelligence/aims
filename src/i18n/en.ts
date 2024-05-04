@@ -356,6 +356,8 @@ export const i18n_en = {
       RegressionModel: 'Regression Model',
       RawData: 'Raw Data',
       PolynomialRegressionDegree: 'Polynomial Regression Degree',
+      ClickToIncludeMolecule: 'Click to include this molecule',
+      ClickToExcludeMolecule: 'Click to exclude this molecule',
     },
 
     menu: {

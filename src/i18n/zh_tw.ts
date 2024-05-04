@@ -352,6 +352,8 @@ export const i18n_zh_tw = {
       RegressionModel: '回歸模型',
       RawData: '原始數據',
       PolynomialRegressionDegree: '多項式迴歸度',
+      ClickToIncludeMolecule: '按這裡把此分子加入下圖分析',
+      ClickToExcludeMolecule: '按這裡把此分子從下圖分析排除',
     },
 
     menu: {

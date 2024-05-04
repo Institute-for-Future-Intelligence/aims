@@ -167,7 +167,7 @@ const ScissorBox = React.memo(
           {molecule?.invisible ? (
             <MinusCircleOutlined
               style={{ position: 'absolute', right: '-6px', bottom: 25 - viewHeight + 'px', cursor: 'pointer' }}
-              title={'Click to include this molecule'}
+              title={t('projectPanel.ClickToIncludeMolecule', lang)}
               onClick={() => {
                 if (molecule) {
                   setCommonStore((state) => {
@@ -187,7 +187,7 @@ const ScissorBox = React.memo(
           ) : (
             <CheckCircleOutlined
               style={{ position: 'absolute', right: '-6px', bottom: 25 - viewHeight + 'px', cursor: 'pointer' }}
-              title={'Click to exclude this molecule'}
+              title={t('projectPanel.ClickToExcludeMolecule', lang)}
               onClick={() => {
                 if (molecule) {
                   setCommonStore((state) => {
