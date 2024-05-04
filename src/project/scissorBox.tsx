@@ -14,6 +14,10 @@ import { ProjectGalleryControls } from '../controls.tsx';
 import { Html } from '@react-three/drei';
 import { ThreeEvent } from '@react-three/fiber';
 import GalleryViewer from '../view/galleryViewer.tsx';
+import { showInfo } from '../helpers.ts';
+import { useTranslation } from 'react-i18next';
+import { message } from 'antd';
+import { CheckCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 interface MolecularContainerProps {
   viewWidth: number;
@@ -46,12 +50,22 @@ const ScissorBox = React.memo(
     scatterDataIndex,
     setScatterDataHoveredIndex,
   }: MolecularContainerProps) => {
+    const setCommonStore = useStore(Selector.set);
+    const language = useStore(Selector.language);
     const setChanged = usePrimitiveStore(Selector.setChanged);
     const cameraPositionVector = useMemo(() => new Vector3().fromArray(DEFAULT_CAMERA_POSITION), []);
     const labelType = useStore(Selector.labelType);
     const dragAndDropMolecule = usePrimitiveStore(Selector.dragAndDropMolecule);
+    const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
+    const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
+    const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
 
     const lightRef = useRef<DirectionalLight>(null);
+
+    const { t } = useTranslation();
+    const lang = useMemo(() => {
+      return { lng: language };
+    }, [language]);
 
     const onPointerOver = () => {
       usePrimitiveStore.getState().set((state) => {
@@ -117,12 +131,16 @@ const ScissorBox = React.memo(
             onPointerLeave={onPointerLeave}
             onMouseDown={onMouseDown}
             draggable={dragAndDropMolecule}
-            // onDragStart={(e) => {
-            //   // TODO
-            // }}
-            // onDragEnd={(e) => {
-            //   // TODO
-            // }}
+            onDragStart={() => {
+              if (!xyPlaneVisible && !yzPlaneVisible && !xzPlaneVisible) {
+                showInfo(t('message.TurnOnXYZPlanesForDroppingMolecule', lang), 1000);
+              }
+            }}
+            onDragEnd={() => {
+              if (!xyPlaneVisible && !yzPlaneVisible && !xzPlaneVisible) {
+                message.destroy();
+              }
+            }}
           />
         </Html>
         <Html>
@@ -146,6 +164,47 @@ const ScissorBox = React.memo(
           >
             {labelType === LabelType.FORMULA ? formula ?? molecule?.name : molecule?.name}
           </div>
+          {molecule?.invisible ? (
+            <MinusCircleOutlined
+              style={{ position: 'absolute', right: '-6px', bottom: 25 - viewHeight + 'px', cursor: 'pointer' }}
+              title={'Click to include this molecule'}
+              onClick={() => {
+                if (molecule) {
+                  setCommonStore((state) => {
+                    for (const m of state.projectState.molecules) {
+                      if (m.name === molecule.name) {
+                        m.invisible = false;
+                        usePrimitiveStore.getState().set((state) => {
+                          state.regressionAnalysis = false;
+                        });
+                        break;
+                      }
+                    }
+                  });
+                }
+              }}
+            />
+          ) : (
+            <CheckCircleOutlined
+              style={{ position: 'absolute', right: '-6px', bottom: 25 - viewHeight + 'px', cursor: 'pointer' }}
+              title={'Click to exclude this molecule'}
+              onClick={() => {
+                if (molecule) {
+                  setCommonStore((state) => {
+                    for (const m of state.projectState.molecules) {
+                      if (m.name === molecule.name) {
+                        m.invisible = true;
+                        usePrimitiveStore.getState().set((state) => {
+                          state.regressionAnalysis = false;
+                        });
+                        break;
+                      }
+                    }
+                  });
+                }
+              }}
+            />
+          )}
         </Html>
       </>
     );

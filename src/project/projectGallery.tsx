@@ -670,7 +670,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   }, [updateHiddenFlag, projectFilters, hiddenProperties]);
 
   const scatterData = useMemo(() => {
-    const data: { x: number; y: number }[] = [];
+    const data: { all: { x: number; y: number }[]; visible: { x: number; y: number }[] } = { all: [], visible: [] };
     if (projectMolecules) {
       for (const m of projectMolecules) {
         const prop = molecularPropertiesMap.get(m.name);
@@ -692,13 +692,20 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 // ignore
               }
             }
-            data.push({ x, y });
+            if (!m.invisible) data.visible.push({ x, y });
+            data.all.push({ x, y });
           }
         }
       }
     }
-    if (sortDataScatterPlot === 'X') return data.sort((a, b) => a.x - b.x);
-    if (sortDataScatterPlot === 'Y') return data.sort((a, b) => a.y - b.y);
+    if (sortDataScatterPlot === 'X') {
+      data.all.sort((a, b) => a.x - b.x);
+      data.visible.sort((a, b) => a.x - b.x);
+    }
+    if (sortDataScatterPlot === 'Y') {
+      data.all.sort((a, b) => a.y - b.y);
+      data.visible.sort((a, b) => a.y - b.y);
+    }
     return data;
   }, [
     sortDataScatterPlot,
@@ -734,6 +741,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     if (sortDataScatterPlot === 'X') return data.sort((a, b) => a.x - b.x);
     if (sortDataScatterPlot === 'Y') return data.sort((a, b) => a.y - b.y);
     return data;
+    // don't add other dependencies because we want this to be called only when the button is clicked
   }, [regression]);
 
   useEffect(() => {
@@ -1004,7 +1012,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
 
             {data.length > 0 && graphType === GraphType.SCATTER_PLOT && (
               <>
-                <PolynomialRegression data={scatterData} />
+                <PolynomialRegression data={scatterData.visible} />
                 <PropertiesHeader>
                   <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Relationship', lang)}</span>
                   <span>
@@ -1178,16 +1186,16 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 />
                 <Scatter
                   name={t('projectPanel.RawData', lang)}
-                  data={scatterData}
+                  data={scatterData.all}
                   fill={'#8884d8'}
                   line={lineWidthScatterPlot > 0}
                   strokeWidth={lineWidthScatterPlot}
                   shape={<Dot r={dotSizeScatterPlot} />}
                   onPointerOver={(e) => {
-                    setScatterDataHoveredIndex(scatterData.indexOf(e.payload));
+                    setScatterDataHoveredIndex(scatterData.all.indexOf(e.payload));
                   }}
                   onClick={(e) => {
-                    const index = scatterData.indexOf(e.payload);
+                    const index = scatterData.all.indexOf(e.payload);
                     if (index >= 0) {
                       setCommonStore((state) => {
                         state.projectState.selectedMolecule = sortedMoleculesRef.current[index];
@@ -1195,16 +1203,17 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     }
                   }}
                 >
-                  {scatterData.map((entry, index) => {
+                  {scatterData.all.map((entry, index) => {
                     const selected = selectedMolecule
                       ? index === sortedMoleculesRef.current.indexOf(selectedMolecule)
                       : false;
+                    const color = projectMolecules[index].invisible ? 'lightgray' : '#8884d8';
                     const hovered = index === scatterDataHoveredIndex;
                     if (selected && hovered) {
                       return (
                         <Cell
                           key={`cell-${index}`}
-                          fill="#8884d8"
+                          fill={color}
                           stroke={'black'}
                           strokeWidth={2}
                           strokeDasharray={'2 2'}
@@ -1215,7 +1224,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       return (
                         <Cell
                           key={`cell-${index}`}
-                          fill="#8884d8"
+                          fill={color}
                           stroke={'black'}
                           strokeWidth={1}
                           strokeDasharray={'2 2'}
@@ -1223,9 +1232,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       );
                     }
                     if (selected) {
-                      return <Cell key={`cell-${index}`} fill="#8884d8" stroke={'black'} strokeWidth={2} />;
+                      return <Cell key={`cell-${index}`} fill={color} stroke={'black'} strokeWidth={2} />;
                     }
-                    return <Cell key={`cell-${index}`} fill="#8884d8" />;
+                    return <Cell key={`cell-${index}`} fill={color} />;
                   })}
                 </Scatter>
                 {regressionAnalysis && (
@@ -1241,7 +1250,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     strokeDasharray="5 5"
                     strokeWidth={2}
                     shape={<RenderNoShape />}
-                  ></Scatter>
+                  />
                 )}
               </ScatterChart>
             )}
