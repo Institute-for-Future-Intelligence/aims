@@ -61,6 +61,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           lineWidthScatterPlot: data.lineWidthScatterPlot !== undefined ? data.lineWidthScatterPlot : 1,
           dotSizeScatterPlot: data.dotSizeScatterPlot !== undefined ? data.dotSizeScatterPlot : 4,
           sortDataScatterPlot: data.sortDataScatterPlot ?? 'None',
+          regressionDegree: data.regressionDegree ?? 1,
           numberOfMostSimilarMolecules: data.numberOfMostSimilarMolecules ?? 5,
 
           hideGallery: !!data.hideGallery,

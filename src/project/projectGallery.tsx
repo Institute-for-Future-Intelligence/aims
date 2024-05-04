@@ -52,7 +52,6 @@ import { View } from './View.tsx';
 import { Undoable } from '../undo/Undoable.ts';
 import FindMoleculeModal from './findMoleculeModal.tsx';
 import RegressionImage from '../assets/regression.png';
-import RegressionContent from './regressionContent.tsx';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);
@@ -160,6 +159,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
   const providedMolecularProperties = useStore(Selector.providedMolecularProperties);
   const dragAndDropMolecule = usePrimitiveStore(Selector.dragAndDropMolecule);
+  const regressionAnalysis = usePrimitiveStore(Selector.regressionAnalysis);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -967,19 +967,24 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               <PropertiesHeader>
                 <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Relationship', lang)}</span>
                 <span>
-                  <Popover
-                    title={
-                      <div onClick={(e) => e.stopPropagation()}>
-                        <img src={RegressionImage} width={'16px'} alt={'regression'} />{' '}
-                        {t('projectPanel.RegressionAnalysis', lang)}
-                      </div>
-                    }
-                    content={<RegressionContent />}
+                  <Button
+                    style={{
+                      paddingLeft: '2px',
+                      paddingRight: '2px',
+                      verticalAlign: 'top',
+                      border: regressionAnalysis ? '1px solid gray' : 'none',
+                      background: regressionAnalysis ? 'lightgray' : 'white',
+                    }}
+                    title={t('projectPanel.RegressionAnalysis', lang)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      usePrimitiveStore.getState().set((state) => {
+                        state.regressionAnalysis = !state.regressionAnalysis;
+                      });
+                    }}
                   >
-                    <Button style={{ border: 'none', paddingRight: 0, background: 'white', verticalAlign: 'top' }}>
-                      <img src={RegressionImage} alt={'regression'} />
-                    </Button>
-                  </Popover>
+                    <img src={RegressionImage} alt={'regression'} />
+                  </Button>
                   <Popover
                     title={
                       <div onClick={(e) => e.stopPropagation()}>

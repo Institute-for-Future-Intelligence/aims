@@ -23,6 +23,7 @@ export interface PrimitiveStoreState {
   dragAndDropMolecule: boolean;
   hoveredMolecule: MoleculeInterface | null;
   selectedPlane: number;
+  regressionAnalysis: boolean;
 
   pickMode: PickMode;
   pickedAtomIndex: number;
@@ -129,6 +130,7 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     dragAndDropMolecule: false,
     hoveredMolecule: null,
     selectedPlane: -1,
+    regressionAnalysis: false,
 
     pickMode: PickMode.MOLECULE,
     pickedAtomIndex: -1,

@@ -48,6 +48,7 @@ export interface ProjectState {
   lineWidthScatterPlot: number;
   dotSizeScatterPlot: number;
   sortDataScatterPlot: string;
+  regressionDegree: number;
   numberOfMostSimilarMolecules: number;
 
   cameraPosition: number[];

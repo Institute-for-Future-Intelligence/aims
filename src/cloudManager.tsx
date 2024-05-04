@@ -364,6 +364,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             lineWidthScatterPlot: data.lineWidthScatterPlot !== undefined ? data.lineWidthScatterPlot : 1,
             dotSizeScatterPlot: data.dotSizeScatterPlot !== undefined ? data.dotSizeScatterPlot : 4,
             sortDataScatterPlot: data.sortDataScatterPlot ?? 'None',
+            regressionDegree: data.regressionDegree ?? 1,
             numberOfMostSimilarMolecules: data.numberOfMostSimilarMolecules ?? 5,
             type: data.type ?? ProjectType.DRUG_DISCOVERY,
             molecules: data.molecules ?? [],

@@ -6,7 +6,7 @@ import React, { useMemo } from 'react';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
-import { Checkbox, Radio, Slider, Space } from 'antd';
+import { Checkbox, InputNumber, Radio, Slider, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
 import {
   updateHorizontalLinesScatterPlot,
@@ -29,6 +29,7 @@ const GraphSettingsContent = React.memo(() => {
   const sortDataScatterPlot = useStore(Selector.sortDataScatterPlot) ?? 'None';
   const xAxisNameScatterPlot = useStore(Selector.xAxisNameScatterPlot) ?? 'atomCount';
   const yAxisNameScatterPlot = useStore(Selector.yAxisNameScatterPlot) ?? 'bondCount';
+  const regressionDegree = useStore(Selector.regressionDegree) ?? 1;
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -114,6 +115,24 @@ const GraphSettingsContent = React.memo(() => {
         >
           <span style={{ fontSize: '12px' }}>{t('projectPanel.VerticalLines', lang)}</span>
         </Checkbox>
+      </Space>
+      <br />
+      <Space style={{ fontSize: '12px' }}>
+        <Space>{t('projectPanel.PolynomialRegressionDegree', lang) + ':'}</Space>
+        <InputNumber
+          style={{ width: '60px' }}
+          min={1}
+          max={10}
+          step={1}
+          value={regressionDegree}
+          onChange={(value) => {
+            if (value === null) return;
+            setCommonStore((state) => {
+              state.projectState.regressionDegree = value;
+            });
+            setChanged(true);
+          }}
+        />
       </Space>
       <br />
       <Space style={{ fontSize: '12px' }}>
