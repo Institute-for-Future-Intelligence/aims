@@ -224,6 +224,8 @@ export const sortDataScatterPlot = (state: CommonStoreState) => state.projectSta
 
 export const regressionAnalysis = (state: PrimitiveStoreState) => state.regressionAnalysis;
 
+export const regression = (state: PrimitiveStoreState) => state.regression;
+
 export const regressionDegree = (state: CommonStoreState) => state.projectState.regressionDegree;
 
 export const numberOfMostSimilarMolecules = (state: CommonStoreState) =>

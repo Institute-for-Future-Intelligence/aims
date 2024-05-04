@@ -52,10 +52,15 @@ import { View } from './View.tsx';
 import { Undoable } from '../undo/Undoable.ts';
 import FindMoleculeModal from './findMoleculeModal.tsx';
 import RegressionImage from '../assets/regression.png';
+import PolynomialRegression from './regression.tsx';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);
 }
+
+const RenderNoShape = (props: any) => {
+  return null;
+};
 
 const Container = styled.div`
   position: relative;
@@ -160,6 +165,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const providedMolecularProperties = useStore(Selector.providedMolecularProperties);
   const dragAndDropMolecule = usePrimitiveStore(Selector.dragAndDropMolecule);
   const regressionAnalysis = usePrimitiveStore(Selector.regressionAnalysis);
+  const regression = usePrimitiveStore(Selector.regression);
+  const regressionDegree = useStore(Selector.regressionDegree) ?? 1;
 
   const [loading, setLoading] = useState<boolean>(true);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -703,6 +710,38 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     molecularPropertiesMap,
   ]);
 
+  const regressionData = useMemo(() => {
+    const data: { x: number; y: number }[] = [];
+    if (projectMolecules && regression) {
+      for (const m of projectMolecules) {
+        const prop = molecularPropertiesMap.get(m.name);
+        if (prop) {
+          let x = prop[xAxisNameScatterPlot as keyof MolecularProperties];
+          if (typeof x === 'number') {
+            if (xFormula && xFormula !== 'x') {
+              try {
+                x = evaluate(xFormula as MathExpression, { x }) as number;
+              } catch (e) {
+                // ignore
+              }
+            }
+            const y = regression.predict(x);
+            data.push({ x, y });
+          }
+        }
+      }
+    }
+    if (sortDataScatterPlot === 'X') return data.sort((a, b) => a.x - b.x);
+    if (sortDataScatterPlot === 'Y') return data.sort((a, b) => a.y - b.y);
+    return data;
+  }, [regression]);
+
+  useEffect(() => {
+    usePrimitiveStore.getState().set((state) => {
+      state.regressionAnalysis = false;
+    });
+  }, [regressionDegree, xFormula, yFormula, xAxisNameScatterPlot, yAxisNameScatterPlot]);
+
   return (
     <Container
       onContextMenu={(e) => {
@@ -964,82 +1003,85 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             {/*scatter plot*/}
 
             {data.length > 0 && graphType === GraphType.SCATTER_PLOT && (
-              <PropertiesHeader>
-                <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Relationship', lang)}</span>
-                <span>
-                  <Button
-                    style={{
-                      paddingLeft: '2px',
-                      paddingRight: '2px',
-                      verticalAlign: 'top',
-                      border: regressionAnalysis ? '1px solid gray' : 'none',
-                      background: regressionAnalysis ? 'lightgray' : 'white',
-                    }}
-                    title={t('projectPanel.RegressionAnalysis', lang)}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      usePrimitiveStore.getState().set((state) => {
-                        state.regressionAnalysis = !state.regressionAnalysis;
-                      });
-                    }}
-                  >
-                    <img src={RegressionImage} alt={'regression'} />
-                  </Button>
-                  <Popover
-                    title={
-                      <div onClick={(e) => e.stopPropagation()}>
-                        <TableOutlined /> {t('projectPanel.CoordinateSystemSettings', lang)}
-                      </div>
-                    }
-                    content={
-                      <CoordinateSystemSettingsContent
-                        xAxisNameScatterPlot={xAxisNameScatterPlot}
-                        yAxisNameScatterPlot={yAxisNameScatterPlot}
-                        xFormula={xFormula}
-                        yFormula={yFormula}
-                        xMinScatterPlot={xMinScatterPlot}
-                        xMaxScatterPlot={xMaxScatterPlot}
-                        yMinScatterPlot={yMinScatterPlot}
-                        yMaxScatterPlot={yMaxScatterPlot}
-                      />
-                    }
-                  >
-                    <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                      <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
-                    </Button>
-                  </Popover>
-                  <Popover
-                    title={
-                      <div onClick={(e) => e.stopPropagation()}>
-                        <DotChartOutlined /> {t('projectPanel.ScatterPlotSettings', lang)}
-                      </div>
-                    }
-                    content={<GraphSettingsContent />}
-                  >
-                    <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                      <DotChartOutlined style={{ fontSize: '24px', color: 'gray' }} />
-                    </Button>
-                  </Popover>
-                  <Button
-                    style={{ border: 'none', paddingRight: '20px', background: 'white' }}
-                    onClick={() => {
-                      saveSvg('scatter-plot')
-                        .then(() => {
-                          showInfo(t('message.ScreenshotSaved', lang));
-                          if (loggable) logAction('Take Screenshot of the Scatter Plot');
-                        })
-                        .catch((reason) => {
-                          showError(reason);
+              <>
+                <PolynomialRegression data={scatterData} />
+                <PropertiesHeader>
+                  <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Relationship', lang)}</span>
+                  <span>
+                    <Button
+                      style={{
+                        paddingLeft: '2px',
+                        paddingRight: '2px',
+                        verticalAlign: 'top',
+                        border: regressionAnalysis ? '1px solid gray' : 'none',
+                        background: regressionAnalysis ? 'lightgray' : 'white',
+                      }}
+                      title={t('projectPanel.RegressionAnalysis', lang)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        usePrimitiveStore.getState().set((state) => {
+                          state.regressionAnalysis = !state.regressionAnalysis;
                         });
-                    }}
-                  >
-                    <CameraOutlined
-                      style={{ fontSize: '24px', color: 'gray' }}
-                      title={t('projectPanel.GraphScreenshot', lang)}
-                    />
-                  </Button>
-                </span>
-              </PropertiesHeader>
+                      }}
+                    >
+                      <img src={RegressionImage} alt={'regression'} />
+                    </Button>
+                    <Popover
+                      title={
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <TableOutlined /> {t('projectPanel.CoordinateSystemSettings', lang)}
+                        </div>
+                      }
+                      content={
+                        <CoordinateSystemSettingsContent
+                          xAxisNameScatterPlot={xAxisNameScatterPlot}
+                          yAxisNameScatterPlot={yAxisNameScatterPlot}
+                          xFormula={xFormula}
+                          yFormula={yFormula}
+                          xMinScatterPlot={xMinScatterPlot}
+                          xMaxScatterPlot={xMaxScatterPlot}
+                          yMinScatterPlot={yMinScatterPlot}
+                          yMaxScatterPlot={yMaxScatterPlot}
+                        />
+                      }
+                    >
+                      <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                        <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                      </Button>
+                    </Popover>
+                    <Popover
+                      title={
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <DotChartOutlined /> {t('projectPanel.ScatterPlotSettings', lang)}
+                        </div>
+                      }
+                      content={<GraphSettingsContent />}
+                    >
+                      <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                        <DotChartOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                      </Button>
+                    </Popover>
+                    <Button
+                      style={{ border: 'none', paddingRight: '20px', background: 'white' }}
+                      onClick={() => {
+                        saveSvg('scatter-plot')
+                          .then(() => {
+                            showInfo(t('message.ScreenshotSaved', lang));
+                            if (loggable) logAction('Take Screenshot of the Scatter Plot');
+                          })
+                          .catch((reason) => {
+                            showError(reason);
+                          });
+                      }}
+                    >
+                      <CameraOutlined
+                        style={{ fontSize: '24px', color: 'gray' }}
+                        title={t('projectPanel.GraphScreenshot', lang)}
+                      />
+                    </Button>
+                  </span>
+                </PropertiesHeader>
+              </>
             )}
             {data.length > 0 && graphType === GraphType.SCATTER_PLOT && (
               <ScatterChart
@@ -1052,7 +1094,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   bottom: 20,
                   left: 10,
                 }}
-                data={data}
               >
                 <CartesianGrid
                   strokeWidth="1"
@@ -1186,6 +1227,17 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     return <Cell key={`cell-${index}`} fill="#8884d8" />;
                   })}
                 </Scatter>
+                {regressionAnalysis && (
+                  <Scatter
+                    name="Regression"
+                    data={regressionData}
+                    fill={'gray'}
+                    line={true}
+                    strokeDasharray="5 5"
+                    strokeWidth={2}
+                    shape={<RenderNoShape />}
+                  />
+                )}
               </ScatterChart>
             )}
           </div>

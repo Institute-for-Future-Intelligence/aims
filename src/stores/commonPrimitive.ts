@@ -7,7 +7,7 @@ import { produce } from 'immer';
 import { MoleculeInterface } from '../types';
 import { PickMode, ProjectType } from '../constants';
 import { Molecule } from '../models/Molecule.ts';
-import { Atom } from '../models/Atom.ts';
+import { PolynomialRegression } from 'ml-regression-polynomial';
 
 // avoid using undefined value in the store for now.
 export interface PrimitiveStoreState {
@@ -24,6 +24,7 @@ export interface PrimitiveStoreState {
   hoveredMolecule: MoleculeInterface | null;
   selectedPlane: number;
   regressionAnalysis: boolean;
+  regression: PolynomialRegression | null;
 
   pickMode: PickMode;
   pickedAtomIndex: number;
@@ -131,6 +132,7 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     hoveredMolecule: null,
     selectedPlane: -1,
     regressionAnalysis: false,
+    regression: null,
 
     pickMode: PickMode.MOLECULE,
     pickedAtomIndex: -1,
