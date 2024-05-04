@@ -37,7 +37,7 @@ import { ProjectUtil } from './ProjectUtil.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { updateDataColoring } from '../cloudProjectUtil.ts';
 import { Filter, FilterType } from '../Filter.ts';
-import { CartesianGrid, Cell, Dot, Label, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, Cell, Dot, Label, Legend, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { Canvas, useThree } from '@react-three/fiber';
 import ScissorBox from './scissorBox.tsx';
@@ -1095,6 +1095,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   left: 10,
                 }}
               >
+                {regressionAnalysis && <Legend wrapperStyle={{ bottom: '10px', fontSize: '12px' }} />}
                 <CartesianGrid
                   strokeWidth="1"
                   stroke={'gray'}
@@ -1176,7 +1177,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   }}
                 />
                 <Scatter
-                  name="All"
+                  name={t('projectPanel.RawData', lang)}
                   data={scatterData}
                   fill={'#8884d8'}
                   line={lineWidthScatterPlot > 0}
@@ -1229,14 +1230,18 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 </Scatter>
                 {regressionAnalysis && (
                   <Scatter
-                    name="Regression"
+                    name={
+                      regression
+                        ? t('projectPanel.RegressionModel', lang) + ': ' + regression.toString(3).substring(7)
+                        : 'Regression'
+                    }
                     data={regressionData}
                     fill={'gray'}
                     line={true}
                     strokeDasharray="5 5"
                     strokeWidth={2}
                     shape={<RenderNoShape />}
-                  />
+                  ></Scatter>
                 )}
               </ScatterChart>
             )}

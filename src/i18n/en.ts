@@ -353,6 +353,8 @@ export const i18n_en = {
       SortDataByXValue: 'By X',
       SortDataByYValue: 'By Y',
       RegressionAnalysis: 'Regression Analysis',
+      RegressionModel: 'Regression Model',
+      RawData: 'Raw Data',
       PolynomialRegressionDegree: 'Polynomial Regression Degree',
     },
 

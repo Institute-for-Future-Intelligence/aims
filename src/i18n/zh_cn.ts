@@ -350,6 +350,8 @@ export const i18n_zh_cn = {
       SortDataByXValue: '按X值',
       SortDataByYValue: '按Y值',
       RegressionAnalysis: '回归分析',
+      RegressionModel: '回归模型',
+      RawData: '原始数据',
       PolynomialRegressionDegree: '多项式回归度',
     },
 
