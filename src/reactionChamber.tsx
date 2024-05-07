@@ -199,11 +199,15 @@ const ReactionChamber = React.memo(() => {
           }
           usePrimitiveStore.getState().set((state) => {
             state.enableRotate = true;
-            state.selectedPlane = -1;
           });
         }}
         onContextMenu={onContextMenu}
         onClick={() => canvasRef.current?.focus()}
+        onPointerMissed={() => {
+          usePrimitiveStore.getState().set((state) => {
+            state.selectedPlane = -1;
+          });
+        }}
       >
         <ReSizer />
         <ReactionChamberControls lightRef={lightRef} />
