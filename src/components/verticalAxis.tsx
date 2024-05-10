@@ -195,21 +195,21 @@ const VerticalAxis = React.memo(
                           minimum: value,
                           maximum: range.maximum,
                         } as Range;
-                        if (user.uid && projectTitle) {
-                          updateRanges(user.uid, projectTitle, state.projectState.ranges);
+                        if (user.uid && state.projectState.title) {
+                          updateRanges(user.uid, state.projectState.title, state.projectState.ranges);
                         }
                       } else {
                         const r = { variable, minimum: value, maximum: max } as Range;
                         state.projectState.ranges.push(r);
-                        if (user.uid && projectTitle) {
-                          addRange(user.uid, projectTitle, r);
+                        if (user.uid && state.projectState.title) {
+                          addRange(user.uid, state.projectState.title, r);
                         }
                       }
                     } else {
                       const r = { variable, minimum: value, maximum: max } as Range;
                       state.projectState.ranges = [r];
-                      if (user.uid && projectTitle) {
-                        addRange(user.uid, projectTitle, r);
+                      if (user.uid && state.projectState.title) {
+                        addRange(user.uid, state.projectState.title, r);
                       }
                     }
                   });
@@ -246,21 +246,21 @@ const VerticalAxis = React.memo(
                           minimum: range.minimum,
                           maximum: value,
                         } as Range;
-                        if (user.uid && projectTitle) {
-                          updateRanges(user.uid, projectTitle, state.projectState.ranges);
+                        if (user.uid && state.projectState.title) {
+                          updateRanges(user.uid, state.projectState.title, state.projectState.ranges);
                         }
                       } else {
                         const r = { variable, minimum: min, maximum: value } as Range;
                         state.projectState.ranges.push(r);
-                        if (user.uid && projectTitle) {
-                          addRange(user.uid, projectTitle, r);
+                        if (user.uid && state.projectState.title) {
+                          addRange(user.uid, state.projectState.title, r);
                         }
                       }
                     } else {
                       const r = { variable, minimum: min, maximum: value } as Range;
                       state.projectState.ranges = [r];
-                      if (user.uid && projectTitle) {
-                        addRange(user.uid, projectTitle, r);
+                      if (user.uid && state.projectState.title) {
+                        addRange(user.uid, state.projectState.title, r);
                       }
                     }
                   });
@@ -329,7 +329,7 @@ const VerticalAxis = React.memo(
         <line x1={0} x2={0} y1={yScale(min)} y2={yScale(max)} stroke="black" strokeWidth={2} />
 
         {filter && filter.type === FilterType.Between && (
-          <foreignObject x={-areaWidth / 2} y={-5} width={areaWidth} height={areaHeight - 3}>
+          <foreignObject x={-areaWidth / 2} y={4} width={areaWidth} height={areaHeight - 3}>
             <ConfigProvider
               theme={{
                 components: {
@@ -345,6 +345,7 @@ const VerticalAxis = React.memo(
                 style={{ marginLeft: areaWidth / 2 + 'px' }}
                 min={min}
                 max={max}
+                step={(max - min) / 100}
                 value={[filter.lowerBound ?? min, filter.upperBound ?? max]}
                 onChange={(values) => {
                   if (filter) {

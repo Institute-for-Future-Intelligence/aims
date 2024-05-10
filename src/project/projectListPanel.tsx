@@ -10,7 +10,6 @@ import ReactDraggable, { DraggableBounds, DraggableData, DraggableEvent, Draggab
 import { Dropdown, Input, Modal, Space, Table, Typography } from 'antd';
 import {
   CaretDownOutlined,
-  CloudOutlined,
   ExclamationCircleOutlined,
   QuestionCircleOutlined,
   WarningOutlined,
@@ -353,7 +352,6 @@ const ProjectListPanel = React.memo(
                         key: 'project-title',
                         label: (
                           <>
-                            <CloudOutlined style={{ paddingRight: '6px' }} />
                             <MenuItem fontWeight={'bold'}>{title}</MenuItem>
                             <hr />
                           </>
