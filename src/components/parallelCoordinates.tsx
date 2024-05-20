@@ -5,7 +5,7 @@
 import * as d3Scale from 'd3-scale';
 import * as d3Shape from 'd3-shape';
 import { DatumEntry } from '../types';
-import React from 'react';
+import React, { useMemo } from 'react';
 import VerticalAxis from './verticalAxis';
 import { Filter } from '../Filter';
 
@@ -74,16 +74,22 @@ const ParallelCoordinates = React.memo(
     const allGroups = [...new Set(data.map((d) => d.group as string))];
 
     // Compute a xScale: spread all Y axis along the chart width
-    const xScale = d3Scale.scalePoint<string>().range([0, boundsWidth]).domain(variables).padding(0);
+    const xScale = useMemo(
+      () => d3Scale.scalePoint<string>().range([0, boundsWidth]).domain(variables).padding(0),
+      [variables, boundsWidth],
+    );
 
     // Compute the yScales: 1 scale per variable
-    const yScales: { [name: string]: YScale } = {};
-    variables.forEach((variable, index) => {
-      yScales[variable] = d3Scale
-        .scaleLinear()
-        .range([boundsHeight, 0])
-        .domain([minima[index] ?? 0, maxima[index] ?? 1]);
-    });
+    const yScales: { [name: string]: YScale } = useMemo(() => {
+      const tmp: { [name: string]: YScale } = {};
+      variables.forEach((variable, index) => {
+        tmp[variable] = d3Scale
+          .scaleLinear()
+          .range([boundsHeight, 0])
+          .domain([minima[index] ?? 0, maxima[index] ?? 1]);
+      });
+      return tmp;
+    }, [variables, boundsHeight, minima, maxima]);
 
     // Color Scale
     const colorScale = d3Scale.scaleOrdinal<string>().domain(allGroups).range(COLORS);
@@ -91,66 +97,90 @@ const ParallelCoordinates = React.memo(
     // Compute lines
     const lineGenerator = d3Shape.line();
 
-    const allLines = data.map((e, i) => {
-      if (e.invisible) return null;
-      const allCoordinates = variables.map((v) => {
-        const yScale = yScales[v];
-        // I don't understand the type of scalePoint. IMO x cannot be undefined since I'm passing it something of type Variable.
-        const x = xScale(v) ?? 0;
-        const y = yScale(e[v] as number);
-        return [x, y] as [number, number];
-      });
+    const allLines = useMemo(
+      () =>
+        data.map((e, i) => {
+          if (e.invisible) return null;
+          const allCoordinates = variables.map((v) => {
+            const yScale = yScales[v];
+            // I don't understand the type of scalePoint. IMO x cannot be undefined since I'm passing it something of type Variable.
+            const x = xScale(v) ?? 0;
+            const y = yScale(e[v] as number);
+            return [x, y] as [number, number];
+          });
 
-      const d = lineGenerator(allCoordinates);
-      if (!d) {
-        return undefined;
-      }
+          const d = lineGenerator(allCoordinates);
+          if (!d) {
+            return undefined;
+          }
 
-      return (
-        <path
-          onMouseOver={() => {
-            if (hover) hover(i);
-          }}
-          key={i}
-          d={d}
-          cursor={e.hovered ? 'pointer' : 'default'}
-          stroke={e.hovered ? 'red' : colorScale(e.group as string)}
-          fill="none"
-          strokeWidth={e.selected && !e.excluded ? 3 : e.excluded ? 0.25 : 1.5}
-          strokeDasharray={e.hovered ? '3,3' : 'none'}
-        />
-      );
-    });
+          return (
+            <path
+              onMouseOver={() => {
+                if (hover) hover(i);
+              }}
+              key={i}
+              d={d}
+              cursor={e.hovered ? 'pointer' : 'default'}
+              stroke={e.hovered ? 'red' : colorScale(e.group as string)}
+              fill="none"
+              strokeWidth={e.selected && !e.excluded ? 3 : e.excluded ? 0.25 : 1.5}
+              strokeDasharray={e.hovered ? '3,3' : 'none'}
+            />
+          );
+        }),
+      [data, colorScale, variables, xScale, yScales],
+    );
 
     // Compute Axes
-    const allAxes = variables.map((variable, i) => {
-      const yScale = yScales[variable];
-      return (
-        <g key={i} transform={'translate(' + xScale(variable) + ',0)'}>
-          <VerticalAxis
-            yScale={yScale}
-            tickInterval={40}
-            tickIntegers={tickIntegers[i]}
-            type={types[i] ?? 'number'}
-            variable={variables[i]}
-            name={titles[i]}
-            unit={units[i]}
-            digits={digits[i]}
-            min={minima[i]}
-            max={maxima[i]}
-            step={steps[i]}
-            filter={filters[i]}
-            value={
-              hoveredIndex >= 0 && data[hoveredIndex] && !data[hoveredIndex]?.invisible
-                ? (data[hoveredIndex][variable] as number)
-                : selectedIndex >= 0 && data[selectedIndex] && !data[selectedIndex].invisible
-                  ? (data[selectedIndex][variable] as number)
-                  : undefined
-            }
-          />
-        </g>
-      );
-    });
+    const allAxes = useMemo(
+      () =>
+        variables.map((variable, i) => {
+          const yScale = yScales[variable];
+          return (
+            <g key={i} transform={'translate(' + xScale(variable) + ',0)'}>
+              <VerticalAxis
+                yScale={yScale}
+                tickInterval={40}
+                tickIntegers={tickIntegers[i]}
+                type={types[i] ?? 'number'}
+                variable={variables[i]}
+                name={titles[i]}
+                unit={units[i]}
+                digits={digits[i]}
+                min={minima[i]}
+                max={maxima[i]}
+                step={steps[i]}
+                filter={filters[i]}
+                value={
+                  hoveredIndex >= 0 && data[hoveredIndex] && !data[hoveredIndex]?.invisible
+                    ? (data[hoveredIndex][variable] as number)
+                    : selectedIndex >= 0 && data[selectedIndex] && !data[selectedIndex].invisible
+                      ? (data[selectedIndex][variable] as number)
+                      : undefined
+                }
+              />
+            </g>
+          );
+        }),
+      [
+        variables,
+        data,
+        digits,
+        filters,
+        minima,
+        maxima,
+        steps,
+        tickIntegers,
+        titles,
+        types,
+        units,
+        xScale,
+        yScales,
+        selectedIndex,
+        hoveredIndex,
+      ],
+    );
 
     return (
       <svg

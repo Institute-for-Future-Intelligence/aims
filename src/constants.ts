@@ -6,9 +6,7 @@ import { Euler, Vector2, Vector3 } from 'three';
 
 export const VERSION = '0.1.5';
 
-export const isProd = process.env.NODE_ENV === 'production';
-
-export const HOME_URL: string = isProd
+export const HOME_URL: string = import.meta.env.PROD
   ? 'https://institute-for-future-intelligence.github.io/aims/'
   : 'http://localhost:3001/aims';
 
