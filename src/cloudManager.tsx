@@ -423,6 +423,32 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       });
   };
 
+  const renameProjectAndUpdateList = (uid: string, oldTitle: string, newTitle: string) => {
+    if (myProjectsRef.current) {
+      let index = -1;
+      let oldProject = null;
+      let newProject = null;
+      for (const [i, p] of myProjectsRef.current.entries()) {
+        if (p.title === oldTitle) {
+          index = i;
+          oldProject = { title: oldTitle, timestamp: p.timestamp, type: p.type } as ProjectInfo;
+          newProject = { title: newTitle, timestamp: p.timestamp, type: p.type } as ProjectInfo;
+          break;
+        }
+      }
+      if (index !== -1 && newProject && oldProject) {
+        myProjectsRef.current.splice(index, 1);
+        myProjectsRef.current.push(newProject);
+        removeProjectFromList(uid, oldProject).then(() => {
+          // ignore for now
+        });
+        addProjectToList(uid, newProject).then(() => {
+          // ignore for now
+        });
+      }
+    }
+  };
+
   const renameProject = (oldTitle: string, newTitle: string) => {
     // check if the new project title is already taken
     fetchMyProjects(false).then(() => {
@@ -438,8 +464,9 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       if (exist) {
         showInfo(t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
       } else {
-        if (!user.uid) return;
-        const files = firebase.firestore().collection('users').doc(user.uid).collection('projects');
+        const uid = user.uid;
+        if (!uid) return;
+        const files = firebase.firestore().collection('users').doc(uid).collection('projects');
         files
           .doc(oldTitle)
           .get()
@@ -457,21 +484,14 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
                       .doc(oldTitle)
                       .delete()
                       .then(() => {
-                        // ignore
+                        renameProjectAndUpdateList(uid, oldTitle, newTitle);
+                        setUpdateFlag(!updateFlag);
+                        setCommonStore((state) => {
+                          if (state.projectState.title === oldTitle) {
+                            state.projectState.title = newTitle;
+                          }
+                        });
                       });
-                    if (myProjectsRef.current) {
-                      for (const p of myProjectsRef.current) {
-                        if (p.title === oldTitle) {
-                          p.title = newTitle;
-                        }
-                      }
-                      setUpdateFlag(!updateFlag);
-                    }
-                    setCommonStore((state) => {
-                      if (state.projectState.title === oldTitle) {
-                        state.projectState.title = newTitle;
-                      }
-                    });
                   });
               }
             }
