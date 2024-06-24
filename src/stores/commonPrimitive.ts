@@ -61,6 +61,7 @@ export interface PrimitiveStoreState {
   createProjectDialog: boolean;
   setCreateProjectDialog: (b: boolean) => void;
   saveProjectFlag: boolean;
+  setSaveProjectFlag: (b: boolean) => void;
   saveProjectAsFlag: boolean;
   saveProjectAsDialog: boolean;
   setSaveProjectAsDialog: (b: boolean) => void;
@@ -183,6 +184,11 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
       });
     },
     saveProjectFlag: false,
+    setSaveProjectFlag(b) {
+      immerSet((state) => {
+        state.saveProjectFlag = b;
+      });
+    },
     saveProjectAsFlag: false,
     saveProjectAsDialog: false,
     setSaveProjectAsDialog(b) {

@@ -22,6 +22,7 @@ export const i18n_en = {
     },
 
     word: {
+      Save: 'Save',
       Results: 'Results',
       Import: 'Import',
       Total: 'Total',

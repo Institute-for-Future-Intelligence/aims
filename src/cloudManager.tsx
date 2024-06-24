@@ -13,31 +13,24 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { showError, showInfo } from './helpers';
-import { MolecularContainer, MoleculeTransform, ProjectState } from './types';
+import { ProjectInfo, ProjectState } from './types';
 import Spinner from './components/spinner';
 import { Util } from './Util';
 import MainToolBar from './mainToolBar';
 import ProjectListPanel from './project/projectListPanel.tsx';
-import { fetchProject } from './cloudProjectUtil';
+import { addProjectToList, fetchProject, removeProjectFromList } from './cloudProjectUtil';
 import { ClassID, SchoolID, User } from './User';
 import {
-  ChemicalNotation,
-  DataColoring,
   DEFAULT_CAMERA_POSITION,
   DEFAULT_CAMERA_ROTATION,
   DEFAULT_CAMERA_UP,
   DEFAULT_PAN_CENTER,
   FirebaseName,
-  GraphType,
-  LabelType,
   ProjectType,
-  SpaceshipDisplayMode,
 } from './constants';
-import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import { ProjectUtil } from './project/ProjectUtil.ts';
 import { useTranslation } from 'react-i18next';
 import { useRefStore } from './stores/commonRef.ts';
-import { ModelUtil } from './models/ModelUtil.ts';
 import { useDataStore } from './stores/commonData.ts';
 import { Molecule } from './models/Molecule.ts';
 
@@ -77,7 +70,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
 
   const [updateFlag, setUpdateFlag] = useState(false);
   const [updateMyProjectsFlag, setUpdateMyProjectsFlag] = useState(false);
-  const myProjectsRef = useRef<ProjectState[] | void>(); // Not sure why I need to use ref to store this
+  const myProjectsRef = useRef<ProjectInfo[]>([]);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -326,127 +319,58 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
 
   // fetch owner's projects from the cloud
   const fetchMyProjects = async (silent: boolean) => {
-    if (!user.uid) return;
+    const uid = user.uid;
+    if (!uid) return;
     if (!silent) setWaiting(true);
-    myProjectsRef.current = await firebase
+    myProjectsRef.current = [];
+    await firebase
       .firestore()
       .collection('users')
-      .doc(user.uid)
-      .collection('projects')
+      .doc(uid)
       .get()
-      .then((querySnapshot) => {
-        const a: ProjectState[] = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          // Assign default values below as an attribute may not be defined by the time the data was created
-          // In that case, undefined will be used, resulting in a crash from Firestore
-          const cl = data.type === ProjectType.DRUG_DISCOVERY ? 50 : 20;
-          a.push({
-            owner: user.uid,
-            title: doc.id,
-            timestamp: data.timestamp ?? -1,
-            key: data.key ?? data.timestamp,
-            time: data.time,
-            description: data.description ?? '',
-            dataColoring: data.dataColoring ?? DataColoring.ALL,
-            selectedProperty: data.selectedProperty ?? null,
-            sortDescending: data.sortDescending ?? false,
-            xAxisNameScatterPlot: data.xAxisNameScatterPlot ?? 'atomCount',
-            yAxisNameScatterPlot: data.yAxisNameScatterPlot ?? 'bondCount',
-            xFormula: data.xFormula ?? 'x',
-            yFormula: data.yFormula ?? 'y',
-            xMinScatterPlot: data.xMinScatterPlot !== undefined ? data.xMinScatterPlot : 0,
-            xMaxScatterPlot: data.xMaxScatterPlot !== undefined ? data.xMaxScatterPlot : 100,
-            yMinScatterPlot: data.yMinScatterPlot !== undefined ? data.yMinScatterPlot : 0,
-            yMaxScatterPlot: data.yMaxScatterPlot !== undefined ? data.yMaxScatterPlot : 100,
-            xLinesScatterPlot: !!data.xLinesScatterPlot,
-            yLinesScatterPlot: !!data.yLinesScatterPlot,
-            lineWidthScatterPlot: data.lineWidthScatterPlot !== undefined ? data.lineWidthScatterPlot : 1,
-            dotSizeScatterPlot: data.dotSizeScatterPlot !== undefined ? data.dotSizeScatterPlot : 4,
-            sortDataScatterPlot: data.sortDataScatterPlot ?? 'None',
-            regressionDegree: data.regressionDegree ?? 1,
-            numberOfMostSimilarMolecules: data.numberOfMostSimilarMolecules ?? 5,
-            type: data.type ?? ProjectType.DRUG_DISCOVERY,
-            molecules: data.molecules ?? [],
-            numberOfColumns: data.numberOfColumns ?? 3,
-            selectedMolecule: data.selectedMolecule ?? null,
-            ligand: data.ligand ?? null,
-            protein: data.protein ?? null,
-            ranges: data.ranges ?? [],
-            filters: data.filters ?? [],
-            hiddenProperties: data.hiddenProperties ?? [],
-
-            hideGallery: !!data.hideGallery,
-
-            chamberViewerPercentWidth: data.chamberViewerPercentWidth ?? 50,
-            chamberViewerAxes: data.chamberViewerAxes ?? true,
-            chamberViewerStyle: data.chamberViewerStyle ?? MolecularViewerStyle.BallAndStick,
-            chamberViewerMaterial: data.chamberViewerMaterial ?? MolecularViewerMaterial.Diffuse,
-            chamberViewerColoring: data.chamberViewerColoring ?? MolecularViewerColoring.Element,
-            chamberViewerFoggy: !!data.chamberViewerFoggy,
-            chamberViewerBackground: data.chamberViewerBackground ?? 'black',
-            chamberViewerSelector: data.chamberViewerSelector ?? 'all',
-
-            rotationStep: data.rotationStep ?? Util.toRadians(5),
-            translationStep: data.translationStep ?? 1,
-
-            ligandTransform: data.ligandTransform ?? ({ x: 0, y: 0, z: 0, euler: [0, 0, 0] } as MoleculeTransform),
-
-            spaceshipDisplayMode: data.spaceshipDisplayMode ?? SpaceshipDisplayMode.NONE,
-            spaceshipSize: data.spaceshipSize ?? 1,
-            spaceshipRoll: data.spaceshipRoll ?? 0,
-            spaceshipPitch: data.spaceshipPitch ?? 0,
-            spaceshipYaw: data.spaceshipYaw ?? 0,
-            spaceshipX: data.spaceshipX ?? 0,
-            spaceshipY: data.spaceshipY ?? 0,
-            spaceshipZ: data.spaceshipZ ?? 0,
-
-            projectViewerStyle: data.projectViewerStyle ?? MolecularViewerStyle.Stick,
-            projectViewerMaterial: data.projectViewerMaterial ?? MolecularViewerMaterial.Soft,
-            projectViewerBackground: data.projectViewerBackground ?? 'white',
-
-            graphType: data.graphType ?? GraphType.PARALLEL_COORDINATES,
-            labelType: data.labelType ?? LabelType.NAME,
-
-            xyPlaneVisible: !!data.xyPlaneVisible,
-            yzPlaneVisible: !!data.yzPlaneVisible,
-            xzPlaneVisible: !!data.xzPlaneVisible,
-            xyPlanePosition: data.xyPlanePosition ?? 0,
-            yzPlanePosition: data.yzPlanePosition ?? 0,
-            xzPlanePosition: data.xzPlanePosition ?? 0,
-
-            molecularContainer: data.molecularContainer ?? ({ lx: cl, ly: cl, lz: cl } as MolecularContainer),
-            molecularContainerVisible: !!data.molecularContainerVisible,
-            vdwBondsVisible: !!data.vdwBondsVisible,
-            vdwBondCutoffRelative: data.vdwBondCutoffRelative ?? 0.5,
-            momentumVisible: !!data.momentumVisible,
-            momentumScaleFactor: data.momentumScaleFactor ?? 1,
-            forceVisible: !!data.forceVisible,
-            forceScaleFactor: data.forceScaleFactor ?? 1,
-            kineticEnergyScaleFactor: data.kineticEnergyScaleFactor ?? 1,
-            energyGraphVisible: !!data.energyGraphVisible,
-            angularBondsVisible: !!data.angularBondsVisible,
-            torsionalBondsVisible: !!data.torsionalBondsVisible,
-
-            testMolecules: ModelUtil.reconstructMoleculesFromFirestore(data.testMolecules),
-
-            timeStep: data.timeStep ?? 0.5,
-            refreshInterval: data.refreshInterval ?? 20,
-            collectInterval: data.collectInterval ?? 100,
-            constantTemperature: !!data.constantTemperature,
-            temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,
-            pressure: data.pressure !== undefined && data.pressure !== null ? data.pressure : 1,
-
-            cameraPosition: data.cameraPosition ?? DEFAULT_CAMERA_POSITION,
-            cameraRotation: data.cameraRotation ?? DEFAULT_CAMERA_ROTATION,
-            cameraUp: data.cameraUp ?? DEFAULT_CAMERA_UP,
-            panCenter: data.panCenter ?? DEFAULT_PAN_CENTER,
-          } as ProjectState);
-        });
-        return a;
-      })
-      .catch((error) => {
-        showError(t('message.CannotOpenYourProjects', lang) + ': ' + error);
+      .then(async (doc) => {
+        const projectList = doc.data()?.projectList;
+        if (projectList && projectList.length > 0) {
+          // if a project list exists, use it
+          myProjectsRef.current?.push(...projectList);
+        } else {
+          // if a project list does not exist, create one
+          await firebase
+            .firestore()
+            .collection('users')
+            .doc(uid)
+            .collection('projects')
+            .get()
+            .then((querySnapshot) => {
+              const a: ProjectState[] = [];
+              querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                myProjectsRef.current?.push({
+                  timestamp: data.timestamp,
+                  title: doc.id,
+                  type: data.type,
+                } as ProjectInfo);
+              });
+              return a;
+            })
+            .catch((error) => {
+              showError(t('message.CannotOpenYourProjects', lang) + ': ' + error);
+            })
+            .finally(() => {
+              firebase
+                .firestore()
+                .collection('users')
+                .doc(uid)
+                .update({ projectList: myProjectsRef.current })
+                .then(() => {
+                  // ignore
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            });
+        }
+        setUpdateMyProjectsFlag(!updateMyProjectsFlag);
       })
       .finally(() => {
         if (!silent) setWaiting(false);
@@ -477,25 +401,25 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       .delete()
       .then(() => {
         if (myProjectsRef.current && user.uid) {
-          setUpdateFlag(!updateFlag);
+          removeProjectIfExisting(user.uid, title).then(() => {
+            setUpdateFlag(!updateFlag);
+            // if the project list panel is open, update it
+            if (showProjectListPanel) {
+              fetchMyProjects(false).then(() => {
+                setUpdateMyProjectsFlag(!updateMyProjectsFlag);
+                setUpdateFlag(!updateFlag);
+              });
+            }
+          });
         }
         setCommonStore((state) => {
           if (title === state.projectState.title) {
             state.projectState = ProjectUtil.createDefaultProjectState();
           }
         });
-        setUpdateMyProjectsFlag(!updateMyProjectsFlag);
       })
       .catch((error) => {
         showError(t('message.CannotDeleteProject', lang) + ': ' + error);
-      })
-      .finally(() => {
-        // if the project list panel is open, update it
-        if (showProjectListPanel) {
-          fetchMyProjects(false).then(() => {
-            setUpdateFlag(!updateFlag);
-          });
-        }
       });
   };
 
@@ -738,8 +662,26 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     }
   };
 
+  const removeProjectIfExisting = async (uid: string, title: string) => {
+    if (myProjectsRef.current) {
+      let index = -1;
+      for (const [i, p] of myProjectsRef.current.entries()) {
+        if (p.title === title) {
+          index = i;
+          await removeProjectFromList(uid, p);
+          break;
+        }
+      }
+      if (index !== -1) {
+        myProjectsRef.current.splice(index, 1);
+      }
+    }
+  };
+
   function saveProject() {
-    if (!user || !user.uid) return;
+    if (!user) return;
+    const uid = user.uid;
+    if (!uid) return;
     const title = useStore.getState().projectState.title;
     if (!title) {
       showError(t('message.CannotSaveProjectWithoutTitle', lang));
@@ -750,37 +692,39 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     ps.timestamp = new Date().getTime();
     ps.time = dayjs(new Date(ps.timestamp)).format('MM/DD/YYYY hh:mm A');
     ps.key = ps.timestamp.toString();
-    if (!saveAndThenOpenProjectFlag) {
-      if (myProjectsRef.current) {
-        for (const p of myProjectsRef.current) {
-          if (p.title === ps.title) {
-            p.timestamp = ps.timestamp;
-            p.time = ps.time;
-            p.key = ps.key;
-            break;
-          }
-        }
-      }
-    }
     updateProjectStateVariables(ps);
     firebase
       .firestore()
       .collection('users')
-      .doc(user.uid)
+      .doc(uid)
       .collection('projects')
       .doc(title)
       .set(ps)
       .then(() => {
-        setUpdateMyProjectsFlag(!updateMyProjectsFlag);
+        if (myProjectsRef.current) {
+          removeProjectIfExisting(uid, title).then(() => {
+            const pi = { timestamp: ps.timestamp, title, type: ps.type } as ProjectInfo;
+            myProjectsRef.current.push(pi);
+            addProjectToList(uid, pi).then(() => {
+              setUpdateMyProjectsFlag(!updateMyProjectsFlag);
+            });
+          });
+        }
       })
       .catch((error) => {
         showError(t('message.CannotSaveProject', lang) + ': ' + error);
       })
       .finally(() => {
-        if (saveAndThenOpenProjectFlag) {
-          setProjectState(useStore.getState().projectStateToOpen);
-        }
         setWaiting(false);
+        if (saveAndThenOpenProjectFlag) {
+          const title = useStore.getState().projectToOpen?.title;
+          if (title) {
+            setWaiting(true);
+            fetchProject(uid, title, setProjectState).finally(() => {
+              setWaiting(false);
+            });
+          }
+        }
         setChanged(false);
       });
   }
@@ -797,62 +741,69 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       showError(t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
       return;
     }
+    setWaiting(true);
     // check if the project title is already taken
-    fetchMyProjects(false).then(() => {
-      let exist = false;
-      if (myProjectsRef.current) {
-        for (const p of myProjectsRef.current) {
-          if (p.title === newTitle) {
-            exist = true;
-            break;
+    fetchMyProjects(false)
+      .then(() => {
+        let exist = false;
+        if (myProjectsRef.current) {
+          for (const p of myProjectsRef.current) {
+            if (p.title === newTitle) {
+              exist = true;
+              break;
+            }
           }
         }
-      }
-      if (exist) {
-        showInfo(t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
-      } else {
-        if (user && user.uid) {
-          const state = useStore.getState();
-          const ps = JSON.parse(JSON.stringify(state.projectState)) as ProjectState;
-          ps.timestamp = new Date().getTime();
-          ps.key = ps.timestamp.toString();
-          ps.time = dayjs(new Date(ps.timestamp)).format('MM/DD/YYYY hh:mm A');
-          ps.title = newTitle;
-          ps.owner = user.uid; // make sure the current user becomes the owner
-          ps.type = usePrimitiveStore.getState().projectType;
-          ps.description = usePrimitiveStore.getState().projectDescription ?? '';
-          updateProjectStateVariables(ps);
-          firebase
-            .firestore()
-            .collection('users')
-            .doc(user.uid)
-            .collection('projects')
-            .doc(newTitle)
-            .set(ps)
-            .then(() => {
-              setUpdateMyProjectsFlag(!updateMyProjectsFlag);
-              setCommonStore((state) => {
-                state.projectState.type = ps.type;
-                state.projectState.title = ps.title;
-                state.projectState.description = ps.description;
+        if (exist) {
+          showInfo(t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
+        } else {
+          if (user && user.uid) {
+            const uid = user.uid;
+            const state = useStore.getState();
+            const ps = JSON.parse(JSON.stringify(state.projectState)) as ProjectState;
+            ps.timestamp = new Date().getTime();
+            ps.key = ps.timestamp.toString();
+            ps.time = dayjs(new Date(ps.timestamp)).format('MM/DD/YYYY hh:mm A');
+            ps.title = newTitle;
+            ps.owner = uid; // make sure the current user becomes the owner
+            ps.type = usePrimitiveStore.getState().projectType;
+            ps.description = usePrimitiveStore.getState().projectDescription ?? '';
+            updateProjectStateVariables(ps);
+            firebase
+              .firestore()
+              .collection('users')
+              .doc(uid)
+              .collection('projects')
+              .doc(newTitle)
+              .set(ps)
+              .then(() => {
+                if (myProjectsRef.current) {
+                  const pi = { timestamp: ps.timestamp, title, type: ps.type } as ProjectInfo;
+                  addProjectToList(uid, pi).then(() => {
+                    myProjectsRef.current.push(pi);
+                    // if the project list panel is open, update it
+                    if (showProjectListPanel) {
+                      setUpdateMyProjectsFlag(!updateMyProjectsFlag);
+                      setUpdateFlag(!updateFlag);
+                    }
+                  });
+                  setCommonStore((state) => {
+                    state.projectState.type = ps.type;
+                    state.projectState.title = ps.title;
+                    state.projectState.description = ps.description;
+                  });
+                }
+              })
+              .catch((error) => {
+                showError(t('message.CannotCreateNewProject', lang) + ': ' + error);
               });
-            })
-            .catch((error) => {
-              showError(t('message.CannotCreateNewProject', lang) + ': ' + error);
-            })
-            .finally(() => {
-              // if the project list panel is open, update it
-              if (showProjectListPanel) {
-                fetchMyProjects(false).then(() => {
-                  setUpdateFlag(!updateFlag);
-                });
-              }
-              setWaiting(false);
-              setChanged(false);
-            });
+          }
         }
-      }
-    });
+      })
+      .finally(() => {
+        setWaiting(false);
+        setChanged(false);
+      });
   }
 
   function showMyProjectsList() {
@@ -894,11 +845,10 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       <MainToolBar signIn={signIn} signOut={signOut} />
       {showProjectListPanel && myProjectsRef.current && (
         <ProjectListPanel
-          projects={myProjectsRef.current}
+          projects={[...myProjectsRef.current]}
           setProjectState={setProjectState}
           deleteProject={deleteProject}
           renameProject={renameProject}
-          updateFlag={updateMyProjectsFlag}
         />
       )}
     </>

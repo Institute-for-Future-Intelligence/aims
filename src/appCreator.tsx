@@ -24,10 +24,12 @@ import CloudManager from './cloudManager';
 import { CloudTwoTone } from '@ant-design/icons';
 import SplitPane from './components/splitPane.tsx';
 import { useRefStore } from './stores/commonRef.ts';
+import { Button } from 'antd';
 
 const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
   const user = useStore(Selector.user);
+  const loggable = useStore.getState().loggable;
   const language = useStore(Selector.language);
   const hideGallery = useStore(Selector.hideGallery);
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
@@ -36,6 +38,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
   const loadProvidedMolecularProperties = useStore(Selector.loadProvidedMolecularProperties);
   const showAccountSettingsPanel = usePrimitiveStore(Selector.showAccountSettingsPanel);
+  const changed = usePrimitiveStore(Selector.changed);
 
   // const setChanged = usePrimitiveStore(Selector.setChanged);
   // const setSkipChange = usePrimitiveStore(Selector.setSkipChange);
@@ -142,7 +145,28 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
           }}
           title={t('projectPanel.ProjectTitle', lang)}
         >
-          {projectTitle ?? ''}
+          {projectTitle ? projectTitle + (isOwner && changed ? ' *' : '') : ''}
+          {!viewOnly && isOwner && changed && (
+            <Button
+              type="primary"
+              size={'small'}
+              style={{ marginLeft: '10px' }}
+              title={t('menu.project.SaveProject', lang)}
+              onClick={() => {
+                usePrimitiveStore.getState().setSaveProjectFlag(true);
+                if (loggable) {
+                  setCommonStore((state) => {
+                    state.actionInfo = {
+                      name: 'Save Project',
+                      timestamp: new Date().getTime(),
+                    };
+                  });
+                }
+              }}
+            >
+              {t('word.Save', lang)}
+            </Button>
+          )}
         </span>
       </div>
 

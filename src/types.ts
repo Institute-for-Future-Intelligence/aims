@@ -4,7 +4,7 @@
 
 import { Object3DNode } from '@react-three/fiber';
 import { Filter } from './Filter';
-import { ChemicalNotation, DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
+import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import RCGroup from './lib/gfx/RCGroup';
 import { Molecule } from './models/Molecule.ts';
@@ -13,6 +13,12 @@ declare module '@react-three/fiber' {
   interface ThreeElements {
     rCGroup: Object3DNode<RCGroup, typeof RCGroup>;
   }
+}
+
+export interface ProjectInfo {
+  timestamp: number;
+  type: ProjectType;
+  title: string;
 }
 
 // use null for undefined, as we need to persist this in Firebase

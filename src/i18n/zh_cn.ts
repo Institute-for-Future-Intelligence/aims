@@ -22,6 +22,7 @@ export const i18n_zh_cn = {
     },
 
     word: {
+      Save: '保存',
       Results: '结果',
       Import: '输入',
       Total: '总数',

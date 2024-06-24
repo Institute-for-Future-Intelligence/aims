@@ -21,7 +21,9 @@ import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useTranslation } from 'react-i18next';
 import { MenuProps } from 'antd/lib';
 import { MenuItem } from '../components/menuItem.tsx';
-import { ProjectState } from '../types.ts';
+import { ProjectInfo, ProjectState } from '../types.ts';
+import { fetchProject } from '../cloudProjectUtil.ts';
+import dayjs from 'dayjs';
 
 const { Column } = Table;
 
@@ -76,19 +78,27 @@ export interface ProjectListPanelProps {
   setProjectState: (projectState: ProjectState) => void;
   deleteProject: (title: string) => void;
   renameProject: (oldTitle: string, newTitle: string) => void;
-  updateFlag: boolean;
 }
 
 const ProjectListPanel = React.memo(
-  ({ projects, setProjectState, deleteProject, renameProject, updateFlag }: ProjectListPanelProps) => {
+  ({ projects, setProjectState, deleteProject, renameProject }: ProjectListPanelProps) => {
     const language = useStore(Selector.language);
     const user = useStore(Selector.user);
     const setCommonStore = useStore(Selector.set);
     const selectedFloatingWindow = useStore(Selector.selectedFloatingWindow);
+    const setWaiting = usePrimitiveStore(Selector.setWaiting);
 
     // nodeRef is to suppress ReactDOM.findDOMNode() deprecation warning. See:
     // https://github.com/react-grid-layout/react-draggable/blob/v4.4.2/lib/DraggableCore.js#L159-L171
     const nodeRef = React.useRef(null);
+
+    const projectsWithKeys = () => {
+      const arr: object[] = [];
+      for (const [i, f] of projects.entries()) {
+        arr.push({ ...f, key: i });
+      }
+      return arr;
+    };
 
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const wOffset = wrapperRef.current ? wrapperRef.current.clientWidth + 40 : 680;
@@ -101,7 +111,7 @@ const ProjectListPanel = React.memo(
     const [newTitle, setNewTitle] = useState<string>();
     const dragRef = useRef<HTMLDivElement | null>(null);
     // make an editable copy because the project array is not mutable
-    const projectsRef = useRef<object[]>([...projects]);
+    const projectsRef = useRef<object[]>(projectsWithKeys());
     // set a flag so that we can update when projectsRef changes
     const [recountFlag, setRecountFlag] = useState<boolean>(false);
     const [selectedIndex, setSelectedIndex] = useState<number>(-1);
@@ -129,10 +139,10 @@ const ProjectListPanel = React.memo(
 
     useEffect(() => {
       if (projects) {
-        projectsRef.current = [...projects];
+        projectsRef.current = projectsWithKeys();
         setRecountFlag(!recountFlag);
       }
-    }, [projects, updateFlag]);
+    }, [projects]);
 
     const onDrag: DraggableEventHandler = (e, ui) => {
       setCurPosition({
@@ -189,7 +199,9 @@ const ProjectListPanel = React.memo(
       }
     };
 
-    const openProject = (record: ProjectState) => {
+    const openProject = (record: ProjectInfo) => {
+      const uid = user.uid;
+      if (!uid) return;
       usePrimitiveStore.getState().set((state) => {
         state.startSimulation = false;
       });
@@ -200,7 +212,7 @@ const ProjectListPanel = React.memo(
           onOk: () => {
             if (user.uid) {
               setCommonStore((state) => {
-                state.projectStateToOpen = record;
+                state.projectToOpen = record;
               });
               usePrimitiveStore.getState().set((state) => {
                 state.saveAndThenOpenProjectFlag = true;
@@ -209,12 +221,20 @@ const ProjectListPanel = React.memo(
               showInfo(t('menu.file.ToSaveYourWorkPleaseSignIn', lang));
             }
           },
-          onCancel: () => setProjectState(record),
+          onCancel: () => {
+            setWaiting(true);
+            fetchProject(uid, record.title, setProjectState).finally(() => {
+              setWaiting(false);
+            });
+          },
           okText: t('word.Yes', lang),
           cancelText: t('word.No', lang),
         });
       } else {
-        setProjectState(record);
+        setWaiting(true);
+        fetchProject(uid, record.title, setProjectState).finally(() => {
+          setWaiting(false);
+        });
       }
     };
 
@@ -315,10 +335,10 @@ const ProjectListPanel = React.memo(
                     if (!projects) return;
                     // must create a new array for ant table to update (don't just set length to 0)
                     projectsRef.current = [];
-                    for (const f of projects) {
+                    for (const [i, f] of projects.entries()) {
                       // @ts-expect-error: Explain what?
                       if (f['title']?.toLowerCase().includes(s.toLowerCase())) {
-                        projectsRef.current.push(f);
+                        projectsRef.current.push({ ...f, key: i });
                       }
                     }
                     setRecountFlag(!recountFlag);
@@ -360,9 +380,7 @@ const ProjectListPanel = React.memo(
                       {
                         key: 'open-project',
                         label: (
-                          <MenuItem onClick={() => openProject(record as ProjectState)}>
-                            {t('word.Open', lang)}
-                          </MenuItem>
+                          <MenuItem onClick={() => openProject(record as ProjectInfo)}>{t('word.Open', lang)}</MenuItem>
                         ),
                       },
                       {
@@ -437,7 +455,7 @@ const ProjectListPanel = React.memo(
                             const selection = window.getSelection();
                             if (selection && selection.toString().length > 0) return;
                             // only proceed when no text is selected
-                            openProject(record as ProjectState);
+                            openProject(record as ProjectInfo);
                           }}
                         >
                           {title}
@@ -486,16 +504,20 @@ const ProjectListPanel = React.memo(
                 />
                 <Column
                   title={`${t('word.Time', lang)}`}
-                  dataIndex="time"
-                  key="time"
+                  dataIndex="timestamp"
+                  key="timestamp"
                   width={'25%'}
                   defaultSortOrder={'descend'}
                   sortDirections={['ascend', 'descend', 'ascend']}
                   sorter={(a: any, b: any) => {
                     return a['timestamp'] - b['timestamp'];
                   }}
-                  render={(time) => {
-                    return <Typography.Text style={{ fontSize: '12px', verticalAlign: 'top' }}>{time}</Typography.Text>;
+                  render={(timestamp) => {
+                    return (
+                      <Typography.Text style={{ fontSize: '12px', verticalAlign: 'top' }}>
+                        {dayjs(new Date(timestamp)).format('MM/DD/YYYY hh:mm A')}
+                      </Typography.Text>
+                    );
                   }}
                   onCell={(data, index) => {
                     return {

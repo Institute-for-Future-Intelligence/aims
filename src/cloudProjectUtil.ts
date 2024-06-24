@@ -8,13 +8,41 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import { showError, showInfo } from './helpers';
 import i18n from './i18n/i18n';
-import { MoleculeInterface, Range, ProjectState, MolecularContainer, MoleculeTransform } from './types';
+import { MoleculeInterface, Range, ProjectState, MolecularContainer, MoleculeTransform, ProjectInfo } from './types';
 import { usePrimitiveStore } from './stores/commonPrimitive';
-import { ChemicalNotation, DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
+import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import dayjs from 'dayjs';
 import { Util } from './Util.ts';
 import { ModelUtil } from './models/ModelUtil.ts';
+
+export const addProjectToList = async (uid: string, project: ProjectInfo) => {
+  await firebase
+    .firestore()
+    .collection('users')
+    .doc(uid)
+    .update({ projectList: firebase.firestore.FieldValue.arrayUnion(project) })
+    .then(() => {
+      // ignore
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+export const removeProjectFromList = async (uid: string, project: ProjectInfo) => {
+  await firebase
+    .firestore()
+    .collection('users')
+    .doc(uid)
+    .update({ projectList: firebase.firestore.FieldValue.arrayRemove(project) })
+    .then(() => {
+      // ignore
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 export const fetchProject = async (userid: string, project: string, setProjectState: (ps: ProjectState) => void) => {
   const lang = { lng: useStore.getState().language };

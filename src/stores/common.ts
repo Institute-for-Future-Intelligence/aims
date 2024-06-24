@@ -9,7 +9,7 @@ import { Util } from '../Util';
 import { VERSION } from '../constants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, MoleculeInterface, ProjectState } from '../types';
+import { ActionInfo, MoleculeInterface, ProjectInfo, ProjectState } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -57,7 +57,7 @@ export interface CommonStoreState {
 
   proteinData: Protein | undefined;
 
-  projectStateToOpen: ProjectState | null;
+  projectToOpen: ProjectInfo | null;
 
   addMolecule: (molecule: MoleculeInterface) => boolean;
   addMolecules: (molecules: MoleculeInterface[]) => void;
@@ -235,7 +235,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
 
           proteinData: undefined,
 
-          projectStateToOpen: null,
+          projectToOpen: null,
 
           addMolecule(molecule: MoleculeInterface) {
             let added = true;
