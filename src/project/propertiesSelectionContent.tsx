@@ -101,7 +101,9 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={atomCountSelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>{t('projectPanel.AtomCount', lang)}</span>
+        <span style={{ fontSize: '12px' }} title={t('tooltip.atomCount', lang)}>
+          {t('projectPanel.AtomCount', lang)}
+        </span>
       </Checkbox>
       <br />
       <Checkbox
@@ -113,7 +115,9 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={bondCountSelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>{t('projectPanel.BondCount', lang)}</span>
+        <span style={{ fontSize: '12px' }} title={t('tooltip.bondCount', lang)}>
+          {t('projectPanel.BondCount', lang)}
+        </span>
       </Checkbox>
       <br />
       <Checkbox
@@ -125,7 +129,9 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={massSelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>{t('projectPanel.MolecularMass', lang)}</span>
+        <span style={{ fontSize: '12px' }} title={t('tooltip.molecularMass', lang)}>
+          {t('projectPanel.MolecularMass', lang)}
+        </span>
       </Checkbox>
       <br />
       <Checkbox
@@ -137,7 +143,9 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={logPSelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>log P</span>
+        <span style={{ fontSize: '12px' }} title={t('tooltip.logP', lang)}>
+          log P
+        </span>
       </Checkbox>
       <br />
       <Checkbox
@@ -149,7 +157,9 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={hBondDonorCountSelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>{t('projectPanel.HydrogenBondDonorCount', lang)}</span>
+        <span style={{ fontSize: '12px' }} title={t('tooltip.hydrogenBondDonorCount', lang)}>
+          {t('projectPanel.HydrogenBondDonorCount', lang)}
+        </span>
       </Checkbox>
       <br />
       <Checkbox
@@ -161,7 +171,9 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={hBondAcceptorCountSelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>{t('projectPanel.HydrogenBondAcceptorCount', lang)}</span>
+        <span style={{ fontSize: '12px' }} title={t('tooltip.hydrogenBondAcceptorCount', lang)}>
+          {t('projectPanel.HydrogenBondAcceptorCount', lang)}
+        </span>
       </Checkbox>
       <br />
       <Checkbox
@@ -173,7 +185,9 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={rotatableBondCountSelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>{t('projectPanel.RotatableBondCount', lang)}</span>
+        <span style={{ fontSize: '12px' }} title={t('tooltip.rotatableBondCount', lang)}>
+          {t('projectPanel.RotatableBondCount', lang)}
+        </span>
       </Checkbox>
       <br />
       <Checkbox
@@ -185,7 +199,9 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={polarSurfaceAreaSelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>{t('projectPanel.PolarSurfaceArea', lang)}</span>
+        <span style={{ fontSize: '12px' }} title={t('tooltip.polarSurfaceArea', lang)}>
+          {t('projectPanel.PolarSurfaceArea', lang)}
+        </span>
       </Checkbox>
       <br />
       <Checkbox
@@ -197,7 +213,9 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={heavyAtomCountSelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>{t('projectPanel.HeavyAtomCount', lang)}</span>
+        <span style={{ fontSize: '12px' }} title={t('tooltip.heavyAtomCount', lang)}>
+          {t('projectPanel.HeavyAtomCount', lang)}
+        </span>
       </Checkbox>
       <br />
       <Checkbox
@@ -209,7 +227,9 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={complexitySelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>{t('projectPanel.Complexity', lang)}</span>
+        <span style={{ fontSize: '12px' }} title={t('tooltip.complexity', lang)}>
+          {t('projectPanel.Complexity', lang)}
+        </span>
       </Checkbox>
       <br />
       <Checkbox
@@ -221,7 +241,9 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={densitySelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>{t('projectPanel.Density', lang)}</span>
+        <span style={{ fontSize: '12px' }} title={t('tooltip.density', lang)}>
+          {t('projectPanel.Density', lang)}
+        </span>
       </Checkbox>
       <br />
       <Checkbox
@@ -233,7 +255,9 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={boilingPointSelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>{t('projectPanel.BoilingPoint', lang)}</span>
+        <span style={{ fontSize: '12px' }} title={t('tooltip.boilingPoint', lang)}>
+          {t('projectPanel.BoilingPoint', lang)}
+        </span>
       </Checkbox>
       <br />
       <Checkbox
@@ -245,7 +269,9 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }}
         checked={meltingPointSelectionRef.current}
       >
-        <span style={{ fontSize: '12px' }}>{t('projectPanel.MeltingPoint', lang)}</span>
+        <span style={{ fontSize: '12px' }} title={t('tooltip.meltingPoint', lang)}>
+          {t('projectPanel.MeltingPoint', lang)}
+        </span>
       </Checkbox>
     </div>
   );

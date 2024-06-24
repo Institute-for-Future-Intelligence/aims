@@ -19,6 +19,16 @@ export const i18n_en = {
       gotoIFI: 'Go to Institute for Future Intelligence',
       clickToOpenMenu: 'Click to open main menu',
       clickToAccessAccountSettings: 'Click to access account settings',
+      atomCount: 'The total number of atoms in the molecule.',
+      bondCount: 'The total number of covalent bonds in the molecule.',
+      molecularMass: 'The mass of the molecule, calculated as the sum of all of its atoms.',
+      logP: 'The partition coefficient in logarithmic form. The partition coefficient is the ratio of concentrations of a compound in a mixture of two immiscible solvents at equilibrium, which is used to compare the solubilities of the solute in these two solvents.',
+      hydrogenBondDonorCount:
+        'The number of hydrogen bond donors in this molecule. A hydrogen bond donor is a chemical group that provides the hydrogen atom in a hydrogen bond.',
+      hydrogenBondAcceptorCount:
+        'The number of hydrogen bond acceptors in this molecule. A hydrogen bond acceptor is a chemical group that participates in a hydrogen bond but does not supply the shared hydrogen atom.',
+      rotatableBondCount:
+        'The number of single-order non-ring bonds where atoms on either side of the bond are bound to non-hydrogen atoms. Rotation around such a bond axis changes the overall shape of the molecule.',
     },
 
     word: {

@@ -7,7 +7,7 @@ import { ScaleLinear } from 'd3-scale';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
-import { ConfigProvider, InputNumber, Popover, Slider } from 'antd';
+import { ConfigProvider, InputNumber, Popover, Slider, Space } from 'antd';
 import { Range } from '../types';
 import { useTranslation } from 'react-i18next';
 import { Filter, FilterType } from '../Filter';
@@ -168,8 +168,20 @@ const VerticalAxis = React.memo(
         <Popover
           content={
             <div>
+              <Space
+                style={{
+                  padding: '8px',
+                  fontSize: '14px',
+                  width: '240px',
+                  border: '1px solid lightgray',
+                  borderRadius: '6px',
+                }}
+              >
+                {t('tooltip.' + variable, lang)}
+              </Space>
+              <br />
               <InputNumber
-                style={{ width: '240px' }}
+                style={{ paddingTop: '4px', width: '240px' }}
                 addonBefore={createLabel(t('word.Minimum', lang), 80)}
                 addonAfter={unit}
                 min={getMin()}
