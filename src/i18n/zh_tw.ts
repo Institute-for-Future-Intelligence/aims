@@ -27,6 +27,12 @@ export const i18n_zh_tw = {
       hydrogenBondAcceptorCount: '分子的氫鍵接受者數量。氫鍵接受者是指在一個氫鍵中不出氫原子的那一方。',
       rotatableBondCount:
         '分子的可旋轉共價鍵數量。可旋轉共價鍵是非環形的單鍵，其中一方原子和非氫原子成鍵。它的旋轉可改變分子形狀。',
+      polarSurfaceArea: '分子的所有極性原子表面積總和。',
+      heavyAtomCount: '分子的重原子總數。所有非氫原子都是重原子。',
+      complexity: '從組分和結構計算的分子複雜程度。',
+      density: '物質單位體積的質量。',
+      boilingPoint: '在特定大氣壓力下物質開始從液體變成氣體的溫度。',
+      meltingPoint: '在特定大氣壓力下物質開始從固體變成液體的溫度。',
     },
 
     word: {

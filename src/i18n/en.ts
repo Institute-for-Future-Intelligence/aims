@@ -29,6 +29,14 @@ export const i18n_en = {
         'The number of hydrogen bond acceptors in this molecule. A hydrogen bond acceptor is a chemical group that participates in a hydrogen bond but does not supply the shared hydrogen atom.',
       rotatableBondCount:
         'The number of single-order non-ring bonds where atoms on either side of the bond are bound to non-hydrogen atoms. Rotation around such a bond axis changes the overall shape of the molecule.',
+      polarSurfaceArea: 'The sum of the surface areas over all the polar atoms of the molecule.',
+      heavyAtomCount: 'The number of heavy atoms in the molecule. A heavy atom is any atom but hydrogen.',
+      complexity: 'The complexity of the molecule measured from both composition and structure.',
+      density: 'The mass per unit of volume of a substance.',
+      boilingPoint:
+        'The temperature at which the compound changes state from liquid to gas at a given atmospheric pressure.',
+      meltingPoint:
+        'The temperature at which the compound changes state from solid to liquid at a given atmospheric pressure.',
     },
 
     word: {

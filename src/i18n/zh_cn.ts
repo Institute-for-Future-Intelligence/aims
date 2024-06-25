@@ -27,6 +27,12 @@ export const i18n_zh_cn = {
       hydrogenBondAcceptorCount: '分子的氢键接受者数量。氢键接受者是在一个氢键中不出氢原子的那一方。',
       rotatableBondCount:
         '分子的可旋转共价键数量。可旋转共价键是非环形的单键，其中一方原子和非氢原子成键。它的旋转可改变分子形状。',
+      polarSurfaceArea: '分子的所有极性原子表面积之和。',
+      heavyAtomCount: '分子的重原子总数。所有非氢原子都是重原子。',
+      complexity: '从组分和结构计算的分子复杂程度。',
+      density: '物质单位体积的质量。',
+      boilingPoint: '在特定大气压下物质开始从液体变成气体的温度。',
+      meltingPoint: '在特定大气压下物质开始从固体变成液体的温度。',
     },
 
     word: {
