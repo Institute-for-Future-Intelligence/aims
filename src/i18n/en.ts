@@ -362,6 +362,7 @@ export const i18n_en = {
       MaximumX: 'Maximum X',
       MinimumY: 'Minimum Y',
       MaximumY: 'Maximum Y',
+      NumericValues: 'Numeric Values',
       ScatterPlotSettings: 'Scatter Plot Settings',
       GridLines: 'Grid Lines',
       HorizontalLines: 'Horizontal',

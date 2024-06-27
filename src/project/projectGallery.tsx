@@ -51,8 +51,10 @@ import { Vector2 } from 'three';
 import { View } from './View.tsx';
 import { Undoable } from '../undo/Undoable.ts';
 import FindMoleculeModal from './findMoleculeModal.tsx';
+import AxesImage from '../assets/axes.png';
 import RegressionImage from '../assets/regression.png';
 import PolynomialRegression from './regression.tsx';
+import NumericValuesContent from './numericValuesContent.tsx';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);
@@ -1037,7 +1039,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     <Popover
                       title={
                         <div onClick={(e) => e.stopPropagation()}>
-                          <TableOutlined /> {t('projectPanel.CoordinateSystemSettings', lang)}
+                          <img src={AxesImage} alt={'axes'} /> {t('projectPanel.CoordinateSystemSettings', lang)}
                         </div>
                       }
                       content={
@@ -1053,8 +1055,16 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                         />
                       }
                     >
-                      <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                        <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                      <Button
+                        style={{
+                          paddingLeft: '10px',
+                          paddingRight: '0px',
+                          verticalAlign: 'top',
+                          border: 'none',
+                        }}
+                        title={t('projectPanel.RegressionAnalysis', lang)}
+                      >
+                        <img src={AxesImage} alt={'axes'} />
                       </Button>
                     </Popover>
                     <Popover
@@ -1067,6 +1077,24 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     >
                       <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
                         <DotChartOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                      </Button>
+                    </Popover>
+                    <Popover
+                      title={
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <TableOutlined /> {t('projectPanel.NumericValues', lang)}
+                        </div>
+                      }
+                      content={
+                        <NumericValuesContent
+                          data={scatterData.all}
+                          xVariable={xAxisNameScatterPlot}
+                          yVariable={yAxisNameScatterPlot}
+                        />
+                      }
+                    >
+                      <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                        <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
                       </Button>
                     </Popover>
                     <Button

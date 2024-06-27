@@ -120,6 +120,7 @@ const CoordinateSystemSettingsContent = React.memo(
           <Col span={16}>
             <Select
               style={{ width: '100%' }}
+              title={t('tooltip.' + xAxisNameScatterPlot, lang)}
               value={xAxisNameScatterPlot}
               onChange={(value) => {
                 setCommonStore((state) => {
@@ -146,6 +147,7 @@ const CoordinateSystemSettingsContent = React.memo(
             <Select
               style={{ width: '100%' }}
               value={yAxisNameScatterPlot}
+              title={t('tooltip.' + yAxisNameScatterPlot, lang)}
               onChange={(value) => {
                 setCommonStore((state) => {
                   state.projectState.yAxisNameScatterPlot = value;
