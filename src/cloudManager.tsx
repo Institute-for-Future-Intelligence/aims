@@ -538,46 +538,52 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       if (exist) {
         showInfo(t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
       } else {
-        if (user && user.uid) {
-          const timestamp = new Date().getTime();
-          const ps = ProjectUtil.createDefaultProjectState();
-          ps.timestamp = timestamp;
-          ps.key = timestamp.toString();
-          ps.time = dayjs(new Date(timestamp)).format('MM/DD/YYYY hh:mm A');
-          ps.title = newTitle;
-          ps.owner = user.uid;
-          ps.type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
-          ps.description = usePrimitiveStore.getState().projectDescription;
-          ps.cameraPosition = DEFAULT_CAMERA_POSITION;
-          ps.cameraRotation = DEFAULT_CAMERA_ROTATION;
-          ps.cameraUp = DEFAULT_CAMERA_UP;
-          ps.panCenter = DEFAULT_PAN_CENTER;
-          firebase
-            .firestore()
-            .collection('users')
-            .doc(user.uid)
-            .collection('projects')
-            .doc(newTitle)
-            .set(ps)
-            .then(() => {
-              setCommonStore((state) => {
-                state.projectState = ps;
-              });
-              setUpdateMyProjectsFlag(!updateMyProjectsFlag);
-            })
-            .catch((error) => {
-              showError(t('message.CannotCreateNewProject', lang) + ': ' + error);
-            })
-            .finally(() => {
-              // if the project list panel is open, update it
-              if (showProjectListPanel) {
-                fetchMyProjects(false).then(() => {
-                  setUpdateFlag(!updateFlag);
+        if (user) {
+          const uid = user.uid;
+          if (uid) {
+            const timestamp = new Date().getTime();
+            const ps = ProjectUtil.createDefaultProjectState();
+            ps.timestamp = timestamp;
+            ps.key = timestamp.toString();
+            ps.time = dayjs(new Date(timestamp)).format('MM/DD/YYYY hh:mm A');
+            ps.title = newTitle;
+            ps.owner = user.uid;
+            ps.type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
+            ps.description = usePrimitiveStore.getState().projectDescription;
+            ps.cameraPosition = DEFAULT_CAMERA_POSITION;
+            ps.cameraRotation = DEFAULT_CAMERA_ROTATION;
+            ps.cameraUp = DEFAULT_CAMERA_UP;
+            ps.panCenter = DEFAULT_PAN_CENTER;
+            firebase
+              .firestore()
+              .collection('users')
+              .doc(uid)
+              .collection('projects')
+              .doc(newTitle)
+              .set(ps)
+              .then(() => {
+                const pi = { timestamp: ps.timestamp, title: ps.title, type: ps.type } as ProjectInfo;
+                addProjectToList(uid, pi).then(() => {
+                  myProjectsRef.current.push(pi);
+                  // if the project list panel is open, update it
+                  if (showProjectListPanel) {
+                    setUpdateMyProjectsFlag(!updateMyProjectsFlag);
+                    setUpdateFlag(!updateFlag);
+                  }
                 });
-              }
-              setWaiting(false);
-              resetProject();
-            });
+                setCommonStore((state) => {
+                  state.projectState = ps;
+                });
+                setUpdateMyProjectsFlag(!updateMyProjectsFlag);
+              })
+              .catch((error) => {
+                showError(t('message.CannotCreateNewProject', lang) + ': ' + error);
+              })
+              .finally(() => {
+                setWaiting(false);
+                resetProject();
+              });
+          }
         }
       }
     });

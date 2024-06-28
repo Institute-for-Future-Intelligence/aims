@@ -92,13 +92,13 @@ const ProjectListPanel = React.memo(
     // https://github.com/react-grid-layout/react-draggable/blob/v4.4.2/lib/DraggableCore.js#L159-L171
     const nodeRef = React.useRef(null);
 
-    const projectsWithKeys = () => {
+    const projectsWithKeys = useMemo(() => {
       const arr: object[] = [];
       for (const [i, f] of projects.entries()) {
         arr.push({ ...f, key: i });
       }
       return arr;
-    };
+    }, [projects]);
 
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const wOffset = wrapperRef.current ? wrapperRef.current.clientWidth + 40 : 680;
@@ -111,7 +111,7 @@ const ProjectListPanel = React.memo(
     const [newTitle, setNewTitle] = useState<string>();
     const dragRef = useRef<HTMLDivElement | null>(null);
     // make an editable copy because the project array is not mutable
-    const projectsRef = useRef<object[]>(projectsWithKeys());
+    const projectsRef = useRef<object[]>(projectsWithKeys);
     // set a flag so that we can update when projectsRef changes
     const [recountFlag, setRecountFlag] = useState<boolean>(false);
     const [selectedIndex, setSelectedIndex] = useState<number>(-1);
@@ -139,7 +139,7 @@ const ProjectListPanel = React.memo(
 
     useEffect(() => {
       if (projects) {
-        projectsRef.current = projectsWithKeys();
+        projectsRef.current = projectsWithKeys;
         setRecountFlag(!recountFlag);
       }
     }, [projects]);

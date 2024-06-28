@@ -209,7 +209,7 @@ const ReactionChamber = React.memo(() => {
           });
         }}
       >
-        <ReSizer />
+        <Resizer />
         <ReactionChamberControls lightRef={lightRef} />
         {/* FIXME: temporary solution to turn on/off fog without updating materials */}
         <fog attach="fog" args={viewerFoggy ? ['#000000', 50, 150] : ['#000000', 0.1, 0]} />
@@ -283,7 +283,7 @@ const ReactionChamber = React.memo(() => {
   );
 });
 
-const ReSizer = () => {
+const Resizer = () => {
   const { gl, camera } = useThree();
 
   useEffect(() => {

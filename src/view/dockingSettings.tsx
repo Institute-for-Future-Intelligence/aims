@@ -496,21 +496,7 @@ const DockingSettings = React.memo(() => {
             {protein.name}
           </span>
         </Popover>
-      ) : (
-        <span
-          style={{
-            position: 'absolute',
-            top: '14px',
-            left: '56px',
-            zIndex: 13,
-            fontSize: '20px',
-            userSelect: 'none',
-            color: 'lightgray',
-          }}
-        >
-          {t('word.Unknown', lang)}
-        </span>
-      )}
+      ) : null}
     </>
   );
 });

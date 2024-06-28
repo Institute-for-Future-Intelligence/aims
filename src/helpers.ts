@@ -6,6 +6,8 @@
 import { saveSvgAsPng } from 'save-svg-as-png';
 import { message } from 'antd';
 import html2canvas from 'html2canvas';
+import { DatumEntry } from './types.ts';
+import { saveAs } from 'file-saver';
 
 export const visitIFI = () => {
   window.open('https://intofuture.org', '_blank');
@@ -93,6 +95,22 @@ export const saveImage = (fileName: string, imgUrl: string) => {
   a.download = fileName;
   a.href = imgUrl;
   a.click();
+};
+
+export const saveCsv = (data: DatumEntry[], fileName: string) => {
+  let content = '';
+  for (const k of Object.keys(data[0])) {
+    content += k + ', ';
+  }
+  content += '\n';
+  for (const o of data) {
+    for (const v of Object.values(o)) {
+      content += v + ', ';
+    }
+    content += '\n';
+  }
+  const blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
+  saveAs(blob, fileName);
 };
 
 export const screenshot = async (elementId: string, name?: string) => {
