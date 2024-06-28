@@ -131,6 +131,7 @@ export const storeMoleculeData = (molecule: MoleculeInterface, atoms: Atom[], ra
       density: properties.density,
       boilingPoint: properties.boilingPoint,
       meltingPoint: properties.meltingPoint,
+      formula: properties.formula,
     } as MolecularProperties);
   }
   useStore.getState().setMolecularStructure(molecule.name, { atoms, radialBonds } as MolecularStructure);

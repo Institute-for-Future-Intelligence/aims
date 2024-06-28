@@ -54,7 +54,8 @@ import FindMoleculeModal from './findMoleculeModal.tsx';
 import AxesImage from '../assets/axes.png';
 import RegressionImage from '../assets/regression.png';
 import PolynomialRegression from './regression.tsx';
-import NumericValuesContent from './numericValuesContent.tsx';
+import ScatterChartNumericValues from './scatterChartNumericValues.tsx';
+import ParallelCoordinatesNumericValuesContent from './parallelCoordinatesNumericValues.tsx';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);
@@ -508,6 +509,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           d['hovered'] = hoveredMolecule === m;
           d['excluded'] = projectFilters ? ProjectUtil.isExcluded(projectFilters, p) : false;
           d['invisible'] = !!m.invisible;
+          d['name'] = m.name;
+          d['formula'] = p.formula;
           data.push(d);
         }
       }
@@ -906,108 +909,120 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             {/*parallel coordinates*/}
 
             {data.length > 0 && graphType === GraphType.PARALLEL_COORDINATES && (
-              <PropertiesHeader
-                // the following disables keyboard focus
-                onMouseDown={(e) => e.preventDefault()}
-              >
-                <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
-                <span>
-                  <Popover
-                    title={
-                      <div onClick={(e) => e.stopPropagation()}>
-                        <CarryOutOutlined /> {t('projectPanel.ChooseProperties', lang)}
-                      </div>
-                    }
-                    onOpenChange={(visible) => {
-                      // TODO
-                    }}
-                    content={
-                      <PropertiesSelectionContent updateHiddenFlag={() => setUpdateHiddenFlag(!updateHiddenFlag)} />
-                    }
-                  >
-                    <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                      <CarryOutOutlined style={{ fontSize: '24px', color: 'gray' }} />
-                    </Button>
-                  </Popover>
-                  <Popover
-                    title={
-                      <div onClick={(e) => e.stopPropagation()}>
-                        <BgColorsOutlined /> {t('projectPanel.ChooseDataColoring', lang)}
-                      </div>
-                    }
-                    content={
-                      <div>
-                        <Radio.Group
-                          onChange={(e) => {
-                            selectDataColoring(e.target.value);
-                          }}
-                          value={projectDataColoring ?? DataColoring.ALL}
-                        >
-                          <Radio style={{ fontSize: '12px', width: '100%' }} value={DataColoring.ALL}>
-                            {t('projectPanel.SameColorForAllMolecules', lang)}
-                          </Radio>
-                          <br />
-                          <Radio style={{ fontSize: '12px', width: '100%' }} value={DataColoring.INDIVIDUALS}>
-                            {t('projectPanel.OneColorForEachMolecule', lang)}
-                          </Radio>
-                        </Radio.Group>
-                      </div>
-                    }
-                  >
-                    <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                      <BgColorsOutlined style={{ fontSize: '24px', color: 'gray' }} />
-                    </Button>
-                  </Popover>
-                  <Button
-                    style={{ border: 'none', paddingRight: '20px', background: 'white' }}
-                    onClick={() => {
-                      saveSvg('parallel-coordinates')
-                        .then(() => {
-                          showInfo(t('message.ScreenshotSaved', lang));
-                          if (loggable) logAction('Take Screenshot of Property Space');
-                        })
-                        .catch((reason) => {
-                          showError(reason);
-                        });
-                    }}
-                  >
-                    <CameraOutlined
-                      style={{ fontSize: '24px', color: 'gray' }}
-                      title={t('projectPanel.GraphScreenshot', lang)}
-                    />
-                  </Button>
-                </span>
-              </PropertiesHeader>
-            )}
-            {data.length > 0 && graphType === GraphType.PARALLEL_COORDINATES && (
-              <ParallelCoordinates
-                id={'parallel-coordinates'}
-                width={relativeWidth * window.innerWidth}
-                height={totalHeight / 2 - 130}
-                data={data}
-                types={types}
-                minima={minima}
-                maxima={maxima}
-                steps={steps}
-                variables={variables}
-                titles={titles}
-                units={units}
-                digits={digits}
-                tickIntegers={tickIntegers}
-                filters={filters}
-                hover={(i: number) => {
-                  usePrimitiveStore.getState().set((state) => {
-                    for (const [index, m] of projectMolecules.entries()) {
-                      if (index === i) {
-                        state.hoveredMolecule = m;
-                        break;
+              <>
+                <PropertiesHeader
+                  // the following disables keyboard focus
+                  onMouseDown={(e) => e.preventDefault()}
+                >
+                  <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
+                  <span>
+                    <Popover
+                      title={
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <CarryOutOutlined /> {t('projectPanel.ChooseProperties', lang)}
+                        </div>
                       }
-                    }
-                  });
-                }}
-                hoveredIndex={projectMolecules && hoveredMolecule ? projectMolecules.indexOf(hoveredMolecule) : -1}
-                selectedIndex={projectMolecules && selectedMolecule ? projectMolecules.indexOf(selectedMolecule) : -1}
-              />
+                      onOpenChange={(visible) => {
+                        // TODO
+                      }}
+                      content={
+                        <PropertiesSelectionContent updateHiddenFlag={() => setUpdateHiddenFlag(!updateHiddenFlag)} />
+                      }
+                    >
+                      <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                        <CarryOutOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                      </Button>
+                    </Popover>
+                    <Popover
+                      title={
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <TableOutlined /> {t('projectPanel.NumericValues', lang)}
+                        </div>
+                      }
+                      content={<ParallelCoordinatesNumericValuesContent data={data} variables={variables} />}
+                    >
+                      <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                        <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                      </Button>
+                    </Popover>
+                    <Popover
+                      title={
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <BgColorsOutlined /> {t('projectPanel.ChooseDataColoring', lang)}
+                        </div>
+                      }
+                      content={
+                        <div>
+                          <Radio.Group
+                            onChange={(e) => {
+                              selectDataColoring(e.target.value);
+                            }}
+                            value={projectDataColoring ?? DataColoring.ALL}
+                          >
+                            <Radio style={{ fontSize: '12px', width: '100%' }} value={DataColoring.ALL}>
+                              {t('projectPanel.SameColorForAllMolecules', lang)}
+                            </Radio>
+                            <br />
+                            <Radio style={{ fontSize: '12px', width: '100%' }} value={DataColoring.INDIVIDUALS}>
+                              {t('projectPanel.OneColorForEachMolecule', lang)}
+                            </Radio>
+                          </Radio.Group>
+                        </div>
+                      }
+                    >
+                      <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                        <BgColorsOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                      </Button>
+                    </Popover>
+                    <Button
+                      style={{ border: 'none', paddingRight: '20px', background: 'white' }}
+                      onClick={() => {
+                        saveSvg('parallel-coordinates')
+                          .then(() => {
+                            showInfo(t('message.ScreenshotSaved', lang));
+                            if (loggable) logAction('Take Screenshot of Property Space');
+                          })
+                          .catch((reason) => {
+                            showError(reason);
+                          });
+                      }}
+                    >
+                      <CameraOutlined
+                        style={{ fontSize: '24px', color: 'gray' }}
+                        title={t('projectPanel.GraphScreenshot', lang)}
+                      />
+                    </Button>
+                  </span>
+                </PropertiesHeader>
+                <ParallelCoordinates
+                  id={'parallel-coordinates'}
+                  width={relativeWidth * window.innerWidth}
+                  height={totalHeight / 2 - 130}
+                  data={data}
+                  types={types}
+                  minima={minima}
+                  maxima={maxima}
+                  steps={steps}
+                  variables={variables}
+                  titles={titles}
+                  units={units}
+                  digits={digits}
+                  tickIntegers={tickIntegers}
+                  filters={filters}
+                  hover={(i: number) => {
+                    usePrimitiveStore.getState().set((state) => {
+                      for (const [index, m] of projectMolecules.entries()) {
+                        if (index === i) {
+                          state.hoveredMolecule = m;
+                          break;
+                        }
+                      }
+                    });
+                  }}
+                  hoveredIndex={projectMolecules && hoveredMolecule ? projectMolecules.indexOf(hoveredMolecule) : -1}
+                  selectedIndex={projectMolecules && selectedMolecule ? projectMolecules.indexOf(selectedMolecule) : -1}
+                />
+              </>
             )}
 
             {/*scatter plot*/}
@@ -1086,7 +1101,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                         </div>
                       }
                       content={
-                        <NumericValuesContent
+                        <ScatterChartNumericValues
                           data={scatterData.all}
                           xVariable={xAxisNameScatterPlot}
                           yVariable={yAxisNameScatterPlot}
@@ -1117,170 +1132,168 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     </Button>
                   </span>
                 </PropertiesHeader>
-              </>
-            )}
-            {data.length > 0 && graphType === GraphType.SCATTER_PLOT && (
-              <ScatterChart
-                id={'scatter-plot'}
-                width={relativeWidth * window.innerWidth}
-                height={totalHeight / 2 - 130}
-                margin={{
-                  top: 10,
-                  right: 40,
-                  bottom: 20,
-                  left: 10,
-                }}
-              >
-                {regressionAnalysis && <Legend wrapperStyle={{ bottom: '10px', fontSize: '11px' }} />}
-                <CartesianGrid
-                  strokeWidth="1"
-                  stroke={'gray'}
-                  horizontal={xLinesScatterPlot}
-                  vertical={yLinesScatterPlot}
-                />
-                <XAxis
-                  dataKey="x"
-                  fontSize={10}
-                  type="number"
-                  domain={[xMinScatterPlot, xMaxScatterPlot]}
-                  label={
-                    <Label
-                      value={
-                        !xFormula || xFormula === 'x'
-                          ? ProjectUtil.getPropertyName(xAxisNameScatterPlot, lang) +
-                            (ProjectUtil.getUnit(xAxisNameScatterPlot) === ''
-                              ? ''
-                              : ' (' + ProjectUtil.getUnit(xAxisNameScatterPlot) + ')')
-                          : xFormula
-                      }
-                      dy={10}
-                      fontSize={11}
-                    />
-                  }
-                  name={ProjectUtil.getPropertyName(xAxisNameScatterPlot, lang)}
-                  strokeWidth={1}
-                  stroke={'gray'}
-                />
-                <YAxis
-                  dataKey="y"
-                  fontSize={10}
-                  type="number"
-                  domain={[yMinScatterPlot, yMaxScatterPlot]}
-                  label={
-                    <Label
-                      value={
-                        !yFormula || yFormula === 'y'
-                          ? ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang) +
-                            (ProjectUtil.getUnit(yAxisNameScatterPlot) === ''
-                              ? ''
-                              : ' (' + ProjectUtil.getUnit(yAxisNameScatterPlot) + ')')
-                          : yFormula
-                      }
-                      dx={-16}
-                      fontSize={11}
-                      angle={-90}
-                    />
-                  }
-                  tickFormatter={(value) => (value > 10000 ? Number(value.toFixed(1)).toExponential(1) : value)}
-                  name={ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang)}
-                  strokeWidth={1}
-                  stroke={'gray'}
-                />
-                <Tooltip
-                  cursor={{ strokeDasharray: '3 3' }}
-                  content={({ active, payload }) => {
-                    if (!active || !payload) return null;
-                    return (
-                      <div
-                        style={{
-                          textAlign: 'left',
-                          fontSize: '12px',
-                          backgroundColor: 'white',
-                          padding: '10px',
-                          border: '1px solid gray',
-                          borderRadius: '8px',
-                        }}
-                      >
-                        {payload.map((p) => {
-                          return (
-                            <div key={p.name}>
-                              {p.name}: {p.value}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    );
-                  }}
-                />
-                <Scatter
-                  name={t('projectPanel.RawData', lang)}
-                  data={scatterData.all}
-                  fill={'#8884d8'}
-                  line={lineWidthScatterPlot > 0}
-                  strokeWidth={lineWidthScatterPlot}
-                  shape={<Dot r={dotSizeScatterPlot} />}
-                  onPointerOver={(e) => {
-                    setScatterDataHoveredIndex(scatterData.all.indexOf(e.payload));
-                  }}
-                  onClick={(e) => {
-                    const index = scatterData.all.indexOf(e.payload);
-                    if (index >= 0) {
-                      setCommonStore((state) => {
-                        state.projectState.selectedMolecule = sortedMoleculesRef.current[index];
-                      });
-                    }
+                <ScatterChart
+                  id={'scatter-plot'}
+                  width={relativeWidth * window.innerWidth}
+                  height={totalHeight / 2 - 130}
+                  margin={{
+                    top: 10,
+                    right: 40,
+                    bottom: 20,
+                    left: 10,
                   }}
                 >
-                  {scatterData.all.map((entry, index) => {
-                    const selected = selectedMolecule
-                      ? index === sortedMoleculesRef.current.indexOf(selectedMolecule)
-                      : false;
-                    const color = projectMolecules[index].invisible ? 'lightgray' : '#8884d8';
-                    const hovered = index === scatterDataHoveredIndex;
-                    if (selected && hovered) {
-                      return (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={color}
-                          stroke={'black'}
-                          strokeWidth={2}
-                          strokeDasharray={'2 2'}
-                        />
-                      );
-                    }
-                    if (hovered && !selected) {
-                      return (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={color}
-                          stroke={'black'}
-                          strokeWidth={1}
-                          strokeDasharray={'2 2'}
-                        />
-                      );
-                    }
-                    if (selected) {
-                      return <Cell key={`cell-${index}`} fill={color} stroke={'black'} strokeWidth={2} />;
-                    }
-                    return <Cell key={`cell-${index}`} fill={color} />;
-                  })}
-                </Scatter>
-                {regressionAnalysis && (
-                  <Scatter
-                    name={
-                      regression
-                        ? t('projectPanel.RegressionModel', lang) + ': ' + regression.toString(3).substring(7)
-                        : 'Regression'
-                    }
-                    data={regressionData}
-                    fill={'gray'}
-                    line={true}
-                    strokeDasharray="5 5"
-                    strokeWidth={2}
-                    shape={<RenderNoShape />}
+                  {regressionAnalysis && <Legend wrapperStyle={{ bottom: '10px', fontSize: '11px' }} />}
+                  <CartesianGrid
+                    strokeWidth="1"
+                    stroke={'gray'}
+                    horizontal={xLinesScatterPlot}
+                    vertical={yLinesScatterPlot}
                   />
-                )}
-              </ScatterChart>
+                  <XAxis
+                    dataKey="x"
+                    fontSize={10}
+                    type="number"
+                    domain={[xMinScatterPlot, xMaxScatterPlot]}
+                    label={
+                      <Label
+                        value={
+                          !xFormula || xFormula === 'x'
+                            ? ProjectUtil.getPropertyName(xAxisNameScatterPlot, lang) +
+                              (ProjectUtil.getUnit(xAxisNameScatterPlot) === ''
+                                ? ''
+                                : ' (' + ProjectUtil.getUnit(xAxisNameScatterPlot) + ')')
+                            : xFormula
+                        }
+                        dy={10}
+                        fontSize={11}
+                      />
+                    }
+                    name={ProjectUtil.getPropertyName(xAxisNameScatterPlot, lang)}
+                    strokeWidth={1}
+                    stroke={'gray'}
+                  />
+                  <YAxis
+                    dataKey="y"
+                    fontSize={10}
+                    type="number"
+                    domain={[yMinScatterPlot, yMaxScatterPlot]}
+                    label={
+                      <Label
+                        value={
+                          !yFormula || yFormula === 'y'
+                            ? ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang) +
+                              (ProjectUtil.getUnit(yAxisNameScatterPlot) === ''
+                                ? ''
+                                : ' (' + ProjectUtil.getUnit(yAxisNameScatterPlot) + ')')
+                            : yFormula
+                        }
+                        dx={-16}
+                        fontSize={11}
+                        angle={-90}
+                      />
+                    }
+                    tickFormatter={(value) => (value > 10000 ? Number(value.toFixed(1)).toExponential(1) : value)}
+                    name={ProjectUtil.getPropertyName(yAxisNameScatterPlot, lang)}
+                    strokeWidth={1}
+                    stroke={'gray'}
+                  />
+                  <Tooltip
+                    cursor={{ strokeDasharray: '3 3' }}
+                    content={({ active, payload }) => {
+                      if (!active || !payload) return null;
+                      return (
+                        <div
+                          style={{
+                            textAlign: 'left',
+                            fontSize: '12px',
+                            backgroundColor: 'white',
+                            padding: '10px',
+                            border: '1px solid gray',
+                            borderRadius: '8px',
+                          }}
+                        >
+                          {payload.map((p) => {
+                            return (
+                              <div key={p.name}>
+                                {p.name}: {p.value}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    }}
+                  />
+                  <Scatter
+                    name={t('projectPanel.RawData', lang)}
+                    data={scatterData.all}
+                    fill={'#8884d8'}
+                    line={lineWidthScatterPlot > 0}
+                    strokeWidth={lineWidthScatterPlot}
+                    shape={<Dot r={dotSizeScatterPlot} />}
+                    onPointerOver={(e) => {
+                      setScatterDataHoveredIndex(scatterData.all.indexOf(e.payload));
+                    }}
+                    onClick={(e) => {
+                      const index = scatterData.all.indexOf(e.payload);
+                      if (index >= 0) {
+                        setCommonStore((state) => {
+                          state.projectState.selectedMolecule = sortedMoleculesRef.current[index];
+                        });
+                      }
+                    }}
+                  >
+                    {scatterData.all.map((entry, index) => {
+                      const selected = selectedMolecule
+                        ? index === sortedMoleculesRef.current.indexOf(selectedMolecule)
+                        : false;
+                      const color = projectMolecules[index].invisible ? 'lightgray' : '#8884d8';
+                      const hovered = index === scatterDataHoveredIndex;
+                      if (selected && hovered) {
+                        return (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={color}
+                            stroke={'black'}
+                            strokeWidth={2}
+                            strokeDasharray={'2 2'}
+                          />
+                        );
+                      }
+                      if (hovered && !selected) {
+                        return (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={color}
+                            stroke={'black'}
+                            strokeWidth={1}
+                            strokeDasharray={'2 2'}
+                          />
+                        );
+                      }
+                      if (selected) {
+                        return <Cell key={`cell-${index}`} fill={color} stroke={'black'} strokeWidth={2} />;
+                      }
+                      return <Cell key={`cell-${index}`} fill={color} />;
+                    })}
+                  </Scatter>
+                  {regressionAnalysis && (
+                    <Scatter
+                      name={
+                        regression
+                          ? t('projectPanel.RegressionModel', lang) + ': ' + regression.toString(3).substring(7)
+                          : 'Regression'
+                      }
+                      data={regressionData}
+                      fill={'gray'}
+                      line={true}
+                      strokeDasharray="5 5"
+                      strokeWidth={2}
+                      shape={<RenderNoShape />}
+                    />
+                  )}
+                </ScatterChart>
+              </>
             )}
           </div>
         </div>

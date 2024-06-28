@@ -10,13 +10,13 @@ import * as Selector from '../stores/selector';
 import { ProjectUtil } from './ProjectUtil.ts';
 import { useTranslation } from 'react-i18next';
 
-interface NumericValuesContentProps {
+interface ScatterChartNumericValuesProps {
   xVariable: string;
   yVariable: string;
   data: { x: number; y: number }[];
 }
 
-const NumericValuesContent = React.memo(({ xVariable, yVariable, data }: NumericValuesContentProps) => {
+const ScatterChartNumericValues = React.memo(({ xVariable, yVariable, data }: ScatterChartNumericValuesProps) => {
   const language = useStore(Selector.language);
 
   const [updateFlag, setUpdateFlag] = React.useState(false);
@@ -120,4 +120,4 @@ const NumericValuesContent = React.memo(({ xVariable, yVariable, data }: Numeric
   );
 });
 
-export default NumericValuesContent;
+export default ScatterChartNumericValues;
