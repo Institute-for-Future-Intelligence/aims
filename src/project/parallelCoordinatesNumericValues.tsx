@@ -54,8 +54,14 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
           dataIndex="formula"
           key="formula"
           // width={'10%'}
-          render={(formula) => {
-            return <Typography.Text style={{ fontSize: '12px', verticalAlign: 'middle' }}>{formula}</Typography.Text>;
+          render={(formula, record: any) => {
+            return (
+              <Typography.Text
+                style={{ fontSize: '12px', color: record.invisible ? 'silver' : 'black', verticalAlign: 'middle' }}
+              >
+                {formula}
+              </Typography.Text>
+            );
           }}
           onHeaderCell={() => {
             return { style: { fontSize: '10px', fontWeight: 'bold' } };
@@ -79,8 +85,14 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
               dataIndex={variable}
               key={variable}
               // width={'10%'}
-              render={(value) => {
-                return <Typography.Text style={{ fontSize: '12px', verticalAlign: 'middle' }}>{value}</Typography.Text>;
+              render={(value, record: any) => {
+                return (
+                  <Typography.Text
+                    style={{ fontSize: '12px', color: record.invisible ? 'silver' : 'black', verticalAlign: 'middle' }}
+                  >
+                    {value}
+                  </Typography.Text>
+                );
               }}
               onHeaderCell={() => {
                 return { style: { fontSize: '10px', fontWeight: 'bold' } };
