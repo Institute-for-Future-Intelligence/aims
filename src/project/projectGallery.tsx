@@ -675,9 +675,17 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   }, [updateHiddenFlag, projectFilters, hiddenProperties]);
 
   const scatterData = useMemo(() => {
-    const data: { all: { x: number; y: number }[]; visible: { x: number; y: number }[]; visibility: boolean[] } = {
+    const data: {
+      all: { x: number; y: number }[];
+      visible: { x: number; y: number }[];
+      name: string[];
+      formula: string[];
+      visibility: boolean[];
+    } = {
       all: [],
       visible: [],
+      name: [],
+      formula: [],
       visibility: [],
     };
     if (projectMolecules) {
@@ -702,6 +710,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               }
             }
             if (!m.invisible) data.visible.push({ x, y });
+            data.name.push(m.name);
+            data.formula.push(prop.formula);
             data.visibility.push(!m.invisible);
             data.all.push({ x, y });
           }
@@ -1108,6 +1118,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       content={
                         <ScatterChartNumericValues
                           data={scatterData.all}
+                          name={scatterData.name}
+                          formula={scatterData.formula}
                           visibility={scatterData.visibility}
                           xVariable={xAxisNameScatterPlot}
                           yVariable={yAxisNameScatterPlot}

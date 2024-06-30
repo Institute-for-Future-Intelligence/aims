@@ -16,10 +16,12 @@ interface ScatterChartNumericValuesProps {
   yVariable: string;
   data: { x: number; y: number }[];
   visibility: boolean[];
+  name: string[];
+  formula: string[];
 }
 
 const ScatterChartNumericValues = React.memo(
-  ({ xVariable, yVariable, data, visibility }: ScatterChartNumericValuesProps) => {
+  ({ xVariable, yVariable, data, visibility, name, formula }: ScatterChartNumericValuesProps) => {
     const language = useStore(Selector.language);
 
     const [updateFlag, setUpdateFlag] = React.useState(false);
@@ -39,20 +41,17 @@ const ScatterChartNumericValues = React.memo(
     }, [data]);
 
     const saveCsv = (fileName: string) => {
-      let content = xVariable + ', ' + yVariable;
+      let content = 'name, ' + xVariable + ', ' + yVariable;
       content += '\n';
-      for (const o of data) {
-        for (const v of Object.values(o)) {
-          content += v + ', ';
-        }
-        content += '\n';
+      for (const [i, o] of data.entries()) {
+        content += name[i] + ',' + o.x + ', ' + o.y + '\n';
       }
       const blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
       saveAs(blob, fileName);
     };
 
     return (
-      <div style={{ width: '280px' }}>
+      <div style={{ width: '400px' }}>
         <Table
           size={'small'}
           style={{ width: '100%', direction: 'ltr', verticalAlign: 'top' }}
@@ -61,16 +60,16 @@ const ScatterChartNumericValues = React.memo(
           pagination={false}
         >
           <Column
-            title={'#'}
+            title={t('molecularViewer.Molecule', lang)}
             dataIndex="key"
             key="key"
-            width={'10%'}
+            // width={'10%'}
             render={(i, record, index) => {
               return (
                 <Typography.Text
                   style={{ fontSize: '12px', color: visibility[index] ? 'black' : 'silver', verticalAlign: 'middle' }}
                 >
-                  {i}
+                  {formula[i]}
                 </Typography.Text>
               );
             }}
@@ -90,7 +89,7 @@ const ScatterChartNumericValues = React.memo(
             title={ProjectUtil.getPropertyName(xVariable, lang) ?? xVariable}
             dataIndex="x"
             key="x"
-            width={'45%'}
+            // width={'45%'}
             render={(x, record, index) => {
               return (
                 <Typography.Text
@@ -119,7 +118,7 @@ const ScatterChartNumericValues = React.memo(
             title={ProjectUtil.getPropertyName(yVariable, lang) ?? yVariable}
             dataIndex="y"
             key="y"
-            width={'45%'}
+            // width={'45%'}
             render={(y, record, index) => {
               return (
                 <Typography.Text
