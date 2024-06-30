@@ -355,6 +355,7 @@ export const i18n_zh_tw = {
       MinimumY: '最小Y',
       MaximumY: '最大Y',
       NumericValues: '數值',
+      ExportCsv: '輸出CSV',
       ScatterPlotSettings: '散點圖設定',
       GridLines: '格線',
       HorizontalLines: '水平線',

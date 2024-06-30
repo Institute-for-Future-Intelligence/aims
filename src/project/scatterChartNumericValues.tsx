@@ -3,12 +3,13 @@
  */
 
 import React, { useEffect, useMemo, useRef } from 'react';
-import { Table, Typography } from 'antd';
+import { Button, Space, Table, Typography } from 'antd';
 import Column from 'antd/lib/table/Column';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { ProjectUtil } from './ProjectUtil.ts';
 import { useTranslation } from 'react-i18next';
+import { saveAs } from 'file-saver';
 
 interface ScatterChartNumericValuesProps {
   xVariable: string;
@@ -37,6 +38,19 @@ const ScatterChartNumericValues = React.memo(
       setUpdateFlag(!updateFlag);
     }, [data]);
 
+    const saveCsv = (fileName: string) => {
+      let content = xVariable + ', ' + yVariable;
+      content += '\n';
+      for (const o of data) {
+        for (const v of Object.values(o)) {
+          content += v + ', ';
+        }
+        content += '\n';
+      }
+      const blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
+      saveAs(blob, fileName);
+    };
+
     return (
       <div style={{ width: '280px' }}>
         <Table
@@ -44,12 +58,7 @@ const ScatterChartNumericValues = React.memo(
           style={{ width: '100%', direction: 'ltr', verticalAlign: 'top' }}
           dataSource={dataRef.current}
           scroll={{ y: 400 }}
-          pagination={{
-            defaultPageSize: 50,
-            showSizeChanger: true,
-            position: ['bottomCenter'],
-            pageSizeOptions: ['50', '100', '200'],
-          }}
+          pagination={false}
         >
           <Column
             title={'#'}
@@ -136,6 +145,15 @@ const ScatterChartNumericValues = React.memo(
             }}
           />
         </Table>
+        <Space style={{ width: '100%', paddingTop: '10px', justifyContent: 'center' }}>
+          <Button
+            onClick={() => {
+              saveCsv(xVariable + '-' + yVariable + '.csv');
+            }}
+          >
+            {t('projectPanel.ExportCsv', lang)}
+          </Button>
+        </Space>
       </div>
     );
   },

@@ -3,13 +3,14 @@
  */
 
 import React, { useEffect, useMemo, useRef } from 'react';
-import { Table, Typography } from 'antd';
+import { Button, Space, Table, Typography } from 'antd';
 import Column from 'antd/lib/table/Column';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { ProjectUtil } from './ProjectUtil.ts';
 import { useTranslation } from 'react-i18next';
 import { DatumEntry } from '../types.ts';
+import { saveAs } from 'file-saver';
 
 interface ParallelCoordinatesNumericValuesProps {
   variables: string[];
@@ -35,6 +36,23 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
     setUpdateFlag(!updateFlag);
   }, [data]);
 
+  const saveCsv = (fileName: string) => {
+    let content = 'name, ';
+    for (const v of variables) {
+      content += v + ', ';
+    }
+    content += '\n';
+    for (const o of data) {
+      content += o.name + ', ';
+      for (const v of variables) {
+        content += o[v] + ', ';
+      }
+      content += '\n';
+    }
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
+    saveAs(blob, fileName);
+  };
+
   return (
     <div style={{ width: '800px' }}>
       <Table
@@ -42,12 +60,7 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
         style={{ width: '100%', direction: 'ltr', verticalAlign: 'top' }}
         dataSource={dataRef.current}
         scroll={{ y: 400 }}
-        pagination={{
-          defaultPageSize: 50,
-          showSizeChanger: true,
-          position: ['bottomCenter'],
-          pageSizeOptions: ['50', '100', '200'],
-        }}
+        pagination={false}
       >
         <Column
           title={t('molecularViewer.Molecule', lang)}
@@ -112,6 +125,15 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
           );
         })}
       </Table>
+      <Space style={{ width: '100%', paddingTop: '10px', justifyContent: 'center' }}>
+        <Button
+          onClick={() => {
+            saveCsv('molecular properties.csv');
+          }}
+        >
+          {t('projectPanel.ExportCsv', lang)}
+        </Button>
+      </Space>
     </div>
   );
 });

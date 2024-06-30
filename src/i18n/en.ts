@@ -363,6 +363,7 @@ export const i18n_en = {
       MinimumY: 'Minimum Y',
       MaximumY: 'Maximum Y',
       NumericValues: 'Numeric Values',
+      ExportCsv: 'Export CSV',
       ScatterPlotSettings: 'Scatter Plot Settings',
       GridLines: 'Grid Lines',
       HorizontalLines: 'Horizontal',
