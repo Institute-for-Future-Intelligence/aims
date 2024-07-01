@@ -2,7 +2,7 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Space, Table, Typography } from 'antd';
 import Column from 'antd/lib/table/Column';
 import { useStore } from '../stores/common.ts';
@@ -20,7 +20,8 @@ interface ParallelCoordinatesNumericValuesProps {
 const ScatterChartNumericValuesContent = React.memo(({ variables, data }: ParallelCoordinatesNumericValuesProps) => {
   const language = useStore(Selector.language);
 
-  const [updateFlag, setUpdateFlag] = React.useState(false);
+  const [updateFlag, setUpdateFlag] = useState<boolean>(false);
+  const [selectedRow, setSelectedRow] = useState<number | undefined>();
   const dataRef = useRef<any[]>([]);
 
   const { t } = useTranslation();
@@ -61,6 +62,13 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
         dataSource={dataRef.current}
         scroll={{ y: 400 }}
         pagination={false}
+        onRow={(record, index) => {
+          return {
+            onClick: () => {
+              setSelectedRow(index);
+            },
+          };
+        }}
       >
         <Column
           title={t('molecularViewer.Molecule', lang)}
@@ -79,14 +87,14 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
           onHeaderCell={() => {
             return { style: { fontSize: '10px', fontWeight: 'bold' } };
           }}
-          onCell={() => {
+          onCell={(record, index) => {
             return {
               style: {
                 paddingLeft: '2px',
                 paddingTop: '2px',
                 paddingBottom: '2px',
                 border: '1px solid lightgray',
-                background: 'white',
+                background: index === selectedRow ? 'lavender' : 'white',
               },
             };
           }}
@@ -110,14 +118,14 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
               onHeaderCell={() => {
                 return { style: { fontSize: '10px', fontWeight: 'bold' } };
               }}
-              onCell={() => {
+              onCell={(record, index) => {
                 return {
                   style: {
                     paddingLeft: '2px',
                     paddingTop: '2px',
                     paddingBottom: '2px',
                     border: '1px solid lightgray',
-                    background: 'white',
+                    background: index === selectedRow ? 'lavender' : 'white',
                   },
                 };
               }}
