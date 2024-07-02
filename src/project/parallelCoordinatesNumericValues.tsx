@@ -11,6 +11,7 @@ import { ProjectUtil } from './ProjectUtil.ts';
 import { useTranslation } from 'react-i18next';
 import { DatumEntry } from '../types.ts';
 import { saveAs } from 'file-saver';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 interface ParallelCoordinatesNumericValuesProps {
   variables: string[];
@@ -19,6 +20,7 @@ interface ParallelCoordinatesNumericValuesProps {
 
 const ScatterChartNumericValuesContent = React.memo(({ variables, data }: ParallelCoordinatesNumericValuesProps) => {
   const language = useStore(Selector.language);
+  const projectMolecules = useStore(Selector.molecules);
 
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const [selectedRow, setSelectedRow] = useState<number | undefined>();
@@ -66,6 +68,14 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
           return {
             onClick: () => {
               setSelectedRow(index);
+              usePrimitiveStore.getState().set((state) => {
+                for (const [i, m] of projectMolecules.entries()) {
+                  if (index === i) {
+                    state.hoveredMolecule = m;
+                    break;
+                  }
+                }
+              });
             },
           };
         }}
@@ -78,7 +88,12 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
           render={(formula, record: any) => {
             return (
               <Typography.Text
-                style={{ fontSize: '12px', color: record.invisible ? 'silver' : 'black', verticalAlign: 'middle' }}
+                style={{
+                  fontSize: '12px',
+                  fontWeight: record.selected ? 'bold' : 'normal',
+                  color: record.invisible ? 'silver' : 'black',
+                  verticalAlign: 'middle',
+                }}
               >
                 {formula}
               </Typography.Text>
@@ -109,7 +124,12 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
               render={(value, record: any) => {
                 return (
                   <Typography.Text
-                    style={{ fontSize: '12px', color: record.invisible ? 'silver' : 'black', verticalAlign: 'middle' }}
+                    style={{
+                      fontSize: '12px',
+                      fontWeight: record.selected ? 'bold' : 'normal',
+                      color: record.invisible ? 'silver' : 'black',
+                      verticalAlign: 'middle',
+                    }}
                   >
                     {value}
                   </Typography.Text>

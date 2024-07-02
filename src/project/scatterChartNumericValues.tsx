@@ -18,10 +18,19 @@ interface ScatterChartNumericValuesProps {
   visibility: boolean[];
   name: string[];
   formula: string[];
+  setScatterDataHoveredIndex: (index: number) => void;
 }
 
 const ScatterChartNumericValues = React.memo(
-  ({ xVariable, yVariable, data, visibility, name, formula }: ScatterChartNumericValuesProps) => {
+  ({
+    xVariable,
+    yVariable,
+    data,
+    visibility,
+    name,
+    formula,
+    setScatterDataHoveredIndex,
+  }: ScatterChartNumericValuesProps) => {
     const language = useStore(Selector.language);
 
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -63,6 +72,7 @@ const ScatterChartNumericValues = React.memo(
             return {
               onClick: () => {
                 setSelectedRow(index);
+                setScatterDataHoveredIndex(index !== undefined ? index : -1);
               },
             };
           }}

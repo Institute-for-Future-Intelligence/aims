@@ -844,7 +844,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             >
               {sortedMoleculesRef.current.map((mol, index) => {
                 const prop = getProvidedMolecularProperties(mol.name);
-                const hovered = hoveredMolecule?.name === mol.name || scatterDataHoveredIndex === index;
+                const hovered =
+                  (graphType === GraphType.PARALLEL_COORDINATES && hoveredMolecule?.name === mol.name) ||
+                  (graphType === GraphType.SCATTER_PLOT && scatterDataHoveredIndex === index);
                 const selected = selectedMolecule?.name === mol.name;
                 return (
                   <View
@@ -859,11 +861,11 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       borderRadius: '10px',
                       border: selected
                         ? hovered
-                          ? '2px dashed red'
-                          : '2px solid red'
+                          ? '3px dashed red'
+                          : '3px solid red'
                         : hovered
-                          ? '1px dashed gray'
-                          : '1px solid gray',
+                          ? '2px dashed gray'
+                          : '2px solid gray',
                       opacity: mol?.excluded ? 0.25 : 1,
                       visibility: loading ? 'hidden' : 'visible',
                     }}
@@ -949,6 +951,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       </Button>
                     </Popover>
                     <Popover
+                      placement={'right'}
                       title={
                         <div onClick={(e) => e.stopPropagation()}>
                           <TableOutlined /> {t('projectPanel.NumericValues', lang)}
@@ -1110,6 +1113,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       </Button>
                     </Popover>
                     <Popover
+                      placement={'right'}
                       title={
                         <div onClick={(e) => e.stopPropagation()}>
                           <TableOutlined /> {t('projectPanel.NumericValues', lang)}
@@ -1123,6 +1127,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                           visibility={scatterData.visibility}
                           xVariable={xAxisNameScatterPlot}
                           yVariable={yAxisNameScatterPlot}
+                          setScatterDataHoveredIndex={setScatterDataHoveredIndex}
                         />
                       }
                     >
