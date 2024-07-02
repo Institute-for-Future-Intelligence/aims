@@ -50,6 +50,31 @@ const ScatterChartNumericValues = React.memo(
       setUpdateFlag(!updateFlag);
     }, [data]);
 
+    useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (selectedRow !== undefined) {
+          switch (e.key) {
+            case 'ArrowDown': {
+              const i = Math.min(selectedRow + 1, data.length - 1);
+              setSelectedRow(i);
+              setScatterDataHoveredIndex(i);
+              break;
+            }
+            case 'ArrowUp': {
+              const i = Math.max(0, selectedRow - 1);
+              setSelectedRow(i);
+              setScatterDataHoveredIndex(i);
+              break;
+            }
+          }
+        }
+      };
+      document.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [selectedRow]);
+
     const saveCsv = (fileName: string) => {
       let content = 'name, ' + xVariable + ', ' + yVariable;
       content += '\n';

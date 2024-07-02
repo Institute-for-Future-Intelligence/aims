@@ -39,6 +39,27 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
     setUpdateFlag(!updateFlag);
   }, [data]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedRow !== undefined) {
+        switch (e.key) {
+          case 'ArrowDown': {
+            selectRow(Math.min(selectedRow + 1, data.length - 1));
+            break;
+          }
+          case 'ArrowUp': {
+            selectRow(Math.max(0, selectedRow - 1));
+            break;
+          }
+        }
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedRow]);
+
   const saveCsv = (fileName: string) => {
     let content = 'name, ';
     for (const v of variables) {
@@ -56,6 +77,18 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
     saveAs(blob, fileName);
   };
 
+  const selectRow = (index: number | undefined) => {
+    setSelectedRow(index);
+    usePrimitiveStore.getState().set((state) => {
+      for (const [i, m] of projectMolecules.entries()) {
+        if (index === i) {
+          state.hoveredMolecule = m;
+          break;
+        }
+      }
+    });
+  };
+
   return (
     <div style={{ width: '800px' }}>
       <Table
@@ -67,15 +100,7 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
         onRow={(record, index) => {
           return {
             onClick: () => {
-              setSelectedRow(index);
-              usePrimitiveStore.getState().set((state) => {
-                for (const [i, m] of projectMolecules.entries()) {
-                  if (index === i) {
-                    state.hoveredMolecule = m;
-                    break;
-                  }
-                }
-              });
+              selectRow(index);
             },
           };
         }}

@@ -933,6 +933,24 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 >
                   <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Properties', lang)}</span>
                   <span>
+                    <Button
+                      style={{ border: 'none', paddingRight: '0px', background: 'white' }}
+                      onClick={() => {
+                        saveSvg('parallel-coordinates')
+                          .then(() => {
+                            showInfo(t('message.ScreenshotSaved', lang));
+                            if (loggable) logAction('Take Screenshot of Property Space');
+                          })
+                          .catch((reason) => {
+                            showError(reason);
+                          });
+                      }}
+                    >
+                      <CameraOutlined
+                        style={{ fontSize: '24px', color: 'gray' }}
+                        title={t('projectPanel.GraphScreenshot', lang)}
+                      />
+                    </Button>
                     <Popover
                       title={
                         <div onClick={(e) => e.stopPropagation()}>
@@ -948,19 +966,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     >
                       <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
                         <CarryOutOutlined style={{ fontSize: '24px', color: 'gray' }} />
-                      </Button>
-                    </Popover>
-                    <Popover
-                      placement={'right'}
-                      title={
-                        <div onClick={(e) => e.stopPropagation()}>
-                          <TableOutlined /> {t('projectPanel.NumericValues', lang)}
-                        </div>
-                      }
-                      content={<ParallelCoordinatesNumericValuesContent data={data} variables={variables} />}
-                    >
-                      <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
-                        <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
                       </Button>
                     </Popover>
                     <Popover
@@ -992,24 +997,19 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                         <BgColorsOutlined style={{ fontSize: '24px', color: 'gray' }} />
                       </Button>
                     </Popover>
-                    <Button
-                      style={{ border: 'none', paddingRight: '20px', background: 'white' }}
-                      onClick={() => {
-                        saveSvg('parallel-coordinates')
-                          .then(() => {
-                            showInfo(t('message.ScreenshotSaved', lang));
-                            if (loggable) logAction('Take Screenshot of Property Space');
-                          })
-                          .catch((reason) => {
-                            showError(reason);
-                          });
-                      }}
+                    <Popover
+                      placement={'right'}
+                      title={
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <TableOutlined /> {t('projectPanel.NumericValues', lang)}
+                        </div>
+                      }
+                      content={<ParallelCoordinatesNumericValuesContent data={data} variables={variables} />}
                     >
-                      <CameraOutlined
-                        style={{ fontSize: '24px', color: 'gray' }}
-                        title={t('projectPanel.GraphScreenshot', lang)}
-                      />
-                    </Button>
+                      <Button style={{ border: 'none', paddingRight: '20px', background: 'white' }}>
+                        <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                      </Button>
+                    </Popover>
                   </span>
                 </PropertiesHeader>
                 <ParallelCoordinates
@@ -1049,11 +1049,29 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               <>
                 <PolynomialRegression data={scatterData.visible} />
                 <PropertiesHeader>
-                  <span style={{ paddingLeft: '20px' }}>{t('projectPanel.Relationship', lang)}</span>
+                  <span style={{ paddingLeft: '0px' }}>{t('projectPanel.Relationship', lang)}</span>
                   <span>
                     <Button
+                      style={{ border: 'none', paddingRight: '0px', background: 'white' }}
+                      onClick={() => {
+                        saveSvg('scatter-plot')
+                          .then(() => {
+                            showInfo(t('message.ScreenshotSaved', lang));
+                            if (loggable) logAction('Take Screenshot of the Scatter Plot');
+                          })
+                          .catch((reason) => {
+                            showError(reason);
+                          });
+                      }}
+                    >
+                      <CameraOutlined
+                        style={{ fontSize: '24px', color: 'gray' }}
+                        title={t('projectPanel.GraphScreenshot', lang)}
+                      />
+                    </Button>
+                    <Button
                       style={{
-                        paddingLeft: '2px',
+                        paddingLeft: '12px',
                         paddingRight: '2px',
                         verticalAlign: 'top',
                         border: regressionAnalysis ? '1px solid gray' : 'none',
@@ -1131,28 +1149,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                         />
                       }
                     >
-                      <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                      <Button style={{ border: 'none', paddingRight: '20px', background: 'white' }}>
                         <TableOutlined style={{ fontSize: '24px', color: 'gray' }} />
                       </Button>
                     </Popover>
-                    <Button
-                      style={{ border: 'none', paddingRight: '20px', background: 'white' }}
-                      onClick={() => {
-                        saveSvg('scatter-plot')
-                          .then(() => {
-                            showInfo(t('message.ScreenshotSaved', lang));
-                            if (loggable) logAction('Take Screenshot of the Scatter Plot');
-                          })
-                          .catch((reason) => {
-                            showError(reason);
-                          });
-                      }}
-                    >
-                      <CameraOutlined
-                        style={{ fontSize: '24px', color: 'gray' }}
-                        title={t('projectPanel.GraphScreenshot', lang)}
-                      />
-                    </Button>
                   </span>
                 </PropertiesHeader>
                 <ScatterChart
@@ -1278,8 +1278,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                             key={`cell-${index}`}
                             fill={color}
                             stroke={'black'}
-                            strokeWidth={2}
-                            strokeDasharray={'2 2'}
+                            strokeWidth={8}
+                            strokeDasharray={'1 2'}
                           />
                         );
                       }
@@ -1288,9 +1288,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                           <Cell
                             key={`cell-${index}`}
                             fill={color}
-                            stroke={'black'}
-                            strokeWidth={1}
-                            strokeDasharray={'2 2'}
+                            stroke={'gray'}
+                            strokeWidth={8}
+                            strokeDasharray={'1 2'}
                           />
                         );
                       }
