@@ -164,6 +164,8 @@ import drugMoleculeUrl026 from './molecules/sdf/chlorpheniramine.sdf';
 import drugMoleculeUrl027 from './molecules/sdf/geldanamycin.sdf';
 import drugMoleculeUrl028 from './molecules/sdf/herbimycin.sdf';
 import drugMoleculeUrl029 from './molecules/sdf/rifaximin.sdf';
+import drugMoleculeUrl030 from './molecules/sdf/rifampicin.sdf';
+import drugMoleculeUrl031 from './molecules/sdf/rifamycin.sdf';
 
 import proteinUrl001 from './proteins/1crn.pdb';
 import proteinUrl002 from './proteins/1a3n.pdb';
@@ -346,6 +348,8 @@ export const drugMolecules = [
   { url: drugMoleculeUrl027, internal: true, name: 'Geldanamycin' } as MoleculeInterface,
   { url: drugMoleculeUrl028, internal: true, name: 'Herbimycin' } as MoleculeInterface,
   { url: drugMoleculeUrl029, internal: true, name: 'Rifaximin' } as MoleculeInterface,
+  { url: drugMoleculeUrl030, internal: true, name: 'Rifampicin' } as MoleculeInterface,
+  { url: drugMoleculeUrl031, internal: true, name: 'Rifamycin' } as MoleculeInterface,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const targetProteins = [
