@@ -177,6 +177,10 @@ import drugMoleculeUrl039 from './molecules/sdf/clarithromycin.sdf';
 import drugMoleculeUrl040 from './molecules/sdf/roxithromycin.sdf';
 import drugMoleculeUrl041 from './molecules/sdf/sirolimus.sdf';
 import drugMoleculeUrl042 from './molecules/sdf/azithromycin.sdf';
+import drugMoleculeUrl043 from './molecules/sdf/spiramycin.sdf';
+import drugMoleculeUrl044 from './molecules/sdf/carbomycin.sdf';
+import drugMoleculeUrl045 from './molecules/sdf/fidaxomicin.sdf';
+import drugMoleculeUrl046 from './molecules/sdf/telithromycin.sdf';
 
 import proteinUrl001 from './proteins/1crn.pdb';
 import proteinUrl002 from './proteins/1a3n.pdb';
@@ -372,6 +376,10 @@ export const drugMolecules = [
   { url: drugMoleculeUrl040, internal: true, name: 'Roxithromycin' } as MoleculeInterface,
   { url: drugMoleculeUrl041, internal: true, name: 'Sirolimus' } as MoleculeInterface,
   { url: drugMoleculeUrl042, internal: true, name: 'Azithromycin' } as MoleculeInterface,
+  { url: drugMoleculeUrl043, internal: true, name: 'Spiramycin' } as MoleculeInterface,
+  { url: drugMoleculeUrl044, internal: true, name: 'Carbomycin' } as MoleculeInterface,
+  { url: drugMoleculeUrl045, internal: true, name: 'Fidaxomicin' } as MoleculeInterface,
+  { url: drugMoleculeUrl046, internal: true, name: 'Telithromycin' } as MoleculeInterface,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const targetProteins = [
