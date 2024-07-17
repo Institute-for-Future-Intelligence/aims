@@ -16,7 +16,7 @@ import { ThreeEvent } from '@react-three/fiber';
 import GalleryViewer from '../view/galleryViewer.tsx';
 import { showInfo } from '../helpers.ts';
 import { useTranslation } from 'react-i18next';
-import { message } from 'antd';
+import { message, Space } from 'antd';
 import { CheckCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 interface MolecularContainerProps {
@@ -144,29 +144,39 @@ const ScissorBox = React.memo(
           />
         </Html>
         <Html>
-          <div
+          <Space
             title={
-              (labelType === LabelType.NAME ? formula ?? molecule?.name : molecule?.name) +
+              molecule?.name +
+              ' (' +
+              formula +
+              ')' +
+              '\n' +
               (smiles ? '\nSMILES: ' + smiles : '') +
-              (inChI ? '\n' + inChI : '')
+              (inChI ? '\n\n' + inChI : '')
             }
             style={{
               position: 'relative',
               left: '4px',
-              bottom: (labelType === LabelType.FORMULA ? 22 : 16) - viewHeight + 2 + 'px',
+              bottom: 26 - viewHeight + 'px',
               textAlign: 'left',
               color: 'gray',
-              fontSize: labelType === LabelType.FORMULA ? '16px' : '10px',
+              fontSize: labelType === LabelType.FORMULA ? '16px' : '11px',
               fontWeight: selected ? 'bold' : 'normal',
               width: viewWidth - 14 + 'px',
             }}
             onMouseDown={onMouseDown}
           >
             {labelType === LabelType.FORMULA ? formula ?? molecule?.name : molecule?.name}
-          </div>
+          </Space>
           {molecule?.invisible ? (
             <MinusCircleOutlined
-              style={{ position: 'absolute', right: '-6px', bottom: 25 - viewHeight + 'px', cursor: 'pointer' }}
+              style={{
+                color: 'dimgray',
+                position: 'absolute',
+                right: '-6px',
+                bottom: 28 - viewHeight + 'px',
+                cursor: 'pointer',
+              }}
               title={t('projectPanel.ClickToIncludeMolecule', lang)}
               onClick={() => {
                 if (molecule) {
@@ -186,7 +196,13 @@ const ScissorBox = React.memo(
             />
           ) : (
             <CheckCircleOutlined
-              style={{ position: 'absolute', right: '-6px', bottom: 25 - viewHeight + 'px', cursor: 'pointer' }}
+              style={{
+                color: 'dimgray',
+                position: 'absolute',
+                right: '-6px',
+                bottom: 28 - viewHeight + 'px',
+                cursor: 'pointer',
+              }}
               title={t('projectPanel.ClickToExcludeMolecule', lang)}
               onClick={() => {
                 if (molecule) {

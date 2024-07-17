@@ -25,6 +25,7 @@ import { Restraint } from '../../models/Restraint.ts';
 
 export const TranslateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const molecularContainer = useStore(Selector.molecularContainer);
@@ -61,6 +62,7 @@ export const TranslateMolecule = () => {
       });
       setUpdateFlag(!updateFlag);
       updateViewer();
+      setChanged(true);
     }
   };
 
@@ -119,6 +121,7 @@ export const TranslateMolecule = () => {
 
 export const RotateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const moleculesRef = useRefStore.getState().moleculesRef;
@@ -159,6 +162,7 @@ export const RotateMolecule = () => {
         if (state.loggable) state.logAction('Rotate Selected Molecule');
       });
       updateViewer();
+      setChanged(true);
     }
   };
 
@@ -199,6 +203,7 @@ export const RotateMolecule = () => {
 
 export const CutMolecule = () => {
   const setCommonStore = useStore(Selector.set);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const testMolecules = useStore(Selector.testMolecules);
 
   const { t } = useTranslation();
@@ -217,6 +222,7 @@ export const CutMolecule = () => {
       state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
       if (state.loggable) state.logAction('Cut Selected Molecule');
     });
+    setChanged(true);
   };
 
   return (
@@ -252,6 +258,7 @@ export const CopyMolecule = () => {
 
 export const PasteMolecule = () => {
   const setCommonStore = useStore(Selector.set);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const testMolecules = useStore(Selector.testMolecules);
   const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
   const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
@@ -278,6 +285,7 @@ export const PasteMolecule = () => {
         if (state.loggable) state.logAction('Paste Cut Molecule');
       });
     }
+    setChanged(true);
   };
 
   return (
@@ -294,6 +302,7 @@ export const PasteMolecule = () => {
 
 export const RestrainMoleculeInputField = () => {
   const setCommonStore = useStore(Selector.set);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const testMolecules = useStore(Selector.testMolecules);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const moleculesRef = useRefStore.getState().moleculesRef;
@@ -351,6 +360,7 @@ export const RestrainMoleculeInputField = () => {
         }
       });
     }
+    setChanged(true);
   };
 
   return (

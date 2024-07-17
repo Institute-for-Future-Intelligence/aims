@@ -9,10 +9,12 @@ import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { ProjectType } from '../constants.ts';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 const ToolBarButtons = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
@@ -54,6 +56,7 @@ const ToolBarButtons = React.memo(() => {
                 setCommonStore((state) => {
                   state.projectState.xyPlanePosition = value;
                 });
+                setChanged(true);
               }}
             />
           ) : undefined
@@ -68,6 +71,7 @@ const ToolBarButtons = React.memo(() => {
             setCommonStore((state) => {
               state.projectState.xyPlaneVisible = !state.projectState.xyPlaneVisible;
             });
+            setChanged(true);
           }}
           // the following disables keyboard focus
           onMouseDown={(e) => e.preventDefault()}
@@ -93,6 +97,7 @@ const ToolBarButtons = React.memo(() => {
                 setCommonStore((state) => {
                   state.projectState.yzPlanePosition = value;
                 });
+                setChanged(true);
               }}
             />
           ) : undefined
@@ -107,6 +112,7 @@ const ToolBarButtons = React.memo(() => {
             setCommonStore((state) => {
               state.projectState.yzPlaneVisible = !state.projectState.yzPlaneVisible;
             });
+            setChanged(true);
           }}
           // the following disables keyboard focus
           onMouseDown={(e) => e.preventDefault()}
@@ -132,6 +138,7 @@ const ToolBarButtons = React.memo(() => {
                 setCommonStore((state) => {
                   state.projectState.xzPlanePosition = value;
                 });
+                setChanged(true);
               }}
             />
           ) : undefined
@@ -146,6 +153,7 @@ const ToolBarButtons = React.memo(() => {
             setCommonStore((state) => {
               state.projectState.xzPlaneVisible = !state.projectState.xzPlaneVisible;
             });
+            setChanged(true);
           }}
           // the following disables keyboard focus
           onMouseDown={(e) => e.preventDefault()}
@@ -170,6 +178,7 @@ const ToolBarButtons = React.memo(() => {
               cancelText: t('word.Cancel', lang),
               onOk: () => {
                 deleteAllAtoms();
+                setChanged(true);
               },
             });
           }}

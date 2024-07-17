@@ -39,8 +39,8 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const loadProvidedMolecularProperties = useStore(Selector.loadProvidedMolecularProperties);
   const showAccountSettingsPanel = usePrimitiveStore(Selector.showAccountSettingsPanel);
   const changed = usePrimitiveStore(Selector.changed);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
 
-  // const setChanged = usePrimitiveStore(Selector.setChanged);
   // const setSkipChange = usePrimitiveStore(Selector.setSkipChange);
   // const cameraPosition = useStore(Selector.cameraPosition);
   // const panCenter = useStore(Selector.panCenter);
@@ -243,6 +243,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
                 state.projectState.chamberViewerPercentWidth = 100 - size;
               });
               useRefStore.getState().resizeCanvases(size);
+              setChanged(true);
             }}
           >
             {!hideGallery ? (
