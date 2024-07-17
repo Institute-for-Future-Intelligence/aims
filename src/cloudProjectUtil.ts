@@ -21,9 +21,32 @@ export const addProjectToList = async (uid: string, project: ProjectInfo) => {
     .firestore()
     .collection('users')
     .doc(uid)
-    .update({ projectList: firebase.firestore.FieldValue.arrayUnion(project) })
-    .then(() => {
-      // ignore
+    .get()
+    .then(async (doc) => {
+      let exist = false;
+      const projectList = doc.data()?.projectList;
+      if (projectList && projectList.length > 0) {
+        for (const p of projectList) {
+          const pi = p as ProjectInfo;
+          if (pi.title === project.title) {
+            exist = true;
+            break;
+          }
+        }
+      }
+      if (!exist) {
+        await firebase
+          .firestore()
+          .collection('users')
+          .doc(uid)
+          .update({ projectList: firebase.firestore.FieldValue.arrayUnion(project) })
+          .then(() => {
+            // ignore
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     })
     .catch((error) => {
       console.log(error);

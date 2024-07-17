@@ -89,7 +89,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
 
   useFlag(showProjectsFlag, showMyProjectsList, () => setPrimitiveStore('showProjectsFlag', false));
 
-  useFlag(updateProjectsFlag, hideMyProjectsList, () => setPrimitiveStore('updateProjectsFlag', false));
+  useFlag(updateProjectsFlag, updateProjects, () => setPrimitiveStore('updateProjectsFlag', false));
 
   useEffect(() => {
     const config = {
@@ -377,14 +377,12 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       });
   };
 
-  const listMyProjects = (show: boolean) => {
+  const listMyProjects = () => {
     if (user.uid) {
-      fetchMyProjects(!show).then(() => {
-        if (show) {
-          usePrimitiveStore.getState().set((state) => {
-            state.showProjectListPanel = true;
-          });
-        }
+      fetchMyProjects(false).then(() => {
+        usePrimitiveStore.getState().set((state) => {
+          state.showProjectListPanel = true;
+        });
         setUpdateMyProjectsFlag(!updateMyProjectsFlag);
       });
     }
@@ -836,11 +834,10 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     usePrimitiveStore.getState().set((state) => {
       state.startSimulation = false;
     });
-    listMyProjects(true);
+    listMyProjects();
   }
 
-  function hideMyProjectsList() {
-    listMyProjects(false);
+  function updateProjects() {
     setUpdateFlag(!updateFlag);
   }
 
