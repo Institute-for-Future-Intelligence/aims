@@ -134,6 +134,16 @@ import biomoleculeUrl321 from './molecules/sdf/tyrosine.sdf';
 import biomoleculeUrl322 from './molecules/sdf/valine.sdf';
 import biomoleculeUrl331 from './molecules/pdb/alphahelix.pdb';
 import biomoleculeUrl332 from './molecules/pdb/betasheet.pdb';
+import biomoleculeUrl341 from './molecules/sdf/acesulfame_potassium.sdf';
+import biomoleculeUrl342 from './molecules/sdf/aspartame.sdf';
+import biomoleculeUrl343 from './molecules/sdf/erythritol.sdf';
+import biomoleculeUrl344 from './molecules/sdf/lactose.sdf';
+import biomoleculeUrl345 from './molecules/sdf/maltose.sdf';
+import biomoleculeUrl346 from './molecules/sdf/mannitol.sdf';
+import biomoleculeUrl347 from './molecules/sdf/saccharin.sdf';
+import biomoleculeUrl348 from './molecules/sdf/sorbitol.sdf';
+import biomoleculeUrl349 from './molecules/sdf/sucralose.sdf';
+import biomoleculeUrl350 from './molecules/sdf/xylitol.sdf';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
@@ -331,6 +341,16 @@ export const biomolecules = [
   { url: biomoleculeUrl322, internal: true, name: 'Valine' } as MoleculeInterface,
   { url: biomoleculeUrl331, internal: true, name: 'Alpha Helix' } as MoleculeInterface,
   { url: biomoleculeUrl332, internal: true, name: 'Beta Sheet' } as MoleculeInterface,
+  { url: biomoleculeUrl341, internal: true, name: 'Acesulfame Potassium' } as MoleculeInterface,
+  { url: biomoleculeUrl342, internal: true, name: 'Aspartame' } as MoleculeInterface,
+  { url: biomoleculeUrl343, internal: true, name: 'Erythritol' } as MoleculeInterface,
+  { url: biomoleculeUrl344, internal: true, name: 'Lactose' } as MoleculeInterface,
+  { url: biomoleculeUrl345, internal: true, name: 'Maltose' } as MoleculeInterface,
+  { url: biomoleculeUrl346, internal: true, name: 'Mannitol' } as MoleculeInterface,
+  { url: biomoleculeUrl347, internal: true, name: 'Saccharin' } as MoleculeInterface,
+  { url: biomoleculeUrl348, internal: true, name: 'Sorbitol' } as MoleculeInterface,
+  { url: biomoleculeUrl349, internal: true, name: 'Sucralose' } as MoleculeInterface,
+  { url: biomoleculeUrl350, internal: true, name: 'Xylitol' } as MoleculeInterface,
 ];
 
 export const drugMolecules = [
