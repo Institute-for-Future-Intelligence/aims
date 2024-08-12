@@ -4,7 +4,7 @@
 
 import { Euler, Vector2, Vector3 } from 'three';
 
-export const VERSION = '0.1.9';
+export const VERSION = '0.2.0';
 
 export const HOME_URL: string = import.meta.env.PROD
   ? 'https://institute-for-future-intelligence.github.io/aims/'

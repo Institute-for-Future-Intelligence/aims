@@ -191,6 +191,10 @@ import drugMoleculeUrl043 from './molecules/sdf/spiramycin.sdf';
 import drugMoleculeUrl044 from './molecules/sdf/carbomycin.sdf';
 import drugMoleculeUrl045 from './molecules/sdf/fidaxomicin.sdf';
 import drugMoleculeUrl046 from './molecules/sdf/telithromycin.sdf';
+import drugMoleculeUrl047 from './molecules/sdf/doxycycline.sdf';
+import drugMoleculeUrl048 from './molecules/sdf/ceftazidime.sdf';
+import drugMoleculeUrl049 from './molecules/sdf/cefotaxime.sdf';
+import drugMoleculeUrl050 from './molecules/sdf/ciprofloxacin.sdf';
 
 import proteinUrl001 from './proteins/1crn.pdb';
 import proteinUrl002 from './proteins/1a3n.pdb';
@@ -400,6 +404,10 @@ export const drugMolecules = [
   { url: drugMoleculeUrl044, internal: true, name: 'Carbomycin' } as MoleculeInterface,
   { url: drugMoleculeUrl045, internal: true, name: 'Fidaxomicin' } as MoleculeInterface,
   { url: drugMoleculeUrl046, internal: true, name: 'Telithromycin' } as MoleculeInterface,
+  { url: drugMoleculeUrl047, internal: true, name: 'Doxycycline' } as MoleculeInterface,
+  { url: drugMoleculeUrl048, internal: true, name: 'Ceftazidime' } as MoleculeInterface,
+  { url: drugMoleculeUrl049, internal: true, name: 'Cefotaxime' } as MoleculeInterface,
+  { url: drugMoleculeUrl050, internal: true, name: 'Ciprofloxacin' } as MoleculeInterface,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const targetProteins = [
