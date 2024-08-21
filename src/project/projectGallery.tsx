@@ -676,17 +676,11 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
 
   const scatterData = useMemo(() => {
     const data: {
-      all: { x: number; y: number }[];
+      all: { x: number; y: number; name: string; formula: string; invisible: boolean }[];
       visible: { x: number; y: number }[];
-      name: string[];
-      formula: string[];
-      visibility: boolean[];
     } = {
       all: [],
       visible: [],
-      name: [],
-      formula: [],
-      visibility: [],
     };
     if (projectMolecules) {
       for (const m of projectMolecules) {
@@ -710,10 +704,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               }
             }
             if (!m.invisible) data.visible.push({ x, y });
-            data.name.push(m.name);
-            data.formula.push(prop.formula);
-            data.visibility.push(!m.invisible);
-            data.all.push({ x, y });
+            data.all.push({ x, y, name: m.name, formula: prop.formula, invisible: !!m.invisible });
           }
         }
       }
@@ -1071,7 +1062,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     </Button>
                     <Button
                       style={{
-                        paddingLeft: '12px',
+                        marginLeft: '10px',
+                        paddingLeft: '2px',
                         paddingRight: '2px',
                         verticalAlign: 'top',
                         border: regressionAnalysis ? '1px solid gray' : 'none',
@@ -1140,9 +1132,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       content={
                         <ScatterChartNumericValues
                           data={scatterData.all}
-                          name={scatterData.name}
-                          formula={scatterData.formula}
-                          visibility={scatterData.visibility}
                           xVariable={xAxisNameScatterPlot}
                           yVariable={yAxisNameScatterPlot}
                           setScatterDataHoveredIndex={setScatterDataHoveredIndex}
@@ -1236,6 +1225,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                             borderRadius: '8px',
                           }}
                         >
+                          <div>
+                            {payload[0].payload.name}: {payload[0].payload.formula}
+                          </div>
                           {payload.map((p) => {
                             return (
                               <div key={p.name}>
@@ -1270,7 +1262,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       const selected = selectedMolecule
                         ? index === sortedMoleculesRef.current.indexOf(selectedMolecule)
                         : false;
-                      const color = projectMolecules[index].invisible ? 'lightgray' : '#8884d8';
+                      const color = entry.invisible ? 'lightgray' : '#8884d8';
                       const hovered = index === scatterDataHoveredIndex;
                       if (selected && hovered) {
                         return (

@@ -10,28 +10,19 @@ import * as Selector from '../stores/selector';
 import { ProjectUtil } from './ProjectUtil.ts';
 import { useTranslation } from 'react-i18next';
 import { saveAs } from 'file-saver';
+import { LabelType } from '../constants.ts';
 
 interface ScatterChartNumericValuesProps {
   xVariable: string;
   yVariable: string;
-  data: { x: number; y: number }[];
-  visibility: boolean[];
-  name: string[];
-  formula: string[];
+  data: { x: number; y: number; invisible: boolean; name: string; formula: string }[];
   setScatterDataHoveredIndex: (index: number) => void;
 }
 
 const ScatterChartNumericValues = React.memo(
-  ({
-    xVariable,
-    yVariable,
-    data,
-    visibility,
-    name,
-    formula,
-    setScatterDataHoveredIndex,
-  }: ScatterChartNumericValuesProps) => {
+  ({ xVariable, yVariable, data, setScatterDataHoveredIndex }: ScatterChartNumericValuesProps) => {
     const language = useStore(Selector.language);
+    const labelType = useStore(Selector.labelType);
 
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
     const [selectedRow, setSelectedRow] = useState<number | undefined>();
@@ -79,7 +70,7 @@ const ScatterChartNumericValues = React.memo(
       let content = 'name, ' + xVariable + ', ' + yVariable;
       content += '\n';
       for (const [i, o] of data.entries()) {
-        content += name[i] + ',' + o.x + ', ' + o.y + '\n';
+        content += data[i].name + ',' + o.x + ', ' + o.y + '\n';
       }
       const blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
       saveAs(blob, fileName);
@@ -110,9 +101,13 @@ const ScatterChartNumericValues = React.memo(
             render={(i, record, index) => {
               return (
                 <Typography.Text
-                  style={{ fontSize: '12px', color: visibility[index] ? 'black' : 'silver', verticalAlign: 'middle' }}
+                  style={{
+                    fontSize: '12px',
+                    color: data[index].invisible ? 'silver' : 'black',
+                    verticalAlign: 'middle',
+                  }}
                 >
-                  {formula[i]}
+                  {labelType === LabelType.FORMULA ? data[i].formula : data[i].name}
                 </Typography.Text>
               );
             }}
@@ -136,7 +131,11 @@ const ScatterChartNumericValues = React.memo(
             render={(x, record, index) => {
               return (
                 <Typography.Text
-                  style={{ fontSize: '12px', color: visibility[index] ? 'black' : 'silver', verticalAlign: 'middle' }}
+                  style={{
+                    fontSize: '12px',
+                    color: data[index].invisible ? 'silver' : 'black',
+                    verticalAlign: 'middle',
+                  }}
                 >
                   {x}
                 </Typography.Text>
@@ -165,7 +164,11 @@ const ScatterChartNumericValues = React.memo(
             render={(y, record, index) => {
               return (
                 <Typography.Text
-                  style={{ fontSize: '12px', color: visibility[index] ? 'black' : 'silver', verticalAlign: 'middle' }}
+                  style={{
+                    fontSize: '12px',
+                    color: data[index].invisible ? 'silver' : 'black',
+                    verticalAlign: 'middle',
+                  }}
                 >
                   {y}
                 </Typography.Text>
