@@ -192,7 +192,7 @@ const DockingSettings = React.memo(() => {
               style={{ width: '100%' }}
               precision={1}
               // make sure that we round up the number as toDegrees may cause things like .999999999
-              value={parseFloat(molecularContainer.lx.toFixed(1))}
+              value={parseFloat(molecularContainer?.lx.toFixed(1))}
               step={1}
               onChange={(value) => {
                 if (value === null) return;
@@ -217,7 +217,7 @@ const DockingSettings = React.memo(() => {
               style={{ width: '100%' }}
               precision={1}
               // make sure that we round up the number as toDegrees may cause things like .999999999
-              value={parseFloat(molecularContainer.ly.toFixed(1))}
+              value={parseFloat(molecularContainer?.ly.toFixed(1))}
               step={1}
               onChange={(value) => {
                 if (value === null) return;
@@ -242,7 +242,7 @@ const DockingSettings = React.memo(() => {
               style={{ width: '100%' }}
               precision={1}
               // make sure that we round up the number as toDegrees may cause things like .999999999
-              value={parseFloat(molecularContainer.lz.toFixed(1))}
+              value={parseFloat(molecularContainer?.lz.toFixed(1))}
               step={1}
               onChange={(value) => {
                 if (value === null) return;
@@ -337,9 +337,9 @@ const DockingSettings = React.memo(() => {
     translationStep,
     rotationStep,
     selector,
-    molecularContainer.lx,
-    molecularContainer.ly,
-    molecularContainer.lz,
+    molecularContainer?.lx,
+    molecularContainer?.ly,
+    molecularContainer?.lz,
   ]);
 
   const createInfo = useMemo(() => {
