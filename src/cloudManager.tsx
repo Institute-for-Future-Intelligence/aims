@@ -292,6 +292,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       });
       // update current user object
       user.noLogging = noLogging;
+      user.anonymous = anonymous;
       user.schoolID = schoolID;
       user.classID = classID;
       user.likes = likes;
@@ -304,7 +305,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           .doc(user.uid)
           .set({
             uid: user.uid,
-            noLogging: user.noLogging,
+            noLogging: !!user.noLogging,
+            anonymous: !!user.anonymous,
             schoolID: user.schoolID ?? SchoolID.UNKNOWN,
             classID: user.classID ?? ClassID.UNKNOWN,
             since: dayjs(new Date()).format('MM/DD/YYYY hh:mm A'),
