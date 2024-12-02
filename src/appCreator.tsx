@@ -182,14 +182,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
             color: hideGallery ? 'antiquewhite' : 'dimgray',
           }}
         >
-          <img
-            alt="IFI Logo"
-            src={ifiLogo}
-            height="30px"
-            style={{ verticalAlign: 'bottom', cursor: 'pointer' }}
-            title={t('tooltip.gotoIFI', lang)}
-            onClick={visitIFI}
-          />
+          <img alt="IFI Logo" src={ifiLogo} height="30px" style={{ verticalAlign: 'bottom' }} />
           {' V ' + VERSION}
         </div>
       ) : (
@@ -200,14 +193,11 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
             height={hideGallery ? '40px' : '24px'}
             style={{
               position: 'absolute',
-              cursor: 'pointer',
               bottom: '6px',
               left: '6px',
               zIndex: 999,
               userSelect: 'none',
             }}
-            title={t('tooltip.gotoIFI', lang)}
-            onClick={visitIFI}
           />
           <div
             style={{

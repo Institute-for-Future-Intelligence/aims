@@ -195,6 +195,7 @@ import drugMoleculeUrl047 from './molecules/sdf/doxycycline.sdf';
 import drugMoleculeUrl048 from './molecules/sdf/ceftazidime.sdf';
 import drugMoleculeUrl049 from './molecules/sdf/cefotaxime.sdf';
 import drugMoleculeUrl050 from './molecules/sdf/ciprofloxacin.sdf';
+import drugMoleculeUrl051 from './molecules/sdf/oxytetracycline.sdf';
 
 import proteinUrl001 from './proteins/1crn.pdb';
 import proteinUrl002 from './proteins/1a3n.pdb';
@@ -408,6 +409,7 @@ export const drugMolecules = [
   { url: drugMoleculeUrl048, internal: true, name: 'Ceftazidime' } as MoleculeInterface,
   { url: drugMoleculeUrl049, internal: true, name: 'Cefotaxime' } as MoleculeInterface,
   { url: drugMoleculeUrl050, internal: true, name: 'Ciprofloxacin' } as MoleculeInterface,
+  { url: drugMoleculeUrl051, internal: true, name: 'Oxytetracycline' } as MoleculeInterface,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const targetProteins = [
