@@ -1,10 +1,10 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import { Euler, Vector2, Vector3 } from 'three';
 
-export const VERSION = '0.2.0';
+export const VERSION = '0.2.1';
 
 export const HOME_URL: string = import.meta.env.PROD
   ? 'https://institute-for-future-intelligence.github.io/aims/'

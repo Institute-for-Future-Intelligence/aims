@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React from 'react';
@@ -15,7 +15,7 @@ const Container = styled.div`
   left: 10px;
   display: flex;
   width: 600px;
-  height: 400px;
+  height: 320px;
   flex-direction: column;
   align-items: center;
   z-index: 1001;

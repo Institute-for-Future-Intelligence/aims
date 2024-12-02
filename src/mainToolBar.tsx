@@ -94,8 +94,6 @@ const MainToolBar = React.memo(({ signIn, signInAnonymously, signOut }: MainTool
     },
   ];
 
-  console.log(user.displayName);
-
   return (
     <ButtonsContainer>
       <Space direction="horizontal">
