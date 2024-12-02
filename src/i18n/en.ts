@@ -83,6 +83,7 @@ export const i18n_en = {
       Version: 'Version',
       VersionInitial: 'V',
       AllRightsReserved: 'All Rights Reserved',
+      Anonymous: 'Anonymous',
     },
 
     term: {
@@ -114,6 +115,7 @@ export const i18n_en = {
     message: {
       CannotSignIn: 'Cannot sign in',
       CannotSignOut: 'Cannot sign out',
+      SigningOutAnonymousAccount: 'Are you sure you want to sign out? This anonymous account will be lost.',
       YourAccountWasCreated: 'Your account was created.',
       CannotCreateAccount: 'Cannot create an account',
       YourAccountSettingsWereSaved: 'Your account settings were saved.',
@@ -464,6 +466,8 @@ export const i18n_en = {
       PrivacyStatement:
         'When you sign in, your Google ID is used to create and access your AIMS account. Only a random alphanumeric string is stored in our database as a reference. No personally identifiable data such as your name or email is ever gathered. For more information, see our ',
       SignIn: 'Sign In',
+      SignInAsMe: 'Sign in as me',
+      SignInAnonymously: 'Sign in anonymously',
       SignOut: 'Sign Out',
       IfYouAreAStudent: 'If you are a student',
     },

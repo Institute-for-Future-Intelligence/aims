@@ -33,6 +33,7 @@ import { useTranslation } from 'react-i18next';
 import { useRefStore } from './stores/commonRef.ts';
 import { useDataStore } from './stores/commonData.ts';
 import { Molecule } from './models/Molecule.ts';
+import AnonymousImage from './assets/anonymous.png';
 
 export interface CloudManagerProps {
   viewOnly: boolean;
@@ -128,9 +129,9 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         setCommonStore((state) => {
           if (state.user) {
             state.user.uid = u.uid;
-            state.user.displayName = u.displayName;
+            state.user.displayName = u.displayName ?? 'Anonymous';
             state.user.email = u.email;
-            state.user.photoURL = u.photoURL;
+            state.user.photoURL = u.photoURL ?? AnonymousImage;
           }
         });
       }
@@ -185,6 +186,29 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     resetProject();
   };
 
+  const signInAnonymously = () => {
+    firebase
+      .auth()
+      .signInAnonymously()
+      .then((result) => {
+        setCommonStore((state) => {
+          if (result.user) {
+            state.user.uid = result.user.uid;
+            state.user.anonymous = true;
+            state.user.displayName = 'Anonymous';
+            registerUser({ ...state.user }).then(() => {
+              // ignore
+            });
+          }
+        });
+      })
+      .catch((error) => {
+        if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+          showError(t('message.CannotSignIn', lang) + ': ' + error);
+        }
+      });
+  };
+
   const signIn = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase
@@ -213,6 +237,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   const registerUser = async (user: User): Promise<any> => {
     const firestore = firebase.firestore();
     let noLogging = false;
+    let anonymous = false;
     let schoolID = SchoolID.UNKNOWN;
     let classID = ClassID.UNKNOWN;
     let likes: string[] = [];
@@ -240,6 +265,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           const docData = doc.data();
           if (docData) {
             noLogging = !!docData.noLogging;
+            anonymous = !!docData.anonymous;
             schoolID = docData.schoolID ? (docData.schoolID as SchoolID) : SchoolID.UNKNOWN;
             classID = docData.classID ? (docData.classID as ClassID) : ClassID.UNKNOWN;
             if (docData.likes) likes = docData.likes;
@@ -254,6 +280,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       // update common store state
       setCommonStore((state) => {
         state.user.noLogging = noLogging;
+        state.user.anonymous = anonymous;
         state.user.schoolID = schoolID;
         state.user.classID = classID;
         state.user.likes = likes;
@@ -865,7 +892,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   ) : (
     <>
       {waiting && <Spinner />}
-      <MainToolBar signIn={signIn} signOut={signOut} />
+      <MainToolBar signIn={signIn} signInAnonymously={signInAnonymously} signOut={signOut} />
       {showProjectListPanel && myProjectsRef.current && (
         <ProjectListPanel
           projects={[...myProjectsRef.current]}

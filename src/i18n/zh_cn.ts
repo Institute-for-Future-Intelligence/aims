@@ -79,6 +79,7 @@ export const i18n_zh_cn = {
       Version: '版本',
       VersionInitial: '版本',
       AllRightsReserved: '版权所有',
+      Anonymous: '无名氏',
     },
 
     term: {
@@ -111,6 +112,7 @@ export const i18n_zh_cn = {
     message: {
       CannotSignIn: '登录失败',
       CannotSignOut: '退出失败',
+      SigningOutAnonymousAccount: '你确定退出吗？一旦退出，此匿名账号将不可恢复。',
       YourAccountWasCreated: '成功建立您的账号。',
       CannotCreateAccount: '无法创建账号',
       YourAccountSettingsWereSaved: '您的账号设定已保存。',
@@ -457,6 +459,8 @@ export const i18n_zh_cn = {
       PrivacyStatement:
         '登录需要采用您的谷歌ID建立或进入您的AIMS账户。 我们只储存一个随机的字符串作为您的ID。 任何关于您的可辨识的个人信息都没有被收集。 详情请参考我们的',
       SignIn: '登录',
+      SignInAsMe: '实名登录',
+      SignInAnonymously: '匿名登录',
       SignOut: '退出账号',
       IfYouAreAStudent: '如果您是一个学生',
     },

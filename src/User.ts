@@ -13,6 +13,7 @@ export interface User {
   likes?: string[];
   published?: string[];
   aliases?: string[];
+  anonymous?: boolean;
 }
 
 export enum SchoolID {

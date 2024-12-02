@@ -79,6 +79,7 @@ export const i18n_zh_tw = {
       Version: '版本',
       VersionInitial: '版本',
       AllRightsReserved: '版權所有',
+      Anonymous: '無名氏',
     },
 
     term: {
@@ -110,6 +111,7 @@ export const i18n_zh_tw = {
     message: {
       CannotSignIn: '登錄失敗',
       CannotSignOut: '退出失敗',
+      SigningOutAnonymousAccount: '你確定退出嗎？一旦退出，此匿名帳號將不可恢復。',
       YourAccountWasCreated: '成功建立您的賬號。',
       CannotCreateAccount: '無法創建賬號',
       YourAccountSettingsWereSaved: '您的賬號設定已保存。',
@@ -456,6 +458,8 @@ export const i18n_zh_tw = {
       PrivacyStatement:
         '登錄需要採用您的谷歌ID建立或進入您的AIMS賬戶。 我們只儲存一個隨機的字符串作為您的ID。 任何關於您的可辨識的個人信息都沒有被收集。 詳情請參考我們的',
       SignIn: '登錄',
+      SignInAsMe: '實名登錄',
+      SignInAnonymously: '匿名登錄',
       SignOut: '退出賬號',
       IfYouAreAStudent: '如果您是一個學生',
     },

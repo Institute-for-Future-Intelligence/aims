@@ -1,15 +1,16 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import styled from 'styled-components';
-import { Avatar, Button, Dropdown, MenuProps, Popover, Space } from 'antd';
+import { Avatar, Button, Dropdown, MenuProps, Modal, Space } from 'antd';
 import React, { useMemo } from 'react';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { MenuItem } from './components/menuItem';
 import { useTranslation } from 'react-i18next';
+import { WarningOutlined } from '@ant-design/icons';
 
 const ButtonsContainer = styled.div`
   position: absolute;
@@ -27,10 +28,11 @@ const ButtonsContainer = styled.div`
 
 export interface MainToolBarProps {
   signIn: () => void;
+  signInAnonymously: () => void;
   signOut: () => void;
 }
 
-const MainToolBar = React.memo(({ signIn, signOut }: MainToolBarProps) => {
+const MainToolBar = React.memo(({ signIn, signInAnonymously, signOut }: MainToolBarProps) => {
   const language = useStore(Selector.language);
   const user = useStore(Selector.user);
 
@@ -38,6 +40,27 @@ const MainToolBar = React.memo(({ signIn, signOut }: MainToolBarProps) => {
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
+
+  const signOutCheck = () => {
+    if (user.anonymous) {
+      Modal.confirm({
+        title: `${t('message.SigningOutAnonymousAccount', lang)}`,
+        icon: <WarningOutlined />,
+        type: 'warning',
+        keyboard: false, // disable Escape key so that onCancel is not called when Escape is pressed
+        onOk: () => {
+          // swap OK and Cancel so that ENTER maps to cancel
+        },
+        onCancel: () => {
+          signOut();
+        },
+        okText: `${t('word.No', lang)}`,
+        cancelText: `${t('word.Yes', lang)}`,
+      });
+    } else {
+      signOut();
+    }
+  };
 
   const avatarMenu: MenuProps['items'] = [
     {
@@ -56,9 +79,22 @@ const MainToolBar = React.memo(({ signIn, signOut }: MainToolBarProps) => {
     },
     {
       key: 'sign-out',
-      label: <MenuItem onClick={signOut}>{t('avatarMenu.SignOut', lang)}</MenuItem>,
+      label: <MenuItem onClick={signOutCheck}>{t('avatarMenu.SignOut', lang)}</MenuItem>,
     },
   ];
+
+  const signInMenu: MenuProps['items'] = [
+    {
+      key: 'signin-default',
+      label: <MenuItem onClick={signIn}>{t('avatarMenu.SignInAsMe', lang)}</MenuItem>,
+    },
+    {
+      key: 'signin-anonymously',
+      label: <MenuItem onClick={signInAnonymously}>{t('avatarMenu.SignInAnonymously', lang)}</MenuItem>,
+    },
+  ];
+
+  console.log(user.displayName);
 
   return (
     <ButtonsContainer>
@@ -79,22 +115,9 @@ const MainToolBar = React.memo(({ signIn, signOut }: MainToolBarProps) => {
               <span style={{ paddingRight: '10px', fontSize: '12px' }}>
                 {t('message.ToSaveYourWorkPleaseSignIn', lang)}
               </span>
-              <Popover
-                title={<div onClick={(e) => e.stopPropagation()}>{t('avatarMenu.PrivacyStatementTitle', lang)}</div>}
-                content={
-                  <div style={{ width: '280px', fontSize: '12px' }}>
-                    {t('avatarMenu.PrivacyStatement', lang)}
-                    <a target="_blank" rel="noopener noreferrer" href={'https://intofuture.org/aims-privacy.html'}>
-                      {t('aboutUs.PrivacyPolicy', lang)}
-                    </a>
-                    .
-                  </div>
-                }
-              >
-                <Button type="primary" onClick={signIn}>
-                  {t('avatarMenu.SignIn', lang)}
-                </Button>
-              </Popover>
+              <Dropdown menu={{ items: signInMenu }} trigger={['click']}>
+                <Button type="primary">{t('avatarMenu.SignIn', lang)}</Button>
+              </Dropdown>
             </>
           )}
         </div>
