@@ -110,6 +110,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
   const clickPointRef = useRefStore.getState().clickPointRef;
   const moleculesRef = useRefStore.getState().moleculesRef;
+  const warnIfTooManyAtoms = useRefStore.getState().warnIfTooManyAtoms;
 
   const lang = useMemo(() => {
     return { lng: language };
@@ -199,6 +200,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         m.setCenter(p);
         state.projectState.testMolecules.push(m);
         if (state.loggable) state.logAction('Paste Copied Molecule');
+        warnIfTooManyAtoms(m.atoms.length);
       });
     } else if (cutMolecule) {
       setCommonStore((state) => {
@@ -206,6 +208,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         m.setCenter(p);
         state.projectState.testMolecules.push(m);
         if (state.loggable) state.logAction('Paste Cut Molecule');
+        warnIfTooManyAtoms(m.atoms.length);
       });
     }
   };

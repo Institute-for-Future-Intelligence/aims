@@ -263,6 +263,7 @@ export const PasteMolecule = () => {
   const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
   const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
   const clickPointRef = useRefStore.getState().clickPointRef;
+  const warnIfTooManyAtoms = useRefStore.getState().warnIfTooManyAtoms;
 
   const { t } = useTranslation();
   const lang = useLanguage();
@@ -276,6 +277,7 @@ export const PasteMolecule = () => {
         m.setCenter(p);
         state.projectState.testMolecules.push(m);
         if (state.loggable) state.logAction('Paste Copied Molecule');
+        warnIfTooManyAtoms(m.atoms.length);
       });
     } else if (cutMolecule) {
       setCommonStore((state) => {
@@ -283,6 +285,7 @@ export const PasteMolecule = () => {
         m.setCenter(p);
         state.projectState.testMolecules.push(m);
         if (state.loggable) state.logAction('Paste Cut Molecule');
+        warnIfTooManyAtoms(m.atoms.length);
       });
     }
     setChanged(true);

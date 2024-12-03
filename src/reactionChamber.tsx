@@ -12,7 +12,6 @@ import {
   DEFAULT_SHADOW_CAMERA_FAR,
   DEFAULT_SHADOW_MAP_SIZE,
   HALF_PI,
-  MAXIMUM_NUMBER_OF_ATOMS_FOR_SIMULATION,
   ProjectType,
   SpaceshipDisplayMode,
 } from './constants';
@@ -40,7 +39,7 @@ import { Molecule } from './models/Molecule.ts';
 import { Atom } from './models/Atom.ts';
 import { VT_CONVERSION_CONSTANT } from './models/physicalConstants.ts';
 import { ModelUtil } from './models/ModelUtil.ts';
-import { showInfo, showWarning } from './helpers.ts';
+import { showInfo } from './helpers.ts';
 import { useTranslation } from 'react-i18next';
 
 const ReactionChamber = React.memo(() => {
@@ -76,6 +75,7 @@ const ReactionChamber = React.memo(() => {
   const planeXYRef = useRefStore.getState().planeXYRef;
   const planeYZRef = useRefStore.getState().planeYZRef;
   const planeXZRef = useRefStore.getState().planeXZRef;
+  const warnIfTooManyAtoms = useRefStore.getState().warnIfTooManyAtoms;
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -96,18 +96,6 @@ const ReactionChamber = React.memo(() => {
           case ProjectType.MOLECULAR_MODELING: {
             const structure = molecularStructureMap.get(selectedMolecule.name);
             if (structure?.atoms) {
-              const mdRef = useRefStore.getState().molecularDynamicsRef;
-              const atomCount = (mdRef?.current?.atoms.length ?? 0) + structure.atoms.length;
-              if (atomCount > MAXIMUM_NUMBER_OF_ATOMS_FOR_SIMULATION) {
-                showWarning(
-                  t('message.TooManyAtomsMayCauseSimulationToRunSlowly', lang) +
-                    ' (' +
-                    atomCount +
-                    ' ' +
-                    t('word.AtomsLowerCasePlural', lang) +
-                    ').',
-                );
-              }
               const atoms: Atom[] = [];
               for (const a of structure.atoms) {
                 const clone = Atom.clone(a);
@@ -130,6 +118,7 @@ const ReactionChamber = React.memo(() => {
               const m = new Molecule(selectedMolecule.name, atoms);
               m.setCenter(point);
               state.projectState.testMolecules.push(m);
+              warnIfTooManyAtoms(m.atoms.length);
             }
             break;
           }

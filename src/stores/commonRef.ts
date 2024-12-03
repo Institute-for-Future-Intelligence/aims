@@ -9,6 +9,10 @@ import { Molecule } from '../models/Molecule.ts';
 import { Camera, invalidate } from '@react-three/fiber';
 import { VdwBond } from '../models/VdwBond.ts';
 import { MolecularDynamics } from '../models/MolecularDynamics.ts';
+import { MAXIMUM_NUMBER_OF_ATOMS_FOR_SIMULATION } from '../constants.ts';
+import i18n from '../i18n/i18n';
+import { showWarning } from '../helpers.ts';
+import { useStore } from './common.ts';
 
 const v = new Vector2();
 
@@ -27,6 +31,7 @@ export interface RefStoreState {
   chamberViewerCanvas: { gl: WebGLRenderer; camera: PerspectiveCamera } | null;
   galleryViewerCanvas: { gl: WebGLRenderer } | null;
   resizeCanvases: (percentWidth: number) => void;
+  warnIfTooManyAtoms: (addition: number) => void;
 }
 
 export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
@@ -44,6 +49,7 @@ export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
     molecularDynamicsRef: null,
     chamberViewerCanvas: null,
     galleryViewerCanvas: null,
+
     resizeCanvases(percentWidth) {
       const chamberViewerCanvas = get().chamberViewerCanvas;
       const galleryViewerCanvas = get().galleryViewerCanvas;
@@ -62,6 +68,22 @@ export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
         const newWidth = (percentWidth * window.innerWidth) / 100;
         gl.getSize(v);
         gl.setSize(newWidth, v.y);
+      }
+    },
+
+    warnIfTooManyAtoms(addition: number) {
+      const mdRef = get().molecularDynamicsRef;
+      const atomCount = (mdRef?.current?.atoms.length ?? 0) + addition;
+      if (atomCount > MAXIMUM_NUMBER_OF_ATOMS_FOR_SIMULATION) {
+        const lang = { lng: useStore.getState().language };
+        showWarning(
+          i18n.t('message.TooManyAtomsMayCauseSimulationToRunSlowly', lang) +
+            ' (' +
+            atomCount +
+            ' ' +
+            i18n.t('word.AtomsLowerCasePlural', lang) +
+            ').',
+        );
       }
     },
   };
