@@ -10,6 +10,8 @@ export const HOME_URL: string = import.meta.env.PROD
   ? 'https://institute-for-future-intelligence.github.io/aims/'
   : 'http://localhost:3001/aims';
 
+export const MAXIMUM_NUMBER_OF_ATOMS_FOR_SIMULATION = 200;
+
 export const DEFAULT_FOV = 30;
 export const DEFAULT_SHADOW_CAMERA_FAR = 10000;
 export const DEFAULT_SHADOW_MAP_SIZE = 4096;

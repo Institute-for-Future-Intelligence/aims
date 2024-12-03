@@ -36,6 +36,7 @@ export const i18n_zh_tw = {
     },
 
     word: {
+      AtomsLowerCasePlural: '原子',
       Save: '保存',
       Results: '結果',
       Import: '輸入',
@@ -109,6 +110,7 @@ export const i18n_zh_tw = {
     },
 
     message: {
+      TooManyAtomsMayCauseSimulationToRunSlowly: '加入太多原子會讓模擬變得很慢',
       CannotSignIn: '登錄失敗',
       CannotSignOut: '退出失敗',
       SigningOutAnonymousAccount: '你確定退出嗎？一旦退出，此匿名帳號將不可恢復。',

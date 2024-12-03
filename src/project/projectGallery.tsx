@@ -1040,7 +1040,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               <>
                 <PolynomialRegression data={scatterData.visible} />
                 <PropertiesHeader>
-                  <span style={{ paddingLeft: '0px' }}>{t('projectPanel.Relationship', lang)}</span>
+                  <span style={{ paddingLeft: '10px' }}>{t('projectPanel.Relationship', lang)}</span>
                   <span>
                     <Button
                       style={{ border: 'none', paddingRight: '0px', background: 'white' }}

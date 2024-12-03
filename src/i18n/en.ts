@@ -40,6 +40,7 @@ export const i18n_en = {
     },
 
     word: {
+      AtomsLowerCasePlural: 'atoms',
       Save: 'Save',
       Results: 'Results',
       Import: 'Import',
@@ -113,6 +114,7 @@ export const i18n_en = {
     },
 
     message: {
+      TooManyAtomsMayCauseSimulationToRunSlowly: 'Too many atoms may cause a simulation to run slowly',
       CannotSignIn: 'Cannot sign in',
       CannotSignOut: 'Cannot sign out',
       SigningOutAnonymousAccount: 'Are you sure you want to sign out? This anonymous account will be lost.',
