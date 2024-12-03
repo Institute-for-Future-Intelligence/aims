@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -239,7 +239,7 @@ const DynamicsViewer = React.memo(
             a.epsilon = 0.005;
           }
         }
-        if (molecule.atoms) {
+        if (molecule.atoms && molecule.atoms[i]) {
           a.position.copy(molecule.atoms[i].position);
           a.velocity.copy(molecule.atoms[i].velocity);
           const force = molecule.atoms[i].force;
