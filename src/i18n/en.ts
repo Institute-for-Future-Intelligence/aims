@@ -97,6 +97,7 @@ export const i18n_en = {
       DrugMolecules: 'Drug Molecules',
       Monatomic: 'Monatomic',
       Crystal: 'Crystal',
+      Any: 'Any',
     },
 
     aboutUs: {
@@ -308,7 +309,7 @@ export const i18n_en = {
       LevenshteinDistance: 'Levenshtein Distance',
       SelectMoleculeToImportIntoGallery: 'Select a molecule to import into gallery',
       SelectMolecule: 'Select a Molecule',
-      TotalMolecules: 'Total Molecules',
+      TypeToSearch: 'Type in the above field to search for a molecule',
       MoleculeType: 'Molecule Type',
       MolecularName: 'Molecular Name',
       MoleculeAlreadyAdded: 'Molecule already added',

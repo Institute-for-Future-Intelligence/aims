@@ -93,6 +93,7 @@ export const i18n_zh_tw = {
       DrugMolecules: '藥物分子',
       Monatomic: '單原子',
       Crystal: '晶體',
+      Any: '任何',
     },
 
     aboutUs: {
@@ -300,7 +301,7 @@ export const i18n_zh_tw = {
       LevenshteinDistance: '萊文斯坦距離',
       SelectMoleculeToImportIntoGallery: '選擇性分子輸入到圖庫',
       SelectMolecule: '選取分子',
-      TotalMolecules: '分子總數',
+      TypeToSearch: '在上面文字框打字可搜尋分子',
       MoleculeType: '分子類别',
       MolecularName: '分子名稱',
       MoleculeAlreadyAdded: '專案已經有此分子',

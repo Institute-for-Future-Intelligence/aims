@@ -113,6 +113,7 @@ export enum ProjectType {
 }
 
 export enum MoleculeType {
+  ANY = 'Any',
   MONATOMIC = 'Monatomic',
   CRYSTAL = 'Crystal',
   COMMON = 'Common',

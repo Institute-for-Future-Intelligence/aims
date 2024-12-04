@@ -37,7 +37,7 @@ const ImportMoleculeModal = React.memo(
     const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
 
     const [moleculeType, setMoleculeType] = useState<MoleculeType>(
-      projectType === ProjectType.DRUG_DISCOVERY ? MoleculeType.DRUG : MoleculeType.COMMON,
+      projectType === ProjectType.DRUG_DISCOVERY ? MoleculeType.DRUG : MoleculeType.ANY,
     );
     const [dragEnabled, setDragEnabled] = useState<boolean>(false);
     const [bounds, setBounds] = useState<DraggableBounds>({ left: 0, top: 0, bottom: 0, right: 0 } as DraggableBounds);
@@ -73,13 +73,25 @@ const ImportMoleculeModal = React.memo(
       setDialogVisible(false);
     };
 
+    const allMolecules = useMemo(() => {
+      return [
+        ...drugMolecules,
+        ...hydrocarbonMolecules,
+        ...monatomicMolecules,
+        ...crystals,
+        ...biomolecules,
+        ...commonMolecules,
+      ];
+    }, []);
+
     const collection = useMemo(() => {
+      if (moleculeType === MoleculeType.COMMON) return commonMolecules;
       if (moleculeType === MoleculeType.DRUG) return drugMolecules;
       if (moleculeType === MoleculeType.HYDROCARBON) return hydrocarbonMolecules;
       if (moleculeType === MoleculeType.MONATOMIC) return monatomicMolecules;
       if (moleculeType === MoleculeType.CRYSTAL) return crystals;
       if (moleculeType === MoleculeType.BIOMOLECULE) return biomolecules;
-      return commonMolecules;
+      return allMolecules;
     }, [moleculeType]);
 
     const total =
@@ -104,11 +116,6 @@ const ImportMoleculeModal = React.memo(
         }
         open={isDialogVisible()}
         footer={[
-          <Flex key="note" justify={'right'}>
-            <Space style={{ paddingBottom: '16px', paddingRight: '4px', fontSize: '10px' }}>
-              {t('projectPanel.TotalMolecules', lang) + ': ' + total}
-            </Space>
-          </Flex>,
           <Button key="Cancel" onClick={onCancel}>
             {t('word.Cancel', lang)}
           </Button>,
@@ -153,11 +160,17 @@ const ImportMoleculeModal = React.memo(
                 case MoleculeType.BIOMOLECULE:
                   setName(biomolecules[0].name);
                   break;
+                case MoleculeType.COMMON:
+                  setName(commonMolecules[0].name);
+                  break;
                 default:
                   setName(commonMolecules[0].name);
               }
             }}
           >
+            <Option key={MoleculeType.ANY} value={MoleculeType.ANY}>
+              {t('term.Any', lang) + ' (' + total + ')'}
+            </Option>
             <Option key={MoleculeType.COMMON} value={MoleculeType.COMMON}>
               {t('term.CommonMolecules', lang) + ' (' + commonMolecules.length + ')'}
             </Option>
@@ -178,28 +191,33 @@ const ImportMoleculeModal = React.memo(
             </Option>
           </Select>
         </Space>
-        <Space direction={'horizontal'}>
+        <Space direction={'horizontal'} align={'start'}>
           <Space direction={'horizontal'} style={{ width: '120px' }}>
             {i18n.t('projectPanel.MolecularName', lang) + ':'}
           </Space>
-          <Select
-            style={{ width: '300px' }}
-            value={getName()}
-            showSearch
-            onChange={(value: string) => {
-              setName(value);
-            }}
-          >
-            {collection.map((d, i) => {
-              const prop = getProvidedMolecularProperties(d.name);
-              const formula = prop?.formula;
-              return (
-                <Option key={`${i}-${d.name}`} value={d.name}>
-                  {d.name + (formula ? ' (' + formula + ')' : '')}
-                </Option>
-              );
-            })}
-          </Select>
+          <Space direction={'vertical'} style={{ width: '300px' }}>
+            <Select
+              style={{ width: '300px' }}
+              value={getName()}
+              showSearch
+              onChange={(value: string) => {
+                setName(value);
+              }}
+            >
+              {collection.map((d, i) => {
+                const prop = getProvidedMolecularProperties(d.name);
+                const formula = prop?.formula;
+                return (
+                  <Option key={`${i}-${d.name}`} value={d.name}>
+                    {d.name + (formula ? ' (' + formula + ')' : '')}
+                  </Option>
+                );
+              })}
+            </Select>
+            <Flex key="note" justify={'left'}>
+              <Space style={{ fontSize: '10px' }}>{t('projectPanel.TypeToSearch', lang)}</Space>
+            </Flex>
+          </Space>
         </Space>
       </Modal>
     );
