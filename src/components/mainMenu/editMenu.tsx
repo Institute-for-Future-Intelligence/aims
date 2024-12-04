@@ -10,7 +10,7 @@ import { UndoManager } from '../../undo/UndoManager';
 import { UNDO_SHOW_INFO_DURATION } from '../../constants';
 import { showInfo } from '../../helpers';
 
-export const createEditMenu = (undoManager: UndoManager, isMac: boolean) => {
+export const createEditMenu = (undoManager: UndoManager, isMac: boolean, refresh: () => void) => {
   const lang = { lng: useStore.getState().language };
   const loggable = useStore.getState().loggable;
   const logAction = useStore.getState().logAction;
@@ -20,6 +20,7 @@ export const createEditMenu = (undoManager: UndoManager, isMac: boolean) => {
       const commandName = undoManager.undo();
       if (commandName) showInfo(i18n.t('menu.edit.Undo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
       if (loggable) logAction('Undo');
+      refresh();
     }
   };
 
@@ -28,6 +29,7 @@ export const createEditMenu = (undoManager: UndoManager, isMac: boolean) => {
       const commandName = undoManager.redo();
       if (commandName) showInfo(i18n.t('menu.edit.Redo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
       if (loggable) logAction('Redo');
+      refresh();
     }
   };
 

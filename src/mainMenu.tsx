@@ -119,7 +119,7 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
       items.push({
         key: 'edit-sub-menu',
         label: <MenuItem hasPadding={false}>{t('menu.editSubMenu', lang)}</MenuItem>,
-        children: createEditMenu(undoManager, isMac),
+        children: createEditMenu(undoManager, isMac, () => setUpdateMenuFlag(!updateMenuFlag)),
       });
     }
 
@@ -194,7 +194,7 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
     });
 
     return items;
-  }, [language, hasUndo, hasRedo, user.uid, projectTitle]);
+  }, [language, hasUndo, hasRedo, updateMenuFlag, user.uid, projectTitle]);
 
   return (
     <>
