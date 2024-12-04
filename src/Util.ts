@@ -3,8 +3,14 @@
  */
 
 import platform from 'platform';
+import { HOME_URL } from './constants.ts';
 
 export class Util {
+  static generateProjectLink(uid: string, title: string, callback: () => void) {
+    const url = HOME_URL + '?userid=' + uid + '&project=' + encodeURIComponent(title);
+    navigator.clipboard.writeText(url).then(callback);
+  }
+
   static isOpenFromURL() {
     const params = new URLSearchParams(window.location.search);
     const userid = params.get('userid');

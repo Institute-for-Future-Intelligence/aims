@@ -11,6 +11,9 @@ import { CreateNewProjectItem } from './createNewProjectItem.tsx';
 import { OpenProjectItem } from './openProjectItem.tsx';
 import { SaveProjectItem } from './saveProjectItem.tsx';
 import { SaveProjectAsItem } from './saveProjectAsItem.tsx';
+import { MenuItem } from '../menuItem.tsx';
+import { Util } from '../../Util.ts';
+import { showSuccess } from '../../helpers.ts';
 
 export const askToCreateProject = () => {
   const lang = { lng: useStore.getState().language };
@@ -83,6 +86,9 @@ export const saveProjectAs = () => {
 
 export const createProjectMenu = (isMac: boolean) => {
   const items: MenuProps['items'] = [];
+  const lang = { lng: useStore.getState().language };
+  const user = useStore.getState().user;
+  const projectTitle = useStore.getState().projectState.title;
 
   items.push({
     key: 'create-new-project',
@@ -105,6 +111,25 @@ export const createProjectMenu = (isMac: boolean) => {
     key: 'save-project-as',
     label: <SaveProjectAsItem isMac={isMac} saveProjectAs={saveProjectAs} />,
   });
+
+  if (user.uid && projectTitle) {
+    items.push({
+      key: 'generate-project-link',
+      label: (
+        <MenuItem
+          hasPadding={false}
+          onClick={() => {
+            if (!user.uid || !projectTitle) return;
+            Util.generateProjectLink(user.uid, projectTitle, () =>
+              showSuccess(i18n.t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.'),
+            );
+          }}
+        >
+          {i18n.t('projectListPanel.GenerateProjectLink', lang)}
+        </MenuItem>
+      ),
+    });
+  }
 
   return items;
 };

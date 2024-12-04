@@ -14,7 +14,7 @@ import {
   QuestionCircleOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
-import { HOME_URL, REGEX_ALLOWABLE_IN_NAME, Z_INDEX_FRONT_PANEL } from '../constants.ts';
+import { REGEX_ALLOWABLE_IN_NAME, Z_INDEX_FRONT_PANEL } from '../constants.ts';
 import { showInfo, showSuccess } from '../helpers.ts';
 import Draggable from 'react-draggable';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
@@ -24,6 +24,7 @@ import { MenuItem } from '../components/menuItem.tsx';
 import { ProjectInfo, ProjectState } from '../types.ts';
 import { fetchProject } from '../cloudProjectUtil.ts';
 import dayjs from 'dayjs';
+import { Util } from '../Util.ts';
 
 const { Column } = Table;
 
@@ -421,10 +422,8 @@ const ProjectListPanel = React.memo(
                         label: (
                           <MenuItem
                             onClick={() => {
-                              const url = HOME_URL + '?userid=' + user.uid + '&project=' + encodeURIComponent(title);
-                              navigator.clipboard
-                                .writeText(url)
-                                .then(() =>
+                              if (user.uid)
+                                Util.generateProjectLink(user.uid, title, () =>
                                   showSuccess(t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.'),
                                 );
                             }}
