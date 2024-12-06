@@ -111,6 +111,7 @@ export const i18n_zh_tw = {
     },
 
     message: {
+      NewVersionAvailable: '有新版本',
       DoYouWantToRemoveAllMoleculesFromGallery: '你確定要刪除專案裡的所有分子嗎？',
       TooManyAtomsMayCauseSimulationToRunSlowly: '加入太多原子會讓模擬變得很慢',
       CannotSignIn: '登錄失敗',

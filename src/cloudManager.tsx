@@ -172,6 +172,9 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         });
       }
     }
+    fetchLatestVersion().then(() => {
+      // ignore
+    });
   };
 
   const setProjectState = (projectState: ProjectState | null) => {
@@ -343,6 +346,28 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       })
       .catch((error) => {
         showError(t('message.CannotSignOut', lang) + ': ' + error);
+      });
+  };
+
+  // get latest version
+  const fetchLatestVersion = async () => {
+    await firebase
+      .firestore()
+      .collection('app')
+      .doc('info')
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          const data = doc.data();
+          if (data && data.latestVersion) {
+            usePrimitiveStore.getState().set((state) => {
+              state.latestVersion = data.latestVersion;
+            });
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 

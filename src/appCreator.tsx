@@ -2,12 +2,12 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { Suspense, useEffect, useMemo, useRef } from 'react';
+import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import ifiLogo from './assets/ifi-logo.png';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import { visitHomepage, visitIFI } from './helpers';
+import { visitHomepage } from './helpers';
 import MainMenu from './mainMenu';
 import { VERSION } from './constants';
 import ShareLinks from './shareLinks';
@@ -24,11 +24,13 @@ import CloudManager from './cloudManager';
 import { CloudTwoTone } from '@ant-design/icons';
 import SplitPane from './components/splitPane.tsx';
 import { useRefStore } from './stores/commonRef.ts';
-import { Button } from 'antd';
+import { Badge, Button, Space } from 'antd';
+import { AlertFilled } from '@ant-design/icons';
 
 const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
   const user = useStore(Selector.user);
+  const latestVersion = usePrimitiveStore(Selector.latestVersion);
   const loggable = useStore.getState().loggable;
   const language = useStore(Selector.language);
   const hideGallery = useStore(Selector.hideGallery);
@@ -53,7 +55,13 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [cameraPosition, panCenter]);
 
+  const [latestVersionReminder, setLatestVersionReminder] = useState<boolean>(false);
+
   const firstLoadRef = useRef<boolean>(true);
+
+  useEffect(() => {
+    if (latestVersion) setLatestVersionReminder(VERSION.localeCompare(latestVersion) < 0);
+  }, [latestVersion]);
 
   useEffect(() => {
     if (firstLoadRef.current) {
@@ -113,31 +121,40 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
           userSelect: 'none',
         }}
       >
-        <span
-          style={{
-            marginLeft: '120px',
-            verticalAlign: 'middle',
-            cursor: 'pointer',
-            userSelect: 'none',
-            fontSize: '30px',
-          }}
-          title={'Artificial Intelligence for Molecular Sciences (AIMS)'}
-          onClick={visitHomepage}
+        <Badge
+          offset={['10px', '0px']}
+          count={
+            latestVersionReminder ? (
+              <AlertFilled style={{ color: 'red', cursor: 'pointer' }} title={t('message.NewVersionAvailable', lang)} />
+            ) : undefined
+          }
         >
-          {`${t('name.AIMS', lang)}`}
-        </span>
+          <Space
+            style={{
+              marginLeft: '90px',
+              verticalAlign: 'middle',
+              cursor: 'pointer',
+              userSelect: 'none',
+              fontSize: '30px',
+            }}
+            title={'Artificial Intelligence for Molecular Sciences (AIMS)'}
+            onClick={visitHomepage}
+          >
+            {`${t('name.AIMS', lang)}`}
+          </Space>
+        </Badge>
         {projectTitle && (
           <CloudTwoTone
             twoToneColor={isOwner ? 'blue' : 'gray'}
             style={{
-              paddingLeft: '10px',
+              paddingLeft: '24px',
               verticalAlign: 'bottom',
             }}
           />
         )}
-        <span
+        <Space
           style={{
-            paddingLeft: '2px',
+            paddingLeft: '4px',
             fontSize: '16px',
             verticalAlign: 'bottom',
             userSelect: 'none',
@@ -167,7 +184,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
               {t('word.Save', lang)}
             </Button>
           )}
-        </span>
+        </Space>
       </div>
 
       {viewOnly ? (

@@ -115,6 +115,7 @@ export const i18n_en = {
     },
 
     message: {
+      NewVersionAvailable: 'A new version is available',
       DoYouWantToRemoveAllMoleculesFromGallery: 'Do you want to remove all molecules from the gallery?',
       TooManyAtomsMayCauseSimulationToRunSlowly: 'Too many atoms may cause a simulation to run slowly',
       CannotSignIn: 'Cannot sign in',

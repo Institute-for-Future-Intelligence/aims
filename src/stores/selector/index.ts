@@ -16,6 +16,8 @@ export const language = (state: CommonStoreState) => state.language;
 
 export const locale = (state: CommonStoreState) => state.locale;
 
+export const latestVersion = (state: PrimitiveStoreState) => state.latestVersion;
+
 export const waiting = (state: PrimitiveStoreState) => state.waiting;
 
 export const setWaiting = (state: PrimitiveStoreState) => state.setWaiting;

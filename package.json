@@ -7,7 +7,7 @@
   "dependencies": {
     "@react-three/drei": "^9.99.4",
     "@react-three/fiber": "^8.15.16",
-    "antd": "^5.12.5",
+    "antd": "^5.22.3",
     "d3-brush": "^3.0.0",
     "dayjs": "^1.10.7",
     "fastest-levenshtein": "^1.0.16",
