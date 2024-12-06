@@ -111,6 +111,7 @@ export const i18n_zh_tw = {
     },
 
     message: {
+      DoYouWantToRemoveAllMoleculesFromGallery: '你確定要刪除專案裡的所有分子嗎？',
       TooManyAtomsMayCauseSimulationToRunSlowly: '加入太多原子會讓模擬變得很慢',
       CannotSignIn: '登錄失敗',
       CannotSignOut: '退出失敗',
@@ -307,6 +308,7 @@ export const i18n_zh_tw = {
       MoleculeAlreadyAdded: '專案已經有此分子',
       MoleculeNotFound: '分子没有找到',
       RemoveSelectedMoleculeFromGallery: '從圖庫移除選取的分子',
+      RemoveAllMoleculesFromGallery: '從圖庫移除所有的分子',
       MakeDescriptionEditable: '編輯描述',
       MakeDescriptionNonEditable: '不編輯描述',
       DoubleClickToMakeDescriptionEditable: '雙擊此描述激活編輯功能',

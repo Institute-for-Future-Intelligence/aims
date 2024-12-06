@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { commonMolecules, drugMolecules, findSimilarMolecules, getMolecule } from '../internalDatabase.ts';
 import { ChemicalNotation, DataColoring, GraphType, ProjectType } from '../constants.ts';
 import styled from 'styled-components';
-import { Button, Collapse, CollapseProps, Empty, Popover, Radio, Spin } from 'antd';
+import { Button, Collapse, CollapseProps, Empty, Modal, Popover, Radio, Spin } from 'antd';
 import {
   BgColorsOutlined,
   CameraOutlined,
@@ -24,6 +24,8 @@ import {
   SortAscendingOutlined,
   SortDescendingOutlined,
   TableOutlined,
+  QuestionCircleOutlined,
+  ClearOutlined,
 } from '@ant-design/icons';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
@@ -126,11 +128,13 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const language = useStore(Selector.language);
   const loggable = useStore.getState().loggable;
   const logAction = useStore.getState().logAction;
+  const molecules = useStore(Selector.molecules);
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const hoveredMolecule = usePrimitiveStore(Selector.hoveredMolecule);
   const addMolecule = useStore(Selector.addMolecule);
   const addMolecules = useStore(Selector.addMolecules);
   const removeMolecule = useStore(Selector.removeMolecule);
+  const removeAllMolecules = useStore(Selector.removeAllMolecules);
   const numberOfColumns = useStore(Selector.numberOfColumns) ?? 3;
   const viewerStyle = useStore(Selector.projectViewerStyle);
   const viewerMaterial = useStore(Selector.projectViewerMaterial);
@@ -351,6 +355,33 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     <DeleteOutlined
                       style={{ fontSize: '24px', color: 'gray' }}
                       title={t('projectPanel.RemoveSelectedMoleculeFromGallery', lang)}
+                    />
+                  </Button>
+                )}
+                {molecules && molecules.length > 0 && (
+                  <Button
+                    style={{ border: 'none', padding: '4px' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      Modal.confirm({
+                        title: `${t('message.DoYouWantToRemoveAllMoleculesFromGallery', lang)}`,
+                        icon: <QuestionCircleOutlined />,
+                        type: 'confirm',
+                        // reverse the button order so no is the default
+                        onCancel: () => {
+                          removeAllMolecules();
+                          setUpdateFlag(!updateFlag);
+                          setChanged(true);
+                        },
+                        onOk: () => {},
+                        cancelText: `${t('word.Yes', lang)}`,
+                        okText: `${t('word.No', lang)}`,
+                      });
+                    }}
+                  >
+                    <ClearOutlined
+                      style={{ fontSize: '24px', color: 'gray' }}
+                      title={t('projectPanel.RemoveAllMoleculesFromGallery', lang)}
                     />
                   </Button>
                 )}

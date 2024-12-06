@@ -115,6 +115,7 @@ export const i18n_en = {
     },
 
     message: {
+      DoYouWantToRemoveAllMoleculesFromGallery: 'Do you want to remove all molecules from the gallery?',
       TooManyAtomsMayCauseSimulationToRunSlowly: 'Too many atoms may cause a simulation to run slowly',
       CannotSignIn: 'Cannot sign in',
       CannotSignOut: 'Cannot sign out',
@@ -315,6 +316,7 @@ export const i18n_en = {
       MoleculeAlreadyAdded: 'Molecule already added',
       MoleculeNotFound: 'Molecule not found',
       RemoveSelectedMoleculeFromGallery: 'Remove selected molecule from gallery',
+      RemoveAllMoleculesFromGallery: 'Remove all molecules from gallery',
       MakeDescriptionEditable: 'Make this description editable',
       MakeDescriptionNonEditable: 'Make this description non-editable',
       DoubleClickToMakeDescriptionEditable: 'Double-click to make this description editable',
