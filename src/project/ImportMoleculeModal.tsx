@@ -35,6 +35,7 @@ const ImportMoleculeModal = React.memo(
     const language = useStore(Selector.language);
     const projectType = useStore(Selector.projectType);
     const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
+    const molecules = useStore(Selector.molecules);
 
     const [moleculeType, setMoleculeType] = useState<MoleculeType>(
       projectType === ProjectType.DRUG_DISCOVERY ? MoleculeType.DRUG : MoleculeType.ANY,
@@ -102,6 +103,29 @@ const ImportMoleculeModal = React.memo(
       monatomicMolecules.length +
       crystals.length;
 
+    const alreadySelected = (name: string) => {
+      for (const m of molecules) {
+        if (m.name === name) return true;
+      }
+      return false;
+    };
+
+    const getUnusedNames = (): string[] => {
+      const names = getNames();
+      const s = [];
+      for (const n of names) {
+        let used = false;
+        for (const m of molecules) {
+          if (m.name === n) {
+            used = true;
+            break;
+          }
+        }
+        if (!used) s.push(n);
+      }
+      return s;
+    };
+
     return (
       <Modal
         width={480}
@@ -144,28 +168,7 @@ const ImportMoleculeModal = React.memo(
             value={moleculeType}
             onChange={(value: MoleculeType) => {
               setMoleculeType(value);
-              switch (value) {
-                case MoleculeType.DRUG:
-                  setNames([drugMolecules[0].name]);
-                  break;
-                case MoleculeType.HYDROCARBON:
-                  setNames([hydrocarbonMolecules[0].name]);
-                  break;
-                case MoleculeType.MONATOMIC:
-                  setNames([monatomicMolecules[0].name]);
-                  break;
-                case MoleculeType.CRYSTAL:
-                  setNames([crystals[0].name]);
-                  break;
-                case MoleculeType.BIOMOLECULE:
-                  setNames([biomolecules[0].name]);
-                  break;
-                case MoleculeType.COMMON:
-                  setNames([commonMolecules[0].name]);
-                  break;
-                default:
-                  setNames([commonMolecules[0].name]);
-              }
+              setNames([]);
             }}
           >
             <Option key={MoleculeType.ANY} value={MoleculeType.ANY}>
@@ -199,21 +202,24 @@ const ImportMoleculeModal = React.memo(
             <Select
               mode="multiple"
               allowClear
-              style={{ width: '300px' }}
-              value={getNames()}
               showSearch
+              maxCount={10}
+              style={{ width: '300px' }}
+              value={getUnusedNames()}
               onChange={(values: string[]) => {
                 setNames(values);
               }}
             >
               {collection.map((d, i) => {
                 const prop = getProvidedMolecularProperties(d.name);
-                const formula = prop?.formula;
-                return (
-                  <Option key={`${i}-${d.name}`} value={d.name}>
-                    {d.name + (formula ? ' (' + formula + ')' : '')}
-                  </Option>
-                );
+                if (!alreadySelected(d.name)) {
+                  const formula = prop?.formula;
+                  return (
+                    <Option key={`${i}-${d.name}`} value={d.name}>
+                      {d.name + (formula ? ' (' + formula + ')' : '')}
+                    </Option>
+                  );
+                }
               })}
             </Select>
             <Flex key="note" justify={'left'}>

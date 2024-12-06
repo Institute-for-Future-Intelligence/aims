@@ -179,7 +179,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const [updateHiddenFlag, setUpdateHiddenFlag] = useState<boolean>(false);
   const [moleculeNames, setMoleculeNames] = useState<string[]>(
-    projectType === ProjectType.DRUG_DISCOVERY ? [drugMolecules[0].name] : [commonMolecules[0].name],
+    projectType === ProjectType.DRUG_DISCOVERY ? [drugMolecules[0].name] : [],
   );
   const [importMoleculeDialogVisible, setImportMoleculeDialogVisible] = useState(false);
   const [findMoleculeDialogVisible, setFindMoleculeDialogVisible] = useState(false);
