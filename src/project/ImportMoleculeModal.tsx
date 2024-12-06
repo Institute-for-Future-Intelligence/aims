@@ -23,15 +23,15 @@ import {
 const { Option } = Select;
 
 export interface ImportMoleculeModalProps {
-  importByName: (name: string) => void;
-  setName: (title: string) => void;
-  getName: () => string;
+  importByNames: () => void;
+  setNames: (names: string[]) => void;
+  getNames: () => string[];
   setDialogVisible: (visible: boolean) => void;
   isDialogVisible: () => boolean;
 }
 
 const ImportMoleculeModal = React.memo(
-  ({ importByName, setName, getName, setDialogVisible, isDialogVisible }: ImportMoleculeModalProps) => {
+  ({ importByNames, setNames, getNames, setDialogVisible, isDialogVisible }: ImportMoleculeModalProps) => {
     const language = useStore(Selector.language);
     const projectType = useStore(Selector.projectType);
     const getProvidedMolecularProperties = useStore(Selector.getProvidedMolecularProperties);
@@ -62,9 +62,9 @@ const ImportMoleculeModal = React.memo(
     };
 
     const onOk = () => {
-      const name = getName();
-      if (name) {
-        importByName(name);
+      const names = getNames();
+      if (names) {
+        importByNames();
         setDialogVisible(false);
       }
     };
@@ -119,7 +119,7 @@ const ImportMoleculeModal = React.memo(
           <Button key="Cancel" onClick={onCancel}>
             {t('word.Cancel', lang)}
           </Button>,
-          <Button key="OK" type="primary" onClick={onOk} disabled={!getName()}>
+          <Button key="OK" type="primary" onClick={onOk} disabled={!getNames()}>
             {t('word.Import', lang)}
           </Button>,
         ]}
@@ -146,25 +146,25 @@ const ImportMoleculeModal = React.memo(
               setMoleculeType(value);
               switch (value) {
                 case MoleculeType.DRUG:
-                  setName(drugMolecules[0].name);
+                  setNames([drugMolecules[0].name]);
                   break;
                 case MoleculeType.HYDROCARBON:
-                  setName(hydrocarbonMolecules[0].name);
+                  setNames([hydrocarbonMolecules[0].name]);
                   break;
                 case MoleculeType.MONATOMIC:
-                  setName(monatomicMolecules[0].name);
+                  setNames([monatomicMolecules[0].name]);
                   break;
                 case MoleculeType.CRYSTAL:
-                  setName(crystals[0].name);
+                  setNames([crystals[0].name]);
                   break;
                 case MoleculeType.BIOMOLECULE:
-                  setName(biomolecules[0].name);
+                  setNames([biomolecules[0].name]);
                   break;
                 case MoleculeType.COMMON:
-                  setName(commonMolecules[0].name);
+                  setNames([commonMolecules[0].name]);
                   break;
                 default:
-                  setName(commonMolecules[0].name);
+                  setNames([commonMolecules[0].name]);
               }
             }}
           >
@@ -197,11 +197,13 @@ const ImportMoleculeModal = React.memo(
           </Space>
           <Space direction={'vertical'} style={{ width: '300px' }}>
             <Select
+              mode="multiple"
+              allowClear
               style={{ width: '300px' }}
-              value={getName()}
+              value={getNames()}
               showSearch
-              onChange={(value: string) => {
-                setName(value);
+              onChange={(values: string[]) => {
+                setNames(values);
               }}
             >
               {collection.map((d, i) => {

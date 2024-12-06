@@ -174,8 +174,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const [updateHiddenFlag, setUpdateHiddenFlag] = useState<boolean>(false);
-  const [moleculeName, setMoleculeName] = useState<string>(
-    projectType === ProjectType.DRUG_DISCOVERY ? drugMolecules[0].name : commonMolecules[0].name,
+  const [moleculeNames, setMoleculeNames] = useState<string[]>(
+    projectType === ProjectType.DRUG_DISCOVERY ? [drugMolecules[0].name] : [commonMolecules[0].name],
   );
   const [importMoleculeDialogVisible, setImportMoleculeDialogVisible] = useState(false);
   const [findMoleculeDialogVisible, setFindMoleculeDialogVisible] = useState(false);
@@ -1333,25 +1333,27 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           />
         )}
         <ImportMoleculeModal
-          importByName={() => {
-            const m = getMolecule(moleculeName);
-            if (m) {
-              const added = addMolecule(m);
-              if (added) {
-                setCommonStore((state) => {
-                  state.projectState.selectedMolecule = m;
-                });
-                setUpdateFlag(!updateFlag);
-                setChanged(true);
+          importByNames={() => {
+            for (const name of moleculeNames) {
+              const m = getMolecule(name);
+              if (m) {
+                const added = addMolecule(m);
+                if (added) {
+                  setCommonStore((state) => {
+                    state.projectState.selectedMolecule = m;
+                  });
+                  setUpdateFlag(!updateFlag);
+                  setChanged(true);
+                } else {
+                  showInfo(t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + name, 3);
+                }
               } else {
-                showError(t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + moleculeName, 3);
+                showError(t('projectPanel.MoleculeNotFound', lang) + ': ' + name, 3);
               }
-            } else {
-              showError(t('projectPanel.MoleculeNotFound', lang) + ': ' + moleculeName, 3);
             }
           }}
-          setName={setMoleculeName}
-          getName={() => moleculeName}
+          setNames={setMoleculeNames}
+          getNames={() => moleculeNames}
           setDialogVisible={setImportMoleculeDialogVisible}
           isDialogVisible={() => importMoleculeDialogVisible}
         />

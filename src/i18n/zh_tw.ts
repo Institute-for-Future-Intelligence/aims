@@ -106,7 +106,7 @@ export const i18n_zh_tw = {
       Support: '服務',
       Acknowledgment: '鳴謝',
       FundingInformation:
-        '本產品的研發承蒙美國國立衛生研究院慷慨資助（項目號R25GM150143）。本產品的任何觀點或結論僅代表創作者個人意見。',
+        '本產品的研發承蒙美國國立衛生研究院慷慨資助（項目號R25GM150143）。本產品的任何觀點或結論僅代表創作者個人意見。Kent Crippen和William Furiosi在本產品研發過程中提供重要協助，在此一併感謝。',
       Contact: '如您需要更多資訊，請聯繫 Charles Xie (charles@intofuture.org)。我們會盡快回复。',
     },
 
