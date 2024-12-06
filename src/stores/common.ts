@@ -62,6 +62,7 @@ export interface CommonStoreState {
   addMolecule: (molecule: MoleculeInterface, index?: number) => boolean;
   addMolecules: (molecules: MoleculeInterface[]) => void;
   removeMolecule: (molecule: MoleculeInterface) => void;
+  removeMoleculeByName: (name: string) => void;
   removeAllMolecules: () => void;
 
   molecularPropertiesMap: Map<string, MolecularProperties>;
@@ -283,6 +284,16 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
             immerSet((state: CommonStoreState) => {
               for (const [i, m] of state.projectState.molecules.entries()) {
                 if (m.name === molecule.name) {
+                  state.projectState.molecules.splice(i, 1);
+                  break;
+                }
+              }
+            });
+          },
+          removeMoleculeByName(name: string) {
+            immerSet((state: CommonStoreState) => {
+              for (const [i, m] of state.projectState.molecules.entries()) {
+                if (m.name === name) {
                   state.projectState.molecules.splice(i, 1);
                   break;
                 }

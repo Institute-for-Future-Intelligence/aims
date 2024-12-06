@@ -140,6 +140,8 @@ export const addMolecules = (state: CommonStoreState) => state.addMolecules;
 
 export const removeMolecule = (state: CommonStoreState) => state.removeMolecule;
 
+export const removeMoleculeByName = (state: CommonStoreState) => state.removeMoleculeByName;
+
 export const removeAllMolecules = (state: CommonStoreState) => state.removeAllMolecules;
 
 export const molecularPropertiesMap = (state: CommonStoreState) => state.molecularPropertiesMap;

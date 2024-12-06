@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { commonMolecules, drugMolecules, findSimilarMolecules, getMolecule } from '../internalDatabase.ts';
+import { drugMolecules, findSimilarMolecules, getMolecule } from '../internalDatabase.ts';
 import { ChemicalNotation, DataColoring, GraphType, ProjectType } from '../constants.ts';
 import styled from 'styled-components';
 import { Button, Collapse, CollapseProps, Empty, Modal, Popover, Radio, Spin } from 'antd';
@@ -58,7 +58,8 @@ import RegressionImage from '../assets/regression.png';
 import PolynomialRegression from './regression.tsx';
 import ScatterChartNumericValues from './scatterChartNumericValues.tsx';
 import ParallelCoordinatesNumericValuesContent from './parallelCoordinatesNumericValues.tsx';
-import { UndoableDeleteMolecule } from '../undo/UndoableDelete.ts';
+import { UndoableDeleteMolecule, UndoableDeleteMolecules } from '../undo/UndoableDelete.ts';
+import { UndoableImportMolecule } from '../undo/UndoableImportMolecule.ts';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);
@@ -126,6 +127,7 @@ const v = new Vector2();
 const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const setCommonStore = useStore(Selector.set);
   const user = useStore(Selector.user);
+  const addUndoable = useStore(Selector.addUndoable);
   const language = useStore(Selector.language);
   const loggable = useStore.getState().loggable;
   const logAction = useStore.getState().logAction;
@@ -135,6 +137,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const addMolecule = useStore(Selector.addMolecule);
   const addMolecules = useStore(Selector.addMolecules);
   const removeMolecule = useStore(Selector.removeMolecule);
+  const removeMoleculeByName = useStore(Selector.removeMoleculeByName);
   const removeAllMolecules = useStore(Selector.removeAllMolecules);
   const numberOfColumns = useStore(Selector.numberOfColumns) ?? 3;
   const viewerStyle = useStore(Selector.projectViewerStyle);
@@ -264,7 +267,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       undo: () => hideGallery(false),
       redo: () => hideGallery(true),
     } as Undoable;
-    useStore.getState().addUndoable(undoable);
+    addUndoable(undoable);
     hideGallery(true);
   };
 
@@ -288,8 +291,41 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
         });
       },
     } as UndoableDeleteMolecule;
-    useStore.getState().addUndoable(undoable);
+    addUndoable(undoable);
     removeMolecule(selectedMolecule);
+    setCommonStore((state) => {
+      state.projectState.selectedMolecule = null;
+    });
+  };
+
+  const clearAllMolecules = () => {
+    if (molecules.length === 0) return;
+    const names: string[] = [];
+    for (const m of molecules) names.push(m.name);
+    const undoable = {
+      name: 'Remove All Molecules',
+      timestamp: Date.now(),
+      moleculeNames: names,
+      undo: () => {
+        if (!undoable.moleculeNames || undoable.moleculeNames.length === 0) return;
+        let mol: MoleculeInterface | null = null;
+        for (const n of undoable.moleculeNames) {
+          mol = getMolecule(n);
+          if (mol) addMolecule(mol);
+        }
+        setCommonStore((state) => {
+          state.projectState.selectedMolecule = mol;
+        });
+      },
+      redo: () => {
+        removeAllMolecules();
+        setCommonStore((state) => {
+          state.projectState.selectedMolecule = null;
+        });
+      },
+    } as UndoableDeleteMolecules;
+    addUndoable(undoable);
+    removeAllMolecules();
     setCommonStore((state) => {
       state.projectState.selectedMolecule = null;
     });
@@ -392,9 +428,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                         title: `${t('message.DoYouWantToRemoveAllMoleculesFromGallery', lang)}`,
                         icon: <QuestionCircleOutlined />,
                         type: 'confirm',
-                        // reverse the button order so no is the default
+                        // reverse the button order so 'no' is the default
                         onCancel: () => {
-                          removeAllMolecules();
+                          clearAllMolecules();
                           setUpdateFlag(!updateFlag);
                           setChanged(true);
                         },
@@ -816,6 +852,44 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       state.regressionAnalysis = false;
     });
   }, [projectTitle, regressionDegree, xFormula, yFormula, xAxisNameScatterPlot, yAxisNameScatterPlot]);
+
+  const undoableImportByNames = () => {
+    const undoable = {
+      name: 'Import Molecules',
+      timestamp: Date.now(),
+      moleculeNames: [...moleculeNames],
+      undo: () => {
+        for (const n of undoable.moleculeNames) {
+          removeMoleculeByName(n);
+        }
+      },
+      redo: () => {
+        importByNames();
+      },
+    } as UndoableImportMolecule;
+    addUndoable(undoable);
+    importByNames();
+  };
+
+  const importByNames = () => {
+    for (const name of moleculeNames) {
+      const m = getMolecule(name);
+      if (m) {
+        const added = addMolecule(m);
+        if (added) {
+          setCommonStore((state) => {
+            state.projectState.selectedMolecule = m;
+          });
+          setUpdateFlag(!updateFlag);
+          setChanged(true);
+        } else {
+          showInfo(t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + name, 3);
+        }
+      } else {
+        showError(t('projectPanel.MoleculeNotFound', lang) + ': ' + name, 3);
+      }
+    }
+  };
 
   return (
     <Container
@@ -1389,25 +1463,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           />
         )}
         <ImportMoleculeModal
-          importByNames={() => {
-            for (const name of moleculeNames) {
-              const m = getMolecule(name);
-              if (m) {
-                const added = addMolecule(m);
-                if (added) {
-                  setCommonStore((state) => {
-                    state.projectState.selectedMolecule = m;
-                  });
-                  setUpdateFlag(!updateFlag);
-                  setChanged(true);
-                } else {
-                  showInfo(t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + name, 3);
-                }
-              } else {
-                showError(t('projectPanel.MoleculeNotFound', lang) + ': ' + name, 3);
-              }
-            }
-          }}
+          importByNames={undoableImportByNames}
           setNames={setMoleculeNames}
           getNames={() => moleculeNames}
           setDialogVisible={setImportMoleculeDialogVisible}
