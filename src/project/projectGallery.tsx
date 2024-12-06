@@ -58,6 +58,7 @@ import RegressionImage from '../assets/regression.png';
 import PolynomialRegression from './regression.tsx';
 import ScatterChartNumericValues from './scatterChartNumericValues.tsx';
 import ParallelCoordinatesNumericValuesContent from './parallelCoordinatesNumericValues.tsx';
+import { UndoableDeleteMolecule } from '../undo/UndoableDelete.ts';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);
@@ -267,6 +268,33 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     hideGallery(true);
   };
 
+  const removeSelectedMolecule = () => {
+    if (!selectedMolecule) return;
+    const undoable = {
+      name: 'Remove Selected Molecule',
+      timestamp: Date.now(),
+      selectedMolecule,
+      selectedIndex: molecules.indexOf(selectedMolecule),
+      undo: () => {
+        addMolecule(undoable.selectedMolecule, undoable.selectedIndex);
+        setCommonStore((state) => {
+          state.projectState.selectedMolecule = undoable.selectedMolecule;
+        });
+      },
+      redo: () => {
+        removeMolecule(undoable.selectedMolecule);
+        setCommonStore((state) => {
+          state.projectState.selectedMolecule = null;
+        });
+      },
+    } as UndoableDeleteMolecule;
+    useStore.getState().addUndoable(undoable);
+    removeMolecule(selectedMolecule);
+    setCommonStore((state) => {
+      state.projectState.selectedMolecule = null;
+    });
+  };
+
   const descriptionItems: CollapseProps['items'] = [
     {
       key: '1',
@@ -344,10 +372,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     style={{ border: 'none', padding: '4px' }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      removeMolecule(selectedMolecule);
-                      setCommonStore((state) => {
-                        state.projectState.selectedMolecule = null;
-                      });
+                      removeSelectedMolecule();
                       setUpdateFlag(!updateFlag);
                       setChanged(true);
                     }}

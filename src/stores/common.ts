@@ -59,7 +59,7 @@ export interface CommonStoreState {
 
   projectToOpen: ProjectInfo | null;
 
-  addMolecule: (molecule: MoleculeInterface) => boolean;
+  addMolecule: (molecule: MoleculeInterface, index?: number) => boolean;
   addMolecules: (molecules: MoleculeInterface[]) => void;
   removeMolecule: (molecule: MoleculeInterface) => void;
   removeAllMolecules: () => void;
@@ -238,7 +238,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
 
           projectToOpen: null,
 
-          addMolecule(molecule: MoleculeInterface) {
+          addMolecule(molecule: MoleculeInterface, index?: number) {
             let added = true;
             immerSet((state: CommonStoreState) => {
               for (const m of state.projectState.molecules) {
@@ -248,7 +248,13 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                 }
               }
               if (added) {
-                state.projectState.molecules.push(molecule);
+                if (index === undefined) {
+                  state.projectState.molecules.push(molecule);
+                } else {
+                  if (index >= 0 && index <= state.projectState.molecules.length) {
+                    state.projectState.molecules.splice(index, 0, molecule);
+                  }
+                }
               }
             });
             return added;

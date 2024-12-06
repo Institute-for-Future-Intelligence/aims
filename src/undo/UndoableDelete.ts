@@ -3,9 +3,15 @@
  */
 
 import { Undoable } from './Undoable';
+import { MoleculeInterface } from '../types.ts';
 
 export interface UndoableDelete extends Undoable {
   selectedId: string;
+}
+
+export interface UndoableDeleteMolecule extends Undoable {
+  selectedMolecule: MoleculeInterface;
+  selectedIndex: number;
 }
 
 export interface UndoableDeleteMultiple extends UndoableDelete {
