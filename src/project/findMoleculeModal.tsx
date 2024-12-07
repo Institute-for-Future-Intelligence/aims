@@ -31,6 +31,7 @@ const FindMoleculeModal = React.memo(
     isDialogVisible,
   }: FindMoleculeModalProps) => {
     const language = useStore(Selector.language);
+    const molecules = useStore(Selector.molecules);
 
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
     const [dragEnabled, setDragEnabled] = useState<boolean>(false);
@@ -65,6 +66,13 @@ const FindMoleculeModal = React.memo(
       setDialogVisible(false);
     };
 
+    const alreadyImported = (name: string) => {
+      for (const m of molecules) {
+        if (m.name === name) return true;
+      }
+      return false;
+    };
+
     const selectMolecule = (checked: boolean, name: string) => {
       if (checked) {
         if (!selectionRef.current.includes(name)) {
@@ -93,6 +101,12 @@ const FindMoleculeModal = React.memo(
           </div>
         }
         open={isDialogVisible()}
+        afterOpenChange={(open: boolean) => {
+          if (open) {
+            selectionRef.current = [];
+            setUpdateFlag(!updateFlag);
+          }
+        }}
         footer={[
           <Button key="Cancel" onClick={onCancel}>
             {t('word.Cancel', lang)}
@@ -120,10 +134,11 @@ const FindMoleculeModal = React.memo(
               <div>{t('message.NoSimilarMoleculesWereFound', lang)}</div>
             ) : (
               similarMoleculesByInChI.map((value) => {
+                if (alreadyImported(value.name)) return;
                 return (
                   <div key={value.name}>
                     <Checkbox onChange={(e) => selectMolecule(e.target.checked, value.name)}>
-                      {value.name + ' (' + value.formula + ')'}{' '}
+                      {value.name + ' (' + value.formula + ') '}
                       <span style={{ fontSize: '10px' }}>
                         <i>D</i>
                         <sub>L</sub>={value.distance}
@@ -140,6 +155,7 @@ const FindMoleculeModal = React.memo(
               <div>{t('message.NoSimilarMoleculesWereFound', lang)}</div>
             ) : (
               similarMoleculesBySmiles.map((value) => {
+                if (alreadyImported(value.name)) return;
                 return (
                   <div key={value.name}>
                     <Checkbox onChange={(e) => selectMolecule(e.target.checked, value.name)}>

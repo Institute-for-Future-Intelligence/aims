@@ -459,6 +459,7 @@ export const findSimilarMolecules = (
   type: ChemicalNotation,
   numberOfMostSimilarMolecules: number,
   molecule: MoleculeInterface,
+  excludedMolecules: MoleculeInterface[],
   molecularProperties: { [key: string]: MolecularProperties },
 ): { name: string; formula: string; distance: number }[] => {
   const prop = molecularProperties[molecule.name];
@@ -468,6 +469,11 @@ export const findSimilarMolecules = (
       const threshold = prop.heavyAtomCount * 2;
       for (const [key, value] of Object.entries(molecularProperties)) {
         if (key === molecule.name || !value.smiles) continue;
+        let excluded = false;
+        for (const m of excludedMolecules) {
+          if (m.name === key) excluded = true;
+        }
+        if (excluded) continue;
         const d = distance(value.smiles, prop.smiles);
         if (d <= threshold) {
           selectedNames.push({ name: key, formula: value.formula, distance: d });
@@ -479,6 +485,11 @@ export const findSimilarMolecules = (
       const threshold = prop.heavyAtomCount * 5;
       for (const [key, value] of Object.entries(molecularProperties)) {
         if (key === molecule.name || !value.inChI) continue;
+        let excluded = false;
+        for (const m of excludedMolecules) {
+          if (m.name === key) excluded = true;
+        }
+        if (excluded) continue;
         const d = distance(value.inChI, prop.inChI);
         if (d <= threshold) {
           selectedNames.push({ name: key, formula: value.formula, distance: d });

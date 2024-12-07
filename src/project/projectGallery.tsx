@@ -374,12 +374,14 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                         ChemicalNotation.INCHI,
                         numberOfMostSimilarMolecules,
                         selectedMolecule,
+                        molecules,
                         providedMolecularProperties,
                       );
                       similarMoleculesBySmilesRef.current = findSimilarMolecules(
                         ChemicalNotation.SMILES,
                         numberOfMostSimilarMolecules,
                         selectedMolecule,
+                        molecules,
                         providedMolecularProperties,
                       );
                       setFindMoleculeDialogVisible(true);
@@ -859,9 +861,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       timestamp: Date.now(),
       moleculeNames: [...moleculeNames],
       undo: () => {
-        for (const n of undoable.moleculeNames) {
-          removeMoleculeByName(n);
-        }
+        for (const n of undoable.moleculeNames) removeMoleculeByName(n);
       },
       redo: () => {
         importByNames();
@@ -889,6 +889,33 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
         showError(t('projectPanel.MoleculeNotFound', lang) + ': ' + name, 3);
       }
     }
+  };
+
+  const undoableImportSimilarMolecules = (names: string[]) => {
+    const undoable = {
+      name: 'Import Similar Molecules',
+      timestamp: Date.now(),
+      moleculeNames: [...names],
+      undo: () => {
+        for (const n of undoable.moleculeNames) {
+          removeMoleculeByName(n);
+        }
+      },
+      redo: () => {
+        importSimilarMolecules(undoable.moleculeNames);
+      },
+    } as UndoableImportMolecule;
+    addUndoable(undoable);
+    importSimilarMolecules(names);
+  };
+
+  const importSimilarMolecules = (names: string[]) => {
+    const molecules: MoleculeInterface[] = [];
+    for (const name of names) {
+      const m = getMolecule(name);
+      if (m) molecules.push(m);
+    }
+    addMolecules(molecules);
   };
 
   return (
@@ -1451,12 +1478,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             setDialogVisible={setFindMoleculeDialogVisible}
             isDialogVisible={() => findMoleculeDialogVisible}
             importByNames={(names: string[]) => {
-              const molecules: MoleculeInterface[] = [];
-              for (const name of names) {
-                const m = getMolecule(name);
-                if (m) molecules.push(m);
-              }
-              addMolecules(molecules);
+              undoableImportSimilarMolecules(names);
               setUpdateFlag(!updateFlag);
               setChanged(true);
             }}

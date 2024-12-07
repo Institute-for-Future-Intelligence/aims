@@ -103,7 +103,7 @@ const ImportMoleculeModal = React.memo(
       monatomicMolecules.length +
       crystals.length;
 
-    const alreadySelected = (name: string) => {
+    const alreadyImported = (name: string) => {
       for (const m of molecules) {
         if (m.name === name) return true;
       }
@@ -212,7 +212,7 @@ const ImportMoleculeModal = React.memo(
             >
               {collection.map((d, i) => {
                 const prop = getProvidedMolecularProperties(d.name);
-                if (!alreadySelected(d.name)) {
+                if (!alreadyImported(d.name)) {
                   const formula = prop?.formula;
                   return (
                     <Option key={`${i}-${d.name}`} value={d.name}>
