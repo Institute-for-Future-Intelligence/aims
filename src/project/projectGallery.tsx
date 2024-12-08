@@ -37,7 +37,6 @@ import { saveSvg, showError, showInfo } from '../helpers.ts';
 import ParallelCoordinates from '../components/parallelCoordinates.tsx';
 import { ProjectUtil } from './ProjectUtil.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
-import { updateDataColoring } from '../cloudProjectUtil.ts';
 import { Filter, FilterType } from '../Filter.ts';
 import { CartesianGrid, Cell, Dot, Label, Legend, Scatter, ScatterChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
@@ -60,6 +59,7 @@ import ScatterChartNumericValues from './scatterChartNumericValues.tsx';
 import ParallelCoordinatesNumericValuesContent from './parallelCoordinatesNumericValues.tsx';
 import { UndoableDeleteMolecule, UndoableDeleteMolecules } from '../undo/UndoableDelete.ts';
 import { UndoableImportMolecule } from '../undo/UndoableImportMolecule.ts';
+import { UndoableChange } from '../undo/UndoableChange.ts';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);
@@ -126,7 +126,6 @@ const v = new Vector2();
 
 const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const setCommonStore = useStore(Selector.set);
-  const user = useStore(Selector.user);
   const addUndoable = useStore(Selector.addUndoable);
   const language = useStore(Selector.language);
   const loggable = useStore.getState().loggable;
@@ -145,7 +144,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const viewerBackground = useStore(Selector.projectViewerBackground);
   const labelType = useStore(Selector.labelType);
   const graphType = useStore(Selector.graphType);
-  const projectOwner = useStore(Selector.projectOwner);
   const projectType = useStore(Selector.projectType);
   const projectTitle = useStore(Selector.projectTitle);
   const projectDescription = useStore(Selector.projectDescription);
@@ -193,8 +191,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
-
-  const isOwner = user.uid === projectOwner;
 
   const descriptionTextAreaEditableRef = useRef<boolean>(false);
   const descriptionRef = useRef<string | null>(null);
@@ -553,7 +549,24 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     },
   ];
 
-  const localSelectDataColoring = (value: DataColoring) => {
+  const selectDataColoring = (value: DataColoring) => {
+    const undoable = {
+      name: 'Toggle Data Coloring',
+      timestamp: Date.now(),
+      oldValue: projectDataColoring,
+      newValue: value,
+      undo: () => {
+        setDataColoring(undoable.oldValue as DataColoring);
+      },
+      redo: () => {
+        setDataColoring(undoable.newValue as DataColoring);
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setDataColoring(value);
+  };
+
+  const setDataColoring = (value: DataColoring) => {
     setCommonStore((state) => {
       state.projectState.dataColoring = value;
     });
@@ -561,18 +574,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       state.updateProjectsFlag = true;
     });
     setUpdateFlag(!updateFlag);
-  };
-
-  const selectDataColoring = (value: DataColoring) => {
-    if (isOwner) {
-      if (user.uid && projectTitle) {
-        updateDataColoring(user.uid, projectTitle, value).then(() => {
-          localSelectDataColoring(value);
-        });
-      }
-    } else {
-      localSelectDataColoring(value);
-    }
     setChanged(true);
   };
 

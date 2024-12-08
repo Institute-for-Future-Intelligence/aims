@@ -242,23 +242,6 @@ export const updateDescription = (userid: string, projectTitle: string, descript
     });
 };
 
-export const updateDataColoring = (userid: string, projectTitle: string, dataColoring: DataColoring) => {
-  const lang = { lng: useStore.getState().language };
-  return firebase
-    .firestore()
-    .collection('users')
-    .doc(userid)
-    .collection('projects')
-    .doc(projectTitle)
-    .update({ dataColoring })
-    .then(() => {
-      // ignore
-    })
-    .catch((error) => {
-      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
-    });
-};
-
 export const updateXAxisNameScatterPlot = (
   userid: string,
   projectTitle: string,

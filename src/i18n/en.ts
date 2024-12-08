@@ -40,6 +40,7 @@ export const i18n_en = {
     },
 
     word: {
+      Formula: 'Formula',
       AtomsLowerCasePlural: 'atoms',
       Save: 'Save',
       Results: 'Results',

@@ -31,6 +31,8 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
     return { lng: language };
   }, [language]);
 
+  const fontSize = '11px';
+
   useEffect(() => {
     dataRef.current = [];
     for (const [i, d] of data.entries()) {
@@ -90,7 +92,7 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
   };
 
   return (
-    <div style={{ width: '800px' }}>
+    <div style={{ width: '900px' }}>
       <Table
         size={'small'}
         style={{ width: '100%', direction: 'ltr', verticalAlign: 'top' }}
@@ -107,14 +109,46 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
       >
         <Column
           title={t('molecularViewer.Molecule', lang)}
-          dataIndex="formula"
-          key="formula"
-          // width={'10%'}
+          dataIndex="name"
+          key="name"
           render={(formula, record: any) => {
             return (
               <Typography.Text
                 style={{
-                  fontSize: '12px',
+                  fontSize,
+                  fontWeight: record.selected ? 'bold' : 'normal',
+                  color: record.invisible ? 'silver' : 'black',
+                  verticalAlign: 'middle',
+                }}
+              >
+                {record.name}
+              </Typography.Text>
+            );
+          }}
+          onHeaderCell={() => {
+            return { style: { fontSize: '10px', fontWeight: 'bold' } };
+          }}
+          onCell={(record, index) => {
+            return {
+              style: {
+                paddingLeft: '2px',
+                paddingTop: '2px',
+                paddingBottom: '2px',
+                border: '1px solid lightgray',
+                background: index === selectedRow ? 'lavender' : 'white',
+              },
+            };
+          }}
+        />
+        <Column
+          title={t('word.Formula', lang)}
+          dataIndex="formula"
+          key="formula"
+          render={(formula, record: any) => {
+            return (
+              <Typography.Text
+                style={{
+                  fontSize,
                   fontWeight: record.selected ? 'bold' : 'normal',
                   color: record.invisible ? 'silver' : 'black',
                   verticalAlign: 'middle',
@@ -150,7 +184,7 @@ const ScatterChartNumericValuesContent = React.memo(({ variables, data }: Parall
                 return (
                   <Typography.Text
                     style={{
-                      fontSize: '12px',
+                      fontSize,
                       fontWeight: record.selected ? 'bold' : 'normal',
                       color: record.invisible ? 'silver' : 'black',
                       verticalAlign: 'middle',

@@ -19,6 +19,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
   const language = useStore(Selector.language);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const hiddenProperties = useStore(Selector.hiddenProperties);
+  const addUndoable = useStore(Selector.addUndoable);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -61,7 +62,6 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
       name: 'Toggle ' + property,
       timestamp: Date.now(),
       checked: selected,
-      property,
       undo: () => {
         setProperty(!undoable.checked, property);
       },
@@ -69,7 +69,7 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         setProperty(undoable.checked, property);
       },
     } as UndoableCheck;
-    useStore.getState().addUndoable(undoable);
+    addUndoable(undoable);
     setProperty(selected, property);
   };
 
