@@ -20,7 +20,7 @@ import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 const { Option } = Select;
 
 interface ProjectSettingsContentProps {
-  numberOfColumns: number;
+  columnCount: number;
   viewerStyle: MolecularViewerStyle;
   viewerMaterial: MolecularViewerMaterial;
   viewerBackground: string;
@@ -30,7 +30,7 @@ interface ProjectSettingsContentProps {
 
 const ProjectSettingsContent = React.memo(
   ({
-    numberOfColumns,
+    columnCount,
     viewerStyle,
     viewerMaterial,
     viewerBackground,
@@ -39,11 +39,20 @@ const ProjectSettingsContent = React.memo(
   }: ProjectSettingsContentProps) => {
     const language = useStore(Selector.language);
     const setChanged = usePrimitiveStore(Selector.setChanged);
+    const addUndoable = useStore(Selector.addUndoable);
+    const numberOfColumns = useStore(Selector.numberOfColumns);
 
     const { t } = useTranslation();
     const lang = useMemo(() => {
       return { lng: language };
     }, [language]);
+
+    const setNumberOfColumns = (n: number) => {
+      useStore.getState().set((state) => {
+        state.projectState.numberOfColumns = n;
+      });
+      setChanged(true);
+    };
 
     const setGraphType = (graphType: GraphType) => {
       useStore.getState().set((state) => {
@@ -81,10 +90,17 @@ const ProjectSettingsContent = React.memo(
       setChanged(true);
     };
 
-    const setNumberOfColumns = (numberOfColumns: number) => {
-      useStore.getState().set((state) => {
-        state.projectState.numberOfColumns = numberOfColumns;
-      });
+    const setColumnCount = (noc: number) => {
+      const undoable = {
+        name: 'Set Number of Columns',
+        timestamp: Date.now(),
+        oldValue: numberOfColumns,
+        newValue: noc,
+        undo: () => setNumberOfColumns(undoable.oldValue as number),
+        redo: () => setNumberOfColumns(undoable.newValue as number),
+      } as UndoableChange;
+      addUndoable(undoable);
+      setNumberOfColumns(noc);
       setChanged(true);
     };
 
@@ -100,10 +116,10 @@ const ProjectSettingsContent = React.memo(
               min={2}
               max={10}
               step={1}
-              value={numberOfColumns}
+              value={columnCount}
               onChange={(value) => {
                 if (value === null) return;
-                setNumberOfColumns(value);
+                setColumnCount(value);
               }}
             />
           </Col>

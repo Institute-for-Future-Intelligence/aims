@@ -481,7 +481,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               }
               content={
                 <ProjectSettingsContent
-                  numberOfColumns={numberOfColumns}
+                  columnCount={numberOfColumns}
                   viewerStyle={viewerStyle}
                   viewerMaterial={viewerMaterial}
                   viewerBackground={viewerBackground}
