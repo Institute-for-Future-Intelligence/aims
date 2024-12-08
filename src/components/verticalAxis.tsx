@@ -12,6 +12,8 @@ import { Range } from '../types';
 import { useTranslation } from 'react-i18next';
 import { Filter, FilterType } from '../Filter';
 import { ProjectUtil } from '../project/ProjectUtil.ts';
+import { UndoableChange } from '../undo/UndoableChange.ts';
+import { Undoable } from '../undo/Undoable.ts';
 
 type VerticalAxisProps = {
   variable: string;
@@ -27,6 +29,7 @@ type VerticalAxisProps = {
   step: number;
   value?: number;
   filter?: Filter;
+  hover?: (i: number) => void;
 };
 
 const DEFAULT_TICK_LENGTH = 8;
@@ -46,14 +49,13 @@ const VerticalAxis = React.memo(
     step,
     value,
     filter,
+    hover,
   }: VerticalAxisProps) => {
     const setCommonStore = useStore(Selector.set);
-    const user = useStore(Selector.user);
     const language = useStore(Selector.language);
-    const projectOwner = useStore(Selector.projectOwner);
-    const projectTitle = useStore(Selector.projectTitle);
     const selectedProperty = useStore(Selector.selectedProperty);
     const setChanged = usePrimitiveStore(Selector.setChanged);
+    const addUndoable = useStore(Selector.addUndoable);
 
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
     const minRef = useRef<number>(min);
@@ -69,22 +71,9 @@ const VerticalAxis = React.memo(
 
     const { t } = useTranslation();
     const lang = { lng: language };
-    const isOwner = user.uid === projectOwner;
     const range = yScale.range();
     const areaHeight = yScale(min) - yScale(max);
     const areaWidth = 40;
-
-    const updateSelectedProperty = async (userid: string, projectTitle: string, selectedProperty: string | null) => {
-      // TODO Firestore
-    };
-
-    const addRange = async (userid: string, projectTitle: string, range: Range) => {
-      // TODO Firestore
-    };
-
-    const updateRanges = async (userid: string, projectTitle: string, ranges: Range[]) => {
-      // TODO Firestore
-    };
 
     const ticks = useMemo(() => {
       const height = range[0] - range[1];
@@ -98,23 +87,28 @@ const VerticalAxis = React.memo(
       }));
     }, [yScale, tickInterval, type, tickIntegers]);
 
-    const localSelect = () => {
+    const select = () => {
+      const undoable = {
+        name: (selectedProperty === variable ? 'Deselect' : 'Select') + ' Property: ' + variable,
+        timestamp: Date.now(),
+        undo: () => {
+          toggleSelect();
+        },
+        redo: () => {
+          toggleSelect();
+        },
+      } as Undoable;
+      addUndoable(undoable);
+      toggleSelect();
+    };
+
+    const toggleSelect = () => {
       setCommonStore((state) => {
         state.projectState.selectedProperty = state.projectState.selectedProperty !== variable ? variable : null;
       });
       usePrimitiveStore.getState().set((state) => {
         state.updateProjectsFlag = true;
       });
-    };
-
-    const select = () => {
-      if (isOwner && projectOwner && projectTitle) {
-        updateSelectedProperty(projectOwner, projectTitle, selectedProperty !== variable ? variable : null).then(() => {
-          localSelect();
-        });
-      } else {
-        localSelect();
-      }
       setChanged(true);
     };
 
@@ -158,8 +152,175 @@ const VerticalAxis = React.memo(
       return Number.MIN_SAFE_INTEGER;
     };
 
+    const setMin = (newValue: number | null) => {
+      if (newValue === null) return;
+      const oldValue = minRef.current;
+      const undoableChange = {
+        name: 'Set Minimum: ' + name,
+        timestamp: Date.now(),
+        oldValue,
+        newValue,
+        undo: () => {
+          setRangeMinimum(oldValue);
+        },
+        redo: () => {
+          setRangeMinimum(newValue);
+        },
+      } as UndoableChange;
+      addUndoable(undoableChange);
+      setRangeMinimum(newValue);
+    };
+
+    const setRangeMinimum = (value: number) => {
+      setCommonStore((state) => {
+        if (state.projectState.ranges) {
+          let index = -1;
+          let range = null;
+          for (const [i, r] of state.projectState.ranges.entries()) {
+            if (r.variable === variable) {
+              index = i;
+              range = r;
+              break;
+            }
+          }
+          if (index >= 0 && range) {
+            state.projectState.ranges[index] = {
+              variable: range.variable,
+              minimum: value,
+              maximum: range.maximum,
+            } as Range;
+          } else {
+            const r = { variable, minimum: value, maximum: max } as Range;
+            state.projectState.ranges.push(r);
+          }
+        } else {
+          const r = { variable, minimum: value, maximum: max } as Range;
+          state.projectState.ranges = [r];
+        }
+      });
+      minRef.current = Number(value);
+      setUpdateFlag(!updateFlag);
+      setChanged(true);
+    };
+
     const getMax = () => {
       return Number.MAX_SAFE_INTEGER;
+    };
+
+    const setMax = (newValue: number | null) => {
+      if (newValue === null) return;
+      const oldValue = maxRef.current;
+      const undoableChange = {
+        name: 'Set Maximum: ' + name,
+        timestamp: Date.now(),
+        oldValue,
+        newValue,
+        undo: () => {
+          setRangeMaximum(oldValue);
+        },
+        redo: () => {
+          setRangeMaximum(newValue);
+        },
+      } as UndoableChange;
+      addUndoable(undoableChange);
+      setRangeMaximum(newValue);
+    };
+
+    const setRangeMaximum = (value: number) => {
+      setCommonStore((state) => {
+        if (state.projectState.ranges) {
+          let index = -1;
+          let range = null;
+          for (const [i, r] of state.projectState.ranges.entries()) {
+            if (r.variable === variable) {
+              index = i;
+              range = r;
+              break;
+            }
+          }
+          if (index >= 0 && range) {
+            state.projectState.ranges[index] = {
+              variable: range.variable,
+              minimum: range.minimum,
+              maximum: value,
+            } as Range;
+          } else {
+            const r = { variable, minimum: min, maximum: value } as Range;
+            state.projectState.ranges.push(r);
+          }
+        } else {
+          const r = { variable, minimum: min, maximum: value } as Range;
+          state.projectState.ranges = [r];
+        }
+      });
+      maxRef.current = Number(value);
+      setUpdateFlag(!updateFlag);
+      setChanged(true);
+    };
+
+    const changeFilter = (values: number[]) => {
+      if (!filter) return;
+      const oldValue = [filter.lowerBound, filter.upperBound] as number[];
+      const undoableChange = {
+        name: 'Set Filter: ' + name,
+        timestamp: Date.now(),
+        oldValue,
+        newValue: values,
+        undo: () => {
+          setFilterBounds(oldValue);
+        },
+        redo: () => {
+          setFilterBounds(values);
+        },
+      } as UndoableChange;
+      addUndoable(undoableChange);
+      setFilterBounds(values);
+    };
+
+    const setFilterBounds = (values: number[]) => {
+      if (filter) {
+        filter.lowerBound = values[0];
+        filter.upperBound = values[1];
+        if (hover) hover(-1);
+        usePrimitiveStore.getState().set((state) => {
+          state.hoveredMolecule = null;
+        });
+        setCommonStore((state) => {
+          if (state.projectState.filters) {
+            let index = -1;
+            for (const [i, f] of state.projectState.filters.entries()) {
+              if (f.variable === variable) {
+                index = i;
+                break;
+              }
+            }
+            if (index >= 0) {
+              state.projectState.filters[index] = {
+                variable: filter.variable,
+                type: filter.type,
+                lowerBound: filter.lowerBound,
+                upperBound: filter.upperBound,
+              } as Filter;
+            } else {
+              const f = {
+                variable,
+                type: filter.type,
+                lowerBound: filter.lowerBound,
+                upperBound: filter.upperBound,
+              } as Filter;
+              state.projectState.filters.push(f);
+            }
+            for (const m of state.projectState.molecules) {
+              const p = state.molecularPropertiesMap.get(m.name);
+              if (p) {
+                m.excluded = ProjectUtil.isExcluded(state.projectState.filters, p);
+              }
+            }
+          }
+        });
+        setUpdateFlag(!updateFlag);
+        setChanged(true);
+      }
     };
 
     return (
@@ -188,47 +349,8 @@ const VerticalAxis = React.memo(
                 max={maxRef.current - step}
                 step={step}
                 value={minRef.current}
-                onChange={(value) => {
-                  if (value === null) return;
-                  setCommonStore((state) => {
-                    if (state.projectState.ranges) {
-                      let index = -1;
-                      let range = null;
-                      for (const [i, r] of state.projectState.ranges.entries()) {
-                        if (r.variable === variable) {
-                          index = i;
-                          range = r;
-                          break;
-                        }
-                      }
-                      if (index >= 0 && range) {
-                        state.projectState.ranges[index] = {
-                          variable: range.variable,
-                          minimum: value,
-                          maximum: range.maximum,
-                        } as Range;
-                        if (user.uid && state.projectState.title) {
-                          updateRanges(user.uid, state.projectState.title, state.projectState.ranges);
-                        }
-                      } else {
-                        const r = { variable, minimum: value, maximum: max } as Range;
-                        state.projectState.ranges.push(r);
-                        if (user.uid && state.projectState.title) {
-                          addRange(user.uid, state.projectState.title, r);
-                        }
-                      }
-                    } else {
-                      const r = { variable, minimum: value, maximum: max } as Range;
-                      state.projectState.ranges = [r];
-                      if (user.uid && state.projectState.title) {
-                        addRange(user.uid, state.projectState.title, r);
-                      }
-                    }
-                  });
-                  minRef.current = Number(value);
-                  setUpdateFlag(!updateFlag);
-                  setChanged(true);
-                }}
+                onPressEnter={(e) => setMin(Number.parseFloat((e.target as HTMLInputElement).value))}
+                onStep={(value) => setMin(value)}
               />
               <br />
               <InputNumber
@@ -239,47 +361,8 @@ const VerticalAxis = React.memo(
                 max={getMax()}
                 step={step}
                 value={maxRef.current}
-                onChange={(value) => {
-                  if (value === null) return;
-                  setCommonStore((state) => {
-                    if (state.projectState.ranges) {
-                      let index = -1;
-                      let range = null;
-                      for (const [i, r] of state.projectState.ranges.entries()) {
-                        if (r.variable === variable) {
-                          index = i;
-                          range = r;
-                          break;
-                        }
-                      }
-                      if (index >= 0 && range) {
-                        state.projectState.ranges[index] = {
-                          variable: range.variable,
-                          minimum: range.minimum,
-                          maximum: value,
-                        } as Range;
-                        if (user.uid && state.projectState.title) {
-                          updateRanges(user.uid, state.projectState.title, state.projectState.ranges);
-                        }
-                      } else {
-                        const r = { variable, minimum: min, maximum: value } as Range;
-                        state.projectState.ranges.push(r);
-                        if (user.uid && state.projectState.title) {
-                          addRange(user.uid, state.projectState.title, r);
-                        }
-                      }
-                    } else {
-                      const r = { variable, minimum: min, maximum: value } as Range;
-                      state.projectState.ranges = [r];
-                      if (user.uid && state.projectState.title) {
-                        addRange(user.uid, state.projectState.title, r);
-                      }
-                    }
-                  });
-                  maxRef.current = Number(value);
-                  setUpdateFlag(!updateFlag);
-                  setChanged(true);
-                }}
+                onPressEnter={(e) => setMax(Number.parseFloat((e.target as HTMLInputElement).value))}
+                onStep={(value) => setMax(value)}
               />
             </div>
           }
@@ -359,50 +442,8 @@ const VerticalAxis = React.memo(
                 max={max}
                 step={(max - min) / 100}
                 value={[filter.lowerBound ?? min, filter.upperBound ?? max]}
-                onChange={(values) => {
-                  if (filter) {
-                    filter.lowerBound = values[0];
-                    filter.upperBound = values[1];
-                    usePrimitiveStore.getState().set((state) => {
-                      state.hoveredMolecule = null;
-                    });
-                    setCommonStore((state) => {
-                      if (state.projectState.filters) {
-                        let index = -1;
-                        for (const [i, f] of state.projectState.filters.entries()) {
-                          if (f.variable === variable) {
-                            index = i;
-                            break;
-                          }
-                        }
-                        if (index >= 0) {
-                          state.projectState.filters[index] = {
-                            variable: filter.variable,
-                            type: filter.type,
-                            lowerBound: filter.lowerBound,
-                            upperBound: filter.upperBound,
-                          } as Filter;
-                        } else {
-                          const f = {
-                            variable,
-                            type: filter.type,
-                            lowerBound: filter.lowerBound,
-                            upperBound: filter.upperBound,
-                          } as Filter;
-                          state.projectState.filters.push(f);
-                        }
-                        for (const m of state.projectState.molecules) {
-                          const p = state.molecularPropertiesMap.get(m.name);
-                          if (p) {
-                            m.excluded = ProjectUtil.isExcluded(state.projectState.filters, p);
-                          }
-                        }
-                      }
-                    });
-                    setUpdateFlag(!updateFlag);
-                    setChanged(true);
-                  }
-                }}
+                onChange={(values) => setFilterBounds(values)}
+                onChangeComplete={(values) => changeFilter(values)}
                 range={true}
                 vertical
               />

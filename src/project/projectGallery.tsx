@@ -918,6 +918,17 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     addMolecules(molecules);
   };
 
+  const hover = (i: number) => {
+    usePrimitiveStore.getState().set((state) => {
+      for (const [index, m] of projectMolecules.entries()) {
+        if (index === i) {
+          state.hoveredMolecule = m;
+          break;
+        }
+      }
+    });
+  };
+
   return (
     <Container
       onContextMenu={(e) => {
@@ -1175,16 +1186,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   digits={digits}
                   tickIntegers={tickIntegers}
                   filters={filters}
-                  hover={(i: number) => {
-                    usePrimitiveStore.getState().set((state) => {
-                      for (const [index, m] of projectMolecules.entries()) {
-                        if (index === i) {
-                          state.hoveredMolecule = m;
-                          break;
-                        }
-                      }
-                    });
-                  }}
+                  hover={hover}
                   hoveredIndex={projectMolecules && hoveredMolecule ? projectMolecules.indexOf(hoveredMolecule) : -1}
                   selectedIndex={projectMolecules && selectedMolecule ? projectMolecules.indexOf(selectedMolecule) : -1}
                 />

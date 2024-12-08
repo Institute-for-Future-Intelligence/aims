@@ -41,7 +41,7 @@ type ParallelCoordinatesProps = {
   digits: number[];
   tickIntegers: boolean[];
   filters: Filter[];
-  hover?: (i: number) => void;
+  hover: (i: number) => void;
   hoveredIndex: number;
   selectedIndex: number;
 };
@@ -159,6 +159,7 @@ const ParallelCoordinates = React.memo(
                       ? (data[selectedIndex][variable] as number)
                       : undefined
                 }
+                hover={hover}
               />
             </g>
           );

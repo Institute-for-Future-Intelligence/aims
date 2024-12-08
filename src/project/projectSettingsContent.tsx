@@ -90,18 +90,17 @@ const ProjectSettingsContent = React.memo(
       setChanged(true);
     };
 
-    const setColumnCount = (noc: number) => {
+    const setColumnCount = (n: number) => {
       const undoable = {
         name: 'Set Number of Columns',
         timestamp: Date.now(),
         oldValue: numberOfColumns,
-        newValue: noc,
+        newValue: n,
         undo: () => setNumberOfColumns(undoable.oldValue as number),
         redo: () => setNumberOfColumns(undoable.newValue as number),
       } as UndoableChange;
       addUndoable(undoable);
-      setNumberOfColumns(noc);
-      setChanged(true);
+      setNumberOfColumns(n);
     };
 
     return (
