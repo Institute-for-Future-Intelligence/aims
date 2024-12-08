@@ -8,7 +8,7 @@ import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useTranslation } from 'react-i18next';
-import { updateHiddenProperties } from '../cloudProjectUtil.ts';
+import { UndoableCheck } from '../undo/UndoableCheck.ts';
 
 interface PropertiesSelectionContentProps {
   updateHiddenFlag: () => void;
@@ -17,17 +17,13 @@ interface PropertiesSelectionContentProps {
 const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesSelectionContentProps) => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
-  const user = useStore(Selector.user);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const hiddenProperties = useStore(Selector.hiddenProperties);
-  const projectOwner = useStore(Selector.projectOwner);
-  const projectTitle = useStore(Selector.projectTitle);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
-  const isOwner = user.uid === projectOwner;
 
   const propertySelectionChangedRef = useRef<boolean>(false);
   const atomCountSelectionRef = useRef<boolean>(!hiddenProperties?.includes('atomCount'));
@@ -60,7 +56,25 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
     meltingPointSelectionRef.current = !hiddenProperties?.includes('meltingPoint');
   }, [hiddenProperties]);
 
-  const localSelectProperty = (selected: boolean, property: string) => {
+  const selectProperty = (selected: boolean, property: string) => {
+    const undoable = {
+      name: 'Toggle ' + property,
+      timestamp: Date.now(),
+      checked: selected,
+      property,
+      undo: () => {
+        setProperty(!undoable.checked, property);
+      },
+      redo: () => {
+        setProperty(undoable.checked, property);
+      },
+    } as UndoableCheck;
+    useStore.getState().addUndoable(undoable);
+    setProperty(selected, property);
+  };
+
+  const setProperty = (selected: boolean, property: string) => {
+    propertySelectionChangedRef.current = true;
     setCommonStore((state) => {
       if (state.projectState.hiddenProperties) {
         if (selected) {
@@ -74,19 +88,6 @@ const PropertiesSelectionContent = React.memo(({ updateHiddenFlag }: PropertiesS
         }
       }
     });
-  };
-
-  const selectProperty = (selected: boolean, property: string) => {
-    propertySelectionChangedRef.current = true;
-    if (isOwner) {
-      if (user.uid && projectTitle) {
-        updateHiddenProperties(user.uid, projectTitle, property, !selected).then(() => {
-          localSelectProperty(selected, property);
-        });
-      }
-    } else {
-      localSelectProperty(selected, property);
-    }
     setChanged(true);
   };
 

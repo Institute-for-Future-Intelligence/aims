@@ -8,7 +8,7 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import { showError, showInfo } from './helpers';
 import i18n from './i18n/i18n';
-import { MoleculeInterface, Range, ProjectState, MolecularContainer, MoleculeTransform, ProjectInfo } from './types';
+import { MoleculeInterface, ProjectState, MolecularContainer, MoleculeTransform, ProjectInfo } from './types';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
@@ -225,68 +225,6 @@ export const removeMoleculeFromProject = (userid: string, projectTitle: string, 
     });
 };
 
-export const updateHiddenProperties = (
-  userid: string,
-  projectTitle: string,
-  hiddenProperty: string,
-  add: boolean, // true is to add, false is to remove
-) => {
-  const lang = { lng: useStore.getState().language };
-  return firebase
-    .firestore()
-    .collection('users')
-    .doc(userid)
-    .collection('projects')
-    .doc(projectTitle)
-    .update({
-      hiddenProperties: add
-        ? firebase.firestore.FieldValue.arrayUnion(hiddenProperty)
-        : firebase.firestore.FieldValue.arrayRemove(hiddenProperty),
-    })
-    .then(() => {
-      // ignore
-    })
-    .catch((error) => {
-      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
-    });
-};
-
-export const addRange = (userid: string, projectTitle: string, range: Range) => {
-  const lang = { lng: useStore.getState().language };
-  return firebase
-    .firestore()
-    .collection('users')
-    .doc(userid)
-    .collection('projects')
-    .doc(projectTitle)
-    .update({
-      ranges: firebase.firestore.FieldValue.arrayUnion(range),
-    })
-    .then(() => {
-      // ignore
-    })
-    .catch((error) => {
-      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
-    });
-};
-
-export const updateRanges = (userid: string, projectTitle: string, ranges: Range[]) => {
-  const lang = { lng: useStore.getState().language };
-  return firebase
-    .firestore()
-    .collection('users')
-    .doc(userid)
-    .collection('projects')
-    .doc(projectTitle)
-    .update({ ranges })
-    .then(() => {
-      // ignore
-    })
-    .catch((error) => {
-      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
-    });
-};
-
 export const updateDescription = (userid: string, projectTitle: string, description: string | null) => {
   const lang = { lng: useStore.getState().language };
   return firebase
@@ -313,23 +251,6 @@ export const updateDataColoring = (userid: string, projectTitle: string, dataCol
     .collection('projects')
     .doc(projectTitle)
     .update({ dataColoring })
-    .then(() => {
-      // ignore
-    })
-    .catch((error) => {
-      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
-    });
-};
-
-export const updateSelectedProperty = (userid: string, projectTitle: string, selectedProperty: string | null) => {
-  const lang = { lng: useStore.getState().language };
-  return firebase
-    .firestore()
-    .collection('users')
-    .doc(userid)
-    .collection('projects')
-    .doc(projectTitle)
-    .update({ selectedProperty })
     .then(() => {
       // ignore
     })
@@ -508,23 +429,6 @@ export const updateLineWidthScatterPlot = (userid: string, projectTitle: string,
     .collection('projects')
     .doc(projectTitle)
     .update({ lineWidthScatterPlot })
-    .then(() => {
-      // ignore
-    })
-    .catch((error) => {
-      showError(i18n.t('message.CannotUpdateProject', lang) + ': ' + error);
-    });
-};
-
-export const updateNumberOfColumns = (userid: string, projectTitle: string, numberOfColumns: number) => {
-  const lang = { lng: useStore.getState().language };
-  return firebase
-    .firestore()
-    .collection('users')
-    .doc(userid)
-    .collection('projects')
-    .doc(projectTitle)
-    .update({ numberOfColumns })
     .then(() => {
       // ignore
     })
