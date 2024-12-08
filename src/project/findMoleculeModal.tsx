@@ -100,6 +100,7 @@ const FindMoleculeModal = React.memo(
             {t('projectPanel.MostSimilarMolecules', lang) + ' ' + moleculeName + ' (' + moleculeFormula + ')'}
           </div>
         }
+        destroyOnClose={true}
         open={isDialogVisible()}
         afterOpenChange={(open: boolean) => {
           if (open) {
