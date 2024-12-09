@@ -39,7 +39,25 @@ export const i18n_en = {
         'The temperature at which the compound changes state from solid to liquid at a given atmospheric pressure.',
     },
 
+    url: {
+      atomCount: 'https://en.wikipedia.org/wiki/Atom',
+      bondCount: 'https://en.wikipedia.org/wiki/Covalent_bond',
+      molecularMass: 'https://en.wikipedia.org/wiki/Molecular_mass',
+      logP: 'https://en.wikipedia.org/wiki/Partition_coefficient',
+      hydrogenBondDonorCount: 'https://en.wikipedia.org/wiki/Hydrogen_bond',
+      hydrogenBondAcceptorCount: 'https://en.wikipedia.org/wiki/Hydrogen_bond',
+      rotatableBondCount:
+        'https://chem.libretexts.org/Courses/Sacramento_City_College/SCC%3A_Chem_420_-_Organic_Chemistry_I/Text/02%3A_Structure_and_Properties_of_Organic_Molecules/2.06%3A_Bond_Rotation',
+      polarSurfaceArea: 'https://en.wikipedia.org/wiki/Chemical_polarity',
+      heavyAtomCount: '',
+      complexity: 'https://pubmed.ncbi.nlm.nih.gov/37675804/',
+      density: 'https://en.wikipedia.org/wiki/Density',
+      boilingPoint: 'https://en.wikipedia.org/wiki/Boiling_point',
+      meltingPoint: 'https://en.wikipedia.org/wiki/Melting_point',
+    },
+
     word: {
+      MoreInformation: 'More information',
       Mute: 'Mute',
       Formula: 'Formula',
       AtomsLowerCasePlural: 'atoms',

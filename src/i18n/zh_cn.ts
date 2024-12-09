@@ -35,7 +35,21 @@ export const i18n_zh_cn = {
       meltingPoint: '在特定大气压下物质开始从固体变成液体的温度。',
     },
 
+    url: {
+      atomCount: 'https://zh.wikipedia.org/wiki/原子',
+      bondCount: 'https://zh.wikipedia.org/wiki/共价键',
+      molecularMass: 'https://zh.wikipedia.org/wiki/分子量',
+      logP: 'https://zh.wikipedia.org/wiki/分配系数',
+      hydrogenBondDonorCount: 'https://zh.wikipedia.org/wiki/氢键',
+      hydrogenBondAcceptorCount: 'https://zh.wikipedia.org/wiki/氢键',
+      polarSurfaceArea: 'https://zh.wikipedia.org/wiki/极性',
+      density: 'https://zh.wikipedia.org/wiki/密度',
+      boilingPoint: 'https://zh.wikipedia.org/wiki/沸点',
+      meltingPoint: 'https://zh.wikipedia.org/wiki/熔点',
+    },
+
     word: {
+      MoreInformation: '更多信息',
       Mute: '勿扰',
       Formula: '公式',
       AtomsLowerCasePlural: '原子',

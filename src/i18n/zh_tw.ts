@@ -35,7 +35,21 @@ export const i18n_zh_tw = {
       meltingPoint: '在特定大氣壓力下物質開始從固體變成液體的溫度。',
     },
 
+    url: {
+      atomCount: 'https://zh.wikipedia.org/zh-tw/原子',
+      bondCount: 'https://zh.wikipedia.org/zh-tw/共價鍵',
+      molecularMass: 'https://zh.wikipedia.org/zh-tw/分子量',
+      logP: 'https://zh.wikipedia.org/zh-tw/分配係數',
+      hydrogenBondDonorCount: 'https://zh.wikipedia.org/zh-tw/氫鍵',
+      hydrogenBondAcceptorCount: 'https://zh.wikipedia.org/zh-tw/氫鍵',
+      polarSurfaceArea: 'https://zh.wikipedia.org/zh-tw/極性',
+      density: 'https://zh.wikipedia.org/zh-tw/密度',
+      boilingPoint: 'https://zh.wikipedia.org/zh-tw/沸點',
+      meltingPoint: 'https://zh.wikipedia.org/zh-tw/熔點',
+    },
+
     word: {
+      MoreInformation: '更多資訊',
       Mute: '勿擾',
       Formula: '公式',
       AtomsLowerCasePlural: '原子',

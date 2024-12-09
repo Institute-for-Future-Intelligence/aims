@@ -77,7 +77,9 @@ export const showUndo = (msg: string, duration?: number) => {
       // other styles do not seem to work
       color: 'black',
     },
-    onClose: () => {},
+    onClick: () => {
+      message.destroy();
+    },
   });
 };
 

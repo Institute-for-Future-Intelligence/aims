@@ -14,6 +14,7 @@ import { Filter, FilterType } from '../Filter';
 import { ProjectUtil } from '../project/ProjectUtil.ts';
 import { UndoableChange } from '../undo/UndoableChange.ts';
 import { Undoable } from '../undo/Undoable.ts';
+import { openInNewTab } from '../helpers.tsx';
 
 type VerticalAxisProps = {
   variable: string;
@@ -323,6 +324,8 @@ const VerticalAxis = React.memo(
       }
     };
 
+    const url = t('url.' + variable, lang);
+
     return (
       <>
         {/* Title */}
@@ -330,15 +333,31 @@ const VerticalAxis = React.memo(
           content={
             <div>
               <Space
+                direction={'vertical'}
                 style={{
                   padding: '8px',
-                  fontSize: '14px',
+                  fontSize: '13px',
                   width: '240px',
                   border: '1px solid lightgray',
                   borderRadius: '6px',
                 }}
               >
-                {t('tooltip.' + variable, lang)}
+                <Space>{t('tooltip.' + variable, lang)}</Space>
+                {url !== '' && (
+                  <Space
+                    style={{
+                      color: 'blueviolet',
+                      cursor: 'pointer',
+                      width: '100%',
+                      justifyContent: 'end',
+                      paddingRight: '8px',
+                    }}
+                    title={url}
+                    onClick={() => openInNewTab(url)}
+                  >
+                    {t('word.MoreInformation', lang) + '...'}
+                  </Space>
+                )}
               </Space>
               <br />
               <InputNumber
