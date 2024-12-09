@@ -9,6 +9,7 @@ import html2canvas from 'html2canvas';
 import i18n from './i18n/i18n';
 import { useStore } from './stores/common.ts';
 import { UNDO_SHOW_INFO_DURATION } from './constants.ts';
+import { usePrimitiveStore } from './stores/commonPrimitive.ts';
 
 export const visitIFI = () => {
   window.open('https://intofuture.org', '_blank');
@@ -56,6 +57,17 @@ export const showUndo = (msg: string, duration?: number) => {
           }}
         >
           {i18n.t('menu.edit.Undo', lang)}
+        </Button>
+        <Button
+          type={'primary'}
+          onClick={() => {
+            usePrimitiveStore.getState().set((state) => {
+              state.doNotShowUndoMessageAgain = true;
+            });
+            message.destroy();
+          }}
+        >
+          {i18n.t('message.DoNotShowAgain', lang)}
         </Button>
       </Space>
     ),

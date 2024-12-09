@@ -16,6 +16,7 @@ export interface PrimitiveStoreState {
   setChanged: (b: boolean) => void;
   skipChange: boolean;
   setSkipChange: (b: boolean) => void;
+  doNotShowUndoMessageAgain: boolean;
   updateViewerFlag: boolean;
   updateViewer: () => void;
   updateInfoFlag: boolean;
@@ -118,6 +119,8 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
         state.skipChange = b;
       });
     },
+    doNotShowUndoMessageAgain: false,
+
     updateViewerFlag: false,
     updateViewer() {
       immerSet((state: PrimitiveStoreState) => {

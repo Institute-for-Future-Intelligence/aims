@@ -113,6 +113,7 @@ export const i18n_zh_cn = {
     },
 
     message: {
+      DoNotShowAgain: '别再显示',
       NewVersionAvailable: '有新版本',
       DoYouWantToRemoveAllMoleculesFromGallery: '你确定要删除项目里的所有分子吗？',
       TooManyAtomsMayCauseSimulationToRunSlowly: '加入太多原子会让模拟变得很慢',
