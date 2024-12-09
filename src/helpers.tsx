@@ -4,8 +4,11 @@
 
 // @ts-expect-error: Explain what?
 import { saveSvgAsPng } from 'save-svg-as-png';
-import { message } from 'antd';
+import { Button, message, Space } from 'antd';
 import html2canvas from 'html2canvas';
+import i18n from './i18n/i18n';
+import { useStore } from './stores/common.ts';
+import { UNDO_SHOW_INFO_DURATION } from './constants.ts';
 
 export const visitIFI = () => {
   window.open('https://intofuture.org', '_blank');
@@ -26,6 +29,41 @@ export const showSuccess = (msg: string, duration?: number) => {
     onClick: () => {
       message.destroy();
     },
+  });
+};
+
+export const showUndo = (msg: string, duration?: number) => {
+  const lang = { lng: useStore.getState().language };
+  // message.config({top: window.innerHeight - 60});
+  message.info({
+    duration: duration ?? 3,
+    content: (
+      <Space direction={'horizontal'}>
+        <span>{msg}</span>
+        <Button
+          type={'primary'}
+          onClick={() => {
+            const commandName = useStore.getState().undoManager.undo();
+            if (commandName) {
+              setTimeout(() => {
+                showInfo(i18n.t('menu.edit.Undone', lang), UNDO_SHOW_INFO_DURATION);
+              }, 500);
+            }
+            if (useStore.getState().loggable) {
+              useStore.getState().logAction('Undo');
+            }
+            message.destroy();
+          }}
+        >
+          {i18n.t('menu.edit.Undo', lang)}
+        </Button>
+      </Space>
+    ),
+    style: {
+      // other styles do not seem to work
+      color: 'black',
+    },
+    onClose: () => {},
   });
 };
 

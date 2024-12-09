@@ -403,6 +403,7 @@ export const i18n_en = {
       edit: {
         Undo: 'Undo',
         Redo: 'Redo',
+        Undone: 'Undone',
       },
       viewSubMenu: 'View',
       view: {

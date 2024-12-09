@@ -33,7 +33,7 @@ import { useTranslation } from 'react-i18next';
 import { DatumEntry, MoleculeInterface } from '../types.ts';
 import TextArea from 'antd/lib/input/TextArea';
 import ImportMoleculeModal from './ImportMoleculeModal.tsx';
-import { saveSvg, showError, showInfo } from '../helpers.ts';
+import { saveSvg, showError, showInfo } from '../helpers.tsx';
 import ParallelCoordinates from '../components/parallelCoordinates.tsx';
 import { ProjectUtil } from './ProjectUtil.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';

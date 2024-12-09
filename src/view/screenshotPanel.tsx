@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../hooks.ts';
 import { Button, Space } from 'antd';
 import React from 'react';
-import { screenshot, showError } from '../helpers.ts';
+import { screenshot, showError } from '../helpers.tsx';
 
 export const ScreenshotPanel = React.memo(() => {
   const loggable = useStore(Selector.loggable);

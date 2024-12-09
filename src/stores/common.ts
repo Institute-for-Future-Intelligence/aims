@@ -26,6 +26,7 @@ import { Restraint } from '../models/Restraint.ts';
 import { Triple } from '../models/Triple.ts';
 import { Quadruple } from '../models/Quadruple.ts';
 import { usePrimitiveStore } from './commonPrimitive.ts';
+import { showUndo } from '../helpers.tsx';
 
 enableMapSet();
 
@@ -324,6 +325,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
 
           undoManager: new UndoManager(),
           addUndoable(undoable: Undoable) {
+            showUndo(undoable.name);
             immerSet((state: CommonStoreState) => {
               if (state.loggable) {
                 state.currentUndoable = undoable;

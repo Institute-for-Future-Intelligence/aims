@@ -15,7 +15,7 @@ import {
   WarningOutlined,
 } from '@ant-design/icons';
 import { REGEX_ALLOWABLE_IN_NAME, Z_INDEX_FRONT_PANEL } from '../constants.ts';
-import { showInfo, showSuccess } from '../helpers.ts';
+import { showInfo, showSuccess } from '../helpers.tsx';
 import Draggable from 'react-draggable';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useTranslation } from 'react-i18next';

@@ -396,6 +396,7 @@ export const i18n_zh_cn = {
       edit: {
         Undo: '撤销',
         Redo: '重做',
+        Undone: '已撤销',
       },
       viewSubMenu: '视界',
       view: {

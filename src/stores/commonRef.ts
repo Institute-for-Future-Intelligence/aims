@@ -11,7 +11,7 @@ import { VdwBond } from '../models/VdwBond.ts';
 import { MolecularDynamics } from '../models/MolecularDynamics.ts';
 import { MAXIMUM_NUMBER_OF_ATOMS_FOR_SIMULATION } from '../constants.ts';
 import i18n from '../i18n/i18n';
-import { showWarning } from '../helpers.ts';
+import { showWarning } from '../helpers.tsx';
 import { useStore } from './common.ts';
 
 const v = new Vector2();

@@ -13,7 +13,7 @@ import { SaveProjectItem } from './saveProjectItem.tsx';
 import { SaveProjectAsItem } from './saveProjectAsItem.tsx';
 import { MenuItem } from '../menuItem.tsx';
 import { Util } from '../../Util.ts';
-import { showSuccess } from '../../helpers.ts';
+import { showSuccess } from '../../helpers.tsx';
 
 export const askToCreateProject = () => {
   const lang = { lng: useStore.getState().language };

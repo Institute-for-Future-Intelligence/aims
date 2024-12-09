@@ -16,6 +16,7 @@ import { resetView, zoomView } from './components/mainMenu/viewMenu';
 import { startFlying, stopFlying } from './fly.ts';
 import { useRefStore } from './stores/commonRef.ts';
 import { Molecule } from './models/Molecule.ts';
+import { message } from 'antd';
 
 export interface KeyboardListenerProps {
   setNavigationView: (selected: boolean) => void;
@@ -412,7 +413,10 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       case 'meta+z': // for Mac
         if (undoManager.hasUndo()) {
           const commandName = undoManager.undo();
-          if (commandName) showInfo(i18n.t('menu.edit.Undo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
+          if (commandName) {
+            message.destroy();
+            showInfo(i18n.t('menu.edit.Undo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
+          }
           if (loggable) logAction('Undo');
         }
         break;
@@ -420,7 +424,10 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       case 'meta+y': // for Mac
         if (undoManager.hasRedo()) {
           const commandName = undoManager.redo();
-          if (commandName) showInfo(i18n.t('menu.edit.Redo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
+          if (commandName) {
+            message.destroy();
+            showInfo(i18n.t('menu.edit.Redo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
+          }
           if (loggable) logAction('Redo');
         }
         break;

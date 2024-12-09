@@ -39,7 +39,7 @@ import { Molecule } from './models/Molecule.ts';
 import { Atom } from './models/Atom.ts';
 import { VT_CONVERSION_CONSTANT } from './models/physicalConstants.ts';
 import { ModelUtil } from './models/ModelUtil.ts';
-import { showInfo } from './helpers.ts';
+import { showInfo } from './helpers.tsx';
 import { useTranslation } from 'react-i18next';
 
 const ReactionChamber = React.memo(() => {
