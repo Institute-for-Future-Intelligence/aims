@@ -325,7 +325,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
 
           undoManager: new UndoManager(),
           addUndoable(undoable: Undoable) {
-            if (!usePrimitiveStore.getState().doNotShowUndoMessageAgain) showUndo(undoable.name);
+            if (!usePrimitiveStore.getState().muteUndoMessage) showUndo(undoable.name);
             immerSet((state: CommonStoreState) => {
               if (state.loggable) {
                 state.currentUndoable = undoable;

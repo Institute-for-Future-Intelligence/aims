@@ -43,6 +43,7 @@ export const showUndo = (msg: string, duration?: number) => {
         <span>{msg}</span>
         <Button
           type={'primary'}
+          title={i18n.t('menu.edit.Undo', lang)}
           onClick={() => {
             const commandName = useStore.getState().undoManager.undo();
             if (commandName) {
@@ -60,14 +61,15 @@ export const showUndo = (msg: string, duration?: number) => {
         </Button>
         <Button
           type={'primary'}
+          title={i18n.t('message.DoNotShowAgain', lang)}
           onClick={() => {
             usePrimitiveStore.getState().set((state) => {
-              state.doNotShowUndoMessageAgain = true;
+              state.muteUndoMessage = true;
             });
             message.destroy();
           }}
         >
-          {i18n.t('message.DoNotShowAgain', lang)}
+          {i18n.t('word.Mute', lang)}
         </Button>
       </Space>
     ),

@@ -36,6 +36,7 @@ export const i18n_zh_tw = {
     },
 
     word: {
+      Mute: '勿擾',
       Formula: '公式',
       AtomsLowerCasePlural: '原子',
       Save: '保存',

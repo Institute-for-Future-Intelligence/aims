@@ -26,8 +26,6 @@ export const changed = (state: PrimitiveStoreState) => state.changed;
 
 export const setChanged = (state: PrimitiveStoreState) => state.setChanged;
 
-export const doNotShowUndoMessageAgain = (state: PrimitiveStoreState) => state.doNotShowUndoMessageAgain;
-
 export const updateViewerFlag = (state: PrimitiveStoreState) => state.updateViewerFlag;
 
 export const updateViewer = (state: PrimitiveStoreState) => state.updateViewer;
