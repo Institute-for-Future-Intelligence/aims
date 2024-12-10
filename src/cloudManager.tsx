@@ -601,7 +601,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             ps.title = newTitle;
             ps.owner = user.uid;
             ps.type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
-            ps.description = usePrimitiveStore.getState().projectDescription;
+            ps.description = usePrimitiveStore.getState().projectDescription ?? null;
             ps.cameraPosition = DEFAULT_CAMERA_POSITION;
             ps.cameraRotation = DEFAULT_CAMERA_ROTATION;
             ps.cameraUp = DEFAULT_CAMERA_UP;
