@@ -6,15 +6,20 @@ import { Undoable } from './Undoable';
 import { MoleculeInterface } from '../types.ts';
 import { Molecule } from '../models/Molecule.ts';
 
-export interface UndoableDeleteMolecule extends Undoable {
+export interface UndoableDeleteMoleculeInGallery extends Undoable {
   selectedMolecule: MoleculeInterface;
   selectedIndex: number;
 }
 
-export interface UndoableDeleteMolecules extends Undoable {
+export interface UndoableDeleteMoleculesInGallery extends Undoable {
   moleculeNames: string[];
 }
 
-export interface UndoableDeleteAllMolecules extends Undoable {
+export interface UndoableDeleteAllMoleculesInChamber extends Undoable {
   molecules: Molecule[];
+}
+
+export interface UndoableDeleteMoleculeInChamber extends Undoable {
+  index: number;
+  molecule: Molecule;
 }

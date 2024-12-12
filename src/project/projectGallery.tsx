@@ -57,7 +57,7 @@ import RegressionImage from '../assets/regression.png';
 import PolynomialRegression from './regression.tsx';
 import ScatterChartNumericValues from './scatterChartNumericValues.tsx';
 import ParallelCoordinatesNumericValuesContent from './parallelCoordinatesNumericValues.tsx';
-import { UndoableDeleteMolecule, UndoableDeleteMolecules } from '../undo/UndoableDelete.ts';
+import { UndoableDeleteMoleculeInGallery, UndoableDeleteMoleculesInGallery } from '../undo/UndoableDelete.ts';
 import { UndoableImportMolecule } from '../undo/UndoableImportMolecule.ts';
 import { UndoableChange } from '../undo/UndoableChange.ts';
 
@@ -286,7 +286,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           state.projectState.selectedMolecule = null;
         });
       },
-    } as UndoableDeleteMolecule;
+    } as UndoableDeleteMoleculeInGallery;
     addUndoable(undoable);
     removeMolecule(selectedMolecule);
     setCommonStore((state) => {
@@ -319,7 +319,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           state.projectState.selectedMolecule = null;
         });
       },
-    } as UndoableDeleteMolecules;
+    } as UndoableDeleteMoleculesInGallery;
     addUndoable(undoable);
     removeAllMolecules();
     setCommonStore((state) => {

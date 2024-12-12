@@ -22,6 +22,8 @@ import { Molecule } from '../../models/Molecule.ts';
 import { useDataStore } from '../../stores/commonData.ts';
 import { isCartoon } from '../../view/moleculeTools.ts';
 import { Restraint } from '../../models/Restraint.ts';
+import { UndoableDeleteMoleculeInChamber } from '../../undo/UndoableDelete.ts';
+import { UndoablePasteMoleculeInChamber } from '../../undo/UndoablePaste.ts';
 
 export const TranslateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
@@ -204,13 +206,37 @@ export const RotateMolecule = () => {
 export const CutMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const addUndoable = useStore(Selector.addUndoable);
   const testMolecules = useStore(Selector.testMolecules);
+  const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
 
   const { t } = useTranslation();
   const lang = useLanguage();
 
-  const cutSelectedMolecule = () => {
-    const pickedMoleculeIndex = usePrimitiveStore.getState().pickedMoleculeIndex;
+  const undoableCutSelectedMolecule = () => {
+    if (pickedMoleculeIndex === -1) return;
+    const undoable = {
+      name: 'Cut Selected Molecule',
+      timestamp: Date.now(),
+      index: pickedMoleculeIndex,
+      molecule: Molecule.clone(testMolecules[pickedMoleculeIndex]),
+      undo: () => {
+        usePrimitiveStore.getState().set((state) => {
+          state.pickedMoleculeIndex = undoable.index;
+        });
+        setCommonStore((state) => {
+          state.projectState.testMolecules.splice(pickedMoleculeIndex, 0, undoable.molecule);
+        });
+      },
+      redo: () => {
+        cutSelectedMolecule(true);
+      },
+    } as UndoableDeleteMoleculeInChamber;
+    addUndoable(undoable);
+    cutSelectedMolecule(false);
+  };
+
+  const cutSelectedMolecule = (redoFlag: boolean) => {
     if (pickedMoleculeIndex === -1) return;
     usePrimitiveStore.getState().set((state) => {
       const m = testMolecules[pickedMoleculeIndex];
@@ -220,13 +246,13 @@ export const CutMolecule = () => {
     });
     setCommonStore((state) => {
       state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
-      if (state.loggable) state.logAction('Cut Selected Molecule');
+      if (!redoFlag && state.loggable) state.logAction('Cut Selected Molecule');
     });
     setChanged(true);
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false} onClick={cutSelectedMolecule}>
+    <MenuItem stayAfterClick={false} hasPadding={false} onClick={undoableCutSelectedMolecule}>
       {t('word.Cut', lang)}
     </MenuItem>
   );
@@ -259,6 +285,7 @@ export const CopyMolecule = () => {
 export const PasteMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const addUndoable = useStore(Selector.addUndoable);
   const testMolecules = useStore(Selector.testMolecules);
   const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
   const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
@@ -268,7 +295,24 @@ export const PasteMolecule = () => {
   const { t } = useTranslation();
   const lang = useLanguage();
 
-  const pasteSelectedMolecule = () => {
+  const undoablePasteSelectedMolecule = () => {
+    const undoable = {
+      name: 'Paste Copied Molecule',
+      timestamp: Date.now(),
+      undo: () => {
+        setCommonStore((state) => {
+          state.projectState.testMolecules.splice(testMolecules.length, 1);
+        });
+      },
+      redo: () => {
+        pasteSelectedMolecule(true);
+      },
+    } as UndoablePasteMoleculeInChamber;
+    addUndoable(undoable);
+    pasteSelectedMolecule(false);
+  };
+
+  const pasteSelectedMolecule = (redoFlag: boolean) => {
     const p = clickPointRef?.current;
     if (!p) return;
     if (copiedMoleculeIndex !== -1) {
@@ -276,7 +320,7 @@ export const PasteMolecule = () => {
         const m = Molecule.clone(testMolecules[copiedMoleculeIndex]);
         m.setCenter(p);
         state.projectState.testMolecules.push(m);
-        if (state.loggable) state.logAction('Paste Copied Molecule');
+        if (!redoFlag && state.loggable) state.logAction('Paste Copied Molecule');
         warnIfTooManyAtoms(m.atoms.length);
       });
     } else if (cutMolecule) {
@@ -292,7 +336,7 @@ export const PasteMolecule = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={true} onClick={pasteSelectedMolecule}>
+    <MenuItem stayAfterClick={false} hasPadding={true} onClick={undoablePasteSelectedMolecule}>
       {t('word.Paste', lang) +
         (cutMolecule
           ? ' ' + cutMolecule.name

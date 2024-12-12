@@ -17,6 +17,7 @@ import { startFlying, stopFlying } from './fly.ts';
 import { useRefStore } from './stores/commonRef.ts';
 import { Molecule } from './models/Molecule.ts';
 import { message } from 'antd';
+import { UndoableDeleteMoleculeInChamber } from './undo/UndoableDelete.ts';
 
 export interface KeyboardListenerProps {
   setNavigationView: (selected: boolean) => void;
@@ -160,12 +161,37 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
 
   const onDelete = () => {
     if (pickedMoleculeIndex !== -1) {
+      const undoable = {
+        name: 'Delete Selected Molecule',
+        timestamp: Date.now(),
+        index: pickedMoleculeIndex,
+        molecule: Molecule.clone(testMolecules[pickedMoleculeIndex]),
+        undo: () => {
+          usePrimitiveStore.getState().set((state) => {
+            state.pickedMoleculeIndex = undoable.index;
+          });
+          setCommonStore((state) => {
+            state.projectState.testMolecules.splice(pickedMoleculeIndex, 0, undoable.molecule);
+          });
+        },
+        redo: () => {
+          deleteSelectedMolecule(true);
+        },
+      } as UndoableDeleteMoleculeInChamber;
+      addUndoable(undoable);
+      deleteSelectedMolecule(false);
+    }
+  };
+
+  const deleteSelectedMolecule = (redoFlag: boolean) => {
+    if (pickedMoleculeIndex !== -1) {
       usePrimitiveStore.getState().set((state) => {
         state.pickedMoleculeIndex = -1;
+        state.changed = true;
       });
       setCommonStore((state) => {
         state.projectState.testMolecules.splice(pickedMoleculeIndex, 1);
-        if (state.loggable) state.logAction('Delete Selected Molecule');
+        if (!redoFlag && state.loggable) state.logAction('Delete Selected Molecule');
       });
     }
   };

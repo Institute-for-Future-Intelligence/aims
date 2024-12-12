@@ -4,6 +4,4 @@
 
 import { Undoable } from './Undoable';
 
-export interface UndoablePaste extends Undoable {
-  pasted: [];
-}
+export interface UndoablePasteMoleculeInChamber extends Undoable {}

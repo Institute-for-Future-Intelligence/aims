@@ -10,11 +10,13 @@ import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { ProjectType } from '../constants.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
-import { UndoableDeleteAllMolecules } from '../undo/UndoableDelete.ts';
+import { UndoableDeleteAllMoleculesInChamber } from '../undo/UndoableDelete.ts';
 
 const ToolBarButtons = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
+  const loggable = useStore(Selector.loggable);
+  const logAction = useStore.getState().logAction;
   const addUndoable = useStore(Selector.addUndoable);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
@@ -45,9 +47,10 @@ const ToolBarButtons = React.memo(() => {
       redo: () => {
         deleteAllAtoms();
       },
-    } as UndoableDeleteAllMolecules;
+    } as UndoableDeleteAllMoleculesInChamber;
     addUndoable(undoable);
     deleteAllAtoms();
+    if (loggable) logAction('Delete All Atoms');
   };
 
   return (
