@@ -10,10 +10,12 @@ import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { ProjectType } from '../constants.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
+import { UndoableDeleteAllMolecules } from '../undo/UndoableDelete.ts';
 
 const ToolBarButtons = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
+  const addUndoable = useStore(Selector.addUndoable);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
@@ -29,6 +31,24 @@ const ToolBarButtons = React.memo(() => {
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
+
+  const removeAllMolecules = () => {
+    const undoable = {
+      name: 'Delete All Atoms',
+      timestamp: Date.now(),
+      molecules: [...testMolecules],
+      undo: () => {
+        setCommonStore((state) => {
+          state.projectState.testMolecules = undoable.molecules ?? [];
+        });
+      },
+      redo: () => {
+        deleteAllAtoms();
+      },
+    } as UndoableDeleteAllMolecules;
+    addUndoable(undoable);
+    deleteAllAtoms();
+  };
 
   return (
     <Space
@@ -184,7 +204,7 @@ const ToolBarButtons = React.memo(() => {
                 okText: t('word.OK', lang),
                 cancelText: t('word.Cancel', lang),
                 onOk: () => {
-                  deleteAllAtoms();
+                  removeAllMolecules();
                   setChanged(true);
                 },
               });
