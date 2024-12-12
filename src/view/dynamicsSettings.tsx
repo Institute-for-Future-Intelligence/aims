@@ -24,10 +24,12 @@ import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useRefStore } from '../stores/commonRef.ts';
 import { Undoable } from '../undo/Undoable.ts';
 import ScreenshotPanel from './screenshotPanel.tsx';
+import { UndoableChange } from '../undo/UndoableChange.ts';
 
 const DynamicsSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
+  const addUndoable = useStore(Selector.addUndoable);
   const loggable = useStore.getState().loggable;
   const logAction = useStore.getState().logAction;
   const setChanged = usePrimitiveStore(Selector.setChanged);
@@ -65,9 +67,81 @@ const DynamicsSettings = React.memo(() => {
       undo: () => showGallery(false),
       redo: () => showGallery(true),
     } as Undoable;
-    useStore.getState().addUndoable(undoable);
+    addUndoable(undoable);
     showGallery(true);
     if (loggable) logAction('Show Gallery');
+  };
+
+  const changeContainerLx = (newValue: number) => {
+    const undoable = {
+      name: 'Change Container Lx',
+      timestamp: Date.now(),
+      oldValue: molecularContainer.lx,
+      newValue,
+      undo: () => {
+        setContainerLx(undoable.oldValue as number);
+      },
+      redo: () => {
+        setContainerLx(undoable.newValue as number);
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setContainerLx(newValue);
+  };
+
+  const setContainerLx = (value: number) => {
+    if (mdRef?.current) mdRef.current.container.lx = value;
+    setCommonStore((state) => {
+      state.projectState.molecularContainer.lx = value;
+    });
+  };
+
+  const changeContainerLy = (newValue: number) => {
+    const undoable = {
+      name: 'Change Container Ly',
+      timestamp: Date.now(),
+      oldValue: molecularContainer.ly,
+      newValue,
+      undo: () => {
+        setContainerLy(undoable.oldValue as number);
+      },
+      redo: () => {
+        setContainerLy(undoable.newValue as number);
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setContainerLy(newValue);
+  };
+
+  const setContainerLy = (value: number) => {
+    if (mdRef?.current) mdRef.current.container.ly = value;
+    setCommonStore((state) => {
+      state.projectState.molecularContainer.ly = value;
+    });
+  };
+
+  const changeContainerLz = (newValue: number) => {
+    const undoable = {
+      name: 'Change Container Lz',
+      timestamp: Date.now(),
+      oldValue: molecularContainer.lz,
+      newValue,
+      undo: () => {
+        setContainerLz(undoable.oldValue as number);
+      },
+      redo: () => {
+        setContainerLz(undoable.newValue as number);
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setContainerLz(newValue);
+  };
+
+  const setContainerLz = (value: number) => {
+    if (mdRef?.current) mdRef.current.container.lz = value;
+    setCommonStore((state) => {
+      state.projectState.molecularContainer.lz = value;
+    });
   };
 
   const modelItems: TabsProps['items'] = useMemo(
@@ -93,12 +167,9 @@ const DynamicsSettings = React.memo(() => {
                   step={1}
                   onChange={(value) => {
                     if (value === null) return;
-                    if (mdRef?.current) mdRef.current.container.lx = value;
-                    setCommonStore((state) => {
-                      state.projectState.molecularContainer.lx = value;
-                      if (state.loggable) state.logAction('Set Container Lx to ' + value.toFixed(1));
-                    });
+                    changeContainerLx(value);
                     setChanged(true);
+                    if (loggable) logAction('Set Container Lx to ' + value.toFixed(1));
                   }}
                 />
               </Col>
@@ -119,12 +190,9 @@ const DynamicsSettings = React.memo(() => {
                   step={1}
                   onChange={(value) => {
                     if (value === null) return;
-                    if (mdRef?.current) mdRef.current.container.ly = value;
-                    setCommonStore((state) => {
-                      state.projectState.molecularContainer.ly = value;
-                      if (state.loggable) state.logAction('Set Container Ly to ' + value.toFixed(1));
-                    });
+                    changeContainerLy(value);
                     setChanged(true);
+                    if (loggable) logAction('Set Container Ly to ' + value.toFixed(1));
                   }}
                 />
               </Col>
@@ -145,12 +213,9 @@ const DynamicsSettings = React.memo(() => {
                   step={1}
                   onChange={(value) => {
                     if (value === null) return;
-                    if (mdRef?.current) mdRef.current.container.lz = value;
-                    setCommonStore((state) => {
-                      state.projectState.molecularContainer.lz = value;
-                      if (state.loggable) state.logAction('Set Container Lz to ' + value.toFixed(1));
-                    });
+                    changeContainerLz(value);
                     setChanged(true);
+                    if (loggable) logAction('Set Container Lz to ' + value.toFixed(1));
                   }}
                 />
               </Col>
@@ -165,6 +230,98 @@ const DynamicsSettings = React.memo(() => {
   const createModelSettings = useMemo(() => {
     return <Tabs defaultActiveKey="1" items={modelItems} />;
   }, [modelItems]);
+
+  const changeVdwCutoff = (newValue: number) => {
+    const undoable = {
+      name: 'Change Van der Waals Bond Cutoff',
+      timestamp: Date.now(),
+      oldValue: vdwBondCutoffRelative,
+      newValue,
+      undo: () => {
+        setVdwCutoff(undoable.oldValue as number);
+      },
+      redo: () => {
+        setVdwCutoff(undoable.newValue as number);
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setVdwCutoff(newValue);
+  };
+
+  const setVdwCutoff = (value: number) => {
+    setCommonStore((state) => {
+      state.projectState.vdwBondCutoffRelative = value;
+    });
+  };
+
+  const changeMomentumScaleFactor = (newValue: number) => {
+    const undoable = {
+      name: 'Change Momentum Scale Factor',
+      timestamp: Date.now(),
+      oldValue: momentumScaleFactor,
+      newValue,
+      undo: () => {
+        setMomentumScaleFactor(undoable.oldValue as number);
+      },
+      redo: () => {
+        setMomentumScaleFactor(undoable.newValue as number);
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setMomentumScaleFactor(newValue);
+  };
+
+  const setMomentumScaleFactor = (value: number) => {
+    setCommonStore((state) => {
+      state.projectState.momentumScaleFactor = value;
+    });
+  };
+
+  const changeForceScaleFactor = (newValue: number) => {
+    const undoable = {
+      name: 'Change Force Scale Factor',
+      timestamp: Date.now(),
+      oldValue: forceScaleFactor,
+      newValue,
+      undo: () => {
+        setForceScaleFactor(undoable.oldValue as number);
+      },
+      redo: () => {
+        setForceScaleFactor(undoable.newValue as number);
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setForceScaleFactor(newValue);
+  };
+
+  const setForceScaleFactor = (value: number) => {
+    setCommonStore((state) => {
+      state.projectState.forceScaleFactor = value;
+    });
+  };
+
+  const changeKineticEnergyScaleFactor = (newValue: number) => {
+    const undoable = {
+      name: 'Change Kinetic Energy Scale Factor',
+      timestamp: Date.now(),
+      oldValue: kineticEnergyScaleFactor,
+      newValue,
+      undo: () => {
+        setKineticEnergyScaleFactor(undoable.oldValue as number);
+      },
+      redo: () => {
+        setKineticEnergyScaleFactor(undoable.newValue as number);
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setKineticEnergyScaleFactor(newValue);
+  };
+
+  const setKineticEnergyScaleFactor = (value: number) => {
+    setCommonStore((state) => {
+      state.projectState.kineticEnergyScaleFactor = value;
+    });
+  };
 
   const displayItems: TabsProps['items'] = useMemo(
     () => [
@@ -189,11 +346,9 @@ const DynamicsSettings = React.memo(() => {
                   step={0.1}
                   onChange={(value) => {
                     if (value === null) return;
-                    setCommonStore((state) => {
-                      state.projectState.vdwBondCutoffRelative = value;
-                      if (state.loggable) state.logAction('Set VDW Bond Cutoff to ' + value.toFixed(2));
-                    });
+                    changeVdwCutoff(value);
                     setChanged(true);
+                    if (loggable) logAction('Set VDW Bond Cutoff to ' + value.toFixed(2));
                   }}
                 />
               </Col>
@@ -214,11 +369,9 @@ const DynamicsSettings = React.memo(() => {
                   step={0.1}
                   onChange={(value) => {
                     if (value === null) return;
-                    setCommonStore((state) => {
-                      state.projectState.momentumScaleFactor = value;
-                      if (state.loggable) state.logAction('Set Momentum Scale Factor to ' + value.toFixed(1));
-                    });
+                    changeMomentumScaleFactor(value);
                     setChanged(true);
+                    if (loggable) logAction('Set Momentum Scale Factor to ' + value.toFixed(1));
                   }}
                 />
               </Col>
@@ -239,11 +392,9 @@ const DynamicsSettings = React.memo(() => {
                   step={0.1}
                   onChange={(value) => {
                     if (value === null) return;
-                    setCommonStore((state) => {
-                      state.projectState.forceScaleFactor = value;
-                      if (state.loggable) state.logAction('Set Force Scale Factor to ' + value.toFixed(1));
-                    });
+                    changeForceScaleFactor(value);
                     setChanged(true);
+                    if (loggable) logAction('Set Force Scale Factor to ' + value.toFixed(1));
                   }}
                 />
               </Col>
@@ -264,11 +415,9 @@ const DynamicsSettings = React.memo(() => {
                   step={0.1}
                   onChange={(value) => {
                     if (value === null) return;
-                    setCommonStore((state) => {
-                      state.projectState.kineticEnergyScaleFactor = value;
-                      if (state.loggable) state.logAction('Set Kinetic Energy Scale Factor to ' + value.toFixed(1));
-                    });
+                    changeKineticEnergyScaleFactor(value);
                     setChanged(true);
+                    if (loggable) logAction('Set Kinetic Energy Scale Factor to ' + value.toFixed(1));
                   }}
                 />
               </Col>
