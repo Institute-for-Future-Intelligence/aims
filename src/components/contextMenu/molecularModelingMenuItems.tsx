@@ -23,7 +23,7 @@ import { useDataStore } from '../../stores/commonData.ts';
 import { isCartoon } from '../../view/moleculeTools.ts';
 import { Restraint } from '../../models/Restraint.ts';
 import { UndoableDeleteMoleculeInChamber } from '../../undo/UndoableDelete.ts';
-import { UndoablePasteMoleculeInChamber } from '../../undo/UndoablePaste.ts';
+import { Undoable } from '../../undo/Undoable.ts';
 
 export const TranslateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
@@ -307,7 +307,7 @@ export const PasteMolecule = () => {
       redo: () => {
         pasteSelectedMolecule(true);
       },
-    } as UndoablePasteMoleculeInChamber;
+    } as Undoable;
     addUndoable(undoable);
     pasteSelectedMolecule(false);
   };

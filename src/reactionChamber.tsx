@@ -41,10 +41,12 @@ import { VT_CONVERSION_CONSTANT } from './models/physicalConstants.ts';
 import { ModelUtil } from './models/ModelUtil.ts';
 import { showInfo } from './helpers.tsx';
 import { useTranslation } from 'react-i18next';
+import { Undoable } from './undo/Undoable.ts';
 
 const ReactionChamber = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
+  const addUndoable = useStore(Selector.addUndoable);
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const viewerStyle = useStore(Selector.chamberViewerStyle);
   const viewerMaterial = useStore(Selector.chamberViewerMaterial);
@@ -64,6 +66,9 @@ const ReactionChamber = React.memo(() => {
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
   const energyGraphVisible = useStore(Selector.energyGraphVisible);
   const molecularStructureMap = useStore(Selector.molecularStructureMap);
+  const testMolecules = useStore(Selector.testMolecules);
+  const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
 
   const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -88,41 +93,61 @@ const ReactionChamber = React.memo(() => {
     });
   }, [clickPointRef]);
 
+  const addMoleculeAt = (point: Vector3) => {
+    if (!selectedMolecule) return;
+    const structure = molecularStructureMap.get(selectedMolecule.name);
+    if (structure?.atoms) {
+      setCommonStore((state) => {
+        const atoms: Atom[] = [];
+        for (const a of structure.atoms) {
+          const clone = Atom.clone(a);
+          clone.index = a.index;
+          if (!clone.fixed) {
+            const temperature = state.projectState.temperature;
+            const constantTemperature = state.projectState.constantTemperature;
+            const currentTemperature = usePrimitiveStore.getState().currentTemperature;
+            // FIXME: Somehow when currentTemperature is used, the speed is set too low
+            const speed =
+              Math.sqrt(constantTemperature ? temperature : Math.max(100, currentTemperature)) * VT_CONVERSION_CONSTANT;
+            clone.velocity.x = speed * (ModelUtil.nextGaussian() - 0.5);
+            clone.velocity.y = speed * (ModelUtil.nextGaussian() - 0.5);
+            clone.velocity.z = speed * (ModelUtil.nextGaussian() - 0.5);
+            clone.initialVelocity?.copy(clone.velocity);
+          }
+          atoms.push(clone);
+        }
+        const m = new Molecule(selectedMolecule.name, atoms);
+        m.setCenter(point);
+        state.projectState.testMolecules.push(m);
+        warnIfTooManyAtoms(m.atoms.length);
+      });
+    }
+  };
+
   const dropMolecule = (e: React.DragEvent) => {
     const point = getIntersection(e);
     if (point && selectedMolecule) {
-      setCommonStore((state) => {
-        switch (state.projectState.type) {
-          case ProjectType.MOLECULAR_MODELING: {
-            const structure = molecularStructureMap.get(selectedMolecule.name);
-            if (structure?.atoms) {
-              const atoms: Atom[] = [];
-              for (const a of structure.atoms) {
-                const clone = Atom.clone(a);
-                clone.index = a.index;
-                if (!clone.fixed) {
-                  const temperature = useStore.getState().projectState.temperature;
-                  const constantTemperature = useStore.getState().projectState.constantTemperature;
-                  const currentTemperature = usePrimitiveStore.getState().currentTemperature;
-                  // FIXME: Somehow when currentTemperature is used, the speed is set too low
-                  const speed =
-                    Math.sqrt(constantTemperature ? temperature : Math.max(100, currentTemperature)) *
-                    VT_CONVERSION_CONSTANT;
-                  clone.velocity.x = speed * (ModelUtil.nextGaussian() - 0.5);
-                  clone.velocity.y = speed * (ModelUtil.nextGaussian() - 0.5);
-                  clone.velocity.z = speed * (ModelUtil.nextGaussian() - 0.5);
-                  clone.initialVelocity?.copy(clone.velocity);
-                }
-                atoms.push(clone);
-              }
-              const m = new Molecule(selectedMolecule.name, atoms);
-              m.setCenter(point);
-              state.projectState.testMolecules.push(m);
-              warnIfTooManyAtoms(m.atoms.length);
-            }
-            break;
-          }
-          case ProjectType.DRUG_DISCOVERY: {
+      switch (projectType) {
+        case ProjectType.MOLECULAR_MODELING: {
+          const undoable = {
+            name: 'Drop Molecule',
+            timestamp: Date.now(),
+            undo: () => {
+              setCommonStore((state) => {
+                state.projectState.testMolecules.splice(testMolecules.length, 1);
+              });
+            },
+            redo: () => {
+              addMoleculeAt(point);
+            },
+          } as Undoable;
+          addUndoable(undoable);
+          addMoleculeAt(point);
+          if (loggable) logAction('Drop molecule at (' + point.x + ', ' + point.y + ', ' + point.z + ')');
+          break;
+        }
+        case ProjectType.DRUG_DISCOVERY: {
+          setCommonStore((state) => {
             state.projectState.ligand = { ...selectedMolecule };
             state.projectState.ligandTransform = {
               x: point.x,
@@ -130,10 +155,10 @@ const ReactionChamber = React.memo(() => {
               z: point.z,
               euler: [0, 0, 0],
             } as MoleculeTransform;
-            break;
-          }
+          });
+          break;
         }
-      });
+      }
     } else {
       if (!point) {
         showInfo(t('message.TurnOnXYZPlanesForDroppingMolecule', lang));
