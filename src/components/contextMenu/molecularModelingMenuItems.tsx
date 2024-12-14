@@ -511,6 +511,9 @@ export const TrajectoryCheckBox = () => {
   const setAtomTrajectoryByIndex = useStore(Selector.setAtomTrajectoryByIndex);
   const positionTimeSeriesMap = useDataStore(Selector.positionTimeSeriesMap);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
+  const addUndoable = useStore(Selector.addUndoable);
   const mdRef = useRefStore.getState().molecularDynamicsRef;
 
   const { t } = useTranslation();
@@ -537,7 +540,7 @@ export const TrajectoryCheckBox = () => {
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
           const undoableCheck = {
-            name: 'Show Trajectory',
+            name: 'Show Atom Trajectory',
             timestamp: Date.now(),
             checked: checked,
             undo: () => {
@@ -547,8 +550,9 @@ export const TrajectoryCheckBox = () => {
               setTrajectory(undoableCheck.checked);
             },
           } as UndoableCheck;
-          useStore.getState().addUndoable(undoableCheck);
+          addUndoable(undoableCheck);
           setTrajectory(checked);
+          if (loggable) logAction(checked ? 'Show atom trajectory' : 'Hide atom trajectory');
         }}
       >
         {t('molecularViewer.Trajectory', lang)}
@@ -563,6 +567,9 @@ export const FixAtomCheckBox = () => {
   const fixAtomByIndex = useStore(Selector.fixAtomByIndex);
   const pickedAtomIndex = usePrimitiveStore(Selector.pickedAtomIndex);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
+  const addUndoable = useStore(Selector.addUndoable);
   const mdRef = useRefStore.getState().molecularDynamicsRef;
 
   const { t } = useTranslation();
@@ -587,7 +594,7 @@ export const FixAtomCheckBox = () => {
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
           const undoableCheck = {
-            name: 'Fix Picked Atom',
+            name: 'Fix Selected Atom',
             timestamp: Date.now(),
             checked: checked,
             undo: () => {
@@ -597,8 +604,9 @@ export const FixAtomCheckBox = () => {
               setFixed(undoableCheck.checked);
             },
           } as UndoableCheck;
-          useStore.getState().addUndoable(undoableCheck);
+          addUndoable(undoableCheck);
           setFixed(checked);
+          if (loggable) logAction(checked ? 'Fix selected atom' : 'Unfix selected atom');
         }}
       >
         {t('experiment.FixAtom', lang)}
@@ -856,6 +864,10 @@ export const AtomEpsilonInputField = () => {
 export const VdwBondsCheckBox = () => {
   const visible = useStore(Selector.vdwBondsVisible);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
+  const addUndoable = useStore(Selector.addUndoable);
+
   const { t } = useTranslation();
   const lang = useLanguage();
 
@@ -884,8 +896,9 @@ export const VdwBondsCheckBox = () => {
               setVisible(undoableCheck.checked);
             },
           } as UndoableCheck;
-          useStore.getState().addUndoable(undoableCheck);
+          addUndoable(undoableCheck);
           setVisible(checked);
+          if (loggable) logAction(checked ? 'Show Van der Waals bonds' : 'Hide Van der Waals bonds');
         }}
       >
         {t('molecularViewer.VanDerWaalsBonds', lang)}
@@ -897,6 +910,10 @@ export const VdwBondsCheckBox = () => {
 export const AngularBondsCheckBox = () => {
   const visible = useStore(Selector.angularBondsVisible);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
+  const addUndoable = useStore(Selector.addUndoable);
+
   const { t } = useTranslation();
   const lang = useLanguage();
 
@@ -925,8 +942,9 @@ export const AngularBondsCheckBox = () => {
               setVisible(undoableCheck.checked);
             },
           } as UndoableCheck;
-          useStore.getState().addUndoable(undoableCheck);
+          addUndoable(undoableCheck);
           setVisible(checked);
+          if (loggable) logAction(checked ? 'Show angular bonds' : 'Hide angular bonds');
         }}
       >
         {t('molecularViewer.AngularBonds', lang)}
@@ -938,6 +956,10 @@ export const AngularBondsCheckBox = () => {
 export const TorsionalBondsCheckBox = () => {
   const visible = useStore(Selector.torsionalBondsVisible);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
+  const addUndoable = useStore(Selector.addUndoable);
+
   const { t } = useTranslation();
   const lang = useLanguage();
 
@@ -966,8 +988,9 @@ export const TorsionalBondsCheckBox = () => {
               setVisible(undoableCheck.checked);
             },
           } as UndoableCheck;
-          useStore.getState().addUndoable(undoableCheck);
+          addUndoable(undoableCheck);
           setVisible(checked);
+          if (loggable) logAction(checked ? 'Show torsional bonds' : 'Hide torsional bonds');
         }}
       >
         {t('molecularViewer.TorsionalBonds', lang)}
@@ -979,6 +1002,10 @@ export const TorsionalBondsCheckBox = () => {
 export const MomentumVectorCheckBox = () => {
   const visible = useStore(Selector.momentumVisible);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
+  const addUndoable = useStore(Selector.addUndoable);
+
   const { t } = useTranslation();
   const lang = useLanguage();
 
@@ -1007,8 +1034,9 @@ export const MomentumVectorCheckBox = () => {
               setVisible(undoableCheck.checked);
             },
           } as UndoableCheck;
-          useStore.getState().addUndoable(undoableCheck);
+          addUndoable(undoableCheck);
           setVisible(checked);
+          if (loggable) logAction(checked ? 'Show momentum vectors' : 'Hide momentum vectors');
         }}
       >
         {t('molecularViewer.MomentumVectors', lang)}
@@ -1020,6 +1048,10 @@ export const MomentumVectorCheckBox = () => {
 export const ForceVectorCheckBox = () => {
   const visible = useStore(Selector.forceVisible);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
+  const addUndoable = useStore(Selector.addUndoable);
+
   const { t } = useTranslation();
   const lang = useLanguage();
 
@@ -1048,8 +1080,9 @@ export const ForceVectorCheckBox = () => {
               setVisible(undoableCheck.checked);
             },
           } as UndoableCheck;
-          useStore.getState().addUndoable(undoableCheck);
+          addUndoable(undoableCheck);
           setVisible(checked);
+          if (loggable) logAction(checked ? 'Show force vectors' : 'Hide force vectors');
         }}
       >
         {t('molecularViewer.ForceVectors', lang)}
