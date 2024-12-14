@@ -24,10 +24,14 @@ import { isCartoon } from '../../view/moleculeTools.ts';
 import { Restraint } from '../../models/Restraint.ts';
 import { UndoableDeleteMoleculeInChamber } from '../../undo/UndoableDelete.ts';
 import { Undoable } from '../../undo/Undoable.ts';
+import { UndoableMoleculeRotation, UndoableMoleculeTranslation } from '../../undo/UndoableMove.ts';
 
 export const TranslateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
+  const addUndoable = useStore(Selector.addUndoable);
   const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const molecularContainer = useStore(Selector.molecularContainer);
@@ -43,6 +47,23 @@ export const TranslateMolecule = () => {
     }
     return new Vector3();
   }, [moleculesRef, pickedIndex, updateFlag]);
+
+  const undoableTranslateSelectedMolecule = (displacement: Vector3) => {
+    if (pickedIndex === -1 || !moleculesRef?.current) return;
+    const undoable = {
+      name: 'Translate Selected Molecule',
+      timestamp: Date.now(),
+      displacement,
+      undo: () => {
+        translateSelectedMolecule(displacement.clone().negate());
+      },
+      redo: () => {
+        translateSelectedMolecule(undoable.displacement);
+      },
+    } as UndoableMoleculeTranslation;
+    addUndoable(undoable);
+    translateSelectedMolecule(displacement);
+  };
 
   const translateSelectedMolecule = (displacement: Vector3) => {
     if (pickedIndex === -1 || !moleculesRef?.current) return;
@@ -60,7 +81,6 @@ export const TranslateMolecule = () => {
             a.position.z += displacement.z;
           }
         }
-        if (state.loggable) state.logAction('Translate Selected Molecule');
       });
       setUpdateFlag(!updateFlag);
       updateViewer();
@@ -83,7 +103,8 @@ export const TranslateMolecule = () => {
           precision={1}
           onChange={(value) => {
             if (value === null) return;
-            translateSelectedMolecule(new Vector3(value - center.x, 0, 0));
+            undoableTranslateSelectedMolecule(new Vector3(value - center.x, 0, 0));
+            if (loggable) logAction('Translate Selected Molecule');
           }}
         />
         <InputNumber
@@ -98,7 +119,8 @@ export const TranslateMolecule = () => {
           precision={1}
           onChange={(value) => {
             if (value === null) return;
-            translateSelectedMolecule(new Vector3(0, value - center.y, 0));
+            undoableTranslateSelectedMolecule(new Vector3(0, value - center.y, 0));
+            if (loggable) logAction('Translate Selected Molecule');
           }}
         />
         <InputNumber
@@ -113,7 +135,8 @@ export const TranslateMolecule = () => {
           precision={1}
           onChange={(value) => {
             if (value === null) return;
-            translateSelectedMolecule(new Vector3(0, 0, value - center.z));
+            undoableTranslateSelectedMolecule(new Vector3(0, 0, value - center.z));
+            if (loggable) logAction('Translate Selected Molecule');
           }}
         />
       </Space>
@@ -124,12 +147,33 @@ export const TranslateMolecule = () => {
 export const RotateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
+  const addUndoable = useStore(Selector.addUndoable);
   const updateViewer = usePrimitiveStore(Selector.updateViewer);
   const pickedIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
   const moleculesRef = useRefStore.getState().moleculesRef;
 
   const { t } = useTranslation();
   const lang = useLanguage();
+
+  const undoableRotateSelectedMolecule = (axis: string, degrees: number) => {
+    if (pickedIndex === -1 || !moleculesRef?.current) return;
+    const undoable = {
+      name: 'Rotate Selected Molecule',
+      timestamp: Date.now(),
+      axis,
+      degrees,
+      undo: () => {
+        rotateSelectedMolecule(axis, -degrees);
+      },
+      redo: () => {
+        rotateSelectedMolecule(axis, degrees);
+      },
+    } as UndoableMoleculeRotation;
+    addUndoable(undoable);
+    rotateSelectedMolecule(axis, degrees);
+  };
 
   const rotateSelectedMolecule = (axis: string, degrees: number) => {
     if (pickedIndex === -1 || !moleculesRef?.current) return;
@@ -161,7 +205,6 @@ export const RotateMolecule = () => {
             a.position.z = m.atoms[i].position.z;
           }
         }
-        if (state.loggable) state.logAction('Rotate Selected Molecule');
       });
       updateViewer();
       setChanged(true);
@@ -173,28 +216,58 @@ export const RotateMolecule = () => {
       <Space direction={'vertical'} onClick={(e) => e.stopPropagation()}>
         <Space direction={'horizontal'}>
           <span>{t('molecularViewer.AboutXAxis', lang) + ':'}</span>
-          <Button onClick={() => rotateSelectedMolecule('x', 5)}>
+          <Button
+            onClick={() => {
+              undoableRotateSelectedMolecule('x', 5);
+              if (loggable) logAction('Rotate Selected Molecule Around X');
+            }}
+          >
             <RotateLeftOutlined />
           </Button>
-          <Button onClick={() => rotateSelectedMolecule('x', -5)}>
+          <Button
+            onClick={() => {
+              undoableRotateSelectedMolecule('x', -5);
+              if (loggable) logAction('Rotate Selected Molecule Around X');
+            }}
+          >
             <RotateRightOutlined />
           </Button>
         </Space>
         <Space direction={'horizontal'}>
           <span>{t('molecularViewer.AboutYAxis', lang) + ':'}</span>
-          <Button onClick={() => rotateSelectedMolecule('y', 5)}>
+          <Button
+            onClick={() => {
+              undoableRotateSelectedMolecule('y', 5);
+              if (loggable) logAction('Rotate Selected Molecule Around Y');
+            }}
+          >
             <RotateLeftOutlined />
           </Button>
-          <Button onClick={() => rotateSelectedMolecule('y', -5)}>
+          <Button
+            onClick={() => {
+              undoableRotateSelectedMolecule('y', -5);
+              if (loggable) logAction('Rotate Selected Molecule Around Y');
+            }}
+          >
             <RotateRightOutlined />
           </Button>
         </Space>
         <Space direction={'horizontal'}>
           <span>{t('molecularViewer.AboutZAxis', lang) + ':'}</span>
-          <Button onClick={() => rotateSelectedMolecule('z', 5)}>
+          <Button
+            onClick={() => {
+              undoableRotateSelectedMolecule('z', 5);
+              if (loggable) logAction('Rotate Selected Molecule Around Z');
+            }}
+          >
             <RotateLeftOutlined />
           </Button>
-          <Button onClick={() => rotateSelectedMolecule('z', -5)}>
+          <Button
+            onClick={() => {
+              undoableRotateSelectedMolecule('z', -5);
+              if (loggable) logAction('Rotate Selected Molecule Around Z');
+            }}
+          >
             <RotateRightOutlined />
           </Button>
         </Space>

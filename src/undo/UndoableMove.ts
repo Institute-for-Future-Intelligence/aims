@@ -3,23 +3,13 @@
  */
 
 import { Undoable } from './Undoable';
-import { MoveDirection } from '../constants';
+import { Vector3 } from 'three';
 
-export interface UndoableMove extends Undoable {
-  oldCx: number;
-  oldCy: number;
-  oldCz: number;
-  newCx: number;
-  newCy: number;
-  newCz: number;
+export interface UndoableMoleculeTranslation extends Undoable {
+  displacement: Vector3;
 }
 
-export interface UndoableMoveSelectedByKey extends Undoable {
-  direction: MoveDirection;
-  displacementMap: Map<string, number>;
-}
-
-export interface UndoableMoveAllByKey extends Undoable {
-  direction: MoveDirection;
-  displacement: number;
+export interface UndoableMoleculeRotation extends Undoable {
+  axis: string;
+  degrees: number;
 }
