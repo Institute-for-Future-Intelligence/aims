@@ -134,6 +134,7 @@ export const i18n_zh_tw = {
       CannotSignIn: '登錄失敗',
       CannotSignOut: '退出失敗',
       SigningOutAnonymousAccount: '你確定退出嗎？一旦退出，此匿名帳號將不可恢復。',
+      SigningInAnonymousAccount: '你確定匿名登入嗎？一旦退出，匿名帳號將無法恢復。',
       YourAccountWasCreated: '成功建立您的賬號。',
       CannotCreateAccount: '無法創建賬號',
       YourAccountSettingsWereSaved: '您的賬號設定已保存。',
