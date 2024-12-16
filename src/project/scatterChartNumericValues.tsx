@@ -10,7 +10,6 @@ import * as Selector from '../stores/selector';
 import { ProjectUtil } from './ProjectUtil.ts';
 import { useTranslation } from 'react-i18next';
 import { saveAs } from 'file-saver';
-import { LabelType } from '../constants.ts';
 
 interface ScatterChartNumericValuesProps {
   xVariable: string;
@@ -22,7 +21,6 @@ interface ScatterChartNumericValuesProps {
 const ScatterChartNumericValues = React.memo(
   ({ xVariable, yVariable, data, setScatterDataHoveredIndex }: ScatterChartNumericValuesProps) => {
     const language = useStore(Selector.language);
-    const labelType = useStore(Selector.labelType);
 
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
     const [selectedRow, setSelectedRow] = useState<number | undefined>();
@@ -76,8 +74,10 @@ const ScatterChartNumericValues = React.memo(
       saveAs(blob, fileName);
     };
 
+    const fontSize = '11px';
+
     return (
-      <div style={{ width: '400px' }}>
+      <div style={{ width: '480px' }}>
         <Table
           size={'small'}
           style={{ width: '100%', direction: 'ltr', verticalAlign: 'top' }}
@@ -97,19 +97,54 @@ const ScatterChartNumericValues = React.memo(
             title={t('molecularViewer.Molecule', lang)}
             dataIndex="key"
             key="key"
-            // width={'10%'}
             render={(i, record, index) => {
               return (
                 <Typography.Text
                   style={{
-                    fontSize: '12px',
+                    fontSize,
                     color: data[index].invisible ? 'silver' : 'black',
                     verticalAlign: 'middle',
                   }}
                 >
-                  {labelType === LabelType.FORMULA ? data[i].formula : data[i].name}
+                  {record.name}
                 </Typography.Text>
               );
+            }}
+            onHeaderCell={() => {
+              return { style: { fontSize: '10px', fontWeight: 'bold' } };
+            }}
+            onCell={(record, index) => {
+              return {
+                style: {
+                  paddingLeft: '2px',
+                  paddingTop: '2px',
+                  paddingBottom: '2px',
+                  border: '1px solid lightgray',
+                  background: index === selectedRow ? 'lavender' : 'white',
+                },
+              };
+            }}
+          />
+          <Column
+            title={t('word.Formula', lang)}
+            dataIndex="formula"
+            key="formula"
+            render={(formula, record: any) => {
+              return (
+                <Typography.Text
+                  style={{
+                    fontSize,
+                    fontWeight: record.selected ? 'bold' : 'normal',
+                    color: record.invisible ? 'silver' : 'black',
+                    verticalAlign: 'middle',
+                  }}
+                >
+                  {formula}
+                </Typography.Text>
+              );
+            }}
+            onHeaderCell={() => {
+              return { style: { fontSize: '10px', fontWeight: 'bold' } };
             }}
             onCell={(record, index) => {
               return {
@@ -132,7 +167,7 @@ const ScatterChartNumericValues = React.memo(
               return (
                 <Typography.Text
                   style={{
-                    fontSize: '12px',
+                    fontSize,
                     color: data[index].invisible ? 'silver' : 'black',
                     verticalAlign: 'middle',
                   }}
@@ -142,7 +177,10 @@ const ScatterChartNumericValues = React.memo(
               );
             }}
             onHeaderCell={() => {
-              return { title: xVariable ? t('tooltip.' + xVariable, lang) : '' };
+              return {
+                style: { fontSize: '10px', fontWeight: 'bold' },
+                title: xVariable ? t('tooltip.' + xVariable, lang) : '',
+              };
             }}
             onCell={(record, index) => {
               return {
@@ -160,12 +198,11 @@ const ScatterChartNumericValues = React.memo(
             title={ProjectUtil.getPropertyName(yVariable, lang) ?? yVariable}
             dataIndex="y"
             key="y"
-            // width={'45%'}
             render={(y, record, index) => {
               return (
                 <Typography.Text
                   style={{
-                    fontSize: '12px',
+                    fontSize,
                     color: data[index].invisible ? 'silver' : 'black',
                     verticalAlign: 'middle',
                   }}
@@ -175,7 +212,10 @@ const ScatterChartNumericValues = React.memo(
               );
             }}
             onHeaderCell={() => {
-              return { title: yVariable ? t('tooltip.' + yVariable, lang) : '' };
+              return {
+                style: { fontSize: '10px', fontWeight: 'bold' },
+                title: yVariable ? t('tooltip.' + yVariable, lang) : '',
+              };
             }}
             onCell={(record, index) => {
               return {

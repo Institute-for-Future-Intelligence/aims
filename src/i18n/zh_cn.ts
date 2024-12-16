@@ -135,7 +135,8 @@ export const i18n_zh_cn = {
       CannotSignIn: '登录失败',
       CannotSignOut: '退出失败',
       SigningOutAnonymousAccount: '你确定退出吗？一旦退出，此匿名账号将不可恢复。',
-      SigningInAnonymousAccount: '你确定匿名登录吗？一旦退出，匿名账号将无法恢复。',
+      SigningInAnonymousAccount:
+        '你确定匿名登录吗？一旦退出，匿名账号将无法恢复。匿名登录主要是为无法实名登录的用户提供临时方便。',
       YourAccountWasCreated: '成功建立您的账号。',
       CannotCreateAccount: '无法创建账号',
       YourAccountSettingsWereSaved: '您的账号设定已保存。',

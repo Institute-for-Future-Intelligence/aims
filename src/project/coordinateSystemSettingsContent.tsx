@@ -2,20 +2,13 @@
  * @Copyright 2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { Col, Input, InputNumber, Row, Select } from 'antd';
+import React, { useMemo } from 'react';
+import { Col, InputNumber, Row, Select } from 'antd';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useTranslation } from 'react-i18next';
-import {
-  updateXAxisNameScatterPlot,
-  updateXMaxScatterPlot,
-  updateXMinScatterPlot,
-  updateYAxisNameScatterPlot,
-  updateYMaxScatterPlot,
-  updateYMinScatterPlot,
-} from '../cloudProjectUtil.ts';
+import { UndoableChange } from '../undo/UndoableChange.ts';
 
 interface CoordinateSystemSettingsContentProps {
   xAxisNameScatterPlot: string | null;
@@ -41,10 +34,10 @@ const CoordinateSystemSettingsContent = React.memo(
   }: CoordinateSystemSettingsContentProps) => {
     const setCommonStore = useStore(Selector.set);
     const language = useStore(Selector.language);
-    const user = useStore(Selector.user);
     const setChanged = usePrimitiveStore(Selector.setChanged);
-    const projectOwner = useStore(Selector.projectOwner);
-    const projectTitle = useStore(Selector.projectTitle);
+    const addUndoable = useStore(Selector.addUndoable);
+    const loggable = useStore(Selector.loggable);
+    const logAction = useStore(Selector.logAction);
 
     const { Option } = Select;
 
@@ -52,18 +45,17 @@ const CoordinateSystemSettingsContent = React.memo(
     const lang = useMemo(() => {
       return { lng: language };
     }, [language]);
-    const isOwner = user.uid === projectOwner;
 
-    const [xFormulaTemp, setXFormulaTemp] = useState<string | null>(xFormula);
-    const [yFormulaTemp, setYFormulaTemp] = useState<string | null>(yFormula);
-
-    useEffect(() => {
-      setXFormulaTemp(xFormula);
-    }, [xFormula]);
-
-    useEffect(() => {
-      setYFormulaTemp(yFormula);
-    }, [yFormula]);
+    // const [xFormulaTemp, setXFormulaTemp] = useState<string | null>(xFormula);
+    // const [yFormulaTemp, setYFormulaTemp] = useState<string | null>(yFormula);
+    //
+    // useEffect(() => {
+    //   setXFormulaTemp(xFormula);
+    // }, [xFormula]);
+    //
+    // useEffect(() => {
+    //   setYFormulaTemp(yFormula);
+    // }, [yFormula]);
 
     const createAxisOptions = () => {
       return (
@@ -111,6 +103,144 @@ const CoordinateSystemSettingsContent = React.memo(
       );
     };
 
+    const undoableSelectXAxis = (value: any) => {
+      const undoable = {
+        name: 'Select X Axis',
+        timestamp: Date.now(),
+        oldValue: xAxisNameScatterPlot,
+        newValue: value,
+        undo: () => {
+          setCommonStore((state) => {
+            state.projectState.xAxisNameScatterPlot = undoable.oldValue as string;
+          });
+        },
+        redo: () => {
+          setCommonStore((state) => {
+            state.projectState.xAxisNameScatterPlot = undoable.newValue as string;
+          });
+        },
+      } as UndoableChange;
+      addUndoable(undoable);
+      setCommonStore((state) => {
+        state.projectState.xAxisNameScatterPlot = value;
+      });
+    };
+
+    const undoableSelectYAxis = (value: any) => {
+      const undoable = {
+        name: 'Select Y Axis',
+        timestamp: Date.now(),
+        oldValue: yAxisNameScatterPlot,
+        newValue: value,
+        undo: () => {
+          setCommonStore((state) => {
+            state.projectState.yAxisNameScatterPlot = undoable.oldValue as string;
+          });
+        },
+        redo: () => {
+          setCommonStore((state) => {
+            state.projectState.yAxisNameScatterPlot = undoable.newValue as string;
+          });
+        },
+      } as UndoableChange;
+      addUndoable(undoable);
+      setCommonStore((state) => {
+        state.projectState.yAxisNameScatterPlot = value;
+      });
+    };
+
+    const undoableSetMinX = (value: number) => {
+      const undoable = {
+        name: 'Set Minimum X',
+        timestamp: Date.now(),
+        oldValue: xMinScatterPlot,
+        newValue: value,
+        undo: () => {
+          setCommonStore((state) => {
+            state.projectState.xMinScatterPlot = undoable.oldValue as number;
+          });
+        },
+        redo: () => {
+          setCommonStore((state) => {
+            state.projectState.xMinScatterPlot = undoable.newValue as number;
+          });
+        },
+      } as UndoableChange;
+      addUndoable(undoable);
+      setCommonStore((state) => {
+        state.projectState.xMinScatterPlot = value;
+      });
+    };
+
+    const undoableSetMaxX = (value: number) => {
+      const undoable = {
+        name: 'Set Maximum X',
+        timestamp: Date.now(),
+        oldValue: xMaxScatterPlot,
+        newValue: value,
+        undo: () => {
+          setCommonStore((state) => {
+            state.projectState.xMaxScatterPlot = undoable.oldValue as number;
+          });
+        },
+        redo: () => {
+          setCommonStore((state) => {
+            state.projectState.xMaxScatterPlot = undoable.newValue as number;
+          });
+        },
+      } as UndoableChange;
+      addUndoable(undoable);
+      setCommonStore((state) => {
+        state.projectState.xMaxScatterPlot = value;
+      });
+    };
+
+    const undoableSetMinY = (value: number) => {
+      const undoable = {
+        name: 'Set Minimum Y',
+        timestamp: Date.now(),
+        oldValue: yMinScatterPlot,
+        newValue: value,
+        undo: () => {
+          setCommonStore((state) => {
+            state.projectState.yMinScatterPlot = undoable.oldValue as number;
+          });
+        },
+        redo: () => {
+          setCommonStore((state) => {
+            state.projectState.yMinScatterPlot = undoable.newValue as number;
+          });
+        },
+      } as UndoableChange;
+      addUndoable(undoable);
+      setCommonStore((state) => {
+        state.projectState.yMinScatterPlot = value;
+      });
+    };
+
+    const undoableSetMaxY = (value: number) => {
+      const undoable = {
+        name: 'Set Maximum Y',
+        timestamp: Date.now(),
+        oldValue: yMaxScatterPlot,
+        newValue: value,
+        undo: () => {
+          setCommonStore((state) => {
+            state.projectState.yMaxScatterPlot = undoable.oldValue as number;
+          });
+        },
+        redo: () => {
+          setCommonStore((state) => {
+            state.projectState.yMaxScatterPlot = undoable.newValue as number;
+          });
+        },
+      } as UndoableChange;
+      addUndoable(undoable);
+      setCommonStore((state) => {
+        state.projectState.yMaxScatterPlot = value;
+      });
+    };
+
     return (
       <div style={{ width: '280px' }}>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
@@ -123,16 +253,9 @@ const CoordinateSystemSettingsContent = React.memo(
               title={t('tooltip.' + xAxisNameScatterPlot, lang)}
               value={xAxisNameScatterPlot}
               onChange={(value) => {
-                setCommonStore((state) => {
-                  state.projectState.xAxisNameScatterPlot = value;
-                });
-                if (isOwner) {
-                  if (user.uid && projectTitle) {
-                    updateXAxisNameScatterPlot(user.uid, projectTitle, value).then(() => {
-                      setChanged(true);
-                    });
-                  }
-                }
+                undoableSelectXAxis(value);
+                setChanged(true);
+                if (loggable) logAction('Select X Axis');
               }}
             >
               {createAxisOptions()}
@@ -149,60 +272,55 @@ const CoordinateSystemSettingsContent = React.memo(
               value={yAxisNameScatterPlot}
               title={t('tooltip.' + yAxisNameScatterPlot, lang)}
               onChange={(value) => {
-                setCommonStore((state) => {
-                  state.projectState.yAxisNameScatterPlot = value;
-                });
-                if (isOwner) {
-                  if (user.uid && projectTitle) {
-                    updateYAxisNameScatterPlot(user.uid, projectTitle, value).then(() => {
-                      setChanged(true);
-                    });
-                  }
-                }
+                undoableSelectYAxis(value);
+                setChanged(true);
+                if (loggable) logAction('Select Y Axis');
               }}
             >
               {createAxisOptions()}
             </Select>
           </Col>
         </Row>
-        <Row>
-          <Col span={8} style={{ paddingTop: '5px' }}>
-            <span style={{ fontSize: '12px' }}>{t('projectPanel.XFormula', lang)}: </span>
-          </Col>
-          <Col span={16}>
-            <Input
-              style={{ width: '100%' }}
-              value={xFormulaTemp ?? 'x'}
-              onChange={(e) => {
-                setXFormulaTemp(e.target.value);
-              }}
-              onPressEnter={() => {
-                setCommonStore((state) => {
-                  state.projectState.xFormula = xFormulaTemp;
-                });
-              }}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={8} style={{ paddingTop: '5px' }}>
-            <span style={{ fontSize: '12px' }}>{t('projectPanel.YFormula', lang)}: </span>
-          </Col>
-          <Col span={16}>
-            <Input
-              style={{ width: '100%' }}
-              value={yFormulaTemp ?? 'y'}
-              onChange={(e) => {
-                setYFormulaTemp(e.target.value);
-              }}
-              onPressEnter={() => {
-                setCommonStore((state) => {
-                  state.projectState.yFormula = yFormulaTemp;
-                });
-              }}
-            />
-          </Col>
-        </Row>
+        {/*<Row>*/}
+        {/*  <Col span={8} style={{ paddingTop: '5px' }}>*/}
+        {/*    <span style={{ fontSize: '12px' }}>{t('projectPanel.XFormula', lang)}: </span>*/}
+        {/*  </Col>*/}
+        {/*  <Col span={16}>*/}
+        {/*    <Input*/}
+        {/*      style={{ width: '100%' }}*/}
+        {/*      value={xFormulaTemp ?? 'x'}*/}
+        {/*      onChange={(e) => {*/}
+        {/*        setXFormulaTemp(e.target.value);*/}
+        {/*      }}*/}
+        {/*      onPressEnter={() => {*/}
+        {/*        setCommonStore((state) => {*/}
+        {/*          state.projectState.xFormula = xFormulaTemp;*/}
+        {/*        });*/}
+        {/*          setChanged(true);*/}
+        {/*      }}*/}
+        {/*    />*/}
+        {/*  </Col>*/}
+        {/*</Row>*/}
+        {/*<Row>*/}
+        {/*  <Col span={8} style={{ paddingTop: '5px' }}>*/}
+        {/*    <span style={{ fontSize: '12px' }}>{t('projectPanel.YFormula', lang)}: </span>*/}
+        {/*  </Col>*/}
+        {/*  <Col span={16}>*/}
+        {/*    <Input*/}
+        {/*      style={{ width: '100%' }}*/}
+        {/*      value={yFormulaTemp ?? 'y'}*/}
+        {/*      onChange={(e) => {*/}
+        {/*        setYFormulaTemp(e.target.value);*/}
+        {/*      }}*/}
+        {/*      onPressEnter={() => {*/}
+        {/*        setCommonStore((state) => {*/}
+        {/*          state.projectState.yFormula = yFormulaTemp;*/}
+        {/*        });*/}
+        {/*          setChanged(true);*/}
+        {/*      }}*/}
+        {/*    />*/}
+        {/*  </Col>*/}
+        {/*</Row>*/}
         <Row>
           <Col span={8} style={{ paddingTop: '5px' }}>
             <span style={{ fontSize: '12px' }}>{t('projectPanel.MinimumX', lang)}: </span>
@@ -214,16 +332,9 @@ const CoordinateSystemSettingsContent = React.memo(
               value={xMinScatterPlot}
               onChange={(value) => {
                 if (value === null) return;
-                setCommonStore((state) => {
-                  state.projectState.xMinScatterPlot = value;
-                });
-                if (isOwner) {
-                  if (user.uid && projectTitle) {
-                    updateXMinScatterPlot(user.uid, projectTitle, value).then(() => {
-                      setChanged(true);
-                    });
-                  }
-                }
+                undoableSetMinX(value);
+                setChanged(true);
+                if (loggable) logAction('Set Minimum X');
               }}
             />
           </Col>
@@ -239,16 +350,9 @@ const CoordinateSystemSettingsContent = React.memo(
               value={xMaxScatterPlot}
               onChange={(value) => {
                 if (value === null) return;
-                setCommonStore((state) => {
-                  state.projectState.xMaxScatterPlot = value;
-                });
-                if (isOwner) {
-                  if (user.uid && projectTitle) {
-                    updateXMaxScatterPlot(user.uid, projectTitle, value).then(() => {
-                      setChanged(true);
-                    });
-                  }
-                }
+                undoableSetMaxX(value);
+                setChanged(true);
+                if (loggable) logAction('Set Maximum X');
               }}
             />
           </Col>
@@ -264,16 +368,9 @@ const CoordinateSystemSettingsContent = React.memo(
               value={yMinScatterPlot}
               onChange={(value) => {
                 if (value === null) return;
-                setCommonStore((state) => {
-                  state.projectState.yMinScatterPlot = value;
-                });
-                if (isOwner) {
-                  if (user.uid && projectTitle) {
-                    updateYMinScatterPlot(user.uid, projectTitle, value).then(() => {
-                      setChanged(true);
-                    });
-                  }
-                }
+                undoableSetMinY(value);
+                setChanged(true);
+                if (loggable) logAction('Set Minimum Y');
               }}
             />
           </Col>
@@ -289,16 +386,9 @@ const CoordinateSystemSettingsContent = React.memo(
               value={yMaxScatterPlot}
               onChange={(value) => {
                 if (value === null) return;
-                setCommonStore((state) => {
-                  state.projectState.yMaxScatterPlot = value;
-                });
-                if (isOwner) {
-                  if (user.uid && projectTitle) {
-                    updateYMaxScatterPlot(user.uid, projectTitle, value).then(() => {
-                      setChanged(true);
-                    });
-                  }
-                }
+                undoableSetMaxY(value);
+                setChanged(true);
+                if (loggable) logAction('Set Maximum Y');
               }}
             />
           </Col>

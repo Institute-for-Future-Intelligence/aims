@@ -143,7 +143,7 @@ export const i18n_en = {
       CannotSignOut: 'Cannot sign out',
       SigningOutAnonymousAccount: 'Are you sure you want to sign out? This anonymous account will be lost.',
       SigningInAnonymousAccount:
-        'Are you sure you want to sign in anonymously? An anonymous account will be lost if you sign out.',
+        'Are you sure you want to sign in anonymously? An anonymous account will be lost if you sign out. It should be used only for temporary purposes and on the same computer.',
       YourAccountWasCreated: 'Your account was created.',
       CannotCreateAccount: 'Cannot create an account',
       YourAccountSettingsWereSaved: 'Your account settings were saved.',

@@ -8,20 +8,16 @@ import * as Selector from '../stores/selector';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { Checkbox, InputNumber, Radio, Slider, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
-import {
-  updateHorizontalLinesScatterPlot,
-  updateLineWidthScatterPlot,
-  updateSymbolSizeScatterPlot,
-  updateVerticalLinesScatterPlot,
-} from '../cloudProjectUtil.ts';
+import { UndoableChange } from '../undo/UndoableChange.ts';
+import { UndoableCheck } from '../undo/UndoableCheck.ts';
 
 const GraphSettingsContent = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
-  const user = useStore(Selector.user);
   const setChanged = usePrimitiveStore(Selector.setChanged);
-  const projectOwner = useStore(Selector.projectOwner);
-  const projectTitle = useStore(Selector.projectTitle);
+  const addUndoable = useStore(Selector.addUndoable);
+  const loggable = useStore(Selector.loggable);
+  const logAction = useStore(Selector.logAction);
   const xLinesScatterPlot = useStore(Selector.xLinesScatterPlot);
   const yLinesScatterPlot = useStore(Selector.yLinesScatterPlot);
   const dotSizeScatterPlot = useStore(Selector.dotSizeScatterPlot);
@@ -35,7 +31,152 @@ const GraphSettingsContent = React.memo(() => {
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
-  const isOwner = user.uid === projectOwner;
+
+  const undoableSetSortData = (value: any) => {
+    const undoable = {
+      name: 'Sort Data for Scatter Plot',
+      timestamp: Date.now(),
+      oldValue: sortDataScatterPlot,
+      newValue: value,
+      undo: () => setSortData(undoable.oldValue),
+      redo: () => setSortData(undoable.newValue),
+    } as UndoableChange;
+    addUndoable(undoable);
+    setSortData(value);
+  };
+
+  const setSortData = (value: any) => {
+    setCommonStore((state) => {
+      state.projectState.sortDataScatterPlot = value;
+      switch (state.projectState.sortDataScatterPlot) {
+        case 'None':
+          state.projectState.selectedProperty = null;
+          state.projectState.sortDescending = false;
+          break;
+        case 'X':
+          state.projectState.selectedProperty = xAxisNameScatterPlot;
+          state.projectState.sortDescending = true;
+          break;
+        case 'Y':
+          state.projectState.selectedProperty = yAxisNameScatterPlot;
+          state.projectState.sortDescending = true;
+          break;
+      }
+    });
+  };
+
+  const undoableSetHorizontalLines = (checked: boolean) => {
+    const undoable = {
+      name: checked ? 'Show Horizontal Lines' : 'Hide Horizontal Lines',
+      timestamp: Date.now(),
+      checked,
+      undo: () => {
+        setCommonStore((state) => {
+          state.projectState.xLinesScatterPlot = !undoable.checked;
+        });
+      },
+      redo: () => {
+        setCommonStore((state) => {
+          state.projectState.xLinesScatterPlot = undoable.checked;
+        });
+      },
+    } as UndoableCheck;
+    addUndoable(undoable);
+    setCommonStore((state) => {
+      state.projectState.xLinesScatterPlot = checked;
+    });
+  };
+
+  const undoableSetVerticalLines = (checked: boolean) => {
+    const undoable = {
+      name: checked ? 'Show Vertical Lines' : 'Hide Vertical Lines',
+      timestamp: Date.now(),
+      checked,
+      undo: () => {
+        setCommonStore((state) => {
+          state.projectState.yLinesScatterPlot = !undoable.checked;
+        });
+      },
+      redo: () => {
+        setCommonStore((state) => {
+          state.projectState.yLinesScatterPlot = undoable.checked;
+        });
+      },
+    } as UndoableCheck;
+    addUndoable(undoable);
+    setCommonStore((state) => {
+      state.projectState.yLinesScatterPlot = checked;
+    });
+  };
+
+  const undoableSetRegressionDegree = (value: number) => {
+    const undoable = {
+      name: 'Change Regression Degree',
+      timestamp: Date.now(),
+      oldValue: regressionDegree,
+      newValue: value,
+      undo: () => {
+        setCommonStore((state) => {
+          state.projectState.regressionDegree = undoable.oldValue as number;
+        });
+      },
+      redo: () => {
+        setCommonStore((state) => {
+          state.projectState.regressionDegree = undoable.newValue as number;
+        });
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setCommonStore((state) => {
+      state.projectState.regressionDegree = value;
+    });
+  };
+
+  const undoableSetSymbolSize = (value: number) => {
+    const undoable = {
+      name: 'Change Symbol Size',
+      timestamp: Date.now(),
+      oldValue: dotSizeScatterPlot,
+      newValue: value,
+      undo: () => {
+        setCommonStore((state) => {
+          state.projectState.dotSizeScatterPlot = undoable.oldValue as number;
+        });
+      },
+      redo: () => {
+        setCommonStore((state) => {
+          state.projectState.dotSizeScatterPlot = undoable.newValue as number;
+        });
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setCommonStore((state) => {
+      state.projectState.dotSizeScatterPlot = value;
+    });
+  };
+
+  const undoableSetLineWidth = (value: number) => {
+    const undoable = {
+      name: 'Change Line Width',
+      timestamp: Date.now(),
+      oldValue: lineWidthScatterPlot,
+      newValue: value,
+      undo: () => {
+        setCommonStore((state) => {
+          state.projectState.lineWidthScatterPlot = undoable.oldValue as number;
+        });
+      },
+      redo: () => {
+        setCommonStore((state) => {
+          state.projectState.lineWidthScatterPlot = undoable.newValue as number;
+        });
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setCommonStore((state) => {
+      state.projectState.lineWidthScatterPlot = value;
+    });
+  };
 
   return (
     <div>
@@ -44,23 +185,9 @@ const GraphSettingsContent = React.memo(() => {
         <Radio.Group
           value={sortDataScatterPlot}
           onChange={(e) => {
-            setCommonStore((state) => {
-              state.projectState.sortDataScatterPlot = e.target.value;
-              switch (state.projectState.sortDataScatterPlot) {
-                case 'None':
-                  state.projectState.selectedProperty = null;
-                  state.projectState.sortDescending = false;
-                  break;
-                case 'X':
-                  state.projectState.selectedProperty = xAxisNameScatterPlot;
-                  state.projectState.sortDescending = true;
-                  break;
-                case 'Y':
-                  state.projectState.selectedProperty = yAxisNameScatterPlot;
-                  state.projectState.sortDescending = true;
-                  break;
-              }
-            });
+            undoableSetSortData(e.target.value);
+            setChanged(true);
+            if (loggable) logAction('Sort Scatter Plot Data');
           }}
         >
           <Radio value={'None'}>
@@ -80,17 +207,9 @@ const GraphSettingsContent = React.memo(() => {
         <Checkbox
           style={{ width: '100%' }}
           onChange={(e) => {
-            const checked = e.target.checked;
-            setCommonStore((state) => {
-              state.projectState.xLinesScatterPlot = checked;
-            });
-            if (isOwner) {
-              if (user.uid && projectTitle) {
-                updateHorizontalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
-                  setChanged(true);
-                });
-              }
-            }
+            undoableSetHorizontalLines(e.target.checked);
+            setChanged(true);
+            if (loggable) logAction('Show/Hide Horizontal Lines');
           }}
           checked={xLinesScatterPlot}
         >
@@ -99,17 +218,9 @@ const GraphSettingsContent = React.memo(() => {
         <Checkbox
           style={{ width: '100%' }}
           onChange={(e) => {
-            const checked = e.target.checked;
-            setCommonStore((state) => {
-              state.projectState.yLinesScatterPlot = checked;
-            });
-            if (isOwner) {
-              if (user.uid && projectTitle) {
-                updateVerticalLinesScatterPlot(user.uid, projectTitle, checked).then(() => {
-                  setChanged(true);
-                });
-              }
-            }
+            undoableSetVerticalLines(e.target.checked);
+            setChanged(true);
+            if (loggable) logAction('Show/Hide Vertical Lines');
           }}
           checked={yLinesScatterPlot}
         >
@@ -127,10 +238,9 @@ const GraphSettingsContent = React.memo(() => {
           value={regressionDegree}
           onChange={(value) => {
             if (value === null) return;
-            setCommonStore((state) => {
-              state.projectState.regressionDegree = value;
-            });
+            undoableSetRegressionDegree(value);
             setChanged(true);
+            if (loggable) logAction('Set Regression Degree');
           }}
         />
       </Space>
@@ -143,16 +253,9 @@ const GraphSettingsContent = React.memo(() => {
           max={10}
           value={dotSizeScatterPlot}
           onChange={(v) => {
-            setCommonStore((state) => {
-              state.projectState.dotSizeScatterPlot = v;
-            });
-            if (isOwner) {
-              if (user.uid && projectTitle) {
-                updateSymbolSizeScatterPlot(user.uid, projectTitle, v).then(() => {
-                  setChanged(true);
-                });
-              }
-            }
+            undoableSetSymbolSize(v);
+            setChanged(true);
+            if (loggable) logAction('Set Symbol Size');
           }}
         />
       </Space>
@@ -165,16 +268,9 @@ const GraphSettingsContent = React.memo(() => {
           max={6}
           value={lineWidthScatterPlot}
           onChange={(v) => {
-            setCommonStore((state) => {
-              state.projectState.lineWidthScatterPlot = v;
-            });
-            if (isOwner) {
-              if (user.uid && projectTitle) {
-                updateLineWidthScatterPlot(user.uid, projectTitle, v).then(() => {
-                  setChanged(true);
-                });
-              }
-            }
+            undoableSetLineWidth(v);
+            setChanged(true);
+            if (loggable) logAction('Set Line Width');
           }}
         />
       </Space>
