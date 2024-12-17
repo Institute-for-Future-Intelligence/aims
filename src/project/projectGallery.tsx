@@ -8,6 +8,7 @@ import { ChemicalNotation, DataColoring, GraphType, ProjectType } from '../const
 import styled from 'styled-components';
 import { Button, Collapse, CollapseProps, Empty, Modal, Popover, Radio, Spin } from 'antd';
 import {
+  ColumnHeightOutlined,
   BgColorsOutlined,
   CameraOutlined,
   CarryOutOutlined,
@@ -1109,6 +1110,12 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       <CameraOutlined
                         style={{ fontSize: '24px', color: 'gray' }}
                         title={t('projectPanel.GraphScreenshot', lang)}
+                      />
+                    </Button>
+                    <Button style={{ border: 'none', paddingRight: '0px', background: 'white' }} onClick={() => {}}>
+                      <ColumnHeightOutlined
+                        style={{ fontSize: '24px', color: 'gray' }}
+                        title={t('projectPanel.AutoscaleGraph', lang)}
                       />
                     </Button>
                     <Popover

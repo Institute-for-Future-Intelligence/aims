@@ -3,7 +3,7 @@
  */
 
 import { useFrame, useThree } from '@react-three/fiber';
-import { DirectionalLight, Euler, Vector3, WebGLCapabilities } from 'three';
+import { DirectionalLight, Euler, Vector3 } from 'three';
 import { useStore } from './stores/common';
 import {
   DEFAULT_CAMERA_POSITION,

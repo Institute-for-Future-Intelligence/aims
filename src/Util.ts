@@ -57,6 +57,15 @@ export class Util {
       : null;
   }
 
+  static nearestNiceNumber(positiveNumber: number): number {
+    // get the first larger power of 10
+    let nice = Math.pow(10, Math.ceil(Math.log10(positiveNumber)));
+    // scale the power to a "nice enough" value
+    if (positiveNumber < 0.25 * nice) nice = 0.25 * nice;
+    else if (positiveNumber < 0.5 * nice) nice = 0.5 * nice;
+    return nice;
+  }
+
   static capitalizeFirstLetter(s: string): string {
     if (s.length === 1) return s.toUpperCase();
     return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();

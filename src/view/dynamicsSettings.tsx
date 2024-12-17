@@ -798,6 +798,14 @@ const DynamicsSettings = React.memo(() => {
           >
             <span>🕖 {(mdRef.current.indexOfStep * timeStep).toFixed(0) + 'fs'}</span>
           </Popover>
+          <Popover
+            title={<div onClick={(e) => e.stopPropagation()}>⚛ {t('projectPanel.AtomCount', lang)}</div>}
+            content={<Space style={{ width: '300px' }}>{t('projectPanel.TotalNumberOfAtomsInModel', lang)}</Space>}
+          >
+            <span style={{ color: mdRef.current.atoms.length > 200 ? 'red' : 'lightgray' }}>
+              ⚛ {mdRef.current.atoms.length}
+            </span>
+          </Popover>
         </Space>
       )}
     </>

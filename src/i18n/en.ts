@@ -352,9 +352,12 @@ export const i18n_en = {
       SameColorForAllMolecules: 'Same color for all molecules',
       OneColorForEachMolecule: 'One color for each molecule',
       GraphScreenshot: 'Take a screenshot of the graph',
+      AutoscaleGraph: 'Autoscale graph',
       ChemicalElements: 'Chemical Elements',
       ChemicalComposition: 'Chemical Composition',
       AtomCount: 'Atom Count',
+      TotalNumberOfAtomsInModel:
+        'The total number of atoms in the model. If exceeding 200, the model may run slowly. The text will turn red as a reminder.',
       BondCount: 'Bond Count',
       RadialBondCount: 'Radial Bond Count',
       AngularBondCount: 'Angular Bond Count',
