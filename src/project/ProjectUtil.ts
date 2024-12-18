@@ -36,6 +36,7 @@ export class ProjectUtil {
       ligand: null,
       protein: null,
       selectedProperty: null,
+      autoscaleGraph: false,
       dataColoring: DataColoring.ALL,
       sortDescending: false,
       ranges: new Array<Range>(),

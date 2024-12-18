@@ -97,6 +97,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           filters: data.filters,
           hiddenProperties: data.hiddenProperties,
           selectedProperty: data.selectedProperty,
+          autoscaleGraph: data.autoscaleGraph,
           sortDescending: data.sortDescending,
           xAxisNameScatterPlot: data.xAxisNameScatterPlot,
           yAxisNameScatterPlot: data.yAxisNameScatterPlot,

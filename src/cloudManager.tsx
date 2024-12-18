@@ -707,6 +707,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       if (!ps.description) delete (ps as any).description;
       if (!ps.selectedMolecule) delete (ps as any).selectedMolecule;
       if (!ps.selectedProperty) delete (ps as any).selectedProperty;
+      if (!ps.autoscaleGraph) delete (ps as any).autoscaleGraph;
       if (!ps.sortDescending) delete (ps as any).sortDescending;
       if (!ps.xLinesScatterPlot) delete (ps as any).xLinesScatterPlot;
       if (!ps.yLinesScatterPlot) delete (ps as any).yLinesScatterPlot;

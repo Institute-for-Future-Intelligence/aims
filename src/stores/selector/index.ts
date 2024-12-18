@@ -116,6 +116,8 @@ export const ligandTransform = (state: CommonStoreState) => state.projectState.l
 
 export const selectedProperty = (state: CommonStoreState) => state.projectState.selectedProperty;
 
+export const autoscaleGraph = (state: CommonStoreState) => state.projectState.autoscaleGraph;
+
 export const selectedMolecule = (state: CommonStoreState) => state.projectState.selectedMolecule;
 
 export const hoveredMolecule = (state: PrimitiveStoreState) => state.hoveredMolecule;

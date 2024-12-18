@@ -155,6 +155,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const projectMolecules = useStore(Selector.molecules);
   const selectedProperty = useStore(Selector.selectedProperty);
   const hiddenProperties = useStore(Selector.hiddenProperties);
+  const autoscaleGraph = useStore(Selector.autoscaleGraph);
   const xAxisNameScatterPlot = useStore(Selector.xAxisNameScatterPlot) ?? 'atomCount';
   const yAxisNameScatterPlot = useStore(Selector.yAxisNameScatterPlot) ?? 'bondCount';
   const sortDataScatterPlot = useStore(Selector.sortDataScatterPlot) ?? 'None';
@@ -696,6 +697,27 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return array;
   }, [updateHiddenFlag, projectRanges, hiddenProperties]);
 
+  const toggleAutoscaleGraph = () => {
+    const undoable = {
+      name: (autoscaleGraph ? 'Disable' : 'Enable') + ' Autoscale Graph',
+      timestamp: Date.now(),
+      undo: () => {
+        setCommonStore((state) => {
+          state.projectState.autoscaleGraph = !state.projectState.autoscaleGraph;
+        });
+      },
+      redo: () => {
+        setCommonStore((state) => {
+          state.projectState.autoscaleGraph = !state.projectState.autoscaleGraph;
+        });
+      },
+    } as Undoable;
+    addUndoable(undoable);
+    setCommonStore((state) => {
+      state.projectState.autoscaleGraph = !state.projectState.autoscaleGraph;
+    });
+  };
+
   const steps: number[] = useMemo(() => {
     const array: number[] = [];
     if (!hiddenProperties?.includes('atomCount')) array.push(1);
@@ -1112,7 +1134,21 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                         title={t('projectPanel.GraphScreenshot', lang)}
                       />
                     </Button>
-                    <Button style={{ border: 'none', paddingRight: '0px', background: 'white' }} onClick={() => {}}>
+                    <Button
+                      style={{
+                        marginLeft: '10px',
+                        paddingLeft: '2px',
+                        paddingRight: '2px',
+                        verticalAlign: 'top',
+                        border: autoscaleGraph ? '1px solid gray' : 'none',
+                        background: autoscaleGraph ? 'lightgray' : 'white',
+                      }}
+                      onClick={() => {
+                        toggleAutoscaleGraph();
+                        setChanged(true);
+                        if (loggable) logAction('Autoscale Graph');
+                      }}
+                    >
                       <ColumnHeightOutlined
                         style={{ fontSize: '24px', color: 'gray' }}
                         title={t('projectPanel.AutoscaleGraph', lang)}

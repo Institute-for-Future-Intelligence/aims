@@ -36,6 +36,7 @@ export interface ProjectState {
   ligand: MoleculeInterface | null;
   protein: MoleculeInterface | null;
   selectedProperty: string | null;
+  autoscaleGraph: boolean;
   dataColoring: DataColoring;
   sortDescending: boolean | null;
   ranges: Range[] | null;
