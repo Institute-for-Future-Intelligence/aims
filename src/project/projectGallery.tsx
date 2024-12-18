@@ -661,41 +661,90 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return max;
   };
 
+  const calcMax = (variable: string, exact?: boolean) => {
+    let max = -Number.MAX_VALUE;
+    let min = Number.MAX_VALUE;
+    for (const d of data) {
+      const v = d[variable];
+      if (v !== undefined) {
+        const n = v as number;
+        if (n > max) max = n;
+        if (n < min) min = n;
+      }
+    }
+    if (exact) return max;
+    return max + (max - min) / 2;
+  };
+
+  const calcMin = (variable: string, exact?: boolean) => {
+    let min = Number.MAX_VALUE;
+    let max = -Number.MAX_VALUE;
+    for (const d of data) {
+      const v = d[variable];
+      if (v !== undefined) {
+        const n = v as number;
+        if (n < min) min = n;
+        if (n > max) max = n;
+      }
+    }
+    if (exact) return min;
+    return min - (max - min) / 2;
+  };
+
   const minima: number[] = useMemo(() => {
     const array: number[] = [];
-    if (!hiddenProperties?.includes('atomCount')) array.push(getMin('atomCount', 0));
-    if (!hiddenProperties?.includes('bondCount')) array.push(getMin('bondCount', 0));
-    if (!hiddenProperties?.includes('molecularMass')) array.push(getMin('molecularMass', 0));
-    if (!hiddenProperties?.includes('logP')) array.push(getMin('logP', -10));
-    if (!hiddenProperties?.includes('hydrogenBondDonorCount')) array.push(getMin('hydrogenBondDonorCount', 0));
-    if (!hiddenProperties?.includes('hydrogenBondAcceptorCount')) array.push(getMin('hydrogenBondAcceptorCount', 0));
-    if (!hiddenProperties?.includes('rotatableBondCount')) array.push(getMin('rotatableBondCount', 0));
-    if (!hiddenProperties?.includes('polarSurfaceArea')) array.push(getMin('polarSurfaceArea', 0));
-    if (!hiddenProperties?.includes('heavyAtomCount')) array.push(getMin('heavyAtomCount', 0));
-    if (!hiddenProperties?.includes('complexity')) array.push(getMin('complexity', 0));
-    if (!hiddenProperties?.includes('density')) array.push(getMin('density', 0));
-    if (!hiddenProperties?.includes('boilingPoint')) array.push(getMin('boilingPoint', -100));
-    if (!hiddenProperties?.includes('meltingPoint')) array.push(getMin('meltingPoint', -100));
+    const flag = autoscaleGraph && data.length > 0;
+    if (!hiddenProperties?.includes('atomCount')) array.push(flag ? calcMin('atomCount') : getMin('atomCount', 0));
+    if (!hiddenProperties?.includes('bondCount')) array.push(flag ? calcMin('bondCount') : getMin('bondCount', 0));
+    if (!hiddenProperties?.includes('molecularMass'))
+      array.push(flag ? calcMin('molecularMass') : getMin('molecularMass', 0));
+    if (!hiddenProperties?.includes('logP')) array.push(flag ? calcMin('logP') : getMin('logP', -10));
+    if (!hiddenProperties?.includes('hydrogenBondDonorCount'))
+      array.push(flag ? calcMin('hydrogenBondDonorCount') : getMin('hydrogenBondDonorCount', 0));
+    if (!hiddenProperties?.includes('hydrogenBondAcceptorCount'))
+      array.push(flag ? calcMin('hydrogenBondAcceptorCount') : getMin('hydrogenBondAcceptorCount', 0));
+    if (!hiddenProperties?.includes('rotatableBondCount'))
+      array.push(flag ? calcMin('rotatableBondCount') : getMin('rotatableBondCount', 0));
+    if (!hiddenProperties?.includes('polarSurfaceArea'))
+      array.push(flag ? calcMin('polarSurfaceArea') : getMin('polarSurfaceArea', 0));
+    if (!hiddenProperties?.includes('heavyAtomCount'))
+      array.push(flag ? calcMin('heavyAtomCount') : getMin('heavyAtomCount', 0));
+    if (!hiddenProperties?.includes('complexity')) array.push(flag ? calcMin('complexity') : getMin('complexity', 0));
+    if (!hiddenProperties?.includes('density')) array.push(flag ? calcMin('density') : getMin('density', 0));
+    if (!hiddenProperties?.includes('boilingPoint'))
+      array.push(flag ? calcMin('boilingPoint') : getMin('boilingPoint', -100));
+    if (!hiddenProperties?.includes('meltingPoint'))
+      array.push(flag ? calcMin('meltingPoint') : getMin('meltingPoint', -100));
     return array;
-  }, [projectRanges, hiddenProperties]);
+  }, [updateHiddenFlag, projectRanges, hiddenProperties, autoscaleGraph, data]);
 
   const maxima: number[] = useMemo(() => {
     const array: number[] = [];
-    if (!hiddenProperties?.includes('atomCount')) array.push(getMax('atomCount', 200));
-    if (!hiddenProperties?.includes('bondCount')) array.push(getMax('bondCount', 200));
-    if (!hiddenProperties?.includes('molecularMass')) array.push(getMax('molecularMass', 1000));
-    if (!hiddenProperties?.includes('logP')) array.push(getMax('logP', 10));
-    if (!hiddenProperties?.includes('hydrogenBondDonorCount')) array.push(getMax('hydrogenBondDonorCount', 20));
-    if (!hiddenProperties?.includes('hydrogenBondAcceptorCount')) array.push(getMax('hydrogenBondAcceptorCount', 20));
-    if (!hiddenProperties?.includes('rotatableBondCount')) array.push(getMax('rotatableBondCount', 20));
-    if (!hiddenProperties?.includes('polarSurfaceArea')) array.push(getMax('polarSurfaceArea', 200));
-    if (!hiddenProperties?.includes('heavyAtomCount')) array.push(getMax('heavyAtomCount', 200));
-    if (!hiddenProperties?.includes('complexity')) array.push(getMax('complexity', 2000));
-    if (!hiddenProperties?.includes('density')) array.push(getMax('density', 5));
-    if (!hiddenProperties?.includes('boilingPoint')) array.push(getMax('boilingPoint', 200));
-    if (!hiddenProperties?.includes('meltingPoint')) array.push(getMax('meltingPoint', 50));
+    const flag = autoscaleGraph && data.length > 0;
+    if (!hiddenProperties?.includes('atomCount')) array.push(flag ? calcMax('atomCount') : getMax('atomCount', 200));
+    if (!hiddenProperties?.includes('bondCount')) array.push(flag ? calcMax('bondCount') : getMax('bondCount', 200));
+    if (!hiddenProperties?.includes('molecularMass'))
+      array.push(flag ? calcMax('molecularMass') : getMax('molecularMass', 1000));
+    if (!hiddenProperties?.includes('logP')) array.push(flag ? calcMax('logP') : getMax('logP', 10));
+    if (!hiddenProperties?.includes('hydrogenBondDonorCount'))
+      array.push(flag ? calcMax('hydrogenBondDonorCount') : getMax('hydrogenBondDonorCount', 20));
+    if (!hiddenProperties?.includes('hydrogenBondAcceptorCount'))
+      array.push(flag ? calcMax('hydrogenBondAcceptorCount') : getMax('hydrogenBondAcceptorCount', 20));
+    if (!hiddenProperties?.includes('rotatableBondCount'))
+      array.push(flag ? calcMax('rotatableBondCount') : getMax('rotatableBondCount', 20));
+    if (!hiddenProperties?.includes('polarSurfaceArea'))
+      array.push(flag ? calcMax('polarSurfaceArea') : getMax('polarSurfaceArea', 200));
+    if (!hiddenProperties?.includes('heavyAtomCount'))
+      array.push(flag ? calcMax('heavyAtomCount') : getMax('heavyAtomCount', 200));
+    if (!hiddenProperties?.includes('complexity'))
+      array.push(flag ? calcMax('complexity') : getMax('complexity', 2000));
+    if (!hiddenProperties?.includes('density')) array.push(flag ? calcMax('density') : getMax('density', 5));
+    if (!hiddenProperties?.includes('boilingPoint'))
+      array.push(flag ? calcMax('boilingPoint') : getMax('boilingPoint', 200));
+    if (!hiddenProperties?.includes('meltingPoint'))
+      array.push(flag ? calcMax('meltingPoint') : getMax('meltingPoint', 50));
     return array;
-  }, [updateHiddenFlag, projectRanges, hiddenProperties]);
+  }, [updateHiddenFlag, projectRanges, hiddenProperties, autoscaleGraph, data]);
 
   const toggleAutoscaleGraph = () => {
     const undoable = {
@@ -763,11 +812,12 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   };
 
   const createFilter = (variable: string, defaultUpperBound: number, defaultLowerBound: number) => {
+    const flag = autoscaleGraph && data.length > 0;
     return {
       variable,
       type: FilterType.Between,
-      upperBound: getFilterUpperBound(variable, defaultUpperBound),
-      lowerBound: getFilterLowerBound(variable, defaultLowerBound),
+      upperBound: getFilterUpperBound(variable, flag ? calcMax(variable, true) : defaultUpperBound),
+      lowerBound: getFilterLowerBound(variable, flag ? calcMin(variable, true) : defaultLowerBound),
     } as Filter;
   };
 
@@ -790,7 +840,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     if (!hiddenProperties?.includes('boilingPoint')) array.push(createFilter('boilingPoint', 200, 0));
     if (!hiddenProperties?.includes('meltingPoint')) array.push(createFilter('meltingPoint', 50, 0));
     return array;
-  }, [updateHiddenFlag, projectFilters, hiddenProperties]);
+  }, [updateHiddenFlag, projectFilters, hiddenProperties, autoscaleGraph, data]);
 
   const scatterData = useMemo(() => {
     const data: {
