@@ -37,6 +37,10 @@ export const i18n_en = {
         'The temperature at which the compound changes state from liquid to gas at a given atmospheric pressure.',
       meltingPoint:
         'The temperature at which the compound changes state from solid to liquid at a given atmospheric pressure.',
+      smilesFormat:
+        'Simplified Molecular Input Line Entry System (SMILES) is a format\nthat represents a molecular structure as a text string. The following\nshows the search results based on SMILES.',
+      inchiFormat:
+        'The IUPAC International Chemical Identifier (InChI) is a format\nthat represents a molecular structure as a text string. The following\nshows the search results based on InChI.',
     },
 
     url: {

@@ -130,7 +130,7 @@ const FindMoleculeModal = React.memo(
       >
         <Space direction={'horizontal'} style={{ width: '100%', paddingTop: '20px', paddingBottom: '10px' }}>
           <Space direction={'vertical'} style={{ paddingRight: '10px' }}>
-            <span>InChI {t('word.Results', lang)}</span>
+            <span title={t('tooltip.inchiFormat', lang)}>InChI {t('word.Results', lang)}</span>
             {similarMoleculesByInChI.length === 0 ? (
               <div>{t('message.NoSimilarMoleculesWereFound', lang)}</div>
             ) : (
@@ -151,7 +151,7 @@ const FindMoleculeModal = React.memo(
             )}
           </Space>
           <Space direction={'vertical'}>
-            <span>SMILES {t('word.Results', lang)}</span>
+            <span title={t('tooltip.smilesFormat', lang)}>SMILES {t('word.Results', lang)}</span>
             {similarMoleculesBySmiles.length === 0 ? (
               <div>{t('message.NoSimilarMoleculesWereFound', lang)}</div>
             ) : (

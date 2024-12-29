@@ -33,6 +33,9 @@ export const i18n_zh_cn = {
       density: '物质单位体积的质量。',
       boilingPoint: '在特定大气压下物质开始从液体变成气体的温度。',
       meltingPoint: '在特定大气压下物质开始从固体变成液体的温度。',
+      smilesFormat: '简化分子线性输入规范（SMILES）是一种用字符串标识分子结构的标准。\n以下是根据此标准搜索的结果。',
+      inchiFormat:
+        '国际化合物标识（InChI）是由国际纯粹与应用化学联合会制定的用以标识分子结构的字符串。\n以下是根据此标准的搜索结果。',
     },
 
     url: {

@@ -33,6 +33,9 @@ export const i18n_zh_tw = {
       density: '物質單位體積的質量。',
       boilingPoint: '在特定大氣壓力下物質開始從液體變成氣體的溫度。',
       meltingPoint: '在特定大氣壓力下物質開始從固體變成液體的溫度。',
+      smilesFormat: '簡化分子線性輸入規格（SMILES）是一種用字串標識分子結構的標準。\n以下是根據此標準搜尋的結果。',
+      inchiFormat:
+        '國際化合物標識（InChI）是由國際純粹與應用化學聯合會制定的用以標識分子結構的字串。\n以下是根據此標準的搜尋結果。',
     },
 
     url: {
