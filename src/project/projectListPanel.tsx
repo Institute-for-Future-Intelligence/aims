@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -337,7 +337,7 @@ const ProjectListPanel = React.memo(
                     // must create a new array for ant table to update (don't just set length to 0)
                     projectsRef.current = [];
                     for (const [i, f] of projects.entries()) {
-                      // @ts-expect-error: Explain what?
+                      // @ts-expect-error: ignore
                       if (f['title']?.toLowerCase().includes(s.toLowerCase())) {
                         projectsRef.current.push({ ...f, key: i });
                       }
@@ -476,32 +476,6 @@ const ProjectListPanel = React.memo(
                   }}
                 />
                 <Column
-                  title={`${t('word.Type', lang)}`}
-                  dataIndex="type"
-                  key="type"
-                  width={'25%'}
-                  defaultSortOrder={'descend'}
-                  sortDirections={['ascend', 'descend', 'ascend']}
-                  sorter={(a: any, b: any) => {
-                    return a['type'].localeCompare(b['type']);
-                  }}
-                  render={(type) => {
-                    return <Typography.Text style={{ fontSize: '12px', verticalAlign: 'top' }}>{type}</Typography.Text>;
-                  }}
-                  onCell={(data, index) => {
-                    return {
-                      style: {
-                        background:
-                          selectedIndex === index
-                            ? 'lightskyblue'
-                            : index !== undefined && index % 2 === 0
-                              ? 'beige'
-                              : 'gainsboro',
-                      },
-                    };
-                  }}
-                />
-                <Column
                   title={`${t('word.Time', lang)}`}
                   dataIndex="timestamp"
                   key="timestamp"
@@ -517,6 +491,32 @@ const ProjectListPanel = React.memo(
                         {dayjs(new Date(timestamp)).format('MM/DD/YYYY hh:mm A')}
                       </Typography.Text>
                     );
+                  }}
+                  onCell={(data, index) => {
+                    return {
+                      style: {
+                        background:
+                          selectedIndex === index
+                            ? 'lightskyblue'
+                            : index !== undefined && index % 2 === 0
+                              ? 'beige'
+                              : 'gainsboro',
+                      },
+                    };
+                  }}
+                />
+                <Column
+                  title={`${t('word.Type', lang)}`}
+                  dataIndex="type"
+                  key="type"
+                  width={'25%'}
+                  defaultSortOrder={'descend'}
+                  sortDirections={['ascend', 'descend', 'ascend']}
+                  sorter={(a: any, b: any) => {
+                    return a['type'].localeCompare(b['type']);
+                  }}
+                  render={(type) => {
+                    return <Typography.Text style={{ fontSize: '12px', verticalAlign: 'top' }}>{type}</Typography.Text>;
                   }}
                   onCell={(data, index) => {
                     return {
