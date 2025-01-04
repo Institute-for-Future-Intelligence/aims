@@ -190,6 +190,7 @@ export const i18n_en = {
       ForceVectors: 'Force Vectors',
       EnergyGraph: 'Energy Graph',
       GlobalStyle: 'Global Style',
+      ProteinStyle: 'Protein Style',
       Style: 'Style',
       Color: 'Color',
       BallAndStick: 'Ball-and-Stick',
