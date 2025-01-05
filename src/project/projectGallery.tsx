@@ -428,6 +428,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                         title: `${t('message.DoYouWantToRemoveAllMoleculesFromGallery', lang)}`,
                         icon: <QuestionCircleOutlined />,
                         type: 'confirm',
+                        keyboard: false,
                         // reverse the button order so 'no' is the default
                         onCancel: () => {
                           clearAllMolecules();

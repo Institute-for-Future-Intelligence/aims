@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 export const i18n_zh_tw = {
@@ -182,6 +182,7 @@ export const i18n_zh_tw = {
       EnergyGraph: '顯示能量圖',
       GlobalStyle: '全域風格',
       ProteinStyle: '蛋白質風格',
+      LigandStyle: '配體風格',
       Style: '風格',
       Color: '顏色',
       BallAndStick: '球和棍',

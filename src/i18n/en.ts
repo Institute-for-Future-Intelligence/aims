@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 export const i18n_en = {
@@ -192,6 +192,7 @@ export const i18n_en = {
       EnergyGraph: 'Energy Graph',
       GlobalStyle: 'Global Style',
       ProteinStyle: 'Protein Style',
+      LigandStyle: 'Ligand Style',
       Style: 'Style',
       Color: 'Color',
       BallAndStick: 'Ball-and-Stick',

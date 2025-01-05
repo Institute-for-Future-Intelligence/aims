@@ -27,7 +27,7 @@ import { Util } from '../Util.ts';
 import { Undoable } from '../undo/Undoable.ts';
 import ScreenshotPanel from './screenshotPanel.tsx';
 import { SpaceshipDisplayMode } from '../constants.ts';
-import { CHAMBER_STYLE_LABELS, MolecularViewerStyle } from './displayOptions.ts';
+import { CHAMBER_STYLE_LABELS, GALLERY_STYLE_LABELS, MolecularViewerStyle } from './displayOptions.ts';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -49,6 +49,7 @@ const DockingSettings = React.memo(() => {
   const molecularContainer = useStore(Selector.molecularContainer);
   const hideGallery = useStore(Selector.hideGallery);
   const chamberViewerStyle = useStore(Selector.chamberViewerStyle);
+  const projectViewerStyle = useStore(Selector.projectViewerStyle);
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode) ?? SpaceshipDisplayMode.NONE;
 
   // onChange of a text area changes at every key typing, triggering the viewer to re-render each time.
@@ -95,6 +96,13 @@ const DockingSettings = React.memo(() => {
     setChanged(true);
   };
 
+  const setLigandStyle = (style: MolecularViewerStyle) => {
+    useStore.getState().set((state) => {
+      state.projectState.projectViewerStyle = style;
+    });
+    setChanged(true);
+  };
+
   const displayItems: TabsProps['items'] = useMemo(
     () => [
       {
@@ -112,7 +120,7 @@ const DockingSettings = React.memo(() => {
                   value={chamberViewerStyle}
                   onChange={(value) => {
                     const undoableChange = {
-                      name: 'Select Protein Style',
+                      name: 'Set Protein Style',
                       timestamp: Date.now(),
                       oldValue: chamberViewerStyle,
                       newValue: value,
@@ -140,9 +148,42 @@ const DockingSettings = React.memo(() => {
       },
       {
         key: '2',
-        label: t('spaceship.Spaceship', lang),
+        label: t('experiment.Ligand', lang),
         children: (
           <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('molecularViewer.LigandStyle', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <Select
+                  style={{ width: '90%' }}
+                  value={projectViewerStyle}
+                  onChange={(value) => {
+                    const undoableChange = {
+                      name: 'Set Ligand Style',
+                      timestamp: Date.now(),
+                      oldValue: projectViewerStyle,
+                      newValue: value,
+                      undo: () => {
+                        setLigandStyle(undoableChange.oldValue as MolecularViewerStyle);
+                      },
+                      redo: () => {
+                        setLigandStyle(undoableChange.newValue as MolecularViewerStyle);
+                      },
+                    } as UndoableChange;
+                    useStore.getState().addUndoable(undoableChange);
+                    setLigandStyle(value);
+                  }}
+                >
+                  {GALLERY_STYLE_LABELS.map((radio, idx) => (
+                    <Option key={`${idx}-${radio.value}`} value={radio.value}>
+                      {t(radio.label, lang)}
+                    </Option>
+                  ))}
+                </Select>
+              </Col>
+            </Row>
             <Row gutter={16} style={{ paddingBottom: '4px' }}>
               <Col span={12} style={{ paddingTop: '5px' }}>
                 <span>{t('spaceship.SpaceshipDisplay', lang)}: </span>
@@ -184,7 +225,7 @@ const DockingSettings = React.memo(() => {
         ),
       },
     ],
-    [lang, spaceshipDisplayMode, chamberViewerStyle],
+    [lang, spaceshipDisplayMode, chamberViewerStyle, projectViewerStyle],
   );
 
   const createDisplaySettings = useMemo(() => {
