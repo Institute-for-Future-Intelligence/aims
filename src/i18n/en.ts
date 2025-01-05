@@ -61,6 +61,7 @@ export const i18n_en = {
     },
 
     word: {
+      Mode: 'Mode',
       MoreInformation: 'More information',
       Mute: 'Mute',
       Formula: 'Formula',
@@ -238,6 +239,7 @@ export const i18n_en = {
     },
 
     spaceship: {
+      Spaceship: 'Spaceship',
       SpaceshipDisplay: 'Spaceship Display',
       OutsideView: 'Outside View',
       InsideView: 'Inside View',

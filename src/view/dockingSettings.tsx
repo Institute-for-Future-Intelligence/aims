@@ -1,19 +1,33 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Col, Descriptions, DescriptionsProps, FloatButton, Input, InputNumber, Popover, Row, Select } from 'antd';
+import {
+  Col,
+  Descriptions,
+  DescriptionsProps,
+  FloatButton,
+  Input,
+  InputNumber,
+  Popover,
+  Row,
+  Select,
+  Tabs,
+  TabsProps,
+} from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { UndoableChange } from '../undo/UndoableChange';
 import { targetProteins } from '../internalDatabase';
-import { AimOutlined, CameraOutlined, ExperimentOutlined, InfoCircleOutlined, RightOutlined } from '@ant-design/icons';
+import { CameraOutlined, ExperimentOutlined, EyeOutlined, InfoCircleOutlined, RightOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive';
 import { Util } from '../Util.ts';
 import { Undoable } from '../undo/Undoable.ts';
 import ScreenshotPanel from './screenshotPanel.tsx';
+import { SpaceshipDisplayMode } from '../constants.ts';
+import { CHAMBER_STYLE_LABELS, MolecularViewerStyle } from './displayOptions.ts';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -34,6 +48,8 @@ const DockingSettings = React.memo(() => {
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const molecularContainer = useStore(Selector.molecularContainer);
   const hideGallery = useStore(Selector.hideGallery);
+  const chamberViewerStyle = useStore(Selector.chamberViewerStyle);
+  const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode) ?? SpaceshipDisplayMode.NONE;
 
   // onChange of a text area changes at every key typing, triggering the viewer to re-render each time.
   // So we store the intermediate result here
@@ -65,7 +81,117 @@ const DockingSettings = React.memo(() => {
     showGallery(true);
   };
 
-  const createContent = useMemo(() => {
+  const setSpaceshipDisplayMode = (mode: SpaceshipDisplayMode) => {
+    useStore.getState().set((state) => {
+      state.projectState.spaceshipDisplayMode = mode;
+    });
+    setChanged(true);
+  };
+
+  const setProteinStyle = (style: MolecularViewerStyle) => {
+    useStore.getState().set((state) => {
+      state.projectState.chamberViewerStyle = style;
+    });
+    setChanged(true);
+  };
+
+  const displayItems: TabsProps['items'] = useMemo(
+    () => [
+      {
+        key: '1',
+        label: t('experiment.Protein', lang),
+        children: (
+          <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('molecularViewer.ProteinStyle', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <Select
+                  style={{ width: '90%' }}
+                  value={chamberViewerStyle}
+                  onChange={(value) => {
+                    const undoableChange = {
+                      name: 'Select Protein Style',
+                      timestamp: Date.now(),
+                      oldValue: chamberViewerStyle,
+                      newValue: value,
+                      undo: () => {
+                        setProteinStyle(undoableChange.oldValue as MolecularViewerStyle);
+                      },
+                      redo: () => {
+                        setProteinStyle(undoableChange.newValue as MolecularViewerStyle);
+                      },
+                    } as UndoableChange;
+                    useStore.getState().addUndoable(undoableChange);
+                    setProteinStyle(value);
+                  }}
+                >
+                  {CHAMBER_STYLE_LABELS.map((radio, idx) => (
+                    <Option key={`${idx}-${radio.value}`} value={radio.value}>
+                      {t(radio.label, lang)}
+                    </Option>
+                  ))}
+                </Select>
+              </Col>
+            </Row>
+          </div>
+        ),
+      },
+      {
+        key: '2',
+        label: t('spaceship.Spaceship', lang),
+        children: (
+          <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('spaceship.SpaceshipDisplay', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <Select
+                  style={{ width: '90%' }}
+                  value={spaceshipDisplayMode}
+                  onChange={(value) => {
+                    const undoableChange = {
+                      name: 'Select Spaceship Mode',
+                      timestamp: Date.now(),
+                      oldValue: spaceshipDisplayMode,
+                      newValue: value,
+                      undo: () => {
+                        setSpaceshipDisplayMode(undoableChange.oldValue as SpaceshipDisplayMode);
+                      },
+                      redo: () => {
+                        setSpaceshipDisplayMode(undoableChange.newValue as SpaceshipDisplayMode);
+                      },
+                    } as UndoableChange;
+                    useStore.getState().addUndoable(undoableChange);
+                    setSpaceshipDisplayMode(value);
+                  }}
+                >
+                  <Option key={SpaceshipDisplayMode.NONE} value={SpaceshipDisplayMode.NONE}>
+                    {t('word.None', lang)}
+                  </Option>
+                  <Option key={SpaceshipDisplayMode.OUTSIDE_VIEW} value={SpaceshipDisplayMode.OUTSIDE_VIEW}>
+                    {t('spaceship.OutsideView', lang)}
+                  </Option>
+                  <Option key={SpaceshipDisplayMode.INSIDE_VIEW} value={SpaceshipDisplayMode.INSIDE_VIEW}>
+                    {t('spaceship.InsideView', lang)}
+                  </Option>
+                </Select>
+              </Col>
+            </Row>
+          </div>
+        ),
+      },
+    ],
+    [lang, spaceshipDisplayMode, chamberViewerStyle],
+  );
+
+  const createDisplaySettings = useMemo(() => {
+    return <Tabs defaultActiveKey="1" items={displayItems} />;
+  }, [displayItems]);
+
+  const createExperimentSettings = useMemo(() => {
     const setProtein = (targetName: string) => {
       setCommonStore((state) => {
         if (targetName === 'None') {
@@ -426,10 +552,10 @@ const DockingSettings = React.memo(() => {
       <Popover
         title={
           <div onClick={(e) => e.stopPropagation()}>
-            <AimOutlined /> {t('experiment.ExperimentSettings', lang)}
+            <ExperimentOutlined /> {t('experiment.ExperimentSettings', lang)}
           </div>
         }
-        content={createContent}
+        content={createExperimentSettings}
       >
         <FloatButton
           shape="square"
@@ -451,6 +577,31 @@ const DockingSettings = React.memo(() => {
       <Popover
         title={
           <div onClick={(e) => e.stopPropagation()}>
+            <EyeOutlined /> {t('experiment.DisplaySettings', lang)}
+          </div>
+        }
+        content={createDisplaySettings}
+      >
+        <FloatButton
+          shape="square"
+          type="primary"
+          style={{
+            position: 'absolute',
+            top: '8px',
+            left: leftIndent + 44 + 'px',
+            height: '20px',
+            zIndex: 13,
+          }}
+          description={
+            <span style={{ fontSize: '20px' }}>
+              <EyeOutlined />
+            </span>
+          }
+        />
+      </Popover>
+      <Popover
+        title={
+          <div onClick={(e) => e.stopPropagation()}>
             <CameraOutlined /> {t('molecularViewer.TakeScreenshot', lang)}
           </div>
         }
@@ -462,7 +613,7 @@ const DockingSettings = React.memo(() => {
           style={{
             position: 'absolute',
             top: '8px',
-            left: leftIndent + 44 + 'px',
+            left: leftIndent + 88 + 'px',
             height: '20px',
             zIndex: 13,
           }}
@@ -486,7 +637,7 @@ const DockingSettings = React.memo(() => {
             style={{
               position: 'absolute',
               top: '14px',
-              left: leftIndent + 96 + 'px',
+              left: leftIndent + 140 + 'px',
               zIndex: 13,
               fontSize: '20px',
               userSelect: 'none',

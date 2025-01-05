@@ -8,7 +8,7 @@ import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../hooks.ts';
 import { MenuItem } from '../menuItem.tsx';
-import { ColorPicker, Radio, RadioChangeEvent, Space } from 'antd';
+import { Radio, RadioChangeEvent, Space } from 'antd';
 import { UndoableChange } from '../../undo/UndoableChange.ts';
 
 export const ResetOrientation = () => {

@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import { MenuProps } from 'antd';
@@ -26,7 +26,6 @@ import {
   TorsionalBondsCheckBox,
   VdwBondsCheckBox,
 } from '../contextMenu/molecularModelingMenuItems.tsx';
-import { SpaceshipDisplayModeRadioGroup } from '../contextMenu/drugDiscoveryMenuItems.tsx';
 
 export const resetView = () => {
   usePrimitiveStore.getState().resetView();
@@ -128,19 +127,6 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
         {
           key: 'molecular-viewer-force-vectors',
           label: <ForceVectorCheckBox />,
-        },
-      ],
-    });
-  }
-
-  if (projectType === ProjectType.DRUG_DISCOVERY) {
-    items.push({
-      key: 'spaceship-display-mode',
-      label: <MenuItem hasPadding={true}>{i18n.t('spaceship.SpaceshipDisplay', lang)}</MenuItem>,
-      children: [
-        {
-          key: 'spaceship-display-mode-radio-group',
-          label: <SpaceshipDisplayModeRadioGroup />,
         },
       ],
     });

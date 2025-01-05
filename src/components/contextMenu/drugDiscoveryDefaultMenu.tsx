@@ -19,7 +19,7 @@ import {
   MaterialRadioGroup,
   Screenshot,
 } from './sharedMenuItems.tsx';
-import { RotateLigand, SpaceshipDisplayModeRadioGroup, TranslateLigand } from './drugDiscoveryMenuItems.tsx';
+import { RotateLigand, TranslateLigand } from './drugDiscoveryMenuItems.tsx';
 
 export const createDrugDiscoveryDefaultMenu = (
   pickedMoleculeIndex: number,
@@ -130,28 +130,6 @@ export const createDrugDiscoveryDefaultMenu = (
     items.push({
       key: 'molecular-viewer-foggy',
       label: <FogCheckBox />,
-    });
-
-    items.push({
-      key: 'molecular-viewer-protein-style-submenu',
-      label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.ProteinStyle', lang)}</MenuItem>,
-      children: [
-        {
-          key: 'molecular-viewer-protein-style-radio-group',
-          label: <GlobalStyleRadioGroup />,
-        },
-      ],
-    });
-
-    items.push({
-      key: 'spaceship-display-mode-submenu',
-      label: <MenuItem hasPadding={true}>{i18n.t('spaceship.SpaceshipDisplay', lang)}</MenuItem>,
-      children: [
-        {
-          key: 'spaceship-display-mode-radio-group',
-          label: <SpaceshipDisplayModeRadioGroup />,
-        },
-      ],
     });
 
     items.push({

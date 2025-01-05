@@ -52,6 +52,7 @@ export const i18n_zh_cn = {
     },
 
     word: {
+      Mode: '模式',
       MoreInformation: '更多信息',
       Mute: '勿扰',
       Formula: '公式',
@@ -229,6 +230,7 @@ export const i18n_zh_cn = {
     },
 
     spaceship: {
+      Spaceship: '飞船',
       SpaceshipDisplay: '飞船显示',
       OutsideView: '外景',
       InsideView: '内景',
