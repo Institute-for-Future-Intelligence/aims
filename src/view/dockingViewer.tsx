@@ -259,7 +259,7 @@ const DockingViewer = React.memo(
     }, [ligand, ligandComplex, projectViewerStyle, projectViewerMaterial, updateViewerFlag]);
 
     useEffect(() => {
-      const picker = new Picker(groupRef.current, camera, gl.domElement);
+      const picker = new Picker(groupRef.current, camera, gl.domElement, true);
       // @ts-expect-error ignore
       settings.set('pick', 'molecule');
       // @ts-expect-error ignore

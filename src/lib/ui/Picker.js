@@ -3,10 +3,11 @@ import settings from '../settings';
 import Timer from '../Timer';
 import EventDispatcher from '../utils/EventDispatcher';
 
-function Picker(gfxObj, camera, domElement) {
+function Picker(gfxObj, camera, domElement, flag) {
   EventDispatcher.call(this);
   const self = this;
 
+  this.flag = flag;
   this.gfxObj = gfxObj;
   this.camera = camera;
   this.domElement = typeof domElement !== 'undefined' ? domElement : document;
@@ -143,9 +144,22 @@ Picker.prototype.pickObject = function (screenPos) {
   } else {
     // try and catch errors in case any of the children is undefined
     try {
-      const residue = point.object.parent.parent._selection.parent._residues[0];
-      if (residue) {
-        picked = { molecule: residue.getMolecule() };
+      if (this.flag) {
+        // for drug discovery
+        const residue = point.object.parent.parent._selection.parent._residues[0];
+        if (residue) {
+          picked = { molecule: residue.getMolecule() };
+        }
+      } else {
+        // for molecular modeling
+        const chunks = point.object.parent.parent._selection.chunks;
+        const residues = point.object.parent.parent._selection.parent._residues;
+        for (const res of residues) {
+          if (res._firstAtom.index === chunks[0]) {
+            picked = { molecule: res.getMolecule() };
+            break;
+          }
+        }
       }
     } catch (e) {
       // ignore

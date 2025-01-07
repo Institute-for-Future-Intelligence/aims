@@ -489,7 +489,7 @@ const DynamicsViewer = React.memo(
     ]);
 
     useEffect(() => {
-      const picker = new Picker(groupRef.current, camera, gl.domElement);
+      const picker = new Picker(groupRef.current, camera, gl.domElement, false);
       // @ts-expect-error ignore
       settings.set('pick', pickMode);
       // @ts-expect-error ignore
