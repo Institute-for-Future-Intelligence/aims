@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -306,6 +306,7 @@ const DockingViewer = React.memo(
         {/*don't put this into the ligand group above as it will be reconstructed every update*/}
         {pickedMoleculeIndex === 1 && ligandComplex && (
           <group
+            name={'Highlighter'}
             position={[
               ligandTransform.x + centerRef.current.x,
               ligandTransform.y + centerRef.current.y,

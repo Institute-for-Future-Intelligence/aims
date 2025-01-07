@@ -8,11 +8,19 @@ import fragmentScreenQuadFromTex from './shaders/ScreenQuadFromTex.frag';
 import fragmentScreenQuadFromTexWithDistortion from './shaders/ScreenQuadFromTexWithDistortion.frag';
 
 const LAYERS = {
-  DEFAULT: 0, VOLUME: 1, TRANSPARENT: 2, PREPASS_TRANSPARENT: 3, VOLUME_BFPLANE: 4, COLOR_FROM_POSITION: 5, SHADOWMAP: 6,
+  DEFAULT: 0,
+  VOLUME: 1,
+  TRANSPARENT: 2,
+  PREPASS_TRANSPARENT: 3,
+  VOLUME_BFPLANE: 4,
+  COLOR_FROM_POSITION: 5,
+  SHADOWMAP: 6,
 };
 
-const SELECTION_LAYERS = [ // These layers, that are used in the selection by ray casting
-  LAYERS.DEFAULT, LAYERS.TRANSPARENT,
+const SELECTION_LAYERS = [
+  // These layers, that are used in the selection by ray casting
+  LAYERS.DEFAULT,
+  LAYERS.TRANSPARENT,
 ];
 
 THREE.Object3D.prototype.resetTransform = function () {
@@ -41,7 +49,7 @@ THREE.Object3D.prototype.addSavingWorldTransform = (function () {
       this.add(object);
     }
   };
-}());
+})();
 
 // render a tiny transparent quad in the center of the screen
 THREE.WebGLRenderer.prototype.renderDummyQuad = (function () {
@@ -57,7 +65,7 @@ THREE.WebGLRenderer.prototype.renderDummyQuad = (function () {
   return function () {
     this.render(_scene, _camera);
   };
-}());
+})();
 
 THREE.WebGLRenderer.prototype.renderScreenQuad = (function () {
   const _scene = new THREE.Scene();
@@ -71,14 +79,14 @@ THREE.WebGLRenderer.prototype.renderScreenQuad = (function () {
     _quad.material = material;
     this.render(_scene, _camera);
   };
-}());
+})();
 
 THREE.Matrix4.prototype.isIdentity = (function () {
   const identity = new THREE.Matrix4();
   return function () {
     return identity.equals(this);
   };
-}());
+})();
 
 THREE.Matrix4.prototype.applyToPointsArray = function (array, stride, w) {
   if (!array || !stride || stride < 3) {
@@ -123,11 +131,11 @@ THREE.WebGLRenderer.prototype.renderScreenQuadFromTex = (function () {
 
   return function (srcTex, opacity) {
     _material.uniforms.srcTex.value = srcTex;
-    _material.transparent = (opacity < 1.0);
+    _material.transparent = opacity < 1.0;
     _material.uniforms.opacity.value = opacity;
     this.renderScreenQuad(_material);
   };
-}());
+})();
 
 THREE.WebGLRenderer.prototype.renderScreenQuadFromTexWithDistortion = (function () {
   const _material = new ScreenQuadMaterial({
@@ -140,7 +148,7 @@ THREE.WebGLRenderer.prototype.renderScreenQuadFromTexWithDistortion = (function 
     _material.uniforms.coef.value = coef;
     this.renderScreenQuad(_material);
   };
-}());
+})();
 
 /**
  * @param {number} angle - Field of view in degrees.
@@ -186,8 +194,8 @@ THREE.PerspectiveCamera.prototype.setDistanceToFit = function (radius, angle) {
  * @param {number} clipPlane - Distance to clip plane.
  * @param {number} fogFarPlane - Distance to fog far plane.
  */
-THREE.Raycaster.prototype.intersectVisibleObject = function (gfxObj, camera, clipPlane, fogFarPlane) {
-  const intersects = this.intersectObject(gfxObj, false);
+THREE.Raycaster.prototype.intersectVisibleObject = function (gfxObj, camera, clipPlane, fogFarPlane, recursive) {
+  const intersects = this.intersectObject(gfxObj, recursive);
   if (intersects.length === 0) {
     return null;
   }
@@ -240,7 +248,7 @@ THREE.Matrix4.prototype.extractScale = (function () {
     }
     return scale;
   };
-}());
+})();
 
 function _calcCylinderMatrix(posBegin, posEnd, radius) {
   const posCenter = posBegin.clone().lerp(posEnd, 0.5);
@@ -329,8 +337,8 @@ THREE.BufferAttribute.prototype.copyAtList = function (attribute, indexList) {
 };
 
 function fillArray(array, value, startIndex, endIndex) {
-  startIndex = (typeof startIndex !== 'undefined') ? startIndex : 0;
-  endIndex = (typeof endIndex !== 'undefined') ? endIndex : array.length;
+  startIndex = typeof startIndex !== 'undefined' ? startIndex : 0;
+  endIndex = typeof endIndex !== 'undefined' ? endIndex : array.length;
   for (let i = startIndex; i < endIndex; ++i) {
     array[i] = value;
   }
@@ -396,7 +404,7 @@ function applySelectionMaterial(geo) {
         lights: false,
         shadowmap: false,
       });
-      node.material.setUberOptions({ fixedColor: new THREE.Color(0xFFFF00), zOffset: -1e-6 });
+      node.material.setUberOptions({ fixedColor: new THREE.Color(0xffff00), zOffset: -1e-6 });
     }
   });
 }

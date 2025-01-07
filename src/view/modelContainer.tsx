@@ -105,7 +105,7 @@ const ModelContainer = React.memo(({ position }: { position?: Vector3 }) => {
   };
 
   return (
-    <group position={position ? [position.x, position.y, position.z] : [0, 0, 0]}>
+    <group name={'Container'} position={position ? [position.x, position.y, position.z] : [0, 0, 0]}>
       {containerVisible && (
         <group>
           <Line

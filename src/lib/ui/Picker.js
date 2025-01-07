@@ -121,7 +121,7 @@ Picker.prototype.pickObject = function (screenPos) {
 
   const clipPlane = settings.now.draft.clipPlane && this.clipPlaneValue ? this.clipPlaneValue : Infinity;
   const fogFarPlane = settings.now.fog && this.fogFarValue ? this.fogFarValue : Infinity;
-  const point = rayCaster.intersectVisibleObject(gfxObj, this.camera, clipPlane, fogFarPlane);
+  const point = rayCaster.intersectVisibleObject(gfxObj, this.camera, clipPlane, fogFarPlane, true);
   if (!point) {
     this.picked = {};
     this.dispatchEvent({ type: 'newpick', obj: {} });
@@ -139,6 +139,16 @@ Picker.prototype.pickObject = function (screenPos) {
       picked = { residue };
     } else if (point.atom) {
       picked = { atom: point.atom };
+    }
+  } else {
+    // try and catch errors in case any of the children is undefined
+    try {
+      const residue = point.object.parent.parent._selection.parent._residues[0];
+      if (residue) {
+        picked = { molecule: residue.getMolecule() };
+      }
+    } catch (e) {
+      // ignore
     }
   }
   this.picked = picked;

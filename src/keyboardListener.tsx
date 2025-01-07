@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -282,8 +282,8 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const handleKeyDown = (key: string) => {
     const ship = useStore.getState().projectState.spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW;
     switch (key) {
-      case 'up':
-        if (selectedPlane >= 0) {
+      case 'up': {
+        if (selectedPlane >= 0 && pickedMoleculeIndex === -1) {
           setCommonStore((state) => {
             switch (selectedPlane) {
               case 0:
@@ -301,8 +301,9 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
           startFlying(FlightControl.MoveForward);
         }
         break;
-      case 'down':
-        if (selectedPlane >= 0) {
+      }
+      case 'down': {
+        if (selectedPlane >= 0 && pickedMoleculeIndex === -1) {
           setCommonStore((state) => {
             switch (selectedPlane) {
               case 0:
@@ -320,6 +321,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
           startFlying(FlightControl.MoveBackward);
         }
         break;
+      }
       case 'q':
         startFlying(ship ? FlightControl.YawLeft : FlightControl.RotateAroundZClockwise);
         break;
