@@ -286,52 +286,54 @@ const DockingViewer = React.memo(
     }, [projectViewerStyle]);
 
     return (
-      <rCGroup
-        ref={groupRef}
-        onPointerOver={onPointerOver}
-        onPointerLeave={onPointerLeave}
-        onPointerDown={onPointerDown}
-      >
-        <rCGroup name={'Protein'} ref={proteinGroupRef} />
+      <>
         <rCGroup
-          name={'Ligand'}
-          ref={ligandGroupRef}
-          position={[
-            ligandTransform.x + centerRef.current.x,
-            ligandTransform.y + centerRef.current.y,
-            ligandTransform.z + centerRef.current.z,
-          ]}
-          rotation={[ligandTransform.euler[0], ligandTransform.euler[1], ligandTransform.euler[2]]}
-        />
-        {/*don't put this into the ligand group above as it will be reconstructed every update*/}
-        {pickedMoleculeIndex === 1 && ligandComplex && (
-          <group
-            name={'Highlighter'}
+          ref={groupRef}
+          onPointerOver={onPointerOver}
+          onPointerLeave={onPointerLeave}
+          onPointerDown={onPointerDown}
+        >
+          <rCGroup name={'Protein'} ref={proteinGroupRef} />
+          <rCGroup
+            name={'Ligand'}
+            ref={ligandGroupRef}
             position={[
               ligandTransform.x + centerRef.current.x,
               ligandTransform.y + centerRef.current.y,
               ligandTransform.z + centerRef.current.z,
             ]}
             rotation={[ligandTransform.euler[0], ligandTransform.euler[1], ligandTransform.euler[2]]}
-          >
-            <Instances limit={1000} range={1000}>
-              <sphereGeometry args={[1, 16, 16]} />
-              <meshStandardMaterial transparent opacity={0.5} />
-              {ligandComplex._atoms.map((a: AtomJS, i: number) => {
-                return (
-                  <Instance
-                    key={i}
-                    scale={Element.getByName(a.element).radius * (skinnyStyle ? 0.6 : 2.4)}
-                    position={[a.position.x, a.position.y, a.position.z]}
-                    color={'yellow'}
-                  />
-                );
-              })}
-            </Instances>
-          </group>
-        )}
-        <ModelContainer position={groupRef?.current?.position.clone().negate()} />
-      </rCGroup>
+          />
+          {/*don't put this into the ligand group above as it will be reconstructed every update*/}
+          {pickedMoleculeIndex === 1 && ligandComplex && (
+            <group
+              name={'Highlighter'}
+              position={[
+                ligandTransform.x + centerRef.current.x,
+                ligandTransform.y + centerRef.current.y,
+                ligandTransform.z + centerRef.current.z,
+              ]}
+              rotation={[ligandTransform.euler[0], ligandTransform.euler[1], ligandTransform.euler[2]]}
+            >
+              <Instances limit={1000} range={1000}>
+                <sphereGeometry args={[1, 16, 16]} />
+                <meshStandardMaterial transparent opacity={0.5} />
+                {ligandComplex._atoms.map((a: AtomJS, i: number) => {
+                  return (
+                    <Instance
+                      key={i}
+                      scale={Element.getByName(a.element).radius * (skinnyStyle ? 0.6 : 2.4)}
+                      position={[a.position.x, a.position.y, a.position.z]}
+                      color={'yellow'}
+                    />
+                  );
+                })}
+              </Instances>
+            </group>
+          )}
+        </rCGroup>
+        <ModelContainer />
+      </>
     );
   },
 );

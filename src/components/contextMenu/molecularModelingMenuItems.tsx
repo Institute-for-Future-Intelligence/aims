@@ -433,7 +433,7 @@ export const RestrainMoleculeInputField = () => {
   const [value, setValue] = useState<number>(0);
 
   const restraint = useMemo(() => {
-    if (pickedIndex !== -1) return testMolecules[pickedIndex].atoms[0].restraint;
+    if (pickedIndex !== -1 && testMolecules[pickedIndex]) return testMolecules[pickedIndex].atoms[0].restraint;
     return null;
   }, [pickedIndex, testMolecules]);
 
