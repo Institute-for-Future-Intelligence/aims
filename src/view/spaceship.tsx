@@ -12,6 +12,7 @@ import { useGLTF } from '@react-three/drei';
 import { HALF_PI } from '../constants.ts';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 const Spaceship = React.memo(() => {
   const spaceshipSize = useStore(Selector.spaceshipSize);
@@ -19,6 +20,8 @@ const Spaceship = React.memo(() => {
   const spaceshipPitch = useStore(Selector.spaceshipPitch) ?? 0;
   const spaceshipYaw = useStore(Selector.spaceshipYaw) ?? 0;
   const spaceshipZ = useStore(Selector.spaceshipZ) ?? 0;
+  const showThrustFlame = usePrimitiveStore(Selector.showThrustFlame);
+
   const { camera, gl } = useThree();
 
   const groupRef = useRef<Group>(null);
@@ -85,23 +88,23 @@ const Spaceship = React.memo(() => {
         }}
       >
         <mesh name="Renault_(S,_T1)_0" geometry={model.nodes['Renault_(S,_T1)_0'].geometry}>
-          <meshStandardMaterial color="#a7a7a7" />
+          <meshStandardMaterial color="#a7a7a7" depthTest={false} transparent={true} />
         </mesh>
         <mesh name="Renault_(S,_T1)_1" geometry={model.nodes['Renault_(S,_T1)_1'].geometry}>
-          <meshStandardMaterial color="silver" />
+          <meshStandardMaterial color="silver" depthTest={false} transparent={true} />
         </mesh>
         <mesh name="Renault_(S,_T1)_2" geometry={model.nodes['Renault_(S,_T1)_2'].geometry}>
-          <meshStandardMaterial color="#a7a7a7" />
+          <meshStandardMaterial color="#a7a7a7" depthTest={false} transparent={true} />
         </mesh>
         <mesh name="Renault_(S,_T1)_3" geometry={model.nodes['Renault_(S,_T1)_3'].geometry}>
-          <meshStandardMaterial color="lightblue" />
+          <meshStandardMaterial color="lightblue" depthTest={false} transparent={true} />
         </mesh>
         {/* nozzle */}
         <mesh name="Renault_(S,_T1)_4" geometry={model.nodes['Renault_(S,_T1)_4'].geometry}>
-          <meshStandardMaterial color="black" />
+          <meshStandardMaterial color={showThrustFlame ? 'yellow' : 'black'} depthTest={false} transparent={true} />
         </mesh>
         <mesh name="Renault_(S,_T1)_5" geometry={model.nodes['Renault_(S,_T1)_5'].geometry}>
-          <meshStandardMaterial color="teal" />
+          <meshStandardMaterial color="teal" depthTest={false} transparent={true} />
         </mesh>
       </group>
     </group>

@@ -271,6 +271,8 @@ export const protein = (state: CommonStoreState) => state.projectState.protein;
 
 export const spaceshipDisplayMode = (state: CommonStoreState) => state.projectState.spaceshipDisplayMode;
 
+export const showThrustFlame = (state: PrimitiveStoreState) => state.showThrustFlame;
+
 export const spaceshipSize = (state: CommonStoreState) => state.projectState.spaceshipSize;
 
 export const spaceshipRoll = (state: CommonStoreState) => state.projectState.spaceshipRoll;

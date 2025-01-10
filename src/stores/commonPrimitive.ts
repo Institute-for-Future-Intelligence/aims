@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import { createWithEqualityFn } from 'zustand/traditional';
@@ -79,6 +79,8 @@ export interface PrimitiveStoreState {
   userCount: number;
 
   currentTemperature: number;
+
+  showThrustFlame: boolean;
 
   set: (fn: (state: PrimitiveStoreState) => void) => void;
   setPrimitiveStore: <K extends keyof PrimitiveStoreState, V extends PrimitiveStoreState[K]>(key: K, val: V) => void;
@@ -213,5 +215,7 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     userCount: 0,
 
     currentTemperature: 300,
+
+    showThrustFlame: false,
   };
 });

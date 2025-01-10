@@ -279,12 +279,21 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     if (loggable) logAction('Move Selected Molecule');
   };
 
+  const showThrustFlame = (show: boolean) => {
+    usePrimitiveStore.getState().set((state) => {
+      state.showThrustFlame = show;
+    });
+  };
+
   const handleKeyDown = (key: string) => {
     const ship = useStore.getState().projectState.spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW;
     const navMode = useStore.getState().projectState.navigationView;
     switch (key) {
       case 'up': {
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         if (selectedPlane >= 0 && pickedMoleculeIndex === -1) {
           setCommonStore((state) => {
             switch (selectedPlane) {
@@ -305,7 +314,10 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         break;
       }
       case 'down': {
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         if (selectedPlane >= 0 && pickedMoleculeIndex === -1) {
           setCommonStore((state) => {
             switch (selectedPlane) {
@@ -326,31 +338,52 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         break;
       }
       case 'q':
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         startFlying(ship ? FlightControl.YawLeft : FlightControl.RotateAroundZClockwise);
         break;
       case 'e':
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         startFlying(ship ? FlightControl.YawRight : FlightControl.RotateAroundZCounterclockwise);
         break;
       case 'a':
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         startFlying(ship ? FlightControl.RollLeft : FlightControl.RotateAroundXCounterclockwise);
         break;
       case 'd':
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         startFlying(ship ? FlightControl.RollRight : FlightControl.RotateAroundXClockwise);
         break;
       case 'w':
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         startFlying(ship ? FlightControl.PitchDown : FlightControl.RotateAroundYClockwise);
         break;
       case 's':
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         startFlying(ship ? FlightControl.PitchUp : FlightControl.RotateAroundYCounterclockwise);
         break;
       case 'x':
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         if (projectType === ProjectType.MOLECULAR_MODELING) {
           onTranslation('x', 1);
         } else {
@@ -358,7 +391,10 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         }
         break;
       case 'shift+x':
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         if (projectType === ProjectType.MOLECULAR_MODELING) {
           onTranslation('x', -1);
         } else {
@@ -366,7 +402,10 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         }
         break;
       case 'y':
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         if (projectType === ProjectType.MOLECULAR_MODELING) {
           onTranslation('y', 1);
         } else {
@@ -374,7 +413,10 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         }
         break;
       case 'shift+y':
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         if (projectType === ProjectType.MOLECULAR_MODELING) {
           onTranslation('y', -1);
         } else {
@@ -382,7 +424,10 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         }
         break;
       case 'z':
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         if (projectType === ProjectType.MOLECULAR_MODELING) {
           onTranslation('z', 1);
         } else {
@@ -390,7 +435,10 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         }
         break;
       case 'shift+z':
-        if (navMode) break;
+        if (navMode) {
+          showThrustFlame(true);
+          break;
+        }
         if (projectType === ProjectType.MOLECULAR_MODELING) {
           onTranslation('z', -1);
         } else {
@@ -501,6 +549,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       case 'down':
       case 's':
       case 'up':
+        showThrustFlame(false);
         stopFlying();
         break;
       case 'alt': {
