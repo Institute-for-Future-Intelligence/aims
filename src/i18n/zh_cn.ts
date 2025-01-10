@@ -52,6 +52,7 @@ export const i18n_zh_cn = {
     },
 
     word: {
+      Press: '按',
       Mode: '模式',
       MoreInformation: '更多信息',
       Mute: '勿扰',
@@ -434,6 +435,10 @@ export const i18n_zh_cn = {
         ZoomOut: '缩小',
         AutoRotate: '自动旋转',
       },
+      accessoriesSubMenu: '配件',
+      accessories: {
+        Instruction: '操作说明',
+      },
       examplesSubMenu: '例子',
       examples: {
         chemistrySubMenu: '化学',
@@ -475,6 +480,29 @@ export const i18n_zh_cn = {
       },
       languageSubMenu: '语言',
       AboutUs: '关于我们',
+    },
+
+    instructionPanel: {
+      Rotate: '旋转',
+      DragMouse: '拖动鼠标',
+      Zoom: '缩放',
+      MouseWheelOrKeys: '鼠标滚轮或者Ctrl+[和Ctrl+]',
+      MouseWheelOrKeysMac: '鼠标滚轮或者⌘+[和⌘+]',
+      Pan: '平移',
+      HoldCtrlDragMouse: '按下Ctrl键并拖动鼠标',
+      HoldMetaDragMouse: '按下⌘键并拖动鼠标',
+      NavigationMode: '导航模式',
+      EnableNavigation: '進入导航模式',
+      DisableNavigation: '退出导航模式',
+      MoveForwardBack: '前后移动',
+      MoveForwardBackInstruction: '按W/S键',
+      MoveLeftRight: '左右移动',
+      MoveLeftRightInstruction: '按A/D键',
+      MoveUpDown: '上下移动',
+      MoveUpDownInstruction: '按Z/X键',
+      Turn: '拐弯',
+      TurnInstruction: '按方向键',
+      ResetView: '重置视角',
     },
 
     accountSettingsPanel: {

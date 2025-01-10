@@ -71,8 +71,6 @@ export interface CommonStoreState {
   molecularStructureMap: Map<string, MolecularStructure>;
   setMolecularStructure: (name: string, structure: MolecularStructure) => void;
 
-  navigationView: boolean;
-
   undoManager: UndoManager;
   addUndoable: (undoable: Undoable) => void;
   loggable: boolean;
@@ -320,8 +318,6 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
               state.molecularStructureMap.set(name, structure);
             });
           },
-
-          navigationView: false,
 
           undoManager: new UndoManager(),
           addUndoable(undoable: Undoable) {

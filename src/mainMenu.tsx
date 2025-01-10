@@ -21,6 +21,7 @@ import { createViewMenu } from './components/mainMenu/viewMenu';
 import { createEditMenu } from './components/mainMenu/editMenu';
 import { Language } from './constants';
 import { createExamplesMenu } from './components/mainMenu/examplesMenu.tsx';
+import { createAccessoriesMenu } from './components/mainMenu/accessoriesMenu.tsx';
 
 const languageRadioStyle = {
   width: '100%',
@@ -128,6 +129,13 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
       key: 'view-sub-menu',
       label: <MenuItem hasPadding={false}>{t('menu.viewSubMenu', lang)}</MenuItem>,
       children: createViewMenu(keyHome, isMac),
+    });
+
+    // accessories menu
+    items.push({
+      key: 'accessories-sub-menu',
+      label: <MenuItem hasPadding={false}>{t('menu.accessoriesSubMenu', lang)}</MenuItem>,
+      children: createAccessoriesMenu(),
     });
 
     // examples menu

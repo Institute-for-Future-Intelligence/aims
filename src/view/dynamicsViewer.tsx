@@ -558,7 +558,7 @@ const DynamicsViewer = React.memo(
             return labels;
           })}
         {pickedMoleculeIndex !== -1 && moleculesRef.current && (
-          <Instances limit={1000} range={1000}>
+          <Instances name={'Highlighter'} limit={1000} range={1000}>
             <sphereGeometry args={[1, 16, 16]} />
             <meshStandardMaterial transparent opacity={0.5} />
             {moleculesRef.current[pickedMoleculeIndex]?.atoms.map((a, i) => {
@@ -579,6 +579,7 @@ const DynamicsViewer = React.memo(
         {pickedAtomRef.current && pickedAtomIndex !== -1 && (
           // must use position.x, etc. in order for this to update in a molecular dynamics simulation
           <Sphere
+            name={'Highlighter'}
             position={[
               pickedAtomRef.current.position.x,
               pickedAtomRef.current.position.y,

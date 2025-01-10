@@ -42,6 +42,7 @@ import { ModelUtil } from './models/ModelUtil.ts';
 import { showInfo } from './helpers.tsx';
 import { useTranslation } from 'react-i18next';
 import { Undoable } from './undo/Undoable.ts';
+import InstructionPanel from './view/instructionPanel.tsx';
 
 const ReactionChamber = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -69,6 +70,7 @@ const ReactionChamber = React.memo(() => {
   const testMolecules = useStore(Selector.testMolecules);
   const loggable = useStore(Selector.loggable);
   const logAction = useStore(Selector.logAction);
+  const showInstructionPanel = useStore(Selector.showInstructionPanel);
 
   const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -289,6 +291,7 @@ const ReactionChamber = React.memo(() => {
       {projectType === ProjectType.DRUG_DISCOVERY && <DockingSettings />}
       {projectType === ProjectType.MOLECULAR_MODELING && <DynamicsSettings />}
       <ToolBarButtons />
+      {showInstructionPanel && <InstructionPanel />}
       {projectType === ProjectType.MOLECULAR_MODELING && <SimulationControls />}
       {energyGraphVisible && <EnergyGraph />}
 

@@ -1,4 +1,8 @@
-import { EventDispatcher, MathUtils, MOUSE, Quaternion, Vector2, Vector3, Euler } from 'three';
+/*
+ * @Copyright 2025. Institute for Future Intelligence, Inc.
+ */
+
+import { EventDispatcher, MathUtils, MOUSE, Quaternion, Vector2, Vector3 } from 'three';
 
 const _changeEvent = { type: 'change' };
 const _startEvent = { type: 'start' };
@@ -39,7 +43,7 @@ class MyTrackballControls extends EventDispatcher {
     this.maxZoom = Infinity;
 
     // this.keys = ['KeyA' /*A*/, 'KeyS' /*S*/, 'KeyD' /*D*/];
-    this.moveSpeed = 1;
+    this.moveSpeed = 5;
     this.turnSpeed = 1;
     this.keys = {
       MOVE_LEFT: 'KeyA',
@@ -668,7 +672,7 @@ class MyTrackballControls extends EventDispatcher {
       delete _pointerPositions[event.pointerId];
 
       for (let i = 0; i < _pointers.length; i++) {
-        if (_pointers[i].pointerId == event.pointerId) {
+        if (_pointers[i].pointerId === event.pointerId) {
           _pointers.splice(i, 1);
           return;
         }
@@ -773,13 +777,10 @@ class MyTrackballControls extends EventDispatcher {
 
     const rollRight = (function () {
       const _axis = new Vector3(0, 0, 1);
-      const _direction = new Vector3();
       const _up = new Vector3(0, 1, 0);
 
       return function rotateUp(distance) {
         const camera = scope.object;
-
-        const rot = camera.rotation.reorder();
 
         camera.rotateOnAxis(_axis, 0.01 * distance);
 

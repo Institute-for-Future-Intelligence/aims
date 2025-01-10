@@ -128,6 +128,9 @@ export interface ProjectState {
   constantTemperature: boolean;
   temperature: number; // if temperature is constant, what value
   pressure: number; // if pressure is constant, what value (TODO)
+
+  navigationView: boolean;
+  showInstructionPanel: boolean;
 }
 
 export interface MolecularContainer {

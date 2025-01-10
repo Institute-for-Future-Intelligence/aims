@@ -122,7 +122,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     const undoableCheck = {
       name: 'Set Navigation View',
       timestamp: Date.now(),
-      checked: !useStore.getState().navigationView,
+      checked: !useStore.getState().projectState.navigationView,
       undo: () => {
         setNavigationView(!undoableCheck.checked);
       },
@@ -131,7 +131,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       },
     } as UndoableCheck;
     addUndoable(undoableCheck);
-    setNavigationView(!useStore.getState().navigationView);
+    setNavigationView(!useStore.getState().projectState.navigationView);
     usePrimitiveStore.getState().set((state) => {
       state.autoRotate = false;
     });
@@ -281,7 +281,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
 
   const handleKeyDown = (key: string) => {
     const ship = useStore.getState().projectState.spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW;
-    const navMode = useStore.getState().navigationView;
+    const navMode = useStore.getState().projectState.navigationView;
     switch (key) {
       case 'up': {
         if (navMode) break;

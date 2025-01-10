@@ -178,7 +178,7 @@ export const NavigationViewCheckBox = ({ isMac }: { isMac: boolean }) => {
 
   const toggleNavigationView = (checked: boolean) => {
     useStore.getState().set((state) => {
-      state.navigationView = checked;
+      state.projectState.navigationView = checked;
     });
     usePrimitiveStore.getState().set((state) => {
       state.enableRotate = false;

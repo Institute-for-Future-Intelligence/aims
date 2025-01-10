@@ -61,6 +61,7 @@ export const i18n_en = {
     },
 
     word: {
+      Press: 'Press',
       Mode: 'Mode',
       MoreInformation: 'More information',
       Mute: 'Mute',
@@ -447,6 +448,10 @@ export const i18n_en = {
         ZoomOut: 'Zoom Out',
         AutoRotate: 'Auto Rotate',
       },
+      accessoriesSubMenu: 'Accessories',
+      accessories: {
+        Instruction: 'Instruction',
+      },
       examplesSubMenu: 'Examples',
       examples: {
         chemistrySubMenu: 'Chemistry',
@@ -488,6 +493,29 @@ export const i18n_en = {
       },
       languageSubMenu: 'Language',
       AboutUs: 'About Us',
+    },
+
+    instructionPanel: {
+      Rotate: 'Rotate',
+      DragMouse: 'Drag mouse',
+      Zoom: 'Zoom',
+      MouseWheelOrKeys: 'Rotate mouse wheel or press Ctrl+[ or Ctrl+]',
+      MouseWheelOrKeysMac: 'Rotate mouse wheel or press ⌘+[ or ⌘+]',
+      Pan: 'Pan',
+      HoldCtrlDragMouse: 'Hold Ctrl and drag mouse',
+      HoldMetaDragMouse: 'Hold ⌘ and drag mouse',
+      NavigationMode: 'Navigation mode',
+      EnableNavigation: 'Enable navigation',
+      DisableNavigation: 'Disable navigation',
+      MoveForwardBack: 'Move forward/back',
+      MoveForwardBackInstruction: 'Press W/S',
+      MoveLeftRight: 'Move left/right',
+      MoveLeftRightInstruction: 'Press A/D',
+      MoveUpDown: 'Move up/down',
+      MoveUpDownInstruction: 'Press Z/X',
+      Turn: 'Turn',
+      TurnInstruction: 'Press arrow keys',
+      ResetView: 'Reset',
     },
 
     accountSettingsPanel: {

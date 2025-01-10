@@ -180,6 +180,8 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           cameraRotation: data.cameraRotation,
           cameraUp: data.cameraUp,
           panCenter: data.panCenter,
+          navigationView: !!data.navigationView,
+          showInstructionPanel: !!data.showInstructionPanel,
         } as ProjectState);
       } else {
         showError(i18n.t('message.CannotOpenProject', lang) + ': ' + project);

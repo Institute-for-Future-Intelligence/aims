@@ -319,4 +319,6 @@ export const torsionalBondsMap = (state: CommonStoreState) => state.torsionalBon
 
 export const torsionalBondsVisible = (state: CommonStoreState) => state.projectState.torsionalBondsVisible;
 
-export const navigationView = (state: CommonStoreState) => state.navigationView;
+export const showInstructionPanel = (state: CommonStoreState) => state.projectState.showInstructionPanel;
+
+export const navigationView = (state: CommonStoreState) => state.projectState.navigationView;

@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import i18n from '../i18n/i18n.ts';
@@ -135,6 +135,9 @@ export class ProjectUtil {
       constantTemperature: false,
       temperature: 300,
       pressure: 1,
+
+      showInstructionPanel: false,
+      navigationView: false,
     } as ProjectState;
   }
 
