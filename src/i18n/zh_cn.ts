@@ -427,6 +427,7 @@ export const i18n_zh_cn = {
       },
       viewSubMenu: '视界',
       view: {
+        NavigationView: '导航模式',
         ShowGallery: '显示图库',
         ResetView: '重置视角',
         ZoomIn: '放大',

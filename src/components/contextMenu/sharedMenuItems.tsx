@@ -170,6 +170,51 @@ export const ContainerCheckBox = () => {
   );
 };
 
+export const NavigationViewCheckBox = ({ isMac }: { isMac: boolean }) => {
+  const navigationView = useStore(Selector.navigationView);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const toggleNavigationView = (checked: boolean) => {
+    useStore.getState().set((state) => {
+      state.navigationView = checked;
+    });
+    usePrimitiveStore.getState().set((state) => {
+      state.enableRotate = false;
+    });
+    setChanged(true);
+  };
+
+  return (
+    <MenuItem stayAfterClick={false} hasPadding={false}>
+      <Checkbox
+        style={{ width: '100%' }}
+        checked={navigationView}
+        onChange={(e: CheckboxChangeEvent) => {
+          const checked = e.target.checked;
+          const undoableCheck = {
+            name: 'Enable/Disable Navigation View',
+            timestamp: Date.now(),
+            checked: checked,
+            undo: () => {
+              toggleNavigationView(!undoableCheck.checked);
+            },
+            redo: () => {
+              toggleNavigationView(undoableCheck.checked);
+            },
+          } as UndoableCheck;
+          useStore.getState().addUndoable(undoableCheck);
+          toggleNavigationView(checked);
+        }}
+      >
+        {t('menu.view.NavigationView', lang)}
+        <LabelMark>{isMac ? '⌘' : 'Ctrl'}+U</LabelMark>
+      </Checkbox>
+    </MenuItem>
+  );
+};
+
 export const GalleryCheckBox = () => {
   const hideGallery = useStore(Selector.hideGallery);
   const setChanged = usePrimitiveStore(Selector.setChanged);

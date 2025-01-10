@@ -70,6 +70,10 @@ export class ProjectUtil {
       cameraRotation: DEFAULT_CAMERA_ROTATION,
       cameraUp: DEFAULT_CAMERA_UP,
       panCenter: DEFAULT_PAN_CENTER,
+      navPosition: DEFAULT_CAMERA_POSITION,
+      navRotation: DEFAULT_CAMERA_ROTATION,
+      navUp: DEFAULT_CAMERA_UP,
+      navTarget: DEFAULT_PAN_CENTER,
 
       hideGallery: false,
 

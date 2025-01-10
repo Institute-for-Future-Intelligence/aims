@@ -1,4 +1,4 @@
-import { EventDispatcher, MathUtils, MOUSE, Quaternion, Vector2, Vector3 } from 'three';
+import { EventDispatcher, MathUtils, MOUSE, Quaternion, Vector2, Vector3, Euler } from 'three';
 
 const _changeEvent = { type: 'change' };
 const _startEvent = { type: 'start' };
@@ -38,7 +38,23 @@ class MyTrackballControls extends EventDispatcher {
     this.minZoom = 0;
     this.maxZoom = Infinity;
 
-    this.keys = ['KeyA' /*A*/, 'KeyS' /*S*/, 'KeyD' /*D*/];
+    // this.keys = ['KeyA' /*A*/, 'KeyS' /*S*/, 'KeyD' /*D*/];
+    this.moveSpeed = 1;
+    this.turnSpeed = 1;
+    this.keys = {
+      MOVE_LEFT: 'KeyA',
+      MOVE_RIGHT: 'KeyD',
+      MOVE_FORWARD: 'KeyW',
+      MOVE_BACKWARD: 'KeyS',
+      MOVE_UP: 'KeyZ',
+      MOVE_DOWN: 'KeyX',
+      ROLL_LEFT: 'KeyQ',
+      ROLL_RIGHT: 'KeyE',
+      ROTATE_LEFT: 'ArrowLeft',
+      ROTATE_UP: 'ArrowUp',
+      ROTATE_RIGHT: 'ArrowRight',
+      ROTATE_DOWN: 'ArrowDown',
+    };
 
     this.mouseButtons = { LEFT: MOUSE.ROTATE, MIDDLE: MOUSE.DOLLY, RIGHT: MOUSE.PAN };
 
@@ -84,6 +100,17 @@ class MyTrackballControls extends EventDispatcher {
     this.zoom0 = this.object.zoom;
 
     // methods
+
+    this.listenToKeyEvents = function (domElement) {
+      domElement.addEventListener('keydown', keydown);
+      this._domElementKeyEvents = domElement;
+    };
+
+    this.removeKeyEvents = function () {
+      if (scope._domElementKeyEvents !== null) {
+        scope._domElementKeyEvents.removeEventListener('keydown', keydown);
+      }
+    };
 
     this.handleResize = function () {
       const box = scope.domElement.getBoundingClientRect();
@@ -391,19 +418,54 @@ class MyTrackballControls extends EventDispatcher {
     function keydown(event) {
       if (scope.enabled === false) return;
 
-      window.removeEventListener('keydown', keydown);
+      switch (event.code) {
+        case scope.keys.MOVE_FORWARD:
+          moveForward(scope.moveSpeed);
+          break;
 
-      if (_keyState !== STATE.NONE) {
-        return;
-      } else if (event.code === scope.keys[STATE.ROTATE] && !scope.noRotate) {
-        _keyState = STATE.ROTATE;
-      } else if (event.code === scope.keys[STATE.ZOOM] && !scope.noZoom) {
-        _keyState = STATE.ZOOM;
-      } else if (
-        (event.code === scope.keys[STATE.PAN] || event.code === 'ControlLeft' || event.code === 'ControlRight') &&
-        !scope.noPan
-      ) {
-        _keyState = STATE.PAN;
+        case scope.keys.MOVE_BACKWARD:
+          moveForward(-scope.moveSpeed);
+          break;
+
+        case scope.keys.MOVE_RIGHT:
+          moveRight(scope.moveSpeed);
+          break;
+
+        case scope.keys.MOVE_LEFT:
+          moveRight(-scope.moveSpeed);
+          break;
+
+        case scope.keys.MOVE_UP:
+          moveUp(scope.moveSpeed);
+          break;
+
+        case scope.keys.MOVE_DOWN:
+          moveUp(-scope.moveSpeed);
+          break;
+
+        case scope.keys.ROLL_LEFT:
+          rollRight(scope.turnSpeed);
+          break;
+
+        case scope.keys.ROLL_RIGHT:
+          rollRight(-scope.turnSpeed);
+          break;
+
+        case scope.keys.ROTATE_UP:
+          spinUp(scope.turnSpeed);
+          break;
+
+        case scope.keys.ROTATE_DOWN:
+          spinUp(-scope.turnSpeed);
+          break;
+
+        case scope.keys.ROTATE_LEFT:
+          spinRight(-scope.turnSpeed);
+          break;
+
+        case scope.keys.ROTATE_RIGHT:
+          spinRight(scope.turnSpeed);
+          break;
       }
     }
 
@@ -630,6 +692,127 @@ class MyTrackballControls extends EventDispatcher {
       return _pointerPositions[pointer.pointerId];
     }
 
+    const moveForward = (function () {
+      const _step = new Vector3();
+
+      return function moveForward(distance) {
+        const camera = scope.object;
+
+        _step
+          .subVectors(scope.target, camera.position)
+          .normalize()
+          .multiplyScalar(distance * 0.1);
+
+        camera.position.add(_step);
+
+        scope.target.add(_step);
+
+        scope.dispatchEvent(_changeEvent);
+
+        scope.dispatchEvent(_endEvent);
+      };
+    })();
+
+    const moveRight = (function () {
+      const _step = new Vector3(0, 0, 0);
+
+      return function moveRight(distance) {
+        const camera = scope.object;
+
+        _step
+          .subVectors(scope.target, camera.position)
+          .cross(camera.up)
+          .setLength(distance * 0.1);
+
+        camera.position.add(_step);
+
+        scope.target.add(_step);
+
+        scope.dispatchEvent(_changeEvent);
+
+        scope.dispatchEvent(_endEvent);
+      };
+    })();
+
+    const moveUp = (function () {
+      const _step = new Vector3(0, 0, 0);
+
+      return function moveUp(distance) {
+        const camera = scope.object;
+
+        _step.copy(camera.up).setLength(distance * 0.1);
+
+        camera.position.add(_step);
+
+        scope.target.add(_step);
+
+        scope.dispatchEvent(_changeEvent);
+
+        scope.dispatchEvent(_endEvent);
+      };
+    })();
+
+    const spinRight = (function () {
+      const _axis = new Vector3(0, 1, 0);
+      const _direction = new Vector3();
+
+      return function spinRight(distance) {
+        const camera = scope.object;
+
+        camera.rotateOnAxis(_axis, -0.01 * distance);
+
+        _eye.subVectors(scope.target, camera.position);
+
+        scope.target.addVectors(camera.position, camera.getWorldDirection(_direction).multiplyScalar(_eye.length()));
+
+        scope.dispatchEvent(_changeEvent);
+
+        scope.dispatchEvent(_endEvent);
+      };
+    })();
+
+    const rollRight = (function () {
+      const _axis = new Vector3(0, 0, 1);
+      const _direction = new Vector3();
+      const _up = new Vector3(0, 1, 0);
+
+      return function rotateUp(distance) {
+        const camera = scope.object;
+
+        const rot = camera.rotation.reorder();
+
+        camera.rotateOnAxis(_axis, 0.01 * distance);
+
+        camera.up.copy(_up).applyQuaternion(camera.quaternion);
+
+        scope.dispatchEvent(_changeEvent);
+
+        scope.dispatchEvent(_endEvent);
+      };
+    })();
+
+    const spinUp = (function () {
+      const _axis = new Vector3(1, 0, 0);
+      const _direction = new Vector3();
+      const _up = new Vector3(0, 1, 0);
+
+      return function rotateUp(distance) {
+        const camera = scope.object;
+
+        camera.rotateOnAxis(_axis, 0.01 * distance);
+
+        camera.up.copy(_up).applyQuaternion(camera.quaternion);
+
+        _eye.subVectors(scope.target, camera.position);
+
+        scope.target.addVectors(camera.position, camera.getWorldDirection(_direction).multiplyScalar(_eye.length()));
+
+        scope.dispatchEvent(_changeEvent);
+
+        scope.dispatchEvent(_endEvent);
+      };
+    })();
+
     this.dispose = function () {
       scope.domElement.removeEventListener('contextmenu', contextmenu);
 
@@ -648,9 +831,6 @@ class MyTrackballControls extends EventDispatcher {
     this.domElement.addEventListener('pointerdown', onPointerDown);
     this.domElement.addEventListener('pointercancel', onPointerCancel);
     this.domElement.addEventListener('wheel', onMouseWheel, { passive: false });
-
-    window.addEventListener('keydown', keydown);
-    window.addEventListener('keyup', keyup);
 
     this.handleResize();
 

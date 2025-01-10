@@ -2,7 +2,7 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import { useFrame, useThree } from '@react-three/fiber';
+import { invalidate, useFrame, useThree } from '@react-three/fiber';
 import { DirectionalLight, Euler, Vector3 } from 'three';
 import { useStore } from './stores/common';
 import {
@@ -53,6 +53,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   const cameraPosition = useStore(Selector.cameraPosition);
   const cameraRotation = useStore(Selector.cameraRotation);
   const cameraUp = useStore(Selector.cameraUp);
+  const navigationView = useStore(Selector.navigationView);
 
   const { gl, camera, set } = useThree();
 
@@ -196,6 +197,27 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
     });
   };
 
+  const saveNavState = () => {
+    useStore.getState().set((state) => {
+      state.projectState.navPosition = camera.position.toArray();
+      state.projectState.navRotation = [camera.rotation.x, camera.rotation.y, camera.rotation.z];
+      state.projectState.navUp = camera.up.toArray();
+      if (controlsRef.current) {
+        const t = controlsRef.current.target;
+        state.projectState.navTarget = t.toArray();
+      }
+    });
+  };
+
+  const renderNav = () => {
+    onControlChange();
+    invalidate();
+  };
+
+  const endNav = () => {
+    saveNavState();
+  };
+
   const onControlStart = () => {
     setFrameLoop('always');
   };
@@ -265,8 +287,56 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
     }
   }, [autoRotate]);
 
+  // change cam position onToggleNavMode
+  useEffect(() => {
+    if (isFirstRender) return;
+    if (navigationView) {
+      const navPos = useStore.getState().projectState.navPosition;
+      const navRot = useStore.getState().projectState.navRotation;
+      const navUp = useStore.getState().projectState.navUp;
+      const navTarget = useStore.getState().projectState.navTarget;
+      if (navPos && navRot && navUp && navTarget) {
+        camera.position.fromArray(navPos);
+        camera.rotation.set(navRot[0], navRot[1], navRot[2], Euler.DEFAULT_ORDER);
+        camera.up.fromArray(navUp);
+        if (controlsRef.current) {
+          controlsRef.current.target.fromArray(navTarget);
+        }
+      }
+    } else {
+      camera.position.fromArray(cameraPosition);
+      camera.rotation.set(cameraRotation[0], cameraRotation[1], cameraRotation[2], Euler.DEFAULT_ORDER);
+      camera.up.fromArray(cameraUp);
+      if (controlsRef.current) {
+        controlsRef.current.target.fromArray(useStore.getState().projectState.panCenter);
+      }
+    }
+    onControlChange();
+  }, [navigationView]);
+
+  // add nav event listeners
+  useEffect(() => {
+    if (!controlsRef.current) return;
+    if (navigationView) {
+      controlsRef.current.listenToKeyEvents(window);
+      controlsRef.current.addEventListener('change', renderNav);
+      controlsRef.current.addEventListener('end', endNav);
+    }
+    invalidate();
+    const ref = controlsRef.current;
+    return () => {
+      if (ref && navigationView) {
+        controlsRef.current.removeKeyEvents();
+        controlsRef.current.removeEventListener('change', renderNav);
+        controlsRef.current.removeEventListener('end', endNav);
+      }
+    };
+  }, [navigationView]);
+
   useFrame(() => {
-    controlsRef.current?.update();
+    if (!navigationView) {
+      controlsRef.current?.update();
+    }
   });
 
   return (
@@ -274,7 +344,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
       ref={controlsRef}
       args={[camera, gl.domElement]}
       staticMoving={true}
-      enabled={enableRotate}
+      enabled={enableRotate || navigationView}
       rotateSpeed={10}
       zoomSpeed={3}
       target={target}

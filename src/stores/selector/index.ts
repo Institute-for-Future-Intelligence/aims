@@ -318,3 +318,5 @@ export const angularBondsVisible = (state: CommonStoreState) => state.projectSta
 export const torsionalBondsMap = (state: CommonStoreState) => state.torsionalBondsMap;
 
 export const torsionalBondsVisible = (state: CommonStoreState) => state.projectState.torsionalBondsVisible;
+
+export const navigationView = (state: CommonStoreState) => state.navigationView;

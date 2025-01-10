@@ -440,6 +440,7 @@ export const i18n_en = {
       },
       viewSubMenu: 'View',
       view: {
+        NavigationView: 'Navigation View',
         ShowGallery: 'Show Gallery',
         ResetView: 'Reset View',
         ZoomIn: 'Zoom In',

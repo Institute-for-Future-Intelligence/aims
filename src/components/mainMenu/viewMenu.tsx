@@ -18,6 +18,7 @@ import {
   GalleryCheckBox,
   GlobalStyleRadioGroup,
   MaterialRadioGroup,
+  NavigationViewCheckBox,
 } from '../contextMenu/sharedMenuItems.tsx';
 import {
   AngularBondsCheckBox,
@@ -81,6 +82,11 @@ export const createViewMenu = (keyHome: string, isMac: boolean) => {
         <LabelMark>({isMac ? '⌘' : 'Ctrl'}+[)</LabelMark>
       </MenuItem>
     ),
+  });
+
+  items.push({
+    key: 'navigation-view-box',
+    label: <NavigationViewCheckBox isMac={isMac} />,
   });
 
   items.push({

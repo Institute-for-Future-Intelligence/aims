@@ -62,6 +62,10 @@ export interface ProjectState {
   cameraRotation: number[];
   cameraUp: number[];
   panCenter: number[];
+  navPosition: number[];
+  navRotation: number[];
+  navUp: number[];
+  navTarget: number[];
 
   hideGallery: boolean;
 
