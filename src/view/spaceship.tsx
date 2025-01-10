@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 // @ts-expect-error: ignore
@@ -45,7 +45,7 @@ const Spaceship = React.memo(() => {
   return (
     <group
       ref={groupRef}
-      scale={spaceshipSize}
+      scale={spaceshipSize * 1.5}
       onPointerOver={(e) => {}}
       onPointerOut={(e) => {}}
       onPointerDown={(e) => {

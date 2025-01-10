@@ -170,7 +170,7 @@ export const ContainerCheckBox = () => {
   );
 };
 
-export const NavigationViewCheckBox = ({ isMac }: { isMac: boolean }) => {
+export const NavigationViewCheckBox = ({ isMac, popup }: { isMac?: boolean; popup?: boolean }) => {
   const navigationView = useStore(Selector.navigationView);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
@@ -209,7 +209,7 @@ export const NavigationViewCheckBox = ({ isMac }: { isMac: boolean }) => {
         }}
       >
         {t('menu.view.NavigationView', lang)}
-        <LabelMark>{isMac ? '⌘' : 'Ctrl'}+U</LabelMark>
+        <LabelMark>{popup ? '' : isMac ? '(⌘+U)' : '(Ctrl+U)'}</LabelMark>
       </Checkbox>
     </MenuItem>
   );

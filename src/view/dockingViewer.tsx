@@ -68,6 +68,7 @@ const DockingViewer = React.memo(
     const ligandTransform =
       useStore.getState().projectState.ligandTransform ?? ({ x: 0, y: 0, z: 0, euler: [0, 0, 0] } as MoleculeTransform);
     const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
+    const navigationView = useStore.getState().projectState.navigationView;
 
     const [proteinComplex, setProteinComplex] = useState<any>();
     const [ligandComplex, setLigandComplex] = useState<any>();
