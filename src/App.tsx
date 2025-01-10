@@ -22,13 +22,24 @@ const App = React.memo(() => {
         {viewOnly ? (
           <AppCreator viewOnly={true} />
         ) : (
-          <Beforeunload onBeforeunload={() => ''}>
+          <MyBeforeunload>
             <AppCreator viewOnly={false} />{' '}
-          </Beforeunload>
+          </MyBeforeunload>
         )}
       </ErrorPage>
     </ConfigProvider>
   );
+});
+
+const MyBeforeunload = React.memo(({ children }: { children: React.ReactNode }) => {
+  const whiteList = ['gen8A3WDDHS2f9Y81muVUz1ZgJ33'];
+  const isInWhiteList = whiteList.find((id) => id === useStore.getState().user.uid);
+
+  if (!import.meta.env.PROD && !!isInWhiteList) {
+    return children;
+  } else {
+    return <Beforeunload onBeforeunload={() => ''}>{children}</Beforeunload>;
+  }
 });
 
 export default App;
