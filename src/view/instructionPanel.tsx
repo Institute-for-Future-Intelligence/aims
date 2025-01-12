@@ -73,6 +73,10 @@ const InstructionPanel = React.memo(() => {
               {i18n.t('instructionPanel.MoveUpDownInstruction', lang)}
             </span>
             <span>
+              <b>{i18n.t('instructionPanel.RollLeftRight', lang)}</b>:{' '}
+              {i18n.t('instructionPanel.RollLeftRightInstruction', lang)}
+            </span>
+            <span>
               <b>{i18n.t('instructionPanel.Turn', lang)}</b>: {i18n.t('instructionPanel.TurnInstruction', lang)}
             </span>
           </>

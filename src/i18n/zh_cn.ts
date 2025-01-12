@@ -500,6 +500,8 @@ export const i18n_zh_cn = {
       MoveLeftRightInstruction: '按A/D键',
       MoveUpDown: '上下移动',
       MoveUpDownInstruction: '按Z/X键',
+      RollLeftRight: '左右横滚',
+      RollLeftRightInstruction: '按Q/E键',
       Turn: '拐弯',
       TurnInstruction: '按方向键',
       ResetView: '重置视角',

@@ -513,6 +513,8 @@ export const i18n_en = {
       MoveLeftRightInstruction: 'Press A/D',
       MoveUpDown: 'Move up/down',
       MoveUpDownInstruction: 'Press Z/X',
+      RollLeftRight: 'Roll left/right',
+      RollLeftRightInstruction: 'Press Q/E',
       Turn: 'Turn',
       TurnInstruction: 'Press arrow keys',
       ResetView: 'Reset',

@@ -499,6 +499,8 @@ export const i18n_zh_tw = {
       MoveLeftRightInstruction: '按A/D鍵',
       MoveUpDown: '上下移動',
       MoveUpDownInstruction: '按Z/X鍵',
+      RollLeftRight: '左右橫滾',
+      RollLeftRightInstruction: '按Q/E鍵',
       Turn: '拐彎',
       TurnInstruction: '按方向鍵',
       ResetView: '重置視角',
