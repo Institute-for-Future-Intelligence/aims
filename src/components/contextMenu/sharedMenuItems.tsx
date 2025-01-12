@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useMemo } from 'react';
@@ -179,6 +179,7 @@ export const NavigationViewCheckBox = ({ isMac, popup }: { isMac?: boolean; popu
   const toggleNavigationView = (checked: boolean) => {
     useStore.getState().set((state) => {
       state.projectState.navigationView = checked;
+      if (checked) state.projectState.showInstructionPanel = true;
     });
     usePrimitiveStore.getState().set((state) => {
       state.enableRotate = false;

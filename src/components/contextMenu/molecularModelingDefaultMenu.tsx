@@ -40,6 +40,7 @@ import {
   FogCheckBox,
   GlobalStyleRadioGroup,
   MaterialRadioGroup,
+  NavigationViewCheckBox,
   Screenshot,
 } from './sharedMenuItems.tsx';
 
@@ -244,6 +245,11 @@ export const createMolecularModelingDefaultMenu = (
     items.push({
       key: 'molecular-viewer-auto-rotate',
       label: <AutoRotateCheckBox />,
+    });
+
+    items.push({
+      key: 'molecular-viewer-navigation-mode',
+      label: <NavigationViewCheckBox popup={true} />,
     });
 
     items.push({
