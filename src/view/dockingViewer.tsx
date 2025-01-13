@@ -323,7 +323,7 @@ const DockingViewer = React.memo(
                   return (
                     <Instance
                       key={i}
-                      scale={Element.getByName(a.element).radius * (skinnyStyle ? 0.6 : 2.4)}
+                      scale={Element.getByName(a.element).radius * (skinnyStyle ? 0.4 : 2)}
                       position={[a.position.x, a.position.y, a.position.z]}
                       color={'yellow'}
                     />

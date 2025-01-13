@@ -562,9 +562,9 @@ const DynamicsViewer = React.memo(
             <sphereGeometry args={[1, 16, 16]} />
             <meshStandardMaterial transparent opacity={0.5} />
             {moleculesRef.current[pickedMoleculeIndex]?.atoms.map((a, i) => {
-              let scaleFactor = skinnyStyle ? 0.4 : 1.2;
+              let scaleFactor = skinnyStyle ? 0.3 : 1.2;
               const style = testMolecules[pickedMoleculeIndex]?.style;
-              if (style) scaleFactor = isSkinny(style) ? 0.4 : 1.2;
+              if (style) scaleFactor = isSkinny(style) ? 0.3 : 1.2;
               return (
                 <Instance
                   key={i}
@@ -585,7 +585,7 @@ const DynamicsViewer = React.memo(
               pickedAtomRef.current.position.y,
               pickedAtomRef.current.position.z,
             ]}
-            scale={Element.getByName(pickedAtomRef.current.elementSymbol).radius * (skinnyStyle ? 0.4 : 1.2)}
+            scale={Element.getByName(pickedAtomRef.current.elementSymbol).radius * (skinnyStyle ? 0.3 : 1.2)}
           >
             <meshStandardMaterial transparent opacity={0.5} color={'yellow'} />
           </Sphere>
