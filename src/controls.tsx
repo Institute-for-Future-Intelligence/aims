@@ -45,23 +45,70 @@ const useFirstRender = () => {
 };
 
 export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) => {
-  const panCenter = useStore(Selector.panCenter);
   const enableRotate = usePrimitiveStore(Selector.enableRotate);
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
   const resetViewFlag = usePrimitiveStore(Selector.resetViewFlag);
   const zoomViewFlag = usePrimitiveStore(Selector.zoomViewFlag);
+
   const cameraPosition = useStore(Selector.cameraPosition);
   const cameraRotation = useStore(Selector.cameraRotation);
   const cameraUp = useStore(Selector.cameraUp);
+  const panCenter = useStore(Selector.panCenter);
   const navigationView = useStore(Selector.navigationView);
+  const navPosition = useStore(Selector.navPosition);
+  const navRotation = useStore(Selector.navRotation);
+  const navUp = useStore(Selector.navUp);
+  const navTarget = useStore(Selector.navTarget);
 
-  const { gl, camera, set } = useThree();
+  const { gl, camera, set, get } = useThree();
 
   const controlsRef = useRef<MyTrackballControls>(null);
   const isFirstRender = useFirstRender();
   const controlEndCalledRef = useRef<boolean>(false);
 
-  const target = useMemo(() => new Vector3().fromArray(panCenter), [panCenter]);
+  const _cameraPosition = useMemo(() => {
+    if (navigationView) return navPosition ?? cameraPosition;
+    else return cameraPosition;
+  }, [cameraPosition, navPosition, navigationView]);
+
+  const _cameraRotation = useMemo(() => {
+    if (navigationView) return navRotation ?? cameraPosition;
+    else return cameraRotation;
+  }, [cameraRotation, navRotation, navigationView]);
+
+  const _cameraUp = useMemo(() => {
+    if (navigationView) return navUp ?? cameraUp;
+    else return cameraUp;
+  }, [cameraUp, navUp, navigationView]);
+
+  const _target = useMemo(() => {
+    if (navigationView) return new Vector3().fromArray(navTarget ?? panCenter);
+    else return new Vector3().fromArray(panCenter);
+  }, [panCenter, navTarget, navigationView]);
+
+  const updateLight = () => {
+    if (lightRef.current) {
+      // sets the point light to a location above the camera
+      lightRef.current.position.set(0, 1, 0);
+      lightRef.current.position.add(camera.position);
+    }
+  };
+
+  // init/update camera due to common store change(which comes from local/cloud data)
+  useEffect(() => {
+    if (controlEndCalledRef.current) {
+      controlEndCalledRef.current = false;
+      return;
+    }
+    camera.position.fromArray(_cameraPosition);
+    camera.rotation.set(_cameraRotation[0], _cameraRotation[1], _cameraRotation[2], Euler.DEFAULT_ORDER);
+    camera.up.fromArray(_cameraUp);
+    if (controlsRef.current) {
+      controlsRef.current.target.copy(_target);
+      camera.lookAt(_target);
+    }
+    updateLight();
+  }, [_cameraPosition, _cameraRotation, _cameraUp, _target]);
 
   const setFrameLoop = (mode: 'demand' | 'always') => {
     set({ frameloop: mode });
@@ -71,15 +118,20 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
     if (controlsRef.current) {
       const r = 2 * usePrimitiveStore.getState().boundingSphereRadius;
       camera.position.set(r, r, r);
-      camera.rotation.set(0, 0, 0, Euler.DEFAULT_ORDER);
       camera.up.set(0, 0, 1);
       controlsRef.current.target.fromArray([0, 0, 0]);
+      camera.lookAt(controlsRef.current.target);
       useStore.getState().set((state) => {
         state.projectState.cameraPosition = [r, r, r];
         state.projectState.cameraRotation = [camera.rotation.x, camera.rotation.y, camera.rotation.z];
         state.projectState.cameraUp = [0, 0, 1];
         state.projectState.panCenter = [0, 0, 0];
+        state.projectState.navPosition = [r, r, r];
+        state.projectState.navRotation = [camera.rotation.x, camera.rotation.y, camera.rotation.z];
+        state.projectState.navUp = [0, 0, 1];
+        state.projectState.navTarget = [0, 0, 0];
       });
+      updateLight();
     }
   };
 
@@ -210,12 +262,24 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   };
 
   const renderNav = () => {
-    onControlChange();
+    updateLight();
     invalidate();
   };
 
   const endNav = () => {
-    saveNavState();
+    const positionSame =
+      navPosition &&
+      navPosition[0] === camera.position.x &&
+      navPosition[1] === camera.position.y &&
+      navPosition[2] === camera.position.z;
+    const rotationSame =
+      navRotation &&
+      navRotation[0] === camera.rotation.x &&
+      navRotation[1] === camera.rotation.y &&
+      navRotation[2] === camera.rotation.z;
+    if (!positionSame || !rotationSame) {
+      saveNavState();
+    }
   };
 
   const onControlStart = () => {
@@ -223,15 +287,11 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   };
 
   const onControlChange = () => {
-    if (lightRef.current) {
-      // sets the point light to a location above the camera
-      lightRef.current.position.set(0, 1, 0);
-      lightRef.current.position.add(camera.position);
-    }
+    updateLight();
   };
 
   const onControlEnd = () => {
-    if (usePrimitiveStore.getState().autoRotate) return;
+    if (usePrimitiveStore.getState().autoRotate || navigationView) return;
     setFrameLoop('demand');
     const cameraPositionSame =
       cameraPosition &&
@@ -255,64 +315,39 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
 
   useEffect(() => {
     if (isFirstRender) return;
-    if (controlEndCalledRef.current) {
-      controlEndCalledRef.current = false;
-      return;
-    }
-    camera.position.fromArray(cameraPosition);
-    camera.rotation.set(cameraRotation[0], cameraRotation[1], cameraRotation[2], Euler.DEFAULT_ORDER);
-  }, [cameraPosition, cameraRotation]);
-
-  useEffect(() => {
-    if (isFirstRender) return;
-    camera.up.fromArray(cameraUp);
-  }, [cameraUp]);
-
-  useEffect(() => {
-    if (isFirstRender) return;
     resetView();
   }, [resetViewFlag]);
 
   useEffect(() => {
-    if (isFirstRender) return;
-    zoomView();
-  }, [zoomViewFlag]);
+    if (isFirstRender || !controlsRef.current) return;
+    if (navigationView) {
+      controlsRef.current.noZoom = true;
+    } else {
+      zoomView();
+      controlsRef.current.noZoom = false;
+    }
+  }, [zoomViewFlag, navigationView]);
 
   useEffect(() => {
+    if (isFirstRender || !controlsRef.current) return;
+    if (navigationView) {
+      controlsRef.current.noPan = true;
+    } else {
+      controlsRef.current.noPan = false;
+    }
+  }, [zoomViewFlag, navigationView]);
+
+  useEffect(() => {
+    if (navigationView) return;
     if (autoRotate) {
       setFrameLoop('always');
     } else {
       setFrameLoop('demand');
-      saveCameraState();
-    }
-  }, [autoRotate]);
-
-  // change cam position onToggleNavMode
-  useEffect(() => {
-    if (isFirstRender) return;
-    if (navigationView) {
-      const navPos = useStore.getState().projectState.navPosition;
-      const navRot = useStore.getState().projectState.navRotation;
-      const navUp = useStore.getState().projectState.navUp;
-      const navTarget = useStore.getState().projectState.navTarget;
-      if (navPos && navRot && navUp && navTarget) {
-        camera.position.fromArray(navPos);
-        camera.rotation.set(navRot[0], navRot[1], navRot[2], Euler.DEFAULT_ORDER);
-        camera.up.fromArray(navUp);
-        if (controlsRef.current) {
-          controlsRef.current.target.fromArray(navTarget);
-        }
-      }
-    } else {
-      camera.position.fromArray(cameraPosition);
-      camera.rotation.set(cameraRotation[0], cameraRotation[1], cameraRotation[2], Euler.DEFAULT_ORDER);
-      camera.up.fromArray(cameraUp);
-      if (controlsRef.current) {
-        controlsRef.current.target.fromArray(useStore.getState().projectState.panCenter);
+      if (!isFirstRender) {
+        saveCameraState();
       }
     }
-    onControlChange();
-  }, [navigationView]);
+  }, [autoRotate, navigationView]);
 
   // add nav event listeners
   useEffect(() => {
@@ -347,7 +382,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
       enabled={enableRotate || navigationView}
       rotateSpeed={10}
       zoomSpeed={3}
-      target={target}
+      target={_target}
       autoRotate={autoRotate}
       onStart={onControlStart}
       onChange={onControlChange}

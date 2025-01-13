@@ -181,6 +181,10 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           cameraUp: data.cameraUp,
           panCenter: data.panCenter,
           navigationView: !!data.navigationView,
+          navPosition: data.navPosition ?? data.cameraPosition,
+          navRotation: data.navRotation ?? data.cameraRotation,
+          navUp: data.navUp ?? data.cameraUp,
+          navTarget: data.navTarget ?? data.panCenter,
           showInstructionPanel: !!data.showInstructionPanel,
         } as ProjectState);
       } else {

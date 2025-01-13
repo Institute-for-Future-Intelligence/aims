@@ -104,6 +104,14 @@ export const cameraUp = (state: CommonStoreState) => state.projectState.cameraUp
 
 export const panCenter = (state: CommonStoreState) => state.projectState.panCenter;
 
+export const navPosition = (state: CommonStoreState) => state.projectState.navPosition;
+
+export const navRotation = (state: CommonStoreState) => state.projectState.navRotation;
+
+export const navUp = (state: CommonStoreState) => state.projectState.navUp;
+
+export const navTarget = (state: CommonStoreState) => state.projectState.navTarget;
+
 export const proteinData = (state: CommonStoreState) => state.proteinData;
 
 export const molecules = (state: CommonStoreState) => state.projectState.molecules;

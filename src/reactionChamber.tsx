@@ -57,6 +57,8 @@ const ReactionChamber = React.memo(() => {
   const viewerAxes = useStore(Selector.chamberViewerAxes);
   const viewerFoggy = useStore(Selector.chamberViewerFoggy);
   const cameraPosition = useStore(Selector.cameraPosition);
+  const navPosition = useStore.getState().projectState.navPosition;
+  const navigationView = useStore.getState().projectState.navigationView;
   const cameraRotation = useStore(Selector.cameraRotation);
   const cameraUp = useStore(Selector.cameraUp);
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
@@ -247,7 +249,9 @@ const ReactionChamber = React.memo(() => {
           ref={lightRef}
           name={'Directional Light'}
           color="white"
-          position={new Vector3().fromArray(cameraPosition ?? DEFAULT_CAMERA_POSITION).add(new Vector3(0, 1, 0))}
+          position={new Vector3()
+            .fromArray((navigationView ? navPosition : cameraPosition) ?? DEFAULT_CAMERA_POSITION)
+            .add(new Vector3(0, 1, 0))}
           intensity={DEFAULT_LIGHT_INTENSITY}
           castShadow={true}
           shadow-bias={0} // may be used to reduce shadow artifacts
