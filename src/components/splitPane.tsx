@@ -69,7 +69,9 @@ const SplitPane = React.memo(
       <div className="split-pane" onPointerMove={handlePointerMove}>
         <div className="left-child">{leftChild}</div>
         {hideGallery && <div className="sash" onPointerDown={handlePointerDown} />}
-        <div className="right-child">{rightChild}</div>
+        <div className="right-child" id="split-pane-right-child">
+          {rightChild}
+        </div>
       </div>
     );
   },

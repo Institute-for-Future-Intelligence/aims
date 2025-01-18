@@ -2,14 +2,14 @@
  * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
  */
 
-import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import ifiLogo from './assets/ifi-logo.png';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { visitHomepage } from './helpers';
 import MainMenu from './mainMenu';
-import { VERSION } from './constants';
+import { SpaceshipDisplayMode, VERSION } from './constants';
 import ShareLinks from './shareLinks';
 import ProjectGallery from './project/projectGallery.tsx';
 import ReactionChamber from './reactionChamber';
@@ -26,6 +26,7 @@ import SplitPane from './components/splitPane.tsx';
 import { useRefStore } from './stores/commonRef.ts';
 import { Badge, Button, Space } from 'antd';
 import { AlertFilled } from '@ant-design/icons';
+import Cockpit from './view/cockpit.tsx';
 
 const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
@@ -42,6 +43,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const showAccountSettingsPanel = usePrimitiveStore(Selector.showAccountSettingsPanel);
   const changed = usePrimitiveStore(Selector.changed);
   const setChanged = usePrimitiveStore(Selector.setChanged);
+  const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
 
   // const setSkipChange = usePrimitiveStore(Selector.setSkipChange);
   // const cameraPosition = useStore(Selector.cameraPosition);
@@ -265,6 +267,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
               <ReactionChamber />
             </Suspense>
           </SplitPane>
+          {spaceshipDisplayMode === SpaceshipDisplayMode.INSIDE_VIEW && <Cockpit />}
           <KeyboardListener setNavigationView={setNavigationView} />
         </div>
       </DropdownContextMenu>
