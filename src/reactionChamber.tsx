@@ -24,7 +24,6 @@ import { DirectionalLight, Euler, PerspectiveCamera, Vector2, Vector3 } from 'th
 import DockingSettings from './view/dockingSettings.tsx';
 import { ReactionChamberControls } from './controls';
 import Spaceship from './view/spaceship.tsx';
-import Cockpit from './view/cockpit.tsx';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import DynamicsSettings from './view/dynamicsSettings.tsx';

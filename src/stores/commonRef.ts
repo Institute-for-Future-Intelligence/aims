@@ -13,11 +13,13 @@ import { MAXIMUM_NUMBER_OF_ATOMS_FOR_SIMULATION } from '../constants.ts';
 import i18n from '../i18n/i18n';
 import { showWarning } from '../helpers.tsx';
 import { useStore } from './common.ts';
+import { MyTrackballControls } from '../js/MyTrackballControls';
 
 const v = new Vector2();
 
 export interface RefStoreState {
   selectNone: () => void;
+  controlsRef: RefObject<MyTrackballControls> | null;
   cameraRef: RefObject<Camera | undefined> | null;
   raycasterRef: RefObject<Raycaster | undefined> | null;
   planeXYRef: RefObject<any> | null;
@@ -37,6 +39,7 @@ export interface RefStoreState {
 export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
   return {
     selectNone: () => {},
+    controlsRef: null,
     cameraRef: null,
     raycasterRef: null,
     planeXYRef: null,

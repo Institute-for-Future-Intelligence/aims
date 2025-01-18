@@ -1,11 +1,13 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { ArrowUpOutlined } from '@ant-design/icons';
 import steeringWheel from '../assets/steering-wheel.png';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
+import { useRefStore } from '../stores/commonRef.ts';
 
 const Cockpit = React.memo(() => {
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
@@ -444,6 +446,7 @@ const Cockpit = React.memo(() => {
       />
       {/* steering wheel */}
       <img
+        alt={'wheel'}
         ref={wheelRef}
         src={steeringWheel}
         style={{
@@ -453,6 +456,22 @@ const Cockpit = React.memo(() => {
           height: wheelRadius * 2 + 'px',
           width: wheelRadius * 2 + 'px',
           transition: 'transform 0.3s ease',
+          userSelect: 'none',
+        }}
+      />
+      <ArrowUpOutlined
+        style={{
+          position: 'absolute',
+          backgroundColor: '#e0b289',
+          padding: '5px',
+          color: 'antiquewhite',
+          bottom: '100px',
+          right: initialWidth / 2 - 10,
+          height: '20px',
+          width: '20px',
+        }}
+        onClick={() => {
+          console.log(useRefStore.getState().controlsRef);
         }}
       />
     </>

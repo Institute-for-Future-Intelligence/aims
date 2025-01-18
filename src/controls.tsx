@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import { invalidate, useFrame, useThree } from '@react-three/fiber';
@@ -22,6 +22,7 @@ import { UndoableCameraChange } from './undo/UndoableCameraChange';
 import { UndoableResetView } from './undo/UndoableResetView';
 import { PerspectiveCamera, TrackballControls } from '@react-three/drei';
 import capabilities from './lib/gfx/capabilities';
+import { useRefStore } from './stores/commonRef.ts';
 
 extend({ MyTrackballControls });
 
@@ -93,6 +94,12 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
       lightRef.current.position.add(camera.position);
     }
   };
+
+  useEffect(() => {
+    useRefStore.setState({
+      controlsRef: controlsRef,
+    });
+  }, [controlsRef]);
 
   // init/update camera due to common store change(which comes from local/cloud data)
   useEffect(() => {
@@ -330,11 +337,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
 
   useEffect(() => {
     if (isFirstRender || !controlsRef.current) return;
-    if (navigationView) {
-      controlsRef.current.noPan = true;
-    } else {
-      controlsRef.current.noPan = false;
-    }
+    controlsRef.current.noPan = navigationView;
   }, [zoomViewFlag, navigationView]);
 
   useEffect(() => {
