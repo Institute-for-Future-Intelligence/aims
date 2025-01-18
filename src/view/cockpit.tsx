@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useMemo, useRef } from 'react';
@@ -35,12 +35,12 @@ const Cockpit = React.memo(() => {
 
   return (
     <group ref={groupRef}>
-      <Plane name={'Cockpit Plane'} args={[10, 0.2]} position={[0, 1.25, 0]}>
-        <meshStandardMaterial attach="material" opacity={0.8} transparent color={'gray'} />
+      <Plane name={'Cockpit Plane'} args={[10, 0.05]} position={[0, 1.32, 0]}>
+        <meshStandardMaterial attach="material" opacity={0.8} transparent color={'dimgray'} />
       </Plane>
       <mesh position={[-5, -1.35, 0]}>
         <shapeGeometry attach="geometry" args={[shape]} />
-        <meshStandardMaterial attach="material" color={'gray'} transparent opacity={0.8} />
+        <meshStandardMaterial attach="material" color={'dimgray'} transparent opacity={0.8} />
       </mesh>
     </group>
   );
