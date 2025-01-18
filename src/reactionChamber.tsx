@@ -280,7 +280,6 @@ const ReactionChamber = React.memo(() => {
             setLoading={setLoading}
           />
         )}
-        {spaceshipDisplayMode === SpaceshipDisplayMode.INSIDE_VIEW && <Cockpit />}
         {spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW && <Spaceship />}
         <GizmoHelper alignment="bottom-right" margin={[30, 30]}>
           <GizmoViewport

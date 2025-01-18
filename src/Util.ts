@@ -6,6 +6,10 @@ import platform from 'platform';
 import { HOME_URL } from './constants.ts';
 
 export class Util {
+  static clamp(val: number, min: number, max: number) {
+    return Math.max(Math.min(val, max), min);
+  }
+
   static generateProjectLink(uid: string, title: string, callback: () => void) {
     const url = HOME_URL + '?userid=' + uid + '&project=' + encodeURIComponent(title);
     navigator.clipboard.writeText(url).then(callback);
