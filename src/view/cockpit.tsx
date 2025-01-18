@@ -34,6 +34,10 @@ const Cockpit = React.memo(() => {
     ctx.lineTo(getW(20), upperHeight);
     ctx.lineTo(getW(80), upperHeight);
     ctx.lineTo(getW(95), 0);
+    ctx.lineTo(getW(80), 0);
+    ctx.lineTo(getW(75), 55);
+    ctx.lineTo(getW(25), 55);
+    ctx.lineTo(getW(20), 0);
     ctx.closePath();
     ctx.fillStyle = '#1A86A0'; // background color
     ctx.fill();
@@ -48,7 +52,7 @@ const Cockpit = React.memo(() => {
     ctx.strokeStyle = '#0F6E81';
     ctx.stroke();
     ctx.closePath();
-    ctx.fillStyle = '#28B7D9';
+    ctx.fillStyle = 'rgb(40 183 217 / 40%)';
     ctx.fill();
 
     // reflections
@@ -83,10 +87,12 @@ const Cockpit = React.memo(() => {
     ctx.lineTo(getW(76), 0);
     ctx.lineTo(getW(72), 0);
     ctx.closePath();
-    ctx.fillStyle = '#7DCEE2';
+    ctx.lineWidth = 0.1;
+    ctx.fillStyle = 'rgb(125 206 226 / 40%)';
     ctx.fill();
 
     // strips
+    ctx.beginPath();
     ctx.moveTo(getW(9), 10);
     ctx.lineTo(getW(20), 10);
     ctx.moveTo(getW(11), 20);
@@ -162,7 +168,7 @@ const Cockpit = React.memo(() => {
     ctx.shadowOffsetY = 0;
     ctx.shadowBlur = 0;
 
-    // background
+    // center background
     ctx.beginPath();
     ctx.moveTo(getW(20), 0);
     ctx.lineTo(getW(80), 0);
@@ -172,41 +178,49 @@ const Cockpit = React.memo(() => {
     ctx.fillStyle = '#1A86A0'; // background color
     ctx.fill();
 
+    // left background
     ctx.beginPath();
     ctx.moveTo(0, 60);
     ctx.lineTo(getW(20), 0);
     ctx.lineTo(getW(10), lowerHeight);
+    ctx.lineTo(getW(7.5), lowerHeight);
+    ctx.lineTo(getW(15), 31);
+    ctx.lineTo(getW(2), 70);
+    ctx.lineTo(getW(2), lowerHeight);
     ctx.lineTo(0, lowerHeight);
     ctx.closePath();
     ctx.fillStyle = '#135261';
     ctx.fill();
 
+    // right background
     ctx.beginPath();
     ctx.moveTo(getW(80), 0);
     ctx.lineTo(width, 60);
     ctx.lineTo(width, lowerHeight);
+    ctx.lineTo(getW(98), lowerHeight);
+    ctx.lineTo(getW(98), 70);
+    ctx.lineTo(getW(85), 31);
+    ctx.lineTo(getW(92.5), lowerHeight);
     ctx.lineTo(getW(90), lowerHeight);
     ctx.closePath();
     ctx.fill();
 
+    // left window
     ctx.beginPath();
-    ctx.moveTo(getW(2), 70);
+    ctx.moveTo(getW(2), lowerHeight);
+    ctx.lineTo(getW(2), 70);
     ctx.lineTo(getW(15), 31);
-    ctx.moveTo(getW(2), 90);
-    ctx.lineTo(getW(13), 56);
-    ctx.moveTo(getW(2), 110);
-    ctx.lineTo(getW(11), 81);
+    ctx.lineTo(getW(7.5), lowerHeight);
+    ctx.closePath();
 
+    // right window
     ctx.moveTo(getW(98), 70);
     ctx.lineTo(getW(85), 31);
-    ctx.moveTo(getW(98), 90);
-    ctx.lineTo(getW(87), 56);
-    ctx.moveTo(getW(98), 110);
-    ctx.lineTo(getW(89), 81);
-    ctx.strokeStyle = '#71ABB9';
-    ctx.lineCap = 'round';
-    ctx.lineWidth = 5;
-    ctx.stroke();
+    ctx.lineTo(getW(92.5), lowerHeight);
+    ctx.lineTo(getW(98), lowerHeight);
+    ctx.closePath();
+    ctx.fillStyle = 'rgb(40 183 217 / 30%)';
+    ctx.fill();
 
     ctx.fillStyle = '#e0b289'; // keys color
     ctx.shadowColor = '#a88667';
@@ -355,10 +369,14 @@ const Cockpit = React.memo(() => {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       drawLowerPart(getWidth(), e.code);
-      if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+      if (e.code === 'ArrowLeft') {
         setKey('left');
-      } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+      } else if (e.code === 'ArrowRight') {
         setKey('right');
+      } else if (e.code === 'ArrowUp') {
+        setKey('up');
+      } else if (e.code === 'ArrowDown') {
+        setKey('down');
       } else {
         setKey(null);
       }
@@ -379,16 +397,20 @@ const Cockpit = React.memo(() => {
   }, []);
 
   // update steering wheel by keyboard
-  const [key, setKey] = useState<'left' | 'right' | null>(null); // only used for left/right
+  const [key, setKey] = useState<'left' | 'right' | 'up' | 'down' | null>(null); // only used for left/right
   useEffect(() => {
     if (!wheelRef.current) return;
 
     if (key === 'left') {
-      wheelRef.current.style.transform = 'rotate(-60deg)';
+      wheelRef.current.style.transform = 'rotate(-60deg) translateY(0)';
     } else if (key === 'right') {
-      wheelRef.current.style.transform = 'rotate(60deg)';
+      wheelRef.current.style.transform = 'rotate(60deg) translateY(0)';
+    } else if (key === 'up') {
+      wheelRef.current.style.transform = 'rotate(0) translateY(-20px) perspective(100px) rotateX(45deg)';
+    } else if (key === 'down') {
+      wheelRef.current.style.transform = 'rotate(0) translateY(20px) perspective(100px) rotateX(-45deg)';
     } else {
-      wheelRef.current.style.transform = 'rotate(0)';
+      wheelRef.current.style.transform = 'rotate(0) translateY(0)';
     }
   }, [key]);
 
