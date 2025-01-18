@@ -120,8 +120,8 @@ class MyTrackballControls extends EventDispatcher {
       const box = scope.domElement.getBoundingClientRect();
       // adjustments come from similar code in the jquery offset() function
       const d = scope.domElement.ownerDocument.documentElement;
-      scope.screen.left = box.left + window.pageXOffset - d.clientLeft;
-      scope.screen.top = box.top + window.pageYOffset - d.clientTop;
+      scope.screen.left = box.left + window.scrollX - d.clientLeft;
+      scope.screen.top = box.top + window.scrollY - d.clientTop;
       scope.screen.width = box.width;
       scope.screen.height = box.height;
     };
@@ -424,51 +424,51 @@ class MyTrackballControls extends EventDispatcher {
 
       switch (event.code) {
         case scope.keys.MOVE_FORWARD:
-          moveForward(scope.moveSpeed);
+          scope.moveForward(scope.moveSpeed);
           break;
 
         case scope.keys.MOVE_BACKWARD:
-          moveForward(-scope.moveSpeed);
+          scope.moveForward(-scope.moveSpeed);
           break;
 
         case scope.keys.MOVE_RIGHT:
-          moveRight(scope.moveSpeed);
+          scope.moveRight(scope.moveSpeed);
           break;
 
         case scope.keys.MOVE_LEFT:
-          moveRight(-scope.moveSpeed);
+          scope.moveRight(-scope.moveSpeed);
           break;
 
         case scope.keys.MOVE_UP:
-          moveUp(scope.moveSpeed);
+          scope.moveUp(scope.moveSpeed);
           break;
 
         case scope.keys.MOVE_DOWN:
-          moveUp(-scope.moveSpeed);
+          scope.moveUp(-scope.moveSpeed);
           break;
 
         case scope.keys.ROLL_LEFT:
-          rollRight(scope.turnSpeed);
+          scope.rollRight(scope.turnSpeed);
           break;
 
         case scope.keys.ROLL_RIGHT:
-          rollRight(-scope.turnSpeed);
+          scope.rollRight(-scope.turnSpeed);
           break;
 
         case scope.keys.ROTATE_UP:
-          spinUp(scope.turnSpeed);
+          scope.spinUp(scope.turnSpeed);
           break;
 
         case scope.keys.ROTATE_DOWN:
-          spinUp(-scope.turnSpeed);
+          scope.spinUp(-scope.turnSpeed);
           break;
 
         case scope.keys.ROTATE_LEFT:
-          spinRight(-scope.turnSpeed);
+          scope.spinRight(-scope.turnSpeed);
           break;
 
         case scope.keys.ROTATE_RIGHT:
-          spinRight(scope.turnSpeed);
+          scope.spinRight(scope.turnSpeed);
           break;
       }
     }
@@ -696,7 +696,7 @@ class MyTrackballControls extends EventDispatcher {
       return _pointerPositions[pointer.pointerId];
     }
 
-    const moveForward = (function () {
+    this.moveForward = (function () {
       const _step = new Vector3();
 
       return function moveForward(distance) {
@@ -717,7 +717,7 @@ class MyTrackballControls extends EventDispatcher {
       };
     })();
 
-    const moveRight = (function () {
+    this.moveRight = (function () {
       const _step = new Vector3(0, 0, 0);
 
       return function moveRight(distance) {
@@ -738,7 +738,7 @@ class MyTrackballControls extends EventDispatcher {
       };
     })();
 
-    const moveUp = (function () {
+    this.moveUp = (function () {
       const _step = new Vector3(0, 0, 0);
 
       return function moveUp(distance) {
@@ -756,7 +756,7 @@ class MyTrackballControls extends EventDispatcher {
       };
     })();
 
-    const spinRight = (function () {
+    this.spinRight = (function () {
       const _axis = new Vector3(0, 1, 0);
       const _direction = new Vector3();
 
@@ -775,7 +775,7 @@ class MyTrackballControls extends EventDispatcher {
       };
     })();
 
-    const rollRight = (function () {
+    this.rollRight = (function () {
       const _axis = new Vector3(0, 0, 1);
       const _up = new Vector3(0, 1, 0);
 
@@ -792,7 +792,7 @@ class MyTrackballControls extends EventDispatcher {
       };
     })();
 
-    const spinUp = (function () {
+    this.spinUp = (function () {
       const _axis = new Vector3(1, 0, 0);
       const _direction = new Vector3();
       const _up = new Vector3(0, 1, 0);

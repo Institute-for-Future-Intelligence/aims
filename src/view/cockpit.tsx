@@ -3,7 +3,7 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowUpOutlined } from '@ant-design/icons';
+import { ArrowUpOutlined, ArrowDownOutlined, ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import steeringWheel from '../assets/steering-wheel.png';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
@@ -244,10 +244,10 @@ const Cockpit = React.memo(() => {
     // keyboard - right
     const rightCenter = getW(70);
     ctx.shadowOffsetX = 1;
-    ctx.fillRect(rightCenter, 80, 25, 25); // down
-    ctx.fillRect(rightCenter - 35, 80, 25, 25); // left
-    ctx.fillRect(rightCenter + 35, 80, 25, 25); // right
-    ctx.fillRect(rightCenter, 45, 25, 25); // up
+    // ctx.fillRect(rightCenter, 80, 25, 25); // down
+    // ctx.fillRect(rightCenter - 35, 80, 25, 25); // left
+    // ctx.fillRect(rightCenter + 35, 80, 25, 25); // right
+    // ctx.fillRect(rightCenter, 45, 25, 25); // up
 
     // highlight key
     if (key !== undefined) {
@@ -285,22 +285,22 @@ const Cockpit = React.memo(() => {
           ctx.fillRect(getW(27), 80, 25, 25); // x
           break;
         }
-        case 'ArrowUp': {
-          ctx.fillRect(rightCenter, 45, 25, 25);
-          break;
-        }
-        case 'ArrowDown': {
-          ctx.fillRect(rightCenter, 80, 25, 25);
-          break;
-        }
-        case 'ArrowLeft': {
-          ctx.fillRect(rightCenter - 35, 80, 25, 25);
-          break;
-        }
-        case 'ArrowRight': {
-          ctx.fillRect(rightCenter + 35, 80, 25, 25);
-          break;
-        }
+        // case 'ArrowUp': {
+        //   ctx.fillRect(rightCenter, 45, 25, 25);
+        //   break;
+        // }
+        // case 'ArrowDown': {
+        //   ctx.fillRect(rightCenter, 80, 25, 25);
+        //   break;
+        // }
+        // case 'ArrowLeft': {
+        //   ctx.fillRect(rightCenter - 35, 80, 25, 25);
+        //   break;
+        // }
+        // case 'ArrowRight': {
+        //   ctx.fillRect(rightCenter + 35, 80, 25, 25);
+        //   break;
+        // }
       }
     }
 
@@ -316,10 +316,10 @@ const Cockpit = React.memo(() => {
     ctx.fillText('z', leftCenter + 7 - 35, 80 + 17.5); // z
     ctx.fillText('x', leftCenter + 7, 80 + 17.5); // x
 
-    ctx.fillText('↓', rightCenter + 7.5, 80 + 17);
-    ctx.fillText('←', rightCenter - 35 + 2, 80 + 18);
-    ctx.fillText('→', rightCenter + 35 + 2, 80 + 18);
-    ctx.fillText('↑', rightCenter + 8, 45 + 17);
+    // ctx.fillText('↓', rightCenter + 7.5, 80 + 17);
+    // ctx.fillText('←', rightCenter - 35 + 2, 80 + 18);
+    // ctx.fillText('→', rightCenter + 35 + 2, 80 + 18);
+    // ctx.fillText('↑', rightCenter + 8, 45 + 17);
   }, []);
 
   const getWidth = useCallback(() => {
@@ -367,6 +367,11 @@ const Cockpit = React.memo(() => {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
+  const onKeyUp = () => {
+    drawLowerPart(getWidth());
+    setKey(null);
+  };
+
   // keyboard listener
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -383,15 +388,8 @@ const Cockpit = React.memo(() => {
         setKey(null);
       }
     };
-
-    const onKeyUp = () => {
-      drawLowerPart(getWidth());
-      setKey(null);
-    };
-
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
-
     return () => {
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
@@ -402,7 +400,6 @@ const Cockpit = React.memo(() => {
   const [key, setKey] = useState<'left' | 'right' | 'up' | 'down' | null>(null); // only used for left/right
   useEffect(() => {
     if (!wheelRef.current) return;
-
     if (key === 'left') {
       wheelRef.current.style.transform = 'rotate(-60deg) translateY(0)';
     } else if (key === 'right') {
@@ -460,19 +457,88 @@ const Cockpit = React.memo(() => {
         }}
       />
       <ArrowUpOutlined
+        title={'Or press arrow up key'}
         style={{
           position: 'absolute',
-          backgroundColor: '#e0b289',
+          backgroundColor: key === 'up' ? '#f0de1a' : '#e0b289',
           padding: '5px',
           color: 'antiquewhite',
-          bottom: '100px',
+          bottom: '101px',
           right: initialWidth / 2 - 10,
           height: '20px',
           width: '20px',
         }}
-        onClick={() => {
-          console.log(useRefStore.getState().controlsRef);
+        onPointerDown={() => {
+          const controls = useRefStore.getState().controlsRef?.current;
+          if (controls) {
+            controls.spinUp(controls.turnSpeed);
+          }
+          setKey('up');
         }}
+        onPointerUp={() => onKeyUp()}
+      />
+      <ArrowDownOutlined
+        title={'Or press arrow down key'}
+        style={{
+          position: 'absolute',
+          backgroundColor: key === 'down' ? '#f0de1a' : '#e0b289',
+          padding: '5px',
+          color: 'antiquewhite',
+          bottom: '9px',
+          right: initialWidth / 2 - 10,
+          height: '20px',
+          width: '20px',
+        }}
+        onPointerDown={() => {
+          const controls = useRefStore.getState().controlsRef?.current;
+          if (controls) {
+            controls.spinUp(-controls.turnSpeed);
+          }
+          setKey('down');
+        }}
+        onPointerUp={() => onKeyUp()}
+      />
+      <ArrowLeftOutlined
+        title={'Or press arrow left key'}
+        style={{
+          position: 'absolute',
+          backgroundColor: key === 'left' ? '#f0de1a' : '#e0b289',
+          padding: '5px',
+          color: 'antiquewhite',
+          bottom: '55px',
+          right: initialWidth / 2 - 4 + wheelRadius,
+          height: '20px',
+          width: '20px',
+        }}
+        onPointerDown={() => {
+          const controls = useRefStore.getState().controlsRef?.current;
+          if (controls) {
+            controls.spinRight(-controls.turnSpeed);
+          }
+          setKey('left');
+        }}
+        onPointerUp={() => onKeyUp()}
+      />
+      <ArrowRightOutlined
+        title={'Or press arrow right key'}
+        style={{
+          position: 'absolute',
+          backgroundColor: key === 'right' ? '#f0de1a' : '#e0b289',
+          padding: '5px',
+          color: 'antiquewhite',
+          bottom: '55px',
+          right: initialWidth / 2 - 16 - wheelRadius,
+          height: '20px',
+          width: '20px',
+        }}
+        onPointerDown={() => {
+          const controls = useRefStore.getState().controlsRef?.current;
+          if (controls) {
+            controls.spinRight(controls.turnSpeed);
+          }
+          setKey('right');
+        }}
+        onPointerUp={() => onKeyUp()}
       />
     </>
   );
