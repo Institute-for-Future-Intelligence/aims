@@ -2,16 +2,23 @@
  * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowUpOutlined, ArrowDownOutlined, ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
-import steeringWheel from '../assets/steering-wheel.png';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { CaretUpOutlined, CaretDownOutlined, CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
+import SteeringWheel from '../assets/steering-wheel.png';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useRefStore } from '../stores/commonRef.ts';
+import { useTranslation } from 'react-i18next';
 
 const Cockpit = React.memo(() => {
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
   const hideGallery = useStore(Selector.hideGallery);
+  const language = useStore(Selector.language);
+
+  const { t } = useTranslation();
+  const lang = useMemo(() => {
+    return { lng: language };
+  }, [language]);
 
   const upperCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const lowerCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -19,8 +26,8 @@ const Cockpit = React.memo(() => {
 
   const [initialWidth, setInitialWidth] = useState<number | null>(null);
   const upperHeight = 80;
-  const lowerHeight = 120;
-  const wheelRadius = 40;
+  const lowerHeight = 100;
+  const wheelRadius = 30;
 
   const drawUpperPart = useCallback((width: number) => {
     if (!upperCanvasRef.current) return;
@@ -157,7 +164,7 @@ const Cockpit = React.memo(() => {
     ctx.fillRect(getW(70), 66, 8, 8);
   }, []);
 
-  const drawLowerPart = useCallback((width: number, key?: string) => {
+  const drawLowerPart = useCallback((width: number) => {
     if (!lowerCanvasRef.current) return;
     const ctx = lowerCanvasRef.current.getContext('2d') as CanvasRenderingContext2D;
     if (!ctx) return;
@@ -223,103 +230,6 @@ const Cockpit = React.memo(() => {
     ctx.closePath();
     ctx.fillStyle = 'rgb(40 183 217 / 30%)';
     ctx.fill();
-
-    ctx.fillStyle = '#e0b289'; // keys color
-    ctx.shadowColor = '#a88667';
-    ctx.shadowBlur = 3;
-
-    // keyboard - left
-    const leftCenter = getW(27);
-    ctx.shadowOffsetX = -1;
-    ctx.shadowOffsetY = 2;
-    ctx.fillRect(leftCenter - 35, 10, 25, 25); // q
-    ctx.fillRect(leftCenter, 10, 25, 25); // w
-    ctx.fillRect(leftCenter + 35, 10, 25, 25); // e
-    ctx.fillRect(leftCenter - 35, 45, 25, 25); // a
-    ctx.fillRect(leftCenter, 45, 25, 25); // s
-    ctx.fillRect(leftCenter + 35, 45, 25, 25); // d
-    ctx.fillRect(leftCenter - 35, 80, 25, 25); // z
-    ctx.fillRect(leftCenter, 80, 25, 25); // x
-
-    // keyboard - right
-    const rightCenter = getW(70);
-    ctx.shadowOffsetX = 1;
-    // ctx.fillRect(rightCenter, 80, 25, 25); // down
-    // ctx.fillRect(rightCenter - 35, 80, 25, 25); // left
-    // ctx.fillRect(rightCenter + 35, 80, 25, 25); // right
-    // ctx.fillRect(rightCenter, 45, 25, 25); // up
-
-    // highlight key
-    if (key !== undefined) {
-      ctx.fillStyle = '#f0de1a';
-      switch (key) {
-        case 'KeyQ': {
-          ctx.fillRect(leftCenter - 36, 9, 25, 25); // q
-          break;
-        }
-        case 'KeyW': {
-          ctx.fillRect(getW(27), 10, 25, 25); // w
-          break;
-        }
-        case 'KeyE': {
-          ctx.fillRect(leftCenter + 35, 10, 25, 25); // e
-          break;
-        }
-        case 'KeyA': {
-          ctx.fillRect(leftCenter - 35, 45, 25, 25); // a
-          break;
-        }
-        case 'KeyS': {
-          ctx.fillRect(getW(27), 45, 25, 25); // s
-          break;
-        }
-        case 'KeyD': {
-          ctx.fillRect(leftCenter + 35, 45, 25, 25); // d
-          break;
-        }
-        case 'KeyZ': {
-          ctx.fillRect(leftCenter - 35, 80, 25, 25); // z
-          break;
-        }
-        case 'KeyX': {
-          ctx.fillRect(getW(27), 80, 25, 25); // x
-          break;
-        }
-        // case 'ArrowUp': {
-        //   ctx.fillRect(rightCenter, 45, 25, 25);
-        //   break;
-        // }
-        // case 'ArrowDown': {
-        //   ctx.fillRect(rightCenter, 80, 25, 25);
-        //   break;
-        // }
-        // case 'ArrowLeft': {
-        //   ctx.fillRect(rightCenter - 35, 80, 25, 25);
-        //   break;
-        // }
-        // case 'ArrowRight': {
-        //   ctx.fillRect(rightCenter + 35, 80, 25, 25);
-        //   break;
-        // }
-      }
-    }
-
-    // text
-    ctx.fillStyle = 'white'; // text color
-    ctx.font = '20px serif';
-    ctx.fillText('q', leftCenter - 35 + 7, 10 + 16.5); // q
-    ctx.fillText('w', leftCenter + 5, 10 + 17.5); // w
-    ctx.fillText('e', leftCenter + 8 + 35, 10 + 17.5); // e
-    ctx.fillText('a', leftCenter + 7 - 35, 45 + 17.5); // a
-    ctx.fillText('s', leftCenter + 8, 45 + 17.5); // s
-    ctx.fillText('d', leftCenter + 7 + 35, 45 + 17.5); // d
-    ctx.fillText('z', leftCenter + 7 - 35, 80 + 17.5); // z
-    ctx.fillText('x', leftCenter + 7, 80 + 17.5); // x
-
-    // ctx.fillText('↓', rightCenter + 7.5, 80 + 17);
-    // ctx.fillText('←', rightCenter - 35 + 2, 80 + 18);
-    // ctx.fillText('→', rightCenter + 35 + 2, 80 + 18);
-    // ctx.fillText('↑', rightCenter + 8, 45 + 17);
   }, []);
 
   const getWidth = useCallback(() => {
@@ -375,7 +285,7 @@ const Cockpit = React.memo(() => {
   // keyboard listener
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      drawLowerPart(getWidth(), e.code);
+      drawLowerPart(getWidth());
       if (e.code === 'ArrowLeft') {
         setKey('left');
       } else if (e.code === 'ArrowRight') {
@@ -384,6 +294,17 @@ const Cockpit = React.memo(() => {
         setKey('up');
       } else if (e.code === 'ArrowDown') {
         setKey('down');
+      } else if (
+        e.code === 'KeyW' ||
+        e.code === 'KeyS' ||
+        e.code === 'KeyQ' ||
+        e.code === 'KeyE' ||
+        e.code === 'KeyA' ||
+        e.code === 'KeyD' ||
+        e.code === 'KeyZ' ||
+        e.code === 'KeyX'
+      ) {
+        setKey(e.code);
       } else {
         setKey(null);
       }
@@ -397,7 +318,9 @@ const Cockpit = React.memo(() => {
   }, []);
 
   // update steering wheel by keyboard
-  const [key, setKey] = useState<'left' | 'right' | 'up' | 'down' | null>(null); // only used for left/right
+  const [key, setKey] = useState<
+    'left' | 'right' | 'up' | 'down' | 'KeyW' | 'KeyS' | 'KeyQ' | 'KeyE' | 'KeyA' | 'KeyD' | 'KeyZ' | 'KeyX' | null
+  >(null);
   useEffect(() => {
     if (!wheelRef.current) return;
     if (key === 'left') {
@@ -445,10 +368,10 @@ const Cockpit = React.memo(() => {
       <img
         alt={'wheel'}
         ref={wheelRef}
-        src={steeringWheel}
+        src={SteeringWheel}
         style={{
           position: 'absolute',
-          bottom: '25px',
+          bottom: '20px',
           right: initialWidth / 2 - wheelRadius,
           height: wheelRadius * 2 + 'px',
           width: wheelRadius * 2 + 'px',
@@ -456,14 +379,16 @@ const Cockpit = React.memo(() => {
           userSelect: 'none',
         }}
       />
-      <ArrowUpOutlined
-        title={'Or press arrow up key'}
+
+      {/*pitch up */}
+      <CaretUpOutlined
+        title={t('spaceship.PitchUpPressArrowUp', lang)}
         style={{
           position: 'absolute',
           backgroundColor: key === 'up' ? '#f0de1a' : '#e0b289',
-          padding: '5px',
+          padding: '2px',
           color: 'antiquewhite',
-          bottom: '101px',
+          bottom: '78px',
           right: initialWidth / 2 - 10,
           height: '20px',
           width: '20px',
@@ -477,15 +402,17 @@ const Cockpit = React.memo(() => {
         }}
         onPointerUp={() => onKeyUp()}
       />
-      <ArrowDownOutlined
-        title={'Or press arrow down key'}
+
+      {/*pitch down*/}
+      <CaretDownOutlined
+        title={t('spaceship.PitchDownPressArrowDown', lang)}
         style={{
           position: 'absolute',
           backgroundColor: key === 'down' ? '#f0de1a' : '#e0b289',
-          padding: '5px',
+          padding: '2px',
           color: 'antiquewhite',
-          bottom: '9px',
-          right: initialWidth / 2 - 10,
+          bottom: '2px',
+          right: initialWidth / 2 - 9,
           height: '20px',
           width: '20px',
         }}
@@ -498,15 +425,17 @@ const Cockpit = React.memo(() => {
         }}
         onPointerUp={() => onKeyUp()}
       />
-      <ArrowLeftOutlined
-        title={'Or press arrow left key'}
+
+      {/*yaw left*/}
+      <CaretLeftOutlined
+        title={t('spaceship.YawLeftPressArrowLeft', lang)}
         style={{
           position: 'absolute',
           backgroundColor: key === 'left' ? '#f0de1a' : '#e0b289',
-          padding: '5px',
+          padding: '2px',
           color: 'antiquewhite',
-          bottom: '55px',
-          right: initialWidth / 2 - 4 + wheelRadius,
+          bottom: '40px',
+          right: initialWidth / 2 - 2 + wheelRadius,
           height: '20px',
           width: '20px',
         }}
@@ -519,15 +448,17 @@ const Cockpit = React.memo(() => {
         }}
         onPointerUp={() => onKeyUp()}
       />
-      <ArrowRightOutlined
-        title={'Or press arrow right key'}
+
+      {/*yaw right*/}
+      <CaretRightOutlined
+        title={t('spaceship.YawRightPressArrowRight', lang)}
         style={{
           position: 'absolute',
           backgroundColor: key === 'right' ? '#f0de1a' : '#e0b289',
-          padding: '5px',
+          padding: '2px',
           color: 'antiquewhite',
-          bottom: '55px',
-          right: initialWidth / 2 - 16 - wheelRadius,
+          bottom: '40px',
+          right: initialWidth / 2 - 19 - wheelRadius,
           height: '20px',
           width: '20px',
         }}
@@ -540,6 +471,434 @@ const Cockpit = React.memo(() => {
         }}
         onPointerUp={() => onKeyUp()}
       />
+
+      {/*roll left*/}
+      <span
+        title={t('spaceship.RollLeftPressQ', lang)}
+        style={{
+          position: 'absolute',
+          backgroundColor: key === 'KeyQ' ? '#f0de1a' : '#e0b289',
+          bottom: '40px',
+          right: initialWidth / 2 + 21 + wheelRadius,
+          width: '20px',
+          height: '20px',
+          userSelect: 'none',
+        }}
+        onPointerDown={() => {
+          const controls = useRefStore.getState().controlsRef?.current;
+          if (controls) {
+            controls.rollRight(controls.turnSpeed);
+          }
+          setKey('KeyQ');
+        }}
+        onPointerUp={() => onKeyUp()}
+      >
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '20px',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '2px',
+            right: '0px',
+            width: '20px',
+            height: '20px',
+            fontWeight: 'bold',
+            userSelect: 'none',
+          }}
+        >
+          ↶
+        </span>
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '10px',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '-35px',
+            right: '-6px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          Q
+        </span>
+      </span>
+
+      {/*roll right*/}
+      <span
+        title={t('spaceship.RollRightPressE', lang)}
+        style={{
+          position: 'absolute',
+          backgroundColor: key === 'KeyE' ? '#f0de1a' : '#e0b289',
+          bottom: '40px',
+          right: initialWidth / 2 - 42 - wheelRadius,
+          width: '20px',
+          height: '20px',
+          userSelect: 'none',
+        }}
+        onPointerDown={() => {
+          const controls = useRefStore.getState().controlsRef?.current;
+          if (controls) {
+            controls.rollRight(-controls.turnSpeed);
+          }
+          setKey('KeyE');
+        }}
+        onPointerUp={() => onKeyUp()}
+      >
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '20px',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '2px',
+            right: '0px',
+            width: '20px',
+            height: '20px',
+            fontWeight: 'bold',
+            userSelect: 'none',
+          }}
+        >
+          ↷
+        </span>
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '10px',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '-35px',
+            right: '-6px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          E
+        </span>
+      </span>
+
+      {/*move forward*/}
+      <span
+        title={t('spaceship.MoveForwardPressW', lang)}
+        style={{
+          position: 'absolute',
+          backgroundColor: key === 'KeyW' ? '#f0de1a' : '#e0b289',
+          bottom: lowerHeight / 2 - 14,
+          right: initialWidth / 2 + 270,
+          width: '30px',
+          height: '30px',
+          userSelect: 'none',
+        }}
+        onPointerDown={() => {
+          const controls = useRefStore.getState().controlsRef?.current;
+          if (controls) {
+            controls.moveForward(controls.moveSpeed);
+          }
+          setKey('KeyW');
+        }}
+        onPointerUp={() => onKeyUp()}
+      >
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '25px',
+            fontWeight: 'bolder',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '0px',
+            right: '0px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          △
+        </span>
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '10px',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '-32px',
+            right: '0px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          W
+        </span>
+      </span>
+
+      {/*move backward*/}
+      <span
+        title={t('spaceship.MoveBackwardPressS', lang)}
+        style={{
+          position: 'absolute',
+          backgroundColor: key === 'KeyS' ? '#f0de1a' : '#e0b289',
+          bottom: lowerHeight / 2 - 14,
+          right: initialWidth / 2 + 235,
+          width: '30px',
+          height: '30px',
+          userSelect: 'none',
+        }}
+        onPointerDown={() => {
+          const controls = useRefStore.getState().controlsRef?.current;
+          if (controls) {
+            controls.moveForward(-controls.moveSpeed);
+          }
+          setKey('KeyS');
+        }}
+        onPointerUp={() => onKeyUp()}
+      >
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '25px',
+            fontWeight: 'bolder',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '0px',
+            left: '0px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          ▽
+        </span>
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '10px',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '-32px',
+            right: '0px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          S
+        </span>
+      </span>
+
+      {/*move left*/}
+      <span
+        title={t('spaceship.MoveLeftPressA', lang)}
+        style={{
+          position: 'absolute',
+          backgroundColor: key === 'KeyA' ? '#f0de1a' : '#e0b289',
+          bottom: lowerHeight / 2 - 14,
+          right: initialWidth / 2 + 200,
+          width: '30px',
+          height: '30px',
+          userSelect: 'none',
+        }}
+        onPointerDown={() => {
+          const controls = useRefStore.getState().controlsRef?.current;
+          if (controls) {
+            controls.moveRight(-controls.moveSpeed);
+          }
+          setKey('KeyA');
+        }}
+        onPointerUp={() => onKeyUp()}
+      >
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '25px',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '0px',
+            left: '0px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          🡰
+        </span>
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '10px',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '-32px',
+            right: '0px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          A
+        </span>
+      </span>
+
+      {/*move right*/}
+      <span
+        title={t('spaceship.MoveRightPressD', lang)}
+        style={{
+          position: 'absolute',
+          backgroundColor: key === 'KeyD' ? '#f0de1a' : '#e0b289',
+          bottom: lowerHeight / 2 - 14,
+          right: initialWidth / 2 + 165,
+          width: '30px',
+          height: '30px',
+          userSelect: 'none',
+        }}
+        onPointerDown={() => {
+          const controls = useRefStore.getState().controlsRef?.current;
+          if (controls) {
+            controls.moveRight(controls.moveSpeed);
+          }
+          setKey('KeyD');
+        }}
+        onPointerUp={() => onKeyUp()}
+      >
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '25px',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '0px',
+            left: '0px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          🡲
+        </span>
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '10px',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '-32px',
+            right: '0px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          D
+        </span>
+      </span>
+
+      {/*move up*/}
+      <span
+        title={t('spaceship.MoveUpPressZ', lang)}
+        style={{
+          position: 'absolute',
+          backgroundColor: key === 'KeyZ' ? '#f0de1a' : '#e0b289',
+          bottom: lowerHeight / 2 - 14,
+          right: initialWidth / 2 + 130,
+          width: '30px',
+          height: '30px',
+          userSelect: 'none',
+        }}
+        onPointerDown={() => {
+          const controls = useRefStore.getState().controlsRef?.current;
+          if (controls) {
+            controls.moveUp(controls.moveSpeed);
+          }
+          setKey('KeyZ');
+        }}
+        onPointerUp={() => onKeyUp()}
+      >
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '25px',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '2px',
+            left: '0px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          🡱
+        </span>
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '10px',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '-32px',
+            right: '0px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          Z
+        </span>
+      </span>
+
+      {/*move down*/}
+      <span
+        title={t('spaceship.MoveDownPressX', lang)}
+        style={{
+          position: 'absolute',
+          backgroundColor: key === 'KeyX' ? '#f0de1a' : '#e0b289',
+          bottom: lowerHeight / 2 - 14,
+          right: initialWidth / 2 + 95,
+          width: '30px',
+          height: '30px',
+          userSelect: 'none',
+        }}
+        onPointerDown={() => {
+          const controls = useRefStore.getState().controlsRef?.current;
+          if (controls) {
+            controls.moveUp(-controls.moveSpeed);
+          }
+          setKey('KeyX');
+        }}
+        onPointerUp={() => onKeyUp()}
+      >
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '25px',
+            padding: '0px',
+            color: 'antiquewhite',
+            top: '2px',
+            left: '0px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          🡳
+        </span>
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '10px',
+            padding: '0px',
+            color: 'antiquewhite',
+            bottom: '-32px',
+            right: '0px',
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+        >
+          X
+        </span>
+      </span>
     </>
   );
 });
