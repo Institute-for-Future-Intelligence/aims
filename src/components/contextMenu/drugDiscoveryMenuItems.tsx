@@ -196,6 +196,7 @@ export const SpaceshipDisplayModeRadioGroup = () => {
   const setMode = (mode: SpaceshipDisplayMode) => {
     useStore.getState().set((state) => {
       state.projectState.spaceshipDisplayMode = mode;
+      if (mode === SpaceshipDisplayMode.INSIDE_VIEW) state.projectState.showInstructionPanel = false;
     });
     setChanged(true);
   };

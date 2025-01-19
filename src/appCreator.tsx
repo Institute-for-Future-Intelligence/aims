@@ -102,7 +102,12 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setNavigationView = (selected: boolean) => {
     setCommonStore((state) => {
       state.projectState.navigationView = selected;
-      if (selected) state.projectState.showInstructionPanel = true;
+      if (selected) {
+        state.projectState.showInstructionPanel = false;
+        state.projectState.spaceshipDisplayMode = SpaceshipDisplayMode.INSIDE_VIEW;
+      } else {
+        state.projectState.spaceshipDisplayMode = SpaceshipDisplayMode.NONE;
+      }
     });
     usePrimitiveStore.getState().set((state) => {
       state.enableRotate = !selected;

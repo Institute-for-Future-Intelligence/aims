@@ -23,6 +23,7 @@ import {
   MolecularViewerStyle,
 } from '../../view/displayOptions';
 import { isCartoon } from '../../view/moleculeTools.ts';
+import { SpaceshipDisplayMode } from '../../constants.ts';
 
 export const AutoRotateCheckBox = ({ isMac }: { isMac?: boolean }) => {
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
@@ -179,7 +180,12 @@ export const NavigationViewCheckBox = ({ isMac, popup }: { isMac?: boolean; popu
   const toggleNavigationView = (checked: boolean) => {
     useStore.getState().set((state) => {
       state.projectState.navigationView = checked;
-      if (checked) state.projectState.showInstructionPanel = true;
+      if (checked) {
+        state.projectState.showInstructionPanel = false;
+        state.projectState.spaceshipDisplayMode = SpaceshipDisplayMode.INSIDE_VIEW;
+      } else {
+        state.projectState.spaceshipDisplayMode = SpaceshipDisplayMode.NONE;
+      }
     });
     usePrimitiveStore.getState().set((state) => {
       state.enableRotate = false;

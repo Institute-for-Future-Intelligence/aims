@@ -23,6 +23,18 @@ const Cockpit = React.memo(() => {
   const upperCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const lowerCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const wheelRef = useRef<HTMLImageElement | null>(null);
+  const pitchUpRef = useRef<HTMLElement | null>(null);
+  const pitchDownRef = useRef<HTMLElement | null>(null);
+  const yawLeftRef = useRef<HTMLElement | null>(null);
+  const yawRightRef = useRef<HTMLElement | null>(null);
+  const rollLeftRef = useRef<HTMLElement | null>(null);
+  const rollRightRef = useRef<HTMLElement | null>(null);
+  const moveForwardRef = useRef<HTMLElement | null>(null);
+  const moveBackwardRef = useRef<HTMLElement | null>(null);
+  const moveLeftRef = useRef<HTMLElement | null>(null);
+  const moveRightRef = useRef<HTMLElement | null>(null);
+  const moveUpRef = useRef<HTMLElement | null>(null);
+  const moveDownRef = useRef<HTMLElement | null>(null);
 
   const [initialWidth, setInitialWidth] = useState<number | null>(null);
   const upperHeight = 80;
@@ -251,6 +263,42 @@ const Cockpit = React.memo(() => {
       if (wheelRef.current) {
         wheelRef.current.style.right = width / 2 - wheelRadius + 'px';
       }
+      if (pitchUpRef.current) {
+        pitchUpRef.current.style.right = width / 2 - 10 + 'px';
+      }
+      if (pitchDownRef.current) {
+        pitchDownRef.current.style.right = width / 2 - 10 + 'px';
+      }
+      if (yawLeftRef.current) {
+        yawLeftRef.current.style.right = width / 2 - 2 + wheelRadius + 'px';
+      }
+      if (yawRightRef.current) {
+        yawRightRef.current.style.right = width / 2 - 19 - wheelRadius + 'px';
+      }
+      if (rollLeftRef.current) {
+        rollLeftRef.current.style.right = width / 2 + 21 + wheelRadius + 'px';
+      }
+      if (rollRightRef.current) {
+        rollRightRef.current.style.right = width / 2 - 42 - wheelRadius + 'px';
+      }
+      if (moveForwardRef.current) {
+        moveForwardRef.current.style.right = width / 2 - 125 + 'px';
+      }
+      if (moveBackwardRef.current) {
+        moveBackwardRef.current.style.right = width / 2 - 160 + 'px';
+      }
+      if (moveLeftRef.current) {
+        moveLeftRef.current.style.right = width / 2 + 200 + 'px';
+      }
+      if (moveRightRef.current) {
+        moveRightRef.current.style.right = width / 2 + 165 + 'px';
+      }
+      if (moveUpRef.current) {
+        moveUpRef.current.style.right = width / 2 + 130 + 'px';
+      }
+      if (moveDownRef.current) {
+        moveDownRef.current.style.right = width / 2 + 95 + 'px';
+      }
     }
   }, [drawLowerPart]);
 
@@ -364,6 +412,7 @@ const Cockpit = React.memo(() => {
           pointerEvents: 'none',
         }}
       />
+
       {/* steering wheel */}
       <img
         alt={'wheel'}
@@ -382,6 +431,7 @@ const Cockpit = React.memo(() => {
 
       {/*pitch up */}
       <CaretUpOutlined
+        ref={pitchUpRef}
         title={t('spaceship.PitchUpPressArrowUp', lang)}
         style={{
           position: 'absolute',
@@ -405,6 +455,7 @@ const Cockpit = React.memo(() => {
 
       {/*pitch down*/}
       <CaretDownOutlined
+        ref={pitchDownRef}
         title={t('spaceship.PitchDownPressArrowDown', lang)}
         style={{
           position: 'absolute',
@@ -428,6 +479,7 @@ const Cockpit = React.memo(() => {
 
       {/*yaw left*/}
       <CaretLeftOutlined
+        ref={yawLeftRef}
         title={t('spaceship.YawLeftPressArrowLeft', lang)}
         style={{
           position: 'absolute',
@@ -451,6 +503,7 @@ const Cockpit = React.memo(() => {
 
       {/*yaw right*/}
       <CaretRightOutlined
+        ref={yawRightRef}
         title={t('spaceship.YawRightPressArrowRight', lang)}
         style={{
           position: 'absolute',
@@ -474,6 +527,7 @@ const Cockpit = React.memo(() => {
 
       {/*roll left*/}
       <span
+        ref={rollLeftRef}
         title={t('spaceship.RollLeftPressQ', lang)}
         style={{
           position: 'absolute',
@@ -528,6 +582,7 @@ const Cockpit = React.memo(() => {
 
       {/*roll right*/}
       <span
+        ref={rollRightRef}
         title={t('spaceship.RollRightPressE', lang)}
         style={{
           position: 'absolute',
@@ -582,12 +637,13 @@ const Cockpit = React.memo(() => {
 
       {/*move forward*/}
       <span
+        ref={moveForwardRef}
         title={t('spaceship.MoveForwardPressW', lang)}
         style={{
           position: 'absolute',
           backgroundColor: key === 'KeyW' ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 + 270,
+          right: initialWidth / 2 - 125,
           width: '30px',
           height: '30px',
           userSelect: 'none',
@@ -636,12 +692,13 @@ const Cockpit = React.memo(() => {
 
       {/*move backward*/}
       <span
+        ref={moveBackwardRef}
         title={t('spaceship.MoveBackwardPressS', lang)}
         style={{
           position: 'absolute',
           backgroundColor: key === 'KeyS' ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 + 235,
+          right: initialWidth / 2 - 160,
           width: '30px',
           height: '30px',
           userSelect: 'none',
@@ -690,6 +747,7 @@ const Cockpit = React.memo(() => {
 
       {/*move left*/}
       <span
+        ref={moveLeftRef}
         title={t('spaceship.MoveLeftPressA', lang)}
         style={{
           position: 'absolute',
@@ -743,6 +801,7 @@ const Cockpit = React.memo(() => {
 
       {/*move right*/}
       <span
+        ref={moveRightRef}
         title={t('spaceship.MoveRightPressD', lang)}
         style={{
           position: 'absolute',
@@ -796,6 +855,7 @@ const Cockpit = React.memo(() => {
 
       {/*move up*/}
       <span
+        ref={moveUpRef}
         title={t('spaceship.MoveUpPressZ', lang)}
         style={{
           position: 'absolute',
@@ -849,6 +909,7 @@ const Cockpit = React.memo(() => {
 
       {/*move down*/}
       <span
+        ref={moveDownRef}
         title={t('spaceship.MoveDownPressX', lang)}
         style={{
           position: 'absolute',
