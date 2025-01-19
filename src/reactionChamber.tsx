@@ -280,7 +280,7 @@ const ReactionChamber = React.memo(() => {
           />
         )}
         {spaceshipDisplayMode === SpaceshipDisplayMode.OUTSIDE_VIEW && <Spaceship />}
-        <GizmoHelper alignment="bottom-right" margin={[30, 30]}>
+        <GizmoHelper alignment="bottom-right" margin={navigationView ? [40, 80] : [30, 30]}>
           <GizmoViewport
             axisColors={['red', 'green', 'blue']}
             labelColor="white"

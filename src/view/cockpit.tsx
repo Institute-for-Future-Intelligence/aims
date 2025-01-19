@@ -22,6 +22,7 @@ const Cockpit = React.memo(() => {
 
   const upperCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const lowerCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const middleCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const wheelRef = useRef<HTMLImageElement | null>(null);
   const pitchUpRef = useRef<HTMLElement | null>(null);
   const pitchDownRef = useRef<HTMLElement | null>(null);
@@ -37,9 +38,10 @@ const Cockpit = React.memo(() => {
   const moveDownRef = useRef<HTMLElement | null>(null);
 
   const [initialWidth, setInitialWidth] = useState<number | null>(null);
+  const [initialHeight, setInitialHeight] = useState<number | null>(null);
   const upperHeight = 80;
   const lowerHeight = 100;
-  const wheelRadius = 30;
+  const wheelRadius = 24;
 
   const drawUpperPart = useCallback((width: number) => {
     if (!upperCanvasRef.current) return;
@@ -176,6 +178,23 @@ const Cockpit = React.memo(() => {
     ctx.fillRect(getW(70), 66, 8, 8);
   }, []);
 
+  const drawMiddlePart = useCallback((width: number, height: number) => {
+    if (!middleCanvasRef.current) return;
+    const ctx = middleCanvasRef.current.getContext('2d') as CanvasRenderingContext2D;
+    if (!ctx) return;
+    /** get actually size based on 0-100 value */
+    const getW = (w: number) => (w / 100) * width;
+    ctx.clearRect(0, 0, width, height);
+    ctx.beginPath();
+    ctx.moveTo(getW(80), 0);
+    ctx.lineTo(getW(80), height);
+    ctx.moveTo(getW(20), 0);
+    ctx.lineTo(getW(20), height);
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = '#1A86A0';
+    ctx.stroke();
+  }, []);
+
   const drawLowerPart = useCallback((width: number) => {
     if (!lowerCanvasRef.current) return;
     const ctx = lowerCanvasRef.current.getContext('2d') as CanvasRenderingContext2D;
@@ -253,13 +272,26 @@ const Cockpit = React.memo(() => {
     }
   }, []);
 
+  const getHeight = useCallback(() => {
+    const rightChild = document.getElementById('split-pane-right-child');
+    if (rightChild) {
+      return rightChild.clientHeight - upperHeight - lowerHeight;
+    } else {
+      return 800;
+    }
+  }, []);
+
   const onResize = useCallback(() => {
-    if (lowerCanvasRef.current && upperCanvasRef.current) {
+    if (lowerCanvasRef.current && upperCanvasRef.current && middleCanvasRef.current) {
       const width = getWidth();
+      const height = getHeight();
       lowerCanvasRef.current.width = width;
       upperCanvasRef.current.width = width;
+      middleCanvasRef.current.width = width;
+      middleCanvasRef.current.height = height;
       drawLowerPart(width);
       drawUpperPart(width);
+      drawMiddlePart(width, height);
       if (wheelRef.current) {
         wheelRef.current.style.right = width / 2 - wheelRadius + 'px';
       }
@@ -302,17 +334,20 @@ const Cockpit = React.memo(() => {
     }
   }, [drawLowerPart]);
 
-  // init width
+  // init width and height
   useEffect(() => {
     setInitialWidth(getWidth());
-  }, [getWidth, setInitialWidth]);
+    setInitialHeight(getHeight());
+  }, [getWidth, setInitialWidth, getHeight, setInitialHeight]);
 
   // init draw
   useEffect(() => {
     if (initialWidth === null) return;
     drawLowerPart(initialWidth);
     drawUpperPart(initialWidth);
-  }, [initialWidth, drawLowerPart, drawUpperPart]);
+    if (initialHeight === null) return;
+    drawMiddlePart(initialWidth, initialHeight);
+  }, [initialWidth, initialHeight, drawLowerPart, drawUpperPart, drawMiddlePart]);
 
   // listen to split pane resize
   useEffect(() => {
@@ -384,7 +419,7 @@ const Cockpit = React.memo(() => {
     }
   }, [key]);
 
-  if (initialWidth === null) return null;
+  if (initialWidth === null || initialHeight === null) return null;
 
   return (
     <>
@@ -400,6 +435,20 @@ const Cockpit = React.memo(() => {
           pointerEvents: 'none',
         }}
       />
+
+      {/*middle part*/}
+      <canvas
+        ref={middleCanvasRef}
+        width={initialWidth}
+        height={initialHeight}
+        style={{
+          position: 'absolute',
+          top: '150px',
+          right: '0',
+          pointerEvents: 'none',
+        }}
+      />
+
       {/* lower part */}
       <canvas
         ref={lowerCanvasRef}
@@ -420,7 +469,7 @@ const Cockpit = React.memo(() => {
         src={SteeringWheel}
         style={{
           position: 'absolute',
-          bottom: '20px',
+          bottom: '26px',
           right: initialWidth / 2 - wheelRadius,
           height: wheelRadius * 2 + 'px',
           width: wheelRadius * 2 + 'px',
@@ -438,7 +487,7 @@ const Cockpit = React.memo(() => {
           backgroundColor: key === 'up' ? '#f0de1a' : '#e0b289',
           padding: '2px',
           color: 'antiquewhite',
-          bottom: '78px',
+          bottom: '72px',
           right: initialWidth / 2 - 10,
           height: '20px',
           width: '20px',
@@ -462,7 +511,7 @@ const Cockpit = React.memo(() => {
           backgroundColor: key === 'down' ? '#f0de1a' : '#e0b289',
           padding: '2px',
           color: 'antiquewhite',
-          bottom: '2px',
+          bottom: '6px',
           right: initialWidth / 2 - 9,
           height: '20px',
           width: '20px',

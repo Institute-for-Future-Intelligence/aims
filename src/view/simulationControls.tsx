@@ -58,6 +58,7 @@ const SimulationControls = React.memo(() => {
   const constantTemperature = useStore(Selector.constantTemperature);
   const refreshInterval = useStore(Selector.refreshInterval) ?? 20;
   const collectInterval = useStore(Selector.collectInterval) ?? 100;
+  const navigationView = useStore(Selector.navigationView);
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
   const requestRef = useRef<number>(0);
@@ -205,6 +206,7 @@ const SimulationControls = React.memo(() => {
 
   return (
     <Container
+      style={{ bottom: navigationView ? '108px' : '6px' }}
       // the following disables keyboard focus
       onMouseDown={(e) => e.preventDefault()}
       // the following disables the context menu
