@@ -250,6 +250,7 @@ export const i18n_zh_cn = {
       YawRightPressArrowRight: '向右偏航\n按向右箭头键',
       RollLeftPressQ: '向左滚动\n按Q键',
       RollRightPressE: '向右滚动\n按E键',
+      Thrust: '推力',
     },
 
     experiment: {

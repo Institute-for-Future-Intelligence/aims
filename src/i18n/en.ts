@@ -259,6 +259,7 @@ export const i18n_en = {
       YawRightPressArrowRight: 'Yaw right\nPress the Arrow Right key',
       RollLeftPressQ: 'Roll left\nPress the Q key',
       RollRightPressE: 'Roll right\nPress the E key',
+      Thrust: 'Thrust',
     },
 
     experiment: {

@@ -9,6 +9,7 @@ import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useRefStore } from '../stores/commonRef.ts';
 import { useTranslation } from 'react-i18next';
+import { Slider } from 'antd';
 
 const Cockpit = React.memo(() => {
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
@@ -36,6 +37,7 @@ const Cockpit = React.memo(() => {
   const moveRightRef = useRef<HTMLElement | null>(null);
   const moveUpRef = useRef<HTMLElement | null>(null);
   const moveDownRef = useRef<HTMLElement | null>(null);
+  const thrustSliderRef = useRef<HTMLElement | null>(null);
 
   const [initialWidth, setInitialWidth] = useState<number | null>(null);
   const [initialHeight, setInitialHeight] = useState<number | null>(null);
@@ -330,6 +332,9 @@ const Cockpit = React.memo(() => {
       }
       if (moveDownRef.current) {
         moveDownRef.current.style.right = width / 2 + 95 + 'px';
+      }
+      if (thrustSliderRef.current) {
+        thrustSliderRef.current.style.right = width / 2 - 240 + 'px';
       }
     }
   }, [drawLowerPart]);
@@ -1007,6 +1012,45 @@ const Cockpit = React.memo(() => {
           }}
         >
           X
+        </span>
+      </span>
+      <span
+        ref={thrustSliderRef}
+        style={{
+          position: 'absolute',
+          backgroundColor: '#e0b289',
+          bottom: '36px',
+          right: initialWidth / 2 - 240,
+          height: '30px',
+          width: '72px',
+          userSelect: 'none',
+        }}
+      >
+        <Slider
+          defaultValue={1}
+          min={0.1}
+          max={5}
+          step={0.1}
+          style={{ marginLeft: '10px', marginRight: '10px' }}
+          onChange={(value) => {
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+              controls.moveSpeed = 5 * value;
+              controls.turnSpeed = value;
+            }
+          }}
+        />
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '10px',
+            color: 'antiquewhite',
+            bottom: '-13px',
+            right: '10px',
+            userSelect: 'none',
+          }}
+        >
+          {t('spaceship.Thrust', lang)}
         </span>
       </span>
     </>
