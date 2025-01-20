@@ -1027,10 +1027,12 @@ const Cockpit = React.memo(() => {
         }}
       >
         <Slider
+          keyboard={false}
           defaultValue={1}
           min={0.1}
           max={5}
           step={0.1}
+          tooltip={{ formatter: (value) => `${value}X` }}
           style={{ marginLeft: '10px', marginRight: '10px' }}
           onChange={(value) => {
             const controls = useRefStore.getState().controlsRef?.current;
@@ -1046,7 +1048,7 @@ const Cockpit = React.memo(() => {
             fontSize: '10px',
             color: 'antiquewhite',
             bottom: '-13px',
-            right: '10px',
+            right: '20px',
             userSelect: 'none',
           }}
         >
