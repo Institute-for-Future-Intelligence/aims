@@ -260,6 +260,10 @@ export const i18n_en = {
       RollLeftPressQ: 'Roll left\nPress the Q key',
       RollRightPressE: 'Roll right\nPress the E key',
       Thrust: 'Thrust',
+      ChangeThrustPower: 'Change thrust power',
+      TeleportXCoordinate: 'Teleport x-coordinate',
+      TeleportYCoordinate: 'Teleport y-coordinate',
+      TeleportZCoordinate: 'Teleport z-coordinate',
     },
 
     experiment: {

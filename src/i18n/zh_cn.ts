@@ -251,6 +251,10 @@ export const i18n_zh_cn = {
       RollLeftPressQ: '向左滚动\n按Q键',
       RollRightPressE: '向右滚动\n按E键',
       Thrust: '推力',
+      ChangeThrustPower: '改变推力功率',
+      TeleportXCoordinate: '即时传送的X坐标',
+      TeleportYCoordinate: '即时传送的Y坐标',
+      TeleportZCoordinate: '即时传送的Z坐标',
     },
 
     experiment: {

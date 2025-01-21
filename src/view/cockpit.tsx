@@ -1045,6 +1045,7 @@ const Cockpit = React.memo(() => {
       {/*thrust slider*/}
       <span
         ref={thrustSliderRef}
+        title={t('spaceship.ChangeThrustPower', lang)}
         style={{
           position: 'absolute',
           backgroundColor: '#e0b289',
@@ -1088,6 +1089,7 @@ const Cockpit = React.memo(() => {
       {/*x coordinate*/}
       <span
         ref={xCoordinateFieldRef}
+        title={t('spaceship.TeleportXCoordinate', lang)}
         style={{
           position: 'absolute',
           bottom: '36px',
@@ -1097,7 +1099,6 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
-          keyboard={false}
           value={xCoordinateRef.current}
           precision={1}
           step={0.1}
@@ -1109,6 +1110,7 @@ const Cockpit = React.memo(() => {
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.x = value;
+              controls.update();
             }
           }}
         />
@@ -1118,17 +1120,18 @@ const Cockpit = React.memo(() => {
             fontSize: '10px',
             color: 'antiquewhite',
             bottom: '-13px',
-            right: '25px',
+            right: '20px',
             userSelect: 'none',
           }}
         >
-          X
+          x (Å)
         </span>
       </span>
 
       {/*y coordinate*/}
       <span
         ref={yCoordinateFieldRef}
+        title={t('spaceship.TeleportYCoordinate', lang)}
         style={{
           position: 'absolute',
           bottom: '36px',
@@ -1138,7 +1141,6 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
-          keyboard={false}
           value={yCoordinateRef.current}
           precision={1}
           step={0.1}
@@ -1150,6 +1152,7 @@ const Cockpit = React.memo(() => {
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.y = value;
+              controls.update();
             }
           }}
         />
@@ -1159,17 +1162,18 @@ const Cockpit = React.memo(() => {
             fontSize: '10px',
             color: 'antiquewhite',
             bottom: '-13px',
-            right: '25px',
+            right: '20px',
             userSelect: 'none',
           }}
         >
-          Y
+          y (Å)
         </span>
       </span>
 
       {/*z coordinate*/}
       <span
         ref={zCoordinateFieldRef}
+        title={t('spaceship.TeleportZCoordinate', lang)}
         style={{
           position: 'absolute',
           bottom: '36px',
@@ -1179,7 +1183,6 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
-          keyboard={false}
           value={zCoordinateRef.current}
           precision={1}
           step={0.1}
@@ -1191,6 +1194,7 @@ const Cockpit = React.memo(() => {
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.z = value;
+              controls.update();
             }
           }}
         />
@@ -1200,11 +1204,11 @@ const Cockpit = React.memo(() => {
             fontSize: '10px',
             color: 'antiquewhite',
             bottom: '-13px',
-            right: '25px',
+            right: '20px',
             userSelect: 'none',
           }}
         >
-          Z
+          z (Å)
         </span>
       </span>
     </>
