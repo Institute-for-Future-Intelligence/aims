@@ -132,6 +132,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           ligandTransform: data.ligandTransform ?? ({ x: 0, y: 0, z: 0, euler: [0, 0, 0] } as MoleculeTransform),
 
           spaceshipDisplayMode: data.spaceshipDisplayMode ?? SpaceshipDisplayMode.NONE,
+          spaceshipThrust: data.spaceshipThrust ?? 1,
           spaceshipSize: data.spaceshipSize ?? 1,
           spaceshipRoll: data.spaceshipRoll ?? 0,
           spaceshipPitch: data.spaceshipPitch ?? 0,

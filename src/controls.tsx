@@ -60,6 +60,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   const navRotation = useStore(Selector.navRotation);
   const navUp = useStore(Selector.navUp);
   const navTarget = useStore(Selector.navTarget);
+  const thrust = useStore(Selector.spaceshipThrust);
 
   const { gl, camera, set, get } = useThree();
 
@@ -96,6 +97,10 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   };
 
   useEffect(() => {
+    if (controlsRef.current) {
+      controlsRef.current.moveSpeed = 5 * thrust;
+      controlsRef.current.turnSpeed = thrust;
+    }
     useRefStore.setState({
       controlsRef: controlsRef,
     });

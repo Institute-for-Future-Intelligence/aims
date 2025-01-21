@@ -86,6 +86,7 @@ export interface ProjectState {
   // ligandAcceleration: number[]; // acceleration along x, y, z axes
 
   spaceshipDisplayMode: SpaceshipDisplayMode;
+  spaceshipThrust: number;
   spaceshipRoll: number;
   spaceshipPitch: number;
   spaceshipYaw: number;

@@ -12,10 +12,12 @@ import { useTranslation } from 'react-i18next';
 import { InputNumber, Slider } from 'antd';
 
 const Cockpit = React.memo(() => {
+  const setCommonStore = useStore(Selector.set);
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
   const hideGallery = useStore(Selector.hideGallery);
   const language = useStore(Selector.language);
   const navPosition = useStore(Selector.navPosition);
+  const spaceshipThrust = useStore(Selector.spaceshipThrust);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -1058,7 +1060,7 @@ const Cockpit = React.memo(() => {
       >
         <Slider
           keyboard={false}
-          defaultValue={1}
+          value={spaceshipThrust}
           min={0.1}
           max={5}
           step={0.1}
@@ -1070,6 +1072,9 @@ const Cockpit = React.memo(() => {
               controls.moveSpeed = 5 * value;
               controls.turnSpeed = value;
             }
+            setCommonStore((state) => {
+              state.projectState.spaceshipThrust = value;
+            });
           }}
         />
         <span

@@ -92,6 +92,7 @@ export class ProjectUtil {
       ligandTransform: { x: 0, y: 0, z: 0, euler: [0, 0, 0] } as MoleculeTransform,
 
       spaceshipDisplayMode: SpaceshipDisplayMode.NONE,
+      spaceshipThrust: 1,
       spaceshipSize: 1,
       spaceshipRoll: 0,
       spaceshipPitch: 0,
