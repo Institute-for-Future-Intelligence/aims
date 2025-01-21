@@ -1108,6 +1108,7 @@ const Cockpit = React.memo(() => {
             setUpdateFlag(!updateFlag);
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
+              controls.object.position.x = value;
             }
           }}
         />
@@ -1148,6 +1149,7 @@ const Cockpit = React.memo(() => {
             setUpdateFlag(!updateFlag);
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
+              controls.object.position.y = value;
             }
           }}
         />
@@ -1188,6 +1190,7 @@ const Cockpit = React.memo(() => {
             setUpdateFlag(!updateFlag);
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
+              controls.object.position.z = value;
             }
           }}
         />
