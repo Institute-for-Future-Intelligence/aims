@@ -23,6 +23,7 @@ import { UndoableResetView } from './undo/UndoableResetView';
 import { PerspectiveCamera, TrackballControls } from '@react-three/drei';
 import capabilities from './lib/gfx/capabilities';
 import { useRefStore } from './stores/commonRef.ts';
+import { useMultipleKeys } from './hooks.ts';
 
 extend({ MyTrackballControls });
 
@@ -273,12 +274,11 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
     });
   };
 
-  const renderNav = () => {
+  const onNavChange = () => {
     updateLight();
-    invalidate();
   };
 
-  const endNav = () => {
+  const onNavEnd = () => {
     const positionSame =
       navPosition &&
       navPosition[0] === camera.position.x &&
@@ -295,11 +295,13 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   };
 
   const onControlStart = () => {
+    if (navigationView) return;
     setFrameLoop('always');
   };
 
   const onControlChange = () => {
     updateLight();
+    invalidate();
   };
 
   const onControlEnd = () => {
@@ -357,28 +359,68 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
     }
   }, [autoRotate, navigationView]);
 
-  // add nav event listeners
-  useEffect(() => {
-    if (!controlsRef.current) return;
-    if (navigationView) {
-      controlsRef.current.listenToKeyEvents(window);
-      controlsRef.current.addEventListener('change', renderNav);
-      controlsRef.current.addEventListener('end', endNav);
+  const onKeyDown = () => {
+    if (!useStore.getState().projectState.navigationView) return;
+    setFrameLoop('always');
+  };
+
+  const onKeyUp = () => {
+    if (!useStore.getState().projectState.navigationView) return;
+    if (pressedKeys.length === 0) {
+      setFrameLoop('demand');
+      onNavEnd();
     }
-    invalidate();
-    const ref = controlsRef.current;
-    return () => {
-      if (ref && navigationView) {
-        controlsRef.current.removeKeyEvents();
-        controlsRef.current.removeEventListener('change', renderNav);
-        controlsRef.current.removeEventListener('end', endNav);
-      }
-    };
-  }, [navigationView]);
+  };
+
+  const pressedKeys = useMultipleKeys(onKeyDown, onKeyUp);
 
   useFrame(() => {
     if (!navigationView) {
       controlsRef.current?.update();
+    } else {
+      const controls = controlsRef.current;
+      if (!controls) return;
+      for (const key of pressedKeys) {
+        switch (key) {
+          case controls.keys.MOVE_FORWARD:
+            controls.moveForward(controls.moveSpeed);
+            break;
+          case controls.keys.MOVE_BACKWARD:
+            controls.moveForward(-controls.moveSpeed);
+            break;
+          case controls.keys.MOVE_RIGHT:
+            controls.moveRight(controls.moveSpeed);
+            break;
+          case controls.keys.MOVE_LEFT:
+            controls.moveRight(-controls.moveSpeed);
+            break;
+          case controls.keys.MOVE_UP:
+            controls.moveUp(controls.moveSpeed);
+            break;
+          case controls.keys.MOVE_DOWN:
+            controls.moveUp(-controls.moveSpeed);
+            break;
+          case controls.keys.ROLL_LEFT:
+            controls.rollRight(controls.turnSpeed);
+            break;
+          case controls.keys.ROLL_RIGHT:
+            controls.rollRight(-controls.turnSpeed);
+            break;
+          case controls.keys.ROTATE_UP:
+            controls.spinUp(controls.turnSpeed);
+            break;
+          case controls.keys.ROTATE_DOWN:
+            controls.spinUp(-controls.turnSpeed);
+            break;
+          case controls.keys.ROTATE_LEFT:
+            controls.spinRight(-controls.turnSpeed);
+            break;
+          case controls.keys.ROTATE_RIGHT:
+            controls.spinRight(controls.turnSpeed);
+            break;
+        }
+      }
+      onNavChange();
     }
   });
 

@@ -312,14 +312,12 @@ class MyTrackballControls extends EventDispatcher {
 
         scope.object.lookAt(scope.target);
 
-        if (lastPosition.distanceToSquared(scope.object.position) > EPS) {
-          scope.dispatchEvent(_changeEvent);
-          if (scope.onChange) {
-            scope.onChange();
-          }
-
-          lastPosition.copy(scope.object.position);
+        scope.dispatchEvent(_changeEvent);
+        if (scope.onChange) {
+          scope.onChange();
         }
+
+        lastPosition.copy(scope.object.position);
       } else if (scope.object.isOrthographicCamera) {
         scope.object.lookAt(scope.target);
 

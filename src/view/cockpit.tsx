@@ -390,64 +390,79 @@ const Cockpit = React.memo(() => {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  const onKeyUp = () => {
-    drawLowerPart(getWidth());
-    setKey(null);
+  // =====
+  const [pressedKeyState, setPressKeyState] = useState<string[]>([]);
+  const pressedKeysRef = useRef<string[]>([]);
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!pressedKeysRef.current.find((v) => v === e.code)) {
+      pressedKeysRef.current.push(e.code);
+      setPressKeyState([...pressedKeysRef.current]);
+      updateSteeringWheel(pressedKeysRef.current);
+    }
   };
 
-  // keyboard listener
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      drawLowerPart(getWidth());
-      if (e.code === 'ArrowLeft') {
-        setKey('left');
-      } else if (e.code === 'ArrowRight') {
-        setKey('right');
-      } else if (e.code === 'ArrowUp') {
-        setKey('up');
-      } else if (e.code === 'ArrowDown') {
-        setKey('down');
-      } else if (
-        e.code === 'KeyW' ||
-        e.code === 'KeyS' ||
-        e.code === 'KeyQ' ||
-        e.code === 'KeyE' ||
-        e.code === 'KeyA' ||
-        e.code === 'KeyD' ||
-        e.code === 'KeyZ' ||
-        e.code === 'KeyX'
-      ) {
-        setKey(e.code);
+  const handleKeyUp = (e: KeyboardEvent) => {
+    const idx = pressedKeysRef.current.findIndex((v) => v === e.code);
+    if (idx !== -1) {
+      pressedKeysRef.current.splice(idx, 1);
+      setPressKeyState([...pressedKeysRef.current]);
+      updateSteeringWheel(pressedKeysRef.current);
+    }
+  };
+
+  const handleKeyClickDown = (key: string) => {
+    if (!pressedKeysRef.current.find((v) => v === key)) {
+      pressedKeysRef.current.push(key);
+      setPressKeyState([...pressedKeysRef.current]);
+      updateSteeringWheel(pressedKeysRef.current);
+    }
+  };
+
+  const handleKeyClickUp = (key: string) => {
+    const idx = pressedKeysRef.current.findIndex((v) => v === key);
+    if (idx !== -1) {
+      pressedKeysRef.current.splice(idx, 1);
+      setPressKeyState([...pressedKeysRef.current]);
+      updateSteeringWheel(pressedKeysRef.current);
+    }
+  };
+
+  const updateSteeringWheel = (keys: string[]) => {
+    if (!wheelRef.current) return;
+    let x = 0,
+      y = 0;
+    for (const key of keys) {
+      if (key === 'ArrowLeft') x--;
+      else if (key === 'ArrowRight') x++;
+      if (key === 'ArrowUp') y++;
+      else if (key === 'ArrowDown') y--;
+    }
+    if (x === -1) {
+      wheelRef.current.style.transform = 'rotate(-60deg) translateY(0)';
+    } else if (x === 1) {
+      wheelRef.current.style.transform = 'rotate(60deg) translateY(0)';
+    } else if (x === 0) {
+      wheelRef.current.style.transform = 'rotate(0deg)';
+      if (y === -1) {
+        wheelRef.current.style.transform = 'translateY(20px) perspective(100px) rotateX(-45deg) rotate(0deg)';
+      } else if (y === 1) {
+        wheelRef.current.style.transform = 'translateY(-20px) perspective(100px) rotateX(45deg) rotate(0deg)';
       } else {
-        setKey(null);
+        wheelRef.current.style.transform = 'rotate(0) translateY(0)';
       }
-    };
-    window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('keyup', onKeyUp);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
     return () => {
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
   }, []);
-
-  // update steering wheel by keyboard
-  const [key, setKey] = useState<
-    'left' | 'right' | 'up' | 'down' | 'KeyW' | 'KeyS' | 'KeyQ' | 'KeyE' | 'KeyA' | 'KeyD' | 'KeyZ' | 'KeyX' | null
-  >(null);
-  useEffect(() => {
-    if (!wheelRef.current) return;
-    if (key === 'left') {
-      wheelRef.current.style.transform = 'rotate(-60deg) translateY(0)';
-    } else if (key === 'right') {
-      wheelRef.current.style.transform = 'rotate(60deg) translateY(0)';
-    } else if (key === 'up') {
-      wheelRef.current.style.transform = 'rotate(0) translateY(-20px) perspective(100px) rotateX(45deg)';
-    } else if (key === 'down') {
-      wheelRef.current.style.transform = 'rotate(0) translateY(20px) perspective(100px) rotateX(-45deg)';
-    } else {
-      wheelRef.current.style.transform = 'rotate(0) translateY(0)';
-    }
-  }, [key]);
+  // =====
 
   if (initialWidth === null || initialHeight === null) return null;
 
@@ -518,7 +533,7 @@ const Cockpit = React.memo(() => {
         title={t('spaceship.PitchUpPressArrowUp', lang)}
         style={{
           position: 'absolute',
-          backgroundColor: key === 'up' ? '#f0de1a' : '#e0b289',
+          backgroundColor: pressedKeyState.find((key) => key === 'ArrowUp') ? '#f0de1a' : '#e0b289',
           padding: '2px',
           color: 'antiquewhite',
           bottom: '72px',
@@ -530,10 +545,11 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.spinUp(controls.turnSpeed);
+            controls.update();
           }
-          setKey('up');
+          handleKeyClickDown('ArrowUp');
         }}
-        onPointerUp={() => onKeyUp()}
+        onPointerUp={() => handleKeyClickUp('ArrowUp')}
       />
 
       {/*pitch down*/}
@@ -542,7 +558,7 @@ const Cockpit = React.memo(() => {
         title={t('spaceship.PitchDownPressArrowDown', lang)}
         style={{
           position: 'absolute',
-          backgroundColor: key === 'down' ? '#f0de1a' : '#e0b289',
+          backgroundColor: pressedKeyState.find((key) => key === 'ArrowDown') ? '#f0de1a' : '#e0b289',
           padding: '2px',
           color: 'antiquewhite',
           bottom: '6px',
@@ -554,10 +570,11 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.spinUp(-controls.turnSpeed);
+            controls.update();
           }
-          setKey('down');
+          handleKeyClickDown('ArrowDown');
         }}
-        onPointerUp={() => onKeyUp()}
+        onPointerUp={() => handleKeyClickUp('ArrowDown')}
       />
 
       {/*yaw left*/}
@@ -566,7 +583,7 @@ const Cockpit = React.memo(() => {
         title={t('spaceship.YawLeftPressArrowLeft', lang)}
         style={{
           position: 'absolute',
-          backgroundColor: key === 'left' ? '#f0de1a' : '#e0b289',
+          backgroundColor: pressedKeyState.find((key) => key === 'ArrowLeft') ? '#f0de1a' : '#e0b289',
           padding: '2px',
           color: 'antiquewhite',
           bottom: '40px',
@@ -578,10 +595,11 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.spinRight(-controls.turnSpeed);
+            controls.update();
           }
-          setKey('left');
+          handleKeyClickDown('ArrowLeft');
         }}
-        onPointerUp={() => onKeyUp()}
+        onPointerUp={() => handleKeyClickUp('ArrowLeft')}
       />
 
       {/*yaw right*/}
@@ -590,7 +608,7 @@ const Cockpit = React.memo(() => {
         title={t('spaceship.YawRightPressArrowRight', lang)}
         style={{
           position: 'absolute',
-          backgroundColor: key === 'right' ? '#f0de1a' : '#e0b289',
+          backgroundColor: pressedKeyState.find((key) => key === 'ArrowRight') ? '#f0de1a' : '#e0b289',
           padding: '2px',
           color: 'antiquewhite',
           bottom: '40px',
@@ -602,10 +620,11 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.spinRight(controls.turnSpeed);
+            controls.update();
           }
-          setKey('right');
+          handleKeyClickDown('ArrowRight');
         }}
-        onPointerUp={() => onKeyUp()}
+        onPointerUp={() => handleKeyClickUp('ArrowRight')}
       />
 
       {/*roll left*/}
@@ -614,7 +633,7 @@ const Cockpit = React.memo(() => {
         title={t('spaceship.RollLeftPressQ', lang)}
         style={{
           position: 'absolute',
-          backgroundColor: key === 'KeyQ' ? '#f0de1a' : '#e0b289',
+          backgroundColor: pressedKeyState.find((key) => key === 'KeyQ') ? '#f0de1a' : '#e0b289',
           bottom: '40px',
           right: initialWidth / 2 + 21 + wheelRadius,
           width: '20px',
@@ -625,10 +644,11 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.rollRight(controls.turnSpeed);
+            controls.update();
           }
-          setKey('KeyQ');
+          handleKeyClickDown('KeyQ');
         }}
-        onPointerUp={() => onKeyUp()}
+        onPointerUp={() => handleKeyClickUp('KeyQ')}
       >
         <span
           style={{
@@ -669,7 +689,7 @@ const Cockpit = React.memo(() => {
         title={t('spaceship.RollRightPressE', lang)}
         style={{
           position: 'absolute',
-          backgroundColor: key === 'KeyE' ? '#f0de1a' : '#e0b289',
+          backgroundColor: pressedKeyState.find((key) => key === 'KeyE') ? '#f0de1a' : '#e0b289',
           bottom: '40px',
           right: initialWidth / 2 - 42 - wheelRadius,
           width: '20px',
@@ -680,10 +700,11 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.rollRight(-controls.turnSpeed);
+            controls.update();
           }
-          setKey('KeyE');
+          handleKeyClickDown('KeyE');
         }}
-        onPointerUp={() => onKeyUp()}
+        onPointerUp={() => handleKeyClickUp('KeyE')}
       >
         <span
           style={{
@@ -724,7 +745,7 @@ const Cockpit = React.memo(() => {
         title={t('spaceship.MoveForwardPressW', lang)}
         style={{
           position: 'absolute',
-          backgroundColor: key === 'KeyW' ? '#f0de1a' : '#e0b289',
+          backgroundColor: pressedKeyState.find((key) => key === 'KeyW') ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
           right: initialWidth / 2 + 250,
           width: '30px',
@@ -735,10 +756,11 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.moveForward(controls.moveSpeed);
+            controls.update();
           }
-          setKey('KeyW');
+          handleKeyClickDown('KeyW');
         }}
-        onPointerUp={() => onKeyUp()}
+        onPointerUp={() => handleKeyClickUp('KeyW')}
       >
         <span
           style={{
@@ -779,7 +801,7 @@ const Cockpit = React.memo(() => {
         title={t('spaceship.MoveBackwardPressS', lang)}
         style={{
           position: 'absolute',
-          backgroundColor: key === 'KeyS' ? '#f0de1a' : '#e0b289',
+          backgroundColor: pressedKeyState.find((key) => key === 'KeyS') ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
           right: initialWidth / 2 + 215,
           width: '30px',
@@ -790,10 +812,11 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.moveForward(-controls.moveSpeed);
+            controls.update();
           }
-          setKey('KeyS');
+          handleKeyClickDown('KeyS');
         }}
-        onPointerUp={() => onKeyUp()}
+        onPointerUp={() => handleKeyClickUp('KeyS')}
       >
         <span
           style={{
@@ -834,7 +857,7 @@ const Cockpit = React.memo(() => {
         title={t('spaceship.MoveLeftPressA', lang)}
         style={{
           position: 'absolute',
-          backgroundColor: key === 'KeyA' ? '#f0de1a' : '#e0b289',
+          backgroundColor: pressedKeyState.find((key) => key === 'KeyA') ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
           right: initialWidth / 2 + 180,
           width: '30px',
@@ -845,10 +868,11 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.moveRight(-controls.moveSpeed);
+            controls.update();
           }
-          setKey('KeyA');
+          handleKeyClickDown('KeyA');
         }}
-        onPointerUp={() => onKeyUp()}
+        onPointerUp={() => handleKeyClickUp('KeyA')}
       >
         <span
           style={{
@@ -888,7 +912,7 @@ const Cockpit = React.memo(() => {
         title={t('spaceship.MoveRightPressD', lang)}
         style={{
           position: 'absolute',
-          backgroundColor: key === 'KeyD' ? '#f0de1a' : '#e0b289',
+          backgroundColor: pressedKeyState.find((key) => key === 'KeyD') ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
           right: initialWidth / 2 + 145,
           width: '30px',
@@ -899,10 +923,11 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.moveRight(controls.moveSpeed);
+            controls.update();
           }
-          setKey('KeyD');
+          handleKeyClickDown('KeyD');
         }}
-        onPointerUp={() => onKeyUp()}
+        onPointerUp={() => handleKeyClickUp('KeyD')}
       >
         <span
           style={{
@@ -942,7 +967,7 @@ const Cockpit = React.memo(() => {
         title={t('spaceship.MoveUpPressZ', lang)}
         style={{
           position: 'absolute',
-          backgroundColor: key === 'KeyZ' ? '#f0de1a' : '#e0b289',
+          backgroundColor: pressedKeyState.find((key) => key === 'KeyZ') ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
           right: initialWidth / 2 + 110,
           width: '30px',
@@ -953,10 +978,11 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.moveUp(controls.moveSpeed);
+            controls.update();
           }
-          setKey('KeyZ');
+          handleKeyClickDown('KeyZ');
         }}
-        onPointerUp={() => onKeyUp()}
+        onPointerUp={() => handleKeyClickUp('KeyZ')}
       >
         <span
           style={{
@@ -996,7 +1022,7 @@ const Cockpit = React.memo(() => {
         title={t('spaceship.MoveDownPressX', lang)}
         style={{
           position: 'absolute',
-          backgroundColor: key === 'KeyX' ? '#f0de1a' : '#e0b289',
+          backgroundColor: pressedKeyState.find((key) => key === 'KeyX') ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
           right: initialWidth / 2 + 75,
           width: '30px',
@@ -1007,10 +1033,11 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.moveUp(-controls.moveSpeed);
+            controls.update();
           }
-          setKey('KeyX');
+          handleKeyClickDown('KeyX');
         }}
-        onPointerUp={() => onKeyUp()}
+        onPointerUp={() => handleKeyClickUp('KeyX')}
       >
         <span
           style={{
