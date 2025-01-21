@@ -9,12 +9,13 @@ import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useRefStore } from '../stores/commonRef.ts';
 import { useTranslation } from 'react-i18next';
-import { Slider } from 'antd';
+import { InputNumber, Slider } from 'antd';
 
 const Cockpit = React.memo(() => {
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
   const hideGallery = useStore(Selector.hideGallery);
   const language = useStore(Selector.language);
+  const navPosition = useStore(Selector.navPosition);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -38,7 +39,20 @@ const Cockpit = React.memo(() => {
   const moveUpRef = useRef<HTMLElement | null>(null);
   const moveDownRef = useRef<HTMLElement | null>(null);
   const thrustSliderRef = useRef<HTMLElement | null>(null);
+  const xCoordinateFieldRef = useRef<HTMLElement | null>(null);
+  const yCoordinateFieldRef = useRef<HTMLElement | null>(null);
+  const zCoordinateFieldRef = useRef<HTMLElement | null>(null);
+  const xCoordinateRef = useRef<number>(0);
+  const yCoordinateRef = useRef<number>(0);
+  const zCoordinateRef = useRef<number>(0);
 
+  useEffect(() => {
+    xCoordinateRef.current = navPosition[0];
+    yCoordinateRef.current = navPosition[1];
+    zCoordinateRef.current = navPosition[2];
+  }, [navPosition]);
+
+  const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const [initialWidth, setInitialWidth] = useState<number | null>(null);
   const [initialHeight, setInitialHeight] = useState<number | null>(null);
   const upperHeight = 80;
@@ -192,7 +206,7 @@ const Cockpit = React.memo(() => {
     ctx.lineTo(getW(80), height);
     ctx.moveTo(getW(20), 0);
     ctx.lineTo(getW(20), height);
-    ctx.lineWidth = 6;
+    ctx.lineWidth = 3;
     ctx.strokeStyle = '#1A86A0';
     ctx.stroke();
   }, []);
@@ -316,25 +330,34 @@ const Cockpit = React.memo(() => {
         rollRightRef.current.style.right = width / 2 - 42 - wheelRadius + 'px';
       }
       if (moveForwardRef.current) {
-        moveForwardRef.current.style.right = width / 2 - 125 + 'px';
+        moveForwardRef.current.style.right = width / 2 + 250 + 'px';
       }
       if (moveBackwardRef.current) {
-        moveBackwardRef.current.style.right = width / 2 - 160 + 'px';
+        moveBackwardRef.current.style.right = width / 2 + 215 + 'px';
       }
       if (moveLeftRef.current) {
-        moveLeftRef.current.style.right = width / 2 + 200 + 'px';
+        moveLeftRef.current.style.right = width / 2 + 180 + 'px';
       }
       if (moveRightRef.current) {
-        moveRightRef.current.style.right = width / 2 + 165 + 'px';
+        moveRightRef.current.style.right = width / 2 + 145 + 'px';
       }
       if (moveUpRef.current) {
-        moveUpRef.current.style.right = width / 2 + 130 + 'px';
+        moveUpRef.current.style.right = width / 2 + 110 + 'px';
       }
       if (moveDownRef.current) {
-        moveDownRef.current.style.right = width / 2 + 95 + 'px';
+        moveDownRef.current.style.right = width / 2 + 75 + 'px';
       }
       if (thrustSliderRef.current) {
-        thrustSliderRef.current.style.right = width / 2 - 240 + 'px';
+        thrustSliderRef.current.style.right = width / 2 - 150 + 'px';
+      }
+      if (xCoordinateFieldRef.current) {
+        xCoordinateFieldRef.current.style.right = width / 2 - 210 + 'px';
+      }
+      if (yCoordinateFieldRef.current) {
+        yCoordinateFieldRef.current.style.right = width / 2 - 268 + 'px';
+      }
+      if (zCoordinateFieldRef.current) {
+        zCoordinateFieldRef.current.style.right = width / 2 - 326 + 'px';
       }
     }
   }, [drawLowerPart]);
@@ -463,7 +486,11 @@ const Cockpit = React.memo(() => {
           position: 'absolute',
           bottom: '0',
           right: '0',
-          pointerEvents: 'none',
+          // pointerEvents: 'none',
+        }}
+        onContextMenu={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
         }}
       />
 
@@ -697,7 +724,7 @@ const Cockpit = React.memo(() => {
           position: 'absolute',
           backgroundColor: key === 'KeyW' ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 - 125,
+          right: initialWidth / 2 + 250,
           width: '30px',
           height: '30px',
           userSelect: 'none',
@@ -752,7 +779,7 @@ const Cockpit = React.memo(() => {
           position: 'absolute',
           backgroundColor: key === 'KeyS' ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 - 160,
+          right: initialWidth / 2 + 215,
           width: '30px',
           height: '30px',
           userSelect: 'none',
@@ -807,7 +834,7 @@ const Cockpit = React.memo(() => {
           position: 'absolute',
           backgroundColor: key === 'KeyA' ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 + 200,
+          right: initialWidth / 2 + 180,
           width: '30px',
           height: '30px',
           userSelect: 'none',
@@ -861,7 +888,7 @@ const Cockpit = React.memo(() => {
           position: 'absolute',
           backgroundColor: key === 'KeyD' ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 + 165,
+          right: initialWidth / 2 + 145,
           width: '30px',
           height: '30px',
           userSelect: 'none',
@@ -915,7 +942,7 @@ const Cockpit = React.memo(() => {
           position: 'absolute',
           backgroundColor: key === 'KeyZ' ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 + 130,
+          right: initialWidth / 2 + 110,
           width: '30px',
           height: '30px',
           userSelect: 'none',
@@ -969,7 +996,7 @@ const Cockpit = React.memo(() => {
           position: 'absolute',
           backgroundColor: key === 'KeyX' ? '#f0de1a' : '#e0b289',
           bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 + 95,
+          right: initialWidth / 2 + 75,
           width: '30px',
           height: '30px',
           userSelect: 'none',
@@ -1014,13 +1041,15 @@ const Cockpit = React.memo(() => {
           X
         </span>
       </span>
+
+      {/*thrust slider*/}
       <span
         ref={thrustSliderRef}
         style={{
           position: 'absolute',
           backgroundColor: '#e0b289',
           bottom: '36px',
-          right: initialWidth / 2 - 240,
+          right: initialWidth / 2 - 150,
           height: '30px',
           width: '72px',
           userSelect: 'none',
@@ -1053,6 +1082,126 @@ const Cockpit = React.memo(() => {
           }}
         >
           {t('spaceship.Thrust', lang)}
+        </span>
+      </span>
+
+      {/*x coordinate*/}
+      <span
+        ref={xCoordinateFieldRef}
+        style={{
+          position: 'absolute',
+          bottom: '36px',
+          right: initialWidth / 2 - 210,
+          height: '30px',
+          userSelect: 'none',
+        }}
+      >
+        <InputNumber
+          keyboard={false}
+          value={xCoordinateRef.current}
+          precision={1}
+          step={0.1}
+          style={{ width: '55px', height: '30px', fontSize: '12px' }}
+          onChange={(value) => {
+            if (value === null) return;
+            xCoordinateRef.current = value;
+            setUpdateFlag(!updateFlag);
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+            }
+          }}
+        />
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '10px',
+            color: 'antiquewhite',
+            bottom: '-13px',
+            right: '25px',
+            userSelect: 'none',
+          }}
+        >
+          X
+        </span>
+      </span>
+
+      {/*y coordinate*/}
+      <span
+        ref={yCoordinateFieldRef}
+        style={{
+          position: 'absolute',
+          bottom: '36px',
+          right: initialWidth / 2 - 268,
+          height: '30px',
+          userSelect: 'none',
+        }}
+      >
+        <InputNumber
+          keyboard={false}
+          value={yCoordinateRef.current}
+          precision={1}
+          step={0.1}
+          style={{ width: '55px', height: '30px', fontSize: '12px' }}
+          onChange={(value) => {
+            if (value === null) return;
+            yCoordinateRef.current = value;
+            setUpdateFlag(!updateFlag);
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+            }
+          }}
+        />
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '10px',
+            color: 'antiquewhite',
+            bottom: '-13px',
+            right: '25px',
+            userSelect: 'none',
+          }}
+        >
+          Y
+        </span>
+      </span>
+
+      {/*z coordinate*/}
+      <span
+        ref={zCoordinateFieldRef}
+        style={{
+          position: 'absolute',
+          bottom: '36px',
+          right: initialWidth / 2 - 326,
+          height: '30px',
+          userSelect: 'none',
+        }}
+      >
+        <InputNumber
+          keyboard={false}
+          value={zCoordinateRef.current}
+          precision={1}
+          step={0.1}
+          style={{ width: '55px', height: '30px', fontSize: '12px' }}
+          onChange={(value) => {
+            if (value === null) return;
+            zCoordinateRef.current = value;
+            setUpdateFlag(!updateFlag);
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+            }
+          }}
+        />
+        <span
+          style={{
+            position: 'absolute',
+            fontSize: '10px',
+            color: 'antiquewhite',
+            bottom: '-13px',
+            right: '25px',
+            userSelect: 'none',
+          }}
+        >
+          Z
         </span>
       </span>
     </>
