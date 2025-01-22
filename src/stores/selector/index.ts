@@ -34,6 +34,10 @@ export const updateInfoFlag = (state: PrimitiveStoreState) => state.updateInfoFl
 
 export const updateInfo = (state: PrimitiveStoreState) => state.updateInfo;
 
+export const updateCockpitFlag = (state: PrimitiveStoreState) => state.updateCockpitFlag;
+
+export const updateCockpit = (state: PrimitiveStoreState) => state.updateCockpit;
+
 export const selectedPlane = (state: PrimitiveStoreState) => state.selectedPlane;
 
 export const xyPlaneVisible = (state: CommonStoreState) => state.projectState.xyPlaneVisible;

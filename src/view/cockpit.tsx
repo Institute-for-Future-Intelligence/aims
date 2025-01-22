@@ -10,6 +10,7 @@ import * as Selector from '../stores/selector';
 import { useRefStore } from '../stores/commonRef.ts';
 import { useTranslation } from 'react-i18next';
 import { InputNumber, Slider } from 'antd';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 const Cockpit = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -18,6 +19,7 @@ const Cockpit = React.memo(() => {
   const language = useStore(Selector.language);
   const navPosition = useStore(Selector.navPosition);
   const spaceshipThrust = useStore(Selector.spaceshipThrust);
+  const updateCockpitFlag = usePrimitiveStore(Selector.updateCockpitFlag); // should be here to trigger update
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -44,15 +46,10 @@ const Cockpit = React.memo(() => {
   const xCoordinateFieldRef = useRef<HTMLElement | null>(null);
   const yCoordinateFieldRef = useRef<HTMLElement | null>(null);
   const zCoordinateFieldRef = useRef<HTMLElement | null>(null);
-  const xCoordinateInputRef = useRef<HTMLInputElement | null>(null);
-  const yCoordinateInputRef = useRef<HTMLInputElement | null>(null);
-  const zCoordinateInputRef = useRef<HTMLInputElement | null>(null);
-
-  const [coordinate, setCoordinates] = useState({ x: 0, y: 0, z: 0 });
+  const navCoordinatesRef = useRef<number[]>([0, 0, 0]);
 
   useEffect(() => {
-    const [x, y, z] = navPosition;
-    setCoordinates({ x, y, z });
+    navCoordinatesRef.current = [...navPosition];
   }, [navPosition]);
 
   const [initialWidth, setInitialWidth] = useState<number | null>(null);
@@ -464,14 +461,8 @@ const Cockpit = React.memo(() => {
   }, []);
 
   useEffect(() => {
-    if (xCoordinateInputRef.current && yCoordinateInputRef.current && zCoordinateInputRef.current) {
-      useRefStore.setState({
-        xCoordinateInputRef: xCoordinateInputRef,
-        yCoordinateInputRef: yCoordinateInputRef,
-        zCoordinateInputRef: zCoordinateInputRef,
-      });
-    }
-  }, [xCoordinateInputRef, yCoordinateInputRef, zCoordinateInputRef, initialWidth, initialHeight]);
+    useRefStore.setState({ navCoordinatesRef });
+  }, [navCoordinatesRef]);
 
   if (initialWidth === null || initialHeight === null) return null;
 
@@ -1140,14 +1131,13 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
-          ref={xCoordinateInputRef}
-          value={coordinate.x}
+          value={navCoordinatesRef.current[0]}
           precision={1}
           step={0.1}
           style={{ width: '55px', height: '30px', fontSize: '12px' }}
           onChange={(value) => {
             if (value === null) return;
-            setCoordinates({ ...coordinate, x: value });
+            navCoordinatesRef.current[0] = value;
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.x = value;
@@ -1182,14 +1172,13 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
-          ref={yCoordinateInputRef}
-          value={coordinate.y}
+          value={navCoordinatesRef.current[1]}
           precision={1}
           step={0.1}
           style={{ width: '55px', height: '30px', fontSize: '12px' }}
           onChange={(value) => {
             if (value === null) return;
-            setCoordinates({ ...coordinate, y: value });
+            navCoordinatesRef.current[1] = value;
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.y = value;
@@ -1224,14 +1213,13 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
-          ref={zCoordinateInputRef}
-          value={coordinate.z}
+          value={navCoordinatesRef.current[2]}
           precision={1}
           step={0.1}
           style={{ width: '55px', height: '30px', fontSize: '12px' }}
           onChange={(value) => {
             if (value === null) return;
-            setCoordinates({ ...coordinate, z: value });
+            navCoordinatesRef.current[2] = value;
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.z = value;

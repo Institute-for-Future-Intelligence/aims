@@ -51,6 +51,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
   const resetViewFlag = usePrimitiveStore(Selector.resetViewFlag);
   const zoomViewFlag = usePrimitiveStore(Selector.zoomViewFlag);
+  const updateCockpit = usePrimitiveStore(Selector.updateCockpit);
 
   const cameraPosition = useStore(Selector.cameraPosition);
   const cameraRotation = useStore(Selector.cameraRotation);
@@ -63,7 +64,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   const navTarget = useStore(Selector.navTarget);
   const thrust = useStore(Selector.spaceshipThrust);
 
-  const { gl, camera, set, get } = useThree();
+  const { gl, camera, set } = useThree();
 
   const controlsRef = useRef<MyTrackballControls>(null);
   const isFirstRender = useFirstRender();
@@ -98,16 +99,12 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   };
 
   const updateDashBoardCoordinates = () => {
-    const xCoordinateInputRef = useRefStore.getState().xCoordinateInputRef;
-    const yCoordinateInputRef = useRefStore.getState().yCoordinateInputRef;
-    const zCoordinateInputRef = useRefStore.getState().zCoordinateInputRef;
-    if (xCoordinateInputRef?.current && yCoordinateInputRef?.current && zCoordinateInputRef?.current) {
-      // @ts-expect-error
-      xCoordinateInputRef.current.nativeElement.children[1].children[0].value = camera.position.x.toFixed(1);
-      // @ts-expect-error
-      yCoordinateInputRef.current.nativeElement.children[1].children[0].value = camera.position.y.toFixed(1);
-      // @ts-expect-error
-      zCoordinateInputRef.current.nativeElement.children[1].children[0].value = camera.position.z.toFixed(1);
+    const c = useRefStore.getState().navCoordinatesRef;
+    if (c?.current) {
+      c.current[0] = camera.position.x;
+      c.current[1] = camera.position.y;
+      c.current[2] = camera.position.z;
+      updateCockpit();
     }
   };
 
