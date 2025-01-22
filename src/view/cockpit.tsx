@@ -44,6 +44,9 @@ const Cockpit = React.memo(() => {
   const xCoordinateFieldRef = useRef<HTMLElement | null>(null);
   const yCoordinateFieldRef = useRef<HTMLElement | null>(null);
   const zCoordinateFieldRef = useRef<HTMLElement | null>(null);
+  const xCoordinateInputRef = useRef<HTMLInputElement | null>(null);
+  const yCoordinateInputRef = useRef<HTMLInputElement | null>(null);
+  const zCoordinateInputRef = useRef<HTMLInputElement | null>(null);
 
   const [coordinate, setCoordinates] = useState({ x: 0, y: 0, z: 0 });
 
@@ -461,14 +464,14 @@ const Cockpit = React.memo(() => {
   }, []);
 
   useEffect(() => {
-    if (xCoordinateFieldRef.current && yCoordinateFieldRef.current && zCoordinateFieldRef.current) {
+    if (xCoordinateInputRef.current && yCoordinateInputRef.current && zCoordinateInputRef.current) {
       useRefStore.setState({
-        xCoordinateInputDOM: xCoordinateFieldRef.current.children[0].children[1].children[0] as HTMLInputElement,
-        yCoordinateInputDOM: yCoordinateFieldRef.current.children[0].children[1].children[0] as HTMLInputElement,
-        zCoordinateInputDOM: zCoordinateFieldRef.current.children[0].children[1].children[0] as HTMLInputElement,
+        xCoordinateInputRef: xCoordinateInputRef,
+        yCoordinateInputRef: yCoordinateInputRef,
+        zCoordinateInputRef: zCoordinateInputRef,
       });
     }
-  }, [xCoordinateFieldRef, yCoordinateFieldRef, zCoordinateFieldRef, initialWidth, initialHeight]);
+  }, [xCoordinateInputRef, yCoordinateInputRef, zCoordinateInputRef, initialWidth, initialHeight]);
 
   if (initialWidth === null || initialHeight === null) return null;
 
@@ -1137,6 +1140,7 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
+          ref={xCoordinateInputRef}
           value={coordinate.x}
           precision={1}
           step={0.1}
@@ -1178,6 +1182,7 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
+          ref={yCoordinateInputRef}
           value={coordinate.y}
           precision={1}
           step={0.1}
@@ -1219,6 +1224,7 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
+          ref={zCoordinateInputRef}
           value={coordinate.z}
           precision={1}
           step={0.1}

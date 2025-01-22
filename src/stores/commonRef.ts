@@ -15,8 +15,6 @@ import { showWarning } from '../helpers.tsx';
 import { useStore } from './common.ts';
 import { MyTrackballControls } from '../js/MyTrackballControls';
 
-const v = new Vector2();
-
 export interface RefStoreState {
   selectNone: () => void;
   controlsRef: RefObject<MyTrackballControls> | null;
@@ -32,9 +30,9 @@ export interface RefStoreState {
   molecularDynamicsRef: RefObject<MolecularDynamics> | null;
   chamberViewerCanvas: { gl: WebGLRenderer; camera: PerspectiveCamera } | null;
   galleryViewerCanvas: { gl: WebGLRenderer } | null;
-  xCoordinateInputDOM: HTMLInputElement | null;
-  yCoordinateInputDOM: HTMLInputElement | null;
-  zCoordinateInputDOM: HTMLInputElement | null;
+  xCoordinateInputRef: RefObject<HTMLInputElement> | null;
+  yCoordinateInputRef: RefObject<HTMLInputElement> | null;
+  zCoordinateInputRef: RefObject<HTMLInputElement> | null;
   resizeCanvases: (percentWidth: number) => void;
   warnIfTooManyAtoms: (addition: number) => void;
 }
@@ -56,13 +54,14 @@ export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
     chamberViewerCanvas: null,
     galleryViewerCanvas: null,
 
-    xCoordinateInputDOM: null,
-    yCoordinateInputDOM: null,
-    zCoordinateInputDOM: null,
+    xCoordinateInputRef: null,
+    yCoordinateInputRef: null,
+    zCoordinateInputRef: null,
 
     resizeCanvases(percentWidth) {
       const chamberViewerCanvas = get().chamberViewerCanvas;
       const galleryViewerCanvas = get().galleryViewerCanvas;
+      const v = new Vector2();
 
       if (chamberViewerCanvas) {
         const { gl, camera } = chamberViewerCanvas;

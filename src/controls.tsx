@@ -98,13 +98,16 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   };
 
   const updateDashBoardCoordinates = () => {
-    const xCoordinateInputDOM = useRefStore.getState().xCoordinateInputDOM;
-    const yCoordinateInputDOM = useRefStore.getState().yCoordinateInputDOM;
-    const zCoordinateInputDOM = useRefStore.getState().zCoordinateInputDOM;
-    if (xCoordinateInputDOM && yCoordinateInputDOM && zCoordinateInputDOM) {
-      xCoordinateInputDOM.value = camera.position.x.toFixed(1);
-      yCoordinateInputDOM.value = camera.position.y.toFixed(1);
-      zCoordinateInputDOM.value = camera.position.z.toFixed(1);
+    const xCoordinateInputRef = useRefStore.getState().xCoordinateInputRef;
+    const yCoordinateInputRef = useRefStore.getState().yCoordinateInputRef;
+    const zCoordinateInputRef = useRefStore.getState().zCoordinateInputRef;
+    if (xCoordinateInputRef?.current && yCoordinateInputRef?.current && zCoordinateInputRef?.current) {
+      // @ts-expect-error
+      xCoordinateInputRef.current.nativeElement.children[1].children[0].value = camera.position.x.toFixed(1);
+      // @ts-expect-error
+      yCoordinateInputRef.current.nativeElement.children[1].children[0].value = camera.position.y.toFixed(1);
+      // @ts-expect-error
+      zCoordinateInputRef.current.nativeElement.children[1].children[0].value = camera.position.z.toFixed(1);
     }
   };
 
