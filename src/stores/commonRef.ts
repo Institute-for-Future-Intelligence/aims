@@ -32,6 +32,9 @@ export interface RefStoreState {
   molecularDynamicsRef: RefObject<MolecularDynamics> | null;
   chamberViewerCanvas: { gl: WebGLRenderer; camera: PerspectiveCamera } | null;
   galleryViewerCanvas: { gl: WebGLRenderer } | null;
+  xCoordinateInputDOM: HTMLInputElement | null;
+  yCoordinateInputDOM: HTMLInputElement | null;
+  zCoordinateInputDOM: HTMLInputElement | null;
   resizeCanvases: (percentWidth: number) => void;
   warnIfTooManyAtoms: (addition: number) => void;
 }
@@ -52,6 +55,10 @@ export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
     molecularDynamicsRef: null,
     chamberViewerCanvas: null,
     galleryViewerCanvas: null,
+
+    xCoordinateInputDOM: null,
+    yCoordinateInputDOM: null,
+    zCoordinateInputDOM: null,
 
     resizeCanvases(percentWidth) {
       const chamberViewerCanvas = get().chamberViewerCanvas;

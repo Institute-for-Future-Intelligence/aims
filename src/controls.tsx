@@ -97,6 +97,17 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
     }
   };
 
+  const updateDashBoardCoordinates = () => {
+    const xCoordinateInputDOM = useRefStore.getState().xCoordinateInputDOM;
+    const yCoordinateInputDOM = useRefStore.getState().yCoordinateInputDOM;
+    const zCoordinateInputDOM = useRefStore.getState().zCoordinateInputDOM;
+    if (xCoordinateInputDOM && yCoordinateInputDOM && zCoordinateInputDOM) {
+      xCoordinateInputDOM.value = camera.position.x.toFixed(1);
+      yCoordinateInputDOM.value = camera.position.y.toFixed(1);
+      zCoordinateInputDOM.value = camera.position.z.toFixed(1);
+    }
+  };
+
   useEffect(() => {
     if (controlsRef.current) {
       controlsRef.current.moveSpeed = 5 * thrust;
@@ -276,6 +287,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
 
   const onNavChange = () => {
     updateLight();
+    updateDashBoardCoordinates();
   };
 
   const onNavEnd = () => {

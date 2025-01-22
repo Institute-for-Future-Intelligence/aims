@@ -44,17 +44,14 @@ const Cockpit = React.memo(() => {
   const xCoordinateFieldRef = useRef<HTMLElement | null>(null);
   const yCoordinateFieldRef = useRef<HTMLElement | null>(null);
   const zCoordinateFieldRef = useRef<HTMLElement | null>(null);
-  const xCoordinateRef = useRef<number>(0);
-  const yCoordinateRef = useRef<number>(0);
-  const zCoordinateRef = useRef<number>(0);
+
+  const [coordinate, setCoordinates] = useState({ x: 0, y: 0, z: 0 });
 
   useEffect(() => {
-    xCoordinateRef.current = navPosition[0];
-    yCoordinateRef.current = navPosition[1];
-    zCoordinateRef.current = navPosition[2];
+    const [x, y, z] = navPosition;
+    setCoordinates({ x, y, z });
   }, [navPosition]);
 
-  const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const [initialWidth, setInitialWidth] = useState<number | null>(null);
   const [initialHeight, setInitialHeight] = useState<number | null>(null);
   const upperHeight = 80;
@@ -462,7 +459,16 @@ const Cockpit = React.memo(() => {
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, []);
-  // =====
+
+  useEffect(() => {
+    if (xCoordinateFieldRef.current && yCoordinateFieldRef.current && zCoordinateFieldRef.current) {
+      useRefStore.setState({
+        xCoordinateInputDOM: xCoordinateFieldRef.current.children[0].children[1].children[0] as HTMLInputElement,
+        yCoordinateInputDOM: yCoordinateFieldRef.current.children[0].children[1].children[0] as HTMLInputElement,
+        zCoordinateInputDOM: zCoordinateFieldRef.current.children[0].children[1].children[0] as HTMLInputElement,
+      });
+    }
+  }, [xCoordinateFieldRef, yCoordinateFieldRef, zCoordinateFieldRef, initialWidth, initialHeight]);
 
   if (initialWidth === null || initialHeight === null) return null;
 
@@ -1131,14 +1137,13 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
-          value={xCoordinateRef.current}
+          value={coordinate.x}
           precision={1}
           step={0.1}
           style={{ width: '55px', height: '30px', fontSize: '12px' }}
           onChange={(value) => {
             if (value === null) return;
-            xCoordinateRef.current = value;
-            setUpdateFlag(!updateFlag);
+            setCoordinates({ ...coordinate, x: value });
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.x = value;
@@ -1173,14 +1178,13 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
-          value={yCoordinateRef.current}
+          value={coordinate.y}
           precision={1}
           step={0.1}
           style={{ width: '55px', height: '30px', fontSize: '12px' }}
           onChange={(value) => {
             if (value === null) return;
-            yCoordinateRef.current = value;
-            setUpdateFlag(!updateFlag);
+            setCoordinates({ ...coordinate, y: value });
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.y = value;
@@ -1215,14 +1219,13 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
-          value={zCoordinateRef.current}
+          value={coordinate.z}
           precision={1}
           step={0.1}
           style={{ width: '55px', height: '30px', fontSize: '12px' }}
           onChange={(value) => {
             if (value === null) return;
-            zCoordinateRef.current = value;
-            setUpdateFlag(!updateFlag);
+            setCoordinates({ ...coordinate, z: value });
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.z = value;
