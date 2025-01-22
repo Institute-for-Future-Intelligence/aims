@@ -69,6 +69,7 @@ class MyTrackballControls extends EventDispatcher {
     this.onStart = null;
     this.onChange = null;
     this.onEnd = null;
+    this.onNavEnd = null;
 
     // internals
 
@@ -285,7 +286,7 @@ class MyTrackballControls extends EventDispatcher {
       }
     };
 
-    this.update = function () {
+    this.update = function (triggerNavEnd) {
       _eye.subVectors(scope.object.position, scope.target);
 
       if (!scope.noRotate) {
@@ -315,6 +316,9 @@ class MyTrackballControls extends EventDispatcher {
         scope.dispatchEvent(_changeEvent);
         if (scope.onChange) {
           scope.onChange();
+        }
+        if (scope.onNavEnd && triggerNavEnd) {
+          scope.onNavEnd();
         }
 
         lastPosition.copy(scope.object.position);

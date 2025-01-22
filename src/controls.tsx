@@ -437,6 +437,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
       onStart={onControlStart}
       onChange={onControlChange}
       onEnd={onControlEnd}
+      onNavEnd={onNavEnd}
     />
   );
 });

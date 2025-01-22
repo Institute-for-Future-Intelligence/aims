@@ -545,7 +545,7 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.spinUp(controls.turnSpeed);
-            controls.update();
+            controls.update(true);
           }
           handleKeyClickDown('ArrowUp');
         }}
@@ -570,7 +570,7 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.spinUp(-controls.turnSpeed);
-            controls.update();
+            controls.update(true);
           }
           handleKeyClickDown('ArrowDown');
         }}
@@ -595,7 +595,7 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.spinRight(-controls.turnSpeed);
-            controls.update();
+            controls.update(true);
           }
           handleKeyClickDown('ArrowLeft');
         }}
@@ -620,7 +620,7 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.spinRight(controls.turnSpeed);
-            controls.update();
+            controls.update(true);
           }
           handleKeyClickDown('ArrowRight');
         }}
@@ -644,7 +644,7 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.rollRight(controls.turnSpeed);
-            controls.update();
+            controls.update(true);
           }
           handleKeyClickDown('KeyQ');
         }}
@@ -700,7 +700,7 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.rollRight(-controls.turnSpeed);
-            controls.update();
+            controls.update(true);
           }
           handleKeyClickDown('KeyE');
         }}
@@ -756,7 +756,7 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.moveForward(controls.moveSpeed);
-            controls.update();
+            controls.update(true);
           }
           handleKeyClickDown('KeyW');
         }}
@@ -812,7 +812,7 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.moveForward(-controls.moveSpeed);
-            controls.update();
+            controls.update(true);
           }
           handleKeyClickDown('KeyS');
         }}
@@ -868,7 +868,7 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.moveRight(-controls.moveSpeed);
-            controls.update();
+            controls.update(true);
           }
           handleKeyClickDown('KeyA');
         }}
@@ -923,7 +923,7 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.moveRight(controls.moveSpeed);
-            controls.update();
+            controls.update(true);
           }
           handleKeyClickDown('KeyD');
         }}
@@ -978,7 +978,7 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.moveUp(controls.moveSpeed);
-            controls.update();
+            controls.update(true);
           }
           handleKeyClickDown('KeyZ');
         }}
@@ -1033,7 +1033,7 @@ const Cockpit = React.memo(() => {
           const controls = useRefStore.getState().controlsRef?.current;
           if (controls) {
             controls.moveUp(-controls.moveSpeed);
-            controls.update();
+            controls.update(true);
           }
           handleKeyClickDown('KeyX');
         }}
@@ -1142,7 +1142,7 @@ const Cockpit = React.memo(() => {
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.x = value;
-              controls.update();
+              controls.update(true);
             }
           }}
         />
@@ -1184,7 +1184,7 @@ const Cockpit = React.memo(() => {
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.y = value;
-              controls.update();
+              controls.update(true);
             }
           }}
         />
@@ -1226,7 +1226,7 @@ const Cockpit = React.memo(() => {
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.z = value;
-              controls.update();
+              controls.update(true);
             }
           }}
         />
