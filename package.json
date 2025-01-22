@@ -7,7 +7,7 @@
   "dependencies": {
     "@react-three/drei": "^9.99.4",
     "@react-three/fiber": "^8.15.16",
-    "antd": "^5.22.3",
+    "antd": "^5.23.2",
     "d3-brush": "^3.0.0",
     "dayjs": "^1.10.7",
     "fastest-levenshtein": "^1.0.16",
@@ -37,7 +37,7 @@
     "styled-components": "^6.1.1",
     "three": "^0.158.0",
     "three-spritetext": "^1.8.1",
-    "typescript": "^5.3.2",
+    "typescript": "^5.3.3",
     "vite-raw-plugin": "^1.0.2",
     "web-vitals": "^3.5.0",
     "zustand": "^4.5.0"
