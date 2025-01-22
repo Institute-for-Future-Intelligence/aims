@@ -51,7 +51,6 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   const autoRotate = usePrimitiveStore(Selector.autoRotate);
   const resetViewFlag = usePrimitiveStore(Selector.resetViewFlag);
   const zoomViewFlag = usePrimitiveStore(Selector.zoomViewFlag);
-  const updateCockpit = usePrimitiveStore(Selector.updateCockpit);
 
   const cameraPosition = useStore(Selector.cameraPosition);
   const cameraRotation = useStore(Selector.cameraRotation);
@@ -95,16 +94,6 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
       // sets the point light to a location above the camera
       lightRef.current.position.set(0, 1, 0);
       lightRef.current.position.add(camera.position);
-    }
-  };
-
-  const updateDashBoardCoordinates = () => {
-    const c = useRefStore.getState().navCoordinatesRef;
-    if (c?.current) {
-      c.current[0] = camera.position.x;
-      c.current[1] = camera.position.y;
-      c.current[2] = camera.position.z;
-      updateCockpit();
     }
   };
 
@@ -287,7 +276,11 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
 
   const onNavChange = () => {
     updateLight();
-    updateDashBoardCoordinates();
+    usePrimitiveStore.getState().set((state) => {
+      state.navCoordinates[0] = camera.position.x;
+      state.navCoordinates[1] = camera.position.y;
+      state.navCoordinates[2] = camera.position.z;
+    });
   };
 
   const onNavEnd = () => {

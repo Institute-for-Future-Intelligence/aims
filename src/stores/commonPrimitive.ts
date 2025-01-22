@@ -21,8 +21,6 @@ export interface PrimitiveStoreState {
   updateViewer: () => void;
   updateInfoFlag: boolean;
   updateInfo: () => void;
-  updateCockpitFlag: boolean;
-  updateCockpit: () => void;
 
   dragAndDropMolecule: boolean;
   hoveredMolecule: MoleculeInterface | null;
@@ -83,6 +81,7 @@ export interface PrimitiveStoreState {
   currentTemperature: number;
 
   showThrustFlame: boolean;
+  navCoordinates: number[];
 
   set: (fn: (state: PrimitiveStoreState) => void) => void;
   setPrimitiveStore: <K extends keyof PrimitiveStoreState, V extends PrimitiveStoreState[K]>(key: K, val: V) => void;
@@ -135,12 +134,6 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     updateInfo() {
       immerSet((state: PrimitiveStoreState) => {
         state.updateInfoFlag = !state.updateInfoFlag;
-      });
-    },
-    updateCockpitFlag: false,
-    updateCockpit() {
-      immerSet((state: PrimitiveStoreState) => {
-        state.updateCockpitFlag = !state.updateCockpitFlag;
       });
     },
 
@@ -225,5 +218,6 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     currentTemperature: 300,
 
     showThrustFlame: false,
+    navCoordinates: [0, 0, 0],
   };
 });

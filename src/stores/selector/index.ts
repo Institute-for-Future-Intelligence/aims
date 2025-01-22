@@ -34,10 +34,6 @@ export const updateInfoFlag = (state: PrimitiveStoreState) => state.updateInfoFl
 
 export const updateInfo = (state: PrimitiveStoreState) => state.updateInfo;
 
-export const updateCockpitFlag = (state: PrimitiveStoreState) => state.updateCockpitFlag;
-
-export const updateCockpit = (state: PrimitiveStoreState) => state.updateCockpit;
-
 export const selectedPlane = (state: PrimitiveStoreState) => state.selectedPlane;
 
 export const xyPlaneVisible = (state: CommonStoreState) => state.projectState.xyPlaneVisible;
@@ -286,6 +282,8 @@ export const spaceshipDisplayMode = (state: CommonStoreState) => state.projectSt
 export const spaceshipThrust = (state: CommonStoreState) => state.projectState.spaceshipThrust;
 
 export const showThrustFlame = (state: PrimitiveStoreState) => state.showThrustFlame;
+
+export const navCoordinates = (state: PrimitiveStoreState) => state.navCoordinates;
 
 export const spaceshipSize = (state: CommonStoreState) => state.projectState.spaceshipSize;
 

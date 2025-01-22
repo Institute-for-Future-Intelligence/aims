@@ -19,7 +19,7 @@ const Cockpit = React.memo(() => {
   const language = useStore(Selector.language);
   const navPosition = useStore(Selector.navPosition);
   const spaceshipThrust = useStore(Selector.spaceshipThrust);
-  const updateCockpitFlag = usePrimitiveStore(Selector.updateCockpitFlag); // should be here to trigger update
+  const navCoordinates = usePrimitiveStore(Selector.navCoordinates);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -46,10 +46,11 @@ const Cockpit = React.memo(() => {
   const xCoordinateFieldRef = useRef<HTMLElement | null>(null);
   const yCoordinateFieldRef = useRef<HTMLElement | null>(null);
   const zCoordinateFieldRef = useRef<HTMLElement | null>(null);
-  const navCoordinatesRef = useRef<number[]>([0, 0, 0]);
 
   useEffect(() => {
-    navCoordinatesRef.current = [...navPosition];
+    usePrimitiveStore.getState().set((state) => {
+      state.navCoordinates = [...navPosition];
+    });
   }, [navPosition]);
 
   const [initialWidth, setInitialWidth] = useState<number | null>(null);
@@ -459,10 +460,6 @@ const Cockpit = React.memo(() => {
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, []);
-
-  useEffect(() => {
-    useRefStore.setState({ navCoordinatesRef });
-  }, [navCoordinatesRef]);
 
   if (initialWidth === null || initialHeight === null) return null;
 
@@ -1131,13 +1128,15 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
-          value={navCoordinatesRef.current[0]}
+          value={navCoordinates[0]}
           precision={1}
           step={0.1}
           style={{ width: '55px', height: '30px', fontSize: '12px' }}
           onChange={(value) => {
             if (value === null) return;
-            navCoordinatesRef.current[0] = value;
+            usePrimitiveStore.getState().set((state) => {
+              state.navCoordinates[0] = value;
+            });
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.x = value;
@@ -1172,13 +1171,15 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
-          value={navCoordinatesRef.current[1]}
+          value={navCoordinates[1]}
           precision={1}
           step={0.1}
           style={{ width: '55px', height: '30px', fontSize: '12px' }}
           onChange={(value) => {
             if (value === null) return;
-            navCoordinatesRef.current[1] = value;
+            usePrimitiveStore.getState().set((state) => {
+              state.navCoordinates[1] = value;
+            });
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.y = value;
@@ -1213,13 +1214,15 @@ const Cockpit = React.memo(() => {
         }}
       >
         <InputNumber
-          value={navCoordinatesRef.current[2]}
+          value={navCoordinates[2]}
           precision={1}
           step={0.1}
           style={{ width: '55px', height: '30px', fontSize: '12px' }}
           onChange={(value) => {
             if (value === null) return;
-            navCoordinatesRef.current[2] = value;
+            usePrimitiveStore.getState().set((state) => {
+              state.navCoordinates[2] = value;
+            });
             const controls = useRefStore.getState().controlsRef?.current;
             if (controls) {
               controls.object.position.z = value;
