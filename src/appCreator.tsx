@@ -9,7 +9,7 @@ import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { visitHomepage } from './helpers';
 import MainMenu from './mainMenu';
-import { SpaceshipDisplayMode, VERSION } from './constants';
+import { ProjectType, SpaceshipDisplayMode, VERSION } from './constants';
 import ShareLinks from './shareLinks';
 import ProjectGallery from './project/projectGallery.tsx';
 import ReactionChamber from './reactionChamber';
@@ -21,11 +21,10 @@ import KeyboardListener from './keyboardListener';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import AccountSettingsPanel from './accountSettingsPanel';
 import CloudManager from './cloudManager';
-import { CloudTwoTone } from '@ant-design/icons';
+import { AlertFilled, CloudTwoTone } from '@ant-design/icons';
 import SplitPane from './components/splitPane.tsx';
 import { useRefStore } from './stores/commonRef.ts';
 import { Badge, Button, Space } from 'antd';
-import { AlertFilled } from '@ant-design/icons';
 import Cockpit from './view/cockpit.tsx';
 
 const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
@@ -36,6 +35,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const language = useStore(Selector.language);
   const hideGallery = useStore(Selector.hideGallery);
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
+  const projectType = useStore(Selector.projectType);
   const projectOwner = useStore(Selector.projectOwner);
   const projectTitle = useStore(Selector.projectTitle);
   const loadChemicalElements = useStore(Selector.loadChemicalElements);
@@ -44,6 +44,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const changed = usePrimitiveStore(Selector.changed);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
+  const navigationView = useStore(Selector.navigationView);
 
   // const setSkipChange = usePrimitiveStore(Selector.setSkipChange);
   // const cameraPosition = useStore(Selector.cameraPosition);
@@ -272,7 +273,10 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
               <ReactionChamber />
             </Suspense>
           </SplitPane>
-          {spaceshipDisplayMode === SpaceshipDisplayMode.INSIDE_VIEW && <Cockpit />}
+          {projectType === ProjectType.DRUG_DISCOVERY && spaceshipDisplayMode === SpaceshipDisplayMode.INSIDE_VIEW && (
+            <Cockpit />
+          )}
+          {projectType === ProjectType.MOLECULAR_MODELING && navigationView && <Cockpit />}
           <KeyboardListener setNavigationView={setNavigationView} />
         </div>
       </DropdownContextMenu>
