@@ -28,7 +28,8 @@ const Cockpit = React.memo(() => {
 
   const upperCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const lowerCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const middleCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const leftBarCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rightBarCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const wheelRef = useRef<HTMLImageElement | null>(null);
   const pitchUpRef = useRef<HTMLElement | null>(null);
   const pitchDownRef = useRef<HTMLElement | null>(null);
@@ -58,6 +59,7 @@ const Cockpit = React.memo(() => {
   const upperHeight = 80;
   const lowerHeight = 100;
   const wheelRadius = 24;
+  const barWidth = 4;
 
   const drawUpperPart = useCallback((width: number) => {
     if (!upperCanvasRef.current) return;
@@ -194,21 +196,33 @@ const Cockpit = React.memo(() => {
     ctx.fillRect(getW(70), 66, 8, 8);
   }, []);
 
-  const drawMiddlePart = useCallback((width: number, height: number) => {
-    if (!middleCanvasRef.current) return;
-    const ctx = middleCanvasRef.current.getContext('2d') as CanvasRenderingContext2D;
-    if (!ctx) return;
-    /** get actually size based on 0-100 value */
-    const getW = (w: number) => (w / 100) * width;
-    ctx.clearRect(0, 0, width, height);
-    ctx.beginPath();
-    ctx.moveTo(getW(80), 0);
-    ctx.lineTo(getW(80), height);
-    ctx.moveTo(getW(20), 0);
-    ctx.lineTo(getW(20), height);
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = '#1A86A0';
-    ctx.stroke();
+  const drawBars = useCallback((width: number, height: number) => {
+    if (leftBarCanvasRef.current) {
+      const ctx = leftBarCanvasRef.current.getContext('2d') as CanvasRenderingContext2D;
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, height);
+      ctx.moveTo(2, 0);
+      ctx.lineTo(2, height);
+      ctx.lineWidth = barWidth;
+      ctx.strokeStyle = '#1A86A0';
+      ctx.stroke();
+    }
+    if (rightBarCanvasRef.current) {
+      const ctx = rightBarCanvasRef.current.getContext('2d') as CanvasRenderingContext2D;
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, height);
+      ctx.moveTo(2, 0);
+      ctx.lineTo(2, height);
+      ctx.lineWidth = barWidth;
+      ctx.strokeStyle = '#1A86A0';
+      ctx.stroke();
+    }
   }, []);
 
   const drawLowerPart = useCallback((width: number) => {
@@ -298,16 +312,18 @@ const Cockpit = React.memo(() => {
   }, []);
 
   const onResize = useCallback(() => {
-    if (lowerCanvasRef.current && upperCanvasRef.current && middleCanvasRef.current) {
+    if (lowerCanvasRef.current && upperCanvasRef.current && leftBarCanvasRef.current && rightBarCanvasRef.current) {
       const width = getWidth();
       const height = getHeight();
       lowerCanvasRef.current.width = width;
       upperCanvasRef.current.width = width;
-      middleCanvasRef.current.width = width;
-      middleCanvasRef.current.height = height;
+      leftBarCanvasRef.current.height = height;
+      leftBarCanvasRef.current.style.right = 0.8 * width - barWidth + 'px';
+      rightBarCanvasRef.current.height = height;
+      rightBarCanvasRef.current.style.right = 0.2 * width + 'px';
       drawLowerPart(width);
       drawUpperPart(width);
-      drawMiddlePart(width, height);
+      drawBars(width, height);
       if (wheelRef.current) {
         wheelRef.current.style.right = width / 2 - wheelRadius + 'px';
       }
@@ -374,8 +390,8 @@ const Cockpit = React.memo(() => {
     drawLowerPart(initialWidth);
     drawUpperPart(initialWidth);
     if (initialHeight === null) return;
-    drawMiddlePart(initialWidth, initialHeight);
-  }, [initialWidth, initialHeight, drawLowerPart, drawUpperPart, drawMiddlePart]);
+    drawBars(initialWidth, initialHeight);
+  }, [initialWidth, initialHeight, drawLowerPart, drawUpperPart, drawBars]);
 
   // listen to split pane resize
   useEffect(() => {
@@ -478,15 +494,28 @@ const Cockpit = React.memo(() => {
         }}
       />
 
-      {/*middle part*/}
+      {/*left bar*/}
       <canvas
-        ref={middleCanvasRef}
-        width={initialWidth}
+        ref={leftBarCanvasRef}
+        width={barWidth}
         height={initialHeight}
         style={{
           position: 'absolute',
-          top: '150px',
-          right: '0',
+          top: '152px',
+          right: 0.8 * initialWidth - barWidth + 'px',
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/*right bar*/}
+      <canvas
+        ref={rightBarCanvasRef}
+        width={barWidth}
+        height={initialHeight}
+        style={{
+          position: 'absolute',
+          top: '152px',
+          right: 0.2 * initialWidth + 'px',
           pointerEvents: 'none',
         }}
       />
