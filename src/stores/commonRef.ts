@@ -17,7 +17,7 @@ import { MyTrackballControls } from '../js/MyTrackballControls';
 
 export interface RefStoreState {
   selectNone: () => void;
-  dashboardCanvasRef: RefObject<HTMLCanvasElement> | null;
+  dashboardDivRef: RefObject<HTMLDivElement> | null;
   controlsRef: RefObject<MyTrackballControls> | null;
   cameraRef: RefObject<Camera | undefined> | null;
   raycasterRef: RefObject<Raycaster | undefined> | null;
@@ -51,7 +51,7 @@ export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
     molecularDynamicsRef: null,
     chamberViewerCanvas: null,
     galleryViewerCanvas: null,
-    dashboardCanvasRef: null,
+    dashboardDivRef: null,
 
     resizeCanvases(percentWidth) {
       const chamberViewerCanvas = get().chamberViewerCanvas;

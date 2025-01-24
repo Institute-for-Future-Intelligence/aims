@@ -468,26 +468,28 @@ const Cockpit = React.memo(() => {
     }
   };
 
-  useEffect(() => {
-    if (lowerCanvasRef.current) {
-      lowerCanvasRef.current.addEventListener('keydown', handleKeyDown);
-      lowerCanvasRef.current.addEventListener('keyup', handleKeyUp);
-    }
-    return () => {
-      if (lowerCanvasRef.current) {
-        lowerCanvasRef.current.removeEventListener('keydown', handleKeyDown);
-        lowerCanvasRef.current.removeEventListener('keyup', handleKeyUp);
-      }
-    };
-  }, [lowerCanvasRef, initialWidth, initialHeight]);
+  const dashboardDivRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (lowerCanvasRef.current) {
+    if (dashboardDivRef.current) {
+      dashboardDivRef.current.addEventListener('keydown', handleKeyDown);
+      dashboardDivRef.current.addEventListener('keyup', handleKeyUp);
+    }
+    return () => {
+      if (dashboardDivRef.current) {
+        dashboardDivRef.current.removeEventListener('keydown', handleKeyDown);
+        dashboardDivRef.current.removeEventListener('keyup', handleKeyUp);
+      }
+    };
+  }, [dashboardDivRef, initialWidth, initialHeight]);
+
+  useEffect(() => {
+    if (dashboardDivRef.current) {
       useRefStore.setState({
-        dashboardCanvasRef: lowerCanvasRef,
+        dashboardDivRef: dashboardDivRef,
       });
     }
-  }, [lowerCanvasRef, initialWidth, initialHeight]);
+  }, [dashboardDivRef, initialWidth, initialHeight]);
 
   if (initialWidth === null || initialHeight === null) return null;
 
@@ -532,630 +534,631 @@ const Cockpit = React.memo(() => {
         }}
       />
 
-      {/* lower part */}
-      <canvas
-        ref={lowerCanvasRef}
-        width={initialWidth}
-        height={lowerHeight}
-        tabIndex={0}
-        style={{
-          position: 'absolute',
-          bottom: '0',
-          right: '0',
-          // pointerEvents: 'none',
-        }}
-        onContextMenu={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-        }}
-      />
-
-      {/* steering wheel */}
-      <img
-        alt={'wheel'}
-        ref={wheelRef}
-        src={SteeringWheel}
-        style={{
-          position: 'absolute',
-          bottom: '26px',
-          right: initialWidth / 2 - wheelRadius,
-          height: wheelRadius * 2 + 'px',
-          width: wheelRadius * 2 + 'px',
-          transition: 'transform 0.3s ease',
-          userSelect: 'none',
-        }}
-      />
-
-      {/*pitch up */}
-      <CaretUpOutlined
-        ref={pitchUpRef}
-        title={t('spaceship.PitchUpPressArrowUp', lang)}
-        style={{
-          position: 'absolute',
-          backgroundColor: pressedKeyState.find((key) => key === 'ArrowUp') ? '#f0de1a' : '#e0b289',
-          padding: '2px',
-          color: 'antiquewhite',
-          bottom: '72px',
-          right: initialWidth / 2 - 10,
-          height: '20px',
-          width: '20px',
-        }}
-        onPointerDown={() => {
-          const controls = useRefStore.getState().controlsRef?.current;
-          if (controls) {
-            controls.spinUp(controls.turnSpeed);
-            controls.update(true);
-          }
-          handleKeyClickDown('ArrowUp');
-        }}
-        onPointerUp={() => handleKeyClickUp('ArrowUp')}
-      />
-
-      {/*pitch down*/}
-      <CaretDownOutlined
-        ref={pitchDownRef}
-        title={t('spaceship.PitchDownPressArrowDown', lang)}
-        style={{
-          position: 'absolute',
-          backgroundColor: pressedKeyState.find((key) => key === 'ArrowDown') ? '#f0de1a' : '#e0b289',
-          padding: '2px',
-          color: 'antiquewhite',
-          bottom: '6px',
-          right: initialWidth / 2 - 9,
-          height: '20px',
-          width: '20px',
-        }}
-        onPointerDown={() => {
-          const controls = useRefStore.getState().controlsRef?.current;
-          if (controls) {
-            controls.spinUp(-controls.turnSpeed);
-            controls.update(true);
-          }
-          handleKeyClickDown('ArrowDown');
-        }}
-        onPointerUp={() => handleKeyClickUp('ArrowDown')}
-      />
-
-      {/*yaw left*/}
-      <CaretLeftOutlined
-        ref={yawLeftRef}
-        title={t('spaceship.YawLeftPressArrowLeft', lang)}
-        style={{
-          position: 'absolute',
-          backgroundColor: pressedKeyState.find((key) => key === 'ArrowLeft') ? '#f0de1a' : '#e0b289',
-          padding: '2px',
-          color: 'antiquewhite',
-          bottom: '40px',
-          right: initialWidth / 2 - 2 + wheelRadius,
-          height: '20px',
-          width: '20px',
-        }}
-        onPointerDown={() => {
-          const controls = useRefStore.getState().controlsRef?.current;
-          if (controls) {
-            controls.spinRight(-controls.turnSpeed);
-            controls.update(true);
-          }
-          handleKeyClickDown('ArrowLeft');
-        }}
-        onPointerUp={() => handleKeyClickUp('ArrowLeft')}
-      />
-
-      {/*yaw right*/}
-      <CaretRightOutlined
-        ref={yawRightRef}
-        title={t('spaceship.YawRightPressArrowRight', lang)}
-        style={{
-          position: 'absolute',
-          backgroundColor: pressedKeyState.find((key) => key === 'ArrowRight') ? '#f0de1a' : '#e0b289',
-          padding: '2px',
-          color: 'antiquewhite',
-          bottom: '40px',
-          right: initialWidth / 2 - 19 - wheelRadius,
-          height: '20px',
-          width: '20px',
-        }}
-        onPointerDown={() => {
-          const controls = useRefStore.getState().controlsRef?.current;
-          if (controls) {
-            controls.spinRight(controls.turnSpeed);
-            controls.update(true);
-          }
-          handleKeyClickDown('ArrowRight');
-        }}
-        onPointerUp={() => handleKeyClickUp('ArrowRight')}
-      />
-
-      {/*roll left*/}
-      <span
-        ref={rollLeftRef}
-        title={t('spaceship.RollLeftPressQ', lang)}
-        style={{
-          position: 'absolute',
-          backgroundColor: pressedKeyState.find((key) => key === 'KeyQ') ? '#f0de1a' : '#e0b289',
-          bottom: '40px',
-          right: initialWidth / 2 + 21 + wheelRadius,
-          width: '20px',
-          height: '20px',
-          userSelect: 'none',
-        }}
-        onPointerDown={() => {
-          const controls = useRefStore.getState().controlsRef?.current;
-          if (controls) {
-            controls.rollRight(controls.turnSpeed);
-            controls.update(true);
-          }
-          handleKeyClickDown('KeyQ');
-        }}
-        onPointerUp={() => handleKeyClickUp('KeyQ')}
-      >
-        <span
+      <div ref={dashboardDivRef} tabIndex={0} id={'dashboard-div'}>
+        {/* lower part */}
+        <canvas
+          ref={lowerCanvasRef}
+          width={initialWidth}
+          height={lowerHeight}
           style={{
             position: 'absolute',
-            fontSize: '20px',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '2px',
-            right: '0px',
-            width: '20px',
-            height: '20px',
-            fontWeight: 'bold',
-            userSelect: 'none',
+            bottom: '0',
+            right: '0',
+            // pointerEvents: 'none',
           }}
-        >
-          ↶
-        </span>
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '10px',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '-35px',
-            right: '-6px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          Q
-        </span>
-      </span>
-
-      {/*roll right*/}
-      <span
-        ref={rollRightRef}
-        title={t('spaceship.RollRightPressE', lang)}
-        style={{
-          position: 'absolute',
-          backgroundColor: pressedKeyState.find((key) => key === 'KeyE') ? '#f0de1a' : '#e0b289',
-          bottom: '40px',
-          right: initialWidth / 2 - 42 - wheelRadius,
-          width: '20px',
-          height: '20px',
-          userSelect: 'none',
-        }}
-        onPointerDown={() => {
-          const controls = useRefStore.getState().controlsRef?.current;
-          if (controls) {
-            controls.rollRight(-controls.turnSpeed);
-            controls.update(true);
-          }
-          handleKeyClickDown('KeyE');
-        }}
-        onPointerUp={() => handleKeyClickUp('KeyE')}
-      >
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '20px',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '2px',
-            right: '0px',
-            width: '20px',
-            height: '20px',
-            fontWeight: 'bold',
-            userSelect: 'none',
-          }}
-        >
-          ↷
-        </span>
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '10px',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '-35px',
-            right: '-6px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          E
-        </span>
-      </span>
-
-      {/*move forward*/}
-      <span
-        ref={moveForwardRef}
-        title={t('spaceship.MoveForwardPressW', lang)}
-        style={{
-          position: 'absolute',
-          backgroundColor: pressedKeyState.find((key) => key === 'KeyW') ? '#f0de1a' : '#e0b289',
-          bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 + 250,
-          width: '30px',
-          height: '30px',
-          userSelect: 'none',
-        }}
-        onPointerDown={() => {
-          const controls = useRefStore.getState().controlsRef?.current;
-          if (controls) {
-            controls.moveForward(controls.moveSpeed);
-            controls.update(true);
-          }
-          handleKeyClickDown('KeyW');
-        }}
-        onPointerUp={() => handleKeyClickUp('KeyW')}
-      >
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '25px',
-            fontWeight: 'bolder',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '0px',
-            right: '0px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          △
-        </span>
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '10px',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '-32px',
-            right: '0px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          W
-        </span>
-      </span>
-
-      {/*move backward*/}
-      <span
-        ref={moveBackwardRef}
-        title={t('spaceship.MoveBackwardPressS', lang)}
-        style={{
-          position: 'absolute',
-          backgroundColor: pressedKeyState.find((key) => key === 'KeyS') ? '#f0de1a' : '#e0b289',
-          bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 + 215,
-          width: '30px',
-          height: '30px',
-          userSelect: 'none',
-        }}
-        onPointerDown={() => {
-          const controls = useRefStore.getState().controlsRef?.current;
-          if (controls) {
-            controls.moveForward(-controls.moveSpeed);
-            controls.update(true);
-          }
-          handleKeyClickDown('KeyS');
-        }}
-        onPointerUp={() => handleKeyClickUp('KeyS')}
-      >
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '25px',
-            fontWeight: 'bolder',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '0px',
-            left: '0px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          ▽
-        </span>
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '10px',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '-32px',
-            right: '0px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          S
-        </span>
-      </span>
-
-      {/*move left*/}
-      <span
-        ref={moveLeftRef}
-        title={t('spaceship.MoveLeftPressA', lang)}
-        style={{
-          position: 'absolute',
-          backgroundColor: pressedKeyState.find((key) => key === 'KeyA') ? '#f0de1a' : '#e0b289',
-          bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 + 180,
-          width: '30px',
-          height: '30px',
-          userSelect: 'none',
-        }}
-        onPointerDown={() => {
-          const controls = useRefStore.getState().controlsRef?.current;
-          if (controls) {
-            controls.moveRight(-controls.moveSpeed);
-            controls.update(true);
-          }
-          handleKeyClickDown('KeyA');
-        }}
-        onPointerUp={() => handleKeyClickUp('KeyA')}
-      >
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '25px',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '0px',
-            left: '0px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          🡰
-        </span>
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '10px',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '-32px',
-            right: '0px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          A
-        </span>
-      </span>
-
-      {/*move right*/}
-      <span
-        ref={moveRightRef}
-        title={t('spaceship.MoveRightPressD', lang)}
-        style={{
-          position: 'absolute',
-          backgroundColor: pressedKeyState.find((key) => key === 'KeyD') ? '#f0de1a' : '#e0b289',
-          bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 + 145,
-          width: '30px',
-          height: '30px',
-          userSelect: 'none',
-        }}
-        onPointerDown={() => {
-          const controls = useRefStore.getState().controlsRef?.current;
-          if (controls) {
-            controls.moveRight(controls.moveSpeed);
-            controls.update(true);
-          }
-          handleKeyClickDown('KeyD');
-        }}
-        onPointerUp={() => handleKeyClickUp('KeyD')}
-      >
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '25px',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '0px',
-            left: '0px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          🡲
-        </span>
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '10px',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '-32px',
-            right: '0px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          D
-        </span>
-      </span>
-
-      {/*move up*/}
-      <span
-        ref={moveUpRef}
-        title={t('spaceship.MoveUpPressZ', lang)}
-        style={{
-          position: 'absolute',
-          backgroundColor: pressedKeyState.find((key) => key === 'KeyZ') ? '#f0de1a' : '#e0b289',
-          bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 + 110,
-          width: '30px',
-          height: '30px',
-          userSelect: 'none',
-        }}
-        onPointerDown={() => {
-          const controls = useRefStore.getState().controlsRef?.current;
-          if (controls) {
-            controls.moveUp(controls.moveSpeed);
-            controls.update(true);
-          }
-          handleKeyClickDown('KeyZ');
-        }}
-        onPointerUp={() => handleKeyClickUp('KeyZ')}
-      >
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '25px',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '2px',
-            left: '0px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          🡱
-        </span>
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '10px',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '-32px',
-            right: '0px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          Z
-        </span>
-      </span>
-
-      {/*move down*/}
-      <span
-        ref={moveDownRef}
-        title={t('spaceship.MoveDownPressX', lang)}
-        style={{
-          position: 'absolute',
-          backgroundColor: pressedKeyState.find((key) => key === 'KeyX') ? '#f0de1a' : '#e0b289',
-          bottom: lowerHeight / 2 - 14,
-          right: initialWidth / 2 + 75,
-          width: '30px',
-          height: '30px',
-          userSelect: 'none',
-        }}
-        onPointerDown={() => {
-          const controls = useRefStore.getState().controlsRef?.current;
-          if (controls) {
-            controls.moveUp(-controls.moveSpeed);
-            controls.update(true);
-          }
-          handleKeyClickDown('KeyX');
-        }}
-        onPointerUp={() => handleKeyClickUp('KeyX')}
-      >
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '25px',
-            padding: '0px',
-            color: 'antiquewhite',
-            top: '2px',
-            left: '0px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          🡳
-        </span>
-        <span
-          style={{
-            position: 'absolute',
-            fontSize: '10px',
-            padding: '0px',
-            color: 'antiquewhite',
-            bottom: '-32px',
-            right: '0px',
-            width: '30px',
-            height: '30px',
-            userSelect: 'none',
-          }}
-        >
-          X
-        </span>
-      </span>
-
-      {/*thrust slider*/}
-      <span
-        ref={thrustSliderRef}
-        title={t('spaceship.ChangeThrustPower', lang)}
-        style={{
-          position: 'absolute',
-          backgroundColor: '#e0b289',
-          bottom: '36px',
-          right: initialWidth / 2 - 150,
-          height: '30px',
-          width: '72px',
-          userSelect: 'none',
-        }}
-      >
-        <Slider
-          keyboard={false}
-          value={spaceshipThrust}
-          min={0.1}
-          max={5}
-          step={0.1}
-          tooltip={{ formatter: (value) => `${value}X` }}
-          style={{ marginLeft: '10px', marginRight: '10px' }}
-          onChange={(value) => {
-            const controls = useRefStore.getState().controlsRef?.current;
-            if (controls) {
-              controls.moveSpeed = 5 * value;
-              controls.turnSpeed = value;
-            }
-            setCommonStore((state) => {
-              state.projectState.spaceshipThrust = value;
-            });
+          onContextMenu={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
           }}
         />
-        <span
+
+        {/* steering wheel */}
+        <img
+          alt={'wheel'}
+          ref={wheelRef}
+          src={SteeringWheel}
           style={{
             position: 'absolute',
-            fontSize: '10px',
+            bottom: '26px',
+            right: initialWidth / 2 - wheelRadius,
+            height: wheelRadius * 2 + 'px',
+            width: wheelRadius * 2 + 'px',
+            transition: 'transform 0.3s ease',
+            userSelect: 'none',
+          }}
+        />
+
+        {/*pitch up */}
+        <CaretUpOutlined
+          ref={pitchUpRef}
+          title={t('spaceship.PitchUpPressArrowUp', lang)}
+          style={{
+            position: 'absolute',
+            backgroundColor: pressedKeyState.find((key) => key === 'ArrowUp') ? '#f0de1a' : '#e0b289',
+            padding: '2px',
             color: 'antiquewhite',
-            bottom: '-13px',
-            right: '20px',
+            bottom: '72px',
+            right: initialWidth / 2 - 10,
+            height: '20px',
+            width: '20px',
+          }}
+          onPointerDown={() => {
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+              controls.spinUp(controls.turnSpeed);
+              controls.update(true);
+            }
+            handleKeyClickDown('ArrowUp');
+          }}
+          onPointerUp={() => handleKeyClickUp('ArrowUp')}
+        />
+
+        {/*pitch down*/}
+        <CaretDownOutlined
+          ref={pitchDownRef}
+          title={t('spaceship.PitchDownPressArrowDown', lang)}
+          style={{
+            position: 'absolute',
+            backgroundColor: pressedKeyState.find((key) => key === 'ArrowDown') ? '#f0de1a' : '#e0b289',
+            padding: '2px',
+            color: 'antiquewhite',
+            bottom: '6px',
+            right: initialWidth / 2 - 9,
+            height: '20px',
+            width: '20px',
+          }}
+          onPointerDown={() => {
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+              controls.spinUp(-controls.turnSpeed);
+              controls.update(true);
+            }
+            handleKeyClickDown('ArrowDown');
+          }}
+          onPointerUp={() => handleKeyClickUp('ArrowDown')}
+        />
+
+        {/*yaw left*/}
+        <CaretLeftOutlined
+          ref={yawLeftRef}
+          title={t('spaceship.YawLeftPressArrowLeft', lang)}
+          style={{
+            position: 'absolute',
+            backgroundColor: pressedKeyState.find((key) => key === 'ArrowLeft') ? '#f0de1a' : '#e0b289',
+            padding: '2px',
+            color: 'antiquewhite',
+            bottom: '40px',
+            right: initialWidth / 2 - 2 + wheelRadius,
+            height: '20px',
+            width: '20px',
+          }}
+          onPointerDown={() => {
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+              controls.spinRight(-controls.turnSpeed);
+              controls.update(true);
+            }
+            handleKeyClickDown('ArrowLeft');
+          }}
+          onPointerUp={() => handleKeyClickUp('ArrowLeft')}
+        />
+
+        {/*yaw right*/}
+        <CaretRightOutlined
+          ref={yawRightRef}
+          title={t('spaceship.YawRightPressArrowRight', lang)}
+          style={{
+            position: 'absolute',
+            backgroundColor: pressedKeyState.find((key) => key === 'ArrowRight') ? '#f0de1a' : '#e0b289',
+            padding: '2px',
+            color: 'antiquewhite',
+            bottom: '40px',
+            right: initialWidth / 2 - 19 - wheelRadius,
+            height: '20px',
+            width: '20px',
+          }}
+          onPointerDown={() => {
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+              controls.spinRight(controls.turnSpeed);
+              controls.update(true);
+            }
+            handleKeyClickDown('ArrowRight');
+          }}
+          onPointerUp={() => handleKeyClickUp('ArrowRight')}
+        />
+
+        {/*roll left*/}
+        <span
+          ref={rollLeftRef}
+          title={t('spaceship.RollLeftPressQ', lang)}
+          style={{
+            position: 'absolute',
+            backgroundColor: pressedKeyState.find((key) => key === 'KeyQ') ? '#f0de1a' : '#e0b289',
+            bottom: '40px',
+            right: initialWidth / 2 + 21 + wheelRadius,
+            width: '20px',
+            height: '20px',
+            userSelect: 'none',
+          }}
+          onPointerDown={() => {
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+              controls.rollRight(controls.turnSpeed);
+              controls.update(true);
+            }
+            handleKeyClickDown('KeyQ');
+          }}
+          onPointerUp={() => handleKeyClickUp('KeyQ')}
+        >
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '20px',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '2px',
+              right: '0px',
+              width: '20px',
+              height: '20px',
+              fontWeight: 'bold',
+              userSelect: 'none',
+            }}
+          >
+            ↶
+          </span>
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '10px',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '-35px',
+              right: '-6px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            Q
+          </span>
+        </span>
+
+        {/*roll right*/}
+        <span
+          ref={rollRightRef}
+          title={t('spaceship.RollRightPressE', lang)}
+          style={{
+            position: 'absolute',
+            backgroundColor: pressedKeyState.find((key) => key === 'KeyE') ? '#f0de1a' : '#e0b289',
+            bottom: '40px',
+            right: initialWidth / 2 - 42 - wheelRadius,
+            width: '20px',
+            height: '20px',
+            userSelect: 'none',
+          }}
+          onPointerDown={() => {
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+              controls.rollRight(-controls.turnSpeed);
+              controls.update(true);
+            }
+            handleKeyClickDown('KeyE');
+          }}
+          onPointerUp={() => handleKeyClickUp('KeyE')}
+        >
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '20px',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '2px',
+              right: '0px',
+              width: '20px',
+              height: '20px',
+              fontWeight: 'bold',
+              userSelect: 'none',
+            }}
+          >
+            ↷
+          </span>
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '10px',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '-35px',
+              right: '-6px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            E
+          </span>
+        </span>
+
+        {/*move forward*/}
+        <span
+          ref={moveForwardRef}
+          title={t('spaceship.MoveForwardPressW', lang)}
+          style={{
+            position: 'absolute',
+            backgroundColor: pressedKeyState.find((key) => key === 'KeyW') ? '#f0de1a' : '#e0b289',
+            bottom: lowerHeight / 2 - 14,
+            right: initialWidth / 2 + 250,
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+          onPointerDown={() => {
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+              controls.moveForward(controls.moveSpeed);
+              controls.update(true);
+            }
+            handleKeyClickDown('KeyW');
+          }}
+          onPointerUp={() => handleKeyClickUp('KeyW')}
+        >
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '25px',
+              fontWeight: 'bolder',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '0px',
+              right: '0px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            △
+          </span>
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '10px',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '-32px',
+              right: '0px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            W
+          </span>
+        </span>
+
+        {/*move backward*/}
+        <span
+          ref={moveBackwardRef}
+          title={t('spaceship.MoveBackwardPressS', lang)}
+          style={{
+            position: 'absolute',
+            backgroundColor: pressedKeyState.find((key) => key === 'KeyS') ? '#f0de1a' : '#e0b289',
+            bottom: lowerHeight / 2 - 14,
+            right: initialWidth / 2 + 215,
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+          onPointerDown={() => {
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+              controls.moveForward(-controls.moveSpeed);
+              controls.update(true);
+            }
+            handleKeyClickDown('KeyS');
+          }}
+          onPointerUp={() => handleKeyClickUp('KeyS')}
+        >
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '25px',
+              fontWeight: 'bolder',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '0px',
+              left: '0px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            ▽
+          </span>
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '10px',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '-32px',
+              right: '0px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            S
+          </span>
+        </span>
+
+        {/*move left*/}
+        <span
+          ref={moveLeftRef}
+          title={t('spaceship.MoveLeftPressA', lang)}
+          style={{
+            position: 'absolute',
+            backgroundColor: pressedKeyState.find((key) => key === 'KeyA') ? '#f0de1a' : '#e0b289',
+            bottom: lowerHeight / 2 - 14,
+            right: initialWidth / 2 + 180,
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+          onPointerDown={() => {
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+              controls.moveRight(-controls.moveSpeed);
+              controls.update(true);
+            }
+            handleKeyClickDown('KeyA');
+          }}
+          onPointerUp={() => handleKeyClickUp('KeyA')}
+        >
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '25px',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '0px',
+              left: '0px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            🡰
+          </span>
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '10px',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '-32px',
+              right: '0px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            A
+          </span>
+        </span>
+
+        {/*move right*/}
+        <span
+          ref={moveRightRef}
+          title={t('spaceship.MoveRightPressD', lang)}
+          style={{
+            position: 'absolute',
+            backgroundColor: pressedKeyState.find((key) => key === 'KeyD') ? '#f0de1a' : '#e0b289',
+            bottom: lowerHeight / 2 - 14,
+            right: initialWidth / 2 + 145,
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+          onPointerDown={() => {
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+              controls.moveRight(controls.moveSpeed);
+              controls.update(true);
+            }
+            handleKeyClickDown('KeyD');
+          }}
+          onPointerUp={() => handleKeyClickUp('KeyD')}
+        >
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '25px',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '0px',
+              left: '0px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            🡲
+          </span>
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '10px',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '-32px',
+              right: '0px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            D
+          </span>
+        </span>
+
+        {/*move up*/}
+        <span
+          ref={moveUpRef}
+          title={t('spaceship.MoveUpPressZ', lang)}
+          style={{
+            position: 'absolute',
+            backgroundColor: pressedKeyState.find((key) => key === 'KeyZ') ? '#f0de1a' : '#e0b289',
+            bottom: lowerHeight / 2 - 14,
+            right: initialWidth / 2 + 110,
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+          onPointerDown={() => {
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+              controls.moveUp(controls.moveSpeed);
+              controls.update(true);
+            }
+            handleKeyClickDown('KeyZ');
+          }}
+          onPointerUp={() => handleKeyClickUp('KeyZ')}
+        >
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '25px',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '2px',
+              left: '0px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            🡱
+          </span>
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '10px',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '-32px',
+              right: '0px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            Z
+          </span>
+        </span>
+
+        {/*move down*/}
+        <span
+          ref={moveDownRef}
+          title={t('spaceship.MoveDownPressX', lang)}
+          style={{
+            position: 'absolute',
+            backgroundColor: pressedKeyState.find((key) => key === 'KeyX') ? '#f0de1a' : '#e0b289',
+            bottom: lowerHeight / 2 - 14,
+            right: initialWidth / 2 + 75,
+            width: '30px',
+            height: '30px',
+            userSelect: 'none',
+          }}
+          onPointerDown={() => {
+            const controls = useRefStore.getState().controlsRef?.current;
+            if (controls) {
+              controls.moveUp(-controls.moveSpeed);
+              controls.update(true);
+            }
+            handleKeyClickDown('KeyX');
+          }}
+          onPointerUp={() => handleKeyClickUp('KeyX')}
+        >
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '25px',
+              padding: '0px',
+              color: 'antiquewhite',
+              top: '2px',
+              left: '0px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            🡳
+          </span>
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '10px',
+              padding: '0px',
+              color: 'antiquewhite',
+              bottom: '-32px',
+              right: '0px',
+              width: '30px',
+              height: '30px',
+              userSelect: 'none',
+            }}
+          >
+            X
+          </span>
+        </span>
+
+        {/*thrust slider*/}
+        <span
+          ref={thrustSliderRef}
+          title={t('spaceship.ChangeThrustPower', lang)}
+          style={{
+            position: 'absolute',
+            backgroundColor: '#e0b289',
+            bottom: '36px',
+            right: initialWidth / 2 - 150,
+            height: '30px',
+            width: '72px',
             userSelect: 'none',
           }}
         >
-          {t('spaceship.Thrust', lang)}
+          <Slider
+            keyboard={false}
+            value={spaceshipThrust}
+            min={0.1}
+            max={5}
+            step={0.1}
+            tooltip={{ formatter: (value) => `${value}X` }}
+            style={{ marginLeft: '10px', marginRight: '10px' }}
+            onChange={(value) => {
+              const controls = useRefStore.getState().controlsRef?.current;
+              if (controls) {
+                controls.moveSpeed = 5 * value;
+                controls.turnSpeed = value;
+              }
+              setCommonStore((state) => {
+                state.projectState.spaceshipThrust = value;
+              });
+            }}
+          />
+          <span
+            style={{
+              position: 'absolute',
+              fontSize: '10px',
+              color: 'antiquewhite',
+              bottom: '-13px',
+              right: '20px',
+              userSelect: 'none',
+            }}
+          >
+            {t('spaceship.Thrust', lang)}
+          </span>
         </span>
-      </span>
+      </div>
 
       {/*x coordinate*/}
       <span

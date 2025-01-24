@@ -13,7 +13,7 @@ export const useLanguage = () => {
 
 export const useMultipleKeys = (keydown?: (e: KeyboardEvent) => void, keyup?: (e: KeyboardEvent) => void) => {
   const pressedKeysRef = useRef<string[]>([]);
-  const dashboardCanvasRef = useRefStore((state) => state.dashboardCanvasRef);
+  const dashboardDivRef = useRefStore((state) => state.dashboardDivRef);
 
   const onKeyDown = (e: KeyboardEvent) => {
     e.preventDefault();
@@ -36,17 +36,17 @@ export const useMultipleKeys = (keydown?: (e: KeyboardEvent) => void, keyup?: (e
   };
 
   useEffect(() => {
-    if (dashboardCanvasRef?.current) {
-      dashboardCanvasRef.current.addEventListener('keydown', onKeyDown);
-      dashboardCanvasRef.current.addEventListener('keyup', onKeyUp);
+    if (dashboardDivRef?.current) {
+      dashboardDivRef.current.addEventListener('keydown', onKeyDown);
+      dashboardDivRef.current.addEventListener('keyup', onKeyUp);
       return () => {
-        if (dashboardCanvasRef.current) {
-          dashboardCanvasRef.current.removeEventListener('keydown', onKeyDown);
-          dashboardCanvasRef.current.removeEventListener('keyup', onKeyUp);
+        if (dashboardDivRef.current) {
+          dashboardDivRef.current.removeEventListener('keydown', onKeyDown);
+          dashboardDivRef.current.removeEventListener('keyup', onKeyUp);
         }
       };
     }
-  }, [dashboardCanvasRef]);
+  }, [dashboardDivRef]);
 
   return pressedKeysRef.current;
 };
