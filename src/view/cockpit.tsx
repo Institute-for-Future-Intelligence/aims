@@ -404,7 +404,6 @@ const Cockpit = React.memo(() => {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // =====
   const [pressedKeyState, setPressKeyState] = useState<string[]>([]);
   const pressedKeysRef = useRef<string[]>([]);
 

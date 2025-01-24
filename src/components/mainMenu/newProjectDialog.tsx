@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useMemo, useRef, useState } from 'react';
@@ -152,6 +152,7 @@ const NewProjectDialog = React.memo(({ saveAs }: { saveAs: boolean }) => {
                 e.preventDefault();
                 return false;
               }
+              e.stopPropagation(); // do this to prevent this event from passing to the canvas behind it
             }}
             onChange={(e) => {
               setProjectTitle(e.target.value);
@@ -171,6 +172,9 @@ const NewProjectDialog = React.memo(({ saveAs }: { saveAs: boolean }) => {
             maxLength={200}
             style={{ width: '100%' }}
             value={projectDescription ?? ''}
+            onKeyDown={(e) => {
+              e.stopPropagation(); // do this to prevent this event from passing to the canvas behind it
+            }}
             onChange={(e) => {
               setProjectDescription(e.target.value);
             }}

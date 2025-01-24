@@ -278,6 +278,7 @@ const ProjectListPanel = React.memo(
                   e.preventDefault();
                   return false;
                 }
+                e.stopPropagation();
               }}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setNewTitle(e.target.value);
@@ -332,6 +333,9 @@ const ProjectListPanel = React.memo(
                   allowClear
                   size={'small'}
                   enterButton
+                  onKeyDown={(e) => {
+                    e.stopPropagation(); // do this to prevent this event from passing to the canvas behind it
+                  }}
                   onSearch={(s) => {
                     if (!projects) return;
                     // must create a new array for ant table to update (don't just set length to 0)

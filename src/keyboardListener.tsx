@@ -291,7 +291,6 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
     switch (key) {
       case 'up': {
         if (navMode) {
-          showThrustFlame(true);
           break;
         }
         if (selectedPlane >= 0 && pickedMoleculeIndex === -1) {
@@ -315,7 +314,6 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       }
       case 'down': {
         if (navMode) {
-          showThrustFlame(true);
           break;
         }
         if (selectedPlane >= 0 && pickedMoleculeIndex === -1) {
@@ -339,14 +337,12 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
       }
       case 'q':
         if (navMode) {
-          showThrustFlame(true);
           break;
         }
         startFlying(ship ? FlightControl.YawLeft : FlightControl.RotateAroundZClockwise);
         break;
       case 'e':
         if (navMode) {
-          showThrustFlame(true);
           break;
         }
         startFlying(ship ? FlightControl.YawRight : FlightControl.RotateAroundZCounterclockwise);

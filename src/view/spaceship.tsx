@@ -5,7 +5,7 @@
 // @ts-expect-error: ignore
 import shipUrl from '../assets/ship.gltf';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Group, MeshBasicMaterial, Vector3 } from 'three';
 import { useGLTF } from '@react-three/drei';
@@ -24,6 +24,7 @@ const Spaceship = React.memo(() => {
 
   const { camera, gl } = useThree();
 
+  const [selected, setSelected] = useState<boolean>(false);
   const groupRef = useRef<Group>(null);
 
   useFrame(() => {
@@ -50,6 +51,7 @@ const Spaceship = React.memo(() => {
       onPointerOut={(e) => {}}
       onPointerDown={(e) => {
         if (e.button === 2) return;
+        setSelected(!selected);
       }}
     >
       {drawTarget && (
@@ -79,7 +81,7 @@ const Spaceship = React.memo(() => {
         </group>
       )}
       <group
-        rotation={[HALF_PI + spaceshipPitch, Math.PI + spaceshipRoll, spaceshipYaw]}
+        rotation={[HALF_PI * 1.2 + spaceshipPitch, Math.PI + spaceshipRoll, spaceshipYaw]}
         onPointerOver={() => {
           gl.domElement.style.cursor = 'pointer';
         }}
@@ -88,23 +90,28 @@ const Spaceship = React.memo(() => {
         }}
       >
         <mesh name="Renault_(S,_T1)_0" geometry={model.nodes['Renault_(S,_T1)_0'].geometry}>
-          <meshStandardMaterial color="#a7a7a7" depthTest={false} transparent={true} />
+          <meshStandardMaterial color="#a7a7a7" depthTest={false} transparent={true} opacity={selected ? 0.75 : 1} />
         </mesh>
         <mesh name="Renault_(S,_T1)_1" geometry={model.nodes['Renault_(S,_T1)_1'].geometry}>
-          <meshStandardMaterial color="silver" depthTest={false} transparent={true} />
+          <meshStandardMaterial color={'silver'} depthTest={false} transparent={true} opacity={selected ? 0.75 : 1} />
         </mesh>
         <mesh name="Renault_(S,_T1)_2" geometry={model.nodes['Renault_(S,_T1)_2'].geometry}>
-          <meshStandardMaterial color="#a7a7a7" depthTest={false} transparent={true} />
+          <meshStandardMaterial color="#a7a7a7" depthTest={false} transparent={true} opacity={selected ? 0.75 : 1} />
         </mesh>
         <mesh name="Renault_(S,_T1)_3" geometry={model.nodes['Renault_(S,_T1)_3'].geometry}>
-          <meshStandardMaterial color="lightblue" depthTest={false} transparent={true} />
+          <meshStandardMaterial color="lightblue" depthTest={false} transparent={true} opacity={selected ? 0.75 : 1} />
         </mesh>
         {/* nozzle */}
         <mesh name="Renault_(S,_T1)_4" geometry={model.nodes['Renault_(S,_T1)_4'].geometry}>
-          <meshStandardMaterial color={showThrustFlame ? 'yellow' : 'black'} depthTest={false} transparent={true} />
+          <meshStandardMaterial
+            color={showThrustFlame ? 'yellow' : 'black'}
+            depthTest={false}
+            transparent={true}
+            opacity={selected ? 0.75 : 1}
+          />
         </mesh>
         <mesh name="Renault_(S,_T1)_5" geometry={model.nodes['Renault_(S,_T1)_5'].geometry}>
-          <meshStandardMaterial color="teal" depthTest={false} transparent={true} />
+          <meshStandardMaterial color={'teal'} depthTest={false} transparent={true} opacity={selected ? 0.75 : 1} />
         </mesh>
       </group>
     </group>
