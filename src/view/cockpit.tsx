@@ -408,6 +408,7 @@ const Cockpit = React.memo(() => {
   const pressedKeysRef = useRef<string[]>([]);
 
   const handleKeyDown = (e: KeyboardEvent) => {
+    e.preventDefault();
     if (!pressedKeysRef.current.find((v) => v === e.code)) {
       pressedKeysRef.current.push(e.code);
       setPressKeyState([...pressedKeysRef.current]);
@@ -468,13 +469,25 @@ const Cockpit = React.memo(() => {
   };
 
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
+    if (lowerCanvasRef.current) {
+      lowerCanvasRef.current.addEventListener('keydown', handleKeyDown);
+      lowerCanvasRef.current.addEventListener('keyup', handleKeyUp);
+    }
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
+      if (lowerCanvasRef.current) {
+        lowerCanvasRef.current.removeEventListener('keydown', handleKeyDown);
+        lowerCanvasRef.current.removeEventListener('keyup', handleKeyUp);
+      }
     };
-  }, []);
+  }, [lowerCanvasRef, initialWidth, initialHeight]);
+
+  useEffect(() => {
+    if (lowerCanvasRef.current) {
+      useRefStore.setState({
+        dashboardCanvasRef: lowerCanvasRef,
+      });
+    }
+  }, [lowerCanvasRef, initialWidth, initialHeight]);
 
   if (initialWidth === null || initialHeight === null) return null;
 
@@ -524,6 +537,7 @@ const Cockpit = React.memo(() => {
         ref={lowerCanvasRef}
         width={initialWidth}
         height={lowerHeight}
+        tabIndex={0}
         style={{
           position: 'absolute',
           bottom: '0',
