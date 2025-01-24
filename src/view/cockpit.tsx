@@ -3,7 +3,16 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { CaretUpOutlined, CaretDownOutlined, CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
+import {
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  CaretUpOutlined,
+  CaretDownOutlined,
+  CaretLeftOutlined,
+  CaretRightOutlined,
+} from '@ant-design/icons';
 import SteeringWheel from '../assets/steering-wheel.png';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
@@ -915,10 +924,11 @@ const Cockpit = React.memo(() => {
           }}
           onPointerUp={() => handleKeyClickUp('KeyA')}
         >
-          <span
+          <ArrowLeftOutlined
             style={{
               position: 'absolute',
-              fontSize: '25px',
+              justifyContent: 'center',
+              fontSize: '22px',
               padding: '0px',
               color: 'antiquewhite',
               bottom: '0px',
@@ -927,9 +937,7 @@ const Cockpit = React.memo(() => {
               height: '30px',
               userSelect: 'none',
             }}
-          >
-            🡰
-          </span>
+          />
           <span
             style={{
               position: 'absolute',
@@ -970,10 +978,11 @@ const Cockpit = React.memo(() => {
           }}
           onPointerUp={() => handleKeyClickUp('KeyD')}
         >
-          <span
+          <ArrowRightOutlined
             style={{
               position: 'absolute',
-              fontSize: '25px',
+              justifyContent: 'center',
+              fontSize: '22px',
               padding: '0px',
               color: 'antiquewhite',
               bottom: '0px',
@@ -982,9 +991,7 @@ const Cockpit = React.memo(() => {
               height: '30px',
               userSelect: 'none',
             }}
-          >
-            🡲
-          </span>
+          />
           <span
             style={{
               position: 'absolute',
@@ -1025,21 +1032,20 @@ const Cockpit = React.memo(() => {
           }}
           onPointerUp={() => handleKeyClickUp('KeyZ')}
         >
-          <span
+          <ArrowUpOutlined
             style={{
               position: 'absolute',
-              fontSize: '25px',
+              justifyContent: 'center',
+              fontSize: '24px',
               padding: '0px',
               color: 'antiquewhite',
-              bottom: '2px',
+              bottom: '0px',
               left: '0px',
               width: '30px',
               height: '30px',
               userSelect: 'none',
             }}
-          >
-            🡱
-          </span>
+          />
           <span
             style={{
               position: 'absolute',
@@ -1080,21 +1086,20 @@ const Cockpit = React.memo(() => {
           }}
           onPointerUp={() => handleKeyClickUp('KeyX')}
         >
-          <span
+          <ArrowDownOutlined
             style={{
               position: 'absolute',
-              fontSize: '25px',
+              justifyContent: 'center',
+              fontSize: '24px',
               padding: '0px',
               color: 'antiquewhite',
-              top: '2px',
+              top: '0px',
               left: '0px',
               width: '30px',
               height: '30px',
               userSelect: 'none',
             }}
-          >
-            🡳
-          </span>
+          />
           <span
             style={{
               position: 'absolute',
