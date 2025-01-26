@@ -40,67 +40,73 @@ export const ViewAngleMenuItems = () => {
         case ViewAngle.PositiveXDirection: {
           if (navigationView) {
             state.projectState.navPosition = [state.projectState.molecularContainer.lx * d, 0, 0];
-            state.projectState.navUp = [1, 0, 0];
-          } else {
-            state.projectState.cameraPosition = [state.projectState.molecularContainer.lx * d, 0, 0];
-            state.projectState.cameraRotation = [0, 0, 0];
-            state.projectState.cameraUp = [0, 0, 1];
+            state.projectState.navRotation = [0, 0, 0];
+            state.projectState.navTarget = [0, 0, 0];
+            state.projectState.navUp = [0, 0, 1];
           }
+          state.projectState.cameraPosition = [state.projectState.molecularContainer.lx * d, 0, 0];
+          state.projectState.cameraRotation = [0, 0, 0];
+          state.projectState.cameraUp = [0, 0, 1];
           break;
         }
         case ViewAngle.NegativeXDirection: {
           if (navigationView) {
             state.projectState.navPosition = [-state.projectState.molecularContainer.lx * d, 0, 0];
-            state.projectState.navUp = [-1, 0, 0];
-          } else {
-            state.projectState.cameraPosition = [-state.projectState.molecularContainer.lx * d, 0, 0];
-            state.projectState.cameraRotation = [0, 0, 0];
-            state.projectState.cameraUp = [0, 0, 1];
+            state.projectState.navRotation = [0, 0, 0];
+            state.projectState.navTarget = [0, 0, 0];
+            state.projectState.navUp = [0, 0, 1];
           }
+          state.projectState.cameraPosition = [-state.projectState.molecularContainer.lx * d, 0, 0];
+          state.projectState.cameraRotation = [0, 0, 0];
+          state.projectState.cameraUp = [0, 0, 1];
           break;
         }
         case ViewAngle.PositiveYDirection: {
           if (navigationView) {
             state.projectState.navPosition = [0, state.projectState.molecularContainer.ly * d, 0];
-            state.projectState.navUp = [0, 1, 0];
-          } else {
-            state.projectState.cameraPosition = [0, state.projectState.molecularContainer.ly * d, 0];
-            state.projectState.cameraRotation = [0, 0, 0];
-            state.projectState.cameraUp = [0, 0, 1];
+            state.projectState.navRotation = [0, 0, 0];
+            state.projectState.navTarget = [0, 0, 0];
+            state.projectState.navUp = [0, 0, 1];
           }
+          state.projectState.cameraPosition = [0, state.projectState.molecularContainer.ly * d, 0];
+          state.projectState.cameraRotation = [0, 0, 0];
+          state.projectState.cameraUp = [0, 0, 1];
           break;
         }
         case ViewAngle.NegativeYDirection: {
           if (navigationView) {
             state.projectState.navPosition = [0, -state.projectState.molecularContainer.ly * d, 0];
-            state.projectState.navUp = [0, -1, 0];
-          } else {
-            state.projectState.cameraPosition = [0, -state.projectState.molecularContainer.ly * d, 0];
-            state.projectState.cameraRotation = [0, 0, 0];
-            state.projectState.cameraUp = [0, 0, 1];
+            state.projectState.navRotation = [0, 0, 0];
+            state.projectState.navTarget = [0, 0, 0];
+            state.projectState.navUp = [0, 0, 1];
           }
+          state.projectState.cameraPosition = [0, -state.projectState.molecularContainer.ly * d, 0];
+          state.projectState.cameraRotation = [0, 0, 0];
+          state.projectState.cameraUp = [0, 0, 1];
           break;
         }
         case ViewAngle.PositiveZDirection: {
           if (navigationView) {
             state.projectState.navPosition = [0, 0, state.projectState.molecularContainer.lz * d];
-            state.projectState.navUp = [0, 0, 1];
-          } else {
-            state.projectState.cameraPosition = [0, 0, state.projectState.molecularContainer.lz * d];
-            state.projectState.cameraRotation = [0, 0, 0];
-            state.projectState.cameraUp = [1, 0, 0];
+            state.projectState.navRotation = [0, 0, 0];
+            state.projectState.navTarget = [0, 0, 0];
+            state.projectState.navUp = [1, 0, 0];
           }
+          state.projectState.cameraPosition = [0, 0, state.projectState.molecularContainer.lz * d];
+          state.projectState.cameraRotation = [0, 0, 0];
+          state.projectState.cameraUp = [1, 0, 0];
           break;
         }
         case ViewAngle.NegativeZDirection: {
           if (navigationView) {
             state.projectState.navPosition = [0, 0, -state.projectState.molecularContainer.lz * d];
-            state.projectState.navUp = [0, 0, -1];
-          } else {
-            state.projectState.cameraPosition = [0, 0, -state.projectState.molecularContainer.lz * d];
-            state.projectState.cameraRotation = [0, 0, 0];
-            state.projectState.cameraUp = [1, 0, 0];
+            state.projectState.navRotation = [0, 0, 0];
+            state.projectState.navTarget = [0, 0, 0];
+            state.projectState.navUp = [1, 0, 0];
           }
+          state.projectState.cameraPosition = [0, 0, -state.projectState.molecularContainer.lz * d];
+          state.projectState.cameraRotation = [0, 0, 0];
+          state.projectState.cameraUp = [1, 0, 0];
           break;
         }
       }
