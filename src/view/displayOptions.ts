@@ -142,6 +142,24 @@ export const CHAMBER_STYLE_LABELS = [
   { value: MolecularViewerStyle.SolventExcludedSurface, label: 'molecularViewer.SolventExcludedSurface' },
 ];
 
+export enum ViewAngle {
+  PositiveXDirection = 'Positive X',
+  NegativeXDirection = 'Negative X',
+  PositiveYDirection = 'Positive Y',
+  NegativeYDirection = 'Negative Y',
+  PositiveZDirection = 'Positive Z',
+  NegativeZDirection = 'Negative Z',
+}
+
+export const CHAMBER_VIEW_ANGLES = [
+  { value: ViewAngle.PositiveXDirection, label: 'molecularViewer.PositiveXDirection' },
+  { value: ViewAngle.NegativeXDirection, label: 'molecularViewer.NegativeXDirection' },
+  { value: ViewAngle.PositiveYDirection, label: 'molecularViewer.PositiveYDirection' },
+  { value: ViewAngle.NegativeYDirection, label: 'molecularViewer.NegativeYDirection' },
+  { value: ViewAngle.PositiveZDirection, label: 'molecularViewer.PositiveZDirection' },
+  { value: ViewAngle.NegativeZDirection, label: 'molecularViewer.NegativeZDirection' },
+];
+
 export const GALLERY_STYLE_LABELS = [
   { value: MolecularViewerStyle.BallAndStick, label: 'molecularViewer.BallAndStick' },
   { value: MolecularViewerStyle.Wireframe, label: 'molecularViewer.Wireframe' },

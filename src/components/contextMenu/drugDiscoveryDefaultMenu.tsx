@@ -19,6 +19,7 @@ import {
   MaterialRadioGroup,
   NavigationViewCheckBox,
   Screenshot,
+  ViewAngleMenuItems,
 } from './sharedMenuItems.tsx';
 import { RotateLigand, TranslateLigand } from './drugDiscoveryMenuItems.tsx';
 
@@ -136,6 +137,17 @@ export const createDrugDiscoveryDefaultMenu = (
     items.push({
       key: 'molecular-viewer-foggy',
       label: <FogCheckBox />,
+    });
+
+    items.push({
+      key: 'molecular-viewer-view-angle-submenu',
+      label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.ViewDirection', lang)}</MenuItem>,
+      children: [
+        {
+          key: 'molecular-viewer-view-angle-items',
+          label: <ViewAngleMenuItems />,
+        },
+      ],
     });
 
     items.push({

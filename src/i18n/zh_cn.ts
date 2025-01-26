@@ -229,6 +229,13 @@ export const i18n_zh_cn = {
       AboutZAxis: '绕Z轴',
       EulerAngle: '欧拉角',
       Order: '顺序',
+      ViewDirection: '观察方向',
+      PositiveXDirection: '正X轴方向',
+      NegativeXDirection: '负X轴方向',
+      PositiveYDirection: '正Y轴方向',
+      NegativeYDirection: '负Y轴方向',
+      PositiveZDirection: '正Z轴方向',
+      NegativeZDirection: '负Z轴方向',
     },
 
     spaceship: {

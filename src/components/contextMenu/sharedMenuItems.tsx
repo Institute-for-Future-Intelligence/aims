@@ -17,13 +17,116 @@ import { screenshot, showError } from '../../helpers';
 import {
   CHAMBER_COLORING_LABELS,
   CHAMBER_STYLE_LABELS,
+  CHAMBER_VIEW_ANGLES,
   MATERIAL_LABELS,
   MolecularViewerColoring,
   MolecularViewerMaterial,
   MolecularViewerStyle,
+  ViewAngle,
 } from '../../view/displayOptions';
 import { isCartoon } from '../../view/moleculeTools.ts';
 import { SpaceshipDisplayMode } from '../../constants.ts';
+
+export const ViewAngleMenuItems = () => {
+  const navigationView = useStore(Selector.navigationView);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
+  const { t } = useTranslation();
+  const lang = useLanguage();
+
+  const setAngle = (viewAngle: ViewAngle) => {
+    useStore.getState().set((state) => {
+      const d = 3;
+      switch (viewAngle) {
+        case ViewAngle.PositiveXDirection: {
+          if (navigationView) {
+            state.projectState.navPosition = [state.projectState.molecularContainer.lx * d, 0, 0];
+            state.projectState.navUp = [1, 0, 0];
+          } else {
+            state.projectState.cameraPosition = [state.projectState.molecularContainer.lx * d, 0, 0];
+            state.projectState.cameraRotation = [0, 0, 0];
+            state.projectState.cameraUp = [0, 0, 1];
+          }
+          break;
+        }
+        case ViewAngle.NegativeXDirection: {
+          if (navigationView) {
+            state.projectState.navPosition = [-state.projectState.molecularContainer.lx * d, 0, 0];
+            state.projectState.navUp = [-1, 0, 0];
+          } else {
+            state.projectState.cameraPosition = [-state.projectState.molecularContainer.lx * d, 0, 0];
+            state.projectState.cameraRotation = [0, 0, 0];
+            state.projectState.cameraUp = [0, 0, 1];
+          }
+          break;
+        }
+        case ViewAngle.PositiveYDirection: {
+          if (navigationView) {
+            state.projectState.navPosition = [0, state.projectState.molecularContainer.ly * d, 0];
+            state.projectState.navUp = [0, 1, 0];
+          } else {
+            state.projectState.cameraPosition = [0, state.projectState.molecularContainer.ly * d, 0];
+            state.projectState.cameraRotation = [0, 0, 0];
+            state.projectState.cameraUp = [0, 0, 1];
+          }
+          break;
+        }
+        case ViewAngle.NegativeYDirection: {
+          if (navigationView) {
+            state.projectState.navPosition = [0, -state.projectState.molecularContainer.ly * d, 0];
+            state.projectState.navUp = [0, -1, 0];
+          } else {
+            state.projectState.cameraPosition = [0, -state.projectState.molecularContainer.ly * d, 0];
+            state.projectState.cameraRotation = [0, 0, 0];
+            state.projectState.cameraUp = [0, 0, 1];
+          }
+          break;
+        }
+        case ViewAngle.PositiveZDirection: {
+          if (navigationView) {
+            state.projectState.navPosition = [0, 0, state.projectState.molecularContainer.lz * d];
+            state.projectState.navUp = [0, 0, 1];
+          } else {
+            state.projectState.cameraPosition = [0, 0, state.projectState.molecularContainer.lz * d];
+            state.projectState.cameraRotation = [0, 0, 0];
+            state.projectState.cameraUp = [1, 0, 0];
+          }
+          break;
+        }
+        case ViewAngle.NegativeZDirection: {
+          if (navigationView) {
+            state.projectState.navPosition = [0, 0, -state.projectState.molecularContainer.lz * d];
+            state.projectState.navUp = [0, 0, -1];
+          } else {
+            state.projectState.cameraPosition = [0, 0, -state.projectState.molecularContainer.lz * d];
+            state.projectState.cameraRotation = [0, 0, 0];
+            state.projectState.cameraUp = [1, 0, 0];
+          }
+          break;
+        }
+      }
+    });
+    setChanged(true);
+  };
+
+  return (
+    <Space direction="vertical">
+      {CHAMBER_VIEW_ANGLES.map((item, idx) => {
+        return (
+          <MenuItem
+            stayAfterClick={false}
+            hasPadding={false}
+            key={`${idx}-${item.value}`}
+            onClick={() => {
+              setAngle(item.value);
+            }}
+          >
+            {t(item.label, lang)}
+          </MenuItem>
+        );
+      })}
+    </Space>
+  );
+};
 
 export const AutoRotateCheckBox = ({ isMac }: { isMac?: boolean }) => {
   const autoRotate = usePrimitiveStore(Selector.autoRotate);

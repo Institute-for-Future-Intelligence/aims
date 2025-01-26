@@ -42,6 +42,7 @@ import {
   MaterialRadioGroup,
   NavigationViewCheckBox,
   Screenshot,
+  ViewAngleMenuItems,
 } from './sharedMenuItems.tsx';
 
 export const createMolecularModelingDefaultMenu = (
@@ -265,6 +266,17 @@ export const createMolecularModelingDefaultMenu = (
     items.push({
       key: 'molecular-viewer-foggy',
       label: <FogCheckBox />,
+    });
+
+    items.push({
+      key: 'molecular-viewer-view-angle-submenu',
+      label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.ViewDirection', lang)}</MenuItem>,
+      children: [
+        {
+          key: 'molecular-viewer-view-angle-items',
+          label: <ViewAngleMenuItems />,
+        },
+      ],
     });
 
     items.push({

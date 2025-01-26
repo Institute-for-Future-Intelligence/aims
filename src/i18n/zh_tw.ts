@@ -228,6 +228,13 @@ export const i18n_zh_tw = {
       AboutZAxis: '繞Z軸',
       EulerAngle: '歐拉角',
       Order: '順序',
+      ViewDirection: '觀察方向',
+      PositiveXDirection: '正X軸方向',
+      NegativeXDirection: '負X軸方向',
+      PositiveYDirection: '正Y軸方向',
+      NegativeYDirection: '負Y軸方向',
+      PositiveZDirection: '正Z軸方向',
+      NegativeZDirection: '負Z軸方向',
     },
 
     spaceship: {

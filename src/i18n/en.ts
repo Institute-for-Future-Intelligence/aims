@@ -238,6 +238,13 @@ export const i18n_en = {
       AboutZAxis: 'About Z Axis',
       EulerAngle: 'Euler Angle',
       Order: 'Order',
+      ViewDirection: 'View Direction',
+      PositiveXDirection: 'Positive X Direction',
+      NegativeXDirection: 'Negative X Direction',
+      PositiveYDirection: 'Positive Y Direction',
+      NegativeYDirection: 'Negative Y Direction',
+      PositiveZDirection: 'Positive Z Direction',
+      NegativeZDirection: 'Negative Z Direction',
     },
 
     spaceship: {
