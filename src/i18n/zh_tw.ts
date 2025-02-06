@@ -98,6 +98,8 @@ export const i18n_zh_tw = {
       OK: '確定',
       Cancel: '取消',
       Close: '關閉',
+      Maximize: '最大化',
+      Restore: '恢復',
       Version: '版本',
       VersionInitial: '版本',
       AllRightsReserved: '版權所有',

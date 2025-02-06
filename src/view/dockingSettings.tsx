@@ -68,6 +68,7 @@ const DockingSettings = React.memo(() => {
   const showGallery = (show: boolean) => {
     setCommonStore((state) => {
       state.projectState.hideGallery = !show;
+      state.projectState.chamberViewerPercentWidth = show ? 50 : 100;
     });
   };
 

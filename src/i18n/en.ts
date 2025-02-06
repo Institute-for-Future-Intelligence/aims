@@ -107,6 +107,8 @@ export const i18n_en = {
       OK: 'OK',
       Cancel: 'Cancel',
       Close: 'Close',
+      Maximize: 'Maximize',
+      Restore: 'Restore',
       Version: 'Version',
       VersionInitial: 'V',
       AllRightsReserved: 'All Rights Reserved',

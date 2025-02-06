@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -10,6 +10,7 @@ import { Button, Collapse, CollapseProps, Empty, Modal, Popover, Radio, Spin } f
 import {
   ColumnHeightOutlined,
   BgColorsOutlined,
+  BorderOutlined,
   CameraOutlined,
   CarryOutOutlined,
   CloseOutlined,
@@ -19,6 +20,7 @@ import {
   EditOutlined,
   ImportOutlined,
   DotChartOutlined,
+  LeftSquareOutlined,
   LoadingOutlined,
   RightCircleOutlined,
   SettingOutlined,
@@ -178,6 +180,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const regressionAnalysis = usePrimitiveStore(Selector.regressionAnalysis);
   const regression = usePrimitiveStore(Selector.regression);
   const regressionDegree = useStore(Selector.regressionDegree) ?? 1;
+  const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -202,6 +205,11 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const containerRef = useRef<HTMLDivElement>(null!);
   const similarMoleculesByInChIRef = useRef<{ name: string; formula: string; distance: number }[]>([]);
   const similarMoleculesBySmilesRef = useRef<{ name: string; formula: string; distance: number }[]>([]);
+  const previousGalleryPercentWidthRef = useRef<number>(100 - chamberViewerPercentWidth);
+
+  useEffect(() => {
+    if (chamberViewerPercentWidth > 0) previousGalleryPercentWidthRef.current = 100 - chamberViewerPercentWidth;
+  }, [chamberViewerPercentWidth]);
 
   useEffect(() => {
     sortedMoleculesRef.current = [];
@@ -255,6 +263,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const hideGallery = (hide: boolean) => {
     setCommonStore((state) => {
       state.projectState.hideGallery = hide;
+      state.projectState.chamberViewerPercentWidth = hide
+        ? 100
+        : 100 - Math.max(25, previousGalleryPercentWidthRef.current);
     });
   };
 
@@ -267,6 +278,37 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     } as Undoable;
     addUndoable(undoable);
     hideGallery(true);
+  };
+
+  const setGalleryWidth = (percentWidth: number) => {
+    setCommonStore((state) => {
+      state.projectState.chamberViewerPercentWidth = 100 - percentWidth;
+    });
+    if (percentWidth < 100) {
+      previousGalleryPercentWidthRef.current = percentWidth;
+    }
+  };
+
+  const toggleMaximizeGallery = () => {
+    if (chamberViewerPercentWidth === 0) {
+      const undoable = {
+        name: 'Restore Gallery Width',
+        timestamp: Date.now(),
+        undo: () => setGalleryWidth(100),
+        redo: () => setGalleryWidth(previousGalleryPercentWidthRef.current),
+      } as Undoable;
+      addUndoable(undoable);
+      setGalleryWidth(previousGalleryPercentWidthRef.current);
+    } else {
+      const undoable = {
+        name: 'Maximize Gallery Width',
+        timestamp: Date.now(),
+        undo: () => setGalleryWidth(previousGalleryPercentWidthRef.current),
+        redo: () => setGalleryWidth(100),
+      } as Undoable;
+      addUndoable(undoable);
+      setGalleryWidth(100);
+    }
   };
 
   const removeSelectedMolecule = () => {
@@ -1017,16 +1059,33 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
             {t('projectPanel.Project', lang)} :{' '}
             {t(projectType === ProjectType.DRUG_DISCOVERY ? 'term.DrugDiscovery' : 'term.MolecularModeling', lang)}
           </span>
-          <span
-            style={{ cursor: 'pointer' }}
-            onMouseDown={() => {
-              closeGallery();
-            }}
-            onTouchStart={() => {
-              closeGallery();
-            }}
-          >
-            <CloseOutlined title={t('word.Close', lang)} />
+          <span>
+            <span
+              style={{ cursor: 'pointer', paddingRight: '10px' }}
+              onMouseDown={() => {
+                toggleMaximizeGallery();
+              }}
+              onTouchStart={() => {
+                toggleMaximizeGallery();
+              }}
+            >
+              {chamberViewerPercentWidth === 0 ? (
+                <LeftSquareOutlined title={t('word.Restore', lang)} />
+              ) : (
+                <BorderOutlined title={t('word.Maximize', lang)} />
+              )}
+            </span>
+            <span
+              style={{ cursor: 'pointer' }}
+              onMouseDown={() => {
+                closeGallery();
+              }}
+              onTouchStart={() => {
+                closeGallery();
+              }}
+            >
+              <CloseOutlined title={t('word.Close', lang)} />
+            </span>
           </span>
         </Header>
         <Collapse
