@@ -72,6 +72,7 @@ const ReactionChamber = React.memo(() => {
   const loggable = useStore(Selector.loggable);
   const logAction = useStore(Selector.logAction);
   const showInstructionPanel = useStore(Selector.showInstructionPanel);
+  const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
 
   const [loading, setLoading] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -195,6 +196,8 @@ const ReactionChamber = React.memo(() => {
     return null;
   };
 
+  const chamberVisible = chamberViewerPercentWidth > 0.1;
+
   return (
     <>
       <Canvas
@@ -290,12 +293,12 @@ const ReactionChamber = React.memo(() => {
         </GizmoHelper>
       </Canvas>
 
-      {projectType === ProjectType.DRUG_DISCOVERY && <DockingSettings />}
-      {projectType === ProjectType.MOLECULAR_MODELING && <DynamicsSettings />}
-      <ToolBarButtons />
-      {showInstructionPanel && <InstructionPanel />}
-      {projectType === ProjectType.MOLECULAR_MODELING && <SimulationControls />}
-      {energyGraphVisible && <EnergyGraph />}
+      {chamberVisible && projectType === ProjectType.DRUG_DISCOVERY && <DockingSettings />}
+      {chamberVisible && projectType === ProjectType.MOLECULAR_MODELING && <DynamicsSettings />}
+      {chamberVisible && <ToolBarButtons />}
+      {chamberVisible && showInstructionPanel && <InstructionPanel />}
+      {chamberVisible && projectType === ProjectType.MOLECULAR_MODELING && <SimulationControls />}
+      {chamberVisible && energyGraphVisible && <EnergyGraph />}
 
       {loading && canvasRef.current && (
         <Spin

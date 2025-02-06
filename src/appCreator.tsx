@@ -116,6 +116,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   };
 
   const isOwner = user.uid && user.uid === projectOwner;
+  const chamberVisible = chamberViewerPercentWidth > 0.1;
 
   console.log('x');
 
@@ -243,7 +244,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
         </>
       )}
 
-      {!viewOnly && (
+      {!viewOnly && chamberVisible && (
         <ShareLinks size={16} round={true} margin={'2px'} style={{ position: 'absolute', right: '0', top: '90px' }} />
       )}
 
@@ -253,6 +254,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
         <div style={{ height: 'calc(100vh - 72px)' }}>
           <SplitPane
             hideGallery={!hideGallery}
+            maxWidth={100}
             defaultSize={!hideGallery ? 100 - chamberViewerPercentWidth : 0}
             onChange={(size) => {
               setCommonStore((state) => {
