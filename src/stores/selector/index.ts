@@ -66,6 +66,8 @@ export const molecularContainerVisible = (state: CommonStoreState) => state.proj
 
 export const energyGraphVisible = (state: CommonStoreState) => state.projectState.energyGraphVisible;
 
+export const speedGraphVisible = (state: CommonStoreState) => state.projectState.speedGraphVisible;
+
 export const vdwBondsVisible = (state: CommonStoreState) => state.projectState.vdwBondsVisible;
 
 export const vdwBondCutoffRelative = (state: CommonStoreState) => state.projectState.vdwBondCutoffRelative;

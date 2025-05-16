@@ -193,6 +193,7 @@ export const i18n_en = {
       MomentumVectors: 'Momentum Vectors',
       ForceVectors: 'Force Vectors',
       EnergyGraph: 'Energy Graph',
+      SpeedGraph: 'Speed Distribution',
       GlobalStyle: 'Global Style',
       ProteinStyle: 'Protein Style',
       LigandStyle: 'Ligand Style',

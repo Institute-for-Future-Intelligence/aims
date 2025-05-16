@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import { Object3DNode } from '@react-three/fiber';
@@ -120,6 +120,7 @@ export interface ProjectState {
   forceScaleFactor: number;
   kineticEnergyScaleFactor: number;
   energyGraphVisible: boolean;
+  speedGraphVisible: boolean;
   angularBondsVisible: boolean;
   torsionalBondsVisible: boolean;
 

@@ -184,6 +184,7 @@ export const i18n_zh_cn = {
       MomentumVectors: '显示动量矢量',
       ForceVectors: '显示力矢量',
       EnergyGraph: '显示能量图',
+      SpeedGraph: '显示速度分布图',
       GlobalStyle: '全局风格',
       ProteinStyle: '蛋白质风格',
       LigandStyle: '配体风格',

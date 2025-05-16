@@ -1,15 +1,16 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useMemo, useRef } from 'react';
 import {
   RightOutlined,
   PauseOutlined,
-  VerticalRightOutlined,
+  RollbackOutlined,
   ArrowUpOutlined,
   ArrowDownOutlined,
-  FundOutlined,
+  LineChartOutlined,
+  BarChartOutlined,
 } from '@ant-design/icons';
 import { Button, Space } from 'antd';
 import { useStore } from '../stores/common';
@@ -28,7 +29,7 @@ import { DATA_QUEUE_LENGTH } from '../models/physicalConstants.ts';
 const Container = styled.div`
   position: absolute;
   left: calc(50% - 110px);
-  width: 220px;
+  width: 250px;
   bottom: 6px;
   margin: 0;
   display: flex;
@@ -54,6 +55,7 @@ const SimulationControls = React.memo(() => {
   const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
   const positionTimeSeriesMap = useDataStore(Selector.positionTimeSeriesMap);
   const energyGraphVisible = useStore(Selector.energyGraphVisible);
+  const speedGraphVisible = useStore(Selector.speedGraphVisible);
   const temperature = useStore(Selector.temperature);
   const constantTemperature = useStore(Selector.constantTemperature);
   const refreshInterval = useStore(Selector.refreshInterval) ?? 20;
@@ -218,7 +220,7 @@ const SimulationControls = React.memo(() => {
       <Space direction={'horizontal'}>
         <Button
           style={{ background: energyGraphVisible ? 'darkgray' : undefined }}
-          icon={<FundOutlined />}
+          icon={<LineChartOutlined />}
           onClick={() => {
             setCommonStore((state) => {
               state.projectState.energyGraphVisible = !state.projectState.energyGraphVisible;
@@ -228,7 +230,18 @@ const SimulationControls = React.memo(() => {
           title={t('molecularViewer.EnergyGraph', lang)}
         />
         <Button
-          icon={<VerticalRightOutlined />}
+          style={{ background: speedGraphVisible ? 'darkgray' : undefined }}
+          icon={<BarChartOutlined />}
+          onClick={() => {
+            setCommonStore((state) => {
+              state.projectState.speedGraphVisible = !state.projectState.speedGraphVisible;
+            });
+            setChanged(true);
+          }}
+          title={t('molecularViewer.SpeedGraph', lang)}
+        />
+        <Button
+          icon={<RollbackOutlined />}
           onClick={resetSim}
           disabled={startSimulation}
           title={t('experiment.ResetSimulation', lang)}

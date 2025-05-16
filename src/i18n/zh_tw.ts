@@ -183,6 +183,7 @@ export const i18n_zh_tw = {
       MomentumVectors: '顯示動量向量',
       ForceVectors: '顯示力向量',
       EnergyGraph: '顯示能量圖',
+      SpeedGraph: '顯示速度分佈圖',
       GlobalStyle: '全域風格',
       ProteinStyle: '蛋白質風格',
       LigandStyle: '配體風格',

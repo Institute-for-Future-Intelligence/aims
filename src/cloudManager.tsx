@@ -723,6 +723,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       if (!ps.forceVisible) delete (ps as any).forceVisible;
       if (!ps.vdwBondsVisible) delete (ps as any).vdwBondsVisible;
       if (!ps.energyGraphVisible) delete (ps as any).energyGraphVisible;
+      if (!ps.speedGraphVisible) delete (ps as any).speedGraphVisible;
       if (!ps.constantTemperature) delete (ps as any).constantTemperature;
       if (!ps.navigationView) delete (ps as any).navigationView;
       if (!ps.showInstructionPanel) delete (ps as any).showInstructionPanel;
