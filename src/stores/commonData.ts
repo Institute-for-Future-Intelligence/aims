@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import { createWithEqualityFn } from 'zustand/traditional';
@@ -11,11 +11,13 @@ import { PositionData } from '../models/PositionData.ts';
 export interface DataStoreState {
   energyTimeSeries: DataQueue<EnergyData>;
   positionTimeSeriesMap: Map<number, DataQueue<PositionData>>;
+  speedArray: Array<number>;
 }
 
 export const useDataStore = createWithEqualityFn<DataStoreState>()((set, get) => {
   return {
     energyTimeSeries: new DataQueue<EnergyData>(DATA_QUEUE_LENGTH),
     positionTimeSeriesMap: new Map<number, DataQueue<PositionData>>(),
+    speedArray: new Array<number>(),
   };
 });

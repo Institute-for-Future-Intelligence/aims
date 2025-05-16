@@ -118,6 +118,7 @@ const DynamicsViewer = React.memo(
     const moleculeMapRef = useRef<Map<Molecule, Molecule>>(new Map<Molecule, Molecule>());
     const complexMapRef = useRef<Map<Molecule, Complex>>(new Map<Molecule, Complex>());
     const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
+    const speedArray = useDataStore(Selector.speedArray);
 
     const { invalidate, camera, raycaster, gl } = useThree();
 
@@ -191,6 +192,7 @@ const DynamicsViewer = React.memo(
         }
         updateInfo();
         energyTimeSeries.clear();
+        speedArray.length = 0;
         positionTimeSeriesMap.clear();
         vdwBondsRef.current.length = 0;
         return;
@@ -237,6 +239,8 @@ const DynamicsViewer = React.memo(
         } else {
           if (a.elementSymbol === 'C' || a.elementSymbol === 'H' || a.elementSymbol === 'O') {
             a.epsilon = 0.005;
+          } else if (a.elementSymbol === 'HE' || a.elementSymbol === 'AR' || a.elementSymbol === 'XE') {
+            a.epsilon = 0.001;
           }
         }
         if (molecule.atoms && molecule.atoms[i]) {

@@ -26,6 +26,7 @@ export const createExamplesMenu = (viewOnly: boolean) => {
       state.resetSimulation = true;
     });
     useDataStore.getState().energyTimeSeries.clear();
+    useDataStore.getState().speedArray.length = 0;
     useDataStore.getState().positionTimeSeriesMap.clear();
   };
 

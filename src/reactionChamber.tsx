@@ -42,6 +42,7 @@ import { showInfo } from './helpers.tsx';
 import { useTranslation } from 'react-i18next';
 import { Undoable } from './undo/Undoable.ts';
 import InstructionPanel from './view/instructionPanel.tsx';
+import SpeedGraph from './view/speedGraph.tsx';
 
 const ReactionChamber = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -67,6 +68,7 @@ const ReactionChamber = React.memo(() => {
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
   const energyGraphVisible = useStore(Selector.energyGraphVisible);
+  const speedGraphVisible = useStore(Selector.speedGraphVisible);
   const molecularStructureMap = useStore(Selector.molecularStructureMap);
   const testMolecules = useStore(Selector.testMolecules);
   const loggable = useStore(Selector.loggable);
@@ -299,6 +301,7 @@ const ReactionChamber = React.memo(() => {
       {chamberVisible && showInstructionPanel && <InstructionPanel />}
       {chamberVisible && projectType === ProjectType.MOLECULAR_MODELING && <SimulationControls />}
       {chamberVisible && energyGraphVisible && <EnergyGraph />}
+      {chamberVisible && speedGraphVisible && <SpeedGraph />}
 
       {loading && canvasRef.current && (
         <Spin

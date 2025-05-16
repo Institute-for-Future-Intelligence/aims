@@ -61,6 +61,7 @@ export const i18n_en = {
     },
 
     word: {
+      StatisticalWeight: 'Statistical Weight',
       Press: 'Press',
       Mode: 'Mode',
       MoreInformation: 'More information',
@@ -84,6 +85,7 @@ export const i18n_en = {
       Codename: 'Codename',
       Time: 'Time',
       Energy: 'Energy',
+      Speed: 'Speed',
       KineticEnergy: 'Kinetic Energy',
       PotentialEnergy: 'Potential Energy',
       TotalEnergy: 'Total Energy',

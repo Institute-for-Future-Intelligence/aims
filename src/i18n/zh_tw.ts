@@ -52,6 +52,7 @@ export const i18n_zh_tw = {
     },
 
     word: {
+      StatisticalWeight: '權重',
       Press: '按',
       Mode: '模式',
       MoreInformation: '更多資訊',
@@ -75,6 +76,7 @@ export const i18n_zh_tw = {
       Codename: '代號',
       Time: '時間',
       Energy: '能量',
+      Speed: '速度',
       KineticEnergy: '動能',
       PotentialEnergy: '位能',
       TotalEnergy: '總能',
