@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  *
  */
 
@@ -35,3 +35,6 @@ export const UNIT_EV_OVER_KB = 16000 / 1.38;
 
 // converts kelvin into angstrom/femtosecond
 export const VT_CONVERSION_CONSTANT = 0.00002882;
+
+// A/fs -> m/s
+export const SPEED_CONVERTER = 100000;

@@ -54,14 +54,26 @@ const SpeedGraph = React.memo(() => {
     for (const s of speedArray) {
       if (s > max) max = s;
     }
-    dataRef.current = new Array<SpeedData>(Math.round(speedArray.length / 4));
+    if (max < 500) max = 500;
+    else if (max < 1000) max = 1000;
+    else if (max < 5000) max = 5000;
+    else max = 10000;
+    dataRef.current = new Array<SpeedData>(50);
     for (let i = 0; i < dataRef.current.length; i++) {
       dataRef.current[i] = { speed: i, weight: 0 } as SpeedData;
     }
     const delta = max / dataRef.current.length;
     for (const s of speedArray) {
       const n = Math.floor(s / delta);
-      if (dataRef.current[n]) dataRef.current[n].weight++;
+      dataRef.current[n].weight++;
+    }
+    let sum = 0;
+    for (let i = 0; i < dataRef.current.length; i++) {
+      sum += dataRef.current[i].weight;
+    }
+    for (let i = 0; i < dataRef.current.length; i++) {
+      dataRef.current[i].weight /= sum * 0.01;
+      dataRef.current[i].speed = Math.round(dataRef.current[i].speed * delta);
     }
   }, [updateViewerFlag, speedArray, resetSimulation]);
 
@@ -77,47 +89,49 @@ const SpeedGraph = React.memo(() => {
           setChanged(true);
         }}
       />
-      <ResponsiveContainer width="100%" height="100%" style={{ padding: '20px 20px 20px 20px' }}>
-        <BarChart
-          data={dataRef.current}
-          margin={{
-            top: 10,
-            right: 30,
-            left: 20,
-            bottom: 10,
-          }}
-        >
-          <CartesianGrid strokeWidth={0.2} color={'white'} />
-          <XAxis
-            dataKey="time"
-            stroke={'white'}
-            strokeWidth={2}
-            fontSize={10}
-            label={<Label value={t('word.Speed', lang) + ' (m/s)'} fill={'white'} dy={16} fontSize={12} />}
-          />
-          <YAxis
-            stroke={'white'}
-            strokeWidth={2}
-            fontSize={10}
-            label={
-              <Label
-                value={t('word.StatisticalWeight', lang) + ' (%)'}
-                fill={'white'}
-                dx={-16}
-                fontSize={12}
-                angle={-90}
-              />
-            }
-          />
-          <Tooltip
-            contentStyle={{ background: '#505050' }}
-            labelStyle={{ color: 'whitesmoke' }}
-            formatter={(value: number) => value.toFixed(3) + ' %'}
-          />
-          <Legend layout="horizontal" verticalAlign="top" align="center" wrapperStyle={{ top: '4px' }} />
-          <Bar name={t('word.Speed', lang)} type="linear" dataKey="weight" fill={'antiquewhite'} />
-        </BarChart>
-      </ResponsiveContainer>
+      {dataRef.current.length > 0 && (
+        <ResponsiveContainer width="100%" height="100%" style={{ padding: '20px 20px 20px 20px' }}>
+          <BarChart
+            data={dataRef.current}
+            margin={{
+              top: 10,
+              right: 30,
+              left: 20,
+              bottom: 10,
+            }}
+          >
+            <CartesianGrid strokeWidth={0.2} color={'white'} />
+            <XAxis
+              dataKey="speed"
+              stroke={'white'}
+              strokeWidth={2}
+              fontSize={10}
+              label={<Label value={t('word.Speed', lang) + ' (m/s)'} fill={'white'} dy={16} fontSize={12} />}
+            />
+            <YAxis
+              stroke={'white'}
+              strokeWidth={2}
+              fontSize={10}
+              label={
+                <Label
+                  value={t('word.StatisticalWeight', lang) + ' (%)'}
+                  fill={'white'}
+                  dx={-16}
+                  fontSize={12}
+                  angle={-90}
+                />
+              }
+            />
+            <Tooltip
+              contentStyle={{ background: '#505050' }}
+              labelStyle={{ color: 'whitesmoke' }}
+              formatter={(value: number) => value.toFixed(3) + ' %'}
+            />
+            <Legend layout="horizontal" verticalAlign="top" align="center" wrapperStyle={{ top: '4px' }} />
+            <Bar name={t('word.Speed', lang)} type="linear" dataKey="weight" fill={'antiquewhite'} />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
     </Container>
   );
 });

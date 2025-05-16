@@ -24,7 +24,7 @@ import { EnergyData } from '../models/EnergyData.ts';
 import { HeatBath } from '../models/HeatBath.ts';
 import { DataQueue } from '../models/DataQueue.ts';
 import { PositionData } from '../models/PositionData.ts';
-import { DATA_QUEUE_LENGTH } from '../models/physicalConstants.ts';
+import { DATA_QUEUE_LENGTH, SPEED_CONVERTER } from '../models/physicalConstants.ts';
 
 const Container = styled.div`
   position: absolute;
@@ -150,7 +150,7 @@ const SimulationControls = React.memo(() => {
               if (speedGraphVisible) {
                 speedArray.length = 0;
                 for (const atom of md.atoms) {
-                  speedArray.push(atom.velocity.length());
+                  speedArray.push(atom.velocity.length() * SPEED_CONVERTER);
                 }
               }
               for (const [index, atom] of md.atoms.entries()) {
