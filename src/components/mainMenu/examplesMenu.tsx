@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 import { MenuProps } from 'antd';
 import { MenuItem } from '../menuItem.tsx';
@@ -26,7 +26,7 @@ export const createExamplesMenu = (viewOnly: boolean) => {
       state.resetSimulation = true;
     });
     useDataStore.getState().energyTimeSeries.clear();
-    useDataStore.getState().speedArray.length = 0;
+    useDataStore.getState().speedArrayMap.clear();
     useDataStore.getState().positionTimeSeriesMap.clear();
   };
 

@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -67,7 +67,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const moleculesRef = useRefStore.getState().moleculesRef;
   const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
-  const speedArray = useDataStore(Selector.speedArray);
+  const speedArrayMap = useDataStore(Selector.speedArrayMap);
   const positionTimeSeriesMap = useDataStore(Selector.positionTimeSeriesMap);
 
   const [updateFlag, setUpdateFlag] = useState(false);
@@ -558,7 +558,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
 
   const resetProject = () => {
     energyTimeSeries.clear();
-    speedArray.length = 0;
+    speedArrayMap.clear();
     positionTimeSeriesMap.clear();
     usePrimitiveStore.getState().set((state) => {
       state.resetSimulation = true;

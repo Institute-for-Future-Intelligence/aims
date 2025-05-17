@@ -118,7 +118,7 @@ const DynamicsViewer = React.memo(
     const moleculeMapRef = useRef<Map<Molecule, Molecule>>(new Map<Molecule, Molecule>());
     const complexMapRef = useRef<Map<Molecule, Complex>>(new Map<Molecule, Complex>());
     const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
-    const speedArray = useDataStore(Selector.speedArray);
+    const speedArrayMap = useDataStore(Selector.speedArrayMap);
 
     const { invalidate, camera, raycaster, gl } = useThree();
 
@@ -192,7 +192,7 @@ const DynamicsViewer = React.memo(
         }
         updateInfo();
         energyTimeSeries.clear();
-        speedArray.length = 0;
+        speedArrayMap.clear();
         positionTimeSeriesMap.clear();
         vdwBondsRef.current.length = 0;
         return;

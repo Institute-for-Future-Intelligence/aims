@@ -307,7 +307,7 @@ export const translationStep = (state: CommonStoreState) => state.projectState.t
 
 export const energyTimeSeries = (state: DataStoreState) => state.energyTimeSeries;
 
-export const speedArray = (state: DataStoreState) => state.speedArray;
+export const speedArrayMap = (state: DataStoreState) => state.speedArrayMap;
 
 export const positionTimeSeriesMap = (state: DataStoreState) => state.positionTimeSeriesMap;
 

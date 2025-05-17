@@ -53,7 +53,7 @@ const SimulationControls = React.memo(() => {
   const startSimulation = usePrimitiveStore(Selector.startSimulation);
   const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
   const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
-  const speedArray = useDataStore(Selector.speedArray);
+  const speedArrayMap = useDataStore(Selector.speedArrayMap);
   const positionTimeSeriesMap = useDataStore(Selector.positionTimeSeriesMap);
   const energyGraphVisible = useStore(Selector.energyGraphVisible);
   const speedGraphVisible = useStore(Selector.speedGraphVisible);
@@ -102,7 +102,7 @@ const SimulationControls = React.memo(() => {
       const md = mdRef.current;
       md.reset();
       energyTimeSeries.clear();
-      speedArray.length = 0;
+      speedArrayMap.clear();
       positionTimeSeriesMap.forEach((series) => {
         series.clear();
       });
@@ -148,9 +148,13 @@ const SimulationControls = React.memo(() => {
               } as EnergyData;
               energyTimeSeries.add(energyData);
               if (speedGraphVisible) {
-                speedArray.length = 0;
-                for (const atom of md.atoms) {
-                  speedArray.push(atom.velocity.length() * SPEED_CONVERTER);
+                for (const [index, atom] of md.atoms.entries()) {
+                  let speedArray = speedArrayMap.get(index);
+                  if (!speedArray) {
+                    speedArray = new DataQueue<number>(DATA_QUEUE_LENGTH);
+                    speedArrayMap.set(index, speedArray);
+                  }
+                  speedArray.add(atom.velocity.length() * SPEED_CONVERTER);
                 }
               }
               for (const [index, atom] of md.atoms.entries()) {

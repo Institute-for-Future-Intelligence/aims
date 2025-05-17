@@ -11,13 +11,13 @@ import { PositionData } from '../models/PositionData.ts';
 export interface DataStoreState {
   energyTimeSeries: DataQueue<EnergyData>;
   positionTimeSeriesMap: Map<number, DataQueue<PositionData>>;
-  speedArray: Array<number>;
+  speedArrayMap: Map<number, DataQueue<number>>;
 }
 
 export const useDataStore = createWithEqualityFn<DataStoreState>()((set, get) => {
   return {
     energyTimeSeries: new DataQueue<EnergyData>(DATA_QUEUE_LENGTH),
     positionTimeSeriesMap: new Map<number, DataQueue<PositionData>>(),
-    speedArray: new Array<number>(),
+    speedArrayMap: new Map<number, DataQueue<number>>(),
   };
 });

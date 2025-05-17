@@ -40,7 +40,7 @@ const SpeedGraph = React.memo(() => {
   const language = useStore(Selector.language);
   const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
   const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
-  const speedArray = useDataStore(Selector.speedArray);
+  const speedArrayMap = useDataStore(Selector.speedArrayMap);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -51,8 +51,10 @@ const SpeedGraph = React.memo(() => {
 
   useEffect(() => {
     let max = 0;
-    for (const s of speedArray) {
-      if (s > max) max = s;
+    for (const q of speedArrayMap.values()) {
+      for (const s of q.array) {
+        if (s > max) max = s;
+      }
     }
     if (max < 500) max = 500;
     else if (max < 1000) max = 1000;
@@ -63,9 +65,11 @@ const SpeedGraph = React.memo(() => {
       dataRef.current[i] = { speed: i, weight: 0 } as SpeedData;
     }
     const delta = max / dataRef.current.length;
-    for (const s of speedArray) {
-      const n = Math.floor(s / delta);
-      dataRef.current[n].weight++;
+    for (const q of speedArrayMap.values()) {
+      for (const s of q.array) {
+        const n = Math.floor(s / delta);
+        if (dataRef.current[n]) dataRef.current[n].weight++;
+      }
     }
     let sum = 0;
     for (let i = 0; i < dataRef.current.length; i++) {
@@ -75,7 +79,7 @@ const SpeedGraph = React.memo(() => {
       dataRef.current[i].weight /= sum * 0.01;
       dataRef.current[i].speed = Math.round(dataRef.current[i].speed * delta);
     }
-  }, [updateViewerFlag, speedArray, resetSimulation]);
+  }, [updateViewerFlag, speedArrayMap, resetSimulation]);
 
   return (
     <Container>
@@ -125,10 +129,11 @@ const SpeedGraph = React.memo(() => {
             <Tooltip
               contentStyle={{ background: '#505050' }}
               labelStyle={{ color: 'whitesmoke' }}
-              formatter={(value: number) => value.toFixed(3) + ' %'}
+              cursor={{ fill: 'transparent' }}
+              formatter={(value: number) => value.toFixed(1) + ' %'}
             />
             <Legend layout="horizontal" verticalAlign="top" align="center" wrapperStyle={{ top: '4px' }} />
-            <Bar name={t('word.Speed', lang)} type="linear" dataKey="weight" fill={'antiquewhite'} />
+            <Bar name={t('word.StatisticalWeight', lang)} type="linear" dataKey="weight" fill={'antiquewhite'} />
           </BarChart>
         </ResponsiveContainer>
       )}
