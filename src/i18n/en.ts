@@ -61,7 +61,7 @@ export const i18n_en = {
     },
 
     word: {
-      StatisticalWeight: 'Statistical Weight',
+      Probability: 'Probability',
       Press: 'Press',
       Mode: 'Mode',
       MoreInformation: 'More information',
@@ -196,6 +196,8 @@ export const i18n_en = {
       ForceVectors: 'Force Vectors',
       EnergyGraph: 'Energy Graph',
       SpeedGraph: 'Speed Distribution',
+      FixXAxis: 'Fix X-Axis',
+      FixYAxis: 'Fix Y-Axis',
       GlobalStyle: 'Global Style',
       ProteinStyle: 'Protein Style',
       LigandStyle: 'Ligand Style',

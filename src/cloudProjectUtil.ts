@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import { useStore } from './stores/common';
@@ -166,6 +166,8 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           kineticEnergyScaleFactor: data.kineticEnergyScaleFactor ?? 1,
           energyGraphVisible: !!data.energyGraphVisible,
           speedGraphVisible: !!data.speedGraphVisible,
+          speedGraphMaxX: data.speedGraphMaxX ?? 0,
+          speedGraphMaxY: data.speedGraphMaxY ?? 0,
           angularBondsVisible: !!data.angularBondsVisible,
           torsionalBondsVisible: !!data.torsionalBondsVisible,
 

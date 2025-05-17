@@ -68,6 +68,10 @@ export const energyGraphVisible = (state: CommonStoreState) => state.projectStat
 
 export const speedGraphVisible = (state: CommonStoreState) => state.projectState.speedGraphVisible;
 
+export const speedGraphMaxX = (state: CommonStoreState) => state.projectState.speedGraphMaxX;
+
+export const speedGraphMaxY = (state: CommonStoreState) => state.projectState.speedGraphMaxY;
+
 export const vdwBondsVisible = (state: CommonStoreState) => state.projectState.vdwBondsVisible;
 
 export const vdwBondCutoffRelative = (state: CommonStoreState) => state.projectState.vdwBondCutoffRelative;

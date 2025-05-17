@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import { Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useDataStore } from '../stores/commonData.ts';
 import { SpeedData } from '../models/SpeedData.ts';
+import { Checkbox, Space } from 'antd';
 
 const Container = styled.div`
   position: absolute;
@@ -41,6 +42,8 @@ const SpeedGraph = React.memo(() => {
   const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
   const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
   const speedArrayMap = useDataStore(Selector.speedArrayMap);
+  const speedGraphMaxX = useStore(Selector.speedGraphMaxX);
+  const speedGraphMaxY = useStore(Selector.speedGraphMaxY);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -48,8 +51,10 @@ const SpeedGraph = React.memo(() => {
   }, [language]);
 
   const dataRef = useRef<Array<SpeedData>>([]);
+  const maxXRef = useRef<number>(0);
+  const maxYRef = useRef<number>(0);
 
-  useEffect(() => {
+  const findMaxX = () => {
     let max = 0;
     for (const q of speedArrayMap.values()) {
       for (const s of q.array) {
@@ -60,24 +65,31 @@ const SpeedGraph = React.memo(() => {
     else if (max < 1000) max = 1000;
     else if (max < 5000) max = 5000;
     else max = 10000;
+    return max;
+  };
+
+  useEffect(() => {
+    maxXRef.current = speedGraphMaxX ? speedGraphMaxX : findMaxX();
     dataRef.current = new Array<SpeedData>(50);
     for (let i = 0; i < dataRef.current.length; i++) {
-      dataRef.current[i] = { speed: i, weight: 0 } as SpeedData;
+      dataRef.current[i] = { speed: i, probability: 0 } as SpeedData;
     }
-    const delta = max / dataRef.current.length;
+    const dx = maxXRef.current / dataRef.current.length;
     for (const q of speedArrayMap.values()) {
       for (const s of q.array) {
-        const n = Math.floor(s / delta);
-        if (dataRef.current[n]) dataRef.current[n].weight++;
+        const n = Math.floor(s / dx);
+        if (dataRef.current[n]) dataRef.current[n].probability++;
       }
     }
     let sum = 0;
     for (let i = 0; i < dataRef.current.length; i++) {
-      sum += dataRef.current[i].weight;
+      sum += dataRef.current[i].probability;
     }
+    maxYRef.current = 0;
     for (let i = 0; i < dataRef.current.length; i++) {
-      dataRef.current[i].weight /= sum * 0.01;
-      dataRef.current[i].speed = Math.round(dataRef.current[i].speed * delta);
+      dataRef.current[i].probability /= sum * 0.01;
+      if (maxYRef.current < dataRef.current[i].probability) maxYRef.current = dataRef.current[i].probability;
+      dataRef.current[i].speed = Math.round(dataRef.current[i].speed * dx);
     }
   }, [updateViewerFlag, speedArrayMap, resetSimulation]);
 
@@ -93,8 +105,34 @@ const SpeedGraph = React.memo(() => {
           setChanged(true);
         }}
       />
+      <Space style={{ position: 'absolute', bottom: '6px' }}>
+        <Checkbox
+          title={t('molecularViewer.FixXAxis', lang)}
+          checked={speedGraphMaxX > 0}
+          style={{ color: 'antiquewhite', cursor: 'pointer' }}
+          onChange={(e) => {
+            setCommonStore((state) => {
+              state.projectState.speedGraphMaxX = e.target.checked ? maxXRef.current : 0;
+            });
+          }}
+        >
+          {t('molecularViewer.FixXAxis', lang)}
+        </Checkbox>
+        <Checkbox
+          title={t('molecularViewer.FixYAxis', lang)}
+          checked={speedGraphMaxY > 0}
+          style={{ color: 'antiquewhite', cursor: 'pointer' }}
+          onChange={(e) => {
+            setCommonStore((state) => {
+              state.projectState.speedGraphMaxY = e.target.checked ? maxYRef.current : 0;
+            });
+          }}
+        >
+          {t('molecularViewer.FixYAxis', lang)}
+        </Checkbox>
+      </Space>
       {dataRef.current.length > 0 && (
-        <ResponsiveContainer width="100%" height="100%" style={{ padding: '20px 20px 20px 20px' }}>
+        <ResponsiveContainer width="100%" height="100%" style={{ padding: '20px 20px 30px 20px' }}>
           <BarChart
             data={dataRef.current}
             margin={{
@@ -113,17 +151,12 @@ const SpeedGraph = React.memo(() => {
               label={<Label value={t('word.Speed', lang) + ' (m/s)'} fill={'white'} dy={16} fontSize={12} />}
             />
             <YAxis
+              domain={[0, speedGraphMaxY ? Math.round(speedGraphMaxY) + 1 : 'auto']}
               stroke={'white'}
               strokeWidth={2}
               fontSize={10}
               label={
-                <Label
-                  value={t('word.StatisticalWeight', lang) + ' (%)'}
-                  fill={'white'}
-                  dx={-16}
-                  fontSize={12}
-                  angle={-90}
-                />
+                <Label value={t('word.Probability', lang) + ' (%)'} fill={'white'} dx={-16} fontSize={12} angle={-90} />
               }
             />
             <Tooltip
@@ -133,7 +166,7 @@ const SpeedGraph = React.memo(() => {
               formatter={(value: number) => value.toFixed(1) + ' %'}
             />
             <Legend layout="horizontal" verticalAlign="top" align="center" wrapperStyle={{ top: '4px' }} />
-            <Bar name={t('word.StatisticalWeight', lang)} type="linear" dataKey="weight" fill={'antiquewhite'} />
+            <Bar name={t('word.Probability', lang)} type="linear" dataKey="probability" fill={'antiquewhite'} />
           </BarChart>
         </ResponsiveContainer>
       )}

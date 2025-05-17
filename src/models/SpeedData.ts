@@ -4,5 +4,5 @@
 
 export interface SpeedData {
   speed: number;
-  weight: number;
+  probability: number;
 }

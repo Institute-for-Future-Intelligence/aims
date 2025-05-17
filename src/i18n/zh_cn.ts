@@ -52,7 +52,7 @@ export const i18n_zh_cn = {
     },
 
     word: {
-      StatisticalWeight: '权重',
+      Probability: '概率',
       Press: '按',
       Mode: '模式',
       MoreInformation: '更多信息',
@@ -187,6 +187,8 @@ export const i18n_zh_cn = {
       ForceVectors: '显示力矢量',
       EnergyGraph: '显示能量图',
       SpeedGraph: '显示速度分布图',
+      FixXAxis: '固定X轴',
+      FixYAxis: '固定Y轴',
       GlobalStyle: '全局风格',
       ProteinStyle: '蛋白质风格',
       LigandStyle: '配体风格',

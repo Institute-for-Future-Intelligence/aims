@@ -126,6 +126,8 @@ export class ProjectUtil {
       kineticEnergyScaleFactor: 1,
       energyGraphVisible: false,
       speedGraphVisible: false,
+      speedGraphMaxX: 0,
+      speedGraphMaxY: 0,
       angularBondsVisible: false,
       torsionalBondsVisible: false,
 

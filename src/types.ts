@@ -121,6 +121,8 @@ export interface ProjectState {
   kineticEnergyScaleFactor: number;
   energyGraphVisible: boolean;
   speedGraphVisible: boolean;
+  speedGraphMaxX: number;
+  speedGraphMaxY: number;
   angularBondsVisible: boolean;
   torsionalBondsVisible: boolean;
 
