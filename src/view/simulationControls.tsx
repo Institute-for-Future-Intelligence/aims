@@ -122,6 +122,20 @@ const SimulationControls = React.memo(() => {
     }
   }, [resetSimulation, mdRef]);
 
+  const updateSpeedArrayMap = () => {
+    const md = mdRef?.current;
+    if (md) {
+      for (const [index, atom] of md.atoms.entries()) {
+        let speedArray = speedArrayMap.get(index);
+        if (!speedArray) {
+          speedArray = new DataQueue<number>(DATA_QUEUE_LENGTH);
+          speedArrayMap.set(index, speedArray);
+        }
+        speedArray.add(atom.velocity.length() * SPEED_CONVERTER);
+      }
+    }
+  };
+
   const simulate = () => {
     if (startSimulation) {
       if (askForResetRef.current) {
@@ -147,15 +161,10 @@ const SimulationControls = React.memo(() => {
                 t: md.totalEnergy,
               } as EnergyData;
               energyTimeSeries.add(energyData);
-              if (speedGraphVisible) {
-                for (const [index, atom] of md.atoms.entries()) {
-                  let speedArray = speedArrayMap.get(index);
-                  if (!speedArray) {
-                    speedArray = new DataQueue<number>(DATA_QUEUE_LENGTH);
-                    speedArrayMap.set(index, speedArray);
-                  }
-                  speedArray.add(atom.velocity.length() * SPEED_CONVERTER);
-                }
+              // do not use speedGraphVisible defined above in this component
+              // as it will not get updated immediately after the graph button is clicked
+              if (useStore.getState().projectState.speedGraphVisible) {
+                updateSpeedArrayMap();
               }
               for (const [index, atom] of md.atoms.entries()) {
                 if (atom.trajectory) {
@@ -247,6 +256,7 @@ const SimulationControls = React.memo(() => {
           onClick={() => {
             setCommonStore((state) => {
               state.projectState.speedGraphVisible = !state.projectState.speedGraphVisible;
+              if (state.projectState.speedGraphVisible) updateSpeedArrayMap();
             });
             setChanged(true);
           }}

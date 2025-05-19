@@ -13,6 +13,8 @@ import { Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Toolt
 import { useDataStore } from '../stores/commonData.ts';
 import { SpeedData } from '../models/SpeedData.ts';
 import { Checkbox, Space } from 'antd';
+import { useRefStore } from '../stores/commonRef.ts';
+import { Util } from '../Util.ts';
 
 const Container = styled.div`
   position: absolute;
@@ -39,11 +41,13 @@ const SpeedGraph = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const language = useStore(Selector.language);
+  const chemicalElements = useStore(Selector.chemicalElements);
   const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
   const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
   const speedArrayMap = useDataStore(Selector.speedArrayMap);
   const speedGraphMaxX = useStore(Selector.speedGraphMaxX);
   const speedGraphMaxY = useStore(Selector.speedGraphMaxY);
+  const mdRef = useRefStore.getState().molecularDynamicsRef;
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -53,6 +57,7 @@ const SpeedGraph = React.memo(() => {
   const dataRef = useRef<Array<SpeedData>>([]);
   const maxXRef = useRef<number>(0);
   const maxYRef = useRef<number>(0);
+  const namesRef = useRef<Array<string>>([]);
 
   const findMaxX = () => {
     let max = 0;
@@ -69,27 +74,45 @@ const SpeedGraph = React.memo(() => {
   };
 
   useEffect(() => {
+    const md = mdRef?.current;
+    if (!md) return;
+    namesRef.current = [];
+    for (const k of speedArrayMap.keys()) {
+      if (namesRef.current.includes(md.atoms[k].elementSymbol)) continue;
+      namesRef.current.push(md.atoms[k].elementSymbol);
+    }
     maxXRef.current = speedGraphMaxX ? speedGraphMaxX : findMaxX();
     dataRef.current = new Array<SpeedData>(50);
     for (let i = 0; i < dataRef.current.length; i++) {
-      dataRef.current[i] = { speed: i, probability: 0 } as SpeedData;
+      const d = { speed: i } as SpeedData;
+      for (const n of namesRef.current) {
+        d[n] = 0;
+      }
+      dataRef.current[i] = d;
     }
     const dx = maxXRef.current / dataRef.current.length;
-    for (const q of speedArrayMap.values()) {
-      for (const s of q.array) {
-        const n = Math.floor(s / dx);
-        if (dataRef.current[n]) dataRef.current[n].probability++;
+    for (const k of speedArrayMap.keys()) {
+      const q = speedArrayMap.get(k);
+      if (q) {
+        for (const s of q.array) {
+          const n = Math.floor(s / dx);
+          if (dataRef.current[n]) dataRef.current[n][md.atoms[k].elementSymbol]++;
+        }
       }
-    }
-    let sum = 0;
-    for (let i = 0; i < dataRef.current.length; i++) {
-      sum += dataRef.current[i].probability;
     }
     maxYRef.current = 0;
     for (let i = 0; i < dataRef.current.length; i++) {
-      dataRef.current[i].probability /= sum * 0.01;
-      if (maxYRef.current < dataRef.current[i].probability) maxYRef.current = dataRef.current[i].probability;
       dataRef.current[i].speed = Math.round(dataRef.current[i].speed * dx);
+    }
+    for (const n of namesRef.current) {
+      let sum = 0;
+      for (let i = 0; i < dataRef.current.length; i++) {
+        sum += dataRef.current[i][n];
+      }
+      for (let i = 0; i < dataRef.current.length; i++) {
+        dataRef.current[i][n] /= sum * 0.01;
+        if (maxYRef.current < dataRef.current[i][n]) maxYRef.current = dataRef.current[i][n];
+      }
     }
   }, [updateViewerFlag, speedArrayMap, resetSimulation]);
 
@@ -166,7 +189,17 @@ const SpeedGraph = React.memo(() => {
               formatter={(value: number) => value.toFixed(1) + ' %'}
             />
             <Legend layout="horizontal" verticalAlign="top" align="center" wrapperStyle={{ top: '4px' }} />
-            <Bar name={t('word.Probability', lang)} type="linear" dataKey="probability" fill={'antiquewhite'} />
+            {namesRef.current.map((item, index) => {
+              return (
+                <Bar
+                  key={item}
+                  name={item}
+                  type="linear"
+                  dataKey={item}
+                  fill={'#' + chemicalElements[Util.capitalizeFirstLetter(item)].cpkHexColor}
+                />
+              );
+            })}
           </BarChart>
         </ResponsiveContainer>
       )}

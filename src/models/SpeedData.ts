@@ -4,5 +4,6 @@
 
 export interface SpeedData {
   speed: number;
-  probability: number;
+
+  [key: string]: number;
 }

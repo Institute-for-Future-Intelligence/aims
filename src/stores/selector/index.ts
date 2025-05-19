@@ -174,6 +174,8 @@ export const logAction = (state: CommonStoreState) => state.logAction;
 
 export const loadChemicalElements = (state: CommonStoreState) => state.loadChemicalElements;
 
+export const chemicalElements = (state: CommonStoreState) => state.chemicalElements;
+
 export const providedMolecularProperties = (state: CommonStoreState) => state.providedMolecularProperties;
 
 export const getProvidedMolecularProperties = (state: CommonStoreState) => state.getProvidedMolecularProperties;
