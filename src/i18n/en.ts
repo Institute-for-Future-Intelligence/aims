@@ -312,6 +312,7 @@ export const i18n_en = {
       Intervals: 'Intervals',
       RefreshingInterval: 'Refreshing Interval',
       CollectionInterval: 'Collection Interval',
+      SpeedGraphBins: 'Speed Graph Bins',
       Femtosecond: 'Femtosecond',
       ConstantTemperature: 'Constant Temperature',
       Temperature: 'Temperature',

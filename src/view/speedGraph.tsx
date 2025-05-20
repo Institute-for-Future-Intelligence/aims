@@ -123,7 +123,7 @@ const SpeedGraph = React.memo(() => {
         if (maxYRef.current < dataRef.current[i][n]) maxYRef.current = dataRef.current[i][n];
       }
     }
-  }, [updateViewerFlag, speedArrayMap, resetSimulation]);
+  }, [updateViewerFlag, speedArrayMap, resetSimulation, speedGraphBinNumber]);
 
   return (
     <Container>

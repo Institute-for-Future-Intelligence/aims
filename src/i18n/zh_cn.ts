@@ -303,6 +303,7 @@ export const i18n_zh_cn = {
       Intervals: '间隔',
       RefreshingInterval: '刷新间隔',
       CollectionInterval: '采集间隔',
+      SpeedGraphBins: '速度分布图柱数目',
       Femtosecond: '飞秒',
       ConstantTemperature: '恒温',
       Temperature: '温度',

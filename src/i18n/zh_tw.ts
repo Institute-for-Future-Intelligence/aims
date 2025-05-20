@@ -302,6 +302,7 @@ export const i18n_zh_tw = {
       Intervals: '間隔',
       RefreshingInterval: '刷新間隔',
       CollectionInterval: '採集間隔',
+      SpeedGraphBins: '速度分佈圖柱數目',
       Femtosecond: '飛秒',
       ConstantTemperature: '恒温',
       Temperature: '温度',

@@ -25,6 +25,7 @@ import { useRefStore } from '../stores/commonRef.ts';
 import { Undoable } from '../undo/Undoable.ts';
 import ScreenshotPanel from './screenshotPanel.tsx';
 import { UndoableChange } from '../undo/UndoableChange.ts';
+import { SPEED_BIN_NUMBER } from '../models/physicalConstants.ts';
 
 const DynamicsSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -43,6 +44,7 @@ const DynamicsSettings = React.memo(() => {
   const timeStep = useStore(Selector.timeStep) ?? 0.5;
   const refreshInterval = useStore(Selector.refreshInterval) ?? 20;
   const collectInterval = useStore(Selector.collectInterval) ?? 100;
+  const speedGraphBinNumber = useStore(Selector.speedGraphBinNumber) ?? SPEED_BIN_NUMBER;
   const updateInfoFlag = usePrimitiveStore(Selector.updateInfoFlag);
   const currentTemperature = usePrimitiveStore(Selector.currentTemperature);
   const hideGallery = useStore(Selector.hideGallery);
@@ -479,6 +481,33 @@ const DynamicsSettings = React.memo(() => {
                 />
               </Col>
             </Row>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.SpeedGraphBins', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  addonAfter={t('word.Dimensionless', lang)}
+                  min={10}
+                  max={50}
+                  style={{ width: '100%' }}
+                  // make sure that we round up the number as toDegrees may cause things like .999999999
+                  value={Math.round(speedGraphBinNumber)}
+                  step={1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    setCommonStore((state) => {
+                      state.projectState.speedGraphBinNumber = value;
+                      if (state.loggable) state.logAction('Set Speed Graph Bin Number to ' + value.toFixed(0));
+                    });
+                    usePrimitiveStore.getState().set((state) => {
+                      state.updateDataFlag = !state.updateDataFlag;
+                    });
+                    setChanged(true);
+                  }}
+                />
+              </Col>
+            </Row>
           </div>
         ),
       },
@@ -491,6 +520,7 @@ const DynamicsSettings = React.memo(() => {
       kineticEnergyScaleFactor,
       refreshInterval,
       collectInterval,
+      speedGraphBinNumber,
       mdRef,
     ],
   );
