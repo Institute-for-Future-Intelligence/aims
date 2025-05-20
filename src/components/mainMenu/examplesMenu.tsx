@@ -7,7 +7,7 @@ import i18n from '../../i18n/i18n';
 import { useStore } from '../../stores/common.ts';
 import { ProjectState } from '../../types.ts';
 import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
-import { fetchProject } from '../../cloudProjectUtil.ts';
+import { fetchProject, postFetch } from '../../cloudProjectUtil.ts';
 import { HOME_URL } from '../../constants.ts';
 import { useDataStore } from '../../stores/commonData.ts';
 
@@ -36,6 +36,7 @@ export const createExamplesMenu = (viewOnly: boolean) => {
       setWaiting(true);
       fetchProject(owner, title, setProjectState).finally(() => {
         setWaiting(false);
+        postFetch();
       });
       if (useStore.getState().loggable) useStore.getState().logAction('Open Example: ' + title);
       if (!viewOnly) {

@@ -346,6 +346,8 @@ const DynamicsViewer = React.memo(
           state.pickedMoleculeIndex = -1;
           state.pickedAtomIndex = -1;
           state.updateInfoFlag = !state.updateInfoFlag;
+          state.updateDataFlag = !state.updateDataFlag;
+          state.updateViewerFlag = !state.updateViewerFlag;
           if (molecularDynamicsRef.current)
             state.currentTemperature = molecularDynamicsRef.current.getCurrentTemperature();
         });

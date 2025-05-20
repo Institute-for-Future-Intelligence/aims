@@ -21,6 +21,7 @@ import {
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from '../view/displayOptions.ts';
 import { Util } from '../Util.ts';
 import { Molecule } from '../models/Molecule.ts';
+import { SPEED_BIN_NUMBER } from '../models/physicalConstants.ts';
 
 export class ProjectUtil {
   static createDefaultProjectState() {
@@ -128,6 +129,7 @@ export class ProjectUtil {
       speedGraphVisible: false,
       speedGraphMaxX: 0,
       speedGraphMaxY: 0,
+      speedGraphBinNumber: SPEED_BIN_NUMBER,
       angularBondsVisible: false,
       torsionalBondsVisible: false,
 

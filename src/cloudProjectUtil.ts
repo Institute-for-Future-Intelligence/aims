@@ -14,6 +14,8 @@ import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle 
 import dayjs from 'dayjs';
 import { Util } from './Util.ts';
 import { ModelUtil } from './models/ModelUtil.ts';
+import { SPEED_BIN_NUMBER } from './models/physicalConstants.ts';
+import { useDataStore } from './stores/commonData.ts';
 
 export const addProjectToList = async (uid: string, project: ProjectInfo) => {
   await firebase
@@ -168,6 +170,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           speedGraphVisible: !!data.speedGraphVisible,
           speedGraphMaxX: data.speedGraphMaxX ?? 0,
           speedGraphMaxY: data.speedGraphMaxY ?? 0,
+          speedGraphBinNumber: data.speedGraphBinNumber ?? SPEED_BIN_NUMBER,
           angularBondsVisible: !!data.angularBondsVisible,
           torsionalBondsVisible: !!data.torsionalBondsVisible,
 
@@ -198,6 +201,10 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
     .catch((error) => {
       showError(i18n.t('message.CannotOpenProject', lang) + ': ' + error);
     });
+};
+
+export const postFetch = () => {
+  useDataStore.getState().speedArrayMap.clear();
 };
 
 export const getImageData = (image: HTMLImageElement) => {

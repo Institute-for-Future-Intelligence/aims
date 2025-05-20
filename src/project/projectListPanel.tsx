@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { MenuProps } from 'antd/lib';
 import { MenuItem } from '../components/menuItem.tsx';
 import { ProjectInfo, ProjectState } from '../types.ts';
-import { fetchProject } from '../cloudProjectUtil.ts';
+import { fetchProject, postFetch } from '../cloudProjectUtil.ts';
 import dayjs from 'dayjs';
 import { Util } from '../Util.ts';
 
@@ -226,6 +226,7 @@ const ProjectListPanel = React.memo(
             setWaiting(true);
             fetchProject(uid, record.title, setProjectState).finally(() => {
               setWaiting(false);
+              postFetch();
             });
           },
           okText: t('word.Yes', lang),
@@ -235,6 +236,7 @@ const ProjectListPanel = React.memo(
         setWaiting(true);
         fetchProject(uid, record.title, setProjectState).finally(() => {
           setWaiting(false);
+          postFetch();
         });
       }
     };

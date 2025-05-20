@@ -52,6 +52,7 @@ const SimulationControls = React.memo(() => {
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const startSimulation = usePrimitiveStore(Selector.startSimulation);
   const resetSimulation = usePrimitiveStore(Selector.resetSimulation);
+  const updateDataFlag = usePrimitiveStore(Selector.updateDataFlag);
   const energyTimeSeries = useDataStore(Selector.energyTimeSeries);
   const speedArrayMap = useDataStore(Selector.speedArrayMap);
   const positionTimeSeriesMap = useDataStore(Selector.positionTimeSeriesMap);
@@ -103,6 +104,7 @@ const SimulationControls = React.memo(() => {
       md.reset();
       energyTimeSeries.clear();
       speedArrayMap.clear();
+      updateSpeedArrayMap();
       positionTimeSeriesMap.forEach((series) => {
         series.clear();
       });
@@ -121,6 +123,15 @@ const SimulationControls = React.memo(() => {
       });
     }
   }, [resetSimulation, mdRef]);
+
+  useEffect(() => {
+    updateSpeedArrayMap();
+    // NOTE: Without this, the previous content may not be cleared.
+    // I don't understand why, though.
+    usePrimitiveStore.getState().set((state) => {
+      state.updateViewerFlag = !state.updateViewerFlag;
+    });
+  }, [updateDataFlag]);
 
   const updateSpeedArrayMap = () => {
     const md = mdRef?.current;
@@ -210,6 +221,7 @@ const SimulationControls = React.memo(() => {
       usePrimitiveStore.getState().set((state) => {
         state.resetSimulation = true;
       });
+      updateSpeedArrayMap();
     }
   };
 

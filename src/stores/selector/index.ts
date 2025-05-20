@@ -72,6 +72,8 @@ export const speedGraphMaxX = (state: CommonStoreState) => state.projectState.sp
 
 export const speedGraphMaxY = (state: CommonStoreState) => state.projectState.speedGraphMaxY;
 
+export const speedGraphBinNumber = (state: CommonStoreState) => state.projectState.speedGraphBinNumber;
+
 export const vdwBondsVisible = (state: CommonStoreState) => state.projectState.vdwBondsVisible;
 
 export const vdwBondCutoffRelative = (state: CommonStoreState) => state.projectState.vdwBondCutoffRelative;
@@ -145,6 +147,8 @@ export const autoRotate = (state: PrimitiveStoreState) => state.autoRotate;
 export const startSimulation = (state: PrimitiveStoreState) => state.startSimulation;
 
 export const resetSimulation = (state: PrimitiveStoreState) => state.resetSimulation;
+
+export const updateDataFlag = (state: PrimitiveStoreState) => state.updateDataFlag;
 
 export const resetViewFlag = (state: PrimitiveStoreState) => state.resetViewFlag;
 

@@ -38,3 +38,6 @@ export const VT_CONVERSION_CONSTANT = 0.00002882;
 
 // A/fs -> m/s
 export const SPEED_CONVERTER = 100000;
+
+// how many bins do we want in the speed distribution graph
+export const SPEED_BIN_NUMBER = 20;

@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import { MenuProps, Modal } from 'antd';
@@ -73,9 +73,7 @@ const openProject = () => {
 };
 
 export const saveProject = () => {
-  usePrimitiveStore.getState().set((state) => {
-    state.saveProjectFlag = true;
-  });
+  usePrimitiveStore.getState().setSaveProjectFlag(true);
   if (useStore.getState().loggable) useStore.getState().logAction('Save Project');
 };
 

@@ -18,7 +18,7 @@ import Spinner from './components/spinner';
 import { Util } from './Util';
 import MainToolBar from './mainToolBar';
 import ProjectListPanel from './project/projectListPanel.tsx';
-import { addProjectToList, fetchProject, removeProjectFromList } from './cloudProjectUtil';
+import { addProjectToList, fetchProject, postFetch, removeProjectFromList } from './cloudProjectUtil';
 import { ClassID, SchoolID, User } from './User';
 import {
   DEFAULT_CAMERA_POSITION,
@@ -170,6 +170,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         setWaiting(true);
         fetchProject(userid, project, setProjectState).finally(() => {
           setWaiting(false);
+          postFetch();
         });
       }
     }
@@ -728,6 +729,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       if (!ps.speedGraphVisible) delete (ps as any).speedGraphVisible;
       if (!ps.speedGraphMaxX) delete (ps as any).speedGraphMaxX;
       if (!ps.speedGraphMaxY) delete (ps as any).speedGraphMaxY;
+      if (!ps.speedGraphBinNumber) delete (ps as any).speedGraphBinNumber;
       if (!ps.constantTemperature) delete (ps as any).constantTemperature;
       if (!ps.navigationView) delete (ps as any).navigationView;
       if (!ps.showInstructionPanel) delete (ps as any).showInstructionPanel;
@@ -809,6 +811,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             setWaiting(true);
             fetchProject(uid, title, setProjectState).finally(() => {
               setWaiting(false);
+              postFetch();
             });
           }
         }

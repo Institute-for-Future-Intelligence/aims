@@ -15,6 +15,7 @@ import { SpeedData } from '../models/SpeedData.ts';
 import { Checkbox, Space } from 'antd';
 import { useRefStore } from '../stores/commonRef.ts';
 import { Util } from '../Util.ts';
+import { SPEED_BIN_NUMBER } from '../models/physicalConstants.ts';
 
 const Container = styled.div`
   position: absolute;
@@ -47,6 +48,7 @@ const SpeedGraph = React.memo(() => {
   const speedArrayMap = useDataStore(Selector.speedArrayMap);
   const speedGraphMaxX = useStore(Selector.speedGraphMaxX);
   const speedGraphMaxY = useStore(Selector.speedGraphMaxY);
+  const speedGraphBinNumber = useStore(Selector.speedGraphBinNumber) ?? SPEED_BIN_NUMBER;
   const mdRef = useRefStore.getState().molecularDynamicsRef;
 
   const { t } = useTranslation();
@@ -68,7 +70,14 @@ const SpeedGraph = React.memo(() => {
     }
     if (max < 500) max = 500;
     else if (max < 1000) max = 1000;
+    else if (max < 2000) max = 2000;
+    else if (max < 3000) max = 3000;
+    else if (max < 4000) max = 4000;
     else if (max < 5000) max = 5000;
+    else if (max < 6000) max = 6000;
+    else if (max < 7000) max = 7000;
+    else if (max < 8000) max = 8000;
+    else if (max < 9000) max = 9000;
     else max = 10000;
     return max;
   };
@@ -82,7 +91,7 @@ const SpeedGraph = React.memo(() => {
       namesRef.current.push(md.atoms[k].elementSymbol);
     }
     maxXRef.current = speedGraphMaxX ? speedGraphMaxX : findMaxX();
-    dataRef.current = new Array<SpeedData>(50);
+    dataRef.current = new Array<SpeedData>(speedGraphBinNumber);
     for (let i = 0; i < dataRef.current.length; i++) {
       const d = { speed: i } as SpeedData;
       for (const n of namesRef.current) {
@@ -137,6 +146,7 @@ const SpeedGraph = React.memo(() => {
             setCommonStore((state) => {
               state.projectState.speedGraphMaxX = e.target.checked ? maxXRef.current : 0;
             });
+            setChanged(true);
           }}
         >
           {t('molecularViewer.FixXAxis', lang)}
@@ -149,6 +159,7 @@ const SpeedGraph = React.memo(() => {
             setCommonStore((state) => {
               state.projectState.speedGraphMaxY = e.target.checked ? maxYRef.current : 0;
             });
+            setChanged(true);
           }}
         >
           {t('molecularViewer.FixYAxis', lang)}

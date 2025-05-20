@@ -8,6 +8,7 @@ import { MoleculeInterface } from '../types';
 import { PickMode, ProjectType } from '../constants';
 import { Molecule } from '../models/Molecule.ts';
 import { PolynomialRegression } from 'ml-regression-polynomial';
+import { useRefStore } from './commonRef.ts';
 
 // avoid using undefined value in the store for now.
 export interface PrimitiveStoreState {
@@ -38,6 +39,7 @@ export interface PrimitiveStoreState {
 
   startSimulation: boolean;
   resetSimulation: boolean;
+  updateDataFlag: boolean;
 
   enableRotate: boolean;
   autoRotate: boolean;
@@ -153,6 +155,7 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
 
     startSimulation: false,
     resetSimulation: false,
+    updateDataFlag: false,
 
     enableRotate: true,
     autoRotate: false,
@@ -196,6 +199,14 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
       immerSet((state) => {
         state.saveProjectFlag = b;
       });
+      const mdRef = useRefStore.getState().molecularDynamicsRef;
+      if (mdRef?.current) {
+        const md = mdRef.current;
+        for (const a of md.atoms) {
+          a.initialPosition?.copy(a.position);
+          a.initialVelocity?.copy(a.velocity);
+        }
+      }
     },
     saveProjectAsFlag: false,
     saveProjectAsDialog: false,
