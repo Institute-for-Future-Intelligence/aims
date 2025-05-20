@@ -489,6 +489,7 @@ export const i18n_en = {
         chemistrySubMenu: 'Chemistry',
         chemistry: {
           MonatomicMolecules: 'Monatomic Molecules',
+          MaxwellBoltzmannSpeedDistributionArgon: 'Maxwell-Boltzmann Speed Distribution of Argon',
           DiatomicMolecules: 'Diatomic Molecules',
           TriatomicMolecules: 'Triatomic Molecules',
           LinearAlkanes: 'Linear Alkanes',

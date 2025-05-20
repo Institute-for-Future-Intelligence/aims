@@ -59,6 +59,14 @@ export const createExamplesMenu = (viewOnly: boolean) => {
           ),
         },
         {
+          key: 'Maxwell-Boltzmann Speed Distribution of Argon',
+          label: (
+            <MenuItem onClick={() => loadProject('Maxwell-Boltzmann Speed Distribution of Argon')}>
+              {i18n.t('menu.examples.chemistry.MaxwellBoltzmannSpeedDistributionArgon', lang)}
+            </MenuItem>
+          ),
+        },
+        {
           key: 'Diatomic Molecules',
           label: (
             <MenuItem onClick={() => loadProject('Diatomic Molecules')}>
