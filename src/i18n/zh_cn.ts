@@ -478,6 +478,7 @@ export const i18n_zh_cn = {
         chemistry: {
           MonatomicMolecules: '单原子分子',
           MaxwellBoltzmannSpeedDistributionArgon: '氩气的麦克斯韦-玻尔兹曼速度分布',
+          SpeedDistributionsOfCarbonAndHydrogenInMolecules: '分子里的碳氢原子速度分布',
           DiatomicMolecules: '双原子分子',
           TriatomicMolecules: '三原子分子',
           LinearAlkanes: '链烷烃',

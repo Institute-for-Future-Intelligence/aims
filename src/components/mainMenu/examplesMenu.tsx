@@ -67,6 +67,14 @@ export const createExamplesMenu = (viewOnly: boolean) => {
           ),
         },
         {
+          key: 'Speed Distributions of Carbon and Hydrogen Atoms in Molecules',
+          label: (
+            <MenuItem onClick={() => loadProject('Speed Distributions of Carbon and Hydrogen Atoms in Molecules')}>
+              {i18n.t('menu.examples.chemistry.SpeedDistributionsOfCarbonAndHydrogenInMolecules', lang)}
+            </MenuItem>
+          ),
+        },
+        {
           key: 'Diatomic Molecules',
           label: (
             <MenuItem onClick={() => loadProject('Diatomic Molecules')}>

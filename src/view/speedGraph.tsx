@@ -87,7 +87,7 @@ const SpeedGraph = React.memo(() => {
     if (!md) return;
     namesRef.current = [];
     for (const k of speedArrayMap.keys()) {
-      if (namesRef.current.includes(md.atoms[k].elementSymbol)) continue;
+      if (!md.atoms[k] || namesRef.current.includes(md.atoms[k].elementSymbol)) continue;
       namesRef.current.push(md.atoms[k].elementSymbol);
     }
     maxXRef.current = speedGraphMaxX ? speedGraphMaxX : findMaxX();
@@ -105,7 +105,7 @@ const SpeedGraph = React.memo(() => {
       if (q) {
         for (const s of q.array) {
           const n = Math.floor(s / dx);
-          if (dataRef.current[n]) dataRef.current[n][md.atoms[k].elementSymbol]++;
+          if (dataRef.current[n] && md.atoms[k]) dataRef.current[n][md.atoms[k].elementSymbol]++;
         }
       }
     }
