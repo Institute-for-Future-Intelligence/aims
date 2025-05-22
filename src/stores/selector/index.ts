@@ -72,6 +72,8 @@ export const speedGraphMaxX = (state: CommonStoreState) => state.projectState.sp
 
 export const speedGraphMaxY = (state: CommonStoreState) => state.projectState.speedGraphMaxY;
 
+export const speedGraphSortByMolecule = (state: CommonStoreState) => state.projectState.speedGraphSortByMolecule;
+
 export const speedGraphBinNumber = (state: CommonStoreState) => state.projectState.speedGraphBinNumber;
 
 export const vdwBondsVisible = (state: CommonStoreState) => state.projectState.vdwBondsVisible;

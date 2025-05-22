@@ -198,6 +198,7 @@ export const i18n_en = {
       SpeedGraph: 'Speed Distribution',
       FixXAxis: 'Fix X-Axis',
       FixYAxis: 'Fix Y-Axis',
+      SortByMolecule: 'Sort by Molecule',
       GlobalStyle: 'Global Style',
       ProteinStyle: 'Protein Style',
       LigandStyle: 'Ligand Style',

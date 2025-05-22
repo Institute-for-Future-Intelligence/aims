@@ -2,7 +2,7 @@
  * @Copyright 2025. Institute for Future Intelligence, Inc.
  */
 
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
@@ -48,6 +48,7 @@ const SpeedGraph = React.memo(() => {
   const speedArrayMap = useDataStore(Selector.speedArrayMap);
   const speedGraphMaxX = useStore(Selector.speedGraphMaxX);
   const speedGraphMaxY = useStore(Selector.speedGraphMaxY);
+  const speedGraphSortByMolecule = useStore(Selector.speedGraphSortByMolecule);
   const speedGraphBinNumber = useStore(Selector.speedGraphBinNumber) ?? SPEED_BIN_NUMBER;
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
@@ -60,7 +61,7 @@ const SpeedGraph = React.memo(() => {
   const dataRef = useRef<Array<SpeedData>>([]);
   const maxXRef = useRef<number>(0);
   const maxYRef = useRef<number>(0);
-  const namesRef = useRef<Array<string>>([]);
+  const [names, setNames] = useState<string[]>([]);
 
   const findMaxX = () => {
     let max = 0;
@@ -86,16 +87,25 @@ const SpeedGraph = React.memo(() => {
   useEffect(() => {
     const md = mdRef?.current;
     if (!md) return;
-    namesRef.current = [];
-    for (const k of speedArrayMap.keys()) {
-      if (!md.atoms[k] || namesRef.current.includes(md.atoms[k].elementSymbol)) continue;
-      namesRef.current.push(md.atoms[k].elementSymbol);
+    const namesArray: string[] = [];
+    if (speedGraphSortByMolecule) {
+      for (const k of speedArrayMap.keys()) {
+        if (!md.atoms[k] || !md.atoms[k].moleculeName) continue;
+        if (namesArray.includes(md.atoms[k].moleculeName)) continue;
+        namesArray.push(md.atoms[k].moleculeName);
+      }
+    } else {
+      for (const k of speedArrayMap.keys()) {
+        if (!md.atoms[k]) continue;
+        if (namesArray.includes(md.atoms[k].elementSymbol)) continue;
+        namesArray.push(md.atoms[k].elementSymbol);
+      }
     }
     maxXRef.current = speedGraphMaxX ? speedGraphMaxX : findMaxX();
     dataRef.current = new Array<SpeedData>(speedGraphBinNumber);
     for (let i = 0; i < dataRef.current.length; i++) {
       const d = { speed: i } as SpeedData;
-      for (const n of namesRef.current) {
+      for (const n of namesArray) {
         d[n] = 0;
       }
       dataRef.current[i] = d;
@@ -106,7 +116,13 @@ const SpeedGraph = React.memo(() => {
       if (q) {
         for (const s of q.array) {
           const n = Math.floor(s / dx);
-          if (dataRef.current[n] && md.atoms[k]) dataRef.current[n][md.atoms[k].elementSymbol]++;
+          if (dataRef.current[n] && md.atoms[k]) {
+            dataRef.current[n][
+              speedGraphSortByMolecule && md.atoms[k].moleculeName
+                ? md.atoms[k].moleculeName
+                : md.atoms[k].elementSymbol
+            ]++;
+          }
         }
       }
     }
@@ -114,7 +130,7 @@ const SpeedGraph = React.memo(() => {
     for (let i = 0; i < dataRef.current.length; i++) {
       dataRef.current[i].speed = Math.round(dataRef.current[i].speed * dx);
     }
-    for (const n of namesRef.current) {
+    for (const n of namesArray) {
       let sum = 0;
       for (let i = 0; i < dataRef.current.length; i++) {
         sum += dataRef.current[i][n];
@@ -124,7 +140,8 @@ const SpeedGraph = React.memo(() => {
         if (maxYRef.current < dataRef.current[i][n]) maxYRef.current = dataRef.current[i][n];
       }
     }
-  }, [updateViewerFlag, speedArrayMap, resetSimulation, speedGraphBinNumber]);
+    setNames(namesArray);
+  }, [updateViewerFlag, speedArrayMap, resetSimulation, speedGraphBinNumber, speedGraphSortByMolecule]);
 
   return (
     <Container>
@@ -165,6 +182,19 @@ const SpeedGraph = React.memo(() => {
         >
           {t('molecularViewer.FixYAxis', lang)}
         </Checkbox>
+        <Checkbox
+          title={t('molecularViewer.SortByMolecule', lang)}
+          checked={speedGraphSortByMolecule}
+          style={{ color: 'antiquewhite', cursor: 'pointer' }}
+          onChange={(e) => {
+            setCommonStore((state) => {
+              state.projectState.speedGraphSortByMolecule = e.target.checked;
+            });
+            setChanged(true);
+          }}
+        >
+          {t('molecularViewer.SortByMolecule', lang)}
+        </Checkbox>
       </Space>
       {dataRef.current.length > 0 && (
         <ResponsiveContainer width="100%" height="100%" style={{ padding: '20px 20px 30px 20px' }}>
@@ -201,7 +231,7 @@ const SpeedGraph = React.memo(() => {
               formatter={(value: number) => value.toFixed(1) + ' %'}
             />
             <Legend layout="horizontal" verticalAlign="top" align="center" wrapperStyle={{ top: '4px' }} />
-            {namesRef.current.map((item, index) => {
+            {names.map((item, index) => {
               return (
                 <Bar
                   key={item}

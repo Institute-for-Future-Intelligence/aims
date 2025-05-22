@@ -170,6 +170,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           speedGraphVisible: !!data.speedGraphVisible,
           speedGraphMaxX: data.speedGraphMaxX ?? 0,
           speedGraphMaxY: data.speedGraphMaxY ?? 0,
+          speedGraphSortByMolecule: !!data.speedGraphSortByMolecule,
           speedGraphBinNumber: data.speedGraphBinNumber ?? SPEED_BIN_NUMBER,
           angularBondsVisible: !!data.angularBondsVisible,
           torsionalBondsVisible: !!data.torsionalBondsVisible,

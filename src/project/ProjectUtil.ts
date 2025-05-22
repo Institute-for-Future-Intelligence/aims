@@ -129,6 +129,7 @@ export class ProjectUtil {
       speedGraphVisible: false,
       speedGraphMaxX: 0,
       speedGraphMaxY: 0,
+      speedGraphSortByMolecule: false,
       speedGraphBinNumber: SPEED_BIN_NUMBER,
       angularBondsVisible: false,
       torsionalBondsVisible: false,

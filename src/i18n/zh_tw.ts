@@ -188,6 +188,7 @@ export const i18n_zh_tw = {
       SpeedGraph: '顯示速度分佈圖',
       FixXAxis: '固定X軸',
       FixYAxis: '固定Y軸',
+      SortByMolecule: '按分子統計',
       GlobalStyle: '全域風格',
       ProteinStyle: '蛋白質風格',
       LigandStyle: '配體風格',

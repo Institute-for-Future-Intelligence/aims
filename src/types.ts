@@ -123,6 +123,7 @@ export interface ProjectState {
   speedGraphVisible: boolean;
   speedGraphMaxX: number;
   speedGraphMaxY: number;
+  speedGraphSortByMolecule: boolean;
   speedGraphBinNumber: number;
   angularBondsVisible: boolean;
   torsionalBondsVisible: boolean;

@@ -257,6 +257,7 @@ const DynamicsViewer = React.memo(
         }
         a.initialPosition?.copy(a.position);
         a.initialVelocity?.copy(a.velocity);
+        a.moleculeName = molecule.name;
         mol.atoms.push(a);
       }
       molecule.radialBonds.length = 0;

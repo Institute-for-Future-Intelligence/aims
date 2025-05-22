@@ -32,6 +32,8 @@ export class Atom {
   initialPosition?: Vector3;
   initialVelocity?: Vector3;
 
+  moleculeName?: string;
+
   constructor(index: number, elementSymbol: string, position: Vector3, init?: boolean) {
     this.index = index;
     this.elementSymbol = elementSymbol;
