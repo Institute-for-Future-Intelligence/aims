@@ -49,6 +49,7 @@ const SpeedGraph = React.memo(() => {
   const speedGraphMaxX = useStore(Selector.speedGraphMaxX);
   const speedGraphMaxY = useStore(Selector.speedGraphMaxY);
   const speedGraphBinNumber = useStore(Selector.speedGraphBinNumber) ?? SPEED_BIN_NUMBER;
+
   const mdRef = useRefStore.getState().molecularDynamicsRef;
 
   const { t } = useTranslation();
@@ -207,7 +208,7 @@ const SpeedGraph = React.memo(() => {
                   name={item}
                   type="linear"
                   dataKey={item}
-                  fill={'#' + chemicalElements[Util.capitalizeFirstLetter(item)].cpkHexColor}
+                  fill={'#' + chemicalElements[Util.capitalizeFirstLetter(item)]?.cpkHexColor}
                 />
               );
             })}

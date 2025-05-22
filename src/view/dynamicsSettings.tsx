@@ -432,12 +432,12 @@ const DynamicsSettings = React.memo(() => {
         key: '2',
         label: t('experiment.Intervals', lang),
         children: (
-          <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
+          <div style={{ width: '420px' }} onClick={(e) => e.stopPropagation()}>
             <Row gutter={16} style={{ paddingBottom: '4px' }}>
               <Col span={12} style={{ paddingTop: '5px' }}>
                 <span>{t('experiment.RefreshingInterval', lang)}: </span>
               </Col>
-              <Col span={12}>
+              <Col span={10}>
                 <InputNumber
                   addonAfter={t('experiment.Steps', lang)}
                   min={1}
@@ -461,7 +461,7 @@ const DynamicsSettings = React.memo(() => {
               <Col span={12} style={{ paddingTop: '5px' }}>
                 <span>{t('experiment.CollectionInterval', lang)}: </span>
               </Col>
-              <Col span={12}>
+              <Col span={10}>
                 <InputNumber
                   addonAfter={t('experiment.Steps', lang)}
                   min={10}
@@ -485,7 +485,7 @@ const DynamicsSettings = React.memo(() => {
               <Col span={12} style={{ paddingTop: '5px' }}>
                 <span>{t('experiment.SpeedGraphBins', lang)}: </span>
               </Col>
-              <Col span={12}>
+              <Col span={10}>
                 <InputNumber
                   addonAfter={t('word.Dimensionless', lang)}
                   min={10}
