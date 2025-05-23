@@ -25,6 +25,7 @@ import { HeatBath } from '../models/HeatBath.ts';
 import { DataQueue } from '../models/DataQueue.ts';
 import { PositionData } from '../models/PositionData.ts';
 import { DATA_QUEUE_LENGTH, SPEED_CONVERTER } from '../models/physicalConstants.ts';
+import { Vector3 } from 'three';
 
 const Container = styled.div`
   position: absolute;
@@ -63,6 +64,7 @@ const SimulationControls = React.memo(() => {
   const refreshInterval = useStore(Selector.refreshInterval) ?? 20;
   const collectInterval = useStore(Selector.collectInterval) ?? 100;
   const navigationView = useStore(Selector.navigationView);
+  const speedGraphSortByMolecule = useStore(Selector.speedGraphSortByMolecule);
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
   const requestRef = useRef<number>(0);
@@ -136,13 +138,31 @@ const SimulationControls = React.memo(() => {
   const updateSpeedArrayMap = () => {
     const md = mdRef?.current;
     if (md) {
-      for (const [index, atom] of md.atoms.entries()) {
-        let speedArray = speedArrayMap.get(index);
-        if (!speedArray) {
-          speedArray = new DataQueue<number>(DATA_QUEUE_LENGTH);
-          speedArrayMap.set(index, speedArray);
+      if (speedGraphSortByMolecule) {
+        for (const [index, mol] of md.molecules.entries()) {
+          let v = new Vector3();
+          let m = 0;
+          for (const a of mol.atoms) {
+            v.add(a.velocity.clone().multiplyScalar(a.mass));
+            m += a.mass;
+          }
+          v.divideScalar(m);
+          let speedArray = speedArrayMap.get(index);
+          if (!speedArray) {
+            speedArray = new DataQueue<number>(DATA_QUEUE_LENGTH);
+            speedArrayMap.set(index, speedArray);
+          }
+          speedArray.add(v.length() * SPEED_CONVERTER);
         }
-        speedArray.add(atom.velocity.length() * SPEED_CONVERTER);
+      } else {
+        for (const [index, atom] of md.atoms.entries()) {
+          let speedArray = speedArrayMap.get(index);
+          if (!speedArray) {
+            speedArray = new DataQueue<number>(DATA_QUEUE_LENGTH);
+            speedArrayMap.set(index, speedArray);
+          }
+          speedArray.add(atom.velocity.length() * SPEED_CONVERTER);
+        }
       }
     }
   };

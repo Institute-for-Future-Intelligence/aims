@@ -170,3 +170,16 @@ export enum ChemicalNotation {
   SMILES = 'Smiles',
   INCHI = 'InChI',
 }
+
+export const MoleculeColors = [
+  'ffaaaa',
+  'aaffaa',
+  'aaaaff',
+  'aaffff',
+  'ffaaff',
+  'ffffaa',
+  'fffaaa',
+  'aaafff',
+  'aaaaaa',
+  'ffffff',
+];

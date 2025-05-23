@@ -16,6 +16,7 @@ import { Checkbox, Space } from 'antd';
 import { useRefStore } from '../stores/commonRef.ts';
 import { Util } from '../Util.ts';
 import { SPEED_BIN_NUMBER } from '../models/physicalConstants.ts';
+import { MoleculeColors } from '../constants.ts';
 
 const Container = styled.div`
   position: absolute;
@@ -116,12 +117,16 @@ const SpeedGraph = React.memo(() => {
       if (q) {
         for (const s of q.array) {
           const n = Math.floor(s / dx);
-          if (dataRef.current[n] && md.atoms[k]) {
-            dataRef.current[n][
-              speedGraphSortByMolecule && md.atoms[k].moleculeName
-                ? md.atoms[k].moleculeName
-                : md.atoms[k].elementSymbol
-            ]++;
+          if (dataRef.current[n]) {
+            if (speedGraphSortByMolecule) {
+              if (md.molecules[k]) {
+                dataRef.current[n][md.molecules[k].name]++;
+              }
+            } else {
+              if (md.atoms[k]) {
+                dataRef.current[n][md.atoms[k].elementSymbol]++;
+              }
+            }
           }
         }
       }
@@ -238,7 +243,14 @@ const SpeedGraph = React.memo(() => {
                   name={item}
                   type="linear"
                   dataKey={item}
-                  fill={'#' + chemicalElements[Util.capitalizeFirstLetter(item)]?.cpkHexColor}
+                  fill={
+                    '#' +
+                    (speedGraphSortByMolecule
+                      ? index < MoleculeColors.length
+                        ? MoleculeColors[index]
+                        : 'cccccc'
+                      : chemicalElements[Util.capitalizeFirstLetter(item)]?.cpkHexColor)
+                  }
                 />
               );
             })}

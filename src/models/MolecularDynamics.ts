@@ -29,6 +29,7 @@ import { HeatBath } from './HeatBath.ts';
 
 export class MolecularDynamics {
   atoms: Atom[];
+  molecules: Molecule[];
   nonBondedInteractions: NonBondedInteractions;
   radialBonds: RadialBond[];
   angularBonds: AngularBond[];
@@ -46,6 +47,7 @@ export class MolecularDynamics {
 
   constructor(molecules: Molecule[], container: MolecularContainer) {
     this.moleculeCount = molecules.length;
+    this.molecules = molecules;
     this.atoms = [];
     this.radialBonds = [];
     this.angularBonds = [];
