@@ -248,7 +248,7 @@ const SpeedGraph = React.memo(() => {
                     (speedGraphSortByMolecule
                       ? index < MoleculeColors.length
                         ? MoleculeColors[index]
-                        : 'cccccc'
+                        : '000000'
                       : chemicalElements[Util.capitalizeFirstLetter(item)]?.cpkHexColor)
                   }
                 />
