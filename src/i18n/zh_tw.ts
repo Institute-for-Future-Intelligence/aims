@@ -52,6 +52,8 @@ export const i18n_zh_tw = {
     },
 
     word: {
+      ElectronConfiguration: '電子組態',
+      Category: '分類',
       Probability: '機率',
       Press: '按',
       Mode: '模式',

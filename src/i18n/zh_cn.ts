@@ -52,6 +52,8 @@ export const i18n_zh_cn = {
     },
 
     word: {
+      ElectronConfiguration: '电子构型',
+      Category: '分类',
       Probability: '概率',
       Press: '按',
       Mode: '模式',

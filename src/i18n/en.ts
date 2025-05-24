@@ -61,6 +61,8 @@ export const i18n_en = {
     },
 
     word: {
+      ElectronConfiguration: 'Electron Configuration',
+      Category: 'Category',
       Probability: 'Probability',
       Press: 'Press',
       Mode: 'Mode',
@@ -485,7 +487,7 @@ export const i18n_en = {
       accessoriesSubMenu: 'Accessories',
       accessories: {
         Instruction: 'Instruction',
-        PeriodicTable: 'Periodic Table',
+        PeriodicTable: 'Periodic Table of Elements',
       },
       examplesSubMenu: 'Examples',
       examples: {
