@@ -237,7 +237,12 @@ const DynamicsViewer = React.memo(
             a.sigma /= 0.85;
           }
         } else {
-          if (a.elementSymbol === 'C' || a.elementSymbol === 'H' || a.elementSymbol === 'O') {
+          if (
+            a.elementSymbol === 'C' ||
+            a.elementSymbol === 'H' ||
+            a.elementSymbol === 'O' ||
+            a.elementSymbol === 'N'
+          ) {
             a.epsilon = 0.005;
           } else if (a.elementSymbol === 'HE' || a.elementSymbol === 'AR' || a.elementSymbol === 'XE') {
             a.epsilon = 0.001;

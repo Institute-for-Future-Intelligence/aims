@@ -9,7 +9,18 @@ import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import styled from 'styled-components';
-import { Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Label,
+  Legend,
+  Rectangle,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import { useDataStore } from '../stores/commonData.ts';
 import { SpeedData } from '../models/SpeedData.ts';
 import { Checkbox, Space } from 'antd';
@@ -243,6 +254,7 @@ const SpeedGraph = React.memo(() => {
                   name={item}
                   type="linear"
                   dataKey={item}
+                  activeBar={<Rectangle stroke="yellow" strokeWidth={3} />}
                   fill={
                     '#' +
                     (speedGraphSortByMolecule
