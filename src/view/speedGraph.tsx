@@ -206,6 +206,7 @@ const SpeedGraph = React.memo(() => {
             setCommonStore((state) => {
               state.projectState.speedGraphSortByMolecule = e.target.checked;
             });
+            speedArrayMap.clear();
             setChanged(true);
           }}
         >

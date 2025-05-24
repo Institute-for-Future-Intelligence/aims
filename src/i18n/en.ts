@@ -485,6 +485,7 @@ export const i18n_en = {
       accessoriesSubMenu: 'Accessories',
       accessories: {
         Instruction: 'Instruction',
+        PeriodicTable: 'Periodic Table',
       },
       examplesSubMenu: 'Examples',
       examples: {

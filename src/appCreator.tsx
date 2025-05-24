@@ -26,6 +26,7 @@ import SplitPane from './components/splitPane.tsx';
 import { useRefStore } from './stores/commonRef.ts';
 import { Badge, Button, Space } from 'antd';
 import Cockpit from './view/cockpit.tsx';
+import PeriodicTable from './periodicTable.tsx';
 
 const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
@@ -45,6 +46,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const spaceshipDisplayMode = useStore(Selector.spaceshipDisplayMode);
   const navigationView = useStore(Selector.navigationView);
+  const showPeriodicTable = usePrimitiveStore(Selector.showPeriodicTable);
 
   // const setSkipChange = usePrimitiveStore(Selector.setSkipChange);
   // const cameraPosition = useStore(Selector.cameraPosition);
@@ -285,6 +287,15 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
       <CloudManager viewOnly={viewOnly} />
       {showAccountSettingsPanel && <AccountSettingsPanel />}
       {!viewOnly && <AcceptCookie />}
+      {showPeriodicTable && (
+        <PeriodicTable
+          close={() => {
+            usePrimitiveStore.getState().set((state) => {
+              state.showPeriodicTable = false;
+            });
+          }}
+        />
+      )}
     </div>
   );
 });

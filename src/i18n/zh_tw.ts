@@ -471,6 +471,7 @@ export const i18n_zh_tw = {
       accessoriesSubMenu: '配件',
       accessories: {
         Instruction: '操作說明',
+        PeriodicTable: '元素週期表',
       },
       examplesSubMenu: '例子',
       examples: {

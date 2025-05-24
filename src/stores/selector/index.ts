@@ -352,3 +352,5 @@ export const torsionalBondsVisible = (state: CommonStoreState) => state.projectS
 export const showInstructionPanel = (state: CommonStoreState) => state.projectState.showInstructionPanel;
 
 export const navigationView = (state: CommonStoreState) => state.projectState.navigationView;
+
+export const showPeriodicTable = (state: PrimitiveStoreState) => state.showPeriodicTable;

@@ -472,6 +472,7 @@ export const i18n_zh_cn = {
       accessoriesSubMenu: '配件',
       accessories: {
         Instruction: '操作说明',
+        PeriodicTable: '元素周期表',
       },
       examplesSubMenu: '例子',
       examples: {

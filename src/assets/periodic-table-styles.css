@@ -1,0 +1,88 @@
+.table {
+  padding: 6px;
+  width: 970px;
+}
+
+.cells {
+  display: grid;
+  grid-template-rows: repeat(18, auto);
+  grid-template-columns: repeat(10, auto);
+  width: 960px;
+  height: 560px;
+}
+
+.cell {
+  box-sizing: border-box;
+  padding: 1px;
+  width: 50px;
+  height: 48px;
+  display: grid;
+  opacity: 0.7;
+  border: 1px solid gray;
+}
+
+.cell:hover {
+  opacity: 1;
+  border-style: solid;
+  border-color: #ff0000;
+}
+
+.cell .number {
+  font-size: 11px;
+}
+
+.cell .symbol {
+  font-size: 14px;
+  text-align: center;
+}
+
+.cell .name {
+  font-size: 8px;
+  text-align: center;
+}
+
+.cell[data-category*='nonmetal'] {
+  background-color: #f0ff8f;
+}
+
+.cell[data-category*='metalloid'] {
+  background-color: #cbcc98;
+}
+
+.cell[data-category*='noble gas'] {
+  background-color: #bfffff;
+}
+
+.cell[data-category='alkali metal'] {
+  background-color: #ff6565;
+}
+
+.cell[data-category='alkaline earth metal'] {
+  background-color: #ffdead;
+}
+
+.cell[data-category='transition metal'] {
+  background-color: #ffc1c0;
+}
+
+.cell[data-category='post-transition metal'] {
+  background-color: #cccccc;
+}
+
+.cell[data-category='lanthanide'] {
+  background-color: #ffbfff;
+}
+
+.cell[data-category='actinide'] {
+  background-color: #ff99cc;
+}
+
+.cell[data-category*='unknown'] {
+  background-color: #dddddd;
+}
+
+.categories {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: repeat(4, auto);
+}
