@@ -19,7 +19,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   z-index: 1001;
-  background: white;
+  background: whitesmoke;
   border: 1px solid gray;
 `;
 
