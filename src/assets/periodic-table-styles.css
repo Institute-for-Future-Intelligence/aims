@@ -41,7 +41,7 @@
   text-align: center;
 }
 
-.cell[data-category*='Nonmetal'] {
+.cell[data-category*='nonmetal'] {
   background-color: #f0ff8f;
 }
 
