@@ -41,43 +41,43 @@
   text-align: center;
 }
 
-.cell[data-category*='nonmetal'] {
+.cell[data-category*='Nonmetal'] {
   background-color: #f0ff8f;
 }
 
-.cell[data-category*='metalloid'] {
+.cell[data-category*='Metalloid'] {
   background-color: #cbcc98;
 }
 
-.cell[data-category*='noble gas'] {
+.cell[data-category*='Noble gas'] {
   background-color: #bfffff;
 }
 
-.cell[data-category='alkali metal'] {
+.cell[data-category='Alkali metal'] {
   background-color: #ff6565;
 }
 
-.cell[data-category='alkaline earth metal'] {
+.cell[data-category='Alkaline earth metal'] {
   background-color: #ffdead;
 }
 
-.cell[data-category='transition metal'] {
+.cell[data-category='Transition metal'] {
   background-color: #ffc1c0;
 }
 
-.cell[data-category='post-transition metal'] {
+.cell[data-category='Post-transition metal'] {
   background-color: #cccccc;
 }
 
-.cell[data-category='lanthanide'] {
+.cell[data-category='Lanthanide'] {
   background-color: #ffbfff;
 }
 
-.cell[data-category='actinide'] {
+.cell[data-category='Actinide'] {
   background-color: #ff99cc;
 }
 
-.cell[data-category*='unknown'] {
+.cell[data-category*='Unknown'] {
   background-color: #dddddd;
 }
 
