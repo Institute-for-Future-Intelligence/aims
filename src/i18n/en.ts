@@ -284,6 +284,8 @@ export const i18n_en = {
     },
 
     experiment: {
+      ExternalField: 'External Field',
+      GravitationalField: 'Gravitational Field',
       WholeApp: 'Whole App',
       ReactionChamber: 'Reaction Chamber',
       FixAtom: 'Fix',

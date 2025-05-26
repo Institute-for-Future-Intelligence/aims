@@ -62,6 +62,8 @@ export const testMolecules = (state: CommonStoreState) => state.projectState.tes
 
 export const molecularContainer = (state: CommonStoreState) => state.projectState.molecularContainer;
 
+export const gravitationalAcceleration = (state: CommonStoreState) => state.projectState.gravitationalAcceleration;
+
 export const molecularContainerVisible = (state: CommonStoreState) => state.projectState.molecularContainerVisible;
 
 export const energyGraphVisible = (state: CommonStoreState) => state.projectState.energyGraphVisible;

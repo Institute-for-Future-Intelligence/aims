@@ -15,6 +15,7 @@ export const createAccessoriesMenu = () => {
   const setCommonStore = useStore.getState().set;
   const showInstructionPanel = useStore.getState().projectState.showInstructionPanel;
   const showPeriodicTable = usePrimitiveStore.getState().showPeriodicTable;
+  const setChanged = usePrimitiveStore.getState().setChanged;
 
   const lang = { lng: useStore.getState().language };
 
@@ -22,6 +23,7 @@ export const createAccessoriesMenu = () => {
     setCommonStore((state) => {
       state.projectState.showInstructionPanel = !state.projectState.showInstructionPanel;
     });
+    setChanged(true);
   };
 
   const togglePeriodicTable = () => {

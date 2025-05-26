@@ -54,6 +54,7 @@ import { PickMode, UNIT_VECTOR_POS_Y, UNIT_VECTOR_POS_Z } from '../constants.ts'
 import { useDataStore } from '../stores/commonData.ts';
 import { TorsionalBond } from '../models/TorsionalBond.ts';
 import Complex from '../lib/chem/Complex';
+import { GravitationalField } from '../models/GravitationalField.ts';
 
 extend({ RCGroup });
 
@@ -95,6 +96,7 @@ const DynamicsViewer = React.memo(
     const forceScaleFactor = useStore(Selector.forceScaleFactor) ?? 1;
     const kineticEnergyScaleFactor = useStore(Selector.kineticEnergyScaleFactor) ?? 1;
     const molecularContainer = useStore(Selector.molecularContainer);
+    const gravitationalAcceleration = useStore(Selector.gravitationalAcceleration) ?? 0;
     const timeStep = useStore(Selector.timeStep);
     const positionTimeSeriesMap = useDataStore(Selector.positionTimeSeriesMap);
     const angularBondsMap = useStore(Selector.angularBondsMap);
@@ -348,6 +350,8 @@ const DynamicsViewer = React.memo(
         molecularDynamicsRef.current = new MolecularDynamics(moleculesRef.current, molecularContainer);
         molecularDynamicsRef.current.timeStep = timeStep;
         molecularDynamicsRef.current.updateKineticEnergy();
+        if (gravitationalAcceleration > 0)
+          molecularDynamicsRef.current.externalFields.push(new GravitationalField(gravitationalAcceleration));
         usePrimitiveStore.getState().set((state) => {
           state.pickedMoleculeIndex = -1;
           state.pickedAtomIndex = -1;

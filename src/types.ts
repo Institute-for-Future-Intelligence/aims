@@ -111,6 +111,7 @@ export interface ProjectState {
 
   testMolecules: Molecule[]; // molecules in the reaction chamber
   molecularContainer: MolecularContainer;
+  gravitationalAcceleration: number;
   molecularContainerVisible: boolean;
   vdwBondsVisible: boolean;
   vdwBondCutoffRelative: number;

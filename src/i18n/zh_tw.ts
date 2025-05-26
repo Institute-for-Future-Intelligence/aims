@@ -274,6 +274,8 @@ export const i18n_zh_tw = {
     },
 
     experiment: {
+      ExternalField: '外場',
+      GravitationalField: '重力場',
       WholeApp: '整個應用',
       ReactionChamber: '反應室',
       FixAtom: '固定',

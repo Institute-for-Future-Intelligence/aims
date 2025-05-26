@@ -117,6 +117,7 @@ export class ProjectUtil {
       xzPlanePosition: 0,
 
       molecularContainer: { lx: 50, ly: 50, lz: 50 } as MolecularContainer,
+      gravitationalAcceleration: 0,
       molecularContainerVisible: false,
       vdwBondsVisible: false,
       vdwBondCutoffRelative: 0.5,

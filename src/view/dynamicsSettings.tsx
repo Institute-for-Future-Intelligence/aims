@@ -26,6 +26,8 @@ import { Undoable } from '../undo/Undoable.ts';
 import ScreenshotPanel from './screenshotPanel.tsx';
 import { UndoableChange } from '../undo/UndoableChange.ts';
 import { SPEED_BIN_NUMBER } from '../models/physicalConstants.ts';
+import { ExternalFieldType } from '../models/ExternalField.ts';
+import { GravitationalField } from '../models/GravitationalField.ts';
 
 const DynamicsSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -35,6 +37,7 @@ const DynamicsSettings = React.memo(() => {
   const logAction = useStore.getState().logAction;
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const molecularContainer = useStore(Selector.molecularContainer);
+  const gravitationalAcceleration = useStore(Selector.gravitationalAcceleration) ?? 0;
   const vdwBondCutoffRelative = useStore(Selector.vdwBondCutoffRelative) ?? 0.5;
   const momentumScaleFactor = useStore(Selector.momentumScaleFactor) ?? 1;
   const forceScaleFactor = useStore(Selector.forceScaleFactor) ?? 1;
@@ -73,6 +76,43 @@ const DynamicsSettings = React.memo(() => {
     addUndoable(undoable);
     showGallery(true);
     if (loggable) logAction('Show Gallery');
+  };
+
+  const changeGravitationalAcceleration = (newValue: number) => {
+    const undoable = {
+      name: 'Change Gravitational Acceleration',
+      timestamp: Date.now(),
+      oldValue: gravitationalAcceleration,
+      newValue,
+      undo: () => {
+        setGravitationalAcceleration(undoable.oldValue as number);
+      },
+      redo: () => {
+        setGravitationalAcceleration(undoable.newValue as number);
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setGravitationalAcceleration(newValue);
+  };
+
+  const setGravitationalAcceleration = (value: number) => {
+    if (mdRef?.current) {
+      let found = false;
+      for (const f of mdRef.current.externalFields) {
+        if (f.type === ExternalFieldType.Gravitational) {
+          f.intensity = value;
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        const f = new GravitationalField(value);
+        mdRef.current.externalFields.push(f);
+      }
+    }
+    setCommonStore((state) => {
+      state.projectState.gravitationalAcceleration = value;
+    });
   };
 
   const changeContainerLx = (newValue: number) => {
@@ -165,7 +205,6 @@ const DynamicsSettings = React.memo(() => {
                   max={100}
                   style={{ width: '100%' }}
                   precision={1}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
                   value={parseFloat(molecularContainer.lx.toFixed(1))}
                   step={1}
                   onChange={(value) => {
@@ -188,7 +227,6 @@ const DynamicsSettings = React.memo(() => {
                   max={100}
                   style={{ width: '100%' }}
                   precision={1}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
                   value={parseFloat(molecularContainer.ly.toFixed(1))}
                   step={1}
                   onChange={(value) => {
@@ -211,7 +249,6 @@ const DynamicsSettings = React.memo(() => {
                   max={100}
                   style={{ width: '100%' }}
                   precision={1}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
                   value={parseFloat(molecularContainer.lz.toFixed(1))}
                   step={1}
                   onChange={(value) => {
@@ -226,8 +263,38 @@ const DynamicsSettings = React.memo(() => {
           </div>
         ),
       },
+      {
+        key: '2',
+        label: t('experiment.ExternalField', lang),
+        children: (
+          <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.GravitationalField', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  addonAfter={'10¹² m/s²'}
+                  min={0}
+                  max={100}
+                  style={{ width: '100%' }}
+                  precision={0}
+                  value={gravitationalAcceleration}
+                  step={1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    changeGravitationalAcceleration(value);
+                    setChanged(true);
+                    if (loggable) logAction('Set Gravitational Acceleration to ' + value);
+                  }}
+                />
+              </Col>
+            </Row>
+          </div>
+        ),
+      },
     ],
-    [lang, molecularContainer.lx, molecularContainer.ly, molecularContainer.lz, mdRef],
+    [lang, molecularContainer.lx, molecularContainer.ly, molecularContainer.lz, gravitationalAcceleration, mdRef],
   );
 
   const createModelSettings = useMemo(() => {

@@ -275,6 +275,8 @@ export const i18n_zh_cn = {
     },
 
     experiment: {
+      ExternalField: '外场',
+      GravitationalField: '重力场',
       WholeApp: '截屏整个应用',
       ReactionChamber: '反应室',
       FixAtom: '固定',

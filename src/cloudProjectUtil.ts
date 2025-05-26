@@ -158,6 +158,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           xzPlanePosition: data.xzPlanePosition ?? 0,
 
           molecularContainer: data.molecularContainer ?? ({ lx: cl, ly: cl, lz: cl } as MolecularContainer),
+          gravitationalAcceleration: data.gravitationalAcceleration ?? 0,
           molecularContainerVisible: !!data.molecularContainerVisible,
           vdwBondsVisible: !!data.vdwBondsVisible,
           vdwBondCutoffRelative: data.vdwBondCutoffRelative ?? 0.5,

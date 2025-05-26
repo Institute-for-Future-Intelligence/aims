@@ -22,10 +22,11 @@ import { TorsionalBond } from './TorsionalBond.ts';
 import { MolecularContainer } from '../types.ts';
 import { NonBondedInteractions } from './NonBondedInteractions.ts';
 import { Molecule } from './Molecule.ts';
-import { UNIT_EV_OVER_KB, VT_CONVERSION_CONSTANT } from './physicalConstants.ts';
+import { GRAVITY_CONVERSION_CONSTANT, UNIT_EV_OVER_KB, VT_CONVERSION_CONSTANT } from './physicalConstants.ts';
 import { ZERO_TOLERANCE } from '../constants.ts';
 import { ModelUtil } from './ModelUtil.ts';
 import { HeatBath } from './HeatBath.ts';
+import { ExternalField, ExternalFieldType } from './ExternalField.ts';
 
 export class MolecularDynamics {
   atoms: Atom[];
@@ -34,6 +35,7 @@ export class MolecularDynamics {
   radialBonds: RadialBond[];
   angularBonds: AngularBond[];
   torsionalBonds: TorsionalBond[];
+  externalFields: ExternalField[];
   container: MolecularContainer;
   potentialEnergy: number; // total potential energy, not average
   kineticEnergy: number; // total kinetic energy, not average
@@ -59,6 +61,7 @@ export class MolecularDynamics {
       this.torsionalBonds.push(...m.torsionalBonds);
     }
     this.nonBondedInteractions = new NonBondedInteractions(this.atoms, this.radialBonds);
+    this.externalFields = [];
     this.container = { ...container };
     this.potentialEnergy = 0;
     this.kineticEnergy = 0;
@@ -221,6 +224,18 @@ export class MolecularDynamics {
       }
       if (a.damp) {
         a.computeDamp();
+      }
+    }
+    if (this.externalFields.length > 0) {
+      for (const f of this.externalFields) {
+        if (f.type === ExternalFieldType.Gravitational) {
+          console.log(f);
+          for (const a of this.atoms) {
+            if (a.force) {
+              a.force.z -= f.intensity * GRAVITY_CONVERSION_CONSTANT * 1e12;
+            }
+          }
+        }
       }
     }
   }

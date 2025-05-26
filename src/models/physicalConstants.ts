@@ -36,6 +36,9 @@ export const UNIT_EV_OVER_KB = 16000 / 1.38;
 // converts kelvin into angstrom/femtosecond
 export const VT_CONVERSION_CONSTANT = 0.00002882;
 
+// convert m/s^2 to angstrom / fs^2
+export const GRAVITY_CONVERSION_CONSTANT = 1e-20;
+
 // A/fs -> m/s
 export const SPEED_CONVERTER = 100000;
 
