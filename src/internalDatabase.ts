@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import { MoleculeInterface } from './types';
@@ -36,6 +36,7 @@ import commonMoleculeUrl103 from './molecules/xyz/graphen.xyz';
 import commonMoleculeUrl201 from './molecules/xyz/d_glucose.xyz';
 import commonMoleculeUrl202 from './molecules/sdf/ethanol.sdf';
 import commonMoleculeUrl203 from './molecules/sdf/urea.sdf';
+import commonMoleculeUrl301 from './molecules/sdf/ethylamine.sdf';
 
 import hydrocarbonMoleculeUrl001 from './molecules/pdb/methane.pdb';
 import hydrocarbonMoleculeUrl002 from './molecules/sdf/ethane.sdf';
@@ -244,6 +245,7 @@ export const commonMolecules = [
   { url: commonMoleculeUrl201, internal: true, name: 'D-Glucose' } as MoleculeInterface,
   { url: commonMoleculeUrl202, internal: true, name: 'Ethanol' } as MoleculeInterface,
   { url: commonMoleculeUrl203, internal: true, name: 'Urea' } as MoleculeInterface,
+  { url: commonMoleculeUrl301, internal: true, name: 'Ethylamine' } as MoleculeInterface,
 ];
 
 export const hydrocarbonMolecules = [
