@@ -390,6 +390,8 @@ export const i18n_zh_cn = {
       AutoscaleGraph: '自动设定界限',
       ChemicalElements: '化学元素',
       ChemicalComposition: '化学成分',
+      Gravity: '重力',
+      GravityNote: '为了在分子模拟中显示出效应，重力被极大夸大。',
       AtomCount: '原子数量',
       TotalNumberOfAtomsInModel: '模型的原子总数。若超过200，模拟可能会变得很慢。作为提醒，此时数字会变红。',
       BondCount: '共价键数量',

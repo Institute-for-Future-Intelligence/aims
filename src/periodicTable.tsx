@@ -28,6 +28,7 @@ const cell = (props: any) => {
   const { t } = useTranslation();
   return (
     <Popover
+      key={props.number}
       content={
         <Space direction={'vertical'}>
           <span style={{ fontWeight: 'bold', fontSize: 'medium' }}>{props.name}</span>

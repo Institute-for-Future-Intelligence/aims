@@ -246,7 +246,13 @@ const DynamicsViewer = React.memo(
             a.elementSymbol === 'N'
           ) {
             a.epsilon = 0.005;
-          } else if (a.elementSymbol === 'HE' || a.elementSymbol === 'AR' || a.elementSymbol === 'XE') {
+          } else if (
+            a.elementSymbol === 'HE' ||
+            a.elementSymbol === 'NE' ||
+            a.elementSymbol === 'AR' ||
+            a.elementSymbol === 'KR' ||
+            a.elementSymbol === 'XE'
+          ) {
             a.epsilon = 0.001;
           }
         }
@@ -350,8 +356,12 @@ const DynamicsViewer = React.memo(
         molecularDynamicsRef.current = new MolecularDynamics(moleculesRef.current, molecularContainer);
         molecularDynamicsRef.current.timeStep = timeStep;
         molecularDynamicsRef.current.updateKineticEnergy();
-        if (gravitationalAcceleration > 0)
+        if (gravitationalAcceleration > 0) {
           molecularDynamicsRef.current.externalFields.push(new GravitationalField(gravitationalAcceleration));
+          molecularDynamicsRef.current.gravitationDirection = new Vector3(0, -1, 0)
+            .applyQuaternion(camera.quaternion)
+            .normalize();
+        }
         usePrimitiveStore.getState().set((state) => {
           state.pickedMoleculeIndex = -1;
           state.pickedAtomIndex = -1;

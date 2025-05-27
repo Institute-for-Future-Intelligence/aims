@@ -71,10 +71,10 @@ const ToolBarButtons = React.memo(() => {
           zIndex: 13,
         }}
       >
-        <Popover
-          placement={'right'}
-          content={
-            xyPlaneVisible ? (
+        {xyPlaneVisible ? (
+          <Popover
+            placement={'right'}
+            content={
               <InputNumber
                 style={{ width: '120px' }}
                 addonBefore={'Z'}
@@ -89,14 +89,33 @@ const ToolBarButtons = React.memo(() => {
                   setChanged(true);
                 }}
               />
-            ) : undefined
-          }
-        >
+            }
+          >
+            <FloatButton
+              shape="square"
+              description={'X-Y'}
+              style={{ background: 'lightgray' }}
+              onClick={() => {
+                setCommonStore((state) => {
+                  state.projectState.xyPlaneVisible = !state.projectState.xyPlaneVisible;
+                });
+                setChanged(true);
+              }}
+              // the following disables keyboard focus
+              onMouseDown={(e) => e.preventDefault()}
+              // the following disables the context menu
+              onContextMenu={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+            />
+          </Popover>
+        ) : (
           <FloatButton
             shape="square"
             description={'X-Y'}
-            tooltip={xyPlaneVisible ? undefined : t('experiment.ShowXYPlane', lang)}
-            style={{ background: xyPlaneVisible ? 'lightgray' : 'white' }}
+            tooltip={t('experiment.ShowXYPlane', lang)}
+            style={{ background: 'white' }}
             onClick={() => {
               setCommonStore((state) => {
                 state.projectState.xyPlaneVisible = !state.projectState.xyPlaneVisible;
@@ -111,11 +130,11 @@ const ToolBarButtons = React.memo(() => {
               e.preventDefault();
             }}
           />
-        </Popover>
-        <Popover
-          placement={'right'}
-          content={
-            yzPlaneVisible ? (
+        )}
+        {yzPlaneVisible ? (
+          <Popover
+            placement={'right'}
+            content={
               <InputNumber
                 style={{ width: '120px' }}
                 addonBefore={'X'}
@@ -130,14 +149,33 @@ const ToolBarButtons = React.memo(() => {
                   setChanged(true);
                 }}
               />
-            ) : undefined
-          }
-        >
+            }
+          >
+            <FloatButton
+              shape="square"
+              description={'Y-Z'}
+              style={{ background: 'lightgray' }}
+              onClick={() => {
+                setCommonStore((state) => {
+                  state.projectState.yzPlaneVisible = !state.projectState.yzPlaneVisible;
+                });
+                setChanged(true);
+              }}
+              // the following disables keyboard focus
+              onMouseDown={(e) => e.preventDefault()}
+              // the following disables the context menu
+              onContextMenu={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+            />
+          </Popover>
+        ) : (
           <FloatButton
             shape="square"
             description={'Y-Z'}
-            tooltip={yzPlaneVisible ? undefined : t('experiment.ShowYZPlane', lang)}
-            style={{ background: yzPlaneVisible ? 'lightgray' : 'white' }}
+            tooltip={t('experiment.ShowYZPlane', lang)}
+            style={{ background: 'white' }}
             onClick={() => {
               setCommonStore((state) => {
                 state.projectState.yzPlaneVisible = !state.projectState.yzPlaneVisible;
@@ -152,11 +190,11 @@ const ToolBarButtons = React.memo(() => {
               e.preventDefault();
             }}
           />
-        </Popover>
-        <Popover
-          placement={'right'}
-          content={
-            xzPlaneVisible ? (
+        )}
+        {xzPlaneVisible ? (
+          <Popover
+            placement={'right'}
+            content={
               <InputNumber
                 style={{ width: '120px' }}
                 addonBefore={'Y'}
@@ -171,14 +209,33 @@ const ToolBarButtons = React.memo(() => {
                   setChanged(true);
                 }}
               />
-            ) : undefined
-          }
-        >
+            }
+          >
+            <FloatButton
+              shape="square"
+              description={'X-Z'}
+              style={{ background: 'lightgray' }}
+              onClick={() => {
+                setCommonStore((state) => {
+                  state.projectState.xzPlaneVisible = !state.projectState.xzPlaneVisible;
+                });
+                setChanged(true);
+              }}
+              // the following disables keyboard focus
+              onMouseDown={(e) => e.preventDefault()}
+              // the following disables the context menu
+              onContextMenu={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+            />
+          </Popover>
+        ) : (
           <FloatButton
             shape="square"
             description={'X-Z'}
-            tooltip={xzPlaneVisible ? undefined : t('experiment.ShowXZPlane', lang)}
-            style={{ background: xzPlaneVisible ? 'lightgray' : 'white' }}
+            tooltip={t('experiment.ShowXZPlane', lang)}
+            style={{ background: 'white' }}
             onClick={() => {
               setCommonStore((state) => {
                 state.projectState.xzPlaneVisible = !state.projectState.xzPlaneVisible;
@@ -193,7 +250,7 @@ const ToolBarButtons = React.memo(() => {
               e.preventDefault();
             }}
           />
-        </Popover>
+        )}
         {projectType === ProjectType.MOLECULAR_MODELING && (
           <FloatButton
             shape="square"

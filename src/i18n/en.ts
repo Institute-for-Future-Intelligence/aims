@@ -402,6 +402,8 @@ export const i18n_en = {
       AutoscaleGraph: 'Autoscale graph',
       ChemicalElements: 'Chemical Elements',
       ChemicalComposition: 'Chemical Composition',
+      Gravity: 'Gravity',
+      GravityNote: 'For the effect to manifest in molecular models, gravity is greatly exaggerated.',
       AtomCount: 'Atom Count',
       TotalNumberOfAtomsInModel:
         'The total number of atoms in the model. If exceeding 200, the model may run slowly. The text will turn red as a reminder.',

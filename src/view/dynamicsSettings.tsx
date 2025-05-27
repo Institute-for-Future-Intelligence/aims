@@ -904,6 +904,14 @@ const DynamicsSettings = React.memo(() => {
               ⚛ {mdRef.current.atoms.length}
             </span>
           </Popover>
+          {gravitationalAcceleration > 0 && (
+            <Popover
+              title={<div onClick={(e) => e.stopPropagation()}>↓ {t('projectPanel.Gravity', lang)}</div>}
+              content={<Space style={{ width: '300px' }}>{t('projectPanel.GravityNote', lang)}</Space>}
+            >
+              <span>↓ G</span>
+            </Popover>
+          )}
         </Space>
       )}
     </>
