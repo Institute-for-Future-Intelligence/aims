@@ -62,6 +62,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   const navUp = useStore(Selector.navUp);
   const navTarget = useStore(Selector.navTarget);
   const thrust = useStore(Selector.spaceshipThrust);
+  const mdRef = useRefStore.getState().molecularDynamicsRef;
 
   const { gl, camera, set } = useThree();
 
@@ -122,6 +123,12 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
     }
     updateLight();
   }, [_cameraPosition, _cameraRotation, _cameraUp, _target]);
+
+  useEffect(() => {
+    if (mdRef?.current) {
+      mdRef.current.gravitationDirection = new Vector3(0, -1, 0).applyQuaternion(camera.quaternion).normalize();
+    }
+  }, [cameraPosition]);
 
   const setFrameLoop = (mode: 'demand' | 'always') => {
     set({ frameloop: mode });

@@ -276,7 +276,7 @@ const DynamicsSettings = React.memo(() => {
                 <InputNumber
                   addonAfter={'10¹² m/s²'}
                   min={0}
-                  max={100}
+                  max={500}
                   style={{ width: '100%' }}
                   precision={0}
                   value={gravitationalAcceleration}

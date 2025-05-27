@@ -27,6 +27,7 @@ import { ZERO_TOLERANCE } from '../constants.ts';
 import { ModelUtil } from './ModelUtil.ts';
 import { HeatBath } from './HeatBath.ts';
 import { ExternalField, ExternalFieldType } from './ExternalField.ts';
+import { Vector3 } from 'three';
 
 export class MolecularDynamics {
   atoms: Atom[];
@@ -42,6 +43,7 @@ export class MolecularDynamics {
   totalEnergy: number; // not average
   movableCount: number;
   moleculeCount: number;
+  gravitationDirection: Vector3;
 
   timeStep: number = 0.5;
   indexOfStep: number = 0;
@@ -68,6 +70,7 @@ export class MolecularDynamics {
     this.totalEnergy = 0;
     this.movableCount = 0;
     this.heatBath = new HeatBath(300);
+    this.gravitationDirection = new Vector3(0, 0, -1);
   }
 
   countMovables(): number {
@@ -229,10 +232,10 @@ export class MolecularDynamics {
     if (this.externalFields.length > 0) {
       for (const f of this.externalFields) {
         if (f.type === ExternalFieldType.Gravitational) {
-          console.log(f);
           for (const a of this.atoms) {
             if (a.force) {
-              a.force.z -= f.intensity * GRAVITY_CONVERSION_CONSTANT * 1e12;
+              const mag = f.intensity * GRAVITY_CONVERSION_CONSTANT * 1.0e12;
+              a.force.add(this.gravitationDirection.clone().multiplyScalar(mag));
             }
           }
         }
