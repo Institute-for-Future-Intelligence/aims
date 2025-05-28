@@ -37,6 +37,15 @@ import commonMoleculeUrl201 from './molecules/xyz/d_glucose.xyz';
 import commonMoleculeUrl202 from './molecules/sdf/ethanol.sdf';
 import commonMoleculeUrl203 from './molecules/sdf/urea.sdf';
 import commonMoleculeUrl301 from './molecules/sdf/ethylamine.sdf';
+import commonMoleculeUrl302 from './molecules/sdf/ethanal.sdf';
+import commonMoleculeUrl303 from './molecules/sdf/ethanoic_acid.sdf';
+import commonMoleculeUrl304 from './molecules/sdf/ethyl_acetate.sdf';
+import commonMoleculeUrl305 from './molecules/sdf/acetamide.sdf';
+import commonMoleculeUrl306 from './molecules/sdf/propyne.sdf';
+import commonMoleculeUrl307 from './molecules/sdf/propanol.sdf';
+import commonMoleculeUrl308 from './molecules/sdf/propylamine.sdf';
+import commonMoleculeUrl309 from './molecules/sdf/propanal.sdf';
+import commonMoleculeUrl310 from './molecules/sdf/propanone.sdf';
 
 import hydrocarbonMoleculeUrl001 from './molecules/pdb/methane.pdb';
 import hydrocarbonMoleculeUrl002 from './molecules/sdf/ethane.sdf';
@@ -145,6 +154,8 @@ import biomoleculeUrl347 from './molecules/sdf/saccharin.sdf';
 import biomoleculeUrl348 from './molecules/sdf/sorbitol.sdf';
 import biomoleculeUrl349 from './molecules/sdf/sucralose.sdf';
 import biomoleculeUrl350 from './molecules/sdf/xylitol.sdf';
+import biomoleculeUrl351 from './molecules/sdf/neotame.sdf';
+import biomoleculeUrl352 from './molecules/sdf/fructose.sdf';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
@@ -246,6 +257,15 @@ export const commonMolecules = [
   { url: commonMoleculeUrl202, internal: true, name: 'Ethanol' } as MoleculeInterface,
   { url: commonMoleculeUrl203, internal: true, name: 'Urea' } as MoleculeInterface,
   { url: commonMoleculeUrl301, internal: true, name: 'Ethylamine' } as MoleculeInterface,
+  { url: commonMoleculeUrl302, internal: true, name: 'Ethanal' } as MoleculeInterface,
+  { url: commonMoleculeUrl303, internal: true, name: 'Ethanoic Acid' } as MoleculeInterface,
+  { url: commonMoleculeUrl304, internal: true, name: 'Ethyl Acetate' } as MoleculeInterface,
+  { url: commonMoleculeUrl305, internal: true, name: 'Acetamide' } as MoleculeInterface,
+  { url: commonMoleculeUrl306, internal: true, name: 'Propyne' } as MoleculeInterface,
+  { url: commonMoleculeUrl307, internal: true, name: 'Propanol' } as MoleculeInterface,
+  { url: commonMoleculeUrl308, internal: true, name: 'Propylamine' } as MoleculeInterface,
+  { url: commonMoleculeUrl309, internal: true, name: 'Propanal' } as MoleculeInterface,
+  { url: commonMoleculeUrl310, internal: true, name: 'Propanone' } as MoleculeInterface,
 ];
 
 export const hydrocarbonMolecules = [
@@ -358,6 +378,8 @@ export const biomolecules = [
   { url: biomoleculeUrl348, internal: true, name: 'Sorbitol' } as MoleculeInterface,
   { url: biomoleculeUrl349, internal: true, name: 'Sucralose' } as MoleculeInterface,
   { url: biomoleculeUrl350, internal: true, name: 'Xylitol' } as MoleculeInterface,
+  { url: biomoleculeUrl351, internal: true, name: 'Neotame' } as MoleculeInterface,
+  { url: biomoleculeUrl352, internal: true, name: 'Fructose' } as MoleculeInterface,
 ];
 
 export const drugMolecules = [
