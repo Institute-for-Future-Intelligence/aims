@@ -46,6 +46,11 @@ import commonMoleculeUrl307 from './molecules/sdf/propanol.sdf';
 import commonMoleculeUrl308 from './molecules/sdf/propylamine.sdf';
 import commonMoleculeUrl309 from './molecules/sdf/propanal.sdf';
 import commonMoleculeUrl310 from './molecules/sdf/propanone.sdf';
+import commonMoleculeUrl311 from './molecules/sdf/propanoic_acid.sdf';
+import commonMoleculeUrl312 from './molecules/sdf/methyl_propanoate.sdf';
+import commonMoleculeUrl313 from './molecules/sdf/propanamide.sdf';
+import commonMoleculeUrl314 from './molecules/sdf/butanol.sdf';
+import commonMoleculeUrl315 from './molecules/sdf/butanamine.sdf';
 
 import hydrocarbonMoleculeUrl001 from './molecules/pdb/methane.pdb';
 import hydrocarbonMoleculeUrl002 from './molecules/sdf/ethane.sdf';
@@ -266,6 +271,11 @@ export const commonMolecules = [
   { url: commonMoleculeUrl308, internal: true, name: 'Propylamine' } as MoleculeInterface,
   { url: commonMoleculeUrl309, internal: true, name: 'Propanal' } as MoleculeInterface,
   { url: commonMoleculeUrl310, internal: true, name: 'Propanone' } as MoleculeInterface,
+  { url: commonMoleculeUrl311, internal: true, name: 'Propanoic Acid' } as MoleculeInterface,
+  { url: commonMoleculeUrl312, internal: true, name: 'Methyl Propanoate' } as MoleculeInterface,
+  { url: commonMoleculeUrl313, internal: true, name: 'Propanamide' } as MoleculeInterface,
+  { url: commonMoleculeUrl314, internal: true, name: 'Butanol' } as MoleculeInterface,
+  { url: commonMoleculeUrl315, internal: true, name: 'Butanamine' } as MoleculeInterface,
 ];
 
 export const hydrocarbonMolecules = [
