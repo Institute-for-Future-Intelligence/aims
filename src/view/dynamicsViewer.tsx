@@ -245,7 +245,7 @@ const DynamicsViewer = React.memo(
             a.elementSymbol === 'O' ||
             a.elementSymbol === 'N'
           ) {
-            a.epsilon = 0.005;
+            a.epsilon = 0.002;
           } else if (
             a.elementSymbol === 'HE' ||
             a.elementSymbol === 'NE' ||

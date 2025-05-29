@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import { Atom } from './Atom.ts';
@@ -134,5 +134,24 @@ export class ModelUtil {
     num = num / 10.0 + 0.5; // Translate to 0 -> 1
     if (num > 1 || num < 0) return ModelUtil.nextGaussian(); // resample between 0 and 1
     return num;
+  }
+
+  static isGas(atom: Atom): boolean {
+    let b = false;
+    if (atom.moleculeName === 'Dihydrogen') return true;
+    if (atom.moleculeName === 'Dioxygen') return true;
+    if (atom.moleculeName === 'Dinitrogen') return true;
+    if (atom.moleculeName === 'Carbon Dioxide') return true;
+    return b;
+  }
+
+  static isSolid(atom: Atom): boolean {
+    let b = false;
+    if (atom.moleculeName === 'NaCl') return true;
+    if (atom.moleculeName === 'CsCl') return true;
+    if (atom.moleculeName === 'Gold') return true;
+    if (atom.moleculeName === 'Silver') return true;
+    if (atom.moleculeName === 'Iron') return true;
+    return b;
   }
 }

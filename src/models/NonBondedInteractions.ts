@@ -14,6 +14,7 @@ import { Pair } from './Pair.ts';
 import { ZERO_TOLERANCE } from '../constants.ts';
 import { COULOMB_CONSTANT, GF_CONVERSION_CONSTANT, SIX_TIMES_UNIT_FORCE } from './physicalConstants.ts';
 import { RadialBond } from './RadialBond.ts';
+import { ModelUtil } from './ModelUtil.ts';
 
 export class NonBondedInteractions {
   atoms: Atom[] = [];
@@ -119,7 +120,12 @@ export class NonBondedInteractions {
               const sr6 = sr2 * sr2 * sr2;
               const sr12 = sr6 * sr6;
               // geometric mean is costly: 4*Math.sqrt(atom[i].epsilon*atom[j].epsilon); use arithmetic mean
-              const meanEps = 2 * (this.atoms[i].epsilon + this.atoms[j].epsilon);
+              let meanEps = 2 * (this.atoms[i].epsilon + this.atoms[j].epsilon);
+              if (ModelUtil.isSolid(this.atoms[i]) && ModelUtil.isGas(this.atoms[j])) {
+                meanEps = this.atoms[j].epsilon;
+              } else if (ModelUtil.isSolid(this.atoms[j]) && ModelUtil.isGas(this.atoms[i])) {
+                meanEps = this.atoms[i].epsilon;
+              }
               const vij = meanEps * (sr12 - sr6); // Lennard-Jones potential
               const wij = vij + sr12 * meanEps; // Lennard-Jones virial
               energy += vij;
@@ -190,7 +196,12 @@ export class NonBondedInteractions {
               const sr6 = sr2 * sr2 * sr2;
               const sr12 = sr6 * sr6;
               // geometric mean is costly: 4*Math.sqrt(atom[i].epsilon*atom[j].epsilon); use arithmetic mean
-              const meanEps = 2.0 * (this.atoms[i].epsilon + this.atoms[j].epsilon);
+              let meanEps = 2.0 * (this.atoms[i].epsilon + this.atoms[j].epsilon);
+              if (ModelUtil.isSolid(this.atoms[i]) && ModelUtil.isGas(this.atoms[j])) {
+                meanEps = this.atoms[j].epsilon;
+              } else if (ModelUtil.isSolid(this.atoms[j]) && ModelUtil.isGas(this.atoms[i])) {
+                meanEps = this.atoms[i].epsilon;
+              }
               const vij = meanEps * (sr12 - sr6); // Lennard-Jones potential
               const wij = vij + sr12 * meanEps; // Lennard-Jones virial
               energy += vij;
