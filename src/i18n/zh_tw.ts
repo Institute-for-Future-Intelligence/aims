@@ -488,6 +488,7 @@ export const i18n_zh_tw = {
           SpeedDistributionsOfCarbonAndHydrogenInMolecules: '分子裡的碳氫原子速度分佈',
           DiatomicMolecules: '雙原子分子',
           TriatomicMolecules: '三原子分子',
+          SolidVsGas: '比較固體和氣體',
           LinearAlkanes: '鏈烷烴',
           Cycloalkanes: '環烷烴',
           Acenes: '並苯',

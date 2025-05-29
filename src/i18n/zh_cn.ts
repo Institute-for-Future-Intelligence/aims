@@ -489,6 +489,7 @@ export const i18n_zh_cn = {
           SpeedDistributionsOfCarbonAndHydrogenInMolecules: '分子里的碳氢原子速度分布',
           DiatomicMolecules: '双原子分子',
           TriatomicMolecules: '三原子分子',
+          SolidVsGas: '比较固体和气体',
           LinearAlkanes: '链烷烃',
           Cycloalkanes: '环烷烃',
           Acenes: '并苯',

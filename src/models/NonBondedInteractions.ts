@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  *
  * Non-bonded interactions act between atoms which are not linked by covalent bonds, which
  * include van der Waals (Lennard-Jones) and electrostatic (Coulomb) forces.
@@ -119,12 +119,15 @@ export class NonBondedInteractions {
               }
               const sr6 = sr2 * sr2 * sr2;
               const sr12 = sr6 * sr6;
-              // geometric mean is costly: 4*Math.sqrt(atom[i].epsilon*atom[j].epsilon); use arithmetic mean
-              let meanEps = 2 * (this.atoms[i].epsilon + this.atoms[j].epsilon);
+              let meanEps;
+              // workaround to prevent gas molecules from sticking to solids
               if (ModelUtil.isSolid(this.atoms[i]) && ModelUtil.isGas(this.atoms[j])) {
                 meanEps = this.atoms[j].epsilon;
               } else if (ModelUtil.isSolid(this.atoms[j]) && ModelUtil.isGas(this.atoms[i])) {
                 meanEps = this.atoms[i].epsilon;
+              } else {
+                // geometric mean is costly: 4*Math.sqrt(atom[i].epsilon*atom[j].epsilon); use arithmetic mean
+                meanEps = 2.0 * (this.atoms[i].epsilon + this.atoms[j].epsilon);
               }
               const vij = meanEps * (sr12 - sr6); // Lennard-Jones potential
               const wij = vij + sr12 * meanEps; // Lennard-Jones virial
@@ -195,12 +198,15 @@ export class NonBondedInteractions {
               }
               const sr6 = sr2 * sr2 * sr2;
               const sr12 = sr6 * sr6;
-              // geometric mean is costly: 4*Math.sqrt(atom[i].epsilon*atom[j].epsilon); use arithmetic mean
-              let meanEps = 2.0 * (this.atoms[i].epsilon + this.atoms[j].epsilon);
+              let meanEps;
+              // workaround to prevent gas molecules from sticking to solids
               if (ModelUtil.isSolid(this.atoms[i]) && ModelUtil.isGas(this.atoms[j])) {
                 meanEps = this.atoms[j].epsilon;
               } else if (ModelUtil.isSolid(this.atoms[j]) && ModelUtil.isGas(this.atoms[i])) {
                 meanEps = this.atoms[i].epsilon;
+              } else {
+                // geometric mean is costly: 4*Math.sqrt(atom[i].epsilon*atom[j].epsilon); use arithmetic mean
+                meanEps = 2.0 * (this.atoms[i].epsilon + this.atoms[j].epsilon);
               }
               const vij = meanEps * (sr12 - sr6); // Lennard-Jones potential
               const wij = vij + sr12 * meanEps; // Lennard-Jones virial

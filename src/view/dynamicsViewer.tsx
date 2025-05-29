@@ -224,20 +224,16 @@ const DynamicsViewer = React.memo(
           else if (atom.element.name === 'CL') a.charge = -1;
           a.epsilon = 0.05;
         } else if (molecule.name === 'Gold') {
-          if (atom.element.name === 'AU') {
-            a.epsilon = 3.81;
-            a.sigma /= 0.85;
-          }
+          a.epsilon = 3.81;
+          a.sigma /= 0.85;
         } else if (molecule.name === 'Silver') {
-          if (atom.element.name === 'AG') {
-            a.epsilon = 2.95;
-            a.sigma /= 0.85;
-          }
+          a.epsilon = 2.95;
+          a.sigma /= 0.85;
         } else if (molecule.name === 'Iron') {
-          if (atom.element.name === 'FE') {
-            a.epsilon = 4.28;
-            a.sigma /= 0.85;
-          }
+          a.epsilon = 4.28;
+          a.sigma /= 0.85;
+        } else if (molecule.name === 'Dihydrogen' || molecule.name === 'Dioxygen' || molecule.name === 'Dinitrogen') {
+          a.epsilon = 0.002;
         } else {
           if (
             a.elementSymbol === 'C' ||
@@ -245,7 +241,7 @@ const DynamicsViewer = React.memo(
             a.elementSymbol === 'O' ||
             a.elementSymbol === 'N'
           ) {
-            a.epsilon = 0.002;
+            a.epsilon = 0.005;
           } else if (
             a.elementSymbol === 'HE' ||
             a.elementSymbol === 'NE' ||

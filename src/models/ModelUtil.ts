@@ -141,7 +141,13 @@ export class ModelUtil {
     if (atom.moleculeName === 'Dihydrogen') return true;
     if (atom.moleculeName === 'Dioxygen') return true;
     if (atom.moleculeName === 'Dinitrogen') return true;
+    if (atom.moleculeName === 'Carbon Monoxide') return true;
     if (atom.moleculeName === 'Carbon Dioxide') return true;
+    if (atom.moleculeName === 'Helium') return true;
+    if (atom.moleculeName === 'Neon') return true;
+    if (atom.moleculeName === 'Argon') return true;
+    if (atom.moleculeName === 'Krypton') return true;
+    if (atom.moleculeName === 'Xenon') return true;
     return b;
   }
 

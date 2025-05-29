@@ -502,6 +502,7 @@ export const i18n_en = {
           SpeedDistributionsOfCarbonAndHydrogenInMolecules: 'Speed Distributions Of Carbon And Hydrogen in Molecules',
           DiatomicMolecules: 'Diatomic Molecules',
           TriatomicMolecules: 'Triatomic Molecules',
+          SolidVsGas: 'Solid vs. Gas',
           LinearAlkanes: 'Linear Alkanes',
           Cycloalkanes: 'Cycloalkanes',
           Acenes: 'Acenes',

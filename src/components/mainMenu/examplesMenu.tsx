@@ -91,6 +91,14 @@ export const createExamplesMenu = (viewOnly: boolean) => {
           ),
         },
         {
+          key: 'Solid vs. Gas',
+          label: (
+            <MenuItem onClick={() => loadProject('Solid vs Gas')}>
+              {i18n.t('menu.examples.chemistry.SolidVsGas', lang)}
+            </MenuItem>
+          ),
+        },
+        {
           key: 'Linear Alkanes',
           label: (
             <MenuItem onClick={() => loadProject('Alkanes')}>

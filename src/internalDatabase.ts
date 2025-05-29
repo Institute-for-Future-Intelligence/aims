@@ -41,7 +41,6 @@ import commonMoleculeUrl302 from './molecules/sdf/ethanal.sdf';
 import commonMoleculeUrl303 from './molecules/sdf/ethanoic_acid.sdf';
 import commonMoleculeUrl304 from './molecules/sdf/ethyl_acetate.sdf';
 import commonMoleculeUrl305 from './molecules/sdf/acetamide.sdf';
-import commonMoleculeUrl306 from './molecules/sdf/propyne.sdf';
 import commonMoleculeUrl307 from './molecules/sdf/propanol.sdf';
 import commonMoleculeUrl308 from './molecules/sdf/propylamine.sdf';
 import commonMoleculeUrl309 from './molecules/sdf/propanal.sdf';
@@ -100,6 +99,7 @@ import hydrocarbonMoleculeUrl201 from './molecules/sdf/ethylene.sdf';
 import hydrocarbonMoleculeUrl202 from './molecules/sdf/propylene.sdf';
 import hydrocarbonMoleculeUrl203 from './molecules/sdf/cis-2-butene.sdf';
 import hydrocarbonMoleculeUrl204 from './molecules/sdf/trans-2-butene.sdf';
+import hydrocarbonMoleculeUrl205 from './molecules/sdf/propyne.sdf';
 import hydrocarbonMoleculeUrl251 from './molecules/sdf/acetylene.sdf';
 import hydrocarbonMoleculeUrl301 from './molecules/xyz/benzene.xyz';
 import hydrocarbonMoleculeUrl302 from './molecules/sdf/biphenyl.sdf';
@@ -273,7 +273,6 @@ export const commonMolecules = [
   { url: commonMoleculeUrl303, internal: true, name: 'Ethanoic Acid' } as MoleculeInterface,
   { url: commonMoleculeUrl304, internal: true, name: 'Ethyl Acetate' } as MoleculeInterface,
   { url: commonMoleculeUrl305, internal: true, name: 'Acetamide' } as MoleculeInterface,
-  { url: commonMoleculeUrl306, internal: true, name: 'Propyne' } as MoleculeInterface,
   { url: commonMoleculeUrl307, internal: true, name: 'Propanol' } as MoleculeInterface,
   { url: commonMoleculeUrl308, internal: true, name: 'Propylamine' } as MoleculeInterface,
   { url: commonMoleculeUrl309, internal: true, name: 'Propanal' } as MoleculeInterface,
@@ -334,6 +333,7 @@ export const hydrocarbonMolecules = [
   { url: hydrocarbonMoleculeUrl202, internal: true, name: 'Propylene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl203, internal: true, name: 'cis-2-Butene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl204, internal: true, name: 'trans-2-Butene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl205, internal: true, name: 'Propyne' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl251, internal: true, name: 'Acetylene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl301, internal: true, name: 'Benzene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl302, internal: true, name: 'Biphenyl' } as MoleculeInterface,
