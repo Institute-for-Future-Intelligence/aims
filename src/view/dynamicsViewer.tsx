@@ -97,6 +97,7 @@ const DynamicsViewer = React.memo(
     const kineticEnergyScaleFactor = useStore(Selector.kineticEnergyScaleFactor) ?? 1;
     const molecularContainer = useStore(Selector.molecularContainer);
     const gravitationalAcceleration = useStore(Selector.gravitationalAcceleration) ?? 0;
+    const gravityDirection = useStore(Selector.gravityDirection) ?? GravitationalField.VIEWER_COORDINATE_SYSTEM;
     const timeStep = useStore(Selector.timeStep);
     const positionTimeSeriesMap = useDataStore(Selector.positionTimeSeriesMap);
     const angularBondsMap = useStore(Selector.angularBondsMap);
@@ -354,9 +355,13 @@ const DynamicsViewer = React.memo(
         molecularDynamicsRef.current.updateKineticEnergy();
         if (gravitationalAcceleration > 0) {
           molecularDynamicsRef.current.externalFields.push(new GravitationalField(gravitationalAcceleration));
-          molecularDynamicsRef.current.gravitationDirection = new Vector3(0, -1, 0)
-            .applyQuaternion(camera.quaternion)
-            .normalize();
+          if (gravityDirection === GravitationalField.VIEWER_COORDINATE_SYSTEM) {
+            molecularDynamicsRef.current.gravitationDirection = new Vector3(0, -1, 0)
+              .applyQuaternion(camera.quaternion)
+              .normalize();
+          } else {
+            molecularDynamicsRef.current.gravitationDirection = new Vector3(0, 0, -1);
+          }
         }
         usePrimitiveStore.getState().set((state) => {
           state.pickedMoleculeIndex = -1;

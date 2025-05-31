@@ -722,6 +722,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       if (!ps.yzPlaneVisible) delete (ps as any).yzPlaneVisible;
       if (!ps.xzPlaneVisible) delete (ps as any).xzPlaneVisible;
       if (!ps.gravitationalAcceleration) delete (ps as any).gravitationalAcceleration;
+      if (!ps.gravityDirection) delete (ps as any).gravityDirection;
       if (!ps.molecularContainerVisible) delete (ps as any).molecularContainerVisible;
       if (!ps.momentumVisible) delete (ps as any).momentumVisible;
       if (!ps.forceVisible) delete (ps as any).forceVisible;

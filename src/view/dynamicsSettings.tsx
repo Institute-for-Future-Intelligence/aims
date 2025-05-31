@@ -11,6 +11,7 @@ import {
   InputNumber,
   Popover,
   Row,
+  Select,
   Space,
   Switch,
   Tabs,
@@ -28,6 +29,7 @@ import { UndoableChange } from '../undo/UndoableChange.ts';
 import { SPEED_BIN_NUMBER } from '../models/physicalConstants.ts';
 import { ExternalFieldType } from '../models/ExternalField.ts';
 import { GravitationalField } from '../models/GravitationalField.ts';
+import { Vector3 } from 'three';
 
 const DynamicsSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -38,6 +40,7 @@ const DynamicsSettings = React.memo(() => {
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const molecularContainer = useStore(Selector.molecularContainer);
   const gravitationalAcceleration = useStore(Selector.gravitationalAcceleration) ?? 0;
+  const gravityDirection = useStore(Selector.gravityDirection) ?? GravitationalField.VIEWER_COORDINATE_SYSTEM;
   const vdwBondCutoffRelative = useStore(Selector.vdwBondCutoffRelative) ?? 0.5;
   const momentumScaleFactor = useStore(Selector.momentumScaleFactor) ?? 1;
   const forceScaleFactor = useStore(Selector.forceScaleFactor) ?? 1;
@@ -112,6 +115,42 @@ const DynamicsSettings = React.memo(() => {
     }
     setCommonStore((state) => {
       state.projectState.gravitationalAcceleration = value;
+    });
+  };
+
+  const changeGravityDirection = (newValue: number) => {
+    const undoable = {
+      name: 'Change Gravity Direction',
+      timestamp: Date.now(),
+      oldValue: gravityDirection,
+      newValue,
+      undo: () => {
+        setGravityDirection(undoable.oldValue as number);
+      },
+      redo: () => {
+        setGravityDirection(undoable.newValue as number);
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setGravityDirection(newValue);
+  };
+
+  const setGravityDirection = (value: number) => {
+    if (mdRef?.current) {
+      for (const f of mdRef.current.externalFields) {
+        if (f.type === ExternalFieldType.Gravitational) {
+          const g = f as GravitationalField;
+          g.direction = value;
+          if (value === GravitationalField.MODEL_COORDINATE_SYSTEM) {
+            mdRef.current.gravitationDirection = new Vector3(0, 0, -1);
+          } else {
+            // mdRef.current.gravitationDirection = new Vector3(0, -1, 0).applyQuaternion(camera.quaternion).normalize();
+          }
+        }
+      }
+    }
+    setCommonStore((state) => {
+      state.projectState.gravityDirection = value;
     });
   };
 
@@ -267,12 +306,12 @@ const DynamicsSettings = React.memo(() => {
         key: '2',
         label: t('experiment.ExternalField', lang),
         children: (
-          <div style={{ width: '360px' }} onClick={(e) => e.stopPropagation()}>
+          <div style={{ width: '400px' }} onClick={(e) => e.stopPropagation()}>
             <Row gutter={16} style={{ paddingBottom: '4px' }}>
-              <Col span={12} style={{ paddingTop: '5px' }}>
+              <Col span={10} style={{ paddingTop: '5px' }}>
                 <span>{t('experiment.GravitationalField', lang)}: </span>
               </Col>
-              <Col span={12}>
+              <Col span={14}>
                 <InputNumber
                   addonAfter={'10¹² m/s²'}
                   min={0}
@@ -290,11 +329,47 @@ const DynamicsSettings = React.memo(() => {
                 />
               </Col>
             </Row>
+            {gravitationalAcceleration > 0 && (
+              <Row gutter={16} style={{ paddingBottom: '4px' }}>
+                <Col span={10} style={{ paddingTop: '5px' }}>
+                  <span>{t('experiment.GravityDirection', lang)}: </span>
+                </Col>
+                <Col span={14}>
+                  <Select
+                    style={{ width: '100%' }}
+                    value={gravityDirection}
+                    options={[
+                      {
+                        value: GravitationalField.VIEWER_COORDINATE_SYSTEM,
+                        label: t('experiment.ViewerCoordinateSystem', lang),
+                      },
+                      {
+                        value: GravitationalField.MODEL_COORDINATE_SYSTEM,
+                        label: t('experiment.ModelCoordinateSystem', lang),
+                      },
+                    ]}
+                    onChange={(value) => {
+                      changeGravityDirection(value);
+                      setChanged(true);
+                      if (loggable) logAction('Set Gravity Direction to ' + value);
+                    }}
+                  />
+                </Col>
+              </Row>
+            )}
           </div>
         ),
       },
     ],
-    [lang, molecularContainer.lx, molecularContainer.ly, molecularContainer.lz, gravitationalAcceleration, mdRef],
+    [
+      lang,
+      molecularContainer.lx,
+      molecularContainer.ly,
+      molecularContainer.lz,
+      gravitationalAcceleration,
+      gravityDirection,
+      mdRef,
+    ],
   );
 
   const createModelSettings = useMemo(() => {

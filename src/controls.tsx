@@ -24,6 +24,7 @@ import { PerspectiveCamera, TrackballControls } from '@react-three/drei';
 import capabilities from './lib/gfx/capabilities';
 import { useRefStore } from './stores/commonRef.ts';
 import { useMultipleKeys } from './hooks.ts';
+import { GravitationalField } from './models/GravitationalField.ts';
 
 extend({ MyTrackballControls });
 
@@ -62,6 +63,7 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   const navUp = useStore(Selector.navUp);
   const navTarget = useStore(Selector.navTarget);
   const thrust = useStore(Selector.spaceshipThrust);
+  const gravityDirection = useStore(Selector.gravityDirection) ?? GravitationalField.VIEWER_COORDINATE_SYSTEM;
   const mdRef = useRefStore.getState().molecularDynamicsRef;
 
   const { gl, camera, set } = useThree();
@@ -125,8 +127,10 @@ export const ReactionChamberControls = React.memo(({ lightRef }: ControlsProps) 
   }, [_cameraPosition, _cameraRotation, _cameraUp, _target]);
 
   useEffect(() => {
-    if (mdRef?.current) {
-      mdRef.current.gravitationDirection = new Vector3(0, -1, 0).applyQuaternion(camera.quaternion).normalize();
+    if (gravityDirection === GravitationalField.VIEWER_COORDINATE_SYSTEM) {
+      if (mdRef?.current) {
+        mdRef.current.gravitationDirection = new Vector3(0, -1, 0).applyQuaternion(camera.quaternion).normalize();
+      }
     }
   }, [cameraPosition]);
 

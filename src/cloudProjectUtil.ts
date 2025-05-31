@@ -16,6 +16,7 @@ import { Util } from './Util.ts';
 import { ModelUtil } from './models/ModelUtil.ts';
 import { SPEED_BIN_NUMBER } from './models/physicalConstants.ts';
 import { useDataStore } from './stores/commonData.ts';
+import { GravitationalField } from './models/GravitationalField.ts';
 
 export const addProjectToList = async (uid: string, project: ProjectInfo) => {
   await firebase
@@ -159,6 +160,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
 
           molecularContainer: data.molecularContainer ?? ({ lx: cl, ly: cl, lz: cl } as MolecularContainer),
           gravitationalAcceleration: data.gravitationalAcceleration ?? 0,
+          gravityDirection: data.gravityDirection ?? GravitationalField.VIEWER_COORDINATE_SYSTEM,
           molecularContainerVisible: !!data.molecularContainerVisible,
           vdwBondsVisible: !!data.vdwBondsVisible,
           vdwBondCutoffRelative: data.vdwBondCutoffRelative ?? 0.5,

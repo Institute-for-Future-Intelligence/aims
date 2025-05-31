@@ -276,6 +276,9 @@ export const i18n_zh_tw = {
     experiment: {
       ExternalField: '外場',
       GravitationalField: '重力場',
+      GravityDirection: '重力方向',
+      ViewerCoordinateSystem: '觀察者座標系',
+      ModelCoordinateSystem: '模型座標系',
       WholeApp: '整個應用',
       ReactionChamber: '反應室',
       FixAtom: '固定',

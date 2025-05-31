@@ -22,6 +22,7 @@ import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle 
 import { Util } from '../Util.ts';
 import { Molecule } from '../models/Molecule.ts';
 import { SPEED_BIN_NUMBER } from '../models/physicalConstants.ts';
+import { GravitationalField } from '../models/GravitationalField.ts';
 
 export class ProjectUtil {
   static createDefaultProjectState() {
@@ -118,6 +119,7 @@ export class ProjectUtil {
 
       molecularContainer: { lx: 50, ly: 50, lz: 50 } as MolecularContainer,
       gravitationalAcceleration: 0,
+      gravityDirection: GravitationalField.VIEWER_COORDINATE_SYSTEM,
       molecularContainerVisible: false,
       vdwBondsVisible: false,
       vdwBondCutoffRelative: 0.5,
