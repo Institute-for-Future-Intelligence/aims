@@ -30,6 +30,8 @@ import { SPEED_BIN_NUMBER } from '../models/physicalConstants.ts';
 import { ExternalFieldType } from '../models/ExternalField.ts';
 import { GravitationalField } from '../models/GravitationalField.ts';
 import { Vector3 } from 'three';
+import GravityViewerImage from '../assets/gravity-viewer.png';
+import GravityModelImage from '../assets/gravity-model.png';
 
 const DynamicsSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -144,7 +146,11 @@ const DynamicsSettings = React.memo(() => {
           if (value === GravitationalField.MODEL_COORDINATE_SYSTEM) {
             mdRef.current.gravitationDirection = new Vector3(0, 0, -1);
           } else {
-            // mdRef.current.gravitationDirection = new Vector3(0, -1, 0).applyQuaternion(camera.quaternion).normalize();
+            // Because we cannot get camera using useThree, we re-create camera position in common store to trigger
+            // the useEffect hook for setting the gravity direction for molecular dynamics
+            setCommonStore((state) => {
+              state.projectState.cameraPosition = [...state.projectState.cameraPosition];
+            });
           }
         }
       }
@@ -984,7 +990,17 @@ const DynamicsSettings = React.memo(() => {
               title={<div onClick={(e) => e.stopPropagation()}>↓ {t('projectPanel.Gravity', lang)}</div>}
               content={<Space style={{ width: '300px' }}>{t('projectPanel.GravityNote', lang)}</Space>}
             >
-              <span>↓ G</span>
+              <span>
+                <img
+                  width={20}
+                  src={
+                    gravityDirection === GravitationalField.VIEWER_COORDINATE_SYSTEM
+                      ? GravityViewerImage
+                      : GravityModelImage
+                  }
+                />{' '}
+                G
+              </span>
             </Popover>
           )}
         </Space>
