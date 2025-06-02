@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -108,6 +108,17 @@ const ModelContainer = React.memo(({ position }: { position?: Vector3 }) => {
     <group name={'Container'} position={position ? [position.x, position.y, position.z] : [0, 0, 0]}>
       {containerVisible && (
         <group>
+          {container.opacity && (
+            <Box args={[container.lx, container.ly, container.lz]}>
+              <meshStandardMaterial
+                attach="material"
+                opacity={container.opacity}
+                side={DoubleSide}
+                transparent
+                color={'white'}
+              />
+            </Box>
+          )}
           <Line
             points={[
               [-halfLx, -halfLy, -halfLz],

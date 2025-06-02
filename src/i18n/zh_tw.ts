@@ -300,6 +300,7 @@ export const i18n_zh_tw = {
       ContainerLx: '容器Lx',
       ContainerLy: '容器Ly',
       ContainerLz: '容器Lz',
+      ContainerFaceTransparency: '容器透明度',
       DisplaySettings: '顯示設定',
       VdwBondCutoffRelative: '范德華鍵的長度閾值',
       MomentumScaleFactor: '動量向量的比例因子',

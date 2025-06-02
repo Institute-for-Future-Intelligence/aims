@@ -310,6 +310,7 @@ export const i18n_en = {
       ContainerLx: 'Container Lx',
       ContainerLy: 'Container Ly',
       ContainerLz: 'Container Lz',
+      ContainerFaceTransparency: 'Container Transparency',
       DisplaySettings: 'Display Settings',
       VdwBondCutoffRelative: 'VDW Bond Cutoff',
       MomentumScaleFactor: 'Momentum Scale Factor',

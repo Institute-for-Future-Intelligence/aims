@@ -145,6 +145,7 @@ export interface MolecularContainer {
   lx: number;
   ly: number;
   lz: number;
+  opacity?: number;
 }
 
 export interface DatumEntry {

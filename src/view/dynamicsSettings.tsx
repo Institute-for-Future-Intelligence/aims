@@ -232,6 +232,29 @@ const DynamicsSettings = React.memo(() => {
     });
   };
 
+  const changeContainerOpacity = (newValue: number) => {
+    const undoable = {
+      name: 'Change Container Opacity',
+      timestamp: Date.now(),
+      oldValue: molecularContainer.opacity ?? 0,
+      newValue,
+      undo: () => {
+        setContainerOpacity(undoable.oldValue as number);
+      },
+      redo: () => {
+        setContainerOpacity(undoable.newValue as number);
+      },
+    } as UndoableChange;
+    addUndoable(undoable);
+    setContainerOpacity(newValue);
+  };
+
+  const setContainerOpacity = (value: number) => {
+    setCommonStore((state) => {
+      state.projectState.molecularContainer.opacity = value;
+    });
+  };
+
   const modelItems: TabsProps['items'] = useMemo(
     () => [
       {
@@ -305,6 +328,30 @@ const DynamicsSettings = React.memo(() => {
                 />
               </Col>
             </Row>
+            <Row gutter={16} style={{ paddingBottom: '4px' }}>
+              <Col span={12} style={{ paddingTop: '5px' }}>
+                <span>{t('experiment.ContainerFaceTransparency', lang)}: </span>
+              </Col>
+              <Col span={12}>
+                <InputNumber
+                  min={0}
+                  max={1}
+                  style={{ width: '100%' }}
+                  precision={1}
+                  value={
+                    1 -
+                    (molecularContainer.opacity !== undefined ? parseFloat(molecularContainer.opacity.toFixed(1)) : 0)
+                  }
+                  step={0.1}
+                  onChange={(value) => {
+                    if (value === null) return;
+                    changeContainerOpacity(1 - value);
+                    setChanged(true);
+                    if (loggable) logAction('Set Container Transparency to ' + value.toFixed(1));
+                  }}
+                />
+              </Col>
+            </Row>
           </div>
         ),
       },
@@ -372,6 +419,7 @@ const DynamicsSettings = React.memo(() => {
       molecularContainer.lx,
       molecularContainer.ly,
       molecularContainer.lz,
+      molecularContainer.opacity,
       gravitationalAcceleration,
       gravityDirection,
       mdRef,
@@ -992,7 +1040,8 @@ const DynamicsSettings = React.memo(() => {
             >
               <span>
                 <img
-                  width={20}
+                  alt={'Coordinate system'}
+                  width={16}
                   src={
                     gravityDirection === GravitationalField.VIEWER_COORDINATE_SYSTEM
                       ? GravityViewerImage
