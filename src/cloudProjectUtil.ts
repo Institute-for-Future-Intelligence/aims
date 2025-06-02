@@ -128,6 +128,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           chamberViewerFoggy: !!data.chamberViewerFoggy,
           chamberViewerBackground: data.chamberViewerBackground ?? 'black',
           chamberViewerSelector: data.chamberViewerSelector ?? 'all',
+          chamberTemperatureKevin: !!data.chamberTemperatureKevin,
 
           rotationStep: data.rotationStep ?? Util.toRadians(5),
           translationStep: data.translationStep ?? 1,

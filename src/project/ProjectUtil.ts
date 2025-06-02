@@ -87,6 +87,7 @@ export class ProjectUtil {
       chamberViewerFoggy: false,
       chamberViewerBackground: 'black',
       chamberViewerSelector: 'all',
+      chamberTemperatureKevin: false,
 
       rotationStep: Util.toRadians(5),
       translationStep: 1,

@@ -77,6 +77,7 @@ export interface ProjectState {
   chamberViewerFoggy: boolean;
   chamberViewerBackground: string;
   chamberViewerSelector: string;
+  chamberTemperatureKevin?: boolean;
 
   rotationStep: number;
   translationStep: number;

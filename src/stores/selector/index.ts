@@ -283,6 +283,8 @@ export const chamberViewerMaterial = (state: CommonStoreState) => state.projectS
 
 export const chamberViewerStyle = (state: CommonStoreState) => state.projectState.chamberViewerStyle;
 
+export const chamberTemperatureKevin = (state: CommonStoreState) => state.projectState.chamberTemperatureKevin;
+
 export const projectViewerStyle = (state: CommonStoreState) => state.projectState.projectViewerStyle;
 
 export const projectViewerMaterial = (state: CommonStoreState) => state.projectState.projectViewerMaterial;

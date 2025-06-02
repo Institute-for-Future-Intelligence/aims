@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useMemo } from 'react';
@@ -10,6 +10,7 @@ import {
   FloatButton,
   InputNumber,
   Popover,
+  Radio,
   Row,
   Select,
   Space,
@@ -32,6 +33,7 @@ import { GravitationalField } from '../models/GravitationalField.ts';
 import { Vector3 } from 'three';
 import GravityViewerImage from '../assets/gravity-viewer.png';
 import GravityModelImage from '../assets/gravity-model.png';
+import { Util } from '../Util.ts';
 
 const DynamicsSettings = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
@@ -56,6 +58,7 @@ const DynamicsSettings = React.memo(() => {
   const updateInfoFlag = usePrimitiveStore(Selector.updateInfoFlag);
   const currentTemperature = usePrimitiveStore(Selector.currentTemperature);
   const hideGallery = useStore(Selector.hideGallery);
+  const chamberTemperatureKevin = useStore(Selector.chamberTemperatureKevin);
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
 
@@ -540,8 +543,7 @@ const DynamicsSettings = React.memo(() => {
                   max={2}
                   style={{ width: '100%' }}
                   precision={2}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
-                  value={parseFloat(vdwBondCutoffRelative.toFixed(2))}
+                  value={vdwBondCutoffRelative}
                   step={0.1}
                   onChange={(value) => {
                     if (value === null) return;
@@ -563,8 +565,7 @@ const DynamicsSettings = React.memo(() => {
                   max={10}
                   style={{ width: '100%' }}
                   precision={1}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
-                  value={parseFloat(momentumScaleFactor.toFixed(1))}
+                  value={momentumScaleFactor}
                   step={0.1}
                   onChange={(value) => {
                     if (value === null) return;
@@ -586,8 +587,7 @@ const DynamicsSettings = React.memo(() => {
                   max={10}
                   style={{ width: '100%' }}
                   precision={1}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
-                  value={parseFloat(forceScaleFactor.toFixed(1))}
+                  value={forceScaleFactor}
                   step={0.1}
                   onChange={(value) => {
                     if (value === null) return;
@@ -609,8 +609,7 @@ const DynamicsSettings = React.memo(() => {
                   max={10}
                   style={{ width: '100%' }}
                   precision={1}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
-                  value={parseFloat(kineticEnergyScaleFactor.toFixed(1))}
+                  value={kineticEnergyScaleFactor}
                   step={0.1}
                   onChange={(value) => {
                     if (value === null) return;
@@ -639,7 +638,6 @@ const DynamicsSettings = React.memo(() => {
                   min={1}
                   max={50}
                   style={{ width: '100%' }}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
                   value={Math.round(refreshInterval)}
                   step={1}
                   onChange={(value) => {
@@ -663,7 +661,6 @@ const DynamicsSettings = React.memo(() => {
                   min={10}
                   max={200}
                   style={{ width: '100%' }}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
                   value={Math.round(collectInterval)}
                   step={1}
                   onChange={(value) => {
@@ -687,7 +684,6 @@ const DynamicsSettings = React.memo(() => {
                   min={10}
                   max={50}
                   style={{ width: '100%' }}
-                  // make sure that we round up the number as toDegrees may cause things like .999999999
                   value={Math.round(speedGraphBinNumber)}
                   step={1}
                   onChange={(value) => {
@@ -727,44 +723,66 @@ const DynamicsSettings = React.memo(() => {
 
   const createThermometer = useMemo(() => {
     return (
-      <Space direction={'horizontal'} style={{ width: '300px' }} onClick={(e) => e.stopPropagation()}>
-        <span>{t('experiment.ConstantTemperature', lang)}: </span>
-        <Switch
-          checked={constantTemperature}
-          onChange={(checked: boolean) => {
-            setCommonStore((state) => {
-              state.projectState.constantTemperature = checked;
-              if (state.loggable) state.logAction('Set Constant Temperature to ' + checked);
-            });
-          }}
-        />
-        {constantTemperature && (
-          <InputNumber
-            addonAfter={'K'}
-            min={10}
-            max={5000}
-            style={{ width: '100px' }}
-            precision={1}
-            // make sure that we round up the number as toDegrees may cause things like .999999999
-            value={parseFloat(temperature.toFixed(1))}
-            step={1}
-            onChange={(value) => {
-              if (value === null) return;
+      <Space direction={'vertical'}>
+        <Space direction={'horizontal'} style={{ width: '320px' }} onClick={(e) => e.stopPropagation()}>
+          <span>{t('experiment.ConstantTemperature', lang)}: </span>
+          <Switch
+            checked={constantTemperature}
+            onChange={(checked: boolean) => {
               setCommonStore((state) => {
-                state.projectState.temperature = value;
-                if (state.loggable) state.logAction('Set Temperature to ' + value.toFixed(1));
+                state.projectState.constantTemperature = checked;
+                if (state.loggable) state.logAction('Set Constant Temperature to ' + checked);
               });
-              if (mdRef?.current) {
-                mdRef.current.setTemperature(value);
-                mdRef.current.heatBath.temperature = value;
-              }
-              setChanged(true);
             }}
           />
-        )}
+          {constantTemperature && (
+            <InputNumber
+              addonAfter={chamberTemperatureKevin ? 'K' : '°C'}
+              min={10}
+              max={5000}
+              style={{ width: '120px' }}
+              precision={1}
+              value={temperature}
+              step={1}
+              formatter={(value) => {
+                if (value === undefined) return '';
+                // not sure why we need to force the value to a number again
+                return Number(chamberTemperatureKevin ? value : Util.getCelsius(value)).toFixed(1);
+              }}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.temperature = value;
+                  if (state.loggable) state.logAction('Set Temperature to ' + value.toFixed(1));
+                });
+                if (mdRef?.current) {
+                  mdRef.current.setTemperature(value);
+                  mdRef.current.heatBath.temperature = value;
+                }
+                setChanged(true);
+              }}
+            />
+          )}
+        </Space>
+        <Space>
+          <span>{t('experiment.TemperatureUnit', lang)}: </span>
+          <Radio.Group
+            value={chamberTemperatureKevin ? 2 : 1}
+            options={[
+              { value: 1, label: '°C' },
+              { value: 2, label: 'K' },
+            ]}
+            onChange={(e) => {
+              setCommonStore((state) => {
+                state.projectState.chamberTemperatureKevin = e.target.value === 2;
+                if (state.loggable) state.logAction('Set Temperature Unit to ' + (e.target.value == 1 ? '°C' : 'K'));
+              });
+            }}
+          />
+        </Space>
       </Space>
     );
-  }, [temperature, constantTemperature, lang, mdRef]);
+  }, [temperature, constantTemperature, chamberTemperatureKevin, lang, mdRef]);
 
   const createClock = useMemo(() => {
     return (
@@ -773,11 +791,10 @@ const DynamicsSettings = React.memo(() => {
         <InputNumber
           addonAfter={t('experiment.Femtosecond', lang)}
           min={0.1}
-          max={5}
+          max={10}
           style={{ width: '200px' }}
           precision={1}
-          // make sure that we round up the number as toDegrees may cause things like .999999999
-          value={parseFloat(timeStep.toFixed(1))}
+          value={timeStep}
           step={0.1}
           onChange={(value) => {
             if (value === null) return;
@@ -1014,10 +1031,15 @@ const DynamicsSettings = React.memo(() => {
           }}
         >
           <Popover
-            title={<div onClick={(e) => e.stopPropagation()}>🌡 {t('experiment.Temperature', lang)}</div>}
+            title={<div onClick={(e) => e.stopPropagation()}>🌡 {t('experiment.TemperatureSettings', lang)}</div>}
             content={createThermometer}
           >
-            <span>🌡 {Math.round(constantTemperature ? temperature : currentTemperature) + 'K'}</span>
+            <span>
+              🌡{' '}
+              {chamberTemperatureKevin
+                ? Math.round(constantTemperature ? temperature : currentTemperature) + 'K'
+                : Math.round(Util.getCelsius(constantTemperature ? temperature : currentTemperature)) + '°C'}
+            </span>
           </Popover>
           <Popover
             title={<div onClick={(e) => e.stopPropagation()}>🕙 {t('word.Time', lang)}</div>}

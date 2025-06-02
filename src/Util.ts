@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import platform from 'platform';
@@ -36,6 +36,14 @@ export class Util {
     const os = Util.getOS();
     if (os) return os.includes('Chrome');
     return false;
+  }
+
+  static getCelsius(kevin: number): number {
+    return kevin - 273.15;
+  }
+
+  static getKevin(celsius: number): number {
+    return celsius + 273.15;
   }
 
   static toRadians(degrees: number): number {
