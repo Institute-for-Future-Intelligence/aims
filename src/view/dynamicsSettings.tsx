@@ -735,34 +735,53 @@ const DynamicsSettings = React.memo(() => {
               });
             }}
           />
-          {constantTemperature && (
-            <InputNumber
-              addonAfter={chamberTemperatureKevin ? 'K' : '°C'}
-              min={10}
-              max={5000}
-              style={{ width: '120px' }}
-              precision={1}
-              value={temperature}
-              step={1}
-              formatter={(value) => {
-                if (value === undefined) return '';
-                // not sure why we need to force the value to a number again
-                return Number(chamberTemperatureKevin ? value : Util.getCelsius(value)).toFixed(1);
-              }}
-              onChange={(value) => {
-                if (value === null) return;
-                setCommonStore((state) => {
-                  state.projectState.temperature = value;
-                  if (state.loggable) state.logAction('Set Temperature to ' + value.toFixed(1));
-                });
-                if (mdRef?.current) {
-                  mdRef.current.setTemperature(value);
-                  mdRef.current.heatBath.temperature = value;
-                }
-                setChanged(true);
-              }}
-            />
-          )}
+          {constantTemperature &&
+            (chamberTemperatureKevin ? (
+              <InputNumber
+                addonAfter={'K'}
+                min={10}
+                max={5000}
+                style={{ width: '120px' }}
+                precision={1}
+                value={temperature}
+                step={1}
+                onChange={(value) => {
+                  if (value === null) return;
+                  setCommonStore((state) => {
+                    state.projectState.temperature = value;
+                    if (state.loggable) state.logAction('Set Temperature to ' + value.toFixed(1) + 'K');
+                  });
+                  if (mdRef?.current) {
+                    mdRef.current.setTemperature(value);
+                    mdRef.current.heatBath.temperature = value;
+                  }
+                  setChanged(true);
+                }}
+              />
+            ) : (
+              <InputNumber
+                addonAfter={'°C'}
+                min={10 - 263}
+                max={5000 - 273}
+                style={{ width: '120px' }}
+                precision={1}
+                value={parseFloat(Util.getCelsius(temperature).toFixed(1))}
+                step={1}
+                onChange={(value) => {
+                  if (value === null) return;
+                  const kelvin = Util.getKevin(value);
+                  setCommonStore((state) => {
+                    state.projectState.temperature = kelvin;
+                    if (state.loggable) state.logAction('Set Temperature to ' + value.toFixed(1) + '°C');
+                  });
+                  if (mdRef?.current) {
+                    mdRef.current.setTemperature(kelvin);
+                    mdRef.current.heatBath.temperature = kelvin;
+                  }
+                  setChanged(true);
+                }}
+              />
+            ))}
         </Space>
         <Space>
           <span>{t('experiment.TemperatureUnit', lang)}: </span>

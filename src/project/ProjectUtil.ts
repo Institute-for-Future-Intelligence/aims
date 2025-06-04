@@ -145,6 +145,7 @@ export class ProjectUtil {
       collectInterval: 100,
       constantTemperature: false,
       temperature: 300,
+      constantPressure: false,
       pressure: 1,
 
       showInstructionPanel: false,

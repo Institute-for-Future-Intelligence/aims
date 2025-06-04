@@ -52,6 +52,8 @@ export const temperature = (state: CommonStoreState) => state.projectState.tempe
 
 export const constantTemperature = (state: CommonStoreState) => state.projectState.constantTemperature;
 
+export const constantPressure = (state: CommonStoreState) => state.projectState.constantPressure;
+
 export const timeStep = (state: CommonStoreState) => state.projectState.timeStep;
 
 export const refreshInterval = (state: CommonStoreState) => state.projectState.refreshInterval;

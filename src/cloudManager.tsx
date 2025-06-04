@@ -734,6 +734,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       if (!ps.speedGraphSortByMolecule) delete (ps as any).speedGraphSortByMolecule;
       if (!ps.speedGraphBinNumber) delete (ps as any).speedGraphBinNumber;
       if (!ps.constantTemperature) delete (ps as any).constantTemperature;
+      if (!ps.constantPressure) delete (ps as any).constantPressure;
       if (!ps.navigationView) delete (ps as any).navigationView;
       if (!ps.showInstructionPanel) delete (ps as any).showInstructionPanel;
       if (!ps.spaceshipThrust) delete (ps as any).spaceshipThrust;

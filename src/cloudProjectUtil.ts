@@ -186,6 +186,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           collectInterval: data.collectInterval ?? 100,
           constantTemperature: !!data.constantTemperature,
           temperature: data.temperature !== undefined && data.temperature !== null ? data.temperature : 300,
+          constantPressure: !!data.constantPressure,
           pressure: data.pressure !== undefined && data.pressure !== null ? data.pressure : 1,
 
           cameraPosition: data.cameraPosition,

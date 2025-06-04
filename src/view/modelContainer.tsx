@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { DoubleSide, Vector3 } from 'three';
 import { useThree } from '@react-three/fiber';
 import * as Selector from '../stores/selector';
-import { Box, Grid, Line, Plane } from '@react-three/drei';
+import { Box, Cylinder, Grid, Line, Plane } from '@react-three/drei';
 import { HALF_PI, HIGHLIGHT_HANDLE_COLOR } from '../constants.ts';
 import { useStore } from '../stores/common.ts';
 import { useRefStore } from '../stores/commonRef.ts';
@@ -14,6 +14,7 @@ import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { MolecularContainer } from '../types.ts';
 
 const ModelContainer = React.memo(({ position }: { position?: Vector3 }) => {
+  const constantPressure = useStore(Selector.constantPressure);
   const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
   const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
   const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
@@ -108,6 +109,28 @@ const ModelContainer = React.memo(({ position }: { position?: Vector3 }) => {
     <group name={'Container'} position={position ? [position.x, position.y, position.z] : [0, 0, 0]}>
       {containerVisible && (
         <group>
+          {constantPressure && (
+            <group>
+              <Cylinder args={[0.5, 0.5, 20]} position={[0, 0, container.lz / 4 + 10]} rotation={[HALF_PI, 0, 0]}>
+                <meshStandardMaterial
+                  attach="material"
+                  opacity={0.5}
+                  side={DoubleSide}
+                  transparent={false}
+                  color={'gray'}
+                />
+              </Cylinder>
+              <Box args={[container.lx, container.ly, 1]} position={[0, 0, container.lz / 4]}>
+                <meshStandardMaterial
+                  attach="material"
+                  opacity={0.5}
+                  side={DoubleSide}
+                  transparent={false}
+                  color={'gray'}
+                />
+              </Box>
+            </group>
+          )}
           {container.opacity && (
             <Box args={[container.lx, container.ly, container.lz]}>
               <meshStandardMaterial
