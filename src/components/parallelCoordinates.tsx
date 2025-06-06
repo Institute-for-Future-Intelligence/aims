@@ -83,10 +83,16 @@ const ParallelCoordinates = React.memo(
     const yScales: { [name: string]: YScale } = useMemo(() => {
       const tmp: { [name: string]: YScale } = {};
       variables.forEach((variable, index) => {
-        tmp[variable] = d3Scale
-          .scaleLinear()
-          .range([boundsHeight, 0])
-          .domain([minima[index] ?? 0, maxima[index] ?? 1]);
+        tmp[variable] =
+          minima[index] !== maxima[index]
+            ? d3Scale
+                .scaleLinear()
+                .range([boundsHeight, 0])
+                .domain([minima[index] ?? 0, maxima[index] ?? 1])
+            : d3Scale
+                .scaleLinear()
+                .range([boundsHeight, 0])
+                .domain([(minima[index] ?? 0) - 1, (maxima[index] ?? 1) + 1]);
       });
       return tmp;
     }, [variables, boundsHeight, minima, maxima]);
@@ -148,8 +154,8 @@ const ParallelCoordinates = React.memo(
                 name={titles[i]}
                 unit={units[i]}
                 digits={digits[i]}
-                min={minima[i]}
-                max={maxima[i]}
+                min={minima[i] === maxima[i] ? minima[i] - 1 : minima[i]}
+                max={maxima[i] === minima[i] ? maxima[i] + 1 : maxima[i]}
                 step={steps[i]}
                 filter={filters[i]}
                 value={
