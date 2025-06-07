@@ -61,6 +61,9 @@ export const i18n_en = {
     },
 
     word: {
+      CopyLink: 'Copy Link',
+      ShareVia: 'Share via Other Apps',
+      Share: 'Share',
       ElectronConfiguration: 'Electron Configuration',
       Category: 'Category',
       Probability: 'Probability',

@@ -7,7 +7,7 @@ import './App.css';
 import ifiLogo from './assets/ifi-logo.png';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import { visitHomepage } from './helpers';
+import { showSuccess, visitHomepage } from './helpers';
 import MainMenu from './mainMenu';
 import { ProjectType, SpaceshipDisplayMode, VERSION } from './constants';
 import ShareLinks from './shareLinks';
@@ -21,12 +21,14 @@ import KeyboardListener from './keyboardListener';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import AccountSettingsPanel from './accountSettingsPanel';
 import CloudManager from './cloudManager';
-import { AlertFilled, CloudTwoTone } from '@ant-design/icons';
+import { AlertFilled, CloudTwoTone, ShareAltOutlined, LinkOutlined, UploadOutlined } from '@ant-design/icons';
 import SplitPane from './components/splitPane.tsx';
 import { useRefStore } from './stores/commonRef.ts';
-import { Badge, Button, Space } from 'antd';
+import { Badge, Button, Popover, Space } from 'antd';
 import Cockpit from './view/cockpit.tsx';
 import PeriodicTable from './periodicTable.tsx';
+import { Util } from './Util.ts';
+import i18n from './i18n/i18n.ts';
 
 const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
@@ -196,6 +198,40 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
               {t('word.Save', lang)}
             </Button>
           )}
+          {!viewOnly && chamberVisible && (
+            <Popover
+              content={
+                <Space direction={'vertical'}>
+                  <Space direction={'horizontal'}>
+                    <LinkOutlined style={{ fontSize: '20px' }} />
+                    <span
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => {
+                        if (!user.uid || !projectTitle) return;
+                        Util.generateProjectLink(user.uid, projectTitle, () =>
+                          showSuccess(i18n.t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.'),
+                        );
+                      }}
+                    >
+                      {t('word.CopyLink', lang)}
+                    </span>
+                  </Space>
+                  <Space direction={'vertical'}>
+                    <Space direction={'horizontal'}>
+                      <ShareAltOutlined style={{ fontSize: '20px' }} />
+                      <span>{t('word.ShareVia', lang)}</span>
+                    </Space>
+                    <ShareLinks size={36} round={true} margin={'8px'} style={{ paddingLeft: '24px' }} />
+                  </Space>
+                </Space>
+              }
+            >
+              <UploadOutlined
+                title={t('word.Share', lang)}
+                style={{ paddingLeft: '10px', fontSize: '20px', color: 'navy', cursor: 'pointer' }}
+              />
+            </Popover>
+          )}
         </Space>
       </div>
 
@@ -244,10 +280,6 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
             {t('word.VersionInitial', lang) + VERSION + '. ' + t('word.AllRightsReserved', lang) + '. '}
           </div>
         </>
-      )}
-
-      {!viewOnly && chamberVisible && (
-        <ShareLinks size={16} round={true} margin={'2px'} style={{ position: 'absolute', right: '0', top: '90px' }} />
       )}
 
       <MainMenu viewOnly={viewOnly} />

@@ -31,7 +31,7 @@ import { useTranslation } from 'react-i18next';
 
 const ShareLinkContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   z-index: 999;
 `;
 
@@ -68,7 +68,7 @@ const ShareLinks = React.memo(({ style, size, margin, round, handleShareWindowCl
 
   return (
     <ShareLinkContainer style={style}>
-      <EmailShareButton url={url} subject={title}>
+      <EmailShareButton url={url} subject={title} style={{ paddingRight: margin }}>
         <EmailIcon size={size} round={round} />
       </EmailShareButton>
       <TwitterShareButton
@@ -80,7 +80,7 @@ const ShareLinks = React.memo(({ style, size, margin, round, handleShareWindowCl
       >
         <XIcon size={size} round={round} />
       </TwitterShareButton>
-      <BlueskyShareButton url={url} title={title}>
+      <BlueskyShareButton url={url} title={title} style={{ paddingRight: margin }}>
         <BlueskyIcon size={size} round={round} />
       </BlueskyShareButton>
       <FacebookShareButton url={url} style={{ paddingRight: margin }} onShareWindowClose={handleShareWindowClose}>

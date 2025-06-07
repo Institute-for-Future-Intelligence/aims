@@ -52,6 +52,9 @@ export const i18n_zh_tw = {
     },
 
     word: {
+      CopyLink: '複製連結',
+      ShareVia: '分享到',
+      Share: '分享',
       ElectronConfiguration: '電子組態',
       Category: '分類',
       Probability: '機率',
