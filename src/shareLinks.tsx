@@ -1,10 +1,12 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import React from 'react';
 import styled from 'styled-components';
 import {
+  BlueskyIcon,
+  BlueskyShareButton,
   EmailIcon,
   EmailShareButton,
   FacebookIcon,
@@ -78,6 +80,9 @@ const ShareLinks = React.memo(({ style, size, margin, round, handleShareWindowCl
       >
         <XIcon size={size} round={round} />
       </TwitterShareButton>
+      <BlueskyShareButton url={url} title={title}>
+        <BlueskyIcon size={size} round={round} />
+      </BlueskyShareButton>
       <FacebookShareButton url={url} style={{ paddingRight: margin }} onShareWindowClose={handleShareWindowClose}>
         <FacebookIcon size={size} round={round} />
       </FacebookShareButton>

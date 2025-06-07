@@ -29,7 +29,7 @@
     "react-draggable": "^4.4.6",
     "react-i18next": "^13.5.0",
     "react-keyboard-event-handler": "^1.5.4",
-    "react-share": "^5.0.3",
+    "react-share": "^5.2.2",
     "react-timeago": "^7.2.0",
     "recharts": "^2.12.3",
     "save-svg-as-png": "^1.4.17",
