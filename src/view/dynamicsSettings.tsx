@@ -57,6 +57,7 @@ const DynamicsSettings = React.memo(() => {
   const speedGraphBinNumber = useStore(Selector.speedGraphBinNumber) ?? SPEED_BIN_NUMBER;
   const updateInfoFlag = usePrimitiveStore(Selector.updateInfoFlag);
   const currentTemperature = usePrimitiveStore(Selector.currentTemperature);
+  const currentPressure = usePrimitiveStore(Selector.currentPressure);
   const hideGallery = useStore(Selector.hideGallery);
   const chamberTemperatureKevin = useStore(Selector.chamberTemperatureKevin);
 
@@ -1060,6 +1061,7 @@ const DynamicsSettings = React.memo(() => {
                 : Math.round(Util.getCelsius(constantTemperature ? temperature : currentTemperature)) + '°C'}
             </span>
           </Popover>
+          <span>⏲ {(currentPressure * 0.000001).toFixed(2) + 'MPa'}</span>
           <Popover
             title={<div onClick={(e) => e.stopPropagation()}>🕙 {t('word.Time', lang)}</div>}
             content={createClock}

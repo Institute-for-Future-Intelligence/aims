@@ -22,7 +22,12 @@ import { TorsionalBond } from './TorsionalBond.ts';
 import { MolecularContainer } from '../types.ts';
 import { NonBondedInteractions } from './NonBondedInteractions.ts';
 import { Molecule } from './Molecule.ts';
-import { GRAVITY_CONVERSION_CONSTANT, UNIT_EV_OVER_KB, VT_CONVERSION_CONSTANT } from './physicalConstants.ts';
+import {
+  GRAVITY_CONVERSION_CONSTANT,
+  PRESSURE_CONVERSION_CONSTANT,
+  UNIT_EV_OVER_KB,
+  VT_CONVERSION_CONSTANT,
+} from './physicalConstants.ts';
 import { ZERO_TOLERANCE } from '../constants.ts';
 import { ModelUtil } from './ModelUtil.ts';
 import { HeatBath } from './HeatBath.ts';
@@ -179,6 +184,14 @@ export class MolecularDynamics {
   getCurrentTemperature(): number {
     if (this.atoms.length === 0) return 0;
     return (this.kineticEnergy * UNIT_EV_OVER_KB) / this.atoms.length;
+  }
+
+  getCurrentPressure(): number {
+    if (this.atoms.length === 0) return 0;
+    return (
+      (this.getCurrentTemperature() * this.atoms.length * PRESSURE_CONVERSION_CONSTANT) /
+      (this.container.lx * this.container.ly * this.container.lz)
+    );
   }
 
   move() {

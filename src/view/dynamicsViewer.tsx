@@ -369,8 +369,10 @@ const DynamicsViewer = React.memo(
           state.updateInfoFlag = !state.updateInfoFlag;
           state.updateDataFlag = !state.updateDataFlag;
           state.updateViewerFlag = !state.updateViewerFlag;
-          if (molecularDynamicsRef.current)
+          if (molecularDynamicsRef.current) {
             state.currentTemperature = molecularDynamicsRef.current.getCurrentTemperature();
+            state.currentPressure = molecularDynamicsRef.current.getCurrentPressure();
+          }
         });
       }
     };

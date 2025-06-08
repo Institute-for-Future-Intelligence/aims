@@ -113,6 +113,7 @@ const SimulationControls = React.memo(() => {
       // reset temperature settings and display
       md.updateKineticEnergy();
       const currentTemperature = md.getCurrentTemperature();
+      const currentPressure = md.getCurrentPressure();
       // if (md.heatBath.enabled) {
       //   md.heatBath.temperature = currentTemperature;
       //   setCommonStore((state) => {
@@ -121,6 +122,7 @@ const SimulationControls = React.memo(() => {
       // }
       usePrimitiveStore.getState().set((state) => {
         state.currentTemperature = currentTemperature;
+        state.currentPressure = currentPressure;
         state.updateViewerFlag = !state.updateViewerFlag;
       });
     }
@@ -217,6 +219,7 @@ const SimulationControls = React.memo(() => {
             }
             usePrimitiveStore.getState().set((state) => {
               state.currentTemperature = md.getCurrentTemperature();
+              state.currentPressure = md.getCurrentPressure();
               state.updateViewerFlag = !state.updateViewerFlag;
             });
             // recursive call to the next step of the simulation

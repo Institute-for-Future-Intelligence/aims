@@ -333,6 +333,8 @@ export const positionTimeSeriesMap = (state: DataStoreState) => state.positionTi
 
 export const currentTemperature = (state: PrimitiveStoreState) => state.currentTemperature;
 
+export const currentPressure = (state: PrimitiveStoreState) => state.currentPressure;
+
 export const deleteAllAtoms = (state: CommonStoreState) => state.deleteAllAtoms;
 
 export const getAtomByIndex = (state: CommonStoreState) => state.getAtomByIndex;
