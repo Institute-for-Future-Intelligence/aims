@@ -321,6 +321,8 @@ export const i18n_zh_cn = {
       TemperatureUnit: '温度单位',
       TemperatureSettings: '温度设定',
       Temperature: '温度',
+      ConstantPressure: '恒压',
+      PressureSettings: '压力设定',
       Pressure: '压力',
       Protein: '蛋白质',
       Ligand: '配体',

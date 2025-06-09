@@ -330,6 +330,8 @@ export const i18n_en = {
       TemperatureUnit: 'Temperature Unit',
       TemperatureSettings: 'Temperature Settings',
       Temperature: 'Temperature',
+      ConstantPressure: 'Constant Pressure',
+      PressureSettings: 'Pressure Settings',
       Pressure: 'Pressure',
       Protein: 'Protein',
       Ligand: 'Ligand',

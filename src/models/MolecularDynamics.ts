@@ -23,6 +23,7 @@ import { MolecularContainer } from '../types.ts';
 import { NonBondedInteractions } from './NonBondedInteractions.ts';
 import { Molecule } from './Molecule.ts';
 import {
+  DENSITY_CONVERSION_CONSTANT,
   GRAVITY_CONVERSION_CONSTANT,
   PRESSURE_CONVERSION_CONSTANT,
   UNIT_EV_OVER_KB,
@@ -186,12 +187,33 @@ export class MolecularDynamics {
     return (this.kineticEnergy * UNIT_EV_OVER_KB) / this.atoms.length;
   }
 
+  getCurrentVolume(): number {
+    return this.container.lx * this.container.ly * this.container.lz;
+  }
+
+  getCurrentDensity(): number {
+    if (this.atoms.length === 0) return 0;
+    let mass = 0;
+    for (const a of this.atoms) {
+      mass += a.mass;
+    }
+    return (mass / this.getCurrentVolume()) * DENSITY_CONVERSION_CONSTANT;
+  }
+
   getCurrentPressure(): number {
     if (this.atoms.length === 0) return 0;
-    return (
-      (this.getCurrentTemperature() * this.atoms.length * PRESSURE_CONVERSION_CONSTANT) /
-      (this.container.lx * this.container.ly * this.container.lz)
-    );
+    return (this.getCurrentTemperature() * this.atoms.length * PRESSURE_CONVERSION_CONSTANT) / this.getCurrentVolume();
+  }
+
+  getVirial(): number {
+    if (this.atoms.length === 0) return 0;
+    let w = 0;
+    for (const a of this.atoms) {
+      if (a.force) {
+        w += a.position.dot(a.force);
+      }
+    }
+    return w;
   }
 
   move() {

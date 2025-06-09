@@ -372,6 +372,7 @@ const DynamicsViewer = React.memo(
           if (molecularDynamicsRef.current) {
             state.currentTemperature = molecularDynamicsRef.current.getCurrentTemperature();
             state.currentPressure = molecularDynamicsRef.current.getCurrentPressure();
+            state.currentDensity = molecularDynamicsRef.current.getCurrentDensity();
           }
         });
       }

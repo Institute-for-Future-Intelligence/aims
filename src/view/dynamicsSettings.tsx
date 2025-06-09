@@ -50,7 +50,9 @@ const DynamicsSettings = React.memo(() => {
   const forceScaleFactor = useStore(Selector.forceScaleFactor) ?? 1;
   const kineticEnergyScaleFactor = useStore(Selector.kineticEnergyScaleFactor) ?? 1;
   const constantTemperature = useStore(Selector.constantTemperature) ?? false;
+  const constantPressure = useStore(Selector.constantPressure) ?? false;
   const temperature = useStore(Selector.temperature) ?? 300;
+  const pressure = useStore(Selector.pressure) ?? 10;
   const timeStep = useStore(Selector.timeStep) ?? 0.5;
   const refreshInterval = useStore(Selector.refreshInterval) ?? 20;
   const collectInterval = useStore(Selector.collectInterval) ?? 100;
@@ -58,6 +60,7 @@ const DynamicsSettings = React.memo(() => {
   const updateInfoFlag = usePrimitiveStore(Selector.updateInfoFlag);
   const currentTemperature = usePrimitiveStore(Selector.currentTemperature);
   const currentPressure = usePrimitiveStore(Selector.currentPressure);
+  const currentDensity = usePrimitiveStore(Selector.currentDensity);
   const hideGallery = useStore(Selector.hideGallery);
   const chamberTemperatureKevin = useStore(Selector.chamberTemperatureKevin);
 
@@ -722,7 +725,7 @@ const DynamicsSettings = React.memo(() => {
     return <Tabs defaultActiveKey="1" items={displayItems} />;
   }, [displayItems]);
 
-  const createThermometer = useMemo(() => {
+  const createTemperatureSettings = useMemo(() => {
     return (
       <Space direction={'vertical'}>
         <Space direction={'horizontal'} style={{ width: '320px' }} onClick={(e) => e.stopPropagation()}>
@@ -734,6 +737,7 @@ const DynamicsSettings = React.memo(() => {
                 state.projectState.constantTemperature = checked;
                 if (state.loggable) state.logAction('Set Constant Temperature to ' + checked);
               });
+              setChanged(true);
             }}
           />
           {constantTemperature &&
@@ -803,6 +807,49 @@ const DynamicsSettings = React.memo(() => {
       </Space>
     );
   }, [temperature, constantTemperature, chamberTemperatureKevin, lang, mdRef]);
+
+  const createPressureSettings = useMemo(() => {
+    return (
+      <Space direction={'vertical'}>
+        <Space direction={'horizontal'} style={{ width: '320px' }} onClick={(e) => e.stopPropagation()}>
+          <span>{t('experiment.ConstantPressure', lang)}: </span>
+          <Switch
+            checked={constantPressure}
+            onChange={(checked: boolean) => {
+              setCommonStore((state) => {
+                state.projectState.constantPressure = checked;
+                if (state.loggable) state.logAction('Set Constant Pressure to ' + checked);
+              });
+              setChanged(true);
+            }}
+          />
+          {constantPressure && (
+            <InputNumber
+              addonAfter={'MPa'}
+              min={0}
+              max={10000}
+              style={{ width: '120px' }}
+              precision={1}
+              value={pressure}
+              step={1}
+              onChange={(value) => {
+                if (value === null) return;
+                setCommonStore((state) => {
+                  state.projectState.pressure = value;
+                  if (state.loggable) state.logAction('Set Pressure to ' + value.toFixed(1) + 'K');
+                });
+                if (mdRef?.current) {
+                  // mdRef.current.setTemperature(value);
+                  // mdRef.current.heatBath.temperature = value;
+                }
+                setChanged(true);
+              }}
+            />
+          )}
+        </Space>
+      </Space>
+    );
+  }, [pressure, constantPressure, lang, mdRef]);
 
   const createClock = useMemo(() => {
     return (
@@ -1052,28 +1099,42 @@ const DynamicsSettings = React.memo(() => {
         >
           <Popover
             title={<div onClick={(e) => e.stopPropagation()}>🌡 {t('experiment.TemperatureSettings', lang)}</div>}
-            content={createThermometer}
+            content={createTemperatureSettings}
           >
             <span>
-              🌡{' '}
+              <span style={{ fontSize: '20px' }}>🌡</span>
               {chamberTemperatureKevin
                 ? Math.round(constantTemperature ? temperature : currentTemperature) + 'K'
                 : Math.round(Util.getCelsius(constantTemperature ? temperature : currentTemperature)) + '°C'}
             </span>
           </Popover>
-          <span>⏲ {(currentPressure * 0.000001).toFixed(2) + 'MPa'}</span>
           <Popover
-            title={<div onClick={(e) => e.stopPropagation()}>🕙 {t('word.Time', lang)}</div>}
+            title={<div onClick={(e) => e.stopPropagation()}>🕛 {t('experiment.PressureSettings', lang)}</div>}
+            content={createPressureSettings}
+          >
+            <span>
+              <span style={{ fontSize: '20px' }}>🕛</span> {(currentPressure * 0.000001).toFixed(2) + 'MPa'}
+            </span>
+          </Popover>
+          {constantPressure && (
+            <span>
+              <span style={{ fontSize: '20px' }}>🧊</span> {currentDensity.toFixed(2) + 'kg/m³'}
+            </span>
+          )}
+          <Popover
+            title={<div onClick={(e) => e.stopPropagation()}>⏱️ {t('word.Time', lang)}</div>}
             content={createClock}
           >
-            <span>🕖 {(mdRef.current.indexOfStep * timeStep).toFixed(0) + 'fs'}</span>
+            <span>
+              <span style={{ fontSize: '20px' }}>⏱️</span> {(mdRef.current.indexOfStep * timeStep).toFixed(0) + 'fs'}
+            </span>
           </Popover>
           <Popover
             title={<div onClick={(e) => e.stopPropagation()}>⚛ {t('projectPanel.AtomCount', lang)}</div>}
             content={<Space style={{ width: '300px' }}>{t('projectPanel.TotalNumberOfAtomsInModel', lang)}</Space>}
           >
             <span style={{ color: mdRef.current.atoms.length > 200 ? 'red' : 'lightgray' }}>
-              ⚛ {mdRef.current.atoms.length}
+              <span style={{ fontSize: '20px' }}>⚛</span> {mdRef.current.atoms.length}
             </span>
           </Popover>
           {gravitationalAcceleration > 0 && (

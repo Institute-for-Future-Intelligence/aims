@@ -52,6 +52,8 @@ export const temperature = (state: CommonStoreState) => state.projectState.tempe
 
 export const constantTemperature = (state: CommonStoreState) => state.projectState.constantTemperature;
 
+export const pressure = (state: CommonStoreState) => state.projectState.pressure;
+
 export const constantPressure = (state: CommonStoreState) => state.projectState.constantPressure;
 
 export const timeStep = (state: CommonStoreState) => state.projectState.timeStep;
@@ -334,6 +336,8 @@ export const positionTimeSeriesMap = (state: DataStoreState) => state.positionTi
 export const currentTemperature = (state: PrimitiveStoreState) => state.currentTemperature;
 
 export const currentPressure = (state: PrimitiveStoreState) => state.currentPressure;
+
+export const currentDensity = (state: PrimitiveStoreState) => state.currentDensity;
 
 export const deleteAllAtoms = (state: CommonStoreState) => state.deleteAllAtoms;
 

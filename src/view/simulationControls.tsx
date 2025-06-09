@@ -61,6 +61,7 @@ const SimulationControls = React.memo(() => {
   const speedGraphVisible = useStore(Selector.speedGraphVisible);
   const temperature = useStore(Selector.temperature);
   const constantTemperature = useStore(Selector.constantTemperature);
+  const constantPressure = useStore(Selector.constantPressure);
   const refreshInterval = useStore(Selector.refreshInterval) ?? 20;
   const collectInterval = useStore(Selector.collectInterval) ?? 100;
   const navigationView = useStore(Selector.navigationView);
@@ -114,6 +115,7 @@ const SimulationControls = React.memo(() => {
       md.updateKineticEnergy();
       const currentTemperature = md.getCurrentTemperature();
       const currentPressure = md.getCurrentPressure();
+      const currentDensity = md.getCurrentDensity();
       // if (md.heatBath.enabled) {
       //   md.heatBath.temperature = currentTemperature;
       //   setCommonStore((state) => {
@@ -123,6 +125,7 @@ const SimulationControls = React.memo(() => {
       usePrimitiveStore.getState().set((state) => {
         state.currentTemperature = currentTemperature;
         state.currentPressure = currentPressure;
+        state.currentDensity = currentDensity;
         state.updateViewerFlag = !state.updateViewerFlag;
       });
     }
@@ -220,6 +223,9 @@ const SimulationControls = React.memo(() => {
             usePrimitiveStore.getState().set((state) => {
               state.currentTemperature = md.getCurrentTemperature();
               state.currentPressure = md.getCurrentPressure();
+              if (!constantPressure) {
+                state.currentDensity = md.getCurrentDensity();
+              }
               state.updateViewerFlag = !state.updateViewerFlag;
             });
             // recursive call to the next step of the simulation

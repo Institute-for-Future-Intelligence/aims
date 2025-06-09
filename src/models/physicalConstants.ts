@@ -42,6 +42,9 @@ export const GRAVITY_CONVERSION_CONSTANT = 1e-20;
 // Boltzmann constant 1.380649 × 10-23 m^2kg/s^2/K / 10-30 m^3 = 1.38*10^7 kg/m/K/s^2 = 1.38*10^7 Pa/K
 export const PRESSURE_CONVERSION_CONSTANT = 1.38e7;
 
+// au/A^3 -> kg/m^3 (0.001/6.022E^23*10^30)
+export const DENSITY_CONVERSION_CONSTANT = 10000 / 6.022;
+
 // A/fs -> m/s
 export const SPEED_CONVERTER = 100000;
 

@@ -84,6 +84,7 @@ export interface PrimitiveStoreState {
 
   currentTemperature: number;
   currentPressure: number;
+  currentDensity: number;
 
   showThrustFlame: boolean;
   navCoordinates: number[];
@@ -233,6 +234,7 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
 
     currentTemperature: 300,
     currentPressure: 0,
+    currentDensity: 0,
 
     showThrustFlame: false,
     navCoordinates: [0, 0, 0],
