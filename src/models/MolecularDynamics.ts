@@ -27,6 +27,7 @@ import {
   GRAVITY_CONVERSION_CONSTANT,
   PRESSURE_CONVERSION_CONSTANT,
   UNIT_EV_OVER_KB,
+  VIRIAL_CONVERSION_CONSTANT,
   VT_CONVERSION_CONSTANT,
 } from './physicalConstants.ts';
 import { ZERO_TOLERANCE } from '../constants.ts';
@@ -202,18 +203,21 @@ export class MolecularDynamics {
 
   getCurrentPressure(): number {
     if (this.atoms.length === 0) return 0;
-    return (this.getCurrentTemperature() * this.atoms.length * PRESSURE_CONVERSION_CONSTANT) / this.getCurrentVolume();
+    return (
+      (this.getCurrentTemperature() * this.atoms.length * PRESSURE_CONVERSION_CONSTANT + this.getVirialPressure()) /
+      this.getCurrentVolume()
+    );
   }
 
-  getVirial(): number {
+  getVirialPressure(): number {
     if (this.atoms.length === 0) return 0;
     let w = 0;
     for (const a of this.atoms) {
-      if (a.force) {
-        w += a.position.dot(a.force);
+      if (a.acceleration) {
+        w += a.position.dot(a.acceleration) * a.mass;
       }
     }
-    return w;
+    return (w * VIRIAL_CONVERSION_CONSTANT) / 3;
   }
 
   move() {
