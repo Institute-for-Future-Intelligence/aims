@@ -1143,15 +1143,17 @@ const DynamicsSettings = React.memo(() => {
               content={<Space style={{ width: '300px' }}>{t('projectPanel.GravityNote', lang)}</Space>}
             >
               <span>
-                <img
-                  alt={'Coordinate system'}
-                  width={16}
-                  src={
-                    gravityDirection === GravitationalField.VIEWER_COORDINATE_SYSTEM
-                      ? GravityViewerImage
-                      : GravityModelImage
-                  }
-                />{' '}
+                <span style={{ fontSize: '20px' }}>
+                  <img
+                    alt={'Coordinate system'}
+                    width={20}
+                    src={
+                      gravityDirection === GravitationalField.VIEWER_COORDINATE_SYSTEM
+                        ? GravityViewerImage
+                        : GravityModelImage
+                    }
+                  />
+                </span>{' '}
                 G
               </span>
             </Popover>
