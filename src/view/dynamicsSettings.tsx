@@ -1108,14 +1108,14 @@ const DynamicsSettings = React.memo(() => {
                 : Math.round(Util.getCelsius(constantTemperature ? temperature : currentTemperature)) + '°C'}
             </span>
           </Popover>
-          <Popover
-            title={<div onClick={(e) => e.stopPropagation()}>🕛 {t('experiment.PressureSettings', lang)}</div>}
-            content={createPressureSettings}
-          >
-            <span>
-              <span style={{ fontSize: '20px' }}>🕛</span> {(currentPressure * 0.000001).toFixed(2) + 'MPa'}
-            </span>
-          </Popover>
+          {/*<Popover*/}
+          {/*  title={<div onClick={(e) => e.stopPropagation()}>🕛 {t('experiment.PressureSettings', lang)}</div>}*/}
+          {/*  content={createPressureSettings}*/}
+          {/*>*/}
+          {/*  <span>*/}
+          {/*    <span style={{ fontSize: '20px' }}>🕛</span> {(currentPressure * 0.000001).toFixed(2) + 'MPa'}*/}
+          {/*  </span>*/}
+          {/*</Popover>*/}
           {constantPressure && (
             <span>
               <span style={{ fontSize: '20px' }}>🧊</span> {currentDensity.toFixed(2) + 'kg/m³'}

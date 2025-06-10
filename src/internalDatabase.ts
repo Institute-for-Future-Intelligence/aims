@@ -114,6 +114,7 @@ import hydrocarbonMoleculeUrl354 from './molecules/sdf/hexacene.sdf';
 import hydrocarbonMoleculeUrl355 from './molecules/sdf/heptacene.sdf';
 import hydrocarbonMoleculeUrl356 from './molecules/sdf/octacene.sdf';
 import hydrocarbonMoleculeUrl357 from './molecules/sdf/nonacene.sdf';
+import hydrocarbonMoleculeUrl358 from './molecules/sdf/naphthalene.sdf';
 
 import biomoleculeUrl001 from './molecules/sdf/atp.sdf';
 import biomoleculeUrl002 from './molecules/sdf/vitamin_a.sdf';
@@ -336,6 +337,7 @@ export const hydrocarbonMolecules = [
   { url: hydrocarbonMoleculeUrl205, internal: true, name: 'Propyne' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl251, internal: true, name: 'Acetylene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl301, internal: true, name: 'Benzene' } as MoleculeInterface,
+  { url: hydrocarbonMoleculeUrl358, internal: true, name: 'Naphthalene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl302, internal: true, name: 'Biphenyl' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl303, internal: true, name: 'Toluene' } as MoleculeInterface,
   { url: hydrocarbonMoleculeUrl304, internal: true, name: 'Durene' } as MoleculeInterface,
