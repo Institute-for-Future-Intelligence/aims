@@ -414,6 +414,9 @@ export const i18n_en = {
       ChemicalElements: 'Chemical Elements',
       ChemicalComposition: 'Chemical Composition',
       Gravity: 'Gravity',
+      GravityViewerCoordinateSystem: 'Gravity always points downward on the screen.',
+      GravityModelCoordinateSystem:
+        "Gravity always points to the negative z direction in the model's coordinate system.",
       GravityNote: 'For the effect to manifest in molecular models, gravity is greatly exaggerated.',
       AtomCount: 'Atom Count',
       TotalNumberOfAtomsInModel:

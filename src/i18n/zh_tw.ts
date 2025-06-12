@@ -401,6 +401,8 @@ export const i18n_zh_tw = {
       ChemicalElements: '化學元素',
       ChemicalComposition: '化學成分',
       Gravity: '重力',
+      GravityViewerCoordinateSystem: '重力始終在螢幕垂直向下的方向。',
+      GravityModelCoordinateSystem: '重力始終在模型座標系裡的負z方向。',
       GravityNote: '為了在分子模擬中顯示出效應，重力被極大誇大。',
       AtomCount: '原子數量',
       TotalNumberOfAtomsInModel: '模型的原子總數。若超過200，模擬可能會變得很慢。作為提醒，此時數字會變紅。',

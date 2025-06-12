@@ -1140,7 +1140,15 @@ const DynamicsSettings = React.memo(() => {
           {gravitationalAcceleration > 0 && (
             <Popover
               title={<div onClick={(e) => e.stopPropagation()}>↓ {t('projectPanel.Gravity', lang)}</div>}
-              content={<Space style={{ width: '300px' }}>{t('projectPanel.GravityNote', lang)}</Space>}
+              content={
+                <Space style={{ width: '300px' }}>
+                  {(gravityDirection === GravitationalField.VIEWER_COORDINATE_SYSTEM
+                    ? t('projectPanel.GravityViewerCoordinateSystem', lang)
+                    : t('projectPanel.GravityModelCoordinateSystem', lang)) +
+                    ' ' +
+                    t('projectPanel.GravityNote', lang)}
+                </Space>
+              }
             >
               <span>
                 <span style={{ fontSize: '20px' }}>
