@@ -278,7 +278,7 @@ export const i18n_zh_cn = {
     },
 
     experiment: {
-      ExternalField: '外场',
+      ExternalFields: '外场',
       GravitationalField: '重力场',
       GravityDirection: '重力方向',
       ViewerCoordinateSystem: '观察者坐标系',

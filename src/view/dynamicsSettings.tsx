@@ -364,7 +364,7 @@ const DynamicsSettings = React.memo(() => {
       },
       {
         key: '2',
-        label: t('experiment.ExternalField', lang),
+        label: t('experiment.ExternalFields', lang),
         children: (
           <div style={{ width: '400px' }} onClick={(e) => e.stopPropagation()}>
             <Row gutter={16} style={{ paddingBottom: '4px' }}>

@@ -287,7 +287,7 @@ export const i18n_en = {
     },
 
     experiment: {
-      ExternalField: 'External Field',
+      ExternalFields: 'External Fields',
       GravitationalField: 'Gravitational Field',
       GravityDirection: 'Gravity Direction',
       ViewerCoordinateSystem: 'Viewer Coordinate System',
