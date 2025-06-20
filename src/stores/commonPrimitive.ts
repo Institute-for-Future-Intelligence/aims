@@ -89,6 +89,8 @@ export interface PrimitiveStoreState {
   showThrustFlame: boolean;
   navCoordinates: number[];
 
+  generateMoleculePrompt: string;
+
   set: (fn: (state: PrimitiveStoreState) => void) => void;
   setPrimitiveStore: <K extends keyof PrimitiveStoreState, V extends PrimitiveStoreState[K]>(key: K, val: V) => void;
 }
@@ -238,5 +240,7 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
 
     showThrustFlame: false,
     navCoordinates: [0, 0, 0],
+
+    generateMoleculePrompt: 'Give me a SDF file of a novel molecule similar to benzene. It should have hydrogen atoms.',
   };
 });

@@ -29,6 +29,7 @@ import {
   TableOutlined,
   QuestionCircleOutlined,
   ClearOutlined,
+  OpenAIOutlined,
 } from '@ant-design/icons';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
@@ -63,6 +64,7 @@ import ParallelCoordinatesNumericValuesContent from './parallelCoordinatesNumeri
 import { UndoableDeleteMoleculeInGallery, UndoableDeleteMoleculesInGallery } from '../undo/UndoableDelete.ts';
 import { UndoableImportMolecule } from '../undo/UndoableImportMolecule.ts';
 import { UndoableChange } from '../undo/UndoableChange.ts';
+import GenerateMoleculeModal from './GenerateMoleculeModal.tsx';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);
@@ -189,6 +191,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     projectType === ProjectType.DRUG_DISCOVERY ? [drugMolecules[0].name] : [],
   );
   const [importMoleculeDialogVisible, setImportMoleculeDialogVisible] = useState(false);
+  const [generateMoleculeDialogVisible, setGenerateMoleculeDialogVisible] = useState(false);
   const [findMoleculeDialogVisible, setFindMoleculeDialogVisible] = useState(false);
   const [scatterDataHoveredIndex, setScatterDataHoveredIndex] = useState<number>(-1);
 
@@ -443,6 +446,18 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   <ImportOutlined
                     style={{ fontSize: '24px', color: 'gray' }}
                     title={t('projectPanel.SelectMoleculeToImportIntoGallery', lang)}
+                  />
+                </Button>
+                <Button
+                  style={{ border: 'none', padding: '4px' }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setGenerateMoleculeDialogVisible(true);
+                  }}
+                >
+                  <OpenAIOutlined
+                    style={{ fontSize: '24px', color: 'gray' }}
+                    title={t('projectPanel.GenerateMolecule', lang)}
                   />
                 </Button>
                 {selectedMolecule && (
@@ -1646,6 +1661,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           getNames={() => moleculeNames}
           setDialogVisible={setImportMoleculeDialogVisible}
           isDialogVisible={() => importMoleculeDialogVisible}
+        />
+        <GenerateMoleculeModal
+          setDialogVisible={setGenerateMoleculeDialogVisible}
+          isDialogVisible={() => generateMoleculeDialogVisible}
         />
       </ColumnWrapper>
     </Container>

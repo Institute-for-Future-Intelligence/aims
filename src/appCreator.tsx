@@ -198,7 +198,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
               {t('word.Save', lang)}
             </Button>
           )}
-          {!viewOnly && chamberVisible && (
+          {!viewOnly && projectTitle && (
             <Popover
               content={
                 <Space direction={'vertical'}>
