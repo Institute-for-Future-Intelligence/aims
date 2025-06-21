@@ -123,6 +123,7 @@ const ReactionChamber = React.memo(() => {
           atoms.push(clone);
         }
         const m = new Molecule(selectedMolecule.name, atoms);
+        m.data = selectedMolecule.data;
         m.setCenter(point);
         state.projectState.testMolecules.push(m);
         warnIfTooManyAtoms(m.atoms.length);

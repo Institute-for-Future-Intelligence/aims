@@ -19,6 +19,7 @@ export class Molecule implements MoleculeInterface {
   center: Vector3;
 
   url?: string;
+  data?: string;
   internal?: boolean;
   invisible?: boolean;
   excluded?: boolean;
