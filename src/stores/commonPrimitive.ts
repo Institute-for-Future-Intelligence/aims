@@ -241,6 +241,6 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     showThrustFlame: false,
     navCoordinates: [0, 0, 0],
 
-    generateMoleculePrompt: 'Give me a SDF file of a novel molecule similar to benzene. It should have hydrogen atoms.',
+    generateMoleculePrompt: 'Generate a novel molecule similar to benzene.',
   };
 });

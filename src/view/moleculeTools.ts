@@ -137,6 +137,13 @@ export const storeMoleculeData = (molecule: MoleculeInterface, atoms: Atom[], ra
   useStore.getState().setMolecularStructure(molecule.name, { atoms, radialBonds } as MolecularStructure);
 };
 
+export const parseSDF = (text: string, processResult: (result: any, molecule?: Molecule) => void) => {
+  const options = { autoBond: true };
+  new SDFParser(text, options).parse().then((result) => {
+    processResult(result);
+  });
+};
+
 export const loadMolecule = (
   molecule: MoleculeInterface,
   processResult: (result: any, molecule?: Molecule) => void,

@@ -163,6 +163,7 @@ export interface Range {
 export interface MoleculeInterface {
   name: string;
   url?: string;
+  data?: string;
   internal?: boolean;
   invisible?: boolean;
   excluded?: boolean;

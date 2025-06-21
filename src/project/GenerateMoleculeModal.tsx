@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { OpenAIOutlined } from '@ant-design/icons';
 import { OpenAI } from 'openai';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
+import { parseSDF } from '../view/moleculeTools.ts';
 
 export interface GenerateMoleculeModalProps {
   setDialogVisible: (visible: boolean) => void;
@@ -49,7 +50,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   const generate = async () => {
     const response = await client.responses.create({
       model: 'o4-mini',
-      input: prompt,
+      input: prompt + ' It should have hydrogen atoms. Return a SDF file.',
     });
     resultRef.current = response.output_text;
   };
@@ -74,7 +75,12 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
         console.error(e);
       })
       .then(() => {
-        console.log(resultRef.current);
+        if (resultRef.current) {
+          parseSDF(resultRef.current, (result) => {
+            console.log(resultRef.current);
+            console.log(result);
+          });
+        }
       })
       .finally(() => {
         setWaiting(false);
