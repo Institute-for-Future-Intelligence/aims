@@ -12,7 +12,9 @@ import { useTranslation } from 'react-i18next';
 import { OpenAIOutlined } from '@ant-design/icons';
 import { OpenAI } from 'openai';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
-import { parseSDF } from '../view/moleculeTools.ts';
+import { loadMolecule } from '../view/moleculeTools.ts';
+import { MoleculeInterface } from '../types.ts';
+import { showInfo } from '../helpers.tsx';
 
 export interface GenerateMoleculeModalProps {
   setDialogVisible: (visible: boolean) => void;
@@ -27,9 +29,12 @@ const client = new OpenAI({
 });
 
 const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }: GenerateMoleculeModalProps) => {
+  const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const prompt = usePrimitiveStore(Selector.generateMoleculePrompt);
   const setWaiting = usePrimitiveStore(Selector.setWaiting);
+  const addMolecule = useStore(Selector.addMolecule);
+  const setChanged = usePrimitiveStore(Selector.setChanged);
 
   const [dragEnabled, setDragEnabled] = useState<boolean>(false);
   const [bounds, setBounds] = useState<DraggableBounds>({
@@ -50,7 +55,9 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   const generate = async () => {
     const response = await client.responses.create({
       model: 'o4-mini',
-      input: prompt + ' It should have hydrogen atoms. Return a SDF file.',
+      input:
+        prompt +
+        ' It should have hydrogen atoms. Return just a SDF file with a two-line header followed by a new empty line.',
     });
     resultRef.current = response.output_text;
   };
@@ -76,9 +83,20 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
       })
       .then(() => {
         if (resultRef.current) {
-          parseSDF(resultRef.current, (result) => {
+          const mol = { name: 'chatgpt', data: resultRef.current } as MoleculeInterface;
+          loadMolecule(mol, (result) => {
             console.log(resultRef.current);
             console.log(result);
+            mol.name = result.name;
+            const added = addMolecule(mol);
+            if (added) {
+              setCommonStore((state) => {
+                state.projectState.selectedMolecule = mol;
+              });
+              setChanged(true);
+            } else {
+              showInfo(t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + mol.name, 3);
+            }
           });
         }
       })

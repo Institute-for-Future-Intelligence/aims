@@ -148,35 +148,42 @@ export const loadMolecule = (
   molecule: MoleculeInterface,
   processResult: (result: any, molecule?: Molecule) => void,
 ) => {
-  const mol = getData(molecule.name);
-  if (mol?.url) {
-    fetch(mol.url).then((response) => {
-      response.text().then((text) => {
-        let url = mol.url;
-        if (url) {
-          if (url.includes('?')) {
-            // sometimes the url has an appendix (not sure who adds it)
-            url = url.substring(0, url.indexOf('?'));
-          }
-          let parser = null;
-          const options = { autoBond: !isCrystal(molecule.name) };
-          if (url.endsWith('.sdf')) parser = new SDFParser(text, options);
-          else if (url.endsWith('.cif')) parser = new CIFParser(text, options);
-          else if (url.endsWith('.pdb')) parser = new PDBParser(text, options);
-          else if (url.endsWith('.pcj')) parser = new PubChemParser(text, options);
-          else if (url.endsWith('.xyz')) parser = new XYZParser(text, options);
-          else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
-          if (parser) {
-            parser.parse().then((result) => {
-              if (molecule) {
-                processResult(result, molecule as Molecule);
-              } else {
-                processResult(result);
-              }
-            });
-          }
-        }
-      });
+  if (molecule.data) {
+    console.log(molecule.data);
+    new SDFParser(molecule.data).parse().then((result) => {
+      processResult(result, molecule as Molecule);
     });
+  } else {
+    const mol = getData(molecule.name);
+    if (mol?.url) {
+      fetch(mol.url).then((response) => {
+        response.text().then((text) => {
+          let url = mol.url;
+          if (url) {
+            if (url.includes('?')) {
+              // sometimes the url has an appendix (not sure who adds it)
+              url = url.substring(0, url.indexOf('?'));
+            }
+            let parser = null;
+            const options = { autoBond: !isCrystal(molecule.name) };
+            if (url.endsWith('.sdf')) parser = new SDFParser(text, options);
+            else if (url.endsWith('.cif')) parser = new CIFParser(text, options);
+            else if (url.endsWith('.pdb')) parser = new PDBParser(text, options);
+            else if (url.endsWith('.pcj')) parser = new PubChemParser(text, options);
+            else if (url.endsWith('.xyz')) parser = new XYZParser(text, options);
+            else if (url.endsWith('.mol2')) parser = new MOL2Parser(text, options);
+            if (parser) {
+              parser.parse().then((result) => {
+                if (molecule) {
+                  processResult(result, molecule as Molecule);
+                } else {
+                  processResult(result);
+                }
+              });
+            }
+          }
+        });
+      });
+    }
   }
 };
