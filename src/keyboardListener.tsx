@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { UndoableCheck } from './undo/UndoableCheck';
-import { showInfo } from './helpers';
+import { setMessage } from './helpers';
 import i18n from './i18n/i18n';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { FlightControl, PickMode, ProjectType, SpaceshipDisplayMode, UNDO_SHOW_INFO_DURATION } from './constants';
@@ -503,7 +503,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
           const commandName = undoManager.undo();
           if (commandName) {
             message.destroy();
-            showInfo(i18n.t('menu.edit.Undo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
+            setMessage('info', i18n.t('menu.edit.Undo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
           }
           if (loggable) logAction('Undo');
         }
@@ -514,7 +514,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
           const commandName = undoManager.redo();
           if (commandName) {
             message.destroy();
-            showInfo(i18n.t('menu.edit.Redo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
+            setMessage('info', i18n.t('menu.edit.Redo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
           }
           if (loggable) logAction('Redo');
         }

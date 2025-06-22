@@ -2,13 +2,14 @@
  * @Copyright 2025. Institute for Future Intelligence, Inc.
  */
 
-import { App, Button, message, Space } from 'antd';
+import { App, Button, Space } from 'antd';
 import i18n from './i18n/i18n';
 import { useStore } from './stores/common.ts';
 import { UNDO_SHOW_INFO_DURATION } from './constants.ts';
 import { usePrimitiveStore } from './stores/commonPrimitive.ts';
 import React, { useEffect } from 'react';
 import * as Selector from './stores/selector';
+import { setMessage } from './helpers.tsx';
 
 const Messenger = React.memo(() => {
   const msg = usePrimitiveStore(Selector.message);
@@ -19,7 +20,7 @@ const Messenger = React.memo(() => {
     if (msg?.type === 'success') {
       message.success({
         duration: msg?.duration ?? 2,
-        content: msg?.message ?? 'Unknown',
+        content: msg?.content ?? 'Unknown',
         className: 'custom-class',
         style: {
           marginTop: '20vh',
@@ -31,7 +32,31 @@ const Messenger = React.memo(() => {
     } else if (msg?.type === 'warning') {
       message.warning({
         duration: msg?.duration ?? 2,
-        content: msg?.message ?? 'Unknown',
+        content: msg?.content ?? 'Unknown',
+        className: 'custom-class',
+        style: {
+          marginTop: '20vh',
+        },
+        onClick: () => {
+          message.destroy();
+        },
+      });
+    } else if (msg?.type === 'info') {
+      message.info({
+        duration: msg?.duration ?? 2,
+        content: msg?.content ?? 'Unknown',
+        className: 'custom-class',
+        style: {
+          marginTop: '20vh',
+        },
+        onClick: () => {
+          message.destroy();
+        },
+      });
+    } else if (msg?.type === 'error') {
+      message.error({
+        duration: msg.duration ?? 2,
+        content: msg.content,
         className: 'custom-class',
         style: {
           marginTop: '20vh',
@@ -46,7 +71,7 @@ const Messenger = React.memo(() => {
         duration: msg?.duration ?? 3,
         content: (
           <Space direction={'horizontal'}>
-            <span>{msg?.message ?? 'Unknown'}</span>
+            <span>{msg?.content ?? 'Unknown'}</span>
             <Button
               type={'primary'}
               title={i18n.t('menu.edit.Undo', lang)}
@@ -54,7 +79,7 @@ const Messenger = React.memo(() => {
                 const commandName = useStore.getState().undoManager.undo();
                 if (commandName) {
                   setTimeout(() => {
-                    showInfo(i18n.t('menu.edit.Undone', lang), UNDO_SHOW_INFO_DURATION);
+                    setMessage('info', i18n.t('menu.edit.Undone', lang), UNDO_SHOW_INFO_DURATION);
                   }, 500);
                 }
                 if (useStore.getState().loggable) {
@@ -94,31 +119,3 @@ const Messenger = React.memo(() => {
 });
 
 export default Messenger;
-
-export const showInfo = (msg: string, duration?: number) => {
-  message.info({
-    duration: duration ?? 2,
-    content: msg,
-    className: 'custom-class',
-    style: {
-      marginTop: '20vh',
-    },
-    onClick: () => {
-      message.destroy();
-    },
-  });
-};
-
-export const showError = (msg: string, duration?: number) => {
-  message.error({
-    duration: duration ?? 2,
-    content: msg,
-    className: 'custom-class',
-    style: {
-      marginTop: '20vh',
-    },
-    onClick: () => {
-      message.destroy();
-    },
-  });
-};

@@ -15,13 +15,13 @@ import {
   WarningOutlined,
 } from '@ant-design/icons';
 import { REGEX_ALLOWABLE_IN_NAME, Z_INDEX_FRONT_PANEL } from '../constants.ts';
-import { showInfo } from '../helpers.tsx';
+import { setMessage } from '../helpers.tsx';
 import Draggable from 'react-draggable';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useTranslation } from 'react-i18next';
 import { MenuProps } from 'antd/lib';
 import { MenuItem } from '../components/menuItem.tsx';
-import { Message, ProjectInfo, ProjectState } from '../types.ts';
+import { ProjectInfo, ProjectState } from '../types.ts';
 import { fetchProject, postFetch } from '../cloudProjectUtil.ts';
 import dayjs from 'dayjs';
 import { Util } from '../Util.ts';
@@ -221,7 +221,7 @@ const ProjectListPanel = React.memo(
                 state.saveAndThenOpenProjectFlag = true;
               });
             } else {
-              showInfo(t('menu.file.ToSaveYourWorkPleaseSignIn', lang));
+              setMessage('info', t('menu.file.ToSaveYourWorkPleaseSignIn', lang));
             }
           },
           onCancel: () => {
@@ -398,12 +398,7 @@ const ProjectListPanel = React.memo(
                           <MenuItem
                             onClick={() => {
                               navigator.clipboard.writeText(title).then(() => {
-                                usePrimitiveStore.getState().set((state) => {
-                                  state.message = {
-                                    type: 'success',
-                                    message: i18n.t('projectListPanel.TitleCopiedToClipBoard', lang) + '.',
-                                  } as Message;
-                                });
+                                setMessage('success', i18n.t('projectListPanel.TitleCopiedToClipBoard', lang) + '.');
                               });
                             }}
                           >
@@ -437,12 +432,10 @@ const ProjectListPanel = React.memo(
                             onClick={() => {
                               if (user.uid)
                                 Util.generateProjectLink(user.uid, title, () => {
-                                  usePrimitiveStore.getState().set((state) => {
-                                    state.message = {
-                                      type: 'success',
-                                      message: i18n.t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.',
-                                    } as Message;
-                                  });
+                                  setMessage(
+                                    'success',
+                                    i18n.t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.',
+                                  );
                                 });
                             }}
                           >

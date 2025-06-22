@@ -6,7 +6,6 @@ import { useStore } from './stores/common';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
-import { showError } from './helpers';
 import i18n from './i18n/i18n';
 import { ProjectState, MolecularContainer, MoleculeTransform, ProjectInfo } from './types';
 import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode } from './constants';
@@ -17,6 +16,7 @@ import { ModelUtil } from './models/ModelUtil.ts';
 import { SPEED_BIN_NUMBER } from './models/physicalConstants.ts';
 import { useDataStore } from './stores/commonData.ts';
 import { GravitationalField } from './models/GravitationalField.ts';
+import { setMessage } from './helpers.tsx';
 
 export const addProjectToList = async (uid: string, project: ProjectInfo) => {
   await firebase
@@ -201,11 +201,11 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           showInstructionPanel: !!data.showInstructionPanel,
         } as ProjectState);
       } else {
-        showError(i18n.t('message.CannotOpenProject', lang) + ': ' + project);
+        setMessage('error', i18n.t('message.CannotOpenProject', lang) + ': ' + project);
       }
     })
     .catch((error) => {
-      showError(i18n.t('message.CannotOpenProject', lang) + ': ' + error);
+      setMessage('error', i18n.t('message.CannotOpenProject', lang) + ': ' + error);
     });
 };
 

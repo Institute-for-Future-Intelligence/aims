@@ -12,7 +12,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
-import { showError, showInfo } from './helpers';
+import { setMessage } from './helpers';
 import { ProjectInfo, ProjectState } from './types';
 import Spinner from './components/spinner';
 import { Util } from './Util';
@@ -209,7 +209,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       })
       .catch((error) => {
         if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-          showError(t('message.CannotSignIn', lang) + ': ' + error);
+          setMessage('error', t('message.CannotSignIn', lang) + ': ' + error);
         }
       });
   };
@@ -234,7 +234,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       })
       .catch((error) => {
         if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-          showError(t('message.CannotSignIn', lang) + ': ' + error);
+          setMessage('error', t('message.CannotSignIn', lang) + ': ' + error);
         }
       });
   };
@@ -318,10 +318,10 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             os: Util.getOS(),
           })
           .then(() => {
-            showInfo(t('message.YourAccountWasCreated', lang));
+            setMessage('info', t('message.YourAccountWasCreated', lang));
           })
           .catch((error) => {
-            showError(t('message.CannotCreateAccount', lang) + ': ' + error);
+            setMessage('error', t('message.CannotCreateAccount', lang) + ': ' + error);
           });
       }
     }
@@ -347,7 +347,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         });
       })
       .catch((error) => {
-        showError(t('message.CannotSignOut', lang) + ': ' + error);
+        setMessage('error', t('message.CannotSignOut', lang) + ': ' + error);
       });
   };
 
@@ -410,7 +410,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
               return a;
             })
             .catch((error) => {
-              showError(t('message.CannotOpenYourProjects', lang) + ': ' + error);
+              setMessage('error', t('message.CannotOpenYourProjects', lang) + ': ' + error);
             })
             .finally(() => {
               firebase
@@ -473,7 +473,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         });
       })
       .catch((error) => {
-        showError(t('message.CannotDeleteProject', lang) + ': ' + error);
+        setMessage('error', t('message.CannotDeleteProject', lang) + ': ' + error);
       });
   };
 
@@ -516,7 +516,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         }
       }
       if (exist) {
-        showInfo(t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
+        setMessage('info', t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
       } else {
         const uid = user.uid;
         if (!uid) return;
@@ -551,7 +551,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             }
           })
           .catch((error) => {
-            showError(t('message.CannotRenameProject', lang) + ': ' + error);
+            setMessage('error', t('message.CannotRenameProject', lang) + ': ' + error);
           });
       }
     });
@@ -571,12 +571,12 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     if (!user || !user.uid) return;
     const title = usePrimitiveStore.getState().projectTitle;
     if (!title) {
-      showError(t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
+      setMessage('error', t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
       return;
     }
     const newTitle = title.trim();
     if (newTitle.length === 0) {
-      showError(t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
+      setMessage('error', t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
       return;
     }
     // check if the project title is already used
@@ -591,7 +591,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         }
       }
       if (exist) {
-        showInfo(t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
+        setMessage('info', t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
       } else {
         if (user) {
           const uid = user.uid;
@@ -632,7 +632,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
                 setUpdateMyProjectsFlag(!updateMyProjectsFlag);
               })
               .catch((error) => {
-                showError(t('message.CannotCreateNewProject', lang) + ': ' + error);
+                setMessage('error', t('message.CannotCreateNewProject', lang) + ': ' + error);
               })
               .finally(() => {
                 setWaiting(false);
@@ -777,7 +777,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     if (!uid) return;
     const title = useStore.getState().projectState.title;
     if (!title) {
-      showError(t('message.CannotSaveProjectWithoutTitle', lang));
+      setMessage('error', t('message.CannotSaveProjectWithoutTitle', lang));
       return;
     }
     setWaiting(true);
@@ -805,7 +805,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
         }
       })
       .catch((error) => {
-        showError(t('message.CannotSaveProject', lang) + ': ' + error);
+        setMessage('error', t('message.CannotSaveProject', lang) + ': ' + error);
       })
       .finally(() => {
         setWaiting(false);
@@ -827,12 +827,12 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     if (!user || !user.uid) return;
     const title = usePrimitiveStore.getState().projectTitle;
     if (!title) {
-      showError(t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
+      setMessage('error', t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
       return;
     }
     const newTitle = title.trim();
     if (newTitle.length === 0) {
-      showError(t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
+      setMessage('error', t('message.CannotCreateNewProjectWithoutTitle', lang) + '.');
       return;
     }
     setWaiting(true);
@@ -849,7 +849,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           }
         }
         if (exist) {
-          showInfo(t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
+          setMessage('info', t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
         } else {
           if (user && user.uid) {
             const uid = user.uid;
@@ -889,7 +889,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
                 }
               })
               .catch((error) => {
-                showError(t('message.CannotCreateNewProject', lang) + ': ' + error);
+                setMessage('error', t('message.CannotCreateNewProject', lang) + ': ' + error);
               });
           }
         }
@@ -922,10 +922,10 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
           classID: user.classID ?? ClassID.UNKNOWN,
         })
         .then(() => {
-          showInfo(t('message.YourAccountSettingsWereSaved', lang));
+          setMessage('info', t('message.YourAccountSettingsWereSaved', lang));
         })
         .catch((error) => {
-          showError(t('message.CannotSaveYourAccountSettings', lang) + ': ' + error);
+          setMessage('error', t('message.CannotSaveYourAccountSettings', lang) + ': ' + error);
         });
     }
   }

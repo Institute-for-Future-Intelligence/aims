@@ -14,7 +14,7 @@ import { OpenAI } from 'openai';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { loadMolecule } from '../view/moleculeTools.ts';
 import { MoleculeInterface } from '../types.ts';
-import { showInfo } from '../helpers.tsx';
+import { setMessage } from '../helpers.tsx';
 
 export interface GenerateMoleculeModalProps {
   setDialogVisible: (visible: boolean) => void;
@@ -95,7 +95,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
               });
               setChanged(true);
             } else {
-              showInfo(t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + mol.name, 3);
+              setMessage('info', t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + mol.name, 3);
             }
           });
         }

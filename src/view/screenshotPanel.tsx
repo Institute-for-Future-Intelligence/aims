@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import { useStore } from '../stores/common.ts';
@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../hooks.ts';
 import { Button, Space } from 'antd';
 import React from 'react';
-import { screenshot, showError } from '../helpers.tsx';
+import { screenshot, setMessage } from '../helpers.tsx';
 
 export const ScreenshotPanel = React.memo(() => {
   const loggable = useStore(Selector.loggable);
@@ -25,7 +25,7 @@ export const ScreenshotPanel = React.memo(() => {
               if (loggable) logAction('Take Screenshot of Reaction Chamber');
             })
             .catch((reason) => {
-              showError(reason);
+              setMessage('error', reason);
             });
         }}
       >
@@ -38,7 +38,7 @@ export const ScreenshotPanel = React.memo(() => {
               if (loggable) logAction('Take Screenshot of Whole App');
             })
             .catch((reason) => {
-              showError(reason);
+              setMessage('error', reason);
             });
         }}
       >

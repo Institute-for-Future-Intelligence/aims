@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { drugMolecules, findSimilarMolecules, getMolecule } from '../internalDatabase.ts';
 import { ChemicalNotation, DataColoring, GraphType, ProjectType } from '../constants.ts';
 import styled from 'styled-components';
-import { App, Button, Collapse, CollapseProps, Empty, Modal, Popover, Radio, Spin } from 'antd';
+import { App, Button, Collapse, CollapseProps, Empty, Popover, Radio, Spin } from 'antd';
 import {
   ColumnHeightOutlined,
   BgColorsOutlined,
@@ -37,7 +37,7 @@ import { useTranslation } from 'react-i18next';
 import { DatumEntry, MoleculeInterface } from '../types.ts';
 import TextArea from 'antd/lib/input/TextArea';
 import ImportMoleculeModal from './ImportMoleculeModal.tsx';
-import { saveSvg, showError, showInfo } from '../helpers.tsx';
+import { saveSvg, setMessage } from '../helpers.tsx';
 import ParallelCoordinates from '../components/parallelCoordinates.tsx';
 import { ProjectUtil } from './ProjectUtil.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
@@ -1016,10 +1016,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           setUpdateFlag(!updateFlag);
           setChanged(true);
         } else {
-          showInfo(t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + name, 3);
+          setMessage('info', t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + name, 3);
         }
       } else {
-        showError(t('projectPanel.MoleculeNotFound', lang) + ': ' + name, 3);
+        setMessage('error', t('projectPanel.MoleculeNotFound', lang) + ': ' + name, 3);
       }
     }
   };
@@ -1247,11 +1247,11 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       onClick={() => {
                         saveSvg('parallel-coordinates')
                           .then(() => {
-                            showInfo(t('message.ScreenshotSaved', lang));
+                            setMessage('info', t('message.ScreenshotSaved', lang));
                             if (loggable) logAction('Take Screenshot of Property Space');
                           })
                           .catch((reason) => {
-                            showError(reason);
+                            setMessage('error', reason);
                           });
                       }}
                     >
@@ -1376,11 +1376,11 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       onClick={() => {
                         saveSvg('scatter-plot')
                           .then(() => {
-                            showInfo(t('message.ScreenshotSaved', lang));
+                            setMessage('info', t('message.ScreenshotSaved', lang));
                             if (loggable) logAction('Take Screenshot of the Scatter Plot');
                           })
                           .catch((reason) => {
-                            showError(reason);
+                            setMessage('error', reason);
                           });
                       }}
                     >

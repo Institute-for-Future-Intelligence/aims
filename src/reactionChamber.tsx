@@ -38,7 +38,7 @@ import { Molecule } from './models/Molecule.ts';
 import { Atom } from './models/Atom.ts';
 import { VT_CONVERSION_CONSTANT } from './models/physicalConstants.ts';
 import { ModelUtil } from './models/ModelUtil.ts';
-import { showInfo } from './helpers.tsx';
+import { setMessage } from './helpers.tsx';
 import { useTranslation } from 'react-i18next';
 import { Undoable } from './undo/Undoable.ts';
 import InstructionPanel from './view/instructionPanel.tsx';
@@ -168,7 +168,7 @@ const ReactionChamber = React.memo(() => {
       }
     } else {
       if (!point) {
-        showInfo(t('message.TurnOnXYZPlanesForDroppingMolecule', lang));
+        setMessage('info', t('message.TurnOnXYZPlanesForDroppingMolecule', lang));
       }
     }
   };

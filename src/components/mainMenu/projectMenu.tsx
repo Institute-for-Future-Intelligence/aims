@@ -14,7 +14,7 @@ import { SaveProjectAsItem } from './saveProjectAsItem.tsx';
 import { MenuItem } from '../menuItem.tsx';
 import { Util } from '../../Util.ts';
 import { HookAPI } from 'antd/lib/modal/useModal';
-import { Message } from '../../types.ts';
+import { setMessage } from '../../helpers.tsx';
 
 export const askToCreateProject = (modal: HookAPI) => {
   const lang = { lng: useStore.getState().language };
@@ -120,12 +120,7 @@ export const createProjectMenu = (isMac: boolean) => {
           onClick={() => {
             if (!user.uid || !projectTitle) return;
             Util.generateProjectLink(user.uid, projectTitle, () => {
-              usePrimitiveStore.getState().set((state) => {
-                state.message = {
-                  type: 'success',
-                  message: i18n.t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.',
-                } as Message;
-              });
+              setMessage('success', i18n.t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.');
             });
           }}
         >

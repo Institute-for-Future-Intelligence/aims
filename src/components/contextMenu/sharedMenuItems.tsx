@@ -13,7 +13,7 @@ import { UndoableCheck } from '../../undo/UndoableCheck';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useTranslation } from 'react-i18next';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
-import { screenshot, showError } from '../../helpers';
+import { screenshot, setMessage } from '../../helpers';
 import {
   CHAMBER_COLORING_LABELS,
   CHAMBER_STYLE_LABELS,
@@ -187,7 +187,7 @@ export const Screenshot = () => {
         if (loggable) logAction('Take Screenshot of Reaction Chamber');
       })
       .catch((reason) => {
-        showError(reason);
+        setMessage('error', reason);
       });
   };
 

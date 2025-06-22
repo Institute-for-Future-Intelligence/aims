@@ -184,6 +184,6 @@ export interface ActionInfo {
 
 export interface Message {
   type: string;
-  message: string;
+  content: string;
   duration?: number;
 }

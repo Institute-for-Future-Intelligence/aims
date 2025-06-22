@@ -4,8 +4,9 @@
 
 // @ts-expect-error: Explain what?
 import { saveSvgAsPng } from 'save-svg-as-png';
-import { message } from 'antd';
 import html2canvas from 'html2canvas';
+import { usePrimitiveStore } from './stores/commonPrimitive.ts';
+import { Message } from './types.ts';
 
 export const visitIFI = () => {
   window.open('https://intofuture.org', '_blank');
@@ -15,31 +16,9 @@ export const visitHomepage = () => {
   window.open('https://intofuture.org/aims.html', '_blank');
 };
 
-export const showInfo = (msg: string, duration?: number) => {
-  message.info({
-    duration: duration ?? 2,
-    content: msg,
-    className: 'custom-class',
-    style: {
-      marginTop: '20vh',
-    },
-    onClick: () => {
-      message.destroy();
-    },
-  });
-};
-
-export const showError = (msg: string, duration?: number) => {
-  message.error({
-    duration: duration ?? 2,
-    content: msg,
-    className: 'custom-class',
-    style: {
-      marginTop: '20vh',
-    },
-    onClick: () => {
-      message.destroy();
-    },
+export const setMessage = (type: string, content: string, duration?: number) => {
+  usePrimitiveStore.getState().set((state) => {
+    state.message = { type, content, duration } as Message;
   });
 };
 

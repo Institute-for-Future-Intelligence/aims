@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import { createWithEqualityFn } from 'zustand/traditional';
@@ -9,7 +9,7 @@ import { Util } from '../Util';
 import { VERSION } from '../constants';
 import { Undoable } from '../undo/Undoable';
 import { UndoManager } from '../undo/UndoManager';
-import { ActionInfo, Message, MoleculeInterface, ProjectInfo, ProjectState } from '../types';
+import { ActionInfo, MoleculeInterface, ProjectInfo, ProjectState } from '../types';
 import { Locale } from 'antd/lib/locale';
 import enUS from 'antd/lib/locale/en_US';
 import elementsUrl from '../assets/elements.csv';
@@ -26,6 +26,7 @@ import { Restraint } from '../models/Restraint.ts';
 import { Triple } from '../models/Triple.ts';
 import { Quadruple } from '../models/Quadruple.ts';
 import { usePrimitiveStore } from './commonPrimitive.ts';
+import { setMessage } from '../helpers.tsx';
 
 enableMapSet();
 
@@ -321,9 +322,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           undoManager: new UndoManager(),
           addUndoable(undoable: Undoable) {
             if (!usePrimitiveStore.getState().muteUndoMessage) {
-              usePrimitiveStore.getState().set((state) => {
-                state.message = { type: 'undo', message: undoable.name } as Message;
-              });
+              setMessage('undo', undoable.name);
             }
             immerSet((state: CommonStoreState) => {
               if (state.loggable) {

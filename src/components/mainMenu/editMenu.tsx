@@ -8,7 +8,7 @@ import { useStore } from '../../stores/common';
 import { LabelMark, MenuItem } from '../menuItem';
 import { UndoManager } from '../../undo/UndoManager';
 import { UNDO_SHOW_INFO_DURATION } from '../../constants';
-import { showInfo } from '../../helpers';
+import { setMessage } from '../../helpers.tsx';
 
 export const createEditMenu = (undoManager: UndoManager, isMac: boolean, refresh: () => void) => {
   const lang = { lng: useStore.getState().language };
@@ -18,7 +18,7 @@ export const createEditMenu = (undoManager: UndoManager, isMac: boolean, refresh
   const handleUndo = () => {
     if (undoManager.hasUndo()) {
       const commandName = undoManager.undo();
-      if (commandName) showInfo(i18n.t('menu.edit.Undo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
+      if (commandName) setMessage('info', i18n.t('menu.edit.Undo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
       if (loggable) logAction('Undo');
       refresh();
     }
@@ -27,7 +27,7 @@ export const createEditMenu = (undoManager: UndoManager, isMac: boolean, refresh
   const handleRedo = () => {
     if (undoManager.hasRedo()) {
       const commandName = undoManager.redo();
-      if (commandName) showInfo(i18n.t('menu.edit.Redo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
+      if (commandName) setMessage('info', i18n.t('menu.edit.Redo', lang) + ': ' + commandName, UNDO_SHOW_INFO_DURATION);
       if (loggable) logAction('Redo');
       refresh();
     }

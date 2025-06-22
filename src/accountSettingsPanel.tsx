@@ -11,7 +11,7 @@ import { Button, Col, Row, Select } from 'antd';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { useTranslation } from 'react-i18next';
 import { ClassID, SchoolID } from './User';
-import { Message } from './types.ts';
+import { setMessage } from './helpers.tsx';
 
 const { Option } = Select;
 
@@ -153,12 +153,7 @@ const AccountSettingsPanel = React.memo(() => {
                 onClick={() => {
                   if (user.uid) {
                     navigator.clipboard.writeText(user.uid).then(() => {
-                      usePrimitiveStore.getState().set((state) => {
-                        state.message = {
-                          type: 'success',
-                          message: t('accountSettingsPanel.IDInClipBoard', lang),
-                        } as Message;
-                      });
+                      setMessage('success', t('accountSettingsPanel.IDInClipBoard', lang));
                     });
                   }
                 }}

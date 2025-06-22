@@ -7,7 +7,7 @@ import './App.css';
 import ifiLogo from './assets/ifi-logo.png';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import { visitHomepage } from './helpers';
+import { setMessage, visitHomepage } from './helpers';
 import MainMenu from './mainMenu';
 import { ProjectType, SpaceshipDisplayMode, VERSION } from './constants';
 import ShareLinks from './shareLinks';
@@ -30,7 +30,6 @@ import PeriodicTable from './periodicTable.tsx';
 import { Util } from './Util.ts';
 import i18n from './i18n/i18n.ts';
 import Messenger from './messengers.tsx';
-import { Message } from './types.ts';
 
 const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
@@ -210,12 +209,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
                       onClick={() => {
                         if (!user.uid || !projectTitle) return;
                         Util.generateProjectLink(user.uid, projectTitle, () => {
-                          usePrimitiveStore.getState().set((state) => {
-                            state.message = {
-                              type: 'success',
-                              message: i18n.t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.',
-                            } as Message;
-                          });
+                          setMessage('success', i18n.t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.');
                         });
                       }}
                     >

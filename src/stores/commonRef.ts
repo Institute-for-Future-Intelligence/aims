@@ -13,7 +13,7 @@ import { MAXIMUM_NUMBER_OF_ATOMS_FOR_SIMULATION } from '../constants.ts';
 import i18n from '../i18n/i18n';
 import { useStore } from './common.ts';
 import { MyTrackballControls } from '../js/MyTrackballControls';
-import { usePrimitiveStore } from './commonPrimitive.ts';
+import { setMessage } from '../helpers.tsx';
 
 export interface RefStoreState {
   selectNone: () => void;
@@ -80,18 +80,15 @@ export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
       const atomCount = (mdRef?.current?.atoms.length ?? 0) + addition;
       if (atomCount > MAXIMUM_NUMBER_OF_ATOMS_FOR_SIMULATION) {
         const lang = { lng: useStore.getState().language };
-        usePrimitiveStore.getState().set((state) => {
-          state.message = {
-            type: 'warning',
-            message:
-              i18n.t('message.TooManyAtomsMayCauseSimulationToRunSlowly', lang) +
-              ' (' +
-              atomCount +
-              ' ' +
-              i18n.t('word.AtomsLowerCasePlural', lang) +
-              ').',
-          };
-        });
+        setMessage(
+          'warning',
+          i18n.t('message.TooManyAtomsMayCauseSimulationToRunSlowly', lang) +
+            ' (' +
+            atomCount +
+            ' ' +
+            i18n.t('word.AtomsLowerCasePlural', lang) +
+            ').',
+        );
       }
     },
   };

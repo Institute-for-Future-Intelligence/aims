@@ -14,10 +14,10 @@ import { ProjectGalleryControls } from '../controls.tsx';
 import { Html } from '@react-three/drei';
 import { ThreeEvent } from '@react-three/fiber';
 import GalleryViewer from '../view/galleryViewer.tsx';
-import { showInfo } from '../helpers.tsx';
 import { useTranslation } from 'react-i18next';
 import { message, Space } from 'antd';
 import { CheckCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { setMessage } from '../helpers.tsx';
 
 interface MolecularContainerProps {
   viewWidth: number;
@@ -133,7 +133,7 @@ const ScissorBox = React.memo(
             draggable={dragAndDropMolecule}
             onDragStart={() => {
               if (!xyPlaneVisible && !yzPlaneVisible && !xzPlaneVisible) {
-                showInfo(t('message.TurnOnXYZPlanesForDroppingMolecule', lang), 1000);
+                setMessage('info', t('message.TurnOnXYZPlanesForDroppingMolecule', lang), 1000);
               }
             }}
             onDragEnd={() => {
