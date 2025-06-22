@@ -3,7 +3,7 @@
  */
 
 import styled from 'styled-components';
-import { Avatar, Button, Dropdown, MenuProps, Modal, Space } from 'antd';
+import { App, Avatar, Button, Dropdown, MenuProps, Space } from 'antd';
 import React, { useMemo } from 'react';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
@@ -36,13 +36,14 @@ const MainToolBar = React.memo(({ signIn, signInAnonymously, signOut }: MainTool
   const language = useStore(Selector.language);
   const user = useStore(Selector.user);
 
+  const { modal } = App.useApp();
   const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
 
   const anonymousSignInCheck = () => {
-    Modal.confirm({
+    modal.confirm({
       title: `${t('message.SigningInAnonymousAccount', lang)}`,
       icon: <WarningOutlined />,
       type: 'warning',
@@ -57,7 +58,7 @@ const MainToolBar = React.memo(({ signIn, signInAnonymously, signOut }: MainTool
 
   const signOutCheck = () => {
     if (user.anonymous) {
-      Modal.confirm({
+      modal.confirm({
         title: `${t('message.SigningOutAnonymousAccount', lang)}`,
         icon: <WarningOutlined />,
         type: 'warning',

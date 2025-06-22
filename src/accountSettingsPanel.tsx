@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -8,10 +8,10 @@ import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import ReactDraggable, { DraggableEventHandler } from 'react-draggable';
 import { Button, Col, Row, Select } from 'antd';
-import { showSuccess } from './helpers';
 import { usePrimitiveStore } from './stores/commonPrimitive';
 import { useTranslation } from 'react-i18next';
 import { ClassID, SchoolID } from './User';
+import { Message } from './types.ts';
 
 const { Option } = Select;
 
@@ -152,9 +152,14 @@ const AccountSettingsPanel = React.memo(() => {
                 span={6}
                 onClick={() => {
                   if (user.uid) {
-                    navigator.clipboard
-                      .writeText(user.uid)
-                      .then(() => showSuccess(t('accountSettingsPanel.IDInClipBoard', lang)));
+                    navigator.clipboard.writeText(user.uid).then(() => {
+                      usePrimitiveStore.getState().set((state) => {
+                        state.message = {
+                          type: 'success',
+                          message: t('accountSettingsPanel.IDInClipBoard', lang),
+                        } as Message;
+                      });
+                    });
                   }
                 }}
               >

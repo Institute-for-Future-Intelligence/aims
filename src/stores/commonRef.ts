@@ -11,9 +11,9 @@ import { VdwBond } from '../models/VdwBond.ts';
 import { MolecularDynamics } from '../models/MolecularDynamics.ts';
 import { MAXIMUM_NUMBER_OF_ATOMS_FOR_SIMULATION } from '../constants.ts';
 import i18n from '../i18n/i18n';
-import { showWarning } from '../helpers.tsx';
 import { useStore } from './common.ts';
 import { MyTrackballControls } from '../js/MyTrackballControls';
+import { usePrimitiveStore } from './commonPrimitive.ts';
 
 export interface RefStoreState {
   selectNone: () => void;
@@ -80,14 +80,18 @@ export const useRefStore = createWithEqualityFn<RefStoreState>()((set, get) => {
       const atomCount = (mdRef?.current?.atoms.length ?? 0) + addition;
       if (atomCount > MAXIMUM_NUMBER_OF_ATOMS_FOR_SIMULATION) {
         const lang = { lng: useStore.getState().language };
-        showWarning(
-          i18n.t('message.TooManyAtomsMayCauseSimulationToRunSlowly', lang) +
-            ' (' +
-            atomCount +
-            ' ' +
-            i18n.t('word.AtomsLowerCasePlural', lang) +
-            ').',
-        );
+        usePrimitiveStore.getState().set((state) => {
+          state.message = {
+            type: 'warning',
+            message:
+              i18n.t('message.TooManyAtomsMayCauseSimulationToRunSlowly', lang) +
+              ' (' +
+              atomCount +
+              ' ' +
+              i18n.t('word.AtomsLowerCasePlural', lang) +
+              ').',
+          };
+        });
       }
     },
   };

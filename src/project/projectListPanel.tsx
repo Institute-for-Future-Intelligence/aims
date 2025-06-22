@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import ReactDraggable, { DraggableBounds, DraggableData, DraggableEvent, DraggableEventHandler } from 'react-draggable';
-import { Dropdown, Input, Modal, Space, Table, Typography } from 'antd';
+import { App, Dropdown, Input, Modal, Space, Table, Typography } from 'antd';
 import {
   CaretDownOutlined,
   ExclamationCircleOutlined,
@@ -15,16 +15,17 @@ import {
   WarningOutlined,
 } from '@ant-design/icons';
 import { REGEX_ALLOWABLE_IN_NAME, Z_INDEX_FRONT_PANEL } from '../constants.ts';
-import { showInfo, showSuccess } from '../helpers.tsx';
+import { showInfo } from '../helpers.tsx';
 import Draggable from 'react-draggable';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useTranslation } from 'react-i18next';
 import { MenuProps } from 'antd/lib';
 import { MenuItem } from '../components/menuItem.tsx';
-import { ProjectInfo, ProjectState } from '../types.ts';
+import { Message, ProjectInfo, ProjectState } from '../types.ts';
 import { fetchProject, postFetch } from '../cloudProjectUtil.ts';
 import dayjs from 'dayjs';
 import { Util } from '../Util.ts';
+import i18n from '../i18n/i18n.ts';
 
 const { Column } = Table;
 
@@ -118,6 +119,7 @@ const ProjectListPanel = React.memo(
     const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
     const { Search } = Input;
+    const { modal } = App.useApp();
     const { t } = useTranslation();
     const lang = useMemo(() => {
       return { lng: language };
@@ -163,7 +165,7 @@ const ProjectListPanel = React.memo(
     };
 
     const confirmDeleteProject = (title: string) => {
-      Modal.confirm({
+      modal.confirm({
         title: t('projectListPanel.DoYouReallyWantToDeleteProject', lang) + ' "' + title + '"?',
         content: (
           <span style={{ color: 'red', fontWeight: 'bold' }}>
@@ -207,7 +209,7 @@ const ProjectListPanel = React.memo(
         state.startSimulation = false;
       });
       if (usePrimitiveStore.getState().changed) {
-        Modal.confirm({
+        modal.confirm({
           title: t('message.DoYouWantToSaveChanges', lang),
           icon: <ExclamationCircleOutlined />,
           onOk: () => {
@@ -395,9 +397,14 @@ const ProjectListPanel = React.memo(
                         label: (
                           <MenuItem
                             onClick={() => {
-                              navigator.clipboard
-                                .writeText(title)
-                                .then(() => showSuccess(t('projectListPanel.TitleCopiedToClipBoard', lang) + '.'));
+                              navigator.clipboard.writeText(title).then(() => {
+                                usePrimitiveStore.getState().set((state) => {
+                                  state.message = {
+                                    type: 'success',
+                                    message: i18n.t('projectListPanel.TitleCopiedToClipBoard', lang) + '.',
+                                  } as Message;
+                                });
+                              });
                             }}
                           >
                             {t('projectListPanel.CopyTitle', lang)}
@@ -429,9 +436,14 @@ const ProjectListPanel = React.memo(
                           <MenuItem
                             onClick={() => {
                               if (user.uid)
-                                Util.generateProjectLink(user.uid, title, () =>
-                                  showSuccess(t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.'),
-                                );
+                                Util.generateProjectLink(user.uid, title, () => {
+                                  usePrimitiveStore.getState().set((state) => {
+                                    state.message = {
+                                      type: 'success',
+                                      message: i18n.t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.',
+                                    } as Message;
+                                  });
+                                });
                             }}
                           >
                             {t('projectListPanel.GenerateProjectLink', lang)}

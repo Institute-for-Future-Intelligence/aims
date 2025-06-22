@@ -7,7 +7,7 @@ import './App.css';
 import ifiLogo from './assets/ifi-logo.png';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import { showSuccess, visitHomepage } from './helpers';
+import { visitHomepage } from './helpers';
 import MainMenu from './mainMenu';
 import { ProjectType, SpaceshipDisplayMode, VERSION } from './constants';
 import ShareLinks from './shareLinks';
@@ -29,6 +29,8 @@ import Cockpit from './view/cockpit.tsx';
 import PeriodicTable from './periodicTable.tsx';
 import { Util } from './Util.ts';
 import i18n from './i18n/i18n.ts';
+import Messenger from './messengers.tsx';
+import { Message } from './types.ts';
 
 const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
@@ -120,7 +122,6 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
   };
 
   const isOwner = user.uid && user.uid === projectOwner;
-  const chamberVisible = chamberViewerPercentWidth > 0.1;
 
   console.log('x');
 
@@ -208,9 +209,14 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
                       style={{ cursor: 'pointer' }}
                       onClick={() => {
                         if (!user.uid || !projectTitle) return;
-                        Util.generateProjectLink(user.uid, projectTitle, () =>
-                          showSuccess(i18n.t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.'),
-                        );
+                        Util.generateProjectLink(user.uid, projectTitle, () => {
+                          usePrimitiveStore.getState().set((state) => {
+                            state.message = {
+                              type: 'success',
+                              message: i18n.t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.',
+                            } as Message;
+                          });
+                        });
                       }}
                     >
                       {t('word.CopyLink', lang)}
@@ -328,6 +334,7 @@ const AppCreator = React.memo(({ viewOnly = false }: { viewOnly: boolean }) => {
           }}
         />
       )}
+      <Messenger />
     </div>
   );
 });

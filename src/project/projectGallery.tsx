@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { drugMolecules, findSimilarMolecules, getMolecule } from '../internalDatabase.ts';
 import { ChemicalNotation, DataColoring, GraphType, ProjectType } from '../constants.ts';
 import styled from 'styled-components';
-import { Button, Collapse, CollapseProps, Empty, Modal, Popover, Radio, Spin } from 'antd';
+import { App, Button, Collapse, CollapseProps, Empty, Modal, Popover, Radio, Spin } from 'antd';
 import {
   ColumnHeightOutlined,
   BgColorsOutlined,
@@ -195,6 +195,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const [findMoleculeDialogVisible, setFindMoleculeDialogVisible] = useState(false);
   const [scatterDataHoveredIndex, setScatterDataHoveredIndex] = useState<number>(-1);
 
+  const { modal } = App.useApp();
   const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
@@ -481,7 +482,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     style={{ border: 'none', padding: '4px' }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      Modal.confirm({
+                      modal.confirm({
                         title: `${t('message.DoYouWantToRemoveAllMoleculesFromGallery', lang)}`,
                         icon: <QuestionCircleOutlined />,
                         type: 'confirm',

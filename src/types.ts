@@ -181,3 +181,9 @@ export interface ActionInfo {
   readonly timestamp: number;
   readonly name: string;
 }
+
+export interface Message {
+  type: string;
+  message: string;
+  duration?: number;
+}

@@ -4,7 +4,7 @@
 
 import { createWithEqualityFn } from 'zustand/traditional';
 import { produce } from 'immer';
-import { MoleculeInterface } from '../types';
+import { Message, MoleculeInterface } from '../types';
 import { PickMode, ProjectType } from '../constants';
 import { Molecule } from '../models/Molecule.ts';
 import { PolynomialRegression } from 'ml-regression-polynomial';
@@ -22,6 +22,8 @@ export interface PrimitiveStoreState {
   updateViewer: () => void;
   updateInfoFlag: boolean;
   updateInfo: () => void;
+
+  message: Message | undefined;
 
   dragAndDropMolecule: boolean;
   hoveredMolecule: MoleculeInterface | null;
@@ -144,6 +146,8 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
         state.updateInfoFlag = !state.updateInfoFlag;
       });
     },
+
+    message: undefined,
 
     dragAndDropMolecule: false,
     hoveredMolecule: null,

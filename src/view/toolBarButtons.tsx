@@ -1,10 +1,10 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useMemo } from 'react';
 import { ClearOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { FloatButton, InputNumber, Modal, Popover, Space } from 'antd';
+import { App, FloatButton, InputNumber, Popover, Space } from 'antd';
 import { useStore } from '../stores/common';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +29,7 @@ const ToolBarButtons = React.memo(() => {
   const deleteAllAtoms = useStore(Selector.deleteAllAtoms);
   const testMolecules = useStore(Selector.testMolecules);
 
+  const { modal } = App.useApp();
   const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
@@ -258,7 +259,7 @@ const ToolBarButtons = React.memo(() => {
             tooltip={t('experiment.DeleteAllAtoms', lang)}
             onClick={() => {
               if (testMolecules.length === 0) return;
-              Modal.confirm({
+              modal.confirm({
                 title: t('experiment.DoYouReallyWantToDeleteAllAtoms', lang) + '?',
                 icon: <QuestionCircleOutlined />,
                 okText: t('word.OK', lang),

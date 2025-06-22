@@ -16,7 +16,7 @@ import { resetView, zoomView } from './components/mainMenu/viewMenu';
 import { startFlying, stopFlying } from './fly.ts';
 import { useRefStore } from './stores/commonRef.ts';
 import { Molecule } from './models/Molecule.ts';
-import { message } from 'antd';
+import { App, message } from 'antd';
 import { UndoableDeleteMoleculeInChamber } from './undo/UndoableDelete.ts';
 
 export interface KeyboardListenerProps {
@@ -114,6 +114,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const moleculesRef = useRefStore.getState().moleculesRef;
   const warnIfTooManyAtoms = useRefStore.getState().warnIfTooManyAtoms;
 
+  const { modal } = App.useApp();
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
@@ -476,11 +477,11 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         break;
       case 'ctrl+f':
       case 'meta+f': // for Mac
-        askToCreateProject();
+        askToCreateProject(modal);
         break;
       case 'ctrl+o':
       case 'meta+o': // for Mac
-        askToOpenProject();
+        askToOpenProject(modal);
         break;
       case 'ctrl+s':
       case 'meta+s': // for Mac

@@ -369,4 +369,6 @@ export const navigationView = (state: CommonStoreState) => state.projectState.na
 
 export const showPeriodicTable = (state: PrimitiveStoreState) => state.showPeriodicTable;
 
+export const message = (state: PrimitiveStoreState) => state.message;
+
 export const generateMoleculePrompt = (state: PrimitiveStoreState) => state.generateMoleculePrompt;

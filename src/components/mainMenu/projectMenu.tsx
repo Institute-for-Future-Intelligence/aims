@@ -2,7 +2,7 @@
  * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
-import { MenuProps, Modal } from 'antd';
+import { MenuProps } from 'antd';
 import i18n from '../../i18n/i18n';
 import { useStore } from '../../stores/common';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
@@ -13,12 +13,13 @@ import { SaveProjectItem } from './saveProjectItem.tsx';
 import { SaveProjectAsItem } from './saveProjectAsItem.tsx';
 import { MenuItem } from '../menuItem.tsx';
 import { Util } from '../../Util.ts';
-import { showSuccess } from '../../helpers.tsx';
+import { HookAPI } from 'antd/lib/modal/useModal';
+import { Message } from '../../types.ts';
 
-export const askToCreateProject = () => {
+export const askToCreateProject = (modal: HookAPI) => {
   const lang = { lng: useStore.getState().language };
   if (usePrimitiveStore.getState().changed) {
-    Modal.confirm({
+    modal.confirm({
       title: i18n.t('message.DoYouWantToSaveChanges', lang),
       icon: <ExclamationCircleOutlined />,
       onOk: () => {
@@ -41,10 +42,10 @@ const createProject = () => {
   if (useStore.getState().loggable) useStore.getState().logAction('Create New Project');
 };
 
-export const askToOpenProject = () => {
+export const askToOpenProject = (modal: HookAPI) => {
   const lang = { lng: useStore.getState().language };
   if (usePrimitiveStore.getState().changed) {
-    Modal.confirm({
+    modal.confirm({
       title: i18n.t('message.DoYouWantToSaveChanges', lang),
       icon: <ExclamationCircleOutlined />,
       onOk: () => {
@@ -118,9 +119,14 @@ export const createProjectMenu = (isMac: boolean) => {
           hasPadding={false}
           onClick={() => {
             if (!user.uid || !projectTitle) return;
-            Util.generateProjectLink(user.uid, projectTitle, () =>
-              showSuccess(i18n.t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.'),
-            );
+            Util.generateProjectLink(user.uid, projectTitle, () => {
+              usePrimitiveStore.getState().set((state) => {
+                state.message = {
+                  type: 'success',
+                  message: i18n.t('projectListPanel.ProjectLinkGeneratedInClipBoard', lang) + '.',
+                } as Message;
+              });
+            });
           }}
         >
           {i18n.t('projectListPanel.GenerateProjectLink', lang)}

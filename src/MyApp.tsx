@@ -1,32 +1,34 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import React from 'react';
 import './App.css';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
-import { ConfigProvider } from 'antd';
+import { App, ConfigProvider } from 'antd';
 import ErrorPage from './ErrorPage';
 import AppCreator from './appCreator';
 import { Beforeunload } from 'react-beforeunload';
 
-const App = React.memo(() => {
+const MyApp = React.memo(() => {
   const locale = useStore(Selector.locale);
   const params = new URLSearchParams(window.location.search);
   const viewOnly = params.get('viewonly') === 'true';
 
   return (
     <ConfigProvider locale={locale}>
-      <ErrorPage>
-        {viewOnly ? (
-          <AppCreator viewOnly={true} />
-        ) : (
-          <MyBeforeunload>
-            <AppCreator viewOnly={false} />{' '}
-          </MyBeforeunload>
-        )}
-      </ErrorPage>
+      <App>
+        <ErrorPage>
+          {viewOnly ? (
+            <AppCreator viewOnly={true} />
+          ) : (
+            <MyBeforeunload>
+              <AppCreator viewOnly={false} />{' '}
+            </MyBeforeunload>
+          )}
+        </ErrorPage>
+      </App>
     </ConfigProvider>
   );
 });
@@ -42,4 +44,4 @@ const MyBeforeunload = React.memo(({ children }: { children: React.ReactNode }) 
   }
 });
 
-export default App;
+export default MyApp;
