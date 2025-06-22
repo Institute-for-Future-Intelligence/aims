@@ -149,7 +149,6 @@ export const loadMolecule = (
   processResult: (result: any, molecule?: Molecule) => void,
 ) => {
   if (molecule.data) {
-    console.log(molecule.data);
     new SDFParser(molecule.data).parse().then((result) => {
       processResult(result, molecule as Molecule);
     });

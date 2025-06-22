@@ -78,6 +78,8 @@ export class Molecule implements MoleculeInterface {
     mol.torsionalBonds = newTorsionalBonds;
     mol.style = molecule.style;
     mol.multipleResidues = molecule.multipleResidues;
+    // copy the data if the molecule is not from the internal database
+    mol.data = molecule.data;
     return mol;
   }
 
