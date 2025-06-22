@@ -82,7 +82,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
       const data = doc.data();
       if (data) {
         const cl = data.type === ProjectType.DRUG_DISCOVERY ? 50 : 20;
-        setProjectState({
+        const ps = {
           owner: userid,
           title: doc.id,
           key: data.key ?? data.timestamp,
@@ -199,7 +199,16 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           navUp: data.navUp ?? data.cameraUp,
           navTarget: data.navTarget ?? data.panCenter,
           showInstructionPanel: !!data.showInstructionPanel,
-        } as ProjectState);
+        } as ProjectState;
+        for (const m of ps.testMolecules) {
+          for (const n of ps.molecules) {
+            if (n.name === m.name) {
+              m.data = n.data;
+              break;
+            }
+          }
+        }
+        setProjectState(ps);
       } else {
         setMessage('error', i18n.t('message.CannotOpenProject', lang) + ': ' + project);
       }

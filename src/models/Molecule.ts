@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import { Atom } from './Atom.ts';
