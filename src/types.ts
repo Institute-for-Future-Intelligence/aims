@@ -141,6 +141,8 @@ export interface ProjectState {
 
   navigationView: boolean;
   showInstructionPanel: boolean;
+
+  generateMoleculePrompt: string;
 }
 
 export interface MolecularContainer {

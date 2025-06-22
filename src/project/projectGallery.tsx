@@ -64,7 +64,7 @@ import ParallelCoordinatesNumericValuesContent from './parallelCoordinatesNumeri
 import { UndoableDeleteMoleculeInGallery, UndoableDeleteMoleculesInGallery } from '../undo/UndoableDelete.ts';
 import { UndoableImportMolecule } from '../undo/UndoableImportMolecule.ts';
 import { UndoableChange } from '../undo/UndoableChange.ts';
-import GenerateMoleculeModal from './GenerateMoleculeModal.tsx';
+import GenerateMoleculeModal from './generateMoleculeModal.tsx';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);

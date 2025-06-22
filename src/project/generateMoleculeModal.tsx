@@ -2,7 +2,7 @@
  * @Copyright 2025. Institute for Future Intelligence, Inc.
  */
 
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Input, Modal, Space } from 'antd';
 import i18n from '../i18n/i18n.ts';
 import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react-draggable';
@@ -31,7 +31,7 @@ const client = new OpenAI({
 const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }: GenerateMoleculeModalProps) => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
-  const prompt = usePrimitiveStore(Selector.generateMoleculePrompt);
+  const generateMoleculePrompt = useStore(Selector.generateMoleculePrompt);
   const setWaiting = usePrimitiveStore(Selector.setWaiting);
   const addMolecule = useStore(Selector.addMolecule);
   const setChanged = usePrimitiveStore(Selector.setChanged);
@@ -44,6 +44,12 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
     right: 0,
   } as DraggableBounds);
   const dragRef = useRef<HTMLDivElement | null>(null);
+
+  const [prompt, setPrompt] = useState<string>(generateMoleculePrompt);
+
+  useEffect(() => {
+    setPrompt(generateMoleculePrompt);
+  }, [generateMoleculePrompt]);
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -77,9 +83,12 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
 
   const onOk = () => {
     setWaiting(true);
+    setCommonStore((state) => {
+      state.projectState.generateMoleculePrompt = prompt;
+    });
     generate()
       .catch((e) => {
-        console.error(e);
+        setMessage('error', e.toString());
       })
       .then(() => {
         if (resultRef.current) {
@@ -145,7 +154,13 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
     >
       <Space direction={'vertical'} style={{ width: '100%', paddingBottom: '10px', paddingTop: '10px' }}>
         <Space>{i18n.t('projectPanel.WhatMoleculeDoYouWant', lang)}</Space>
-        <TextArea rows={10} value={prompt} />
+        <TextArea
+          rows={10}
+          value={prompt}
+          onChange={(e) => {
+            setPrompt(e.target.value);
+          }}
+        />
       </Space>
     </Modal>
   );

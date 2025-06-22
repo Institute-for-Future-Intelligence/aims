@@ -150,6 +150,8 @@ export class ProjectUtil {
 
       showInstructionPanel: false,
       navigationView: false,
+
+      generateMoleculePrompt: 'Generate a novel molecule similar to benzene.',
     } as ProjectState;
   }
 

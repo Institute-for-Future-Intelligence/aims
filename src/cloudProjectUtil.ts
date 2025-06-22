@@ -199,6 +199,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           navUp: data.navUp ?? data.cameraUp,
           navTarget: data.navTarget ?? data.panCenter,
           showInstructionPanel: !!data.showInstructionPanel,
+          generateMoleculePrompt: data.generateMoleculePrompt ?? 'Generate a novel molecule similar to benzene.',
         } as ProjectState;
         for (const m of ps.testMolecules) {
           for (const n of ps.molecules) {
