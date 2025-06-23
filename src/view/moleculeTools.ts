@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import { getData } from '../internalDatabase.ts';
@@ -16,11 +16,15 @@ import { Molecule } from '../models/Molecule.ts';
 import Complex from '../lib/chem/Complex';
 import MoleculeJS from '../lib/chem/Molecule';
 import Element from '../lib/chem/Element';
+import AtomJS from '../lib/chem/Atom';
 import { Atom } from '../models/Atom.ts';
 import { ModelUtil } from '../models/ModelUtil.ts';
 import { RadialBond } from '../models/RadialBond.ts';
 import { VdwBond } from '../models/VdwBond.ts';
 import { MolecularViewerStyle } from './displayOptions.ts';
+import { Util } from '../Util.ts';
+import { setMessage } from '../helpers.tsx';
+import i18n from '../i18n/i18n.ts';
 
 export const isCrystal = (name: string) => {
   return name === 'Gold' || name === 'Silver' || name === 'Iron' || name === 'NaCl' || name === 'CsCl';
@@ -133,15 +137,52 @@ export const storeMoleculeData = (molecule: MoleculeInterface, atoms: Atom[], ra
       meltingPoint: properties.meltingPoint,
       formula: properties.formula,
     } as MolecularProperties);
+  } else {
+    // handle generated molecules that have missing properties
+    const p = useStore.getState().projectState.generatedMolecularProperties[molecule.name];
+    if (p) {
+      useStore.getState().setMolecularProperties(molecule.name, {
+        atomCount: atoms.length,
+        bondCount: radialBonds.length,
+        molecularMass: p.molecularMass,
+        heavyAtomCount: p.heavyAtomCount,
+        formula: generateFormula(atoms),
+      } as MolecularProperties);
+    }
   }
   useStore.getState().setMolecularStructure(molecule.name, { atoms, radialBonds } as MolecularStructure);
 };
 
-export const parseSDF = (text: string, processResult: (result: any, molecule?: Molecule) => void) => {
-  const options = { autoBond: true };
-  new SDFParser(text, options).parse().then((result) => {
-    processResult(result);
-  });
+export const generateFormula = (atoms: Atom[]): string => {
+  const symbols: Map<string, number> = new Map();
+  for (const a of atoms) {
+    const s = Util.capitalizeFirstLetter(a.elementSymbol);
+    const n = symbols.get(s);
+    symbols.set(s, (n ?? 0) + 1);
+  }
+  let formula: string = '';
+  for (const a of symbols.keys()) {
+    formula += a;
+    const n = symbols.get(a);
+    if (n && n > 1) formula += n;
+  }
+  return formula;
+};
+
+export const generateFormulaFromAtomJS = (atoms: AtomJS[]): string => {
+  const symbols: Map<string, number> = new Map();
+  for (const a of atoms) {
+    const s = Util.capitalizeFirstLetter(a.element.name);
+    const n = symbols.get(s);
+    symbols.set(s, (n ?? 0) + 1);
+  }
+  let formula: string = '';
+  for (const a of symbols.keys()) {
+    formula += a;
+    const n = symbols.get(a);
+    if (n && n > 1) formula += n;
+  }
+  return formula;
 };
 
 export const loadMolecule = (
@@ -149,9 +190,15 @@ export const loadMolecule = (
   processResult: (result: any, molecule?: Molecule) => void,
 ) => {
   if (molecule.data) {
-    new SDFParser(molecule.data).parse().then((result) => {
-      processResult(result, molecule as Molecule);
-    });
+    new SDFParser(molecule.data)
+      .parse()
+      .then((result) => {
+        processResult(result, molecule as Molecule);
+      })
+      .catch((err) => {
+        console.error(err);
+        setMessage('error', i18n.t('message.DoNotUnderstandGeneratedResult', { lng: useStore.getState().language }));
+      });
   } else {
     const mol = getData(molecule.name);
     if (mol?.url) {

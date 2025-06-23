@@ -151,6 +151,7 @@ export const i18n_en = {
     },
 
     message: {
+      DoNotUnderstandGeneratedResult: 'Sorry, I do not understand the generated result.',
       DoNotShowAgain: "Don't show again",
       NewVersionAvailable: 'A new version is available',
       DoYouWantToRemoveAllMoleculesFromGallery: 'Do you want to remove all molecules from the gallery?',

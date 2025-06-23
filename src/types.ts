@@ -8,6 +8,7 @@ import { DataColoring, GraphType, LabelType, ProjectType, SpaceshipDisplayMode }
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from './view/displayOptions';
 import RCGroup from './lib/gfx/RCGroup';
 import { Molecule } from './models/Molecule.ts';
+import { MolecularProperties } from './models/MolecularProperties.ts';
 
 declare module '@react-three/fiber' {
   interface ThreeElements {
@@ -143,6 +144,7 @@ export interface ProjectState {
   showInstructionPanel: boolean;
 
   generateMoleculePrompt: string;
+  generatedMolecularProperties: { [key: string]: MolecularProperties };
 }
 
 export interface MolecularContainer {

@@ -143,6 +143,7 @@ export const i18n_zh_cn = {
     },
 
     message: {
+      DoNotUnderstandGeneratedResult: '抱歉，我不能理解返回结果。',
       DoNotShowAgain: '别再显示',
       NewVersionAvailable: '有新版本',
       DoYouWantToRemoveAllMoleculesFromGallery: '你确定要删除项目里的所有分子吗？',

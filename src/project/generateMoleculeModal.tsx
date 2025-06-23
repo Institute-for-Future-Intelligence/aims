@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { OpenAIOutlined } from '@ant-design/icons';
 import { OpenAI } from 'openai';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
-import { loadMolecule } from '../view/moleculeTools.ts';
+import { generateFormulaFromAtomJS, loadMolecule } from '../view/moleculeTools.ts';
 import { MoleculeInterface } from '../types.ts';
 import { setMessage } from '../helpers.tsx';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
@@ -109,9 +109,10 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
                   molecularMass += a.element.weight;
                   if (a.element.name !== 'H') heavyAtomCount++;
                 }
-                state.providedMolecularProperties[result.name] = {
+                state.projectState.generatedMolecularProperties[result.name] = {
                   molecularMass,
                   heavyAtomCount,
+                  formula: generateFormulaFromAtomJS(result._atoms),
                 } as MolecularProperties;
               });
               setChanged(true);

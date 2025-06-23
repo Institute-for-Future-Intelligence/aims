@@ -182,6 +182,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const regression = usePrimitiveStore(Selector.regression);
   const regressionDegree = useStore(Selector.regressionDegree) ?? 1;
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
+  const generatedMolecularProperties = useStore(Selector.generatedMolecularProperties);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -1152,7 +1153,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
               }}
             >
               {sortedMoleculesRef.current.map((mol, index) => {
-                const prop = getProvidedMolecularProperties(mol.name);
+                let prop = getProvidedMolecularProperties(mol.name);
+                if (!prop) prop = generatedMolecularProperties[mol.name];
                 const hovered =
                   (graphType === GraphType.PARALLEL_COORDINATES && hoveredMolecule?.name === mol.name) ||
                   (graphType === GraphType.SCATTER_PLOT && scatterDataHoveredIndex === index);
