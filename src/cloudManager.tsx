@@ -739,7 +739,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       if (!ps.navigationView) delete (ps as any).navigationView;
       if (!ps.showInstructionPanel) delete (ps as any).showInstructionPanel;
       if (!ps.spaceshipThrust) delete (ps as any).spaceshipThrust;
-      delete (ps as any).selectedMolecule.data;
+      if (ps.selectedMolecule) delete (ps as any).selectedMolecule.data;
 
       // not needed in this type of project
       delete (ps as any).protein;

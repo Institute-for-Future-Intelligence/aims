@@ -15,6 +15,7 @@ import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { loadMolecule } from '../view/moleculeTools.ts';
 import { MoleculeInterface } from '../types.ts';
 import { setMessage } from '../helpers.tsx';
+import { MolecularProperties } from '../models/MolecularProperties.ts';
 
 export interface GenerateMoleculeModalProps {
   setDialogVisible: (visible: boolean) => void;
@@ -25,6 +26,7 @@ const { TextArea } = Input;
 
 const client = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  // apiKey: 'My API Key',
   dangerouslyAllowBrowser: true,
 });
 
@@ -101,6 +103,16 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
             if (added) {
               setCommonStore((state) => {
                 state.projectState.selectedMolecule = mol;
+                let molecularMass = 0;
+                let heavyAtomCount = 0;
+                for (const a of result._atoms) {
+                  molecularMass += a.element.weight;
+                  if (a.element.name !== 'H') heavyAtomCount++;
+                }
+                state.providedMolecularProperties[result.name] = {
+                  molecularMass,
+                  heavyAtomCount,
+                } as MolecularProperties;
               });
               setChanged(true);
             } else {

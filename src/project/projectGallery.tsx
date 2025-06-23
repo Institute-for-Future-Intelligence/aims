@@ -135,7 +135,6 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const language = useStore(Selector.language);
   const loggable = useStore.getState().loggable;
   const logAction = useStore.getState().logAction;
-  const molecules = useStore(Selector.molecules);
   const selectedMolecule = useStore(Selector.selectedMolecule);
   const hoveredMolecule = usePrimitiveStore(Selector.hoveredMolecule);
   const addMolecule = useStore(Selector.addMolecule);
@@ -321,7 +320,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       name: 'Remove Selected Molecule',
       timestamp: Date.now(),
       selectedMolecule,
-      selectedIndex: molecules.indexOf(selectedMolecule),
+      selectedIndex: projectMolecules.indexOf(selectedMolecule),
       undo: () => {
         addMolecule(undoable.selectedMolecule, undoable.selectedIndex);
         setCommonStore((state) => {
@@ -343,9 +342,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   };
 
   const clearAllMolecules = () => {
-    if (molecules.length === 0) return;
+    if (projectMolecules.length === 0) return;
     const names: string[] = [];
-    for (const m of molecules) names.push(m.name);
+    for (const m of projectMolecules) names.push(m.name);
     const undoable = {
       name: 'Remove All Molecules',
       timestamp: Date.now(),
@@ -418,14 +417,14 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                         ChemicalNotation.INCHI,
                         numberOfMostSimilarMolecules,
                         selectedMolecule,
-                        molecules,
+                        projectMolecules,
                         providedMolecularProperties,
                       );
                       similarMoleculesBySmilesRef.current = findSimilarMolecules(
                         ChemicalNotation.SMILES,
                         numberOfMostSimilarMolecules,
                         selectedMolecule,
-                        molecules,
+                        projectMolecules,
                         providedMolecularProperties,
                       );
                       setFindMoleculeDialogVisible(true);
@@ -450,6 +449,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   />
                 </Button>
                 <Button
+                  disabled={false}
                   style={{ border: 'none', padding: '4px' }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -477,7 +477,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     />
                   </Button>
                 )}
-                {molecules && molecules.length > 0 && (
+                {projectMolecules && projectMolecules.length > 0 && (
                   <Button
                     style={{ border: 'none', padding: '4px' }}
                     onClick={(e) => {
