@@ -166,7 +166,7 @@ export const generateFormula = (atoms: Atom[]): string => {
     const n = symbols.get(a);
     if (n && n > 1) formula += n;
   }
-  return formula;
+  return Util.getSubscriptNumber(formula);
 };
 
 export const generateFormulaFromAtomJS = (atoms: AtomJS[]): string => {
@@ -182,7 +182,7 @@ export const generateFormulaFromAtomJS = (atoms: AtomJS[]): string => {
     const n = symbols.get(a);
     if (n && n > 1) formula += n;
   }
-  return formula;
+  return Util.getSubscriptNumber(formula);
 };
 
 export const loadMolecule = (

@@ -82,4 +82,18 @@ export class Util {
     if (s.length === 1) return s.toUpperCase();
     return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
   }
+
+  static getSubscriptNumber(s: string): string {
+    return s
+      .replace(/1/g, '₁')
+      .replace(/2/g, '₂')
+      .replace(/3/g, '₃')
+      .replace(/4/g, '₄')
+      .replace(/5/g, '₅')
+      .replace(/6/g, '₆')
+      .replace(/7/g, '₇')
+      .replace(/8/g, '₈')
+      .replace(/9/g, '₉')
+      .replace(/0/g, '₀');
+  }
 }

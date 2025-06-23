@@ -317,21 +317,25 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
 
   const removeSelectedMolecule = () => {
     if (!selectedMolecule) return;
+    const selectedMolecularProperties = generatedMolecularProperties[selectedMolecule.name];
     const undoable = {
       name: 'Remove Selected Molecule',
       timestamp: Date.now(),
       selectedMolecule,
+      selectedMolecularProperties,
       selectedIndex: projectMolecules.indexOf(selectedMolecule),
       undo: () => {
         addMolecule(undoable.selectedMolecule, undoable.selectedIndex);
         setCommonStore((state) => {
           state.projectState.selectedMolecule = undoable.selectedMolecule;
+          state.projectState.generatedMolecularProperties[selectedMolecule.name] = undoable.selectedMolecularProperties;
         });
       },
       redo: () => {
         removeMolecule(undoable.selectedMolecule);
         setCommonStore((state) => {
           state.projectState.selectedMolecule = null;
+          delete state.projectState.generatedMolecularProperties[selectedMolecule.name];
         });
       },
     } as UndoableDeleteMoleculeInGallery;
@@ -339,6 +343,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     removeMolecule(selectedMolecule);
     setCommonStore((state) => {
       state.projectState.selectedMolecule = null;
+      delete state.projectState.generatedMolecularProperties[selectedMolecule.name];
     });
   };
 
