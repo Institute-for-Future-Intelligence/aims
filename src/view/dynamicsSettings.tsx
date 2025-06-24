@@ -951,8 +951,7 @@ const DynamicsSettings = React.memo(() => {
       <div style={{ width: '300px' }}>
         <Descriptions
           style={{ paddingTop: '10px' }}
-          contentStyle={{ fontSize: '12px' }}
-          labelStyle={{ fontSize: '12px' }}
+          styles={{ label: { fontSize: '12px' }, content: { fontSize: '12px' } }}
           column={1}
           items={items}
           size={'default'}
