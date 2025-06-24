@@ -381,7 +381,7 @@ export const i18n_zh_cn = {
       Descriptor: '描述符',
       LevenshteinDistance: '莱文斯坦距离',
       SelectMoleculeToImportIntoGallery: '选择分子输入到图库',
-      GenerateMolecule: '生成分子',
+      GenerateMolecule: '用AI生成分子',
       WhatMoleculeDoYouWant: '您想要什么分子？',
       SelectMolecule: '选择分子',
       TypeToSearch: '在上面文字框打字可搜索分子',

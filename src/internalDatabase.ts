@@ -30,6 +30,12 @@ import commonMoleculeUrl007 from './molecules/sdf/ozone.sdf';
 import commonMoleculeUrl008 from './molecules/sdf/ammonia.sdf';
 import commonMoleculeUrl009 from './molecules/sdf/hydrogen_peroxide.sdf';
 import commonMoleculeUrl010 from './molecules/sdf/acetic_acid.sdf';
+import commonMoleculeUrl011 from './molecules/sdf/1-octanol.sdf';
+import commonMoleculeUrl012 from './molecules/sdf/2-octanol.sdf';
+import commonMoleculeUrl013 from './molecules/sdf/2-ethylhexanol.sdf';
+import commonMoleculeUrl014 from './molecules/sdf/3-octanol.sdf';
+import commonMoleculeUrl015 from './molecules/sdf/dibutyl_ether.sdf';
+import commonMoleculeUrl016 from './molecules/sdf/di-tert-butyl_ether.sdf';
 import commonMoleculeUrl101 from './molecules/sdf/buckyball.sdf';
 import commonMoleculeUrl102 from './molecules/xyz/nanotube.xyz';
 import commonMoleculeUrl103 from './molecules/xyz/graphen.xyz';
@@ -263,6 +269,12 @@ export const commonMolecules = [
   { url: commonMoleculeUrl008, internal: true, name: 'Ammonia' } as MoleculeInterface,
   { url: commonMoleculeUrl009, internal: true, name: 'Hydrogen Peroxide' } as MoleculeInterface,
   { url: commonMoleculeUrl010, internal: true, name: 'Acetic Acid' } as MoleculeInterface,
+  { url: commonMoleculeUrl011, internal: true, name: '1-Octanol' } as MoleculeInterface,
+  { url: commonMoleculeUrl012, internal: true, name: '2-Octanol' } as MoleculeInterface,
+  { url: commonMoleculeUrl013, internal: true, name: '2-Ethylhexanol' } as MoleculeInterface,
+  { url: commonMoleculeUrl014, internal: true, name: '3-Octanol' } as MoleculeInterface,
+  { url: commonMoleculeUrl015, internal: true, name: 'Dibutyl Ether' } as MoleculeInterface,
+  { url: commonMoleculeUrl016, internal: true, name: 'Di-tert-butyl Ether' } as MoleculeInterface,
   { url: commonMoleculeUrl101, internal: true, name: 'Buckminsterfullerene' } as MoleculeInterface,
   { url: commonMoleculeUrl102, internal: true, name: 'Carbon Nanotube' } as MoleculeInterface,
   { url: commonMoleculeUrl103, internal: true, name: 'Graphene' } as MoleculeInterface,

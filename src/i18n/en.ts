@@ -393,7 +393,7 @@ export const i18n_en = {
       Descriptor: 'Descriptor',
       LevenshteinDistance: 'Levenshtein Distance',
       SelectMoleculeToImportIntoGallery: 'Select a molecule to import into gallery',
-      GenerateMolecule: 'Generate Molecule',
+      GenerateMolecule: 'Generate molecule using AI',
       WhatMoleculeDoYouWant: 'What molecule do you want?',
       SelectMolecule: 'Select a Molecule',
       TypeToSearch: 'Type in the above field to search for a molecule',

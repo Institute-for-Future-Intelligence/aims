@@ -380,7 +380,7 @@ export const i18n_zh_tw = {
       Descriptor: '描述符',
       LevenshteinDistance: '萊文斯坦距離',
       SelectMoleculeToImportIntoGallery: '選擇性分子輸入到圖庫',
-      GenerateMolecule: '生成分子',
+      GenerateMolecule: '用AI生成分子',
       WhatMoleculeDoYouWant: '您想要什麼分子？',
       SelectMolecule: '選取分子',
       TypeToSearch: '在上面文字框打字可搜尋分子',
