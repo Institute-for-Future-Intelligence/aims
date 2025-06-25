@@ -17,74 +17,51 @@ import { SPEED_BIN_NUMBER } from './models/physicalConstants.ts';
 import { useDataStore } from './stores/commonData.ts';
 import { GravitationalField } from './models/GravitationalField.ts';
 import { setMessage } from './helpers.tsx';
+import { arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { firestore } from './firebase.ts';
 
 export const addProjectToList = async (uid: string, project: ProjectInfo) => {
-  await firebase
-    .firestore()
-    .collection('users')
-    .doc(uid)
-    .get()
-    .then(async (doc) => {
-      let exist = false;
-      const projectList = doc.data()?.projectList;
-      if (projectList && projectList.length > 0) {
-        for (const p of projectList) {
-          const pi = p as ProjectInfo;
-          if (pi.title === project.title) {
-            exist = true;
-            break;
-          }
-        }
-      }
-      if (!exist) {
-        await firebase
-          .firestore()
-          .collection('users')
-          .doc(uid)
-          .update({ projectList: firebase.firestore.FieldValue.arrayUnion(project) })
-          .then(() => {
-            // ignore
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  try {
+    const userRef = doc(firestore, 'users', uid);
+    const userSnap = await getDoc(userRef);
+
+    const existingList = userSnap.data()?.projectList ?? [];
+    const exists = existingList.some((p: ProjectInfo) => p.title === project.title);
+
+    if (!exists) {
+      await updateDoc(userRef, {
+        projectList: arrayUnion(project),
+      });
+    }
+  } catch (error) {
+    console.error('Failed to add project to list:', error);
+  }
 };
 
 export const removeProjectFromList = async (uid: string, project: ProjectInfo) => {
-  await firebase
-    .firestore()
-    .collection('users')
-    .doc(uid)
-    .update({ projectList: firebase.firestore.FieldValue.arrayRemove(project) })
-    .then(() => {
-      // ignore
-    })
-    .catch((error) => {
-      console.log(error);
+  try {
+    const userRef = doc(firestore, 'users', uid);
+    await updateDoc(userRef, {
+      projectList: arrayRemove(project),
     });
+  } catch (error) {
+    console.error('Failed to remove project from list:', error);
+  }
 };
 
 export const fetchProject = async (userid: string, project: string, setProjectState: (ps: ProjectState) => void) => {
   const lang = { lng: useStore.getState().language };
-  await firebase
-    .firestore()
-    .collection('users')
-    .doc(userid)
-    .collection('projects')
-    .doc(project)
-    .get()
-    .then((doc) => {
-      const data = doc.data();
+  try {
+    const docRef = doc(firestore, 'users', userid, 'projects', project);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
       if (data) {
         const cl = data.type === ProjectType.DRUG_DISCOVERY ? 50 : 20;
         const ps = {
           owner: userid,
-          title: doc.id,
+          title: docSnap.id,
           key: data.key ?? data.timestamp,
           timestamp: data.timestamp,
           time: data.time ?? dayjs(new Date(data.timestamp)).format('MM/DD/YYYY hh:mm A'),
@@ -214,10 +191,10 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
       } else {
         setMessage('error', i18n.t('message.CannotOpenProject', lang) + ': ' + project);
       }
-    })
-    .catch((error) => {
-      setMessage('error', i18n.t('message.CannotOpenProject', lang) + ': ' + error);
-    });
+    }
+  } catch (e) {
+    setMessage('error', i18n.t('message.CannotOpenProject', lang) + ': ' + e);
+  }
 };
 
 export const postFetch = () => {

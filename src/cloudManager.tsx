@@ -8,10 +8,27 @@ import { usePrimitiveStore } from './stores/commonPrimitive';
 import * as Selector from './stores/selector';
 import dayjs from 'dayjs';
 import 'antd/dist/reset.css';
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
-import 'firebase/storage';
+import { initializeApp, getApps, getApp, FirebaseError } from 'firebase/app';
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithPopup,
+  signInAnonymously,
+  signOut,
+  GoogleAuthProvider,
+} from 'firebase/auth';
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  getDocs,
+  deleteDoc,
+  getCountFromServer,
+} from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 import { setMessage } from './helpers';
 import { ProjectInfo, ProjectState } from './types';
 import Spinner from './components/spinner';
@@ -34,6 +51,7 @@ import { useRefStore } from './stores/commonRef.ts';
 import { useDataStore } from './stores/commonData.ts';
 import { Molecule } from './models/Molecule.ts';
 import AnonymousImage from './assets/anonymous.png';
+import { auth, firestore } from './firebase.ts';
 
 export interface CloudManagerProps {
   viewOnly: boolean;
@@ -94,25 +112,6 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   useFlag(updateProjectsFlag, updateProjects, () => setPrimitiveStore('updateProjectsFlag', false));
 
   useEffect(() => {
-    const config = {
-      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-      databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
-      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-      appId: import.meta.env.VITE_FIREBASE_APP_ID,
-    };
-    let initialize = firebase.apps.length === 0; // no app, should initialize
-    if (firebase.apps.length === 1 && firebase.apps[0].name === FirebaseName.LOG_DATA) {
-      initialize = true; // if there is only the logger app, should initialize
-    }
-    if (initialize) {
-      firebase.initializeApp(config);
-    } else {
-      firebase.app(); // if already initialized, use the default one
-    }
-
     // don't enable persistence as we often need to open multiple tabs
     // firebase.firestore().enablePersistence()
     //   .catch((err) => {
@@ -125,7 +124,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
 
     // do not use firebase.auth().currentUser - currentUser might be null because the auth object has not finished initializing.
     // If you use an observer to keep track of the user's sign-in status, you don't need to handle this case.
-    firebase.auth().onAuthStateChanged((u) => {
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
       if (u) {
         setCommonStore((state) => {
           if (state.user) {
@@ -141,6 +140,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     window.addEventListener('popstate', handlePopStateEvent);
     return () => {
       window.removeEventListener('popstate', handlePopStateEvent);
+      unsubscribe();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -191,56 +191,51 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     resetProject();
   };
 
-  const signInAnonymously = () => {
-    firebase
-      .auth()
-      .signInAnonymously()
-      .then((result) => {
-        setCommonStore((state) => {
-          if (result.user) {
-            state.user.uid = result.user.uid;
-            state.user.anonymous = true;
-            state.user.displayName = 'Anonymous';
-            registerUser({ ...state.user }).then(() => {
-              // ignore
-            });
-          }
-        });
-      })
-      .catch((error) => {
-        if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-          setMessage('error', t('message.CannotSignIn', lang) + ': ' + error);
+  const handleSignInAnonymously = async () => {
+    try {
+      const result = await signInAnonymously(auth);
+      setCommonStore((state) => {
+        if (result.user) {
+          state.user.uid = result.user.uid;
+          state.user.anonymous = true;
+          state.user.displayName = 'Anonymous';
+          registerUser({ ...state.user }).then(() => {
+            // ignore
+          });
         }
       });
+    } catch (e) {
+      const error = e as FirebaseError;
+      if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+        setMessage('error', t('message.CannotSignIn', lang) + ': ' + error);
+      }
+    }
   };
 
-  const signIn = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then((result) => {
-        setCommonStore((state) => {
-          if (result.user) {
-            state.user.uid = result.user.uid;
-            state.user.email = result.user.email;
-            state.user.displayName = result.user.displayName;
-            state.user.photoURL = result.user.photoURL;
-            registerUser({ ...state.user }).then(() => {
-              // ignore
-            });
-          }
-        });
-      })
-      .catch((error) => {
-        if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-          setMessage('error', t('message.CannotSignIn', lang) + ': ' + error);
+  const signIn = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      setCommonStore((state) => {
+        if (result.user) {
+          state.user.uid = result.user.uid;
+          state.user.email = result.user.email;
+          state.user.displayName = result.user.displayName;
+          state.user.photoURL = result.user.photoURL;
+          registerUser({ ...state.user }).then(() => {
+            // ignore
+          });
         }
       });
+    } catch (e) {
+      const error = e as FirebaseError;
+      if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+        setMessage('error', t('message.CannotSignIn', lang) + ': ' + error);
+      }
+    }
   };
 
   const registerUser = async (user: User): Promise<any> => {
-    const firestore = firebase.firestore();
     let noLogging = false;
     let anonymous = false;
     let schoolID = SchoolID.UNKNOWN;
@@ -253,33 +248,26 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     if (user.uid !== null) {
       const superuser = user && user.email === 'charles@intofuture.org';
       if (superuser) {
-        // This way of counting a collection is expensive. It is reserved for only superusers.
-        // It should be replaced by getCountFromServer in the latest version of Firestore;
-        await firestore
-          .collection('users')
-          .get()
-          .then((querySnapshot) => {
-            userCount = querySnapshot.size;
-          });
+        try {
+          const snapshot = await getCountFromServer(collection(firestore, 'users'));
+          userCount = snapshot.data().count;
+        } catch (e) {
+          console.warn('Failed to count users:', e);
+        }
       }
-      found = await firestore
-        .collection('users')
-        .doc(user.uid)
-        .get()
-        .then((doc) => {
-          const docData = doc.data();
-          if (docData) {
-            noLogging = !!docData.noLogging;
-            anonymous = !!docData.anonymous;
-            schoolID = docData.schoolID ? (docData.schoolID as SchoolID) : SchoolID.UNKNOWN;
-            classID = docData.classID ? (docData.classID as ClassID) : ClassID.UNKNOWN;
-            if (docData.likes) likes = docData.likes;
-            if (docData.published) published = docData.published;
-            if (docData.aliases) aliases = docData.aliases;
-            return true;
-          }
-          return false;
-        });
+
+      const docSnap = await getDoc(doc(firestore, 'users', user.uid));
+      const docData = docSnap.data();
+      if (docData) {
+        noLogging = !!docData.noLogging;
+        anonymous = !!docData.anonymous;
+        schoolID = docData.schoolID ? (docData.schoolID as SchoolID) : SchoolID.UNKNOWN;
+        classID = docData.classID ? (docData.classID as ClassID) : ClassID.UNKNOWN;
+        if (docData.likes) likes = docData.likes;
+        if (docData.published) published = docData.published;
+        if (docData.aliases) aliases = docData.aliases;
+        found = true;
+      }
     }
     if (found) {
       // update common store state
@@ -305,10 +293,8 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       user.aliases = aliases;
     } else {
       if (user.uid) {
-        firestore
-          .collection('users')
-          .doc(user.uid)
-          .set({
+        try {
+          await setDoc(doc(firestore, 'users', user.uid), {
             uid: user.uid,
             noLogging: !!user.noLogging,
             anonymous: !!user.anonymous,
@@ -316,61 +302,54 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
             classID: user.classID ?? ClassID.UNKNOWN,
             since: dayjs(new Date()).format('MM/DD/YYYY hh:mm A'),
             os: Util.getOS(),
-          })
-          .then(() => {
-            setMessage('info', t('message.YourAccountWasCreated', lang));
-          })
-          .catch((error) => {
-            setMessage('error', t('message.CannotCreateAccount', lang) + ': ' + error);
           });
+          setMessage('info', t('message.YourAccountWasCreated', lang));
+        } catch (e) {
+          setMessage('error', t('message.CannotCreateAccount', lang) + ': ' + e);
+        }
       }
     }
   };
 
-  const signOut = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        setCommonStore((state) => {
-          state.user.uid = null;
-          state.user.email = null;
-          state.user.displayName = null;
-          state.user.photoURL = null;
-          state.user.likes = [];
-          state.user.published = [];
-          state.user.aliases = [];
-        });
-        usePrimitiveStore.getState().set((state) => {
-          state.showAccountSettingsPanel = false;
-          state.showProjectListPanel = false;
-        });
-      })
-      .catch((error) => {
-        setMessage('error', t('message.CannotSignOut', lang) + ': ' + error);
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      setCommonStore((state) => {
+        state.user.uid = null;
+        state.user.email = null;
+        state.user.displayName = null;
+        state.user.photoURL = null;
+        state.user.likes = [];
+        state.user.published = [];
+        state.user.aliases = [];
       });
+      usePrimitiveStore.getState().set((state) => {
+        state.showAccountSettingsPanel = false;
+        state.showProjectListPanel = false;
+      });
+    } catch (e) {
+      const error = e as FirebaseError;
+      setMessage('error', t('message.CannotSignOut', lang) + ': ' + error);
+    }
   };
 
   // get latest version
   const fetchLatestVersion = async () => {
-    await firebase
-      .firestore()
-      .collection('app')
-      .doc('info')
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          const data = doc.data();
-          if (data && data.latestVersion) {
-            usePrimitiveStore.getState().set((state) => {
-              state.latestVersion = data.latestVersion;
-            });
-          }
+    try {
+      const infoRef = doc(firestore, 'app', 'info');
+      const infoSnap = await getDoc(infoRef);
+
+      if (infoSnap.exists()) {
+        const data = infoSnap.data();
+        if (data?.latestVersion) {
+          usePrimitiveStore.getState().set((state) => {
+            state.latestVersion = data.latestVersion;
+          });
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      }
+    } catch (error) {
+      console.error('Failed to fetch latest version:', error);
+    }
   };
 
   // fetch owner's projects from the cloud
@@ -379,58 +358,48 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     if (!uid) return;
     if (!silent) setWaiting(true);
     myProjectsRef.current = [];
-    await firebase
-      .firestore()
-      .collection('users')
-      .doc(uid)
-      .get()
-      .then(async (doc) => {
-        const projectList = doc.data()?.projectList;
-        if (projectList && projectList.length > 0) {
-          // if a project list exists, use it
-          myProjectsRef.current?.push(...projectList);
-        } else {
-          // if a project list does not exist, create one
-          await firebase
-            .firestore()
-            .collection('users')
-            .doc(uid)
-            .collection('projects')
-            .get()
-            .then((querySnapshot) => {
-              const a: ProjectState[] = [];
-              querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                myProjectsRef.current?.push({
-                  timestamp: data.timestamp,
-                  title: doc.id,
-                  type: data.type,
-                } as ProjectInfo);
-              });
-              return a;
-            })
-            .catch((error) => {
-              setMessage('error', t('message.CannotOpenYourProjects', lang) + ': ' + error);
-            })
-            .finally(() => {
-              firebase
-                .firestore()
-                .collection('users')
-                .doc(uid)
-                .update({ projectList: myProjectsRef.current })
-                .then(() => {
-                  // ignore
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
+    try {
+      const userRef = doc(firestore, 'users', uid);
+      const userSnap = await getDoc(userRef);
+      const projectList = userSnap.data()?.projectList;
+
+      if (projectList && projectList.length > 0) {
+        // if a project list exists, use it
+        myProjectsRef.current.push(...projectList);
+      } else {
+        // if a project list does not exist, create one
+        try {
+          const projectsCol = collection(firestore, 'users', uid, 'projects');
+          const snapshot = await getDocs(projectsCol);
+          const collectedProjects: ProjectInfo[] = [];
+
+          snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            collectedProjects.push({
+              timestamp: data.timestamp,
+              title: docSnap.id,
+              type: data.type,
             });
+          });
+
+          myProjectsRef.current.push(...collectedProjects);
+        } catch (error) {
+          setMessage('error', t('message.CannotOpenYourProjects', lang) + ': ' + (error as Error).message);
+        } finally {
+          try {
+            await updateDoc(userRef, { projectList: myProjectsRef.current });
+          } catch (error) {
+            console.log(error);
+          }
         }
-        setUpdateMyProjectsFlag(!updateMyProjectsFlag);
-      })
-      .finally(() => {
-        if (!silent) setWaiting(false);
-      });
+      }
+
+      setUpdateMyProjectsFlag((prev) => !prev);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      if (!silent) setWaiting(false);
+    }
   };
 
   const listMyProjects = () => {
@@ -444,37 +413,32 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     }
   };
 
-  const deleteProject = (title: string) => {
-    if (!user.uid) return;
-    firebase
-      .firestore()
-      .collection('users')
-      .doc(user.uid)
-      .collection('projects')
-      .doc(title)
-      .delete()
-      .then(() => {
-        if (myProjectsRef.current && user.uid) {
-          removeProjectIfExisting(user.uid, title).then(() => {
-            setUpdateFlag(!updateFlag);
-            // if the project list panel is open, update it
-            if (showProjectListPanel) {
-              fetchMyProjects(false).then(() => {
-                setUpdateMyProjectsFlag(!updateMyProjectsFlag);
-                setUpdateFlag(!updateFlag);
-              });
-            }
-          });
+  const deleteProject = async (title: string) => {
+    const uid = user.uid;
+    if (!uid) return;
+    try {
+      const projectRef = doc(firestore, 'users', uid, 'projects', title);
+      await deleteDoc(projectRef);
+
+      if (myProjectsRef.current) {
+        await removeProjectIfExisting(uid, title);
+        setUpdateFlag((prev) => !prev);
+        // if the project list panel is open, update it
+        if (showProjectListPanel) {
+          await fetchMyProjects(false);
+          setUpdateMyProjectsFlag((prev) => !prev);
+          setUpdateFlag((prev) => !prev);
         }
-        setCommonStore((state) => {
-          if (title === state.projectState.title) {
-            state.projectState = ProjectUtil.createDefaultProjectState();
-          }
-        });
-      })
-      .catch((error) => {
-        setMessage('error', t('message.CannotDeleteProject', lang) + ': ' + error);
+      }
+
+      setCommonStore((state) => {
+        if (title === state.projectState.title) {
+          state.projectState = ProjectUtil.createDefaultProjectState();
+        }
       });
+    } catch (error) {
+      setMessage('error', t('message.CannotDeleteProject', lang) + ': ' + (error as Error).message);
+    }
   };
 
   const renameProjectAndUpdateList = (uid: string, oldTitle: string, newTitle: string) => {
@@ -503,58 +467,45 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     }
   };
 
-  const renameProject = (oldTitle: string, newTitle: string) => {
+  const renameProject = async (oldTitle: string, newTitle: string) => {
     // check if the new project title is already taken
-    fetchMyProjects(false).then(() => {
-      let exist = false;
-      if (myProjectsRef.current) {
-        for (const p of myProjectsRef.current) {
-          if (p.title === newTitle) {
-            exist = true;
-            break;
+    await fetchMyProjects(false);
+
+    const projectExists = myProjectsRef.current?.some((p) => p.title === newTitle);
+    if (projectExists) {
+      setMessage('info', t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
+      return;
+    }
+
+    const uid = user?.uid;
+    if (!uid) return;
+
+    try {
+      const oldRef = doc(firestore, 'users', uid, 'projects', oldTitle);
+      const newRef = doc(firestore, 'users', uid, 'projects', newTitle);
+
+      const oldSnap = await getDoc(oldRef);
+
+      if (oldSnap.exists()) {
+        const oldData = oldSnap.data();
+        const newData = JSON.parse(JSON.stringify(oldData));
+        newData.title = newTitle;
+
+        await setDoc(newRef, newData);
+        await deleteDoc(oldRef);
+
+        renameProjectAndUpdateList(uid, oldTitle, newTitle);
+        setUpdateFlag((prev) => !prev);
+
+        setCommonStore((state) => {
+          if (state.projectState.title === oldTitle) {
+            state.projectState.title = newTitle;
           }
-        }
+        });
       }
-      if (exist) {
-        setMessage('info', t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
-      } else {
-        const uid = user.uid;
-        if (!uid) return;
-        const files = firebase.firestore().collection('users').doc(uid).collection('projects');
-        files
-          .doc(oldTitle)
-          .get()
-          .then((doc) => {
-            if (doc && doc.exists) {
-              const data = doc.data();
-              if (data) {
-                const newData = JSON.parse(JSON.stringify(data));
-                newData.title = newTitle;
-                files
-                  .doc(newTitle)
-                  .set(newData)
-                  .then(() => {
-                    files
-                      .doc(oldTitle)
-                      .delete()
-                      .then(() => {
-                        renameProjectAndUpdateList(uid, oldTitle, newTitle);
-                        setUpdateFlag(!updateFlag);
-                        setCommonStore((state) => {
-                          if (state.projectState.title === oldTitle) {
-                            state.projectState.title = newTitle;
-                          }
-                        });
-                      });
-                  });
-              }
-            }
-          })
-          .catch((error) => {
-            setMessage('error', t('message.CannotRenameProject', lang) + ': ' + error);
-          });
-      }
-    });
+    } catch (error) {
+      setMessage('error', t('message.CannotRenameProject', lang) + ': ' + (error as Error).message);
+    }
   };
 
   const resetProject = () => {
@@ -567,7 +518,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     });
   };
 
-  function createNewProject() {
+  async function createNewProject() {
     if (!user || !user.uid) return;
     const title = usePrimitiveStore.getState().projectTitle;
     if (!title) {
@@ -580,68 +531,57 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
       return;
     }
     // check if the project title is already used
-    fetchMyProjects(false).then(() => {
-      let exist = false;
-      if (myProjectsRef.current) {
-        for (const p of myProjectsRef.current) {
-          if (p.title === newTitle) {
-            exist = true;
-            break;
-          }
-        }
+    await fetchMyProjects(false);
+    const exists = myProjectsRef.current?.some((p) => p.title === newTitle);
+    if (exists) {
+      setMessage('info', t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
+      return;
+    }
+
+    const uid = user.uid;
+    const timestamp = Date.now();
+
+    const ps = ProjectUtil.createDefaultProjectState();
+    ps.timestamp = timestamp;
+    ps.key = timestamp.toString();
+    ps.time = dayjs(timestamp).format('MM/DD/YYYY hh:mm A');
+    ps.title = newTitle;
+    ps.owner = uid;
+    ps.type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
+    ps.description = usePrimitiveStore.getState().projectDescription ?? null;
+    ps.cameraPosition = DEFAULT_CAMERA_POSITION;
+    ps.cameraRotation = DEFAULT_CAMERA_ROTATION;
+    ps.cameraUp = DEFAULT_CAMERA_UP;
+    ps.panCenter = DEFAULT_PAN_CENTER;
+
+    try {
+      const projectRef = doc(firestore, 'users', uid, 'projects', newTitle);
+      await setDoc(projectRef, ps);
+
+      const pi: ProjectInfo = {
+        timestamp: ps.timestamp,
+        title: ps.title,
+        type: ps.type,
+      };
+
+      await addProjectToList(uid, pi);
+      myProjectsRef.current.push(pi);
+      // if the project list panel is open, update it
+      if (showProjectListPanel) {
+        setUpdateMyProjectsFlag((prev) => !prev);
+        setUpdateFlag((prev) => !prev);
       }
-      if (exist) {
-        setMessage('info', t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
-      } else {
-        if (user) {
-          const uid = user.uid;
-          if (uid) {
-            const timestamp = new Date().getTime();
-            const ps = ProjectUtil.createDefaultProjectState();
-            ps.timestamp = timestamp;
-            ps.key = timestamp.toString();
-            ps.time = dayjs(new Date(timestamp)).format('MM/DD/YYYY hh:mm A');
-            ps.title = newTitle;
-            ps.owner = user.uid;
-            ps.type = usePrimitiveStore.getState().projectType ?? ProjectType.DRUG_DISCOVERY;
-            ps.description = usePrimitiveStore.getState().projectDescription ?? null;
-            ps.cameraPosition = DEFAULT_CAMERA_POSITION;
-            ps.cameraRotation = DEFAULT_CAMERA_ROTATION;
-            ps.cameraUp = DEFAULT_CAMERA_UP;
-            ps.panCenter = DEFAULT_PAN_CENTER;
-            firebase
-              .firestore()
-              .collection('users')
-              .doc(uid)
-              .collection('projects')
-              .doc(newTitle)
-              .set(ps)
-              .then(() => {
-                const pi = { timestamp: ps.timestamp, title: ps.title, type: ps.type } as ProjectInfo;
-                addProjectToList(uid, pi).then(() => {
-                  myProjectsRef.current.push(pi);
-                  // if the project list panel is open, update it
-                  if (showProjectListPanel) {
-                    setUpdateMyProjectsFlag(!updateMyProjectsFlag);
-                    setUpdateFlag(!updateFlag);
-                  }
-                });
-                setCommonStore((state) => {
-                  state.projectState = ps;
-                });
-                setUpdateMyProjectsFlag(!updateMyProjectsFlag);
-              })
-              .catch((error) => {
-                setMessage('error', t('message.CannotCreateNewProject', lang) + ': ' + error);
-              })
-              .finally(() => {
-                setWaiting(false);
-                resetProject();
-              });
-          }
-        }
-      }
-    });
+
+      setCommonStore((state) => {
+        state.projectState = ps;
+      });
+      setUpdateMyProjectsFlag((prev) => !prev);
+    } catch (error) {
+      setMessage('error', t('message.CannotCreateNewProject', lang) + ': ' + (error as Error).message);
+    } finally {
+      setWaiting(false);
+      resetProject();
+    }
   }
 
   const updateMolecularVariables = (molecules: Molecule[], remote: boolean) => {
@@ -773,7 +713,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     }
   };
 
-  function saveProject() {
+  async function saveProject() {
     if (!user) return;
     const uid = user.uid;
     if (!uid) return;
@@ -788,44 +728,38 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     ps.time = dayjs(new Date(ps.timestamp)).format('MM/DD/YYYY hh:mm A');
     ps.key = ps.timestamp.toString();
     updateProjectStateVariables(ps);
-    firebase
-      .firestore()
-      .collection('users')
-      .doc(uid)
-      .collection('projects')
-      .doc(title)
-      .set(ps)
-      .then(() => {
-        if (myProjectsRef.current) {
-          removeProjectIfExisting(uid, title).then(() => {
-            const pi = { timestamp: ps.timestamp, title, type: ps.type } as ProjectInfo;
-            myProjectsRef.current.push(pi);
-            addProjectToList(uid, pi).then(() => {
-              setUpdateMyProjectsFlag(!updateMyProjectsFlag);
-            });
-          });
+    try {
+      const projectRef = doc(firestore, 'users', uid, 'projects', title);
+      await setDoc(projectRef, ps);
+
+      if (myProjectsRef.current) {
+        await removeProjectIfExisting(uid, title);
+
+        const pi: ProjectInfo = { timestamp: ps.timestamp, title, type: ps.type };
+        myProjectsRef.current.push(pi);
+
+        await addProjectToList(uid, pi);
+
+        setUpdateMyProjectsFlag((prev) => !prev);
+      }
+    } catch (error) {
+      setMessage('error', t('message.CannotSaveProject', lang) + ': ' + (error as Error).message);
+    } finally {
+      setWaiting(false);
+      if (saveAndThenOpenProjectFlag) {
+        const projectToOpen = useStore.getState().projectToOpen?.title;
+        if (projectToOpen) {
+          setWaiting(true);
+          await fetchProject(uid, projectToOpen, setProjectState);
+          setWaiting(false);
+          postFetch();
         }
-      })
-      .catch((error) => {
-        setMessage('error', t('message.CannotSaveProject', lang) + ': ' + error);
-      })
-      .finally(() => {
-        setWaiting(false);
-        if (saveAndThenOpenProjectFlag) {
-          const title = useStore.getState().projectToOpen?.title;
-          if (title) {
-            setWaiting(true);
-            fetchProject(uid, title, setProjectState).finally(() => {
-              setWaiting(false);
-              postFetch();
-            });
-          }
-        }
-        setChanged(false);
-      });
+      }
+      setChanged(false);
+    }
   }
 
-  function saveProjectAs() {
+  async function saveProjectAs() {
     if (!user || !user.uid) return;
     const title = usePrimitiveStore.getState().projectTitle;
     if (!title) {
@@ -839,67 +773,58 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     }
     setWaiting(true);
     // check if the project title is already taken
-    fetchMyProjects(false)
-      .then(() => {
-        let exist = false;
-        if (myProjectsRef.current) {
-          for (const p of myProjectsRef.current) {
-            if (p.title === newTitle) {
-              exist = true;
-              break;
-            }
-          }
+    try {
+      await fetchMyProjects(false);
+
+      const exists = myProjectsRef.current?.some((p) => p.title === newTitle);
+      if (exists) {
+        setMessage('info', t('message.TitleUsedChooseDifferentOne', lang) + ': ' + title);
+        return;
+      }
+
+      const uid = user.uid;
+      const state = useStore.getState();
+      const ps = JSON.parse(JSON.stringify(state.projectState)) as ProjectState;
+
+      const timestamp = Date.now();
+      ps.timestamp = timestamp;
+      ps.key = timestamp.toString();
+      ps.time = dayjs(timestamp).format('MM/DD/YYYY hh:mm A');
+      ps.title = newTitle;
+      ps.owner = uid;
+      ps.type = usePrimitiveStore.getState().projectType;
+      ps.description = usePrimitiveStore.getState().projectDescription ?? '';
+
+      updateProjectStateVariables(ps);
+
+      const projectRef = doc(firestore, 'users', uid, 'projects', newTitle);
+      await setDoc(projectRef, ps);
+
+      if (myProjectsRef.current) {
+        const pi: ProjectInfo = {
+          timestamp: ps.timestamp,
+          title: title,
+          type: ps.type,
+        };
+        await addProjectToList(uid, pi);
+        myProjectsRef.current.push(pi);
+
+        if (showProjectListPanel) {
+          setUpdateMyProjectsFlag((prev) => !prev);
+          setUpdateFlag((prev) => !prev);
         }
-        if (exist) {
-          setMessage('info', t('message.TitleUsedChooseDifferentOne', lang) + ': ' + newTitle);
-        } else {
-          if (user && user.uid) {
-            const uid = user.uid;
-            const state = useStore.getState();
-            const ps = JSON.parse(JSON.stringify(state.projectState)) as ProjectState;
-            ps.timestamp = new Date().getTime();
-            ps.key = ps.timestamp.toString();
-            ps.time = dayjs(new Date(ps.timestamp)).format('MM/DD/YYYY hh:mm A');
-            ps.title = newTitle;
-            ps.owner = uid; // make sure the current user becomes the owner
-            ps.type = usePrimitiveStore.getState().projectType;
-            ps.description = usePrimitiveStore.getState().projectDescription ?? '';
-            updateProjectStateVariables(ps);
-            firebase
-              .firestore()
-              .collection('users')
-              .doc(uid)
-              .collection('projects')
-              .doc(newTitle)
-              .set(ps)
-              .then(() => {
-                if (myProjectsRef.current) {
-                  const pi = { timestamp: ps.timestamp, title, type: ps.type } as ProjectInfo;
-                  addProjectToList(uid, pi).then(() => {
-                    myProjectsRef.current.push(pi);
-                    // if the project list panel is open, update it
-                    if (showProjectListPanel) {
-                      setUpdateMyProjectsFlag(!updateMyProjectsFlag);
-                      setUpdateFlag(!updateFlag);
-                    }
-                  });
-                  setCommonStore((state) => {
-                    state.projectState.type = ps.type;
-                    state.projectState.title = ps.title;
-                    state.projectState.description = ps.description;
-                  });
-                }
-              })
-              .catch((error) => {
-                setMessage('error', t('message.CannotCreateNewProject', lang) + ': ' + error);
-              });
-          }
-        }
-      })
-      .finally(() => {
-        setWaiting(false);
-        setChanged(false);
-      });
+        setCommonStore((state) => {
+          state.projectState.type = ps.type;
+          state.projectState.title = ps.title;
+          state.projectState.description = ps.description;
+        });
+      }
+    } catch (error) {
+      setMessage('error', t('message.CannotCreateNewProject', lang) + ': ' + (error as Error).message);
+    } finally {
+      setWaiting(false);
+      setChanged(false);
+    }
   }
 
   function showMyProjectsList() {
@@ -913,22 +838,19 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
     setUpdateFlag(!updateFlag);
   }
 
-  function saveAccountSettings() {
-    if (user.uid) {
-      const firestore = firebase.firestore();
-      firestore
-        .collection('users')
-        .doc(user.uid)
-        .update({
-          schoolID: user.schoolID ?? SchoolID.UNKNOWN,
-          classID: user.classID ?? ClassID.UNKNOWN,
-        })
-        .then(() => {
-          setMessage('info', t('message.YourAccountSettingsWereSaved', lang));
-        })
-        .catch((error) => {
-          setMessage('error', t('message.CannotSaveYourAccountSettings', lang) + ': ' + error);
-        });
+  async function saveAccountSettings() {
+    if (!user?.uid) return;
+
+    try {
+      const userRef = doc(firestore, 'users', user.uid);
+      await updateDoc(userRef, {
+        schoolID: user.schoolID ?? SchoolID.UNKNOWN,
+        classID: user.classID ?? ClassID.UNKNOWN,
+      });
+
+      setMessage('info', t('message.YourAccountSettingsWereSaved', lang));
+    } catch (error) {
+      setMessage('error', t('message.CannotSaveYourAccountSettings', lang) + ': ' + (error as Error).message);
     }
   }
 
@@ -937,7 +859,7 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   ) : (
     <>
       {waiting && <Spinner />}
-      <MainToolBar signIn={signIn} signInAnonymously={signInAnonymously} signOut={signOut} />
+      <MainToolBar signIn={signIn} signInAnonymously={handleSignInAnonymously} signOut={handleSignOut} />
       {showProjectListPanel && myProjectsRef.current && (
         <ProjectListPanel
           projects={[...myProjectsRef.current]}
