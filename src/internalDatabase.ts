@@ -238,6 +238,10 @@ import drugMoleculeUrl051 from './molecules/sdf/oxytetracycline.sdf';
 import drugMoleculeUrl052 from './molecules/sdf/carbamazepine.sdf';
 import drugMoleculeUrl053 from './molecules/sdf/citalopram.sdf';
 import drugMoleculeUrl054 from './molecules/sdf/diclofenac.sdf';
+import drugMoleculeUrl055 from './molecules/sdf/diphenhydramine.sdf';
+import drugMoleculeUrl056 from './molecules/sdf/fluoxetine.sdf';
+import drugMoleculeUrl057 from './molecules/sdf/sulfamethoxazole.sdf';
+import drugMoleculeUrl058 from './molecules/sdf/trimethoprim.sdf';
 
 import proteinUrl001 from './proteins/1crn.pdb';
 import proteinUrl002 from './proteins/1a3n.pdb';
@@ -494,6 +498,10 @@ export const drugMolecules = [
   { url: drugMoleculeUrl052, internal: true, name: 'Carbamazepine' } as MoleculeInterface,
   { url: drugMoleculeUrl053, internal: true, name: 'Citalopram' } as MoleculeInterface,
   { url: drugMoleculeUrl054, internal: true, name: 'Diclofenac' } as MoleculeInterface,
+  { url: drugMoleculeUrl055, internal: true, name: 'Diphenhydramine' } as MoleculeInterface,
+  { url: drugMoleculeUrl056, internal: true, name: 'Fluoxetine' } as MoleculeInterface,
+  { url: drugMoleculeUrl057, internal: true, name: 'Sulfamethoxazole' } as MoleculeInterface,
+  { url: drugMoleculeUrl058, internal: true, name: 'Trimethoprim' } as MoleculeInterface,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const targetProteins = [
