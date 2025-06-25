@@ -526,6 +526,7 @@ export const i18n_en = {
           Cycloalkanes: 'Cycloalkanes',
           Acenes: 'Acenes',
           Bu2EneIsomers: 'Bu-2-ene Isomers',
+          C8H18OIsomers: 'C₈H₁₈O Isomers',
           CisTransIsomerismOfFattyAcids: 'Cis-Trans Isomerism of Fatty Acids',
         },
         biologySubMenu: 'Biology',

@@ -511,6 +511,7 @@ export const i18n_zh_tw = {
           Cycloalkanes: '環烷烴',
           Acenes: '並苯',
           Bu2EneIsomers: '2-丁烯的順反異構',
+          C8H18OIsomers: 'C₈H₁₈O的同分異構',
           CisTransIsomerismOfFattyAcids: '油酸的順反異構',
         },
         biologySubMenu: '生物',

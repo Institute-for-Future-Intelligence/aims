@@ -36,6 +36,8 @@ import commonMoleculeUrl013 from './molecules/sdf/2-ethylhexanol.sdf';
 import commonMoleculeUrl014 from './molecules/sdf/3-octanol.sdf';
 import commonMoleculeUrl015 from './molecules/sdf/dibutyl_ether.sdf';
 import commonMoleculeUrl016 from './molecules/sdf/di-tert-butyl_ether.sdf';
+import commonMoleculeUrl017 from './molecules/sdf/r-mecoprop.sdf';
+import commonMoleculeUrl018 from './molecules/sdf/s-mecoprop.sdf';
 import commonMoleculeUrl101 from './molecules/sdf/buckyball.sdf';
 import commonMoleculeUrl102 from './molecules/xyz/nanotube.xyz';
 import commonMoleculeUrl103 from './molecules/xyz/graphen.xyz';
@@ -127,6 +129,12 @@ import biomoleculeUrl002 from './molecules/sdf/vitamin_a.sdf';
 import biomoleculeUrl003 from './molecules/sdf/vitamin_c.sdf';
 import biomoleculeUrl004 from './molecules/sdf/vitamin_d.sdf';
 import biomoleculeUrl005 from './molecules/sdf/citric_acid.sdf';
+import biomoleculeUrl006 from './molecules/sdf/ethinylestradiol.sdf';
+import biomoleculeUrl007 from './molecules/sdf/estradiol.sdf';
+import biomoleculeUrl008 from './molecules/sdf/estriol.sdf';
+import biomoleculeUrl009 from './molecules/sdf/estrone.sdf';
+import biomoleculeUrl010 from './molecules/sdf/progesterone.sdf';
+import biomoleculeUrl011 from './molecules/sdf/testosterone.sdf';
 import biomoleculeUrl101 from './molecules/pdb/cholesterol.pdb';
 import biomoleculeUrl102 from './molecules/sdf/oleic_acid.sdf';
 import biomoleculeUrl103 from './molecules/sdf/stearic_acid.sdf';
@@ -227,6 +235,9 @@ import drugMoleculeUrl048 from './molecules/sdf/ceftazidime.sdf';
 import drugMoleculeUrl049 from './molecules/sdf/cefotaxime.sdf';
 import drugMoleculeUrl050 from './molecules/sdf/ciprofloxacin.sdf';
 import drugMoleculeUrl051 from './molecules/sdf/oxytetracycline.sdf';
+import drugMoleculeUrl052 from './molecules/sdf/carbamazepine.sdf';
+import drugMoleculeUrl053 from './molecules/sdf/citalopram.sdf';
+import drugMoleculeUrl054 from './molecules/sdf/diclofenac.sdf';
 
 import proteinUrl001 from './proteins/1crn.pdb';
 import proteinUrl002 from './proteins/1a3n.pdb';
@@ -275,6 +286,8 @@ export const commonMolecules = [
   { url: commonMoleculeUrl014, internal: true, name: '3-Octanol' } as MoleculeInterface,
   { url: commonMoleculeUrl015, internal: true, name: 'Dibutyl Ether' } as MoleculeInterface,
   { url: commonMoleculeUrl016, internal: true, name: 'Di-tert-butyl Ether' } as MoleculeInterface,
+  { url: commonMoleculeUrl017, internal: true, name: '(R)-Mecoprop' } as MoleculeInterface,
+  { url: commonMoleculeUrl018, internal: true, name: '(S)-Mecoprop' } as MoleculeInterface,
   { url: commonMoleculeUrl101, internal: true, name: 'Buckminsterfullerene' } as MoleculeInterface,
   { url: commonMoleculeUrl102, internal: true, name: 'Carbon Nanotube' } as MoleculeInterface,
   { url: commonMoleculeUrl103, internal: true, name: 'Graphene' } as MoleculeInterface,
@@ -370,6 +383,12 @@ export const biomolecules = [
   { url: biomoleculeUrl003, internal: true, name: 'Vitamin C' } as MoleculeInterface,
   { url: biomoleculeUrl004, internal: true, name: 'Vitamin D' } as MoleculeInterface,
   { url: biomoleculeUrl005, internal: true, name: 'Citric Acid' } as MoleculeInterface,
+  { url: biomoleculeUrl006, internal: true, name: 'Ethinylestradiol' } as MoleculeInterface,
+  { url: biomoleculeUrl007, internal: true, name: 'Estradiol' } as MoleculeInterface,
+  { url: biomoleculeUrl008, internal: true, name: 'Estriol' } as MoleculeInterface,
+  { url: biomoleculeUrl009, internal: true, name: 'Estrone' } as MoleculeInterface,
+  { url: biomoleculeUrl010, internal: true, name: 'Progesterone' } as MoleculeInterface,
+  { url: biomoleculeUrl011, internal: true, name: 'Testosterone' } as MoleculeInterface,
   { url: biomoleculeUrl101, internal: true, name: 'Cholesterol' } as MoleculeInterface,
   { url: biomoleculeUrl102, internal: true, name: 'Oleic Acid' } as MoleculeInterface,
   { url: biomoleculeUrl103, internal: true, name: 'Stearic Acid' } as MoleculeInterface,
@@ -472,6 +491,9 @@ export const drugMolecules = [
   { url: drugMoleculeUrl049, internal: true, name: 'Cefotaxime' } as MoleculeInterface,
   { url: drugMoleculeUrl050, internal: true, name: 'Ciprofloxacin' } as MoleculeInterface,
   { url: drugMoleculeUrl051, internal: true, name: 'Oxytetracycline' } as MoleculeInterface,
+  { url: drugMoleculeUrl052, internal: true, name: 'Carbamazepine' } as MoleculeInterface,
+  { url: drugMoleculeUrl053, internal: true, name: 'Citalopram' } as MoleculeInterface,
+  { url: drugMoleculeUrl054, internal: true, name: 'Diclofenac' } as MoleculeInterface,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const targetProteins = [
