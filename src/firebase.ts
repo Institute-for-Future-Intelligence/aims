@@ -1,3 +1,7 @@
+/*
+ * @Copyright 2025. Institute for Future Intelligence, Inc.
+ */
+
 import { getApp, getApps, initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
