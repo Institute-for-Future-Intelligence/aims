@@ -10,13 +10,12 @@ import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
 import { OpenAIOutlined } from '@ant-design/icons';
-import { OpenAI } from 'openai';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { generateFormulaFromAtomJS, loadMolecule } from '../view/moleculeTools.ts';
 import { MoleculeInterface } from '../types.ts';
 import { setMessage } from '../helpers.tsx';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
-import { getFunctions, httpsCallable } from 'firebase/functions';
+import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions';
 
 export interface GenerateMoleculeModalProps {
   setDialogVisible: (visible: boolean) => void;
@@ -24,12 +23,6 @@ export interface GenerateMoleculeModalProps {
 }
 
 const { TextArea } = Input;
-
-const client = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  // apiKey: 'My API Key',
-  dangerouslyAllowBrowser: true,
-});
 
 const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }: GenerateMoleculeModalProps) => {
   const setCommonStore = useStore(Selector.set);
@@ -61,22 +54,15 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
 
   const resultRef = useRef<string | null>(null);
 
-  const functions = getFunctions();
-  const callOpenAI = httpsCallable(functions, 'callOpenAI');
-
   const generate = async () => {
-    // const response = await client.responses.create({
-    //   model: 'o4-mini',
-    //   input:
-    //     prompt +
-    //     ' It should have hydrogen atoms. Return just a SDF file with a two-line header followed by a new empty line.',
-    // });
-    // resultRef.current = response.output_text;
+    const functions = getFunctions();
+    // connectFunctionsEmulator(functions, 'localhost', 5001);
+    const callOpenAI = httpsCallable(functions, 'callOpenAI');
+
     const res = (await callOpenAI({
       text: prompt,
     })) as any;
     resultRef.current = res.data.text;
-    console.log('returned', resultRef.current);
   };
 
   const onStart = (event: DraggableEvent, uiData: DraggableData) => {
