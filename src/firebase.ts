@@ -19,7 +19,7 @@ const config = {
 };
 
 const apps = getApps();
-const app =
+export const app =
   apps.length === 0 || (apps.length === 1 && apps[0].name === FirebaseName.LOG_DATA) ? initializeApp(config) : getApp();
 
 export const auth = getAuth(app);

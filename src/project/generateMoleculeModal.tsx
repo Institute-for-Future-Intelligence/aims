@@ -16,6 +16,7 @@ import { MoleculeInterface } from '../types.ts';
 import { setMessage } from '../helpers.tsx';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import { app } from '../firebase.ts';
 
 export interface GenerateMoleculeModalProps {
   setDialogVisible: (visible: boolean) => void;
@@ -55,7 +56,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   const resultRef = useRef<string | null>(null);
 
   const generate = async () => {
-    const functions = getFunctions();
+    const functions = getFunctions(app, 'us-east4');
     // connectFunctionsEmulator(functions, 'localhost', 5001);
     const callOpenAI = httpsCallable(functions, 'callOpenAI');
 
