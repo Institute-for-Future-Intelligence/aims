@@ -142,6 +142,7 @@ export const i18n_zh_tw = {
     },
 
     message: {
+      GeneratingAMoleculeWillTakeAWhile: '生成一個分子可能需要一些時間。您確定繼續嗎？',
       DoNotUnderstandGeneratedResult: '抱歉，我不能理解回傳結果。',
       DoNotShowAgain: '別再顯示',
       NewVersionAvailable: '有新版本',
@@ -513,6 +514,7 @@ export const i18n_zh_tw = {
           Bu2EneIsomers: '2-丁烯的順反異構',
           C8H18OIsomers: 'C₈H₁₈O的同分異構',
           CisTransIsomerismOfFattyAcids: '油酸的順反異構',
+          ForeverChemicals: '持久性有機污染物',
         },
         biologySubMenu: '生物',
         biology: {

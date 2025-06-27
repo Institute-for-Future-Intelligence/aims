@@ -152,6 +152,14 @@ export const createExamplesMenu = (viewOnly: boolean) => {
             </MenuItem>
           ),
         },
+        {
+          key: 'PFAS',
+          label: (
+            <MenuItem onClick={() => loadProject('PFAS')}>
+              {i18n.t('menu.examples.chemistry.ForeverChemicals', lang)}
+            </MenuItem>
+          ),
+        },
       ],
     },
     {

@@ -151,6 +151,7 @@ export const i18n_en = {
     },
 
     message: {
+      GeneratingAMoleculeWillTakeAWhile: 'Generating a molecule will take a long. Do you want to continue?',
       DoNotUnderstandGeneratedResult: 'Sorry, I do not understand the generated result.',
       DoNotShowAgain: "Don't show again",
       NewVersionAvailable: 'A new version is available',
@@ -528,6 +529,7 @@ export const i18n_en = {
           Bu2EneIsomers: 'Bu-2-ene Isomers',
           C8H18OIsomers: 'C₈H₁₈O Isomers',
           CisTransIsomerismOfFattyAcids: 'Cis-Trans Isomerism of Fatty Acids',
+          ForeverChemicals: 'Forever Chemicals',
         },
         biologySubMenu: 'Biology',
         biology: {

@@ -3,13 +3,13 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Input, Modal, Space } from 'antd';
+import { App, Button, Input, Modal, Space } from 'antd';
 import i18n from '../i18n/i18n.ts';
 import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react-draggable';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
-import { OpenAIOutlined } from '@ant-design/icons';
+import { OpenAIOutlined, WarningOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { generateFormulaFromAtomJS, loadMolecule } from '../view/moleculeTools.ts';
 import { MoleculeInterface } from '../types.ts';
@@ -33,6 +33,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   const addMolecule = useStore(Selector.addMolecule);
   const setChanged = usePrimitiveStore(Selector.setChanged);
 
+  const [prompt, setPrompt] = useState<string>(generateMoleculePrompt);
   const [dragEnabled, setDragEnabled] = useState<boolean>(false);
   const [bounds, setBounds] = useState<DraggableBounds>({
     left: 0,
@@ -40,20 +41,20 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
     bottom: 0,
     right: 0,
   } as DraggableBounds);
+
   const dragRef = useRef<HTMLDivElement | null>(null);
 
-  const [prompt, setPrompt] = useState<string>(generateMoleculePrompt);
-
-  useEffect(() => {
-    setPrompt(generateMoleculePrompt);
-  }, [generateMoleculePrompt]);
-
+  const { modal } = App.useApp();
   const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
   }, [language]);
 
   const resultRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    setPrompt(generateMoleculePrompt);
+  }, [generateMoleculePrompt]);
 
   const generate = async () => {
     const functions = getFunctions(app, 'us-east4');
@@ -78,8 +79,21 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
       });
     }
   };
-
   const onOk = () => {
+    modal.confirm({
+      title: `${t('message.GeneratingAMoleculeWillTakeAWhile', lang)}`,
+      icon: <WarningOutlined />,
+      type: 'warning',
+      onOk: () => {
+        runGenAI();
+      },
+      onCancel: () => {},
+      okText: `${t('word.Yes', lang)}`,
+      cancelText: `${t('word.No', lang)}`,
+    });
+  };
+
+  const runGenAI = () => {
     setWaiting(true);
     setCommonStore((state) => {
       state.projectState.generateMoleculePrompt = prompt;
