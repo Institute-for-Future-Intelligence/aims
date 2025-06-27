@@ -65,6 +65,12 @@ import commonMoleculeUrl319 from './molecules/sdf/methy_butanoate.sdf';
 import commonMoleculeUrl320 from './molecules/sdf/butanamide.sdf';
 import commonMoleculeUrl321 from './molecules/sdf/ethanamine.sdf';
 import commonMoleculeUrl322 from './molecules/sdf/methoxymethane.sdf';
+import commonMoleculeUrl400 from './molecules/sdf/perfluorooctanoic_acid.sdf';
+import commonMoleculeUrl401 from './molecules/sdf/perfluoroheptanoic_acid.sdf';
+import commonMoleculeUrl402 from './molecules/sdf/perfluorohexanoic_acid.sdf';
+import commonMoleculeUrl403 from './molecules/sdf/perfluorohexanesulfonic_acid.sdf';
+import commonMoleculeUrl404 from './molecules/sdf/perfluorodecanoic_acid.sdf';
+import commonMoleculeUrl405 from './molecules/sdf/perfluorooctanesulfonic_acid.sdf';
 
 import hydrocarbonMoleculeUrl001 from './molecules/pdb/methane.pdb';
 import hydrocarbonMoleculeUrl002 from './molecules/sdf/ethane.sdf';
@@ -243,6 +249,7 @@ import drugMoleculeUrl056 from './molecules/sdf/fluoxetine.sdf';
 import drugMoleculeUrl057 from './molecules/sdf/sulfamethoxazole.sdf';
 import drugMoleculeUrl058 from './molecules/sdf/trimethoprim.sdf';
 import drugMoleculeUrl059 from './molecules/sdf/ampicillin.sdf';
+import drugMoleculeUrl060 from './molecules/sdf/chloramphenicol.sdf';
 
 import proteinUrl001 from './proteins/1crn.pdb';
 import proteinUrl002 from './proteins/1a3n.pdb';
@@ -320,6 +327,12 @@ export const commonMolecules = [
   { url: commonMoleculeUrl320, internal: true, name: 'Butanamide' } as MoleculeInterface,
   { url: commonMoleculeUrl321, internal: true, name: 'Ethanamine' } as MoleculeInterface,
   { url: commonMoleculeUrl322, internal: true, name: 'Methoxymethane' } as MoleculeInterface,
+  { url: commonMoleculeUrl400, internal: true, name: 'Perfluorooctanoic Acid' } as MoleculeInterface,
+  { url: commonMoleculeUrl401, internal: true, name: 'Perfluoroheptanoic Acid' } as MoleculeInterface,
+  { url: commonMoleculeUrl402, internal: true, name: 'Perfluorohexanoic Acid' } as MoleculeInterface,
+  { url: commonMoleculeUrl403, internal: true, name: 'Perfluorohexanesulfonic Acid' } as MoleculeInterface,
+  { url: commonMoleculeUrl404, internal: true, name: 'Perfluorodecanoic Acid' } as MoleculeInterface,
+  { url: commonMoleculeUrl405, internal: true, name: 'Perfluorooctanesulfonic Acid' } as MoleculeInterface,
 ];
 
 export const hydrocarbonMolecules = [
@@ -504,6 +517,7 @@ export const drugMolecules = [
   { url: drugMoleculeUrl057, internal: true, name: 'Sulfamethoxazole' } as MoleculeInterface,
   { url: drugMoleculeUrl058, internal: true, name: 'Trimethoprim' } as MoleculeInterface,
   { url: drugMoleculeUrl059, internal: true, name: 'Ampicillin' } as MoleculeInterface,
+  { url: drugMoleculeUrl060, internal: true, name: 'Chloramphenicol' } as MoleculeInterface,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const targetProteins = [

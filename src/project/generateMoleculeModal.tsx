@@ -15,7 +15,7 @@ import { generateFormulaFromAtomJS, loadMolecule } from '../view/moleculeTools.t
 import { MoleculeInterface } from '../types.ts';
 import { setMessage } from '../helpers.tsx';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
-import { connectFunctionsEmulator, getFunctions, httpsCallable } from 'firebase/functions';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 
 export interface GenerateMoleculeModalProps {
   setDialogVisible: (visible: boolean) => void;
