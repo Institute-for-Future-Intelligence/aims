@@ -100,7 +100,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
     });
     generate()
       .catch((e) => {
-        setMessage('error', e.toString());
+        setMessage('error', e.toString(), 10);
       })
       .then(() => {
         if (resultRef.current) {
