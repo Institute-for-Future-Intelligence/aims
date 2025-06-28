@@ -38,6 +38,9 @@ import commonMoleculeUrl015 from './molecules/sdf/dibutyl_ether.sdf';
 import commonMoleculeUrl016 from './molecules/sdf/di-tert-butyl_ether.sdf';
 import commonMoleculeUrl017 from './molecules/sdf/r-mecoprop.sdf';
 import commonMoleculeUrl018 from './molecules/sdf/s-mecoprop.sdf';
+import commonMoleculeUrl019 from './molecules/sdf/nitric_oxide.sdf';
+import commonMoleculeUrl020 from './molecules/sdf/nitrogen_dioxide.sdf';
+import commonMoleculeUrl021 from './molecules/sdf/nitrous_oxide.sdf';
 import commonMoleculeUrl101 from './molecules/sdf/buckyball.sdf';
 import commonMoleculeUrl102 from './molecules/xyz/nanotube.xyz';
 import commonMoleculeUrl103 from './molecules/xyz/graphen.xyz';
@@ -300,6 +303,9 @@ export const commonMolecules = [
   { url: commonMoleculeUrl016, internal: true, name: 'Di-tert-butyl Ether' } as MoleculeInterface,
   { url: commonMoleculeUrl017, internal: true, name: '(R)-Mecoprop' } as MoleculeInterface,
   { url: commonMoleculeUrl018, internal: true, name: '(S)-Mecoprop' } as MoleculeInterface,
+  { url: commonMoleculeUrl019, internal: true, name: 'Nitric Oxide' } as MoleculeInterface,
+  { url: commonMoleculeUrl020, internal: true, name: 'Nitrogen Dioxide' } as MoleculeInterface,
+  { url: commonMoleculeUrl021, internal: true, name: 'Nitrous Oxide' } as MoleculeInterface,
   { url: commonMoleculeUrl101, internal: true, name: 'Buckminsterfullerene' } as MoleculeInterface,
   { url: commonMoleculeUrl102, internal: true, name: 'Carbon Nanotube' } as MoleculeInterface,
   { url: commonMoleculeUrl103, internal: true, name: 'Graphene' } as MoleculeInterface,
@@ -571,6 +577,7 @@ export const findSimilarMolecules = (
   molecularProperties: { [key: string]: MolecularProperties },
 ): { name: string; formula: string; distance: number }[] => {
   const prop = molecularProperties[molecule.name];
+  if (!prop) return [];
   const selectedNames: { name: string; formula: string; distance: number }[] = [];
   switch (type) {
     case ChemicalNotation.SMILES: {
