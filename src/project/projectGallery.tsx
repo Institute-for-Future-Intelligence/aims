@@ -29,7 +29,7 @@ import {
   TableOutlined,
   QuestionCircleOutlined,
   ClearOutlined,
-  OpenAIOutlined,
+  BulbOutlined,
 } from '@ant-design/icons';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
@@ -462,7 +462,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     setGenerateMoleculeDialogVisible(true);
                   }}
                 >
-                  <OpenAIOutlined
+                  <BulbOutlined
                     style={{ fontSize: '24px', color: 'gray' }}
                     title={t('projectPanel.GenerateMolecule', lang)}
                   />

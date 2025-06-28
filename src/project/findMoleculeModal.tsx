@@ -1,9 +1,9 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useMemo, useRef, useState } from 'react';
-import { Button, Checkbox, Modal, Space } from 'antd';
+import { Button, Checkbox, Col, Modal, Row } from 'antd';
 import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react-draggable';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
@@ -128,8 +128,8 @@ const FindMoleculeModal = React.memo(
           </Draggable>
         )}
       >
-        <Space direction={'horizontal'} style={{ width: '100%', paddingTop: '20px', paddingBottom: '10px' }}>
-          <Space direction={'vertical'} style={{ paddingRight: '10px' }}>
+        <Row style={{ width: '100%', paddingTop: '10px', paddingBottom: '10px' }}>
+          <Col style={{ paddingRight: '30px' }}>
             <span title={t('tooltip.inchiFormat', lang)}>InChI {t('word.Results', lang)}</span>
             {similarMoleculesByInChI.length === 0 ? (
               <div>{t('message.NoSimilarMoleculesWereFound', lang)}</div>
@@ -149,8 +149,8 @@ const FindMoleculeModal = React.memo(
                 );
               })
             )}
-          </Space>
-          <Space direction={'vertical'}>
+          </Col>
+          <Col>
             <span title={t('tooltip.smilesFormat', lang)}>SMILES {t('word.Results', lang)}</span>
             {similarMoleculesBySmiles.length === 0 ? (
               <div>{t('message.NoSimilarMoleculesWereFound', lang)}</div>
@@ -170,8 +170,8 @@ const FindMoleculeModal = React.memo(
                 );
               })
             )}
-          </Space>
-        </Space>
+          </Col>
+        </Row>
       </Modal>
     );
   },

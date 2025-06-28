@@ -135,7 +135,7 @@ const ImportMoleculeModal = React.memo(
             onMouseOver={() => setDragEnabled(true)}
             onMouseOut={() => setDragEnabled(false)}
           >
-            <ImportOutlined /> {t('projectPanel.SelectMolecule', lang)}
+            <ImportOutlined /> {t('projectPanel.SelectMoleculeFromInternalDatabase', lang)}
           </div>
         }
         open={isDialogVisible()}
