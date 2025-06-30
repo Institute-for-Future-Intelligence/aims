@@ -664,8 +664,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           if (!hiddenProperties?.includes('heavyAtomCount')) d['heavyAtomCount'] = p.heavyAtomCount;
           if (!hiddenProperties?.includes('complexity')) d['complexity'] = p.complexity;
           if (!hiddenProperties?.includes('density')) d['density'] = p.density;
-          if (!hiddenProperties?.includes('boilingPoint')) d['boilingPoint'] = p.boilingPoint;
           if (!hiddenProperties?.includes('meltingPoint')) d['meltingPoint'] = p.meltingPoint;
+          if (!hiddenProperties?.includes('boilingPoint')) d['boilingPoint'] = p.boilingPoint;
           d['group'] = projectDataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
           d['selected'] = selectedMolecule === m;
           d['hovered'] = hoveredMolecule === m;
@@ -776,10 +776,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
       array.push(flag ? calcMin('heavyAtomCount') : getMin('heavyAtomCount', 0));
     if (!hiddenProperties?.includes('complexity')) array.push(flag ? calcMin('complexity') : getMin('complexity', 0));
     if (!hiddenProperties?.includes('density')) array.push(flag ? calcMin('density') : getMin('density', 0));
-    if (!hiddenProperties?.includes('boilingPoint'))
-      array.push(flag ? calcMin('boilingPoint') : getMin('boilingPoint', -100));
     if (!hiddenProperties?.includes('meltingPoint'))
       array.push(flag ? calcMin('meltingPoint') : getMin('meltingPoint', -100));
+    if (!hiddenProperties?.includes('boilingPoint'))
+      array.push(flag ? calcMin('boilingPoint') : getMin('boilingPoint', -100));
     return array;
   }, [updateHiddenFlag, projectRanges, hiddenProperties, autoscaleGraph, data]);
 
@@ -804,10 +804,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     if (!hiddenProperties?.includes('complexity'))
       array.push(flag ? calcMax('complexity') : getMax('complexity', 2000));
     if (!hiddenProperties?.includes('density')) array.push(flag ? calcMax('density') : getMax('density', 5));
-    if (!hiddenProperties?.includes('boilingPoint'))
-      array.push(flag ? calcMax('boilingPoint') : getMax('boilingPoint', 200));
     if (!hiddenProperties?.includes('meltingPoint'))
       array.push(flag ? calcMax('meltingPoint') : getMax('meltingPoint', 50));
+    if (!hiddenProperties?.includes('boilingPoint'))
+      array.push(flag ? calcMax('boilingPoint') : getMax('boilingPoint', 200));
     return array;
   }, [updateHiddenFlag, projectRanges, hiddenProperties, autoscaleGraph, data]);
 
@@ -845,8 +845,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     if (!hiddenProperties?.includes('heavyAtomCount')) array.push(1);
     if (!hiddenProperties?.includes('complexity')) array.push(1);
     if (!hiddenProperties?.includes('density')) array.push(0.1);
-    if (!hiddenProperties?.includes('boilingPoint')) array.push(1);
     if (!hiddenProperties?.includes('meltingPoint')) array.push(1);
+    if (!hiddenProperties?.includes('boilingPoint')) array.push(1);
     return array;
   }, [hiddenProperties]);
 
@@ -902,8 +902,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     if (!hiddenProperties?.includes('heavyAtomCount')) array.push(createFilter('heavyAtomCount', 100, 1));
     if (!hiddenProperties?.includes('complexity')) array.push(createFilter('complexity', 1000, 0));
     if (!hiddenProperties?.includes('density')) array.push(createFilter('density', 5, 0));
-    if (!hiddenProperties?.includes('boilingPoint')) array.push(createFilter('boilingPoint', 200, 0));
     if (!hiddenProperties?.includes('meltingPoint')) array.push(createFilter('meltingPoint', 50, 0));
+    if (!hiddenProperties?.includes('boilingPoint')) array.push(createFilter('boilingPoint', 200, 0));
     return array;
   }, [updateHiddenFlag, projectFilters, hiddenProperties, autoscaleGraph, data]);
 

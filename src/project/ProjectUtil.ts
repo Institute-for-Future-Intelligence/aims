@@ -49,8 +49,8 @@ export class ProjectUtil {
         'heavyAtomCount',
         'complexity',
         'density',
-        'boilingPoint',
         'meltingPoint',
+        'boilingPoint',
       ],
       xAxisNameScatterPlot: 'atomCount',
       yAxisNameScatterPlot: 'bondCount',
@@ -169,8 +169,8 @@ export class ProjectUtil {
     if (!hidden?.includes('heavyAtomCount')) a.push('heavyAtomCount');
     if (!hidden?.includes('complexity')) a.push('complexity');
     if (!hidden?.includes('density')) a.push('density');
-    if (!hidden?.includes('boilingPoint')) a.push('boilingPoint');
     if (!hidden?.includes('meltingPoint')) a.push('meltingPoint');
+    if (!hidden?.includes('boilingPoint')) a.push('boilingPoint');
     return a;
   }
 
@@ -188,8 +188,8 @@ export class ProjectUtil {
     if (!hidden?.includes('heavyAtomCount')) a.push(i18n.t('projectPanel.HeavyAtomCountShort', l));
     if (!hidden?.includes('complexity')) a.push(i18n.t('projectPanel.Complexity', l));
     if (!hidden?.includes('density')) a.push(i18n.t('projectPanel.Density', l));
-    if (!hidden?.includes('boilingPoint')) a.push(i18n.t('projectPanel.BoilingPoint', l));
     if (!hidden?.includes('meltingPoint')) a.push(i18n.t('projectPanel.MeltingPoint', l));
+    if (!hidden?.includes('boilingPoint')) a.push(i18n.t('projectPanel.BoilingPoint', l));
     return a;
   }
 
@@ -205,8 +205,8 @@ export class ProjectUtil {
     if (property === 'heavyAtomCount') return i18n.t('projectPanel.HeavyAtomCountShort', l);
     if (property === 'complexity') return i18n.t('projectPanel.Complexity', l);
     if (property === 'density') return i18n.t('projectPanel.Density', l);
-    if (property === 'boilingPoint') return i18n.t('projectPanel.BoilingPoint', l);
     if (property === 'meltingPoint') return i18n.t('projectPanel.MeltingPoint', l);
+    if (property === 'boilingPoint') return i18n.t('projectPanel.BoilingPoint', l);
     return undefined;
   }
 
@@ -223,8 +223,8 @@ export class ProjectUtil {
     if (!hidden?.includes('heavyAtomCount')) a.push('number');
     if (!hidden?.includes('complexity')) a.push('number');
     if (!hidden?.includes('density')) a.push('number');
-    if (!hidden?.includes('boilingPoint')) a.push('number');
     if (!hidden?.includes('meltingPoint')) a.push('number');
+    if (!hidden?.includes('boilingPoint')) a.push('number');
     return a;
   }
 
@@ -241,8 +241,8 @@ export class ProjectUtil {
     if (!hidden?.includes('heavyAtomCount')) a.push(0);
     if (!hidden?.includes('complexity')) a.push(1);
     if (!hidden?.includes('density')) a.push(1);
-    if (!hidden?.includes('boilingPoint')) a.push(1);
     if (!hidden?.includes('meltingPoint')) a.push(1);
+    if (!hidden?.includes('boilingPoint')) a.push(1);
     return a;
   }
 
@@ -259,8 +259,8 @@ export class ProjectUtil {
     if (!hidden?.includes('heavyAtomCount')) a.push(true);
     if (!hidden?.includes('complexity')) a.push(false);
     if (!hidden?.includes('density')) a.push(false);
-    if (!hidden?.includes('boilingPoint')) a.push(true);
     if (!hidden?.includes('meltingPoint')) a.push(true);
+    if (!hidden?.includes('boilingPoint')) a.push(true);
     return a;
   }
 
@@ -277,8 +277,8 @@ export class ProjectUtil {
     if (!hidden?.includes('heavyAtomCount')) a.push('');
     if (!hidden?.includes('complexity')) a.push('');
     if (!hidden?.includes('density')) a.push('g/ml');
-    if (!hidden?.includes('boilingPoint')) a.push('°C');
     if (!hidden?.includes('meltingPoint')) a.push('°C');
+    if (!hidden?.includes('boilingPoint')) a.push('°C');
     return a;
   }
 
@@ -286,8 +286,8 @@ export class ProjectUtil {
     if (property === 'molecularMass') return 'u';
     if (property === 'polarSurfaceArea') return 'Å²';
     if (property === 'density') return 'g/ml';
-    if (property === 'boilingPoint') return '°C';
     if (property === 'meltingPoint') return '°C';
+    if (property === 'boilingPoint') return '°C';
     return '';
   }
 

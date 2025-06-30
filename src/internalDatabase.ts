@@ -197,6 +197,8 @@ import biomoleculeUrl354 from './molecules/sdf/glyceraldehyde.sdf';
 import biomoleculeUrl355 from './molecules/sdf/dihydroxyacetone.sdf';
 import biomoleculeUrl356 from './molecules/sdf/galactose.sdf';
 import biomoleculeUrl357 from './molecules/sdf/d-ribose.sdf';
+import biomoleculeUrl358 from './molecules/sdf/amylose.sdf';
+import biomoleculeUrl359 from './molecules/sdf/cellulose.sdf';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
@@ -471,6 +473,8 @@ export const biomolecules = [
   { url: biomoleculeUrl355, internal: true, name: 'Dihydroxyacetone' } as MoleculeInterface,
   { url: biomoleculeUrl356, internal: true, name: 'Galactose' } as MoleculeInterface,
   { url: biomoleculeUrl357, internal: true, name: 'D-Ribose' } as MoleculeInterface,
+  { url: biomoleculeUrl358, internal: true, name: 'Amylose' } as MoleculeInterface,
+  { url: biomoleculeUrl359, internal: true, name: 'Cellulose' } as MoleculeInterface,
 ];
 
 export const drugMolecules = [
