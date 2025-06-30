@@ -44,7 +44,7 @@ import commonMoleculeUrl021 from './molecules/sdf/nitrous_oxide.sdf';
 import commonMoleculeUrl101 from './molecules/sdf/buckyball.sdf';
 import commonMoleculeUrl102 from './molecules/xyz/nanotube.xyz';
 import commonMoleculeUrl103 from './molecules/xyz/graphen.xyz';
-import commonMoleculeUrl201 from './molecules/sdf/d_glucose.sdf';
+import commonMoleculeUrl201 from './molecules/sdf/d-glucose.sdf';
 import commonMoleculeUrl202 from './molecules/sdf/ethanol.sdf';
 import commonMoleculeUrl203 from './molecules/sdf/urea.sdf';
 import commonMoleculeUrl301 from './molecules/sdf/ethylamine.sdf';
@@ -192,6 +192,11 @@ import biomoleculeUrl349 from './molecules/sdf/sucralose.sdf';
 import biomoleculeUrl350 from './molecules/sdf/xylitol.sdf';
 import biomoleculeUrl351 from './molecules/sdf/neotame.sdf';
 import biomoleculeUrl352 from './molecules/sdf/fructose.sdf';
+import biomoleculeUrl353 from './molecules/sdf/sucrose.sdf';
+import biomoleculeUrl354 from './molecules/sdf/glyceraldehyde.sdf';
+import biomoleculeUrl355 from './molecules/sdf/dihydroxyacetone.sdf';
+import biomoleculeUrl356 from './molecules/sdf/galactose.sdf';
+import biomoleculeUrl357 from './molecules/sdf/d-ribose.sdf';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
@@ -461,6 +466,11 @@ export const biomolecules = [
   { url: biomoleculeUrl350, internal: true, name: 'Xylitol' } as MoleculeInterface,
   { url: biomoleculeUrl351, internal: true, name: 'Neotame' } as MoleculeInterface,
   { url: biomoleculeUrl352, internal: true, name: 'Fructose' } as MoleculeInterface,
+  { url: biomoleculeUrl353, internal: true, name: 'Sucrose' } as MoleculeInterface,
+  { url: biomoleculeUrl354, internal: true, name: 'Glyceraldehyde' } as MoleculeInterface,
+  { url: biomoleculeUrl355, internal: true, name: 'Dihydroxyacetone' } as MoleculeInterface,
+  { url: biomoleculeUrl356, internal: true, name: 'Galactose' } as MoleculeInterface,
+  { url: biomoleculeUrl357, internal: true, name: 'D-Ribose' } as MoleculeInterface,
 ];
 
 export const drugMolecules = [
