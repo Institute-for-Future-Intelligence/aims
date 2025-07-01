@@ -157,7 +157,7 @@ const ScissorBox = React.memo(
             style={{
               position: 'relative',
               left: '4px',
-              bottom: 26 - viewHeight + 'px',
+              bottom: 30 - viewHeight + 'px',
               textAlign: 'left',
               color: 'gray',
               fontSize: labelType === LabelType.FORMULA ? '16px' : '11px',
@@ -174,7 +174,7 @@ const ScissorBox = React.memo(
                 color: 'dimgray',
                 position: 'absolute',
                 right: '-6px',
-                bottom: 28 - viewHeight + 'px',
+                bottom: 34 - viewHeight + 'px',
                 cursor: 'pointer',
               }}
               title={t('projectPanel.ClickToIncludeMolecule', lang)}
@@ -200,7 +200,7 @@ const ScissorBox = React.memo(
                 color: 'dimgray',
                 position: 'absolute',
                 right: '-6px',
-                bottom: 28 - viewHeight + 'px',
+                bottom: 34 - viewHeight + 'px',
                 cursor: 'pointer',
               }}
               title={t('projectPanel.ClickToExcludeMolecule', lang)}
