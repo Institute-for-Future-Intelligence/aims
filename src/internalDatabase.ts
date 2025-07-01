@@ -202,6 +202,7 @@ import biomoleculeUrl359 from './molecules/sdf/cellulose.sdf';
 import biomoleculeUrl360 from './molecules/sdf/glycerol.sdf';
 import biomoleculeUrl361 from './molecules/sdf/alpha-linolenic_acid.sdf';
 import biomoleculeUrl362 from './molecules/sdf/gamma-linolenic_acid.sdf';
+import biomoleculeUrl363 from './molecules/sdf/cortisol.sdf';
 
 import drugMoleculeUrl001 from './molecules/pdb/aspirin.pdb';
 import drugMoleculeUrl002 from './molecules/sdf/ibuprofen.sdf';
@@ -481,6 +482,7 @@ export const biomolecules = [
   { url: biomoleculeUrl360, internal: true, name: 'Glycerol' } as MoleculeInterface,
   { url: biomoleculeUrl361, internal: true, name: 'α-Linolenic Acid' } as MoleculeInterface,
   { url: biomoleculeUrl362, internal: true, name: 'γ-Linolenic Acid' } as MoleculeInterface,
+  { url: biomoleculeUrl363, internal: true, name: 'Cortisol' } as MoleculeInterface,
 ];
 
 export const drugMolecules = [
