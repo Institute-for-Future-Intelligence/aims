@@ -3,7 +3,7 @@
  */
 
 import { onCall } from 'firebase-functions/v2/https';
-import { OpenAI } from 'openai';
+import { OpenAI, AzureOpenAI } from 'openai';
 
 exports.callOpenAI = onCall(
   {
@@ -29,6 +29,43 @@ exports.callOpenAI = onCall(
       });
 
       return { text: response.output_text };
+    } catch (e) {
+      return { error: e };
+    }
+  },
+);
+
+const endpoint = 'https://aims-test-resource.cognitiveservices.azure.com/';
+const modelName = 'o4-mini';
+const deployment = 'o4-mini';
+
+exports.callAzure = onCall(
+  { secrets: ['AZURE_OPENAI_API_KEY'], timeoutSeconds: 300, region: 'us-east4' },
+  async (req) => {
+    const apiKey = process.env.OPENAI_API_KEY;
+    const apiVersion = '2024-12-01-preview';
+    const options = { endpoint, apiKey, deployment, apiVersion };
+
+    const client = new AzureOpenAI(options);
+
+    const prompt = req.data.text;
+    try {
+      const response = await client.chat.completions.create({
+        messages: [
+          { role: 'system', content: '' },
+          {
+            role: 'user',
+            content:
+              prompt +
+              ' It should have hydrogen atoms. Return just a SDF file with a two-line header followed by a new empty line.',
+          },
+        ],
+        max_completion_tokens: 100000,
+        model: modelName,
+      });
+
+      console.log(response.choices[0].message.content);
+      return { text: response.choices[0].message.content };
     } catch (e) {
       return { error: e };
     }

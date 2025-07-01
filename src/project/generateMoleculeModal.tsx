@@ -58,10 +58,10 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
 
   const generate = async () => {
     const functions = getFunctions(app, 'us-east4');
-    // connectFunctionsEmulator(functions, 'localhost', 5001);
-    const callOpenAI = httpsCallable(functions, 'callOpenAI', { timeout: 300000 });
+    // const callOpenAI = httpsCallable(functions, 'callOpenAI', { timeout: 300000 });
+    const callAzure = httpsCallable(functions, 'callAzure', { timeout: 300000 });
 
-    const res = (await callOpenAI({
+    const res = (await callAzure({
       text: prompt,
     })) as any;
     resultRef.current = res.data.text;
