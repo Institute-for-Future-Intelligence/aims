@@ -83,7 +83,7 @@ export const saveProjectAs = () => {
   if (useStore.getState().loggable) useStore.getState().logAction('Save Project As');
 };
 
-export const createProjectMenu = (isMac: boolean) => {
+export const createProjectMenu = (isMac: boolean, generating: boolean) => {
   const items: MenuProps['items'] = [];
   const lang = { lng: useStore.getState().language };
   const user = useStore.getState().user;
@@ -91,11 +91,13 @@ export const createProjectMenu = (isMac: boolean) => {
 
   items.push({
     key: 'create-new-project',
+    disabled: generating,
     label: <CreateNewProjectItem isMac={isMac} />,
   });
 
   items.push({
     key: 'open-project',
+    disabled: generating,
     label: <OpenProjectItem isMac={isMac} askToOpenProject={askToOpenProject} />,
   });
 

@@ -113,6 +113,7 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
   const clickPointRef = useRefStore.getState().clickPointRef;
   const moleculesRef = useRefStore.getState().moleculesRef;
   const warnIfTooManyAtoms = useRefStore.getState().warnIfTooManyAtoms;
+  const generating = usePrimitiveStore(Selector.generating);
 
   const { modal } = App.useApp();
   const lang = useMemo(() => {
@@ -476,13 +477,25 @@ const KeyboardListener = React.memo(({ setNavigationView }: KeyboardListenerProp
         toggleAutoRotate();
         break;
       case 'ctrl+f':
-      case 'meta+f': // for Mac
-        askToCreateProject(modal);
+      case 'meta+f': {
+        // for Mac
+        if (generating) {
+          setMessage('info', i18n.t('message.CannotCreateNewProjectWhileGeneratingMolecule', lang));
+        } else {
+          askToCreateProject(modal);
+        }
         break;
+      }
       case 'ctrl+o':
-      case 'meta+o': // for Mac
-        askToOpenProject(modal);
+      case 'meta+o': {
+        // for Mac
+        if (generating) {
+          setMessage('info', i18n.t('message.CannotOpenProjectWhileGeneratingMolecule', lang));
+        } else {
+          askToOpenProject(modal);
+        }
         break;
+      }
       case 'ctrl+s':
       case 'meta+s': // for Mac
         saveProject();

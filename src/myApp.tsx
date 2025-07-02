@@ -24,7 +24,7 @@ const MyApp = React.memo(() => {
             <AppCreator viewOnly={true} />
           ) : (
             <MyBeforeunload>
-              <AppCreator viewOnly={false} />{' '}
+              <AppCreator viewOnly={false} />
             </MyBeforeunload>
           )}
         </ErrorPage>

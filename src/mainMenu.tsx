@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import zhCN from 'antd/lib/locale/zh_CN';
@@ -22,6 +22,7 @@ import { createEditMenu } from './components/mainMenu/editMenu';
 import { Language } from './constants';
 import { createExamplesMenu } from './components/mainMenu/examplesMenu.tsx';
 import { createAccessoriesMenu } from './components/mainMenu/accessoriesMenu.tsx';
+import { usePrimitiveStore } from './stores/commonPrimitive.ts';
 
 const languageRadioStyle = {
   width: '100%',
@@ -68,6 +69,7 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
   const language = useStore(Selector.language);
   const undoManager = useStore.getState().undoManager;
   const projectTitle = useStore.getState().projectState.title;
+  const generating = usePrimitiveStore.getState().generating;
 
   const [aboutUs, setAboutUs] = useState(false);
 
@@ -111,7 +113,7 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
       items.push({
         key: 'project-sub-menu',
         label: <MenuItem hasPadding={false}>{t('menu.projectSubMenu', lang)}</MenuItem>,
-        children: createProjectMenu(isMac),
+        children: createProjectMenu(isMac, generating),
       });
     }
 
