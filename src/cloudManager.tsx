@@ -8,27 +8,9 @@ import { usePrimitiveStore } from './stores/commonPrimitive';
 import * as Selector from './stores/selector';
 import dayjs from 'dayjs';
 import 'antd/dist/reset.css';
-import { initializeApp, getApps, getApp, FirebaseError } from 'firebase/app';
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithPopup,
-  signInAnonymously,
-  signOut,
-  GoogleAuthProvider,
-} from 'firebase/auth';
-import {
-  getFirestore,
-  collection,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  getDocs,
-  deleteDoc,
-  getCountFromServer,
-} from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+import { FirebaseError } from 'firebase/app';
+import { onAuthStateChanged, signInWithPopup, signInAnonymously, signOut, GoogleAuthProvider } from 'firebase/auth';
+import { collection, doc, getDoc, setDoc, updateDoc, getDocs, deleteDoc, getCountFromServer } from 'firebase/firestore';
 import { setMessage } from './helpers';
 import { ProjectInfo, ProjectState } from './types';
 import Spinner from './components/spinner';
@@ -42,7 +24,6 @@ import {
   DEFAULT_CAMERA_ROTATION,
   DEFAULT_CAMERA_UP,
   DEFAULT_PAN_CENTER,
-  FirebaseName,
   ProjectType,
 } from './constants';
 import { ProjectUtil } from './project/ProjectUtil.ts';
@@ -855,10 +836,10 @@ const CloudManager = React.memo(({ viewOnly = false }: CloudManagerProps) => {
   }
 
   return viewOnly ? (
-    <>{waiting && <Spinner />}</>
+    <>{waiting && <Spinner size={'large'} />}</>
   ) : (
     <>
-      {waiting && <Spinner />}
+      {waiting && <Spinner size={'large'} />}
       <MainToolBar signIn={signIn} signInAnonymously={handleSignInAnonymously} signOut={handleSignOut} />
       {showProjectListPanel && myProjectsRef.current && (
         <ProjectListPanel

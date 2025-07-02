@@ -1,11 +1,11 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import { Spin } from 'antd';
 import styled from 'styled-components';
 
-export default styled(Spin)`
+export default styled(Spin)<{ size: string }>`
   position: fixed;
   top: 0;
   left: 0;
