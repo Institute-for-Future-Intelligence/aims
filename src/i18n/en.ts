@@ -152,7 +152,8 @@ export const i18n_en = {
 
     message: {
       GeneratingMolecule: 'Generating molecule...',
-      GeneratingAMoleculeWillTakeAWhile: 'Generating a molecule will take a long time. Do you want to continue?',
+      GeneratingAMoleculeWillTakeAWhile:
+        'Generating a molecule will take a long time. If you close this browser or this project before the result returns, it will be lost. Do you want to continue?',
       DoNotUnderstandGeneratedResult: 'Sorry, I do not understand the generated result.',
       DoNotShowAgain: "Don't show again",
       NewVersionAvailable: 'A new version is available',

@@ -35,7 +35,7 @@
     "recharts": "^2.12.3",
     "save-svg-as-png": "^1.4.17",
     "short-uuid": "^4.2.2",
-    "styled-components": "^6.1.1",
+    "styled-components": "^6.1.19",
     "three": "^0.177.0",
     "three-spritetext": "^1.8.1",
     "typescript": "^5.3.3",
