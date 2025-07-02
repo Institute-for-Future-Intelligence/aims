@@ -22,6 +22,10 @@ export const waiting = (state: PrimitiveStoreState) => state.waiting;
 
 export const setWaiting = (state: PrimitiveStoreState) => state.setWaiting;
 
+export const generating = (state: PrimitiveStoreState) => state.generating;
+
+export const setGenerating = (state: PrimitiveStoreState) => state.setGenerating;
+
 export const changed = (state: PrimitiveStoreState) => state.changed;
 
 export const setChanged = (state: PrimitiveStoreState) => state.setChanged;

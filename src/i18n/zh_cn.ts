@@ -143,6 +143,7 @@ export const i18n_zh_cn = {
     },
 
     message: {
+      GeneratingMolecule: '正在生成分子。。。',
       GeneratingAMoleculeWillTakeAWhile: '生成一个分子可能需要一些时间。您确定继续吗？',
       DoNotUnderstandGeneratedResult: '抱歉，我不能理解返回结果。',
       DoNotShowAgain: '别再显示',

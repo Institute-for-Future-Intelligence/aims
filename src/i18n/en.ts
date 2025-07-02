@@ -151,6 +151,7 @@ export const i18n_en = {
     },
 
     message: {
+      GeneratingMolecule: 'Generating molecule...',
       GeneratingAMoleculeWillTakeAWhile: 'Generating a molecule will take a long time. Do you want to continue?',
       DoNotUnderstandGeneratedResult: 'Sorry, I do not understand the generated result.',
       DoNotShowAgain: "Don't show again",

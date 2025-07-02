@@ -65,6 +65,7 @@ import { UndoableDeleteMoleculeInGallery, UndoableDeleteMoleculesInGallery } fro
 import { UndoableImportMolecule } from '../undo/UndoableImportMolecule.ts';
 import { UndoableChange } from '../undo/UndoableChange.ts';
 import GenerateMoleculeModal from './generateMoleculeModal.tsx';
+import { FidgetSpinner } from 'react-loader-spinner';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);
@@ -183,6 +184,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const regressionDegree = useStore(Selector.regressionDegree) ?? 1;
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
   const generatedMolecularProperties = useStore(Selector.generatedMolecularProperties);
+  const generating = usePrimitiveStore(Selector.generating);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
@@ -454,19 +456,30 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     title={t('projectPanel.SelectMoleculeToImportIntoGallery', lang)}
                   />
                 </Button>
-                <Button
-                  disabled={false}
-                  style={{ border: 'none', padding: '4px' }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setGenerateMoleculeDialogVisible(true);
-                  }}
-                >
-                  <BulbOutlined
-                    style={{ fontSize: '24px', color: 'gray' }}
-                    title={t('projectPanel.GenerateMolecule', lang)}
-                  />
-                </Button>
+                {generating ? (
+                  <span
+                    title={t('message.GeneratingMolecule', lang)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    <FidgetSpinner width={24} height={24} />
+                  </span>
+                ) : (
+                  <Button
+                    disabled={false}
+                    style={{ border: 'none', padding: '4px' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setGenerateMoleculeDialogVisible(true);
+                    }}
+                  >
+                    <BulbOutlined
+                      style={{ fontSize: '24px', color: 'gray' }}
+                      title={t('projectPanel.GenerateMolecule', lang)}
+                    />
+                  </Button>
+                )}
                 {selectedMolecule && (
                   <Button
                     style={{ border: 'none', padding: '4px' }}

@@ -9,7 +9,7 @@ import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
-import { OpenAIOutlined, WarningOutlined } from '@ant-design/icons';
+import { BulbOutlined, WarningOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { generateFormulaFromAtomJS, loadMolecule } from '../view/moleculeTools.ts';
 import { MoleculeInterface } from '../types.ts';
@@ -29,7 +29,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const generateMoleculePrompt = useStore(Selector.generateMoleculePrompt);
-  const setWaiting = usePrimitiveStore(Selector.setWaiting);
+  const setGenerating = usePrimitiveStore(Selector.setGenerating);
   const addMolecule = useStore(Selector.addMolecule);
   const setChanged = usePrimitiveStore(Selector.setChanged);
 
@@ -94,7 +94,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   };
 
   const runGenAI = () => {
-    setWaiting(true);
+    setGenerating(true);
     setCommonStore((state) => {
       state.projectState.generateMoleculePrompt = prompt;
     });
@@ -133,7 +133,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
         }
       })
       .finally(() => {
-        setWaiting(false);
+        setGenerating(false);
       });
     setDialogVisible(false);
   };
@@ -151,7 +151,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
           onMouseOver={() => setDragEnabled(true)}
           onMouseOut={() => setDragEnabled(false)}
         >
-          <OpenAIOutlined /> {t('projectPanel.GenerateMolecule', lang)}
+          <BulbOutlined /> {t('projectPanel.GenerateMolecule', lang)}
         </div>
       }
       open={isDialogVisible()}
