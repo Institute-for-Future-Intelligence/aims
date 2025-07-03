@@ -137,7 +137,7 @@ export const i18n_zh_cn = {
       Support: '服务',
       Acknowledgment: '鸣谢',
       FundingInformation:
-        '本产品的研发承蒙美国国立卫生研究院慷慨资助（项目号R25GM150143）。本产品的任何观点或结论仅代表创作者个人意见。Dylan Bulseco，Kent Crippen和William Furiosi在本产品研发过程中提供重要帮助，在此一并感谢。',
+        '本产品的研发承蒙美国国立卫生研究院慷慨资助（项目号R25GM150143）。本产品的任何观点或结论仅代表创作者个人意见。Dylan Bulseco，Kent Crippen，William Furiosi，Jason Ravitz和Minji Yun在本产品研发过程中提供重要帮助，在此一并感谢。',
       Contact: '如您需要更多信息，请联系 Charles Xie (charles@intofuture.org)。我们会尽快回复。',
       Translators: '翻译',
     },

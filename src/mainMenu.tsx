@@ -143,6 +143,7 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
     // examples menu
     items.push({
       key: 'examples-sub-menu',
+      disabled: generating,
       label: <MenuItem hasPadding={false}>{t('menu.examplesSubMenu', lang)}</MenuItem>,
       children: createExamplesMenu(viewOnly),
     });
@@ -204,7 +205,7 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
     });
 
     return items;
-  }, [language, hasUndo, hasRedo, updateMenuFlag, user.uid, projectTitle]);
+  }, [language, hasUndo, hasRedo, updateMenuFlag, user.uid, projectTitle, generating]);
 
   return (
     <>

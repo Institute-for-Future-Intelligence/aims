@@ -35,12 +35,12 @@ const Team = React.memo(({ top, height, color }: TeamProps) => {
         }}
       >
         <h2 style={{ marginTop: '20px', color: color }}>{i18n.t('aboutUs.ProductBroughtToYouBy', lang)}</h2>
-        <p style={{ fontSize: '16px', color: color }}>Charles Xie and Xiaotong Ding</p>
+        <p style={{ fontSize: '16px', color: color }}>Charles Xie | Xiaotong Ding</p>
         <p style={{ fontSize: '16px', color: color }}>Institute for Future Intelligence, Inc.</p>
         <div
           style={{
             position: 'absolute',
-            marginTop: '20px',
+            marginTop: '0px',
             fontSize: '12px',
             textAlign: 'justify',
             color: color,

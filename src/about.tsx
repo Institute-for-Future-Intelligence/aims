@@ -15,7 +15,7 @@ const Container = styled.div`
   left: 10px;
   display: flex;
   width: 600px;
-  height: 320px;
+  height: 360px;
   flex-direction: column;
   align-items: center;
   z-index: 1001;

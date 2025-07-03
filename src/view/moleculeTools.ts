@@ -197,7 +197,11 @@ export const loadMolecule = (
       })
       .catch((err) => {
         console.error(err);
-        setMessage('error', i18n.t('message.DoNotUnderstandGeneratedResult', { lng: useStore.getState().language }));
+        setMessage(
+          'error',
+          i18n.t('message.DoNotUnderstandGeneratedResult', { lng: useStore.getState().language }),
+          30,
+        );
       });
   } else {
     const mol = getData(molecule.name);

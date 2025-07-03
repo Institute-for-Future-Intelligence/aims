@@ -146,7 +146,7 @@ export const i18n_en = {
       Support: 'Support',
       Acknowledgment: 'Acknowledgment',
       FundingInformation:
-        'The National Institutes of Health (NIH) generously provides funding for the research and development of this product through grants R25GM150143. Any opinions, findings, and conclusions or recommendations expressed in this product, however, are those of the authors and do not necessarily reflect the views of NIH. We thank Dylan Bulseco, Kent Crippen, and William Furiosi for their important feedback and suggestions.',
+        'The National Institutes of Health (NIH) generously provides funding for the research and development of this product through grants R25GM150143. Any opinions, findings, and conclusions or recommendations expressed in this product, however, are those of the authors and do not necessarily reflect the views of NIH. We thank Dylan Bulseco, Kent Crippen, William Furiosi, Jason Ravitz, and Minji Yun for their important feedback and suggestions.',
       Contact: 'For more information, please contact Charles Xie (charles@intofuture.org).',
     },
 
