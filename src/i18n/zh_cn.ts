@@ -143,6 +143,7 @@ export const i18n_zh_cn = {
     },
 
     message: {
+      FailInGeneratingMolecule: '生成分子失败。请再试一下。',
       CannotCreateNewProjectWhileGeneratingMolecule: '正在生成分子时不能创建新的项目。',
       CannotOpenProjectWhileGeneratingMolecule: '正在生成分子时不能打开别的项目。',
       GeneratingMolecule: '正在生成分子。。。',

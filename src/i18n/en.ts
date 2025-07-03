@@ -151,6 +151,7 @@ export const i18n_en = {
     },
 
     message: {
+      FailInGeneratingMolecule: 'Failed in generating a molecule. Please try again.',
       CannotCreateNewProjectWhileGeneratingMolecule: 'Cannot create a new project while generating a molecule.',
       CannotOpenProjectWhileGeneratingMolecule: 'Cannot open other projects while generating a molecule.',
       GeneratingMolecule: 'Generating molecule...',

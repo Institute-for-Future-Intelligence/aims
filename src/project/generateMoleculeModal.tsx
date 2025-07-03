@@ -60,7 +60,6 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
     const functions = getFunctions(app, 'us-east4');
     // const callOpenAI = httpsCallable(functions, 'callOpenAI', { timeout: 300000 });
     const callAzure = httpsCallable(functions, 'callAzure', { timeout: 300000 });
-
     const res = (await callAzure({
       text: prompt,
     })) as any;
@@ -100,7 +99,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
     });
     generate()
       .catch((e) => {
-        setMessage('error', e.toString(), 10);
+        setMessage('error', e.toString(), 30);
       })
       .then(() => {
         if (resultRef.current) {
@@ -127,9 +126,11 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
               });
               setChanged(true);
             } else {
-              setMessage('info', t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + mol.name, 3);
+              setMessage('info', t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + mol.name, 30);
             }
           });
+        } else {
+          setMessage('error', t('message.FailInGeneratingMolecule', lang), 30);
         }
       })
       .finally(() => {
