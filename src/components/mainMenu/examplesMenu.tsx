@@ -137,6 +137,14 @@ export const createExamplesMenu = (viewOnly: boolean) => {
           ),
         },
         {
+          key: 'Enantiomers - Arketamine vs Esketamine',
+          label: (
+            <MenuItem onClick={() => loadProject('Enantiomers - Arketamine vs Esketamine')}>
+              {i18n.t('menu.examples.chemistry.ArketamineVsEsketamine', lang)}
+            </MenuItem>
+          ),
+        },
+        {
           key: 'C₈H₁₈O Isomers',
           label: (
             <MenuItem onClick={() => loadProject('C₈H₁₈O Isomers')}>

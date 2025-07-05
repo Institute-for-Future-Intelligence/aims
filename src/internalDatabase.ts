@@ -264,6 +264,8 @@ import drugMoleculeUrl057 from './molecules/sdf/sulfamethoxazole.sdf';
 import drugMoleculeUrl058 from './molecules/sdf/trimethoprim.sdf';
 import drugMoleculeUrl059 from './molecules/sdf/ampicillin.sdf';
 import drugMoleculeUrl060 from './molecules/sdf/chloramphenicol.sdf';
+import drugMoleculeUrl061 from './molecules/sdf/arketamine.sdf';
+import drugMoleculeUrl062 from './molecules/sdf/esketamine.sdf';
 
 import proteinUrl001 from './proteins/1crn.pdb';
 import proteinUrl002 from './proteins/1a3n.pdb';
@@ -546,6 +548,8 @@ export const drugMolecules = [
   { url: drugMoleculeUrl058, internal: true, name: 'Trimethoprim' } as MoleculeInterface,
   { url: drugMoleculeUrl059, internal: true, name: 'Ampicillin' } as MoleculeInterface,
   { url: drugMoleculeUrl060, internal: true, name: 'Chloramphenicol' } as MoleculeInterface,
+  { url: drugMoleculeUrl061, internal: true, name: 'Arketamine' } as MoleculeInterface,
+  { url: drugMoleculeUrl062, internal: true, name: 'Esketamine' } as MoleculeInterface,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const targetProteins = [
