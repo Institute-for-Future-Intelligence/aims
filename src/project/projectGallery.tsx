@@ -29,7 +29,6 @@ import {
   TableOutlined,
   QuestionCircleOutlined,
   ClearOutlined,
-  BulbOutlined,
 } from '@ant-design/icons';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
@@ -57,6 +56,7 @@ import { View } from './View.tsx';
 import { Undoable } from '../undo/Undoable.ts';
 import FindMoleculeModal from './findMoleculeModal.tsx';
 import AxesImage from '../assets/axes.png';
+import SparkImage from '../assets/spark.png';
 import RegressionImage from '../assets/regression.png';
 import PolynomialRegression from './regression.tsx';
 import ScatterChartNumericValues from './scatterChartNumericValues.tsx';
@@ -474,10 +474,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       setGenerateMoleculeDialogVisible(true);
                     }}
                   >
-                    <BulbOutlined
-                      style={{ fontSize: '24px', color: 'gray' }}
-                      title={t('projectPanel.GenerateMolecule', lang)}
-                    />
+                    <img src={SparkImage} alt={'spark'} title={t('projectPanel.GenerateMolecule', lang)} />
                   </Button>
                 )}
                 {selectedMolecule && (
