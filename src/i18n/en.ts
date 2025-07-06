@@ -155,8 +155,7 @@ export const i18n_en = {
       CannotCreateNewProjectWhileGeneratingMolecule: 'Cannot create a new project while generating a molecule.',
       CannotOpenProjectWhileGeneratingMolecule: 'Cannot open other projects while generating a molecule.',
       GeneratingMolecule: 'Generating molecule...',
-      GeneratingAMoleculeWillTakeAWhile:
-        'Generating a molecule will take a long time. If you close this browser or this project before the result returns, it will be lost. Do you want to continue?',
+      GeneratingAMoleculeWillTakeAWhile: 'Generating a molecule will take a long time. Do you want to continue?',
       DoNotUnderstandGeneratedResult: 'Sorry, I do not understand the generated result.',
       DoNotShowAgain: "Don't show again",
       NewVersionAvailable: 'A new version is available',
@@ -533,7 +532,7 @@ export const i18n_en = {
           Cycloalkanes: 'Cycloalkanes',
           Acenes: 'Acenes',
           Bu2EneIsomers: 'Bu-2-ene Isomers',
-          ArketamineVsEsketamine: 'Enantiomers: Arketamine Vs. Esketamine',
+          ArketamineVsEsketamine: 'Enantiomers: Arketamine vs. Esketamine',
           C8H18OIsomers: 'C₈H₁₈O Isomers',
           CisTransIsomerismOfFattyAcids: 'Cis-Trans Isomerism of Fatty Acids',
           ForeverChemicals: 'Forever Chemicals',
