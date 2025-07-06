@@ -474,7 +474,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                       setGenerateMoleculeDialogVisible(true);
                     }}
                   >
-                    <img src={GenaiImage} alt={'spark'} title={t('projectPanel.GenerateMolecule', lang)} />
+                    <img src={GenaiImage} alt={'genai'} title={t('projectPanel.GenerateMolecule', lang)} />
                   </Button>
                 )}
                 {selectedMolecule && (

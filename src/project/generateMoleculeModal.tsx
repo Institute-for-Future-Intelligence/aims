@@ -9,7 +9,7 @@ import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
-import { BulbOutlined, WarningOutlined } from '@ant-design/icons';
+import { AudioOutlined, AudioMutedOutlined, WarningOutlined } from '@ant-design/icons';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { generateFormulaFromAtomJS, loadMolecule } from '../view/moleculeTools.ts';
 import { MoleculeInterface } from '../types.ts';
@@ -17,6 +17,9 @@ import { setMessage } from '../helpers.tsx';
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { app } from '../firebase.ts';
+import GenaiImage from '../assets/genai.png';
+import { Audio } from 'react-loader-spinner';
+import useSpeechToText, { ResultType } from 'react-hook-speech-to-text';
 
 export interface GenerateMoleculeModalProps {
   setDialogVisible: (visible: boolean) => void;
@@ -34,6 +37,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   const setChanged = usePrimitiveStore(Selector.setChanged);
 
   const [prompt, setPrompt] = useState<string>(generateMoleculePrompt);
+  const [listening, setListening] = useState<boolean>(false);
   const [dragEnabled, setDragEnabled] = useState<boolean>(false);
   const [bounds, setBounds] = useState<DraggableBounds>({
     left: 0,
@@ -66,6 +70,25 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
     resultRef.current = res.data.text;
   };
 
+  const { error, interimResult, isRecording, results, setResults, startSpeechToText, stopSpeechToText } =
+    useSpeechToText({
+      continuous: true,
+      useLegacyResults: false,
+    });
+
+  const speechToText = useMemo(() => {
+    let s = '';
+    for (const result of results) {
+      s += (result as ResultType).transcript;
+    }
+    if (interimResult) s += interimResult;
+    return s;
+  }, [results]);
+
+  useEffect(() => {
+    if (speechToText !== '') setPrompt(speechToText);
+  }, [speechToText]);
+
   const onStart = (event: DraggableEvent, uiData: DraggableData) => {
     if (dragRef.current) {
       const { clientWidth, clientHeight } = window.document.documentElement;
@@ -78,6 +101,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
       });
     }
   };
+
   const onOk = () => {
     modal.confirm({
       title: `${t('message.GeneratingAMoleculeWillTakeAWhile', lang)}`,
@@ -136,11 +160,22 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
       .finally(() => {
         setGenerating(false);
       });
-    setDialogVisible(false);
+    close();
   };
 
   const onCancel = () => {
+    close();
+  };
+
+  const close = () => {
     setDialogVisible(false);
+    setListening(false);
+    stopSpeechToText();
+  };
+
+  const onClear = () => {
+    setPrompt('');
+    setResults([]);
   };
 
   return (
@@ -152,7 +187,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
           onMouseOver={() => setDragEnabled(true)}
           onMouseOut={() => setDragEnabled(false)}
         >
-          <BulbOutlined /> {t('projectPanel.GenerateMolecule', lang)}
+          <img src={GenaiImage} width={'16px'} alt={'genai'} /> {t('projectPanel.GenerateMolecule', lang)}
         </div>
       }
       open={isDialogVisible()}
@@ -160,7 +195,10 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
         <Button key="Cancel" onClick={onCancel}>
           {t('word.Cancel', lang)}
         </Button>,
-        <Button key="OK" type="primary" onClick={onOk}>
+        <Button key="Clear" onClick={onClear}>
+          {t('word.Clear', lang)}
+        </Button>,
+        <Button key="OK" type="primary" onClick={onOk} disabled={prompt === ''}>
           {t('word.Generate', lang)}
         </Button>,
       ]}
@@ -177,8 +215,36 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
       )}
     >
       <Space direction={'vertical'} style={{ width: '100%', paddingBottom: '10px', paddingTop: '10px' }}>
-        <Space>{i18n.t('projectPanel.WhatMoleculeDoYouWant', lang)}</Space>
+        <Space>
+          {i18n.t('projectPanel.WhatMoleculeDoYouWant', lang)}
+          {!error && (
+            <>
+              {listening ? (
+                <>
+                  <AudioMutedOutlined
+                    style={{ paddingLeft: '2px' }}
+                    onClick={() => {
+                      setListening(false);
+                      stopSpeechToText();
+                    }}
+                  />
+                  <Audio width={12} height={16} />
+                  {i18n.t('projectPanel.Listening', lang)}
+                </>
+              ) : (
+                <AudioOutlined
+                  style={{ paddingLeft: '2px' }}
+                  onClick={() => {
+                    setListening(true);
+                    startSpeechToText();
+                  }}
+                />
+              )}
+            </>
+          )}
+        </Space>
         <TextArea
+          disabled={listening}
           rows={10}
           value={prompt}
           onChange={(e) => {

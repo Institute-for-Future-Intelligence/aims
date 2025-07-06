@@ -27,6 +27,7 @@
     "react-cookie-consent": "^9.0.0",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6",
+    "react-hook-speech-to-text": "^0.8.0",
     "react-i18next": "^13.5.0",
     "react-keyboard-event-handler": "^1.5.4",
     "react-loader-spinner": "^6.1.6",
