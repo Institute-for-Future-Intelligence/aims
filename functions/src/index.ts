@@ -27,8 +27,8 @@ exports.callOpenAI = onCall(
           prompt +
           ' The returned molecule must have 3D coordinates and must have hydrogen atoms.' +
           ' Return just a SDF file with a two-line header followed by a new empty line.' +
-          ' The fourth line (the count line) must have one-space indent.' +
-          ' The lines in the atom block must have four spaces indent.',
+          ' The fourth line (the count line) must have only one space indent.' +
+          ' The coordinate lines in the atom block following the fourth line must have four spaces indent.',
       });
 
       return { text: response.output_text };
