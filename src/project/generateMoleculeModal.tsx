@@ -20,6 +20,7 @@ import { app } from '../firebase.ts';
 import GenaiImage from '../assets/genai.png';
 import { Audio } from 'react-loader-spinner';
 import useSpeechToText, { ResultType } from 'react-hook-speech-to-text';
+import { callAzureOpenAI } from '../../functions/src/callAzureOpenAI.ts';
 
 export interface GenerateMoleculeModalProps {
   setDialogVisible: (visible: boolean) => void;
@@ -60,6 +61,14 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   }, [generateMoleculePrompt]);
 
   const generate = async () => {
+    if (import.meta.env.PROD) {
+      await generateRemotely();
+    } else {
+      await generateLocally();
+    }
+  };
+
+  const generateRemotely = async () => {
     const functions = getFunctions(app, 'us-east4');
     // const callOpenAI = httpsCallable(functions, 'callOpenAI', { timeout: 300000 });
     const callAzure = httpsCallable(functions, 'callAzure', { timeout: 300000 });
@@ -67,6 +76,18 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
       text: prompt,
     })) as any;
     resultRef.current = res.data.text;
+  };
+
+  const generateLocally = async () => {
+    const apiKey = import.meta.env.VITE_AZURE_API_KEY;
+    try {
+      const response = await callAzureOpenAI(apiKey, prompt, true);
+      resultRef.current = response.choices[0].message.content;
+      console.log(response);
+      console.log('set', response.choices[0].message.content);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const { error, interimResult, results, setResults, startSpeechToText, stopSpeechToText } = useSpeechToText({
