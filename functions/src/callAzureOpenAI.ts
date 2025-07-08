@@ -1,3 +1,7 @@
+/*
+ * @Copyright 2025. Institute for Future Intelligence, Inc.
+ */
+
 import { AzureOpenAI } from 'openai';
 
 const endpoint = 'https://aims-test-resource.cognitiveservices.azure.com/';

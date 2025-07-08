@@ -168,6 +168,8 @@ export const resetViewFlag = (state: PrimitiveStoreState) => state.resetViewFlag
 
 export const zoomViewFlag = (state: PrimitiveStoreState) => state.zoomViewFlag;
 
+export const hasMolecule = (state: CommonStoreState) => state.hasMolecule;
+
 export const addMolecule = (state: CommonStoreState) => state.addMolecule;
 
 export const addMolecules = (state: CommonStoreState) => state.addMolecules;

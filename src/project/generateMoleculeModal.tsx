@@ -34,6 +34,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   const language = useStore(Selector.language);
   const generateMoleculePrompt = useStore(Selector.generateMoleculePrompt);
   const setGenerating = usePrimitiveStore(Selector.setGenerating);
+  const hasMolecule = useStore(Selector.hasMolecule);
   const addMolecule = useStore(Selector.addMolecule);
   const setChanged = usePrimitiveStore(Selector.setChanged);
 
@@ -137,6 +138,15 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
             console.log(resultRef.current);
             console.log(result);
             mol.name = result.name;
+            // generated molecules may have the same name, give it a different name if the name is taken
+            let has = hasMolecule(mol);
+            let index = 0;
+            const name = mol.name;
+            while (has) {
+              index++;
+              mol.name = name + ' ' + index;
+              has = hasMolecule(mol);
+            }
             const added = addMolecule(mol);
             if (added) {
               setCommonStore((state) => {
@@ -185,7 +195,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
 
   return (
     <Modal
-      width={480}
+      width={600}
       title={
         <div
           style={{ width: '100%', cursor: 'move' }}
