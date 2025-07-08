@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { App, Button, Input, Modal, Space } from 'antd';
+import { Button, Input, Modal, Space } from 'antd';
 import i18n from '../i18n/i18n.ts';
 import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react-draggable';
 import { useStore } from '../stores/common.ts';
@@ -48,7 +48,6 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
 
   const dragRef = useRef<HTMLDivElement | null>(null);
 
-  const { modal } = App.useApp();
   const { t } = useTranslation();
   const lang = useMemo(() => {
     return { lng: language };
@@ -70,11 +69,10 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
     resultRef.current = res.data.text;
   };
 
-  const { error, interimResult, isRecording, results, setResults, startSpeechToText, stopSpeechToText } =
-    useSpeechToText({
-      continuous: true,
-      useLegacyResults: false,
-    });
+  const { error, interimResult, results, setResults, startSpeechToText, stopSpeechToText } = useSpeechToText({
+    continuous: true,
+    useLegacyResults: false,
+  });
 
   const speechToText = useMemo(() => {
     let s = '';
@@ -103,20 +101,6 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   };
 
   const onOk = () => {
-    modal.confirm({
-      title: `${t('message.GeneratingAMoleculeWillTakeAWhile', lang)}`,
-      icon: <WarningOutlined />,
-      type: 'warning',
-      onOk: () => {
-        runGenAI();
-      },
-      onCancel: () => {},
-      okText: `${t('word.Yes', lang)}`,
-      cancelText: `${t('word.No', lang)}`,
-    });
-  };
-
-  const runGenAI = () => {
     setGenerating(true);
     setCommonStore((state) => {
       state.projectState.generateMoleculePrompt = prompt;
@@ -236,7 +220,9 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
                   style={{ paddingLeft: '2px' }}
                   onClick={() => {
                     setListening(true);
-                    startSpeechToText();
+                    startSpeechToText().catch((e) => {
+                      setMessage('error', e.toString());
+                    });
                   }}
                 />
               )}
@@ -251,6 +237,9 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
             setPrompt(e.target.value);
           }}
         />
+        <span style={{ fontSize: '12px' }}>
+          <WarningOutlined /> {t('message.GeneratingAMoleculeMayTakeAWhile', lang)}
+        </span>
       </Space>
     </Modal>
   );

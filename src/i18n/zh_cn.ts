@@ -148,7 +148,7 @@ export const i18n_zh_cn = {
       CannotCreateNewProjectWhileGeneratingMolecule: '正在生成分子时不能创建新的项目。',
       CannotOpenProjectWhileGeneratingMolecule: '正在生成分子时不能打开别的项目。',
       GeneratingMolecule: '正在生成分子。。。',
-      GeneratingAMoleculeWillTakeAWhile: '生成一个分子可能需要一些时间。您确定继续吗？',
+      GeneratingAMoleculeMayTakeAWhile: '生成一个分子可能需要一些时间。',
       DoNotUnderstandGeneratedResult: '抱歉，我不能理解返回结果。',
       DoNotShowAgain: '别再显示',
       NewVersionAvailable: '有新版本',
