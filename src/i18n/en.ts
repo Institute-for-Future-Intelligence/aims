@@ -382,6 +382,8 @@ export const i18n_en = {
     },
 
     projectPanel: {
+      GenAIPrompt: 'Prompt Used to Generate This Molecule',
+      PromptInClipBoard: 'The prompt was copied and is ready to paste.',
       NoMolecule: 'No molecule',
       Project: 'Project',
       ProjectType: 'Type',

@@ -172,6 +172,7 @@ export interface MoleculeInterface {
   invisible?: boolean;
   excluded?: boolean;
   style?: MolecularViewerStyle;
+  prompt?: string; // LLM prompt used to generate this molecule, if any
 }
 
 export interface MoleculeTransform {

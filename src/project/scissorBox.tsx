@@ -15,9 +15,10 @@ import { Html } from '@react-three/drei';
 import { ThreeEvent } from '@react-three/fiber';
 import GalleryViewer from '../view/galleryViewer.tsx';
 import { useTranslation } from 'react-i18next';
-import { message, Space } from 'antd';
+import { Button, message, Popover, Space } from 'antd';
 import { CheckCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { setMessage } from '../helpers.tsx';
+import SparkImage from '../assets/spark.png';
 
 interface MolecularContainerProps {
   viewWidth: number;
@@ -147,9 +148,7 @@ const ScissorBox = React.memo(
           <Space
             title={
               molecule?.name +
-              ' (' +
-              formula +
-              ')' +
+              (formula ? ' (' + formula + ')' : '') +
               '\n' +
               (smiles ? '\nSMILES: ' + smiles : '') +
               (inChI ? '\n\n' + inChI : '')
@@ -168,6 +167,40 @@ const ScissorBox = React.memo(
           >
             {labelType === LabelType.FORMULA ? formula ?? molecule?.name : molecule?.name}
           </Space>
+          {molecule?.prompt && (
+            <Popover
+              content={
+                <Space direction={'vertical'} style={{ width: '400px' }}>
+                  <Space>{molecule.prompt}</Space>
+                  <Button
+                    style={{ float: 'right' }}
+                    onClick={() => {
+                      if (molecule?.prompt) {
+                        navigator.clipboard.writeText(molecule?.prompt).then(() => {
+                          setMessage('success', t('projectPanel.PromptInClipBoard', lang));
+                        });
+                      }
+                    }}
+                  >
+                    {t('word.Copy', lang)}
+                  </Button>
+                </Space>
+              }
+              title={t('projectPanel.GenAIPrompt', lang)}
+            >
+              <img
+                src={SparkImage}
+                alt={'spark'}
+                width={16}
+                style={{
+                  position: 'absolute',
+                  right: '-6px',
+                  top: '6px',
+                  cursor: 'pointer',
+                }}
+              />
+            </Popover>
+          )}
           {molecule?.invisible ? (
             <MinusCircleOutlined
               style={{

@@ -133,19 +133,19 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
       })
       .then(() => {
         if (resultRef.current) {
-          const mol = { name: 'chatgpt', data: resultRef.current } as MoleculeInterface;
+          const mol = { name: 'chatgpt', data: resultRef.current, prompt } as MoleculeInterface;
           loadMolecule(mol, (result) => {
             console.log(resultRef.current);
             console.log(result);
             mol.name = result.name;
             // generated molecules may have the same name, give it a different name if the name is taken
-            let has = hasMolecule(mol);
+            let taken = hasMolecule(mol);
             let index = 0;
             const name = mol.name;
-            while (has) {
+            while (taken) {
               index++;
               mol.name = name + ' ' + index;
-              has = hasMolecule(mol);
+              taken = hasMolecule(mol);
             }
             const added = addMolecule(mol);
             if (added) {

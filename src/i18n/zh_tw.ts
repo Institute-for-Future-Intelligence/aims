@@ -370,6 +370,8 @@ export const i18n_zh_tw = {
     },
 
     projectPanel: {
+      GenAIPrompt: '產生此分子的提示',
+      PromptInClipBoard: '您現在可以粘貼提示了。',
       NoMolecule: '還沒有添加分子',
       Project: '專案',
       ProjectType: '類别',
