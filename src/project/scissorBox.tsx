@@ -165,7 +165,12 @@ const ScissorBox = React.memo(
             }}
             onMouseDown={onMouseDown}
           >
-            {labelType === LabelType.FORMULA ? formula ?? molecule?.name : molecule?.name}
+            {labelType === LabelType.FORMULA
+              ? formula ??
+                molecule?.name.substring(0, Math.min(20, molecule?.name.length)) +
+                  (molecule?.name && molecule.name.length > 20 ? '...' : '')
+              : molecule?.name.substring(0, Math.min(20, molecule?.name.length)) +
+                (molecule?.name && molecule.name.length > 20 ? '...' : '')}
           </Space>
           {molecule?.prompt && (
             <Popover

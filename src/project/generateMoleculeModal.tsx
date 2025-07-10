@@ -21,6 +21,7 @@ import GenaiImage from '../assets/genai.png';
 import { Audio } from 'react-loader-spinner';
 import useSpeechToText, { ResultType } from 'react-hook-speech-to-text';
 import { callAzureOpenAI } from '../../functions/src/callAzureOpenAI.ts';
+import { Util } from '../Util.ts';
 
 export interface GenerateMoleculeModalProps {
   setDialogVisible: (visible: boolean) => void;
@@ -84,8 +85,8 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
     try {
       const response = await callAzureOpenAI(apiKey, prompt, true);
       resultRef.current = response.choices[0].message.content;
-      console.log(response);
-      console.log('set', response.choices[0].message.content);
+      // console.log(response);
+      // console.log('set', response.choices[0].message.content);
     } catch (e) {
       console.log(e);
     }
@@ -133,9 +134,10 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
       })
       .then(() => {
         if (resultRef.current) {
-          const mol = { name: 'chatgpt', data: resultRef.current, prompt } as MoleculeInterface;
+          const data = Util.ensureSdf(resultRef.current);
+          const mol = { name: 'chatgpt', data, prompt } as MoleculeInterface;
           loadMolecule(mol, (result) => {
-            console.log(resultRef.current);
+            console.log(data);
             console.log(result);
             mol.name = result.name;
             // generated molecules may have the same name, give it a different name if the name is taken

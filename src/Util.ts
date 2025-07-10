@@ -83,6 +83,94 @@ export class Util {
     return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
   }
 
+  static isNumericAndWhitespaceOnly(str: string) {
+    return /^[\d\s]*$/.test(str);
+  }
+
+  static findFirstAlphabeticalCharacterIndex(str: string) {
+    const regex = /[a-zA-Z]/; // Regular expression to match any letter (a-z or A-Z)
+    return str.search(regex); // Returns the index of the first match, or -1 if no match
+  }
+
+  static ensureSdf(input: string) {
+    const lines = input.split('\n');
+    let result = '';
+    let lineIndex = 0;
+    let stop = false;
+    for (const a of lines) {
+      if (a.trim() === 'M  END') stop = true;
+      if (stop) {
+        // no need to do anything with other info
+        result += a + '\n';
+      } else {
+        if (lineIndex < 3) {
+          // header has three lines if we count the empty line
+          result += a + '\n';
+        } else if (lineIndex === 3) {
+          // count line: only one space indent
+          result += ' ' + a.trim() + '\n';
+        } else {
+          if (Util.isNumericAndWhitespaceOnly(a)) {
+            // bond block: two space indent if the first number is one digit, one space indent if the first number is two digits
+            const s = a.trim();
+            const first = s.split(' ')[0];
+            if (first.length === 1) {
+              result += '  ' + s;
+            } else if (first.length === 2) {
+              result += ' ' + s;
+            } else {
+              result += s;
+            }
+            result += '\n';
+          } else {
+            // atom block: three space indent or spacing if negative and four space indent or spacing if positive
+            const s = a.trim();
+            const n = Util.findFirstAlphabeticalCharacterIndex(s);
+            const s1 = s.substring(0, n).trim();
+            const s2 = s.substring(n);
+            const c1 = s1.split(' ');
+            let countLetter = 0;
+            for (let i = 0; i < c1.length; i++) {
+              const x = c1[i].trim();
+              if (x === '') continue;
+              if (x.startsWith('-')) {
+                result += '   ' + x;
+                countLetter += x.length + 3;
+              } else {
+                result += '    ' + x;
+                countLetter += x.length + 4;
+              }
+            }
+            // the element symbol is expected to start from position 31
+            const extraSpaces = countLetter < 31 ? 31 - countLetter : 0;
+            const d2 = s2.split(' ');
+            for (let i = 0; i < d2.length; i++) {
+              const x = d2[i].trim();
+              if (x === '') continue;
+              if (i === 0) {
+                // this is the element symbol
+                if (extraSpaces > 0) result += ' '.repeat(extraSpaces);
+                if (x.length === 1) {
+                  // if the element symbol has one letter
+                  result += ' ' + x + '  ';
+                } else {
+                  // if the element symbol has two letters
+                  result += ' ' + x + ' ';
+                }
+              } else {
+                // other data of the atom are separated by two spaces
+                result += x + '  ';
+              }
+            }
+            result += '\n';
+          }
+        }
+        lineIndex++;
+      }
+    }
+    return result;
+  }
+
   static getSubscriptNumber(s: string): string {
     return s
       .replace(/1/g, '₁')
