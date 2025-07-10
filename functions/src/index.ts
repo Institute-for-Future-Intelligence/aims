@@ -44,7 +44,8 @@ exports.callAzure = onCall(
     const prompt = req.data.text;
     try {
       const response = await callAzureOpenAI(apiKey, prompt);
-      console.log(response.choices[0].message.content);
+      console.log('Prompt:', prompt);
+      console.log('Returned:', response.choices[0].message.content);
       return { text: response.choices[0].message.content };
     } catch (e) {
       return { error: e };
