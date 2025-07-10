@@ -97,6 +97,11 @@ export class Util {
     let result = '';
     let lineIndex = 0;
     let stop = false;
+    let atomNumber = 0;
+    let bondNumber = 0;
+    let atomCount = 0;
+    let bondCount = 0;
+    let firstBond = false;
     for (const a of lines) {
       if (a.trim() === 'M  END') stop = true;
       if (stop) {
@@ -108,9 +113,22 @@ export class Util {
           result += a + '\n';
         } else if (lineIndex === 3) {
           // count line: only one space indent
+          const s = a.trim().split(' ');
+          atomNumber = parseInt(s[0]);
+          bondNumber = parseInt(s[1]);
           result += ' ' + a.trim() + '\n';
         } else {
           if (Util.isNumericAndWhitespaceOnly(a)) {
+            if (!firstBond) {
+              firstBond = true;
+              // just add more lines to validate sdf if the actual atom count is less than the specified number of atoms
+              // so that users have a visual cue that shows the sdf is incorrect
+              if (atomCount < atomNumber) {
+                result += '    0.0000    0.0000    0.0000  X  0  0  0  0  0  0  0  0  0  0\n'.repeat(
+                  atomNumber - atomCount,
+                );
+              }
+            }
             // bond block: two space indent if the first number is one digit, one space indent if the first number is two digits
             const s = a.trim();
             const first = s.split(' ')[0];
@@ -122,6 +140,7 @@ export class Util {
               result += s;
             }
             result += '\n';
+            bondCount++;
           } else {
             // atom block: three space indent or spacing if negative and four space indent or spacing if positive
             const s = a.trim();
@@ -163,11 +182,13 @@ export class Util {
               }
             }
             result += '\n';
+            atomCount++;
           }
         }
         lineIndex++;
       }
     }
+    // console.log(result);
     return result;
   }
 

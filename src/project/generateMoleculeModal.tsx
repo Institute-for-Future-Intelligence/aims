@@ -238,7 +238,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
             <>
               {listening ? (
                 <>
-                  <AudioMutedOutlined
+                  <AudioOutlined
                     style={{ paddingLeft: '2px' }}
                     onClick={() => {
                       setListening(false);
@@ -249,7 +249,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
                   {i18n.t('projectPanel.Listening', lang)}
                 </>
               ) : (
-                <AudioOutlined
+                <AudioMutedOutlined
                   style={{ paddingLeft: '2px' }}
                   onClick={() => {
                     setListening(true);
