@@ -94,7 +94,7 @@ export class Util {
 
   // https://en.wikipedia.org/wiki/Chemical_table_file
   static ensureSdf(input: string) {
-    const lines = input.trim().split('\n');
+    const lines = input.split('\n');
     let result = '';
     let lineIndex = 0;
     let stop = false;
@@ -104,6 +104,7 @@ export class Util {
     let bondCount = 0;
     let firstBond = false;
     for (const a of lines) {
+      if (a.trim() === '$$$$') break; // we do not support multiple molecules in a single SDF for now
       if (a.trim() === 'M  END') stop = true;
       if (stop) {
         // no need to do anything with other info

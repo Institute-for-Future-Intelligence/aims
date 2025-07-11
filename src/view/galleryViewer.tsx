@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -49,6 +49,7 @@ const GalleryViewer = React.memo(
     onPointerDown,
   }: GalleryViewerProps) => {
     const projectViewerStyle = useStore(Selector.projectViewerStyle);
+    const removeMoleculeByName = useStore(Selector.removeMoleculeByName);
 
     const [complex, setComplex] = useState<any>();
 
@@ -90,7 +91,7 @@ const GalleryViewer = React.memo(
         setComplex(undefined);
         return;
       }
-      loadMolecule(molecule, processResult);
+      loadMolecule(molecule, processResult, removeMoleculeByName);
     }, [molecule]);
 
     const processResult = (result: any) => {

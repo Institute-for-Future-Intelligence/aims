@@ -188,6 +188,7 @@ export const generateFormulaFromAtomJS = (atoms: AtomJS[]): string => {
 export const loadMolecule = (
   molecule: MoleculeInterface,
   processResult: (result: any, molecule?: Molecule) => void,
+  removeMoleculeByName?: (name: string) => void,
 ) => {
   if (molecule.data) {
     new SDFParser(Util.ensureSdf(molecule.data))
@@ -197,11 +198,10 @@ export const loadMolecule = (
       })
       .catch((err) => {
         console.error(err);
-        setMessage(
-          'error',
-          i18n.t('message.DoNotUnderstandGeneratedResult', { lng: useStore.getState().language }),
-          30,
-        );
+        setMessage('error', i18n.t('message.GeneratedResultNotAccepted', { lng: useStore.getState().language }), 30);
+        if (removeMoleculeByName) {
+          removeMoleculeByName(molecule.name);
+        }
       });
   } else {
     const mol = getData(molecule.name);

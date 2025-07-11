@@ -148,7 +148,7 @@ export const i18n_zh_tw = {
       CannotOpenProjectWhileGeneratingMolecule: '正在生成分子時不能打開别的專案。',
       GeneratingMolecule: '正在生成分子。。。',
       GeneratingAMoleculeMayTakeAWhile: '生成一個分子可能需要一些時間且無法取消。按生成鍵前請仔細考慮好給AI的輸入。',
-      DoNotUnderstandGeneratedResult: '抱歉，我不能理解回傳結果。',
+      GeneratedResultNotAccepted: '抱歉，回傳結果無法解讀。',
       DoNotShowAgain: '別再顯示',
       NewVersionAvailable: '有新版本',
       DoYouWantToRemoveAllMoleculesFromGallery: '你確定要刪除專案裡的所有分子嗎？',

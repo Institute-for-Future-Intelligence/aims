@@ -37,6 +37,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   const setGenerating = usePrimitiveStore(Selector.setGenerating);
   const hasMolecule = useStore(Selector.hasMolecule);
   const addMolecule = useStore(Selector.addMolecule);
+  const removeMoleculeByName = useStore(Selector.removeMoleculeByName);
   const setChanged = usePrimitiveStore(Selector.setChanged);
 
   const [prompt, setPrompt] = useState<string>(generateMoleculePrompt);
@@ -136,40 +137,44 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
         if (resultRef.current) {
           const data = Util.ensureSdf(resultRef.current);
           const mol = { name: 'chatgpt', data, prompt } as MoleculeInterface;
-          loadMolecule(mol, (result) => {
-            console.log(data);
-            console.log(result);
-            mol.name = result.name;
-            // generated molecules may have the same name, give it a different name if the name is taken
-            let taken = hasMolecule(mol);
-            let index = 0;
-            const name = mol.name;
-            while (taken) {
-              index++;
-              mol.name = name + ' ' + index;
-              taken = hasMolecule(mol);
-            }
-            const added = addMolecule(mol);
-            if (added) {
-              setCommonStore((state) => {
-                state.projectState.selectedMolecule = mol;
-                let molecularMass = 0;
-                let heavyAtomCount = 0;
-                for (const a of result._atoms) {
-                  molecularMass += a.element.weight;
-                  if (a.element.name !== 'H') heavyAtomCount++;
-                }
-                state.projectState.generatedMolecularProperties[result.name] = {
-                  molecularMass,
-                  heavyAtomCount,
-                  formula: generateFormulaFromAtomJS(result._atoms),
-                } as MolecularProperties;
-              });
-              setChanged(true);
-            } else {
-              setMessage('info', t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + mol.name, 30);
-            }
-          });
+          loadMolecule(
+            mol,
+            (result) => {
+              console.log(data);
+              console.log(result);
+              mol.name = result.name;
+              // generated molecules may have the same name, give it a different name if the name is taken
+              let taken = hasMolecule(mol);
+              let index = 0;
+              const name = mol.name;
+              while (taken) {
+                index++;
+                mol.name = name + ' ' + index;
+                taken = hasMolecule(mol);
+              }
+              const added = addMolecule(mol);
+              if (added) {
+                setCommonStore((state) => {
+                  state.projectState.selectedMolecule = mol;
+                  let molecularMass = 0;
+                  let heavyAtomCount = 0;
+                  for (const a of result._atoms) {
+                    molecularMass += a.element.weight;
+                    if (a.element.name !== 'H') heavyAtomCount++;
+                  }
+                  state.projectState.generatedMolecularProperties[result.name] = {
+                    molecularMass,
+                    heavyAtomCount,
+                    formula: generateFormulaFromAtomJS(result._atoms),
+                  } as MolecularProperties;
+                });
+                setChanged(true);
+              } else {
+                setMessage('info', t('projectPanel.MoleculeAlreadyAdded', lang) + ': ' + mol.name, 30);
+              }
+            },
+            removeMoleculeByName,
+          );
         } else {
           setMessage('error', t('message.FailInGeneratingMolecule', lang), 30);
         }

@@ -149,7 +149,7 @@ export const i18n_zh_cn = {
       CannotOpenProjectWhileGeneratingMolecule: '正在生成分子时不能打开别的项目。',
       GeneratingMolecule: '正在生成分子。。。',
       GeneratingAMoleculeMayTakeAWhile: '生成一个分子可能需要一些时间且无法取消。在按生成键前请仔细考虑好给AI的输入。',
-      DoNotUnderstandGeneratedResult: '抱歉，我不能理解返回结果。',
+      GeneratedResultNotAccepted: '抱歉，返回结果无法解读。',
       DoNotShowAgain: '别再显示',
       NewVersionAvailable: '有新版本',
       DoYouWantToRemoveAllMoleculesFromGallery: '你确定要删除项目里的所有分子吗？',
