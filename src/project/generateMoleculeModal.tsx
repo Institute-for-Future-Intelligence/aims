@@ -181,6 +181,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   };
 
   const onCancel = () => {
+    setPrompt(generateMoleculePrompt);
     close();
   };
 

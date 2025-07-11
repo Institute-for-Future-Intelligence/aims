@@ -92,8 +92,9 @@ export class Util {
     return str.search(regex); // Returns the index of the first match, or -1 if no match
   }
 
+  // https://en.wikipedia.org/wiki/Chemical_table_file
   static ensureSdf(input: string) {
-    const lines = input.split('\n');
+    const lines = input.trim().split('\n');
     let result = '';
     let lineIndex = 0;
     let stop = false;
@@ -109,10 +110,10 @@ export class Util {
         result += a + '\n';
       } else {
         if (lineIndex < 3) {
-          // header has three lines if we count the empty line
+          // header has three lines: title line, program line, and comment line
           result += a + '\n';
         } else if (lineIndex === 3) {
-          // count line: only one space indent
+          // counts line: only one space indent
           const s = a.trim().split(' ');
           atomNumber = parseInt(s[0]);
           bondNumber = parseInt(s[1]);
