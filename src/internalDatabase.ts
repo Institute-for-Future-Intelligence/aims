@@ -144,6 +144,7 @@ import biomoleculeUrl008 from './molecules/sdf/estriol.sdf';
 import biomoleculeUrl009 from './molecules/sdf/estrone.sdf';
 import biomoleculeUrl010 from './molecules/sdf/progesterone.sdf';
 import biomoleculeUrl011 from './molecules/sdf/testosterone.sdf';
+import biomoleculeUrl012 from './molecules/sdf/thyroxine.sdf';
 import biomoleculeUrl101 from './molecules/pdb/cholesterol.pdb';
 import biomoleculeUrl102 from './molecules/sdf/oleic_acid.sdf';
 import biomoleculeUrl103 from './molecules/sdf/stearic_acid.sdf';
@@ -272,6 +273,17 @@ import proteinUrl002 from './proteins/1a3n.pdb';
 import proteinUrl003 from './proteins/1aid.pdb';
 import proteinUrl004 from './proteins/7qo7.pdb';
 import proteinUrl005 from './proteins/2fom.pdb';
+import proteinUrl006 from './proteins/3i40.pdb';
+import proteinUrl007 from './proteins/1smd.pdb';
+import proteinUrl008 from './proteins/2ppl.pdb';
+import proteinUrl009 from './proteins/3utl.pdb';
+import proteinUrl010 from './proteins/1a0l.pdb';
+import proteinUrl011 from './proteins/1ao6.pdb';
+import proteinUrl012 from './proteins/2btf.pdb';
+import proteinUrl013 from './proteins/1tub.pdb';
+import proteinUrl014 from './proteins/6ec0.pdb';
+import proteinUrl015 from './proteins/1igy.pdb';
+import proteinUrl016 from './proteins/2v26.pdb';
 
 import { MolecularProperties } from './models/MolecularProperties.ts';
 import { distance } from 'fastest-levenshtein';
@@ -426,6 +438,7 @@ export const biomolecules = [
   { url: biomoleculeUrl009, internal: true, name: 'Estrone' } as MoleculeInterface,
   { url: biomoleculeUrl010, internal: true, name: 'Progesterone' } as MoleculeInterface,
   { url: biomoleculeUrl011, internal: true, name: 'Testosterone' } as MoleculeInterface,
+  { url: biomoleculeUrl012, internal: true, name: 'Thyroxine' } as MoleculeInterface,
   { url: biomoleculeUrl101, internal: true, name: 'Cholesterol' } as MoleculeInterface,
   { url: biomoleculeUrl102, internal: true, name: 'Oleic Acid' } as MoleculeInterface,
   { url: biomoleculeUrl103, internal: true, name: 'Stearic Acid' } as MoleculeInterface,
@@ -558,6 +571,17 @@ export const targetProteins = [
   { url: proteinUrl003, internal: true, name: 'HIV-1 Protease' } as MoleculeInterface,
   { url: proteinUrl004, internal: true, name: 'SARS-CoV-2 Omicron Spike' } as MoleculeInterface,
   { url: proteinUrl005, internal: true, name: 'Dengue Virus NS2B/NS3 Protease' } as MoleculeInterface,
+  { url: proteinUrl006, internal: true, name: 'Insulin' } as MoleculeInterface,
+  { url: proteinUrl007, internal: true, name: 'Salivary Amylase' } as MoleculeInterface,
+  { url: proteinUrl008, internal: true, name: 'Pancreatic Lipase' } as MoleculeInterface,
+  { url: proteinUrl009, internal: true, name: 'Pepsin' } as MoleculeInterface,
+  { url: proteinUrl010, internal: true, name: 'Trypsin' } as MoleculeInterface,
+  { url: proteinUrl011, internal: true, name: 'Albumin' } as MoleculeInterface,
+  { url: proteinUrl012, internal: true, name: 'Actin' } as MoleculeInterface,
+  { url: proteinUrl013, internal: true, name: 'Tubulin' } as MoleculeInterface,
+  { url: proteinUrl014, internal: true, name: 'Keratin' } as MoleculeInterface,
+  { url: proteinUrl015, internal: true, name: 'Immunoglobulin' } as MoleculeInterface,
+  { url: proteinUrl016, internal: true, name: 'Myosin' } as MoleculeInterface,
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 export const getMolecule = (name: string) => {
