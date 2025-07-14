@@ -198,6 +198,7 @@ export const loadMolecule = (
       })
       .catch((err) => {
         console.error(err);
+        console.error(molecule.data);
         setMessage('error', i18n.t('message.GeneratedResultNotAccepted', { lng: useStore.getState().language }), 30);
         if (removeMoleculeByName) {
           removeMoleculeByName(molecule.name);

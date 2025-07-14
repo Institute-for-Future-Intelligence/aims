@@ -157,7 +157,7 @@ export const i18n_en = {
       CannotOpenProjectWhileGeneratingMolecule: 'Cannot open other projects while generating a molecule.',
       GeneratingMolecule: 'Generating molecule...',
       GeneratingAMoleculeMayTakeAWhile:
-        'Generating a molecule may take a long time and cannot be cancelled. Think about your prompt carefully before pressing the Generate button.',
+        'Generating a molecule may take a long time and cannot be cancelled. The result is limited to molecules that have less than 1,000 atoms. Think about your prompt carefully before pressing the Generate button.',
       GeneratedResultNotAccepted: 'Sorry, the generated result is not accepted.',
       DoNotShowAgain: "Don't show again",
       NewVersionAvailable: 'A new version is available',

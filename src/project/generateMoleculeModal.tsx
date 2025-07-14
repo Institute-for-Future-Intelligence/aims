@@ -203,7 +203,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
 
   return (
     <Modal
-      width={600}
+      width={650}
       title={
         <div
           style={{ width: '100%', cursor: 'move' }}
