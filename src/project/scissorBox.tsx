@@ -15,8 +15,8 @@ import { Html } from '@react-three/drei';
 import { ThreeEvent } from '@react-three/fiber';
 import GalleryViewer from '../view/galleryViewer.tsx';
 import { useTranslation } from 'react-i18next';
-import { Button, message, Popover, Space } from 'antd';
-import { CheckCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { Input, message, Popover, Space } from 'antd';
+import { CheckCircleOutlined, MinusCircleOutlined, CopyOutlined } from '@ant-design/icons';
 import { setMessage } from '../helpers.tsx';
 import SparkImage from '../assets/spark.png';
 
@@ -35,6 +35,8 @@ interface MolecularContainerProps {
   scatterDataIndex: number;
   setScatterDataHoveredIndex: (index: number) => void;
 }
+
+const { TextArea } = Input;
 
 const ScissorBox = React.memo(
   ({
@@ -145,50 +147,56 @@ const ScissorBox = React.memo(
           />
         </Html>
         <Html>
-          <Space
-            title={
-              molecule?.name +
-              (formula ? ' (' + formula + ')' : '') +
-              '\n' +
-              (smiles ? '\nSMILES: ' + smiles : '') +
-              (inChI ? '\n\n' + inChI : '')
+          <Popover
+            content={
+              <Space direction="vertical" style={{ width: '600px' }}>
+                <Space style={{ fontWeight: 'bold' }}>{molecule?.name + (formula ? ' (' + formula + ')' : '')}</Space>
+                {smiles && <Space>{'SMILES: ' + smiles}</Space>}
+                {inChI && <Space>{inChI}</Space>}
+                {molecule?.data && (
+                  <TextArea style={{ fontFamily: 'monospace', fontSize: '12px' }} value={molecule.data} rows={10} />
+                )}
+              </Space>
             }
-            style={{
-              position: 'relative',
-              left: '4px',
-              bottom: 30 - viewHeight + 'px',
-              textAlign: 'left',
-              color: 'gray',
-              fontSize: labelType === LabelType.FORMULA ? '16px' : '11px',
-              fontWeight: selected ? 'bold' : 'normal',
-              width: viewWidth - 14 + 'px',
-            }}
-            onMouseDown={onMouseDown}
           >
-            {labelType === LabelType.FORMULA
-              ? formula ??
-                molecule?.name.substring(0, Math.min(20, molecule?.name.length)) +
-                  (molecule?.name && molecule.name.length > 20 ? '...' : '')
-              : molecule?.name.substring(0, Math.min(20, molecule?.name.length)) +
-                (molecule?.name && molecule.name.length > 20 ? '...' : '')}
-          </Space>
+            <Space
+              style={{
+                position: 'relative',
+                left: '4px',
+                bottom: 30 - viewHeight + 'px',
+                textAlign: 'left',
+                color: 'gray',
+                fontSize: labelType === LabelType.FORMULA ? '16px' : '11px',
+                fontWeight: selected ? 'bold' : 'normal',
+                width: viewWidth - 14 + 'px',
+              }}
+              onMouseDown={onMouseDown}
+            >
+              {labelType === LabelType.FORMULA
+                ? formula ??
+                  molecule?.name.substring(0, Math.min(20, molecule?.name.length)) +
+                    (molecule?.name && molecule.name.length > 20 ? '...' : '')
+                : molecule?.name.substring(0, Math.min(20, molecule?.name.length)) +
+                  (molecule?.name && molecule.name.length > 20 ? '...' : '')}
+            </Space>
+          </Popover>
           {molecule?.prompt && (
             <Popover
               content={
                 <Space direction={'vertical'} style={{ width: '400px' }}>
-                  <Space>{molecule.prompt}</Space>
-                  <Button
-                    style={{ float: 'right' }}
-                    onClick={() => {
-                      if (molecule?.prompt) {
-                        navigator.clipboard.writeText(molecule?.prompt).then(() => {
-                          setMessage('success', t('projectPanel.PromptInClipBoard', lang));
-                        });
-                      }
-                    }}
-                  >
-                    {t('word.Copy', lang)}
-                  </Button>
+                  <Space>
+                    {molecule.prompt}
+                    <CopyOutlined
+                      title={t('word.Copy', lang)}
+                      onClick={() => {
+                        if (molecule?.prompt) {
+                          navigator.clipboard.writeText(molecule?.prompt).then(() => {
+                            setMessage('success', t('projectPanel.PromptInClipBoard', lang));
+                          });
+                        }
+                      }}
+                    />
+                  </Space>
                 </Space>
               }
               title={t('projectPanel.GenAIPrompt', lang)}

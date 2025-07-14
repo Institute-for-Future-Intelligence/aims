@@ -216,7 +216,7 @@ export class Util {
       }
     }
     // console.log(result);
-    return result;
+    return result.trim();
   }
 
   static getSubscriptNumber(s: string): string {
