@@ -21,7 +21,7 @@ export const callAzureOpenAI = async (apiKey: string | undefined, prompt: string
         role: 'user',
         content:
           prompt +
-          ' The returned molecule must have 3D coordinates and must have hydrogen atoms.' +
+          ' The returned molecule must have 3D coordinates.' +
           ' Return just a SDF file with a two-line header followed by a new empty line.',
       },
     ],

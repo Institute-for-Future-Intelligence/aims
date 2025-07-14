@@ -115,7 +115,7 @@ export class Util {
           result += a + '\n';
         } else if (lineIndex === 3) {
           // counts line: only one space indent
-          const s = a.trim().split(' ');
+          const s = a.trim().split(/\s+/);
           atomNumber = parseInt(s[0]);
           if (atomNumber > 999) {
             // this means there is no space to the next three characters (bond number)
@@ -127,10 +127,14 @@ export class Util {
             result += a.trim() + '\n';
           } else {
             bondNumber = parseInt(s[1]);
-            if (atomNumber < 9) {
-              result += '  ' + a.trim() + '\n';
-            } else if (atomNumber < 99) {
-              result += ' ' + a.trim() + '\n';
+            if (atomNumber < 10) {
+              const index = a.trim().indexOf(s[1], 3);
+              const rest = a.trim().substring(index + 3);
+              result += '  ' + atomNumber + '  ' + bondNumber + rest + '\n';
+            } else if (atomNumber < 100) {
+              const index = a.trim().indexOf(s[1], 3);
+              const rest = a.trim().substring(index + 3);
+              result += ' ' + atomNumber + ' ' + bondNumber + rest + '\n';
             } else {
               if (bondNumber > 99) {
                 // no space between atom and bond numbers if the bond number has three digits
@@ -157,7 +161,7 @@ export class Util {
             }
             // bond block: two space indent if the first number is one digit, one space indent if the first number is two digits
             const s = a.trim();
-            const first = s.split(' ')[0];
+            const first = s.split(/\s+/)[0];
             if (first.length === 1) {
               result += '  ' + s;
             } else if (first.length === 2) {
@@ -173,11 +177,10 @@ export class Util {
             const n = Util.findFirstAlphabeticalCharacterIndex(s);
             const s1 = s.substring(0, n).trim();
             const s2 = s.substring(n);
-            const c1 = s1.split(' ');
+            const c1 = s1.split(/\s+/);
             let countLetter = 0;
             for (let i = 0; i < c1.length; i++) {
               const x = c1[i].trim();
-              if (x === '') continue;
               const n1 = x.substring(0, x.indexOf('.'));
               const n2 = x.substring(x.indexOf('.') + 1);
               const numberOfDigits1 = n1.toString().length;
@@ -187,7 +190,7 @@ export class Util {
               result += ' '.repeat(numberOfSpaces1) + n1 + '.' + n2 + '0'.repeat(numberOfSpaces2);
             }
             // the element symbol is expected to start from position 31
-            const d2 = s2.split(' ');
+            const d2 = s2.split(/\s+/);
             for (let i = 0; i < d2.length; i++) {
               const x = d2[i].trim();
               if (x === '') continue;

@@ -372,6 +372,7 @@ export const i18n_zh_cn = {
     },
 
     projectPanel: {
+      MustHaveHydrogenAtoms: '必须有氢原子',
       GenAIPrompt: '生成此分子的提示',
       PromptInClipBoard: '您现在可以粘贴提示了。',
       NoMolecule: '还没有添加分子',

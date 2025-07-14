@@ -382,6 +382,7 @@ export const i18n_en = {
     },
 
     projectPanel: {
+      MustHaveHydrogenAtoms: 'Must have hydrogen atoms',
       GenAIPrompt: 'Prompt Used to Generate This Molecule',
       PromptInClipBoard: 'The prompt was copied and is ready to paste.',
       NoMolecule: 'No molecule',

@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Input, Modal, Space } from 'antd';
+import { Button, Checkbox, Input, Modal, Space } from 'antd';
 import i18n from '../i18n/i18n.ts';
 import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react-draggable';
 import { useStore } from '../stores/common.ts';
@@ -41,6 +41,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   const setChanged = usePrimitiveStore(Selector.setChanged);
 
   const [prompt, setPrompt] = useState<string>(generateMoleculePrompt);
+  const [hydrogen, setHydrogen] = useState<string>('');
   const [listening, setListening] = useState<boolean>(false);
   const [dragEnabled, setDragEnabled] = useState<boolean>(false);
   const [bounds, setBounds] = useState<DraggableBounds>({
@@ -76,7 +77,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
     // const callOpenAI = httpsCallable(functions, 'callOpenAI', { timeout: 300000 });
     const callAzure = httpsCallable(functions, 'callAzure', { timeout: 300000 });
     const res = (await callAzure({
-      text: prompt,
+      text: prompt + ' ' + hydrogen,
     })) as any;
     resultRef.current = res.data.text;
   };
@@ -84,7 +85,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   const generateLocally = async () => {
     const apiKey = import.meta.env.VITE_AZURE_API_KEY;
     try {
-      const response = await callAzureOpenAI(apiKey, prompt, true);
+      const response = await callAzureOpenAI(apiKey, prompt + ' ' + hydrogen, true);
       resultRef.current = response.choices[0].message.content;
       // console.log(response);
       // console.log('set', response.choices[0].message.content);
@@ -142,7 +143,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
             (result) => {
               console.log(data);
               console.log(result);
-              mol.name = result.name;
+              mol.name = '(AI)-' + result.name;
               // generated molecules may have the same name, give it a different name if the name is taken
               let taken = hasMolecule(mol);
               let index = 0;
@@ -270,12 +271,21 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
         </Space>
         <TextArea
           disabled={listening}
-          rows={10}
+          rows={6}
           value={prompt}
           onChange={(e) => {
             setPrompt(e.target.value);
           }}
         />
+        <Space>
+          <Checkbox
+            onChange={(e) => {
+              setHydrogen(e.target.checked ? 'Must have hydrogen atoms.' : '');
+            }}
+          >
+            {t('projectPanel.MustHaveHydrogenAtoms', lang)}
+          </Checkbox>
+        </Space>
         <span style={{ fontSize: '12px' }}>
           <WarningOutlined /> {t('message.GeneratingAMoleculeMayTakeAWhile', lang)}
         </span>
