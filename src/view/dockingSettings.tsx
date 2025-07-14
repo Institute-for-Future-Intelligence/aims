@@ -357,7 +357,7 @@ const DockingSettings = React.memo(() => {
             <InputNumber
               addonAfter={'Å'}
               min={10}
-              max={100}
+              max={1000}
               style={{ width: '100%' }}
               precision={1}
               // make sure that we round up the number as toDegrees may cause things like .999999999
@@ -382,7 +382,7 @@ const DockingSettings = React.memo(() => {
             <InputNumber
               addonAfter={'Å'}
               min={10}
-              max={100}
+              max={1000}
               style={{ width: '100%' }}
               precision={1}
               // make sure that we round up the number as toDegrees may cause things like .999999999
@@ -407,7 +407,7 @@ const DockingSettings = React.memo(() => {
             <InputNumber
               addonAfter={'Å'}
               min={10}
-              max={100}
+              max={1000}
               style={{ width: '100%' }}
               precision={1}
               // make sure that we round up the number as toDegrees may cause things like .999999999
