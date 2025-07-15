@@ -7,7 +7,6 @@ import { MolecularContainer, MoleculeInterface, MoleculeTransform, ProjectState,
 import { MolecularProperties } from '../models/MolecularProperties.ts';
 import { Filter, FilterType } from '../Filter.ts';
 import {
-  ChemicalNotation,
   DataColoring,
   DEFAULT_CAMERA_POSITION,
   DEFAULT_CAMERA_ROTATION,
@@ -151,6 +150,7 @@ export class ProjectUtil {
       showInstructionPanel: false,
       navigationView: false,
 
+      reasoningEffort: 'medium',
       generateMoleculePrompt: 'Generate a novel molecule similar to benzene.',
       generatedMolecularProperties: {},
     } as ProjectState;

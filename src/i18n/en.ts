@@ -61,6 +61,9 @@ export const i18n_en = {
     },
 
     word: {
+      Low: 'Low',
+      Medium: 'Medium',
+      High: 'High',
       CopyLink: 'Copy Link',
       ShareVia: 'Share via Other Apps',
       Share: 'Share',
@@ -383,6 +386,7 @@ export const i18n_en = {
 
     projectPanel: {
       MustHaveHydrogenAtoms: 'Must have hydrogen atoms',
+      ReasoningEffort: 'Reasoning Effort',
       GenAIPrompt: 'Prompt Used to Generate This Molecule',
       PromptInClipBoard: 'The prompt was copied and is ready to paste.',
       NoMolecule: 'No molecule',

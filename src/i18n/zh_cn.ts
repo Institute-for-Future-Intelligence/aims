@@ -52,6 +52,9 @@ export const i18n_zh_cn = {
     },
 
     word: {
+      Low: '低',
+      Medium: '中',
+      High: '高',
       CopyLink: '复制链接',
       ShareVia: '分享到',
       Share: '分享',
@@ -373,6 +376,7 @@ export const i18n_zh_cn = {
 
     projectPanel: {
       MustHaveHydrogenAtoms: '必须有氢原子',
+      ReasoningEffort: '推理努力程度',
       GenAIPrompt: '生成此分子的提示',
       PromptInClipBoard: '您现在可以粘贴提示了。',
       NoMolecule: '还没有添加分子',

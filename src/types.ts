@@ -143,6 +143,7 @@ export interface ProjectState {
   navigationView: boolean;
   showInstructionPanel: boolean;
 
+  reasoningEffort: string;
   generateMoleculePrompt: string;
   generatedMolecularProperties: { [key: string]: MolecularProperties };
 }

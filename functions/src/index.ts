@@ -19,11 +19,12 @@ exports.callOpenAI = onCall(
     });
 
     const prompt = req.data.text;
+    const reasoningEffort = req.data.reasoningEffort ?? 'medium';
 
     try {
       const response = await openai.responses.create({
         model: 'o4-mini',
-        reasoning: { effort: 'medium' },
+        reasoning: { effort: reasoningEffort },
         input:
           prompt +
           ' The returned molecule must have 3D coordinates.' +
@@ -42,9 +43,11 @@ exports.callAzure = onCall(
   async (req) => {
     const apiKey = process.env.AZURE_OPENAI_API_KEY;
     const prompt = req.data.text;
+    const reasoningEffort = req.data.reasoningEffort ?? 'medium';
     try {
-      const response = await callAzureOpenAI(apiKey, prompt);
+      const response = await callAzureOpenAI(apiKey, prompt, false, reasoningEffort);
       console.log('Prompt:', prompt);
+      console.log('Reasoning Effort:', reasoningEffort);
       console.log('Returned:', response.choices[0].message.content);
       return { text: response.choices[0].message.content };
     } catch (e) {

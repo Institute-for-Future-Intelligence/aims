@@ -377,6 +377,8 @@ export const showPeriodicTable = (state: PrimitiveStoreState) => state.showPerio
 
 export const message = (state: PrimitiveStoreState) => state.message;
 
+export const reasoningEffort = (state: CommonStoreState) => state.projectState.reasoningEffort;
+
 export const generateMoleculePrompt = (state: CommonStoreState) => state.projectState.generateMoleculePrompt;
 
 export const generatedMolecularProperties = (state: CommonStoreState) =>

@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Checkbox, Input, Modal, Space } from 'antd';
+import { Button, Checkbox, Input, Modal, Select, Space } from 'antd';
 import i18n from '../i18n/i18n.ts';
 import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react-draggable';
 import { useStore } from '../stores/common.ts';
@@ -33,6 +33,7 @@ const { TextArea } = Input;
 const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }: GenerateMoleculeModalProps) => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
+  const reasoningEffort = useStore(Selector.reasoningEffort) ?? 'medium';
   const generateMoleculePrompt = useStore(Selector.generateMoleculePrompt);
   const setGenerating = usePrimitiveStore(Selector.setGenerating);
   const hasMolecule = useStore(Selector.hasMolecule);
@@ -74,10 +75,10 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
 
   const generateRemotely = async () => {
     const functions = getFunctions(app, 'us-east4');
-    // const callOpenAI = httpsCallable(functions, 'callOpenAI', { timeout: 300000 });
     const callAzure = httpsCallable(functions, 'callAzure', { timeout: 300000 });
     const res = (await callAzure({
       text: prompt + ' ' + hydrogen,
+      reasoningEffort,
     })) as any;
     resultRef.current = res.data.text;
   };
@@ -85,10 +86,8 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   const generateLocally = async () => {
     const apiKey = import.meta.env.VITE_AZURE_API_KEY;
     try {
-      const response = await callAzureOpenAI(apiKey, prompt + ' ' + hydrogen, true);
+      const response = await callAzureOpenAI(apiKey, prompt + ' ' + hydrogen, true, reasoningEffort);
       resultRef.current = response.choices[0].message.content;
-      // console.log(response);
-      // console.log('set', response.choices[0].message.content);
     } catch (e) {
       console.log(e);
     }
@@ -278,6 +277,21 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
           }}
         />
         <Space>
+          {t('projectPanel.ReasoningEffort', lang) + ':'}
+          <Select
+            value={reasoningEffort}
+            style={{ marginRight: '10px' }}
+            onChange={(value) => {
+              setCommonStore((state) => {
+                state.projectState.reasoningEffort = value;
+              });
+            }}
+            options={[
+              { value: 'low', label: t('word.Low', lang) },
+              { value: 'medium', label: t('word.Medium', lang) },
+              { value: 'high', label: t('word.High', lang) },
+            ]}
+          />
           <Checkbox
             onChange={(e) => {
               setHydrogen(e.target.checked ? 'Must have hydrogen atoms.' : '');

@@ -3,7 +3,6 @@
  */
 
 import { useStore } from './stores/common';
-import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
 import i18n from './i18n/i18n';
@@ -176,6 +175,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           navUp: data.navUp ?? data.cameraUp,
           navTarget: data.navTarget ?? data.panCenter,
           showInstructionPanel: !!data.showInstructionPanel,
+          reasoningEffort: data.reasoningEffort ?? 'medium',
           generateMoleculePrompt: data.generateMoleculePrompt ?? 'Generate a novel molecule similar to benzene.',
           generatedMolecularProperties: data.generatedMolecularProperties ?? {},
         } as ProjectState;

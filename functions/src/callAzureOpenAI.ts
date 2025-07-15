@@ -2,15 +2,28 @@
  * @Copyright 2025. Institute for Future Intelligence, Inc.
  */
 
-import { AzureOpenAI } from 'openai';
+import { AzureOpenAI, OpenAI } from 'openai';
+import ReasoningEffort = OpenAI.ReasoningEffort;
 
 const endpoint = 'https://aims-test-resource.cognitiveservices.azure.com/';
 const modelName = 'o4-mini';
 const deployment = 'o4-mini';
 const apiVersion = '2024-12-01-preview';
 
-export const callAzureOpenAI = async (apiKey: string | undefined, prompt: string, fromBrowser = false) => {
-  const options = { endpoint, apiKey, deployment, apiVersion, dangerouslyAllowBrowser: fromBrowser };
+export const callAzureOpenAI = async (
+  apiKey: string | undefined,
+  prompt: string,
+  fromBrowser = false,
+  reasoningEffort: string,
+) => {
+  const options = {
+    endpoint,
+    apiKey,
+    deployment,
+    apiVersion,
+    dangerouslyAllowBrowser: fromBrowser,
+    reasoning_effort: reasoningEffort,
+  };
 
   const client = new AzureOpenAI(options);
 
@@ -25,6 +38,7 @@ export const callAzureOpenAI = async (apiKey: string | undefined, prompt: string
           ' Return just a SDF file with a two-line header followed by a new empty line.',
       },
     ],
+    reasoning_effort: reasoningEffort as ReasoningEffort,
     max_completion_tokens: 100000,
     model: modelName,
   });
