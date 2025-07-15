@@ -43,6 +43,10 @@ import commonMoleculeUrl020 from './molecules/sdf/nitrogen_dioxide.sdf';
 import commonMoleculeUrl021 from './molecules/sdf/nitrous_oxide.sdf';
 import commonMoleculeUrl022 from './molecules/sdf/isopropyl_alcohol.sdf';
 import commonMoleculeUrl023 from './molecules/sdf/triglyceride_opo.sdf';
+import commonMoleculeUrl024 from './molecules/sdf/tartrazine.sdf';
+import commonMoleculeUrl025 from './molecules/sdf/fd&c_yellow_6.sdf';
+import commonMoleculeUrl026 from './molecules/sdf/fd&c_red_40.sdf';
+import commonMoleculeUrl027 from './molecules/sdf/fd&c_blue_1.sdf';
 import commonMoleculeUrl101 from './molecules/sdf/buckyball.sdf';
 import commonMoleculeUrl102 from './molecules/xyz/nanotube.xyz';
 import commonMoleculeUrl103 from './molecules/xyz/graphen.xyz';
@@ -335,6 +339,10 @@ export const commonMolecules = [
   { url: commonMoleculeUrl021, internal: true, name: 'Nitrous Oxide' } as MoleculeInterface,
   { url: commonMoleculeUrl022, internal: true, name: 'Isopropyl Alcohol' } as MoleculeInterface,
   { url: commonMoleculeUrl023, internal: true, name: 'Triglyceride OPO' } as MoleculeInterface,
+  { url: commonMoleculeUrl024, internal: true, name: 'FD&C Yellow 5' } as MoleculeInterface,
+  { url: commonMoleculeUrl025, internal: true, name: 'FD&C Yellow 6' } as MoleculeInterface,
+  { url: commonMoleculeUrl026, internal: true, name: 'FD&C Red 40' } as MoleculeInterface,
+  { url: commonMoleculeUrl027, internal: true, name: 'FD&C Blue 1' } as MoleculeInterface,
   { url: commonMoleculeUrl101, internal: true, name: 'Buckminsterfullerene' } as MoleculeInterface,
   { url: commonMoleculeUrl102, internal: true, name: 'Carbon Nanotube' } as MoleculeInterface,
   { url: commonMoleculeUrl103, internal: true, name: 'Graphene' } as MoleculeInterface,

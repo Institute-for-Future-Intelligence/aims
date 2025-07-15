@@ -171,7 +171,6 @@ const ScissorBox = React.memo(
                         onClick={() => {
                           if (sdf && molecule?.name) {
                             setCommonStore((state) => {
-                              console.log(sdf);
                               state.setMoleculeData(molecule.name, sdf);
                             });
                           }
