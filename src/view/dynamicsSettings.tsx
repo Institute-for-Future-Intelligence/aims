@@ -1129,11 +1129,11 @@ const DynamicsSettings = React.memo(() => {
             </span>
           </Popover>
           <Popover
-            title={<div onClick={(e) => e.stopPropagation()}>⚛ {t('projectPanel.AtomCount', lang)}</div>}
+            title={<div onClick={(e) => e.stopPropagation()}>⚫ {t('projectPanel.AtomCount', lang)}</div>}
             content={<Space style={{ width: '300px' }}>{t('projectPanel.TotalNumberOfAtomsInModel', lang)}</Space>}
           >
             <span style={{ color: mdRef.current.atoms.length > 200 ? 'red' : 'lightgray' }}>
-              <span style={{ fontSize: '20px' }}>⚛</span> {mdRef.current.atoms.length}
+              <span style={{ fontSize: '20px' }}>⚪</span> {mdRef.current.atoms.length}
             </span>
           </Popover>
           {gravitationalAcceleration > 0 && (

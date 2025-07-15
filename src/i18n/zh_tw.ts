@@ -52,6 +52,7 @@ export const i18n_zh_tw = {
     },
 
     word: {
+      Overwrite: '覆蓋',
       Low: '低',
       Medium: '中',
       High: '高',
@@ -378,6 +379,7 @@ export const i18n_zh_tw = {
       ReasoningEffort: '推理努力程度',
       GenAIPrompt: '產生此分子的提示',
       PromptInClipBoard: '您現在可以粘貼提示了。',
+      DataInClipBoard: '您現在可以粘貼數據了。',
       NoMolecule: '還沒有添加分子',
       Project: '專案',
       ProjectType: '類别',

@@ -203,7 +203,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
 
   return (
     <Modal
-      width={650}
+      width={600}
       title={
         <div
           style={{ width: '100%', cursor: 'move' }}
@@ -270,26 +270,26 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
         </Space>
         <TextArea
           disabled={listening}
-          rows={6}
+          rows={10}
           value={prompt}
           onChange={(e) => {
             setPrompt(e.target.value);
           }}
         />
-        <Space>
+        <Space style={{ fontSize: '12px' }}>
           {t('projectPanel.ReasoningEffort', lang) + ':'}
           <Select
             value={reasoningEffort}
-            style={{ width: '100px', marginRight: '10px' }}
+            style={{ width: '100px', marginRight: '10px', fontSize: '12px' }}
             onChange={(value) => {
               setCommonStore((state) => {
                 state.projectState.reasoningEffort = value;
               });
             }}
             options={[
-              { value: 'low', label: t('word.Low', lang) },
-              { value: 'medium', label: t('word.Medium', lang) },
-              { value: 'high', label: t('word.High', lang) },
+              { value: 'low', label: <span style={{ fontSize: '12px' }}>{t('word.Low', lang)}</span> },
+              { value: 'medium', label: <span style={{ fontSize: '12px' }}>{t('word.Medium', lang)}</span> },
+              { value: 'high', label: <span style={{ fontSize: '12px' }}>{t('word.High', lang)}</span> },
             ]}
           />
           <Checkbox
@@ -297,10 +297,10 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
               setHydrogen(e.target.checked ? 'Must have hydrogen atoms.' : '');
             }}
           >
-            {t('projectPanel.MustHaveHydrogenAtoms', lang)}
+            <span style={{ fontSize: '12px' }}>{t('projectPanel.MustHaveHydrogenAtoms', lang)}</span>
           </Checkbox>
         </Space>
-        <span style={{ fontSize: '12px' }}>
+        <span style={{ fontSize: '11px' }}>
           <WarningOutlined /> {t('message.GeneratingAMoleculeMayTakeAWhile', lang)}
         </span>
       </Space>

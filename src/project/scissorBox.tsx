@@ -7,7 +7,7 @@ import { MoleculeInterface } from '../types.ts';
 import { MolecularViewerColoring, MolecularViewerMaterial, MolecularViewerStyle } from '../view/displayOptions.ts';
 import * as Selector from '../stores/selector';
 import { useStore } from '../stores/common.ts';
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { DirectionalLight, Vector3 } from 'three';
 import { DEFAULT_CAMERA_POSITION, DEFAULT_LIGHT_INTENSITY, LabelType } from '../constants.ts';
 import { ProjectGalleryControls } from '../controls.tsx';
@@ -15,8 +15,8 @@ import { Html } from '@react-three/drei';
 import { ThreeEvent } from '@react-three/fiber';
 import GalleryViewer from '../view/galleryViewer.tsx';
 import { useTranslation } from 'react-i18next';
-import { Input, message, Popover, Space } from 'antd';
-import { CheckCircleOutlined, MinusCircleOutlined, CopyOutlined } from '@ant-design/icons';
+import { Button, Input, message, Popover, Space } from 'antd';
+import { CheckCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { setMessage } from '../helpers.tsx';
 import SparkImage from '../assets/spark.png';
 
@@ -64,6 +64,7 @@ const ScissorBox = React.memo(
     const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
 
     const lightRef = useRef<DirectionalLight>(null);
+    const [sdf, setSdf] = useState<string | undefined>(molecule?.data);
 
     const { t } = useTranslation();
     const lang = useMemo(() => {
@@ -154,7 +155,43 @@ const ScissorBox = React.memo(
                 {smiles && <Space>{'SMILES: ' + smiles}</Space>}
                 {inChI && <Space>{inChI}</Space>}
                 {molecule?.data && (
-                  <TextArea style={{ fontFamily: 'monospace', fontSize: '12px' }} value={molecule.data} rows={10} />
+                  <TextArea
+                    style={{ fontFamily: 'monospace', fontSize: '12px' }}
+                    defaultValue={molecule.data}
+                    rows={10}
+                    onChange={(e) => {
+                      setSdf(e.target.value);
+                    }}
+                  />
+                )}
+                {sdf && (
+                  <Space style={{ float: 'right' }}>
+                    {sdf !== molecule?.data && (
+                      <Button
+                        onClick={() => {
+                          if (sdf && molecule?.name) {
+                            setCommonStore((state) => {
+                              console.log(sdf);
+                              state.setMoleculeData(molecule.name, sdf);
+                            });
+                          }
+                        }}
+                      >
+                        {t('word.Overwrite', lang)}
+                      </Button>
+                    )}
+                    <Button
+                      onClick={() => {
+                        if (sdf) {
+                          navigator.clipboard.writeText(sdf).then(() => {
+                            setMessage('success', t('projectPanel.DataInClipBoard', lang));
+                          });
+                        }
+                      }}
+                    >
+                      {t('word.Copy', lang)}
+                    </Button>
+                  </Space>
                 )}
               </Space>
             }
@@ -184,19 +221,19 @@ const ScissorBox = React.memo(
             <Popover
               content={
                 <Space direction={'vertical'} style={{ width: '400px' }}>
-                  <Space>
-                    {molecule.prompt}
-                    <CopyOutlined
-                      title={t('word.Copy', lang)}
-                      onClick={() => {
-                        if (molecule?.prompt) {
-                          navigator.clipboard.writeText(molecule?.prompt).then(() => {
-                            setMessage('success', t('projectPanel.PromptInClipBoard', lang));
-                          });
-                        }
-                      }}
-                    />
-                  </Space>
+                  <Space>{molecule.prompt}</Space>
+                  <Button
+                    style={{ float: 'right' }}
+                    onClick={() => {
+                      if (molecule?.prompt) {
+                        navigator.clipboard.writeText(molecule?.prompt).then(() => {
+                          setMessage('success', t('projectPanel.PromptInClipBoard', lang));
+                        });
+                      }
+                    }}
+                  >
+                    {t('word.Copy', lang)}
+                  </Button>
                 </Space>
               }
               title={t('projectPanel.GenAIPrompt', lang)}

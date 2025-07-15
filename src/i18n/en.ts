@@ -61,6 +61,7 @@ export const i18n_en = {
     },
 
     word: {
+      Overwrite: 'Overwrite',
       Low: 'Low',
       Medium: 'Medium',
       High: 'High',
@@ -389,6 +390,7 @@ export const i18n_en = {
       ReasoningEffort: 'Reasoning Effort',
       GenAIPrompt: 'Prompt Used to Generate This Molecule',
       PromptInClipBoard: 'The prompt was copied and is ready to paste.',
+      DataInClipBoard: 'The data was copied and is ready to paste.',
       NoMolecule: 'No molecule',
       Project: 'Project',
       ProjectType: 'Type',
