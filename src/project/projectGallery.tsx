@@ -458,6 +458,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 </Button>
                 {generating ? (
                   <span
+                    style={{ cursor: 'wait' }}
                     title={t('message.GeneratingMolecule', lang)}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -468,7 +469,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 ) : (
                   <Button
                     disabled={false}
-                    style={{ border: 'none', padding: '4px' }}
+                    style={{ border: 'none', padding: '4px', cursor: 'pointer' }}
                     onClick={(e) => {
                       e.stopPropagation();
                       setGenerateMoleculeDialogVisible(true);

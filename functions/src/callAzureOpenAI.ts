@@ -3,7 +3,6 @@
  */
 
 import { AzureOpenAI, OpenAI } from 'openai';
-import ReasoningEffort = OpenAI.ReasoningEffort;
 
 const endpoint = 'https://aims-test-resource.cognitiveservices.azure.com/';
 const modelName = 'o4-mini';
@@ -38,7 +37,7 @@ export const callAzureOpenAI = async (
           ' Return just a SDF file with a two-line header followed by a new empty line.',
       },
     ],
-    reasoning_effort: reasoningEffort as ReasoningEffort,
+    reasoning_effort: reasoningEffort as OpenAI.ReasoningEffort,
     max_completion_tokens: 100000,
     model: modelName,
   });

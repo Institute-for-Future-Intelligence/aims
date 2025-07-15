@@ -280,7 +280,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
           {t('projectPanel.ReasoningEffort', lang) + ':'}
           <Select
             value={reasoningEffort}
-            style={{ marginRight: '10px' }}
+            style={{ width: '100px', marginRight: '10px' }}
             onChange={(value) => {
               setCommonStore((state) => {
                 state.projectState.reasoningEffort = value;
