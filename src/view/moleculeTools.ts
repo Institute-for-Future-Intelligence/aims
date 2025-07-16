@@ -139,7 +139,7 @@ export const storeMoleculeData = (molecule: MoleculeInterface, atoms: Atom[], ra
     } as MolecularProperties);
   } else {
     // handle generated molecules that have missing properties
-    const p = useStore.getState().projectState.generatedMolecularProperties[molecule.name];
+    let p = useStore.getState().projectState.generatedMolecularProperties[molecule.name];
     if (p) {
       useStore.getState().setMolecularProperties(molecule.name, {
         atomCount: atoms.length,
@@ -148,6 +148,20 @@ export const storeMoleculeData = (molecule: MoleculeInterface, atoms: Atom[], ra
         heavyAtomCount: p.heavyAtomCount,
         formula: generateFormula(atoms),
       } as MolecularProperties);
+    } else {
+      // backward compatibility (to be removed in 2026)
+      if (molecule.name.startsWith('(AI)-')) {
+        p = useStore.getState().projectState.generatedMolecularProperties[molecule.name.substring(5)];
+        if (p) {
+          useStore.getState().setMolecularProperties(molecule.name, {
+            atomCount: atoms.length,
+            bondCount: radialBonds.length,
+            molecularMass: p.molecularMass,
+            heavyAtomCount: p.heavyAtomCount,
+            formula: generateFormula(atoms),
+          } as MolecularProperties);
+        }
+      }
     }
   }
   useStore.getState().setMolecularStructure(molecule.name, { atoms, radialBonds } as MolecularStructure);
