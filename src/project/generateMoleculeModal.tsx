@@ -162,7 +162,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
                     molecularMass += a.element.weight;
                     if (a.element.name !== 'H') heavyAtomCount++;
                   }
-                  state.projectState.generatedMolecularProperties[result.name] = {
+                  state.projectState.generatedMolecularProperties[mol.name] = {
                     molecularMass,
                     heavyAtomCount,
                     formula: generateFormulaFromAtomJS(result._atoms),
