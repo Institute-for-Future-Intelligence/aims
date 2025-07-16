@@ -43,7 +43,7 @@ import commonMoleculeUrl020 from './molecules/sdf/nitrogen_dioxide.sdf';
 import commonMoleculeUrl021 from './molecules/sdf/nitrous_oxide.sdf';
 import commonMoleculeUrl022 from './molecules/sdf/isopropyl_alcohol.sdf';
 import commonMoleculeUrl023 from './molecules/sdf/triglyceride_opo.sdf';
-import commonMoleculeUrl024 from './molecules/sdf/tartrazine.sdf';
+import commonMoleculeUrl024 from './molecules/sdf/fd&c_yellow_5.sdf';
 import commonMoleculeUrl025 from './molecules/sdf/fd&c_yellow_6.sdf';
 import commonMoleculeUrl026 from './molecules/sdf/fd&c_red_40.sdf';
 import commonMoleculeUrl027 from './molecules/sdf/fd&c_blue_1.sdf';

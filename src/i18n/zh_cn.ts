@@ -381,6 +381,8 @@ export const i18n_zh_cn = {
       GenAIPrompt: '生成此分子的提示',
       PromptInClipBoard: '您现在可以粘贴提示了。',
       DataInClipBoard: '您现在可以粘贴数据了。',
+      SmilesInClipBoard: '您现在可以粘贴SMILES。',
+      InChIInClipBoard: '您现在可以粘贴InChI了。',
       NoMolecule: '还没有添加分子',
       Project: '项目',
       ProjectType: '类别',

@@ -16,7 +16,7 @@ import { ThreeEvent } from '@react-three/fiber';
 import GalleryViewer from '../view/galleryViewer.tsx';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, message, Popover, Space } from 'antd';
-import { CheckCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, MinusCircleOutlined, CopyOutlined } from '@ant-design/icons';
 import { setMessage } from '../helpers.tsx';
 import SparkImage from '../assets/spark.png';
 
@@ -152,8 +152,36 @@ const ScissorBox = React.memo(
             content={
               <Space direction="vertical" style={{ width: '600px' }}>
                 <Space style={{ fontWeight: 'bold' }}>{molecule?.name + (formula ? ' (' + formula + ')' : '')}</Space>
-                {smiles && <Space>{'SMILES: ' + smiles}</Space>}
-                {inChI && <Space>{inChI}</Space>}
+                {smiles && (
+                  <Space>
+                    {'SMILES: ' + smiles}
+                    <CopyOutlined
+                      style={{ paddingLeft: '10px', cursor: 'copy' }}
+                      onClick={() => {
+                        if (smiles) {
+                          navigator.clipboard.writeText(smiles).then(() => {
+                            setMessage('success', t('projectPanel.SmilesInClipBoard', lang));
+                          });
+                        }
+                      }}
+                    />
+                  </Space>
+                )}
+                {inChI && (
+                  <span>
+                    {inChI}
+                    <CopyOutlined
+                      style={{ paddingLeft: '10px', cursor: 'copy' }}
+                      onClick={() => {
+                        if (inChI) {
+                          navigator.clipboard.writeText(inChI).then(() => {
+                            setMessage('success', t('projectPanel.InChIInClipBoard', lang));
+                          });
+                        }
+                      }}
+                    />
+                  </span>
+                )}
                 {molecule?.data && (
                   <TextArea
                     style={{ fontFamily: 'monospace', fontSize: '12px' }}
