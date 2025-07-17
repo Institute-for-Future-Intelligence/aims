@@ -183,14 +183,17 @@ const ScissorBox = React.memo(
                   </span>
                 )}
                 {molecule?.data && (
-                  <TextArea
-                    style={{ fontFamily: 'monospace', fontSize: '12px' }}
-                    defaultValue={molecule.data}
-                    rows={10}
-                    onChange={(e) => {
-                      setSdf(e.target.value);
-                    }}
-                  />
+                  <Space direction={'vertical'} style={{ width: '100%' }}>
+                    <Space>{t('projectPanel.StructureData', lang)}</Space>
+                    <TextArea
+                      style={{ fontFamily: 'monospace', fontSize: '12px' }}
+                      defaultValue={molecule.data}
+                      rows={10}
+                      onChange={(e) => {
+                        setSdf(e.target.value);
+                      }}
+                    />
+                  </Space>
                 )}
                 {sdf && (
                   <Space style={{ float: 'right' }}>
@@ -204,7 +207,7 @@ const ScissorBox = React.memo(
                           }
                         }}
                       >
-                        {t('word.Overwrite', lang)}
+                        {t('word.Save', lang)}
                       </Button>
                     )}
                     <Button

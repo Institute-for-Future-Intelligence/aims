@@ -61,7 +61,6 @@ export const i18n_en = {
     },
 
     word: {
-      Overwrite: 'Overwrite',
       Low: 'Low',
       Medium: 'Medium',
       High: 'High',
@@ -393,6 +392,7 @@ export const i18n_en = {
       DataInClipBoard: 'The data was copied and is ready to paste.',
       SmilesInClipBoard: 'SMILES was copied and is ready to paste.',
       InChIInClipBoard: 'InChI was copied and is ready to paste.',
+      StructureData: 'Molecular Structure Data in the SDF Format',
       NoMolecule: 'No molecule',
       Project: 'Project',
       ProjectType: 'Type',

@@ -52,7 +52,6 @@ export const i18n_zh_tw = {
     },
 
     word: {
-      Overwrite: '覆蓋',
       Low: '低',
       Medium: '中',
       High: '高',
@@ -382,6 +381,7 @@ export const i18n_zh_tw = {
       DataInClipBoard: '您現在可以粘貼數據了。',
       SmilesInClipBoard: '您現在可以粘貼SMILES了。',
       InChIInClipBoard: '您現在可以粘貼InChI了。',
+      StructureData: '分子結構數據（SDF格式）',
       NoMolecule: '還沒有添加分子',
       Project: '專案',
       ProjectType: '類别',
