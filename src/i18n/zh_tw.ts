@@ -96,6 +96,7 @@ export const i18n_zh_tw = {
       Cut: '剪切',
       Copy: '拷貝',
       Paste: '粘貼',
+      Export: '輸出',
       Warning: '警告',
       Caution: '小心',
       Title: '標題',

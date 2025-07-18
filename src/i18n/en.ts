@@ -105,6 +105,7 @@ export const i18n_en = {
       Cut: 'Cut',
       Copy: 'Copy',
       Paste: 'Paste',
+      Export: 'Export',
       Warning: 'Warning',
       Caution: 'Caution',
       Title: 'Title',

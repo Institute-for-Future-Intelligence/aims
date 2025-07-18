@@ -296,14 +296,12 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           },
           getMoleculeByName(name: string) {
             let mol = null;
-            immerSet((state: CommonStoreState) => {
-              for (const m of state.projectState.molecules) {
-                if (m.name === name) {
-                  mol = m;
-                  break;
-                }
+            for (const m of get().projectState.molecules) {
+              if (m.name === name) {
+                mol = m;
+                break;
               }
-            });
+            }
             return mol;
           },
           setMoleculeData(name: string, data: string) {
