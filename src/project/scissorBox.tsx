@@ -66,6 +66,7 @@ const ScissorBox = React.memo(
 
     const lightRef = useRef<DirectionalLight>(null);
     const [sdf, setSdf] = useState<string | undefined>(molecule?.data);
+    const [pop, setPop] = useState<boolean>(false);
 
     const { t } = useTranslation();
     const lang = useMemo(() => {
@@ -150,6 +151,10 @@ const ScissorBox = React.memo(
         </Html>
         <Html>
           <Popover
+            trigger={'click'}
+            onOpenChange={(open: boolean) => {
+              setPop(open);
+            }}
             content={
               <Space direction="vertical" style={{ width: '600px' }}>
                 <Space style={{ fontWeight: 'bold' }}>{molecule?.name + (formula ? ' (' + formula + ')' : '')}</Space>
@@ -198,18 +203,17 @@ const ScissorBox = React.memo(
                 )}
                 {sdf && (
                   <Space style={{ float: 'right' }}>
-                    {sdf !== molecule?.data && (
-                      <Button
-                        onClick={() => {
-                          if (sdf && molecule?.name) {
-                            setMolecularData(molecule.name, sdf);
-                            setChanged(true);
-                          }
-                        }}
-                      >
-                        {t('word.Save', lang)}
-                      </Button>
-                    )}
+                    <Button
+                      disabled={sdf === molecule?.data}
+                      onClick={() => {
+                        if (sdf && molecule?.name) {
+                          setMolecularData(molecule.name, sdf);
+                          setChanged(true);
+                        }
+                      }}
+                    >
+                      {t('word.Save', lang)}
+                    </Button>
                     <Button
                       onClick={() => {
                         if (sdf) {
@@ -239,12 +243,17 @@ const ScissorBox = React.memo(
               }}
               onMouseDown={onMouseDown}
             >
-              {labelType === LabelType.FORMULA
-                ? formula ??
-                  molecule?.name.substring(0, Math.min(20, molecule?.name.length)) +
-                    (molecule?.name && molecule.name.length > 20 ? '...' : '')
-                : molecule?.name.substring(0, Math.min(20, molecule?.name.length)) +
-                  (molecule?.name && molecule.name.length > 20 ? '...' : '')}
+              <span
+                style={{ cursor: 'pointer' }}
+                title={t(pop ? 'projectPanel.ClickToClosePopup' : 'projectPanel.ClickForMoreInfo', lang)}
+              >
+                {labelType === LabelType.FORMULA
+                  ? formula ??
+                    molecule?.name.substring(0, Math.min(20, molecule?.name.length)) +
+                      (molecule?.name && molecule.name.length > 20 ? '...' : '')
+                  : molecule?.name.substring(0, Math.min(20, molecule?.name.length)) +
+                    (molecule?.name && molecule.name.length > 20 ? '...' : '')}
+              </span>
             </Space>
           </Popover>
           {molecule?.prompt && (

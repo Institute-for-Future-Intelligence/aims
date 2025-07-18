@@ -376,6 +376,8 @@ export const i18n_zh_cn = {
     },
 
     projectPanel: {
+      ClickForMoreInfo: '点击此处查看更多信息。。。',
+      ClickToClosePopup: '点击此处关闭弹窗',
       MustHaveHydrogenAtoms: '必须有氢原子',
       ReasoningEffort: '推理努力程度',
       GenAIPrompt: '生成此分子的提示',

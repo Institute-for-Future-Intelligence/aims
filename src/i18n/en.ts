@@ -386,6 +386,8 @@ export const i18n_en = {
     },
 
     projectPanel: {
+      ClickForMoreInfo: 'Click for more information...',
+      ClickToClosePopup: 'Click to close popup',
       MustHaveHydrogenAtoms: 'Must have hydrogen atoms',
       ReasoningEffort: 'Reasoning Effort',
       GenAIPrompt: 'Prompt Used to Generate This Molecule',
