@@ -18,7 +18,7 @@ import {
   MolecularViewerStyle,
   STYLE_MAP,
 } from './displayOptions';
-import { loadMolecule, storeMoleculeData } from './moleculeTools.ts';
+import { generateFormulaFromAtomJS, loadMolecule, storeMoleculeData } from './moleculeTools.ts';
 import { Atom } from '../models/Atom.ts';
 import { RadialBond } from '../models/RadialBond.ts';
 
@@ -48,6 +48,7 @@ const GalleryViewer = React.memo(
     onPointerLeave,
     onPointerDown,
   }: GalleryViewerProps) => {
+    const setCommonStore = useStore(Selector.set);
     const projectViewerStyle = useStore(Selector.projectViewerStyle);
     const removeMoleculeByName = useStore(Selector.removeMoleculeByName);
 
@@ -126,6 +127,10 @@ const GalleryViewer = React.memo(
           radialBonds.push(new RadialBond(atoms[b._left.index], atoms[b._right.index]));
         }
         storeMoleculeData(molecule, atoms, radialBonds);
+        setCommonStore((state) => {
+          const p = state.projectState.generatedMolecularProperties[molecule.name];
+          if (p) p.formula = generateFormulaFromAtomJS(result._atoms);
+        });
       }
     };
 
