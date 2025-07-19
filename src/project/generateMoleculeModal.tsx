@@ -271,6 +271,8 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
         <TextArea
           disabled={listening}
           rows={10}
+          maxLength={1000}
+          showCount
           value={prompt}
           onChange={(e) => {
             setPrompt(e.target.value);
