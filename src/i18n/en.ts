@@ -61,6 +61,7 @@ export const i18n_en = {
     },
 
     word: {
+      Prompt: 'Prompt',
       Low: 'Low',
       Medium: 'Medium',
       High: 'High',
@@ -77,6 +78,7 @@ export const i18n_en = {
       Formula: 'Formula',
       AtomsLowerCasePlural: 'atoms',
       Save: 'Save',
+      Result: 'Result',
       Results: 'Results',
       Import: 'Import',
       Generate: 'Generate',
@@ -393,8 +395,9 @@ export const i18n_en = {
       ReasoningEffort: 'Reasoning Effort',
       GenAIPrompt: 'Prompt used to generate this molecule',
       CopyPrompt: 'Copy this prompt',
+      CopyResult: 'Copy this result',
       PromptInClipBoard: 'The prompt was copied and is ready to paste.',
-      DataInClipBoard: 'The data was copied and is ready to paste.',
+      ResultInClipBoard: 'The result was copied and is ready to paste.',
       SmilesInClipBoard: 'SMILES was copied and is ready to paste.',
       InChIInClipBoard: 'InChI was copied and is ready to paste.',
       StructureData: 'Molecular structure data in the SDF format',

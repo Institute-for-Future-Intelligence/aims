@@ -52,6 +52,7 @@ export const i18n_zh_tw = {
     },
 
     word: {
+      Prompt: '提示',
       Low: '低',
       Medium: '中',
       High: '高',
@@ -68,6 +69,7 @@ export const i18n_zh_tw = {
       Formula: '公式',
       AtomsLowerCasePlural: '原子',
       Save: '保存',
+      Result: '結果',
       Results: '結果',
       Import: '輸入',
       Generate: '生成',
@@ -382,8 +384,9 @@ export const i18n_zh_tw = {
       ReasoningEffort: '推理努力程度',
       GenAIPrompt: '生成此分子的提示',
       CopyPrompt: '拷貝此提示',
+      CopyResult: '拷貝此結果',
       PromptInClipBoard: '您現在可以粘貼提示了。',
-      DataInClipBoard: '您現在可以粘貼數據了。',
+      ResultInClipBoard: '您現在可以粘貼结果了。',
       SmilesInClipBoard: '您現在可以粘貼SMILES了。',
       InChIInClipBoard: '您現在可以粘貼InChI了。',
       StructureData: '分子結構數據（SDF格式）',

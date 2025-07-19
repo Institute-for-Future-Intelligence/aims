@@ -190,8 +190,8 @@ const ScissorBox = React.memo(
                 )}
                 {molecule?.prompt && (
                   <div>
-                    <span style={{ display: 'inline' }}>{t('projectPanel.GenAIPrompt', lang)}: </span>
-                    <span style={{ display: 'inline', fontStyle: 'italic' }}>
+                    <span style={{ display: 'inline', fontWeight: 'bold' }}>{t('word.Prompt', lang)}: </span>
+                    <span style={{ display: 'inline' }}>
                       {molecule.prompt}
                       <CopyOutlined
                         style={{ paddingLeft: '10px', cursor: 'copy' }}
@@ -209,7 +209,23 @@ const ScissorBox = React.memo(
                 )}
                 {molecule?.data && (
                   <Space direction={'vertical'} style={{ width: '100%' }}>
-                    <Space>{t('projectPanel.StructureData', lang)}</Space>
+                    <div>
+                      <span style={{ display: 'inline', fontWeight: 'bold' }}>{t('word.Result', lang)}: </span>
+                      <span style={{ display: 'inline' }}>
+                        {t('projectPanel.StructureData', lang)}
+                        <CopyOutlined
+                          style={{ paddingLeft: '10px', cursor: 'copy' }}
+                          title={t('projectPanel.CopyResult', lang)}
+                          onClick={() => {
+                            if (sdf) {
+                              navigator.clipboard.writeText(sdf).then(() => {
+                                setMessage('success', t('projectPanel.ResultInClipBoard', lang));
+                              });
+                            }
+                          }}
+                        />
+                      </span>
+                    </div>
                     <TextArea
                       style={{ fontFamily: 'monospace', fontSize: '12px' }}
                       defaultValue={molecule.data}
@@ -232,17 +248,6 @@ const ScissorBox = React.memo(
                       }}
                     >
                       {t('word.Save', lang)}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        if (sdf) {
-                          navigator.clipboard.writeText(sdf).then(() => {
-                            setMessage('success', t('projectPanel.DataInClipBoard', lang));
-                          });
-                        }
-                      }}
-                    >
-                      {t('word.Export', lang)}
                     </Button>
                   </Space>
                 )}
