@@ -375,11 +375,13 @@ export const i18n_zh_tw = {
     },
 
     projectPanel: {
+      GeneratedByAI: 'AI生成',
       ClickForMoreInfo: '點擊此處查看更多資訊。 。 。',
       ClickToClosePopup: '點擊此處關閉彈窗',
       MustHaveHydrogenAtoms: '必須有氫原子',
       ReasoningEffort: '推理努力程度',
-      GenAIPrompt: '產生此分子的提示',
+      GenAIPrompt: '生成此分子的提示',
+      CopyPrompt: '拷貝此提示',
       PromptInClipBoard: '您現在可以粘貼提示了。',
       DataInClipBoard: '您現在可以粘貼數據了。',
       SmilesInClipBoard: '您現在可以粘貼SMILES了。',

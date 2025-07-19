@@ -159,7 +159,7 @@ const ScissorBox = React.memo(
               <Space direction="vertical" style={{ width: '600px' }}>
                 <Space style={{ fontWeight: 'bold' }}>{molecule?.name + (formula ? ' (' + formula + ')' : '')}</Space>
                 {smiles && (
-                  <Space>
+                  <span>
                     {'SMILES: ' + smiles}
                     <CopyOutlined
                       style={{ paddingLeft: '10px', cursor: 'copy' }}
@@ -171,7 +171,7 @@ const ScissorBox = React.memo(
                         }
                       }}
                     />
-                  </Space>
+                  </span>
                 )}
                 {inChI && (
                   <span>
@@ -187,6 +187,25 @@ const ScissorBox = React.memo(
                       }}
                     />
                   </span>
+                )}
+                {molecule?.prompt && (
+                  <div>
+                    <span style={{ display: 'inline' }}>{t('projectPanel.GenAIPrompt', lang)}: </span>
+                    <span style={{ display: 'inline', fontStyle: 'italic' }}>
+                      {molecule.prompt}
+                      <CopyOutlined
+                        style={{ paddingLeft: '10px', cursor: 'copy' }}
+                        title={t('projectPanel.CopyPrompt', lang)}
+                        onClick={() => {
+                          if (molecule?.prompt) {
+                            navigator.clipboard.writeText(molecule.prompt).then(() => {
+                              setMessage('success', t('projectPanel.PromptInClipBoard', lang));
+                            });
+                          }
+                        }}
+                      />
+                    </span>
+                  </div>
                 )}
                 {molecule?.data && (
                   <Space direction={'vertical'} style={{ width: '100%' }}>
@@ -257,38 +276,18 @@ const ScissorBox = React.memo(
             </Space>
           </Popover>
           {molecule?.prompt && (
-            <Popover
-              content={
-                <Space direction={'vertical'} style={{ width: '400px' }}>
-                  <Space>{molecule.prompt}</Space>
-                  <Button
-                    style={{ float: 'right' }}
-                    onClick={() => {
-                      if (molecule?.prompt) {
-                        navigator.clipboard.writeText(molecule?.prompt).then(() => {
-                          setMessage('success', t('projectPanel.PromptInClipBoard', lang));
-                        });
-                      }
-                    }}
-                  >
-                    {t('word.Copy', lang)}
-                  </Button>
-                </Space>
-              }
-              title={t('projectPanel.GenAIPrompt', lang)}
-            >
-              <img
-                src={SparkImage}
-                alt={'spark'}
-                width={16}
-                style={{
-                  position: 'absolute',
-                  right: '-6px',
-                  top: '6px',
-                  cursor: 'pointer',
-                }}
-              />
-            </Popover>
+            <img
+              src={SparkImage}
+              alt={'spark'}
+              title={t('projectPanel.GeneratedByAI', lang)}
+              width={16}
+              style={{
+                position: 'absolute',
+                right: '-6px',
+                top: '6px',
+                cursor: 'pointer',
+              }}
+            />
           )}
           {molecule?.invisible ? (
             <MinusCircleOutlined
