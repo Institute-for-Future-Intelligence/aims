@@ -23,17 +23,19 @@ export const addProjectToList = async (uid: string, project: ProjectInfo) => {
   try {
     const userRef = doc(firestore, 'users', uid);
     const userSnap = await getDoc(userRef);
-
     const existingList = userSnap.data()?.projectList ?? [];
-    const exists = existingList.some((p: ProjectInfo) => p.title === project.title);
-
-    if (!exists) {
+    const item = existingList.find((p: ProjectInfo) => p.title === project.title);
+    if (item) {
+      // if project exists, remove it and then add the new one (seems this is how Firebase updates an element of an array)
       await updateDoc(userRef, {
-        projectList: arrayUnion(project),
+        projectList: arrayRemove(item),
       });
     }
+    await updateDoc(userRef, {
+      projectList: arrayUnion(project),
+    });
   } catch (error) {
-    console.error('Failed to add project to list:', error);
+    console.error('Failed to add project to list or update its timestamp:', error);
   }
 };
 
