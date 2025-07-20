@@ -78,8 +78,9 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
   const generateRemotely = async () => {
     const functions = getFunctions(app, 'us-east4');
     const callAzure = httpsCallable(functions, 'callAzure', { timeout: 300000 });
+    const text = JSON.stringify(createInput());
     const res = (await callAzure({
-      text: prompt + ' ' + hydrogen,
+      text,
       reasoningEffort,
     })) as any;
     resultRef.current = res.data.text;
@@ -87,6 +88,15 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
 
   const generateLocally = async () => {
     const apiKey = import.meta.env.VITE_AZURE_API_KEY;
+    try {
+      const response = await callAzureOpenAI(apiKey, createInput() as [], true, reasoningEffort);
+      resultRef.current = response.choices[0].message.content;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const createInput = () => {
     const input = [];
     if (!independentPrompt && molecules.length > 0) {
       for (const m of molecules) {
@@ -101,12 +111,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
       role: 'user',
       content: (prompt.trim().endsWith('.') ? prompt.trim() : prompt.trim() + '. ') + hydrogen,
     });
-    try {
-      const response = await callAzureOpenAI(apiKey, input as [], true, reasoningEffort);
-      resultRef.current = response.choices[0].message.content;
-    } catch (e) {
-      console.log(e);
-    }
+    return input;
   };
 
   const { error, interimResult, results, setResults, startSpeechToText, stopSpeechToText } = useSpeechToText({

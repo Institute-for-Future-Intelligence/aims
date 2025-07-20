@@ -27,20 +27,24 @@ export const callAzureOpenAI = async (
     reasoning_effort: reasoningEffort,
   };
 
-  const modifiedInput = [];
-  for (const x of input) {
-    if (x['role'] === 'user') {
-      if (x['content'] === undefined) continue;
-      modifiedInput.push({ role: 'user', content: x['content'] + defaultPromptAppendix });
-    } else {
-      modifiedInput.push(x);
+  let modifiedInput = [];
+  if (fromBrowser) {
+    for (const x of input) {
+      if (x['role'] === 'user') {
+        if (x['content'] === undefined) continue;
+        modifiedInput.push({ role: 'user', content: x['content'] + defaultPromptAppendix });
+      } else {
+        modifiedInput.push(x);
+      }
     }
+  } else {
+    modifiedInput = input;
   }
 
   const client = new AzureOpenAI(options);
 
   const response = await client.chat.completions.create({
-    messages: [{ role: 'system', content: '' }, ...(modifiedInput as [])],
+    messages: modifiedInput as [],
     reasoning_effort: reasoningEffort as OpenAI.ReasoningEffort,
     max_completion_tokens: 100000,
     model: modelName,
