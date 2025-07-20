@@ -163,7 +163,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
             (result) => {
               console.log(data);
               console.log(result);
-              mol.name = '(AI)-' + result.name;
+              mol.name = 'AI: ' + result.name;
               // generated molecules may have the same name, give it a different name if the name is taken
               let taken = hasMolecule(mol);
               let index = 0;

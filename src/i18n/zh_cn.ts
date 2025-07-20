@@ -150,13 +150,13 @@ export const i18n_zh_cn = {
     },
 
     message: {
-      FailInGeneratingMolecule: '生成分子失败。请再试一下。',
+      FailInGeneratingMolecule: '生成分子失败。请再试一下。点击我关闭。',
       CannotCreateNewProjectWhileGeneratingMolecule: '正在生成分子时不能创建新的项目。',
       CannotOpenProjectWhileGeneratingMolecule: '正在生成分子时不能打开别的项目。',
       GeneratingMolecule: '正在生成分子。。。',
       GeneratingAMoleculeMayTakeAWhile:
         '生成一个分子可能需要一些时间且无法取消。结果限于少于一千个原子的分子。在按生成键前请仔细考虑好给AI的输入。',
-      GeneratedResultNotAccepted: '抱歉，返回结果无法解读。',
+      GeneratedResultNotAccepted: '抱歉，返回结果无法解读。点击我关闭。',
       DoNotShowAgain: '别再显示',
       NewVersionAvailable: '有新版本',
       DoYouWantToRemoveAllMoleculesFromGallery: '你确定要删除项目里的所有分子吗？',
@@ -387,6 +387,7 @@ export const i18n_zh_cn = {
       GenAIPrompt: '生成此分子的提示',
       CopyPrompt: '拷贝此提示',
       CopyResult: '拷贝此结果',
+      YouMayEditDataAbove: '上面的数据可编辑。',
       PromptInClipBoard: '您现在可以粘贴提示了。',
       ResultInClipBoard: '您现在可以粘贴结果了。',
       SmilesInClipBoard: '您现在可以粘贴SMILES。',

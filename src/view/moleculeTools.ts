@@ -150,7 +150,7 @@ export const storeMoleculeData = (molecule: MoleculeInterface, atoms: Atom[], ra
       } as MolecularProperties);
     } else {
       // backward compatibility (to be removed in 2026)
-      if (molecule.name.startsWith('(AI)-')) {
+      if (molecule.name.startsWith('AI: ')) {
         p = useStore.getState().projectState.generatedMolecularProperties[molecule.name.substring(5)];
         if (p) {
           useStore.getState().setMolecularProperties(molecule.name, {

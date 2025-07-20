@@ -397,6 +397,7 @@ export const i18n_en = {
       GenAIPrompt: 'Prompt used to generate this molecule',
       CopyPrompt: 'Copy this prompt',
       CopyResult: 'Copy this result',
+      YouMayEditDataAbove: 'You may edit the data above.',
       PromptInClipBoard: 'The prompt was copied and is ready to paste.',
       ResultInClipBoard: 'The result was copied and is ready to paste.',
       SmilesInClipBoard: 'SMILES was copied and is ready to paste.',

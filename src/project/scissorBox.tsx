@@ -16,7 +16,7 @@ import { ThreeEvent } from '@react-three/fiber';
 import GalleryViewer from '../view/galleryViewer.tsx';
 import { useTranslation } from 'react-i18next';
 import { Button, Input, message, Popover, Space } from 'antd';
-import { CheckCircleOutlined, MinusCircleOutlined, CopyOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, MinusCircleOutlined, CopyOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { setMessage } from '../helpers.tsx';
 import SparkImage from '../assets/spark.png';
 
@@ -238,6 +238,8 @@ const ScissorBox = React.memo(
                 )}
                 {sdf && (
                   <Space style={{ float: 'right' }}>
+                    <InfoCircleOutlined />
+                    <span style={{ fontSize: '12px' }}>{t('projectPanel.YouMayEditDataAbove', lang)}</span>
                     <Button
                       disabled={sdf === molecule?.data}
                       onClick={() => {
