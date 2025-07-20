@@ -377,6 +377,7 @@ export const i18n_zh_tw = {
     },
 
     projectPanel: {
+      AIMemory: 'AI記憶',
       GeneratedByAI: 'AI生成',
       ClickForMoreInfo: '點擊此處查看更多資訊。 。 。',
       ClickToClosePopup: '點擊此處關閉彈窗',

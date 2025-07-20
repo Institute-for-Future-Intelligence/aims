@@ -378,6 +378,7 @@ export const i18n_zh_cn = {
     },
 
     projectPanel: {
+      AIMemory: 'AI记忆',
       GeneratedByAI: 'AI生成',
       ClickForMoreInfo: '点击此处查看更多信息。。。',
       ClickToClosePopup: '点击此处关闭弹窗',

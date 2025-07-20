@@ -144,6 +144,7 @@ export interface ProjectState {
   showInstructionPanel: boolean;
 
   reasoningEffort: string;
+  independentPrompt: boolean;
   generateMoleculePrompt: string;
   generatedMolecularProperties: { [key: string]: MolecularProperties };
 }

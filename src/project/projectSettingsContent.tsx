@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useMemo } from 'react';
@@ -26,6 +26,7 @@ interface ProjectSettingsContentProps {
   viewerBackground: string;
   labelType: LabelType;
   graphType: GraphType;
+  rememberPrompts: boolean;
 }
 
 const ProjectSettingsContent = React.memo(
@@ -36,16 +37,23 @@ const ProjectSettingsContent = React.memo(
     viewerBackground,
     labelType,
     graphType,
+    rememberPrompts,
   }: ProjectSettingsContentProps) => {
     const language = useStore(Selector.language);
     const setChanged = usePrimitiveStore(Selector.setChanged);
     const addUndoable = useStore(Selector.addUndoable);
-    const numberOfColumns = useStore(Selector.numberOfColumns);
 
     const { t } = useTranslation();
     const lang = useMemo(() => {
       return { lng: language };
     }, [language]);
+
+    const setAIMemory = (remember: boolean) => {
+      useStore.getState().set((state) => {
+        state.projectState.independentPrompt = !remember;
+      });
+      setChanged(true);
+    };
 
     const setNumberOfColumns = (n: number) => {
       useStore.getState().set((state) => {
@@ -94,7 +102,7 @@ const ProjectSettingsContent = React.memo(
       const undoable = {
         name: 'Set Number of Columns',
         timestamp: Date.now(),
-        oldValue: numberOfColumns,
+        oldValue: columnCount,
         newValue: n,
         undo: () => setNumberOfColumns(undoable.oldValue as number),
         redo: () => setNumberOfColumns(undoable.newValue as number),
@@ -105,6 +113,42 @@ const ProjectSettingsContent = React.memo(
 
     return (
       <div style={{ width: '320px', paddingTop: '10px' }} onClick={(e) => e.stopPropagation()}>
+        <Row gutter={6} style={{ paddingBottom: '4px' }}>
+          <Col span={10} style={{ paddingTop: '5px' }}>
+            <span>{t('projectPanel.AIMemory', lang)}: </span>
+          </Col>
+          <Col span={14}>
+            <Select
+              style={{ width: '100%' }}
+              value={rememberPrompts}
+              onChange={(value: boolean) => {
+                const oldValue = rememberPrompts;
+                const newValue = value;
+                const undoableChange = {
+                  name: 'Select AI Memory',
+                  timestamp: Date.now(),
+                  oldValue: oldValue,
+                  newValue: newValue,
+                  undo: () => {
+                    setAIMemory(undoableChange.oldValue as boolean);
+                  },
+                  redo: () => {
+                    setAIMemory(undoableChange.newValue as boolean);
+                  },
+                } as UndoableChange;
+                useStore.getState().addUndoable(undoableChange);
+                setAIMemory(newValue);
+              }}
+            >
+              <Option key={'Yes'} value={true}>
+                {t('word.Yes', lang)}
+              </Option>
+              <Option key={'No'} value={false}>
+                {t('word.No', lang)}
+              </Option>
+            </Select>
+          </Col>
+        </Row>
         <Row gutter={6} style={{ paddingBottom: '4px' }}>
           <Col span={10} style={{ paddingTop: '5px' }}>
             <span>{t('projectPanel.NumberOfColumns', lang)}: </span>

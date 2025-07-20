@@ -381,6 +381,8 @@ export const message = (state: PrimitiveStoreState) => state.message;
 
 export const reasoningEffort = (state: CommonStoreState) => state.projectState.reasoningEffort;
 
+export const independentPrompt = (state: CommonStoreState) => state.projectState.independentPrompt;
+
 export const generateMoleculePrompt = (state: CommonStoreState) => state.projectState.generateMoleculePrompt;
 
 export const generatedMolecularProperties = (state: CommonStoreState) =>

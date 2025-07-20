@@ -184,6 +184,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const regressionDegree = useStore(Selector.regressionDegree) ?? 1;
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
   const generatedMolecularProperties = useStore(Selector.generatedMolecularProperties);
+  const independentPrompt = useStore(Selector.independentPrompt);
   const generating = usePrimitiveStore(Selector.generating);
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -416,7 +417,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     )}
                   </Button>
                 )}
-                {selectedMolecule && (
+                {selectedMolecule && !selectedMolecule.prompt && (
                   <Button
                     style={{ border: 'none', padding: '4px' }}
                     onClick={(e) => {
@@ -561,6 +562,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   viewerBackground={viewerBackground}
                   labelType={labelType}
                   graphType={graphType}
+                  rememberPrompts={!independentPrompt}
                 />
               }
             >
