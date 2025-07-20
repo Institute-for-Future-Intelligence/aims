@@ -33,7 +33,9 @@ const { TextArea } = Input;
 const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }: GenerateMoleculeModalProps) => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
+  const molecules = useStore(Selector.molecules);
   const reasoningEffort = useStore(Selector.reasoningEffort) ?? 'medium';
+  const independentPrompt = useStore(Selector.independentPrompt);
   const generateMoleculePrompt = useStore(Selector.generateMoleculePrompt);
   const setGenerating = usePrimitiveStore(Selector.setGenerating);
   const hasMolecule = useStore(Selector.hasMolecule);
@@ -85,8 +87,22 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
 
   const generateLocally = async () => {
     const apiKey = import.meta.env.VITE_AZURE_API_KEY;
+    const input = [];
+    if (!independentPrompt && molecules.length > 0) {
+      for (const m of molecules) {
+        if (m.prompt && m.data) {
+          input.push({ role: 'user', content: m.prompt });
+          input.push({ role: 'assistant', content: m.data });
+        }
+      }
+    }
+    // add a period at the end of the prompt to avoid misunderstanding
+    input.push({
+      role: 'user',
+      content: (prompt.trim().endsWith('.') ? prompt.trim() : prompt.trim() + '. ') + hydrogen,
+    });
     try {
-      const response = await callAzureOpenAI(apiKey, prompt + ' ' + hydrogen, true, reasoningEffort);
+      const response = await callAzureOpenAI(apiKey, input as [], true, reasoningEffort);
       resultRef.current = response.choices[0].message.content;
     } catch (e) {
       console.log(e);
@@ -296,7 +312,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
           />
           <Checkbox
             onChange={(e) => {
-              setHydrogen(e.target.checked ? 'Must have hydrogen atoms.' : '');
+              setHydrogen(e.target.checked ? ' Must have hydrogen atoms. ' : '');
             }}
           >
             <span style={{ fontSize: '12px' }}>{t('projectPanel.MustHaveHydrogenAtoms', lang)}</span>
