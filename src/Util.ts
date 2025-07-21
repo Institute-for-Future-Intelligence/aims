@@ -103,6 +103,8 @@ export class Util {
     let atomCount = 0;
     let bondCount = 0;
     let firstBond = false;
+    const atomCoordinates = [];
+    let bondCountPosition = -1;
     for (const a of lines) {
       if (a.trim() === '$$$$') break; // we do not support multiple molecules in a single SDF for now
       if (a.trim() === 'M  END') stop = true;
@@ -124,6 +126,7 @@ export class Util {
             s[1] = ss.substring(3, 6);
             atomNumber = parseInt(s[0]);
             bondNumber = parseInt(s[1]);
+            bondCountPosition = result.length + 3;
             result += a.trim() + '\n';
           } else {
             bondNumber = parseInt(s[1]);
@@ -161,16 +164,47 @@ export class Util {
             }
             // bond block: two space indent if the first number is one digit, one space indent if the first number is two digits
             const s = a.trim();
-            const first = s.split(/\s+/)[0];
-            if (first.length === 1) {
-              result += '  ' + s;
-            } else if (first.length === 2) {
-              result += ' ' + s;
-            } else {
-              result += s;
+            const ss = s.split(/\s+/);
+            if (ss.length >= 2) {
+              const b1 = ss[0];
+              const b2 = ss[1];
+              const k1 = parseInt(b1) - 1; // SDF bond index starts from 1
+              const k2 = parseInt(b2) - 1;
+              if (k1 >= 0 && k2 >= 0 && k1 < atomCoordinates.length && k2 < atomCoordinates.length) {
+                const dx = atomCoordinates[k1][0] - atomCoordinates[k2][0];
+                const dy = atomCoordinates[k1][1] - atomCoordinates[k2][1];
+                const dz = atomCoordinates[k1][2] - atomCoordinates[k2][2];
+                // only keep bonds shorter than 5 angstrom
+                if (dx * dx + dy * dy + dz * dz < 25) {
+                  if (b1.length === 1) {
+                    result += '  ' + b1;
+                  } else if (b1.length === 2) {
+                    result += ' ' + b1;
+                  } else {
+                    result += b1;
+                  }
+                  if (b2.length === 1) {
+                    result += '  ' + b2;
+                  } else if (b2.length === 2) {
+                    result += ' ' + b2;
+                  } else {
+                    result += b2;
+                  }
+                  if (ss.length >= 3) {
+                    const b3 = ss[2];
+                    if (b3.length === 1) {
+                      result += '  ' + b3;
+                    } else if (b3.length === 2) {
+                      result += ' ' + b3;
+                    } else {
+                      result += b3;
+                    }
+                  }
+                  result += '\n';
+                  bondCount++;
+                }
+              }
             }
-            result += '\n';
-            bondCount++;
           } else {
             // atom block: three space indent or spacing if negative and four space indent or spacing if positive
             const s = a.trim();
@@ -178,7 +212,7 @@ export class Util {
             const s1 = s.substring(0, n).trim();
             const s2 = s.substring(n);
             const c1 = s1.split(/\s+/);
-            let countLetter = 0;
+            const v = [];
             for (let i = 0; i < c1.length; i++) {
               const x = c1[i].trim();
               const n1 = x.substring(0, x.indexOf('.'));
@@ -188,7 +222,9 @@ export class Util {
               const numberOfDigits2 = n2.toString().length;
               const numberOfSpaces2 = Math.max(0, 4 - numberOfDigits2);
               result += ' '.repeat(numberOfSpaces1) + n1 + '.' + n2 + '0'.repeat(numberOfSpaces2);
+              if (i < 3) v.push(parseFloat(x));
             }
+            atomCoordinates.push(v);
             // the element symbol is expected to start from position 31
             const d2 = s2.split(/\s+/);
             for (let i = 0; i < d2.length; i++) {
@@ -214,6 +250,13 @@ export class Util {
         }
         lineIndex++;
       }
+    }
+    const r1 = result.substring(0, bondCountPosition);
+    const r2 = result.substring(bondCountPosition + 3);
+    if (bondCount > 99) {
+      result = r1 + bondCount + r2;
+    } else {
+      result = r1 + ' '.repeat(3 - bondCount.toString().length) + bondCount + r2;
     }
     // console.log(result);
     return result.trim();

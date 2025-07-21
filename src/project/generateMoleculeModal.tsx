@@ -293,6 +293,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
           disabled={listening}
           rows={10}
           maxLength={1000}
+          spellCheck={true}
           showCount
           value={prompt}
           onChange={(e) => {
