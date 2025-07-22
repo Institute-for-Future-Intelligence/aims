@@ -54,7 +54,7 @@ const ScissorBox = React.memo(
     setScatterDataHoveredIndex,
   }: MolecularContainerProps) => {
     const setCommonStore = useStore(Selector.set);
-    const setMolecularData = useStore(Selector.setMolecularData);
+    const setMoleculeData = useStore(Selector.setMoleculeData);
     const language = useStore(Selector.language);
     const setChanged = usePrimitiveStore(Selector.setChanged);
     const cameraPositionVector = useMemo(() => new Vector3().fromArray(DEFAULT_CAMERA_POSITION), []);
@@ -244,7 +244,7 @@ const ScissorBox = React.memo(
                       disabled={sdf === molecule?.data}
                       onClick={() => {
                         if (sdf && molecule?.name) {
-                          setMolecularData(molecule.name, sdf);
+                          setMoleculeData(molecule.name, sdf);
                           setChanged(true);
                         }
                       }}

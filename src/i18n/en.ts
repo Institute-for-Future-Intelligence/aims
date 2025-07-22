@@ -165,6 +165,7 @@ export const i18n_en = {
       GeneratingAMoleculeMayTakeAWhile:
         'Generating a molecule may take a long time and cannot be cancelled. The result is limited to molecules that have less than 1,000 atoms. Think about your prompt carefully before pressing OK.',
       GeneratedResultNotAccepted: 'Sorry, the generated result is not accepted. Click me to close.',
+      RevisionNotAccepted: 'Sorry, the revision is not accepted.',
       DoNotShowAgain: "Don't show again",
       NewVersionAvailable: 'A new version is available',
       DoYouWantToRemoveAllMoleculesFromGallery: 'Do you want to remove all molecules from the gallery?',

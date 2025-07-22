@@ -21,6 +21,7 @@ import {
 import { generateFormulaFromAtomJS, loadMolecule, storeMoleculeData } from './moleculeTools.ts';
 import { Atom } from '../models/Atom.ts';
 import { RadialBond } from '../models/RadialBond.ts';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 export interface GalleryViewerProps {
   molecule: MoleculeInterface;
@@ -51,6 +52,7 @@ const GalleryViewer = React.memo(
     const setCommonStore = useStore(Selector.set);
     const projectViewerStyle = useStore(Selector.projectViewerStyle);
     const removeMoleculeByName = useStore(Selector.removeMoleculeByName);
+    const moleculeDataUpdated = usePrimitiveStore(Selector.moleculeDataUpdated);
 
     const [complex, setComplex] = useState<any>();
 
@@ -92,7 +94,7 @@ const GalleryViewer = React.memo(
         setComplex(undefined);
         return;
       }
-      loadMolecule(molecule, processResult, removeMoleculeByName);
+      loadMolecule(molecule, processResult, moleculeDataUpdated ? undefined : removeMoleculeByName);
     }, [molecule]);
 
     const processResult = (result: any) => {

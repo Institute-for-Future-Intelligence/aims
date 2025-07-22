@@ -25,6 +25,7 @@ import { MolecularViewerStyle } from './displayOptions.ts';
 import { Util } from '../Util.ts';
 import { setMessage } from '../helpers.tsx';
 import i18n from '../i18n/i18n.ts';
+import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 
 export const isCrystal = (name: string) => {
   return name === 'Gold' || name === 'Silver' || name === 'Iron' || name === 'NaCl' || name === 'CsCl';
@@ -213,10 +214,20 @@ export const loadMolecule = (
       .catch((err) => {
         console.error(err);
         console.error(molecule.data);
-        setMessage('error', i18n.t('message.GeneratedResultNotAccepted', { lng: useStore.getState().language }), 30);
+        const moleculeDataUpdated = usePrimitiveStore.getState().moleculeDataUpdated;
+        setMessage(
+          'error',
+          i18n.t(moleculeDataUpdated ? 'message.RevisionNotAccepted' : 'message.GeneratedResultNotAccepted', {
+            lng: useStore.getState().language,
+          }),
+          moleculeDataUpdated ? 3 : 30,
+        );
         if (removeMoleculeByName) {
           removeMoleculeByName(molecule.name);
         }
+        usePrimitiveStore.getState().set((state) => {
+          state.moleculeDataUpdated = false;
+        });
       });
   } else {
     const mol = getData(molecule.name);

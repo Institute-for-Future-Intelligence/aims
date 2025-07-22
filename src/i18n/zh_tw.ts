@@ -156,6 +156,7 @@ export const i18n_zh_tw = {
       GeneratingAMoleculeMayTakeAWhile:
         '生成一個分子可能需要一些時間且無法取消。結果限於少於一千個原子的分子。按鍵前請仔細考慮好給AI的輸入。',
       GeneratedResultNotAccepted: '抱歉，回傳結果無法解讀。點擊我關閉。',
+      RevisionNotAccepted: '抱歉，修正無法解讀。',
       DoNotShowAgain: '別再顯示',
       NewVersionAvailable: '有新版本',
       DoYouWantToRemoveAllMoleculesFromGallery: '你確定要刪除專案裡的所有分子嗎？',

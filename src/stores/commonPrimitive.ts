@@ -43,6 +43,8 @@ export interface PrimitiveStoreState {
   resetSimulation: boolean;
   updateDataFlag: boolean;
 
+  moleculeDataUpdated: boolean;
+
   enableRotate: boolean;
   autoRotate: boolean;
 
@@ -167,6 +169,8 @@ export const usePrimitiveStore = createWithEqualityFn<PrimitiveStoreState>()((se
     startSimulation: false,
     resetSimulation: false,
     updateDataFlag: false,
+
+    moleculeDataUpdated: false,
 
     enableRotate: true,
     autoRotate: false,

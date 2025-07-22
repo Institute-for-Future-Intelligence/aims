@@ -309,6 +309,9 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
               for (const m of state.projectState.molecules) {
                 if (m.name === name) {
                   m.data = data;
+                  usePrimitiveStore.getState().set((state) => {
+                    state.moleculeDataUpdated = true;
+                  });
                   break;
                 }
               }

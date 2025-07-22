@@ -180,7 +180,7 @@ export const removeMoleculeByName = (state: CommonStoreState) => state.removeMol
 
 export const removeAllMolecules = (state: CommonStoreState) => state.removeAllMolecules;
 
-export const setMolecularData = (state: CommonStoreState) => state.setMoleculeData;
+export const setMoleculeData = (state: CommonStoreState) => state.setMoleculeData;
 
 export const molecularPropertiesMap = (state: CommonStoreState) => state.molecularPropertiesMap;
 
@@ -378,6 +378,8 @@ export const navigationView = (state: CommonStoreState) => state.projectState.na
 export const showPeriodicTable = (state: PrimitiveStoreState) => state.showPeriodicTable;
 
 export const message = (state: PrimitiveStoreState) => state.message;
+
+export const moleculeDataUpdated = (state: PrimitiveStoreState) => state.moleculeDataUpdated;
 
 export const reasoningEffort = (state: CommonStoreState) => state.projectState.reasoningEffort;
 
