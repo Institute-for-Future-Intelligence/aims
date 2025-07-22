@@ -8,7 +8,7 @@ import Draggable, { DraggableBounds, DraggableData, DraggableEvent } from 'react
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { useTranslation } from 'react-i18next';
-import { DiffOutlined } from '@ant-design/icons';
+import { DiffOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
 export interface FindMoleculeModalProps {
   moleculeName: string;
@@ -109,6 +109,16 @@ const FindMoleculeModal = React.memo(
           }
         }}
         footer={[
+          <InfoCircleOutlined key={'Info'} style={{ paddingRight: '5px' }} />,
+          <span
+            key={'Note'}
+            style={{
+              fontSize: '11px',
+              paddingRight: '10px',
+            }}
+          >
+            {t('projectPanel.LimitedToInternalDatabase', lang)}
+          </span>,
           <Button key="Cancel" onClick={onCancel}>
             {t('word.Cancel', lang)}
           </Button>,

@@ -156,13 +156,12 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
       })
       .then(() => {
         if (resultRef.current) {
-          const data = Util.ensureSdf(resultRef.current);
+          const data = Util.correctSdf(resultRef.current);
           const mol = { name: 'chatgpt', data, prompt } as MoleculeInterface;
           loadMolecule(
             mol,
             (result) => {
               console.log(data);
-              console.log(result);
               mol.name = 'AI: ' + result.name;
               // generated molecules may have the same name, give it a different name if the name is taken
               let taken = hasMolecule(mol);
@@ -243,7 +242,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
           {t('word.Clear', lang)}
         </Button>,
         <Button key="OK" type="primary" onClick={onOk} disabled={prompt === ''}>
-          {t('word.Generate', lang)}
+          {t('word.OK', lang)}
         </Button>,
       ]}
       onCancel={onCancel}
@@ -266,7 +265,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
               {listening ? (
                 <>
                   <AudioOutlined
-                    style={{ paddingLeft: '2px' }}
+                    style={{ paddingLeft: '2px', fontSize: '16px' }}
                     onClick={() => {
                       setListening(false);
                       stopSpeechToText();
@@ -277,7 +276,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
                 </>
               ) : (
                 <AudioMutedOutlined
-                  style={{ paddingLeft: '2px' }}
+                  style={{ paddingLeft: '2px', fontSize: '16px' }}
                   onClick={() => {
                     setListening(true);
                     startSpeechToText().catch((e) => {
@@ -325,7 +324,7 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
           </Checkbox>
         </Space>
         <span style={{ fontSize: '11px' }}>
-          <WarningOutlined /> {t('message.GeneratingAMoleculeMayTakeAWhile', lang)}
+          <WarningOutlined style={{ fontSize: '16px' }} /> {t('message.GeneratingAMoleculeMayTakeAWhile', lang)}
         </span>
       </Space>
     </Modal>

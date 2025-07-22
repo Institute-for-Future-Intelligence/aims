@@ -155,7 +155,7 @@ export const i18n_zh_cn = {
       CannotOpenProjectWhileGeneratingMolecule: '正在生成分子时不能打开别的项目。',
       GeneratingMolecule: '正在生成分子。。。',
       GeneratingAMoleculeMayTakeAWhile:
-        '生成一个分子可能需要一些时间且无法取消。结果限于少于一千个原子的分子。在按生成键前请仔细考虑好给AI的输入。',
+        '生成一个分子可能需要一些时间且无法取消。结果限于少于一千个原子的分子。按键前请仔细考虑好给AI的输入。',
       GeneratedResultNotAccepted: '抱歉，返回结果无法解读。点击我关闭。',
       DoNotShowAgain: '别再显示',
       NewVersionAvailable: '有新版本',
@@ -378,6 +378,7 @@ export const i18n_zh_cn = {
     },
 
     projectPanel: {
+      LimitedToInternalDatabase: '结果限于内建数据库里的分子。',
       AIMemory: 'AI记忆',
       GeneratedByAI: 'AI生成',
       ClickForMoreInfo: '点击此处查看更多信息。。。',

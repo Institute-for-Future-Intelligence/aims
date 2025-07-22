@@ -205,7 +205,7 @@ export const loadMolecule = (
   removeMoleculeByName?: (name: string) => void,
 ) => {
   if (molecule.data) {
-    new SDFParser(Util.ensureSdf(molecule.data))
+    new SDFParser(Util.correctSdf(molecule.data))
       .parse()
       .then((result) => {
         processResult(result, molecule as Molecule);

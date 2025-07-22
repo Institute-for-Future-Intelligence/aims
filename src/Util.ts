@@ -93,7 +93,7 @@ export class Util {
   }
 
   // https://en.wikipedia.org/wiki/Chemical_table_file
-  static ensureSdf(input: string) {
+  static correctSdf(input: string) {
     const lines = input.split('\n');
     let result = '';
     let lineIndex = 0;
