@@ -186,6 +186,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           for (const n of ps.molecules) {
             if (n.name === m.name) {
               m.data = n.data;
+              m.autoBond = n.autoBond;
               break;
             }
           }

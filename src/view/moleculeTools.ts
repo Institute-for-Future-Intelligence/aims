@@ -206,7 +206,7 @@ export const loadMolecule = (
   removeMoleculeByName?: (name: string) => void,
 ) => {
   if (molecule.data) {
-    new SDFParser(Util.correctSdf(molecule.data))
+    new SDFParser(Util.correctSdf(molecule.data), { autoBond: !!molecule.autoBond })
       .parse()
       .then((result) => {
         processResult(result, molecule as Molecule);

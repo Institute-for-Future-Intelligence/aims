@@ -174,6 +174,7 @@ export interface MoleculeInterface {
   invisible?: boolean;
   excluded?: boolean;
   style?: MolecularViewerStyle;
+  autoBond?: boolean;
   prompt?: string; // LLM prompt used to generate this molecule, if any
 }
 

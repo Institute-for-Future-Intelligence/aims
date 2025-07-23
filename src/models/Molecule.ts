@@ -20,6 +20,7 @@ export class Molecule implements MoleculeInterface {
 
   url?: string;
   data?: string;
+  autoBond?: boolean;
   internal?: boolean;
   invisible?: boolean;
   excluded?: boolean;
@@ -80,6 +81,7 @@ export class Molecule implements MoleculeInterface {
     mol.multipleResidues = molecule.multipleResidues;
     // copy the data if the molecule is not from the internal database
     mol.data = molecule.data;
+    mol.autoBond = molecule.autoBond;
     return mol;
   }
 

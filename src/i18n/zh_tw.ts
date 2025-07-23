@@ -378,6 +378,7 @@ export const i18n_zh_tw = {
     },
 
     projectPanel: {
+      AutoBond: '自動成鍵',
       LimitedToInternalDatabase: '結果限於內建資料庫裡的分子。',
       AIMemory: 'AI記憶',
       GeneratedByAI: 'AI生成',

@@ -55,6 +55,8 @@ import { useDataStore } from '../stores/commonData.ts';
 import { TorsionalBond } from '../models/TorsionalBond.ts';
 import Complex from '../lib/chem/Complex';
 import { GravitationalField } from '../models/GravitationalField.ts';
+import { Triple } from '../models/Triple.ts';
+import { Quadruple } from '../models/Quadruple.ts';
 
 extend({ RCGroup });
 
@@ -281,14 +283,25 @@ const DynamicsViewer = React.memo(
           mol.radialBonds.push(new RadialBond(mol.atoms[index1], mol.atoms[index2], length));
           molecule.radialBonds.push(new RadialBond(molecule.atoms[index1], molecule.atoms[index2], length));
         }
-        let aBonds = useStore.getState().angularBondsMap[mol.name];
-        if (!aBonds || aBonds.length === 0) {
+        let aBonds: Triple[];
+        if (molecule.data) {
+          // generated molecules do not use cache as we may modify their data dynamically
           aBonds = ModelUtil.generateAngularBonds(mol.atoms, mol.radialBonds);
           setCommonStore((state) => {
             if (aBonds) {
               state.angularBondsMap[mol.name] = aBonds;
             }
           });
+        } else {
+          aBonds = useStore.getState().angularBondsMap[mol.name];
+          if (!aBonds || aBonds.length === 0) {
+            aBonds = ModelUtil.generateAngularBonds(mol.atoms, mol.radialBonds);
+            setCommonStore((state) => {
+              if (aBonds) {
+                state.angularBondsMap[mol.name] = aBonds;
+              }
+            });
+          }
         }
         if (aBonds?.length > 0) {
           for (const x of aBonds) {
@@ -302,14 +315,25 @@ const DynamicsViewer = React.memo(
             );
           }
         }
-        let tBonds = useStore.getState().torsionalBondsMap[mol.name];
-        if ((!tBonds || tBonds.length === 0) && aBonds) {
+        let tBonds: Quadruple[];
+        if (molecule.data) {
+          // generated molecules do not use cache as we may modify their data dynamically
           tBonds = ModelUtil.generateTorsionalBonds(mol.atoms, mol.radialBonds, aBonds);
           setCommonStore((state) => {
             if (tBonds) {
               state.torsionalBondsMap[mol.name] = tBonds;
             }
           });
+        } else {
+          tBonds = useStore.getState().torsionalBondsMap[mol.name];
+          if ((!tBonds || tBonds.length === 0) && aBonds) {
+            tBonds = ModelUtil.generateTorsionalBonds(mol.atoms, mol.radialBonds, aBonds);
+            setCommonStore((state) => {
+              if (tBonds) {
+                state.torsionalBondsMap[mol.name] = tBonds;
+              }
+            });
+          }
         }
         if (tBonds?.length > 0) {
           for (const x of tBonds) {

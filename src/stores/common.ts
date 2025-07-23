@@ -65,6 +65,7 @@ export interface CommonStoreState {
   addMolecules: (molecules: MoleculeInterface[]) => void;
   getMoleculeByName: (name: string) => MoleculeInterface | null;
   setMoleculeData: (name: string, data: string) => void;
+  setMoleculeAutoBond: (name: string, autoBond: boolean) => void;
   removeMolecule: (molecule: MoleculeInterface) => void;
   removeMoleculeByName: (name: string) => void;
   removeAllMolecules: () => void;
@@ -312,6 +313,16 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
                   usePrimitiveStore.getState().set((state) => {
                     state.moleculeDataUpdated = true;
                   });
+                  break;
+                }
+              }
+            });
+          },
+          setMoleculeAutoBond(name: string, autoBond: boolean) {
+            immerSet((state: CommonStoreState) => {
+              for (const m of state.projectState.molecules) {
+                if (m.name === name) {
+                  m.autoBond = autoBond;
                   break;
                 }
               }

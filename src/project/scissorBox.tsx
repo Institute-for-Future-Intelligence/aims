@@ -15,8 +15,14 @@ import { Html } from '@react-three/drei';
 import { ThreeEvent } from '@react-three/fiber';
 import GalleryViewer from '../view/galleryViewer.tsx';
 import { useTranslation } from 'react-i18next';
-import { Button, Input, message, Popover, Space } from 'antd';
-import { CheckCircleOutlined, MinusCircleOutlined, CopyOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Input, message, Popover, Space } from 'antd';
+import {
+  CheckCircleOutlined,
+  MinusCircleOutlined,
+  CopyOutlined,
+  InfoCircleOutlined,
+  MenuOutlined,
+} from '@ant-design/icons';
 import { setMessage } from '../helpers.tsx';
 import SparkImage from '../assets/spark.png';
 
@@ -55,6 +61,7 @@ const ScissorBox = React.memo(
   }: MolecularContainerProps) => {
     const setCommonStore = useStore(Selector.set);
     const setMoleculeData = useStore(Selector.setMoleculeData);
+    const setMoleculeAutoBond = useStore(Selector.setMoleculeAutoBond);
     const language = useStore(Selector.language);
     const setChanged = usePrimitiveStore(Selector.setChanged);
     const cameraPositionVector = useMemo(() => new Vector3().fromArray(DEFAULT_CAMERA_POSITION), []);
@@ -269,6 +276,15 @@ const ScissorBox = React.memo(
               }}
               onMouseDown={onMouseDown}
             >
+              {molecule?.prompt && (
+                <img
+                  src={SparkImage}
+                  alt={'spark'}
+                  title={t('projectPanel.GeneratedByAI', lang)}
+                  height={18}
+                  style={{ paddingBottom: '4px' }}
+                />
+              )}
               <span
                 style={{ cursor: 'pointer' }}
                 title={t(pop ? 'projectPanel.ClickToClosePopup' : 'projectPanel.ClickForMoreInfo', lang)}
@@ -283,18 +299,29 @@ const ScissorBox = React.memo(
             </Space>
           </Popover>
           {molecule?.prompt && (
-            <img
-              src={SparkImage}
-              alt={'spark'}
-              title={t('projectPanel.GeneratedByAI', lang)}
-              width={16}
-              style={{
-                position: 'absolute',
-                right: '-6px',
-                top: '6px',
-                cursor: 'pointer',
-              }}
-            />
+            <Popover
+              content={
+                <Space direction={'vertical'}>
+                  <Checkbox
+                    checked={!!molecule.autoBond}
+                    onChange={(e) => {
+                      if (molecule?.name) setMoleculeAutoBond(molecule.name, e.target.checked);
+                    }}
+                  >
+                    {t('projectPanel.AutoBond', lang)}
+                  </Checkbox>
+                </Space>
+              }
+            >
+              <MenuOutlined
+                style={{
+                  position: 'absolute',
+                  right: '0px',
+                  top: '6px',
+                  cursor: 'pointer',
+                }}
+              />
+            </Popover>
           )}
           {molecule?.invisible ? (
             <MinusCircleOutlined

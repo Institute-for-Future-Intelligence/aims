@@ -302,7 +302,7 @@ export default class SDFParser extends Parser {
     this._complex.units = this._complex.units.concat(this._assemblies);
     this._buildMolecules();
     this._complex.finalize({
-      needAutoBonding: false,
+      needAutoBonding: this._options.autoBond !== undefined ? this._options.autoBond : false,
       detectAromaticLoops: false,
       enableEditing: false,
       serialAtomMap: this._serialAtomMap,

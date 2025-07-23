@@ -124,6 +124,7 @@ const ReactionChamber = React.memo(() => {
         }
         const m = new Molecule(selectedMolecule.name, atoms);
         m.data = selectedMolecule.data;
+        m.autoBond = selectedMolecule.autoBond;
         m.setCenter(point);
         state.projectState.testMolecules.push(m);
         warnIfTooManyAtoms(m.atoms.length);
