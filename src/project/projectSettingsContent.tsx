@@ -27,6 +27,7 @@ interface ProjectSettingsContentProps {
   labelType: LabelType;
   graphType: GraphType;
   rememberPrompts: boolean;
+  showPrompts: boolean;
 }
 
 const ProjectSettingsContent = React.memo(
@@ -38,6 +39,7 @@ const ProjectSettingsContent = React.memo(
     labelType,
     graphType,
     rememberPrompts,
+    showPrompts,
   }: ProjectSettingsContentProps) => {
     const language = useStore(Selector.language);
     const setChanged = usePrimitiveStore(Selector.setChanged);
@@ -47,6 +49,13 @@ const ProjectSettingsContent = React.memo(
     const lang = useMemo(() => {
       return { lng: language };
     }, [language]);
+
+    const setShowPrompts = (b: boolean) => {
+      useStore.getState().set((state) => {
+        state.projectState.showPrompts = b;
+      });
+      setChanged(true);
+    };
 
     const setAIMemory = (remember: boolean) => {
       useStore.getState().set((state) => {
@@ -138,6 +147,42 @@ const ProjectSettingsContent = React.memo(
                 } as UndoableChange;
                 useStore.getState().addUndoable(undoableChange);
                 setAIMemory(newValue);
+              }}
+            >
+              <Option key={'Yes'} value={true}>
+                {t('word.Yes', lang)}
+              </Option>
+              <Option key={'No'} value={false}>
+                {t('word.No', lang)}
+              </Option>
+            </Select>
+          </Col>
+        </Row>
+        <Row gutter={6} style={{ paddingBottom: '4px' }}>
+          <Col span={10} style={{ paddingTop: '5px' }}>
+            <span>{t('projectPanel.ShowPrompts', lang)}: </span>
+          </Col>
+          <Col span={14}>
+            <Select
+              style={{ width: '100%' }}
+              value={!!showPrompts}
+              onChange={(value: boolean) => {
+                const oldValue = showPrompts;
+                const newValue = value;
+                const undoableChange = {
+                  name: 'Show Prompts',
+                  timestamp: Date.now(),
+                  oldValue: oldValue,
+                  newValue: newValue,
+                  undo: () => {
+                    setShowPrompts(undoableChange.oldValue as boolean);
+                  },
+                  redo: () => {
+                    setShowPrompts(undoableChange.newValue as boolean);
+                  },
+                } as UndoableChange;
+                useStore.getState().addUndoable(undoableChange);
+                setShowPrompts(newValue);
               }}
             >
               <Option key={'Yes'} value={true}>

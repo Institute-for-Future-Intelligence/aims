@@ -70,6 +70,8 @@ const ScissorBox = React.memo(
     const xyPlaneVisible = useStore(Selector.xyPlaneVisible);
     const yzPlaneVisible = useStore(Selector.yzPlaneVisible);
     const xzPlaneVisible = useStore(Selector.xzPlaneVisible);
+    const numberOfColumns = useStore(Selector.numberOfColumns) ?? 3;
+    const showPrompts = useStore(Selector.showPrompts);
 
     const lightRef = useRef<DirectionalLight>(null);
     const [sdf, setSdf] = useState<string | undefined>(molecule?.data);
@@ -265,7 +267,7 @@ const ScissorBox = React.memo(
           >
             <Space
               style={{
-                position: 'relative',
+                position: 'relative', // I have no idea why this one has to be relative
                 left: '4px',
                 bottom: 30 - viewHeight + 'px',
                 textAlign: 'left',
@@ -298,6 +300,39 @@ const ScissorBox = React.memo(
               </span>
             </Space>
           </Popover>
+          {molecule?.prompt &&
+            showPrompts &&
+            (molecule.prompt.length > 300 / numberOfColumns ? (
+              <Space
+                style={{
+                  position: 'absolute',
+                  left: '8px',
+                  top: '2px',
+                  textAlign: 'left',
+                  color: '#444',
+                  fontSize: Math.round(42 / numberOfColumns) + 'px',
+                  width: viewWidth - 50 + 'px',
+                }}
+              >
+                <span style={{ display: 'inline' }}>
+                  {molecule.prompt.substring(0, 300 / numberOfColumns).trim()} ...
+                </span>
+              </Space>
+            ) : (
+              <Space
+                style={{
+                  position: 'absolute',
+                  left: '8px',
+                  top: '2px',
+                  textAlign: 'left',
+                  color: '#444',
+                  fontSize: Math.round(42 / numberOfColumns) + 'px',
+                  width: viewWidth - 50 + 'px',
+                }}
+              >
+                {molecule.prompt}
+              </Space>
+            ))}
           {molecule?.prompt && (
             <Popover
               content={

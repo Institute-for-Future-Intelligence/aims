@@ -185,6 +185,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const chamberViewerPercentWidth = useStore(Selector.chamberViewerPercentWidth);
   const generatedMolecularProperties = useStore(Selector.generatedMolecularProperties);
   const independentPrompt = useStore(Selector.independentPrompt);
+  const showPrompts = useStore(Selector.showPrompts);
   const generating = usePrimitiveStore(Selector.generating);
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -563,6 +564,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   labelType={labelType}
                   graphType={graphType}
                   rememberPrompts={!independentPrompt}
+                  showPrompts={showPrompts}
                 />
               }
             >

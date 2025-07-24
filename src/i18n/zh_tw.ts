@@ -381,6 +381,7 @@ export const i18n_zh_tw = {
       AutoBond: '自動成鍵',
       LimitedToInternalDatabase: '結果限於內建資料庫裡的分子。',
       AIMemory: 'AI記憶',
+      ShowPrompts: '顯示提示',
       GeneratedByAI: 'AI生成',
       ClickForMoreInfo: '點擊此處查看更多資訊。 。 。',
       ClickToClosePopup: '點擊此處關閉彈窗',

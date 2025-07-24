@@ -382,6 +382,7 @@ export const i18n_zh_cn = {
       AutoBond: '自动成键',
       LimitedToInternalDatabase: '结果限于内建数据库里的分子。',
       AIMemory: 'AI记忆',
+      ShowPrompts: '显示提示',
       GeneratedByAI: 'AI生成',
       ClickForMoreInfo: '点击此处查看更多信息。。。',
       ClickToClosePopup: '点击此处关闭弹窗',

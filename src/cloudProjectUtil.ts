@@ -177,6 +177,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           navUp: data.navUp ?? data.cameraUp,
           navTarget: data.navTarget ?? data.panCenter,
           showInstructionPanel: !!data.showInstructionPanel,
+          showPrompts: !!data.showPrompt,
           reasoningEffort: data.reasoningEffort ?? 'medium',
           independentPrompt: !!data.independentPrompt,
           generateMoleculePrompt: data.generateMoleculePrompt ?? 'Generate a novel molecule similar to benzene.',

@@ -150,6 +150,7 @@ export class ProjectUtil {
       showInstructionPanel: false,
       navigationView: false,
 
+      showPrompts: false,
       reasoningEffort: 'medium',
       independentPrompt: false,
       generateMoleculePrompt: 'Generate a novel molecule similar to benzene.',

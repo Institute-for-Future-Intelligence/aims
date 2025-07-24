@@ -387,6 +387,8 @@ export const reasoningEffort = (state: CommonStoreState) => state.projectState.r
 
 export const independentPrompt = (state: CommonStoreState) => state.projectState.independentPrompt;
 
+export const showPrompts = (state: CommonStoreState) => state.projectState.showPrompts;
+
 export const generateMoleculePrompt = (state: CommonStoreState) => state.projectState.generateMoleculePrompt;
 
 export const generatedMolecularProperties = (state: CommonStoreState) =>
