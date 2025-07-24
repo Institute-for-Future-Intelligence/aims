@@ -147,22 +147,17 @@ export const storeMoleculeData = (molecule: MoleculeInterface, atoms: Atom[], ra
         bondCount: radialBonds.length,
         molecularMass: p.molecularMass,
         heavyAtomCount: p.heavyAtomCount,
-        formula: generateFormula(atoms),
+        formula: p.formula ?? generateFormula(atoms),
+        logP: p.logP,
+        hydrogenBondDonorCount: p.hydrogenBondDonorCount,
+        hydrogenBondAcceptorCount: p.hydrogenBondAcceptorCount,
+        rotatableBondCount: p.rotatableBondCount,
+        polarSurfaceArea: p.polarSurfaceArea,
+        complexity: p.complexity,
+        density: p.density,
+        boilingPoint: p.boilingPoint,
+        meltingPoint: p.meltingPoint,
       } as MolecularProperties);
-    } else {
-      // backward compatibility (to be removed in 2026)
-      if (molecule.name.startsWith('AI: ')) {
-        p = useStore.getState().projectState.generatedMolecularProperties[molecule.name.substring(5)];
-        if (p) {
-          useStore.getState().setMolecularProperties(molecule.name, {
-            atomCount: atoms.length,
-            bondCount: radialBonds.length,
-            molecularMass: p.molecularMass,
-            heavyAtomCount: p.heavyAtomCount,
-            formula: generateFormula(atoms),
-          } as MolecularProperties);
-        }
-      }
     }
   }
   useStore.getState().setMolecularStructure(molecule.name, { atoms, radialBonds } as MolecularStructure);

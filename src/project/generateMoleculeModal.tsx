@@ -182,11 +182,42 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
                     molecularMass += a.element.weight;
                     if (a.element.name !== 'H') heavyAtomCount++;
                   }
-                  state.projectState.generatedMolecularProperties[mol.name] = {
+                  const molProp = {
                     molecularMass,
                     heavyAtomCount,
                     formula: generateFormulaFromAtomJS(result._atoms),
                   } as MolecularProperties;
+                  const props = result.metadata.properties;
+                  console.log(props);
+                  if (props) {
+                    const formula = props['Formula'];
+                    if (formula) molProp.formula = Util.getSubscriptNumber(formula);
+                    const smiles = props['SMILES'];
+                    if (smiles) molProp.smiles = smiles;
+                    const inchi = props['InChI'];
+                    if (inchi) molProp.inChI = inchi;
+                    const boilingPoint = props['BoilingPoint'];
+                    if (boilingPoint !== undefined) molProp.boilingPoint = parseFloat(boilingPoint);
+                    const meltingPoint = props['MeltingPoint'];
+                    if (meltingPoint !== undefined) molProp.meltingPoint = parseFloat(meltingPoint);
+                    const density = props['Density'];
+                    if (density !== undefined) molProp.density = parseFloat(density);
+                    const complexity = props['Complexity'];
+                    if (complexity !== undefined) molProp.complexity = parseFloat(complexity);
+                    const logP = props['logP'];
+                    if (logP !== undefined) molProp.logP = parseFloat(logP);
+                    const polarSurfaceArea = props['PolarSurfaceArea'];
+                    if (polarSurfaceArea !== undefined) molProp.polarSurfaceArea = parseFloat(polarSurfaceArea);
+                    const hydrogenBondDonorCount = props['HydrogenBondDonors'];
+                    if (hydrogenBondDonorCount !== undefined)
+                      molProp.hydrogenBondDonorCount = parseInt(hydrogenBondDonorCount);
+                    const hydrogenBondAcceptorCount = props['HydrogenBondAcceptors'];
+                    if (hydrogenBondAcceptorCount !== undefined)
+                      molProp.hydrogenBondAcceptorCount = parseInt(hydrogenBondAcceptorCount);
+                    const rotatableBondCount = props['RotatableBonds'];
+                    if (rotatableBondCount !== undefined) molProp.rotatableBondCount = parseInt(rotatableBondCount);
+                  }
+                  state.projectState.generatedMolecularProperties[mol.name] = molProp;
                 });
                 setChanged(true);
               } else {

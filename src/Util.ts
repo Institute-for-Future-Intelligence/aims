@@ -258,8 +258,10 @@ export class Util {
     } else {
       result = r1 + ' '.repeat(3 - bondCount.toString().length) + bondCount + r2;
     }
+    result = result.trim();
+    if (!result.endsWith('$$$$')) result += '\n\n$$$$';
     // console.log(result);
-    return result.trim();
+    return result;
   }
 
   static getSubscriptNumber(s: string): string {

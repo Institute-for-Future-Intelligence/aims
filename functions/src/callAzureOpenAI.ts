@@ -10,7 +10,19 @@ const deployment = 'o4-mini';
 const apiVersion = '2024-12-01-preview';
 
 export const defaultPromptAppendix =
-  'The molecule must have 3D coordinates. Return just a SDF file with a two-line header followed by a new empty line.';
+  'The molecule must have 3D coordinates. ' +
+  'Return just a SDF file with a two-line header followed by a new empty line. ' +
+  'Include SMILES and InChI notations and all possible chemical and physical properties as the associated data. ' +
+  'Molecular formula must have the name exactly as a string Formula. ' +
+  'logP must have the name exactly as a string logP. ' +
+  'Complexity must have the name exactly as a string Complexity. ' +
+  'Polar surface area must have the name exactly as a string PolarSurfaceArea. ' +
+  'Number of hydrogen bond donors must have the name exactly as a string HydrogenBondDonors. ' +
+  'Number of hydrogen bond acceptors must have the name exactly as a string HydrogenBondAcceptors. ' +
+  'Number of rotatable bonds must have the name exactly as a string RotatableBonds. ' +
+  'Density must have the name exactly as a string Density and must be in gram per cubic centimeter. ' +
+  'Melting point must have the name exactly as a string MeltingPoint and must be in Celsius. ' +
+  'Boiling point must have the name exactly as a string BoilingPoint and must be in Celsius. ';
 
 export const callAzureOpenAI = async (
   apiKey: string | undefined,

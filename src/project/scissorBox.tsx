@@ -167,7 +167,7 @@ const ScissorBox = React.memo(
             content={
               <Space direction="vertical" style={{ width: '600px' }}>
                 <Space style={{ fontWeight: 'bold' }}>{molecule?.name + (formula ? ' (' + formula + ')' : '')}</Space>
-                {smiles && (
+                {!molecule?.prompt && smiles && (
                   <span>
                     {'SMILES: ' + smiles}
                     <CopyOutlined
@@ -182,7 +182,7 @@ const ScissorBox = React.memo(
                     />
                   </span>
                 )}
-                {inChI && (
+                {!molecule?.prompt && inChI && (
                   <span>
                     {inChI}
                     <CopyOutlined

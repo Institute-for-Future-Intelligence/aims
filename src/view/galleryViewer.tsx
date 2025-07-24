@@ -131,7 +131,7 @@ const GalleryViewer = React.memo(
         storeMoleculeData(molecule, atoms, radialBonds);
         setCommonStore((state) => {
           const p = state.projectState.generatedMolecularProperties[molecule.name];
-          if (p) p.formula = generateFormulaFromAtomJS(result._atoms);
+          if (p && !p.formula) p.formula = generateFormulaFromAtomJS(result._atoms);
         });
       }
     };
