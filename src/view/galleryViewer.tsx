@@ -22,6 +22,7 @@ import { generateFormulaFromAtomJS, loadMolecule, storeMoleculeData } from './mo
 import { Atom } from '../models/Atom.ts';
 import { RadialBond } from '../models/RadialBond.ts';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
+import { readSdfProps } from '../project/generateMoleculeModal.tsx';
 
 export interface GalleryViewerProps {
   molecule: MoleculeInterface;
@@ -99,7 +100,6 @@ const GalleryViewer = React.memo(
 
     const processResult = (result: any) => {
       setComplex(result);
-
       // center the molecule
       const n = result._atoms.length;
       if (n > 0) {
@@ -128,11 +128,14 @@ const GalleryViewer = React.memo(
         for (const b of result._bonds) {
           radialBonds.push(new RadialBond(atoms[b._left.index], atoms[b._right.index]));
         }
+        if (moleculeDataUpdated) {
+          const molProps = readSdfProps(result);
+          if (!molProps.formula) molProps.formula = generateFormulaFromAtomJS(result._atoms);
+          setCommonStore((state) => {
+            state.projectState.generatedMolecularProperties[molecule.name] = molProps;
+          });
+        }
         storeMoleculeData(molecule, atoms, radialBonds);
-        setCommonStore((state) => {
-          const p = state.projectState.generatedMolecularProperties[molecule.name];
-          if (p && !p.formula) p.formula = generateFormulaFromAtomJS(result._atoms);
-        });
       }
     };
 

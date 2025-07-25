@@ -139,7 +139,6 @@ export const storeMoleculeData = (molecule: MoleculeInterface, atoms: Atom[], ra
       formula: properties.formula,
     } as MolecularProperties);
   } else {
-    // handle generated molecules that have missing properties
     let p = useStore.getState().projectState.generatedMolecularProperties[molecule.name];
     if (p) {
       useStore.getState().setMolecularProperties(molecule.name, {
