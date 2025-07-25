@@ -4,7 +4,7 @@
 
 import { AzureOpenAI, OpenAI } from 'openai';
 
-const endpoint = 'https://aims-test-resource.cognitiveservices.azure.com/';
+const endpoint = 'https://ifi-aims-genai.cognitiveservices.azure.com/';
 const modelName = 'o4-mini';
 const deployment = 'o4-mini';
 const apiVersion = '2024-12-01-preview';
