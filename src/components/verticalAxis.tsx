@@ -57,6 +57,7 @@ const VerticalAxis = React.memo(
     const selectedProperty = useStore(Selector.selectedProperty);
     const setChanged = usePrimitiveStore(Selector.setChanged);
     const addUndoable = useStore(Selector.addUndoable);
+    const hiddenProperties = useStore(Selector.hiddenProperties);
 
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
     const minRef = useRef<number>(min);
@@ -314,7 +315,7 @@ const VerticalAxis = React.memo(
             for (const m of state.projectState.molecules) {
               const p = state.molecularPropertiesMap.get(m.name);
               if (p) {
-                m.excluded = ProjectUtil.isExcluded(state.projectState.filters, p);
+                m.excluded = ProjectUtil.isExcluded(state.projectState.filters, p, hiddenProperties ?? []);
               }
             }
           }
@@ -388,7 +389,7 @@ const VerticalAxis = React.memo(
         >
           {createTitle()}
         </Popover>
-        {value !== undefined && (
+        {value !== undefined && value !== null && (
           <text
             x={0}
             y={-8}

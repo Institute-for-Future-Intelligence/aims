@@ -226,13 +226,16 @@ const DynamicsViewer = React.memo(
           else if (atom.element.name === 'CS') a.charge = 1;
           else if (atom.element.name === 'CL') a.charge = -1;
           a.epsilon = 0.05;
-        } else if (molecule.name === 'Gold') {
+        } else if (a.elementSymbol.toUpperCase() === 'AU') {
           a.epsilon = 3.81;
           a.sigma /= 0.85;
-        } else if (molecule.name === 'Silver') {
+        } else if (a.elementSymbol.toUpperCase() === 'AG') {
           a.epsilon = 2.95;
           a.sigma /= 0.85;
-        } else if (molecule.name === 'Iron') {
+        } else if (a.elementSymbol.toUpperCase() === 'CU') {
+          a.epsilon = 3.5;
+          a.sigma /= 0.8;
+        } else if (a.elementSymbol.toUpperCase() === 'FE') {
           a.epsilon = 4.28;
           a.sigma /= 0.85;
         } else if (molecule.name === 'Dihydrogen' || molecule.name === 'Dioxygen' || molecule.name === 'Dinitrogen') {

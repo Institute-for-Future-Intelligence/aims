@@ -684,7 +684,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           d['group'] = projectDataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
           d['selected'] = selectedMolecule === m;
           d['hovered'] = hoveredMolecule === m;
-          d['excluded'] = projectFilters ? ProjectUtil.isExcluded(projectFilters, p) : false;
+          d['excluded'] = projectFilters ? ProjectUtil.isExcluded(projectFilters, p, hiddenProperties ?? []) : false;
           d['invisible'] = !!m.invisible;
           d['name'] = m.name;
           d['formula'] = p.formula;

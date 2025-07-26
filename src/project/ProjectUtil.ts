@@ -293,8 +293,9 @@ export class ProjectUtil {
     return '';
   }
 
-  static isExcluded(filters: Filter[], p: MolecularProperties): boolean {
+  static isExcluded(filters: Filter[], p: MolecularProperties, hidden: string[]): boolean {
     for (const f of filters) {
+      if (hidden.includes(f.variable)) continue;
       if (f.type === FilterType.Between && f.upperBound !== undefined && f.lowerBound !== undefined) {
         const v = p[f.variable as keyof MolecularProperties];
         if (typeof v === 'number') {
