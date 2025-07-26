@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -164,6 +164,9 @@ const ScatterChartNumericValues = React.memo(
             key="x"
             // width={'45%'}
             render={(x, record, index) => {
+              if (typeof x === 'number') {
+                x = parseFloat(x.toFixed(3));
+              }
               return (
                 <Typography.Text
                   style={{
@@ -199,6 +202,9 @@ const ScatterChartNumericValues = React.memo(
             dataIndex="y"
             key="y"
             render={(y, record, index) => {
+              if (typeof y === 'number') {
+                y = parseFloat(y.toFixed(3));
+              }
               return (
                 <Typography.Text
                   style={{

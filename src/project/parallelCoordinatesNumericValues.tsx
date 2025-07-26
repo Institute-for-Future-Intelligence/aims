@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -182,6 +182,9 @@ const ParallelCoordinatesNumericValuesContent = React.memo(
                 key={variable}
                 // width={'10%'}
                 render={(value, record: any) => {
+                  if (typeof value === 'number') {
+                    value = parseFloat(value.toFixed(3));
+                  }
                   return (
                     <Typography.Text
                       style={{
