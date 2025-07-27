@@ -47,6 +47,16 @@ import commonMoleculeUrl024 from './molecules/sdf/fd&c_yellow_5.sdf';
 import commonMoleculeUrl025 from './molecules/sdf/fd&c_yellow_6.sdf';
 import commonMoleculeUrl026 from './molecules/sdf/fd&c_red_40.sdf';
 import commonMoleculeUrl027 from './molecules/sdf/fd&c_blue_1.sdf';
+import commonMoleculeUrl028 from './molecules/sdf/silabenzene.sdf';
+import commonMoleculeUrl029 from './molecules/sdf/hexachlorobenzene.sdf';
+import commonMoleculeUrl030 from './molecules/sdf/monochlorobenzene.sdf';
+import commonMoleculeUrl031 from './molecules/sdf/1,4-dichlorobenzene.sdf';
+import commonMoleculeUrl032 from './molecules/sdf/1,2-dichlorobenzene.sdf';
+import commonMoleculeUrl033 from './molecules/sdf/1,3-dichlorobenzene.sdf';
+import commonMoleculeUrl034 from './molecules/sdf/pentachlorobenzene.sdf';
+import commonMoleculeUrl035 from './molecules/sdf/1,2,3-trichlorobenzene.sdf';
+import commonMoleculeUrl036 from './molecules/sdf/1,2,4-trichlorobenzene.sdf';
+import commonMoleculeUrl037 from './molecules/sdf/1,3,5-trichlorobenzene.sdf';
 import commonMoleculeUrl101 from './molecules/sdf/buckyball.sdf';
 import commonMoleculeUrl102 from './molecules/xyz/nanotube.xyz';
 import commonMoleculeUrl103 from './molecules/xyz/graphen.xyz';
@@ -343,6 +353,16 @@ export const commonMolecules = [
   { url: commonMoleculeUrl025, internal: true, name: 'FD&C Yellow 6' } as MoleculeInterface,
   { url: commonMoleculeUrl026, internal: true, name: 'FD&C Red 40' } as MoleculeInterface,
   { url: commonMoleculeUrl027, internal: true, name: 'FD&C Blue 1' } as MoleculeInterface,
+  { url: commonMoleculeUrl028, internal: true, name: 'Silabenzene' } as MoleculeInterface,
+  { url: commonMoleculeUrl029, internal: true, name: 'Hexachlorobenzene' } as MoleculeInterface,
+  { url: commonMoleculeUrl030, internal: true, name: 'Monochlorobenzene' } as MoleculeInterface,
+  { url: commonMoleculeUrl031, internal: true, name: '1,4-Dichlorobenzene' } as MoleculeInterface,
+  { url: commonMoleculeUrl032, internal: true, name: '1,2-Dichlorobenzene' } as MoleculeInterface,
+  { url: commonMoleculeUrl033, internal: true, name: '1,3-Dichlorobenzene' } as MoleculeInterface,
+  { url: commonMoleculeUrl034, internal: true, name: 'Pentachlorobenzene' } as MoleculeInterface,
+  { url: commonMoleculeUrl035, internal: true, name: '1,2,3-Trichlorobenzene' } as MoleculeInterface,
+  { url: commonMoleculeUrl036, internal: true, name: '1,2,4-Trichlorobenzene' } as MoleculeInterface,
+  { url: commonMoleculeUrl037, internal: true, name: '1,3,5-Trichlorobenzene' } as MoleculeInterface,
   { url: commonMoleculeUrl101, internal: true, name: 'Buckminsterfullerene' } as MoleculeInterface,
   { url: commonMoleculeUrl102, internal: true, name: 'Carbon Nanotube' } as MoleculeInterface,
   { url: commonMoleculeUrl103, internal: true, name: 'Graphene' } as MoleculeInterface,
