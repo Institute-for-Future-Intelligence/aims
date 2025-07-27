@@ -559,6 +559,7 @@ export const i18n_en = {
           LinearAlkanes: 'Linear Alkanes',
           Cycloalkanes: 'Cycloalkanes',
           Acenes: 'Acenes',
+          Chlorobenzenes: 'Chorobenzenes',
           Bu2EneIsomers: 'Bu-2-ene Isomers',
           ArketamineVsEsketamine: 'Enantiomers: Arketamine vs. Esketamine',
           C8H18OIsomers: 'C₈H₁₈O Isomers',

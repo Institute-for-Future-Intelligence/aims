@@ -545,6 +545,7 @@ export const i18n_zh_cn = {
           LinearAlkanes: '链烷烃',
           Cycloalkanes: '环烷烃',
           Acenes: '并苯',
+          Chlorobenzenes: '氯苯',
           Bu2EneIsomers: '2-丁烯的顺反异构',
           ArketamineVsEsketamine: '氯胺酮的对映异构',
           C8H18OIsomers: 'C₈H₁₈O的同分异构',

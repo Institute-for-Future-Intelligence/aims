@@ -129,6 +129,14 @@ export const createExamplesMenu = (viewOnly: boolean) => {
           ),
         },
         {
+          key: 'Chlorobenzenes',
+          label: (
+            <MenuItem onClick={() => loadProject('Chlorobenzenes')}>
+              {i18n.t('menu.examples.chemistry.Chlorobenzenes', lang)}
+            </MenuItem>
+          ),
+        },
+        {
           key: 'Bu-2-ene Isomers',
           label: (
             <MenuItem onClick={() => loadProject('Bu-2-ene Isomers')}>
