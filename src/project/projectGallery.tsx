@@ -29,6 +29,8 @@ import {
   TableOutlined,
   QuestionCircleOutlined,
   ClearOutlined,
+  PlusSquareOutlined,
+  MinusSquareOutlined,
 } from '@ant-design/icons';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
@@ -384,6 +386,14 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     });
   };
 
+  const excludedMoleculeCount = useMemo(() => {
+    let count = 0;
+    for (const m of projectMolecules) {
+      if (m.invisible) count++;
+    }
+    return count;
+  }, [projectMolecules]);
+
   const descriptionItems: CollapseProps['items'] = [
     {
       key: '1',
@@ -443,6 +453,48 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     <DiffOutlined
                       style={{ fontSize: '24px', color: 'gray' }}
                       title={t('projectPanel.FindMoleculesMostSimilarToSelectedOneToImportIntoGallery', lang)}
+                    />
+                  </Button>
+                )}
+                {projectMolecules.length > 0 && excludedMoleculeCount > 0 && (
+                  <Button
+                    style={{ border: 'none', padding: '4px' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCommonStore((state) => {
+                        for (const m of state.projectState.molecules) {
+                          m.invisible = false;
+                          usePrimitiveStore.getState().set((state) => {
+                            state.regressionAnalysis = false;
+                          });
+                        }
+                      });
+                    }}
+                  >
+                    <PlusSquareOutlined
+                      style={{ fontSize: '24px', color: 'gray' }}
+                      title={t('projectPanel.IncludeAllMolecules', lang)}
+                    />
+                  </Button>
+                )}
+                {projectMolecules.length > 0 && excludedMoleculeCount < projectMolecules.length && (
+                  <Button
+                    style={{ border: 'none', padding: '4px' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCommonStore((state) => {
+                        for (const m of state.projectState.molecules) {
+                          m.invisible = true;
+                          usePrimitiveStore.getState().set((state) => {
+                            state.regressionAnalysis = false;
+                          });
+                        }
+                      });
+                    }}
+                  >
+                    <MinusSquareOutlined
+                      style={{ fontSize: '24px', color: 'gray' }}
+                      title={t('projectPanel.ExcludeAllMolecules', lang)}
                     />
                   </Button>
                 )}
@@ -681,7 +733,15 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
           if (!hiddenProperties?.includes('density')) d['density'] = p.density;
           if (!hiddenProperties?.includes('meltingPoint')) d['meltingPoint'] = p.meltingPoint;
           if (!hiddenProperties?.includes('boilingPoint')) d['boilingPoint'] = p.boilingPoint;
-          d['group'] = projectDataColoring === DataColoring.INDIVIDUALS ? m.name : 'default';
+          const aiGroup = m.name.startsWith('AI:');
+          d['group'] =
+            projectDataColoring === DataColoring.INDIVIDUALS
+              ? m.name
+              : projectDataColoring === DataColoring.GROUPS
+                ? aiGroup
+                  ? 'AI'
+                  : 'NonAI'
+                : 'default';
           d['selected'] = selectedMolecule === m;
           d['hovered'] = hoveredMolecule === m;
           d['excluded'] = projectFilters ? ProjectUtil.isExcluded(projectFilters, p, hiddenProperties ?? []) : false;
@@ -1339,6 +1399,9 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                             <br />
                             <Radio style={{ fontSize: '12px', width: '100%' }} value={DataColoring.INDIVIDUALS}>
                               {t('projectPanel.OneColorForEachMolecule', lang)}
+                            </Radio>
+                            <Radio style={{ fontSize: '12px', width: '100%' }} value={DataColoring.GROUPS}>
+                              {t('projectPanel.OneColorForEachGroup', lang)}
                             </Radio>
                           </Radio.Group>
                         </div>

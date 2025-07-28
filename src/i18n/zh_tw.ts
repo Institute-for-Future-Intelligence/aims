@@ -378,6 +378,8 @@ export const i18n_zh_tw = {
     },
 
     projectPanel: {
+      IncludeAllMolecules: '把圖庫裡的所有分子加入下圖分析',
+      ExcludeAllMolecules: '把圖庫裡的所有分子從下圖分析排除',
       AutoBond: '自動成鍵',
       LimitedToInternalDatabase: '結果限於內建資料庫裡的分子。',
       AIMemory: 'AI記憶',
@@ -434,6 +436,7 @@ export const i18n_zh_tw = {
       ChooseDataColoring: '選擇數據著色',
       SameColorForAllMolecules: '所有分子一個顏色',
       OneColorForEachMolecule: '每個分子一個顏色',
+      OneColorForEachGroup: '每個組一個顏色',
       GraphScreenshot: '圖形截屏',
       AutoscaleGraph: '自動設定界限',
       ChemicalElements: '化學元素',

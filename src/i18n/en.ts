@@ -389,6 +389,8 @@ export const i18n_en = {
     },
 
     projectPanel: {
+      IncludeAllMolecules: 'Include all molecules in the Gallery in graph',
+      ExcludeAllMolecules: 'Exclude all molecules in the Gallery in graph',
       AutoBond: 'Auto Bond',
       LimitedToInternalDatabase: 'Results limited to molecules from the internal database.',
       AIMemory: 'AI Memory',
@@ -447,6 +449,7 @@ export const i18n_en = {
       ChooseDataColoring: 'Choose data coloring',
       SameColorForAllMolecules: 'Same color for all molecules',
       OneColorForEachMolecule: 'One color for each molecule',
+      OneColorForEachGroup: 'One color for each group',
       GraphScreenshot: 'Take a screenshot of the graph',
       AutoscaleGraph: 'Autoscale graph',
       ChemicalElements: 'Chemical Elements',
