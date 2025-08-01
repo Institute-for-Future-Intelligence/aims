@@ -13,7 +13,7 @@ export const defaultPromptAppendix =
   'The molecule must have 3D coordinates. ' +
   'Return just a SDF file with a three-line header: ' +
   'The first line has the molecule name, the second line has software name and version, and the third one has comments. ' +
-  'Create a brief statement about the molecule and add it to the third line. The statement cannot take more than one line. ' +
+  'Add a brief explanation about how the molecule was generated to the third line. The explanation cannot take more than one line. ' +
   'Include SMILES and InChI notations and all possible chemical and physical properties as the associated data. ' +
   'Molecular formula must have the name exactly as a string Formula. ' +
   'logP must have the name exactly as a string logP. ' +

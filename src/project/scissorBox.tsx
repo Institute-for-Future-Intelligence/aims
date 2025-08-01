@@ -282,7 +282,7 @@ const ScissorBox = React.memo(
                 <img
                   src={SparkImage}
                   alt={'spark'}
-                  title={t('projectPanel.GeneratedByAI', lang)}
+                  title={molecule.description ?? t('projectPanel.GeneratedByAI', lang)}
                   height={18}
                   style={{ paddingBottom: '4px' }}
                 />
