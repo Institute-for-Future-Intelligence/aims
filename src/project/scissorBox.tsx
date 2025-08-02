@@ -34,6 +34,7 @@ interface MolecularContainerProps {
   formula: string;
   smiles: string;
   inChI: string;
+  description: string;
   style: MolecularViewerStyle;
   material: MolecularViewerMaterial;
   selector?: string;
@@ -53,6 +54,7 @@ const ScissorBox = React.memo(
     formula,
     smiles,
     inChI,
+    description,
     style,
     material,
     setLoading,
@@ -282,7 +284,7 @@ const ScissorBox = React.memo(
                 <img
                   src={SparkImage}
                   alt={'spark'}
-                  title={molecule.description ?? t('projectPanel.GeneratedByAI', lang)}
+                  title={description ?? t('projectPanel.GeneratedByAI', lang)}
                   height={18}
                   style={{ paddingBottom: '4px' }}
                 />

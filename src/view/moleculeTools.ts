@@ -156,6 +156,7 @@ export const storeMoleculeData = (molecule: MoleculeInterface, atoms: Atom[], ra
         density: p.density,
         boilingPoint: p.boilingPoint,
         meltingPoint: p.meltingPoint,
+        description: p.description,
       } as MolecularProperties);
     }
   }

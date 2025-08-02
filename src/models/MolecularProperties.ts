@@ -22,6 +22,7 @@ export interface MolecularProperties {
   meltingPoint: number;
   smiles: string;
   inChI: string;
+  description: string;
 }
 
 export interface MolecularStructure {

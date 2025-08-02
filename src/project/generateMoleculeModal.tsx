@@ -69,6 +69,8 @@ export const readSdfProps = (result: any): MolecularProperties => {
       molProp.hydrogenBondAcceptorCount = parseInt(hydrogenBondAcceptorCount);
     const rotatableBondCount = props['RotatableBonds'];
     if (rotatableBondCount !== undefined) molProp.rotatableBondCount = parseInt(rotatableBondCount);
+    const explanation = props['Explanation'];
+    if (explanation) molProp.description = explanation;
   }
   return molProp;
 };
@@ -206,7 +208,6 @@ const GenerateMoleculeModal = React.memo(({ setDialogVisible, isDialogVisible }:
             (result) => {
               console.log(data);
               mol.name = 'AI: ' + result.name;
-              mol.description = result.metadata.title;
               // generated molecules may have the same name, give it a different name if the name is taken
               let taken = hasMolecule(mol);
               let index = 0;
