@@ -15,6 +15,9 @@ export interface UndoableDeleteMoleculeInGallery extends Undoable {
 
 export interface UndoableDeleteMoleculesInGallery extends Undoable {
   moleculeNames: string[];
+  moleculeDataMap: Map<string, string>;
+  moleculePromptMap: Map<string, string>;
+  moleculePropertiesMap: Map<string, MolecularProperties>;
 }
 
 export interface UndoableDeleteAllMoleculesInChamber extends Undoable {

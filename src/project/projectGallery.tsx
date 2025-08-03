@@ -369,17 +369,41 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const clearAllMolecules = () => {
     if (projectMolecules.length === 0) return;
     const names: string[] = [];
-    for (const m of projectMolecules) names.push(m.name);
+    const dataMap: Map<string, string> = new Map<string, string>();
+    const promptMap: Map<string, string> = new Map<string, string>();
+    const propertiesMap: Map<string, MolecularProperties> = new Map<string, MolecularProperties>();
+    for (const m of projectMolecules) {
+      names.push(m.name);
+      if (m.data) dataMap.set(m.name, m.data);
+      if (m.prompt) promptMap.set(m.name, m.prompt);
+      const p = generatedMolecularProperties[m.name];
+      if (p) propertiesMap.set(m.name, p);
+    }
     const undoable = {
       name: 'Remove All Molecules',
       timestamp: Date.now(),
       moleculeNames: names,
+      moleculeDataMap: dataMap,
+      moleculePromptMap: promptMap,
+      moleculePropertiesMap: propertiesMap,
       undo: () => {
         if (!undoable.moleculeNames || undoable.moleculeNames.length === 0) return;
         let mol: MoleculeInterface | null = null;
         for (const n of undoable.moleculeNames) {
           mol = getMolecule(n);
-          if (mol) addMolecule(mol);
+          if (mol) {
+            addMolecule(mol);
+          } else {
+            const data = undoable.moleculeDataMap.get(n);
+            const prompt = undoable.moleculePromptMap.get(n);
+            if (data && prompt) {
+              addMolecule({ name: n, data, prompt } as MoleculeInterface);
+              setCommonStore((state) => {
+                const p = undoable.moleculePropertiesMap.get(n);
+                if (p) state.projectState.generatedMolecularProperties[n] = p;
+              });
+            }
+          }
         }
         setCommonStore((state) => {
           state.projectState.selectedMolecule = mol;

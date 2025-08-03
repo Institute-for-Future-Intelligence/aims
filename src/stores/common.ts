@@ -350,6 +350,7 @@ export const useStore = createWithEqualityFn<CommonStoreState>()(
           },
           removeAllMolecules() {
             immerSet((state: CommonStoreState) => {
+              state.projectState.generatedMolecularProperties = {};
               state.projectState.molecules = [];
               state.projectState.selectedMolecule = null;
             });
