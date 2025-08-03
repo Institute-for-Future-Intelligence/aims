@@ -83,6 +83,7 @@ const DynamicsViewer = React.memo(
     onPointerDown,
   }: DynamicsViewerProps) => {
     const setCommonStore = useStore(Selector.set);
+    const hasMolecule = useStore(Selector.hasMolecule);
     const testMolecules = useStore(Selector.testMolecules);
     const updateViewerFlag = usePrimitiveStore(Selector.updateViewerFlag);
     const updateInfo = usePrimitiveStore(Selector.updateInfo);
@@ -181,30 +182,43 @@ const DynamicsViewer = React.memo(
       });
     }, [camera, raycaster, cameraRef, raycasterRef, moleculesRef, vdwBondsRef, molecularDynamicsRef]);
 
+    const clearModel = () => {
+      setComplex(undefined);
+      if (molecularDynamicsRef.current) {
+        molecularDynamicsRef.current.atoms.length = 0;
+        molecularDynamicsRef.current.radialBonds.length = 0;
+        molecularDynamicsRef.current.angularBonds.length = 0;
+        molecularDynamicsRef.current.torsionalBonds.length = 0;
+        molecularDynamicsRef.current = null;
+      }
+      updateInfo();
+      energyTimeSeries.clear();
+      speedArrayMap.clear();
+      positionTimeSeriesMap.clear();
+      vdwBondsRef.current.length = 0;
+    };
+
     useEffect(() => {
       moleculesRef.current.length = 0;
       complexesRef.current.length = 0;
       moleculeMapRef.current.clear();
       complexMapRef.current.clear();
       if (!testMolecules || testMolecules.length === 0) {
-        setComplex(undefined);
-        if (molecularDynamicsRef.current) {
-          molecularDynamicsRef.current.atoms.length = 0;
-          molecularDynamicsRef.current.radialBonds.length = 0;
-          molecularDynamicsRef.current.angularBonds.length = 0;
-          molecularDynamicsRef.current.torsionalBonds.length = 0;
-          molecularDynamicsRef.current = null;
-        }
-        updateInfo();
-        energyTimeSeries.clear();
-        speedArrayMap.clear();
-        positionTimeSeriesMap.clear();
-        vdwBondsRef.current.length = 0;
+        clearModel();
         return;
       }
       if (setLoading) setLoading(true);
+      let notInGallery = true;
       for (const m of testMolecules) {
-        loadMolecule(m, processResult);
+        const found = hasMolecule(m);
+        if (found) {
+          loadMolecule(m, processResult);
+          notInGallery = false;
+        }
+      }
+      if (setLoading && notInGallery) {
+        setLoading(false);
+        clearModel();
       }
     }, [testMolecules]);
 
