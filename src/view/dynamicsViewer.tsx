@@ -208,15 +208,18 @@ const DynamicsViewer = React.memo(
         return;
       }
       if (setLoading) setLoading(true);
-      let notInGallery = true;
+      let noTestMoleculeIsInGallery = true;
       for (const m of testMolecules) {
-        const found = hasMolecule(m);
-        if (found) {
-          loadMolecule(m, processResult);
-          notInGallery = false;
+        if (hasMolecule(m)) {
+          noTestMoleculeIsInGallery = false;
+          break;
         }
       }
-      if (setLoading && notInGallery) {
+      // load molecules even if it is not in the gallery (built-in molecules are system-wide, not project specific)
+      for (const m of testMolecules) {
+        loadMolecule(m, processResult);
+      }
+      if (setLoading && noTestMoleculeIsInGallery) {
         setLoading(false);
         clearModel();
       }

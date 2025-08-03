@@ -363,6 +363,13 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     setCommonStore((state) => {
       state.projectState.selectedMolecule = null;
       delete state.projectState.generatedMolecularProperties[selectedMolecule.name];
+      // remove the molecule from the reaction chamber if any (there may be multiple)
+      for (let i = state.projectState.testMolecules.length - 1; i >= 0; i--) {
+        const m = state.projectState.testMolecules[i];
+        if (m.data && m.name === selectedMolecule.name) {
+          state.projectState.testMolecules.splice(i, 1);
+        }
+      }
     });
   };
 
@@ -420,6 +427,10 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     removeAllMolecules();
     setCommonStore((state) => {
       state.projectState.selectedMolecule = null;
+      for (let i = state.projectState.testMolecules.length - 1; i >= 0; i--) {
+        const m = state.projectState.testMolecules[i];
+        if (m.data) state.projectState.testMolecules.splice(i, 1);
+      }
     });
   };
 
