@@ -315,6 +315,7 @@ const ScissorBox = React.memo(
                   fontSize: Math.round(42 / numberOfColumns) + 'px',
                   width: viewWidth - 50 + 'px',
                 }}
+                onClick={onMouseDown}
               >
                 <span style={{ display: 'inline' }}>
                   {molecule.prompt.substring(0, 300 / numberOfColumns).trim()} ...
@@ -331,6 +332,7 @@ const ScissorBox = React.memo(
                   fontSize: Math.round(42 / numberOfColumns) + 'px',
                   width: viewWidth - 50 + 'px',
                 }}
+                onClick={onMouseDown}
               >
                 {molecule.prompt}
               </Space>

@@ -379,6 +379,7 @@ export const i18n_zh_cn = {
     },
 
     projectPanel: {
+      SecondsSinceGenerationStarted: '生成开始后的秒数',
       IncludeAllMolecules: '把图库里的所有分子加入下图分析',
       ExcludeAllMolecules: '把图库里的所有分子从下图分析排除',
       AutoBond: '自动成键',

@@ -389,6 +389,7 @@ export const i18n_en = {
     },
 
     projectPanel: {
+      SecondsSinceGenerationStarted: 'Seconds since generation started',
       IncludeAllMolecules: 'Include all molecules in the Gallery in graph',
       ExcludeAllMolecules: 'Exclude all molecules in the Gallery in graph',
       AutoBond: 'Auto Bond',

@@ -7,7 +7,7 @@ import { drugMolecules, findSimilarMolecules, getMolecule } from '../internalDat
 import { ChemicalNotation, DataColoring, GraphType, ProjectType } from '../constants.ts';
 import styled from 'styled-components';
 import { App, Button, Collapse, CollapseProps, Empty, Popover, Radio, Spin } from 'antd';
-import {
+import Icon, {
   ColumnHeightOutlined,
   BgColorsOutlined,
   BorderOutlined,
@@ -190,6 +190,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const showPrompts = useStore(Selector.showPrompts);
   const generating = usePrimitiveStore(Selector.generating);
 
+  const [count, setCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [updateFlag, setUpdateFlag] = useState<boolean>(false);
   const [updateHiddenFlag, setUpdateHiddenFlag] = useState<boolean>(false);
@@ -216,6 +217,18 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const similarMoleculesByInChIRef = useRef<{ name: string; formula: string; distance: number }[]>([]);
   const similarMoleculesBySmilesRef = useRef<{ name: string; formula: string; distance: number }[]>([]);
   const previousGalleryPercentWidthRef = useRef<number>(100 - chamberViewerPercentWidth);
+
+  useEffect(() => {
+    let intervalId: number;
+    if (generating) {
+      intervalId = window.setInterval(() => {
+        setCount((c) => c + 1);
+      }, 1000);
+    } else {
+      setCount(0);
+    }
+    return () => window.clearInterval(intervalId);
+  }, [generating]);
 
   useEffect(() => {
     if (chamberViewerPercentWidth > 0) previousGalleryPercentWidthRef.current = 100 - chamberViewerPercentWidth;
@@ -512,13 +525,29 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 </Button>
                 {generating ? (
                   <span
-                    style={{ cursor: 'wait' }}
+                    style={{ cursor: 'progress' }}
                     title={t('message.GeneratingMolecule', lang)}
                     onClick={(e) => {
                       e.stopPropagation();
                     }}
                   >
                     <FidgetSpinner width={24} height={24} />
+                    {/* I have to use an Icon to ensure the text is aligned with other icons on the toolbar. */}
+                    <Icon
+                      style={{ border: 'none', width: '24px', height: '24px', cursor: 'default' }}
+                      title={t('projectPanel.SecondsSinceGenerationStarted', lang)}
+                      component={() => {
+                        const x0 = count > 99 ? 2 : count > 9 ? 6 : 8;
+                        return (
+                          <svg width="24" height="24">
+                            {/*<circle cx='12' cy='12' r='12' stroke={'gray'} fill={'transparent'}/>*/}
+                            <text x={x0} y="15" fontSize="12" fontFamily={'monospace'} fill="gray">
+                              {count}
+                            </text>
+                          </svg>
+                        );
+                      }}
+                    />
                   </span>
                 ) : (
                   <Button

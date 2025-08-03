@@ -378,6 +378,7 @@ export const i18n_zh_tw = {
     },
 
     projectPanel: {
+      SecondsSinceGenerationStarted: '生成開始後的秒數',
       IncludeAllMolecules: '把圖庫裡的所有分子加入下圖分析',
       ExcludeAllMolecules: '把圖庫裡的所有分子從下圖分析排除',
       AutoBond: '自動成鍵',
