@@ -76,6 +76,7 @@ export const fetchProject = async (userid: string, project: string, setProjectSt
           protein: data.protein,
           ranges: data.ranges,
           filters: data.filters,
+          enableFilters: data.enableFilters,
           hiddenProperties: data.hiddenProperties,
           selectedProperty: data.selectedProperty,
           autoscaleGraph: data.autoscaleGraph,

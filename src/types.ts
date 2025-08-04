@@ -42,6 +42,7 @@ export interface ProjectState {
   sortDescending: boolean | null;
   ranges: Range[] | null;
   filters: Filter[] | null;
+  enableFilters: boolean | null;
   hiddenProperties: string[] | null;
   xAxisNameScatterPlot: string | null;
   yAxisNameScatterPlot: string | null;

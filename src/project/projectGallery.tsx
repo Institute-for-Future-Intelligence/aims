@@ -31,6 +31,7 @@ import Icon, {
   ClearOutlined,
   PlusSquareOutlined,
   MinusSquareOutlined,
+  FilterOutlined,
 } from '@ant-design/icons';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
@@ -50,7 +51,7 @@ import ScissorBox from './scissorBox.tsx';
 import ProjectSettingsContent from './projectSettingsContent.tsx';
 import PropertiesSelectionContent from './propertiesSelectionContent.tsx';
 import CoordinateSystemSettingsContent from './coordinateSystemSettingsContent.tsx';
-import GraphSettingsContent from './graphSettingsContent.tsx';
+import ScatterChartSettingsContent from './scatterChartSettingsContent.tsx';
 import { evaluate, MathExpression } from 'mathjs';
 import { useRefStore } from '../stores/commonRef.ts';
 import { Vector2 } from 'three';
@@ -68,6 +69,7 @@ import { UndoableImportMolecule } from '../undo/UndoableImportMolecule.ts';
 import { UndoableChange } from '../undo/UndoableChange.ts';
 import GenerateMoleculeModal from './generateMoleculeModal.tsx';
 import { FidgetSpinner } from 'react-loader-spinner';
+import FilterOptionsContent from './filterOptionsContent.tsx';
 
 export interface ProjectGalleryProps {
   relativeWidth: number; // (0, 1);
@@ -189,6 +191,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   const independentPrompt = useStore(Selector.independentPrompt);
   const showPrompts = useStore(Selector.showPrompts);
   const generating = usePrimitiveStore(Selector.generating);
+  const enableFilters = !!useStore(Selector.enableFilters);
 
   const [count, setCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
@@ -808,7 +811,8 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                 : 'default';
           d['selected'] = selectedMolecule === m;
           d['hovered'] = hoveredMolecule === m;
-          d['excluded'] = projectFilters ? ProjectUtil.isExcluded(projectFilters, p, hiddenProperties ?? []) : false;
+          d['excluded'] =
+            enableFilters && projectFilters ? ProjectUtil.isExcluded(projectFilters, p, hiddenProperties ?? []) : false;
           d['invisible'] = !!m.invisible;
           d['name'] = m.name;
           d['formula'] = p.formula;
@@ -825,6 +829,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     projectDataColoring,
     projectFilters,
     hiddenProperties,
+    enableFilters,
   ]);
 
   const [variables, titles, units, digits, tickIntegers, types] = useMemo(
@@ -1430,12 +1435,21 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                     <Popover
                       title={
                         <div onClick={(e) => e.stopPropagation()}>
+                          <FilterOutlined /> {t('projectPanel.FilterOptions', lang)}
+                        </div>
+                      }
+                      content={<FilterOptionsContent />}
+                    >
+                      <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
+                        <FilterOutlined style={{ fontSize: '24px', color: 'gray' }} />
+                      </Button>
+                    </Popover>
+                    <Popover
+                      title={
+                        <div onClick={(e) => e.stopPropagation()}>
                           <CarryOutOutlined /> {t('projectPanel.ChooseProperties', lang)}
                         </div>
                       }
-                      onOpenChange={(visible) => {
-                        // TODO
-                      }}
                       content={
                         <PropertiesSelectionContent updateHiddenFlag={() => setUpdateHiddenFlag(!updateHiddenFlag)} />
                       }
@@ -1509,6 +1523,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                   hover={hover}
                   hoveredIndex={projectMolecules && hoveredMolecule ? projectMolecules.indexOf(hoveredMolecule) : -1}
                   selectedIndex={projectMolecules && selectedMolecule ? projectMolecules.indexOf(selectedMolecule) : -1}
+                  enableFilters={enableFilters}
                 />
               </>
             )}
@@ -1595,7 +1610,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
                           <DotChartOutlined /> {t('projectPanel.ScatterPlotSettings', lang)}
                         </div>
                       }
-                      content={<GraphSettingsContent />}
+                      content={<ScatterChartSettingsContent />}
                     >
                       <Button style={{ border: 'none', paddingRight: 0, background: 'white' }}>
                         <DotChartOutlined style={{ fontSize: '24px', color: 'gray' }} />

@@ -378,6 +378,9 @@ export const i18n_zh_tw = {
     },
 
     projectPanel: {
+      FilterOptions: '過濾器選項',
+      EnableFilters: '啟用過濾器',
+      SetMinimumFiltersToPassAllData: '設定允許所有數據通過的最小過濾器',
       SecondsSinceGenerationStarted: '生成開始後的秒數',
       IncludeAllMolecules: '把圖庫裡的所有分子加入下圖分析',
       ExcludeAllMolecules: '把圖庫裡的所有分子從下圖分析排除',

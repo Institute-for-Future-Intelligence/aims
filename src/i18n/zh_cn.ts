@@ -379,6 +379,9 @@ export const i18n_zh_cn = {
     },
 
     projectPanel: {
+      FilterOptions: '过滤器选项',
+      EnableFilters: '启用过滤器',
+      SetMinimumFiltersToPassAllData: '设定允许所有数据通过的最小过滤器',
       SecondsSinceGenerationStarted: '生成开始后的秒数',
       IncludeAllMolecules: '把图库里的所有分子加入下图分析',
       ExcludeAllMolecules: '把图库里的所有分子从下图分析排除',

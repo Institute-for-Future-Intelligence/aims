@@ -42,6 +42,7 @@ export class ProjectUtil {
       sortDescending: false,
       ranges: new Array<Range>(),
       filters: new Array<Filter>(),
+      enableFilters: false,
       hiddenProperties: [
         'atomCount',
         'bondCount',

@@ -240,6 +240,8 @@ export const projectDataColoring = (state: CommonStoreState) => state.projectSta
 
 export const projectFilters = (state: CommonStoreState) => state.projectState.filters;
 
+export const enableFilters = (state: CommonStoreState) => state.projectState.enableFilters;
+
 export const projectRanges = (state: CommonStoreState) => state.projectState.ranges;
 
 export const hiddenProperties = (state: CommonStoreState) => state.projectState.hiddenProperties;

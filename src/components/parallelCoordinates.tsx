@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import * as d3Scale from 'd3-scale';
@@ -44,6 +44,7 @@ type ParallelCoordinatesProps = {
   hover: (i: number) => void;
   hoveredIndex: number;
   selectedIndex: number;
+  enableFilters: boolean;
 };
 
 type YScale = d3Scale.ScaleLinear<number, number>;
@@ -67,6 +68,7 @@ const ParallelCoordinates = React.memo(
     hover,
     hoveredIndex,
     selectedIndex,
+    enableFilters,
   }: ParallelCoordinatesProps) => {
     const boundsWidth = width - MARGIN.right - MARGIN.left;
     const boundsHeight = height - MARGIN.top - MARGIN.bottom;
@@ -135,7 +137,7 @@ const ParallelCoordinates = React.memo(
             />
           );
         }),
-      [data, colorScale, variables, xScale, yScales],
+      [data, colorScale, variables, xScale, yScales, enableFilters],
     );
 
     // Compute Axes

@@ -1,5 +1,5 @@
 /*
- * @Copyright 2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useMemo } from 'react';
@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { UndoableChange } from '../undo/UndoableChange.ts';
 import { UndoableCheck } from '../undo/UndoableCheck.ts';
 
-const GraphSettingsContent = React.memo(() => {
+const ScatterChartSettingsContent = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const setChanged = usePrimitiveStore(Selector.setChanged);
@@ -278,4 +278,4 @@ const GraphSettingsContent = React.memo(() => {
   );
 });
 
-export default GraphSettingsContent;
+export default ScatterChartSettingsContent;

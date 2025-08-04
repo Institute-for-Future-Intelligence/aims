@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2024. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -58,6 +58,7 @@ const VerticalAxis = React.memo(
     const setChanged = usePrimitiveStore(Selector.setChanged);
     const addUndoable = useStore(Selector.addUndoable);
     const hiddenProperties = useStore(Selector.hiddenProperties);
+    const enableFilters = !!useStore(Selector.enableFilters);
 
     const [updateFlag, setUpdateFlag] = useState<boolean>(false);
     const minRef = useRef<number>(min);
@@ -443,7 +444,7 @@ const VerticalAxis = React.memo(
 
         <line x1={0} x2={0} y1={yScale(min)} y2={yScale(max)} stroke="black" strokeWidth={2} />
 
-        {filter && filter.type === FilterType.Between && (
+        {enableFilters && filter && filter.type === FilterType.Between && (
           <foreignObject x={-areaWidth / 2} y={4} width={areaWidth} height={(areaHeight ?? 3) - 3}>
             <ConfigProvider
               theme={{
