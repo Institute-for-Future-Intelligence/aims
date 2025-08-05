@@ -2,20 +2,18 @@
  * @Copyright 2025. Institute for Future Intelligence, Inc.
  */
 
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { Button, Checkbox } from 'antd';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useTranslation } from 'react-i18next';
-import { UndoableCheck } from '../undo/UndoableCheck.ts';
 import { ProjectUtil } from './ProjectUtil.ts';
 
 const FilterOptionsContent = React.memo(() => {
   const setCommonStore = useStore(Selector.set);
   const language = useStore(Selector.language);
   const setChanged = usePrimitiveStore(Selector.setChanged);
-  const addUndoable = useStore(Selector.addUndoable);
   const hiddenProperties = useStore(Selector.hiddenProperties);
   const enableFilters = !!useStore(Selector.enableFilters);
 
@@ -55,7 +53,15 @@ const FilterOptionsContent = React.memo(() => {
       {enableFilters && (
         <>
           <br />
-          <Button style={{ width: '100%', border: 'none', paddingLeft: '24px' }} onClick={() => {}}>
+          <Button
+            style={{ width: '100%', border: 'none', paddingLeft: '24px' }}
+            onClick={() => {
+              setCommonStore((state) => {
+                state.projectState.filters = [];
+              });
+              setChanged(true);
+            }}
+          >
             <span style={{ fontSize: '12px' }} title={t('tooltip.bondCount', lang)}>
               {t('projectPanel.SetMinimumFiltersToPassAllData', lang)}
             </span>

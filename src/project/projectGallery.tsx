@@ -1051,6 +1051,23 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
     return array;
   }, [updateHiddenFlag, projectFilters, hiddenProperties, autoscaleGraph, data]);
 
+  useEffect(() => {
+    setCommonStore((state) => {
+      if (state.projectState.filters) {
+        for (const m of state.projectState.molecules) {
+          const p = state.molecularPropertiesMap.get(m.name);
+          if (p) {
+            m.excluded = ProjectUtil.isExcluded(
+              state.projectState.filters,
+              p,
+              state.projectState.hiddenProperties ?? [],
+            );
+          }
+        }
+      }
+    });
+  }, [projectMolecules, projectFilters, hiddenProperties, molecularPropertiesMap]);
+
   const scatterData = useMemo(() => {
     const data: {
       all: { x: number; y: number; name: string; formula: string; invisible: boolean }[];

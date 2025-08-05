@@ -391,7 +391,7 @@ export const i18n_en = {
     projectPanel: {
       FilterOptions: 'Filter Options',
       EnableFilters: 'Enable Filters',
-      SetMinimumFiltersToPassAllData: 'Set Minimum Filters That All Data Pass',
+      SetMinimumFiltersToPassAllData: 'Minimum Filters That Let All Data Pass',
       SecondsSinceGenerationStarted: 'Seconds since generation started',
       IncludeAllMolecules: 'Include all molecules in the Gallery in graph',
       ExcludeAllMolecules: 'Exclude all molecules in the Gallery in graph',

@@ -445,7 +445,7 @@ const VerticalAxis = React.memo(
         <line x1={0} x2={0} y1={yScale(min)} y2={yScale(max)} stroke="black" strokeWidth={2} />
 
         {enableFilters && filter && filter.type === FilterType.Between && (
-          <foreignObject x={-areaWidth / 2} y={4} width={areaWidth} height={(areaHeight ?? 3) - 3}>
+          <foreignObject x={-areaWidth / 2} y={-4} width={areaWidth} height={(areaHeight ?? 3) - 3}>
             <ConfigProvider
               theme={{
                 components: {
