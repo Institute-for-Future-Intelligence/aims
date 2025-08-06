@@ -3,7 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { Button, Checkbox } from 'antd';
+import { Checkbox } from 'antd';
 import { useStore } from '../stores/common.ts';
 import * as Selector from '../stores/selector';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
@@ -51,22 +51,17 @@ const FilterOptionsContent = React.memo(() => {
         <span style={{ fontSize: '12px' }}>{t('projectPanel.EnableFilters', lang)}</span>
       </Checkbox>
       {enableFilters && (
-        <>
-          <br />
-          <Button
-            style={{ width: '100%', border: 'none', paddingLeft: '24px' }}
-            onClick={() => {
-              setCommonStore((state) => {
-                state.projectState.filters = [];
-              });
-              setChanged(true);
-            }}
-          >
-            <span style={{ fontSize: '12px' }} title={t('tooltip.bondCount', lang)}>
-              {t('projectPanel.SetMinimumFiltersToPassAllData', lang)}
-            </span>
-          </Button>
-        </>
+        <span
+          style={{ width: '100%', paddingLeft: '24px', fontSize: '12px', cursor: 'pointer' }}
+          onClick={() => {
+            setCommonStore((state) => {
+              state.projectState.filters = [];
+            });
+            setChanged(true);
+          }}
+        >
+          {t('projectPanel.SetMinimumFiltersToPassAllData', lang)}
+        </span>
       )}
     </div>
   );

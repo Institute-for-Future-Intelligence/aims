@@ -1021,7 +1021,7 @@ const ProjectGallery = React.memo(({ relativeWidth }: ProjectGalleryProps) => {
   };
 
   const createFilter = (variable: string, defaultUpperBound: number, defaultLowerBound: number) => {
-    const flag = autoscaleGraph && data.length > 0;
+    const flag = data.length > 0;
     return {
       variable,
       type: FilterType.Between,
