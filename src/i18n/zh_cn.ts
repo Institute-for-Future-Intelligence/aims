@@ -445,6 +445,7 @@ export const i18n_zh_cn = {
       GraphScreenshot: '图形截屏',
       AutoscaleGraph: '自动设定界限',
       ChemicalElements: '化学元素',
+      ChemicalElementColorKeys: '显示颜色',
       ChemicalComposition: '化学成分',
       Gravity: '重力',
       GravityViewerCoordinateSystem: '重力始终在屏幕垂直向下的方向。',

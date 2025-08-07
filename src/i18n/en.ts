@@ -457,6 +457,7 @@ export const i18n_en = {
       GraphScreenshot: 'Take a screenshot of the graph',
       AutoscaleGraph: 'Autoscale graph',
       ChemicalElements: 'Chemical Elements',
+      ChemicalElementColorKeys: 'Color Keys',
       ChemicalComposition: 'Chemical Composition',
       Gravity: 'Gravity',
       GravityViewerCoordinateSystem: 'Gravity always points downward on the screen.',

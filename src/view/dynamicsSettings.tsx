@@ -63,6 +63,7 @@ const DynamicsSettings = React.memo(() => {
   const currentDensity = usePrimitiveStore(Selector.currentDensity);
   const hideGallery = useStore(Selector.hideGallery);
   const chamberTemperatureKevin = useStore(Selector.chamberTemperatureKevin);
+  const getChemicalElement = useStore(Selector.getChemicalElement);
 
   const mdRef = useRefStore.getState().molecularDynamicsRef;
 
@@ -884,6 +885,7 @@ const DynamicsSettings = React.memo(() => {
     let torsionalBondCount = 0;
     let elementString: string = '';
     let compositionString: string = '';
+    const colorMap = new Map<string, string>();
     const elements: Map<string, number> = new Map<string, number>();
     if (mdRef?.current) {
       atomCount = mdRef.current.atoms.length;
@@ -905,6 +907,7 @@ const DynamicsSettings = React.memo(() => {
           elementString += e + '(' + elementCount + '), ';
           compositionString += e + '(' + Math.round((100 * elementCount) / atomCount) + '%), ';
         }
+        colorMap.set(e, getChemicalElement(Util.capitalizeFirstLetter(e))?.cpkHexColor ?? '000000');
       }
       if (elementString.length > 2) elementString = elementString.substring(0, elementString.length - 2);
       if (compositionString.length > 2)
@@ -943,6 +946,28 @@ const DynamicsSettings = React.memo(() => {
       },
       {
         key: '7',
+        label: t('projectPanel.ChemicalElementColorKeys', lang),
+        children: (
+          <div>
+            {Array.from(colorMap).map(([key, value]) => (
+              <span key={key}>
+                <span> {key}: </span>
+                <span
+                  style={{
+                    width: '20px',
+                    height: '12px',
+                    display: 'inline-block',
+                    background: '#' + value,
+                    border: '1px solid black',
+                  }}
+                />
+              </span>
+            ))}
+          </div>
+        ),
+      },
+      {
+        key: '8',
         label: t('projectPanel.ChemicalComposition', lang),
         children: compositionString,
       },

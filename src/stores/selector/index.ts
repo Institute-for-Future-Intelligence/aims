@@ -200,6 +200,8 @@ export const loadChemicalElements = (state: CommonStoreState) => state.loadChemi
 
 export const chemicalElements = (state: CommonStoreState) => state.chemicalElements;
 
+export const getChemicalElement = (state: CommonStoreState) => state.getChemicalElement;
+
 export const providedMolecularProperties = (state: CommonStoreState) => state.providedMolecularProperties;
 
 export const getProvidedMolecularProperties = (state: CommonStoreState) => state.getProvidedMolecularProperties;
