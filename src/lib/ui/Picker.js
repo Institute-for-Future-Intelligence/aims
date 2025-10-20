@@ -178,7 +178,8 @@ Picker.prototype.getMouseInViewport = function (pageX, pageY) {
 };
 
 Picker.prototype.mousedown = function (event) {
-  event.preventDefault();
+  // this would block context menu behavior: not able to close when click on canvas
+  // event.preventDefault();
   event.stopPropagation();
 
   if (event.button === 0 || event.button === 2) {
