@@ -8,7 +8,7 @@ import React, { useMemo } from 'react';
 import { useStore } from './stores/common';
 import * as Selector from './stores/selector';
 import { usePrimitiveStore } from './stores/commonPrimitive';
-import { MenuItem } from './components/menuItem';
+import { AntdMenuItem } from './components/menuItem';
 import { useTranslation } from 'react-i18next';
 import { WarningOutlined } from '@ant-design/icons';
 
@@ -81,7 +81,7 @@ const MainToolBar = React.memo(({ signIn, signInAnonymously, signOut }: MainTool
     {
       key: 'account',
       label: (
-        <MenuItem
+        <AntdMenuItem
           onClick={() => {
             usePrimitiveStore.getState().set((state) => {
               state.showAccountSettingsPanel = true;
@@ -89,23 +89,23 @@ const MainToolBar = React.memo(({ signIn, signInAnonymously, signOut }: MainTool
           }}
         >
           {t('avatarMenu.AccountSettings', lang)}
-        </MenuItem>
+        </AntdMenuItem>
       ),
     },
     {
       key: 'sign-out',
-      label: <MenuItem onClick={signOutCheck}>{t('avatarMenu.SignOut', lang)}</MenuItem>,
+      label: <AntdMenuItem onClick={signOutCheck}>{t('avatarMenu.SignOut', lang)}</AntdMenuItem>,
     },
   ];
 
   const signInMenu: MenuProps['items'] = [
     {
       key: 'signin-default',
-      label: <MenuItem onClick={signIn}>{t('avatarMenu.SignInAsMe', lang)}</MenuItem>,
+      label: <AntdMenuItem onClick={signIn}>{t('avatarMenu.SignInAsMe', lang)}</AntdMenuItem>,
     },
     {
       key: 'signin-anonymously',
-      label: <MenuItem onClick={anonymousSignInCheck}>{t('avatarMenu.SignInAnonymously', lang)}</MenuItem>,
+      label: <AntdMenuItem onClick={anonymousSignInCheck}>{t('avatarMenu.SignInAnonymously', lang)}</AntdMenuItem>,
     },
   ];
 

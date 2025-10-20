@@ -4,12 +4,9 @@
 
 import { useStore } from '../../stores/common';
 import i18n from '../../i18n/i18n';
-import { MenuProps, Space } from 'antd';
-import { MenuItem } from '../menuItem';
-import { MoleculeInterface } from '../../types.ts';
-import { Molecule } from '../../models/Molecule.ts';
+import { Space } from 'antd';
+import { MainMenuItem, MainSubMenu } from '../menuItem';
 import Element from '../../lib/chem/Element';
-import React from 'react';
 import { useRefStore } from '../../stores/commonRef.ts';
 import {
   AngularBondsCheckBox,
@@ -35,320 +32,201 @@ import {
   AutoRotateCheckBox,
   AxesCheckBox,
   BackgroundColor,
-  ColoringRadioGroup,
+  ColoringRadioSubmenu,
   ContainerCheckBox,
   FogCheckBox,
-  GlobalStyleRadioGroup,
-  MaterialRadioGroup,
+  GlobalStyleRadioSubmenu,
+  MaterialRadioSubmenu,
   NavigationViewCheckBox,
   Screenshot,
-  ViewAngleMenuItems,
+  ViewAngleSubmenu,
 } from './sharedMenuItems.tsx';
+import { useLanguage } from '../../hooks.ts';
+import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
+import * as Selector from '../../stores/selector';
 
-export const createMolecularModelingDefaultMenu = (
-  pickedAtomIndex: number,
-  pickedMoleculeIndex: number,
-  copiedMoleculeIndex: number,
-  cutMolecule: MoleculeInterface | null,
-  selectedPlane: number,
-  testMolecules: Molecule[],
-) => {
-  const lang = { lng: useStore.getState().language };
-
-  const items: MenuProps['items'] = [];
+const MolecularModelingMenu = () => {
+  const lang = useLanguage();
+  const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
+  const testMolecules = useStore(Selector.testMolecules);
+  const pickedAtomIndex = usePrimitiveStore(Selector.pickedAtomIndex);
+  const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
+  const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
+  const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
 
   const pickedMolecule = pickedMoleculeIndex !== -1 ? testMolecules[pickedMoleculeIndex] : null;
+
+  const atomCoordinates = () => {
+    const mdRef = useRefStore.getState().molecularDynamicsRef;
+    if (mdRef?.current) {
+      const p = mdRef.current.atoms[pickedAtomIndex].position;
+      return (
+        <MainMenuItem>
+          {i18n.t('experiment.AtomicCoordinates', lang) +
+            ': (' +
+            p.x.toFixed(2) +
+            ', ' +
+            p.y.toFixed(2) +
+            ', ' +
+            p.z.toFixed(2) +
+            ') Å'}
+        </MainMenuItem>
+      );
+    } else {
+      return null;
+    }
+  };
+
+  const pasteMolecule = () => {
+    if (copiedMoleculeIndex !== -1 || cutMolecule) {
+      if (selectedPlane !== -1) {
+        return (
+          <>
+            <PasteMolecule />
+            <hr style={{ marginLeft: '24px' }} />
+          </>
+        );
+      } else {
+        return (
+          <>
+            <MainMenuItem hasPadding={true}>{i18n.t('message.NoPlaneToPaste', lang)}</MainMenuItem>
+            <hr style={{ marginLeft: '24px' }} />
+          </>
+        );
+      }
+    }
+  };
+
   if (pickedMolecule) {
     const prop = useStore.getState().getProvidedMolecularProperties(pickedMolecule.name);
-    items.push({
-      key: 'molecule-name',
-      label: (
-        <>
-          <MenuItem stayAfterClick={false} hasPadding={false} fontWeight={'bold'} cursor={'default'}>
-            {pickedMolecule.name + (prop?.formula ? ' ' + prop.formula : '') + ' (#' + pickedMoleculeIndex + ')'}
-          </MenuItem>
-          <hr />
-        </>
-      ),
-    });
+    return (
+      <>
+        <MainMenuItem stayAfterClick={false} hasPadding={false} fontWeight={'bold'}>
+          {pickedMolecule.name + (prop?.formula ? ' ' + prop.formula : '') + ' (#' + pickedMoleculeIndex + ')'}
+        </MainMenuItem>
+        <hr />
 
-    items.push({
-      key: 'molecule-copy',
-      label: <CopyMolecule />,
-    });
+        <CopyMolecule />
 
-    items.push({
-      key: 'molecule-cut',
-      label: <CutMolecule />,
-    });
+        <CutMolecule />
 
-    items.push({
-      key: 'translate-molecule-submenu',
-      label: (
-        <MenuItem stayAfterClick={true} hasPadding={false}>
-          {i18n.t('molecularViewer.TranslateMolecule', lang)}
-        </MenuItem>
-      ),
-      children: [
-        {
-          key: 'translate-molecule-fields',
-          label: <TranslateMolecule />,
-        },
-      ],
-    });
+        <MainSubMenu label={i18n.t('molecularViewer.TranslateMolecule', lang)}>
+          <TranslateMolecule />
+        </MainSubMenu>
 
-    items.push({
-      key: 'rotate-molecule-submenu',
-      label: (
-        <MenuItem stayAfterClick={true} hasPadding={false}>
-          {i18n.t('molecularViewer.RotateMolecule', lang)}
-        </MenuItem>
-      ),
-      children: [
-        {
-          key: 'rotate-molecule-fields',
-          label: <RotateMolecule />,
-        },
-      ],
-    });
+        <MainSubMenu label={i18n.t('molecularViewer.RotateMolecule', lang)}>
+          <RotateMolecule />
+        </MainSubMenu>
 
-    items.push({
-      key: 'molecule-style-submenu',
-      label: <MenuItem hasPadding={false}>{i18n.t('molecularViewer.Style', lang)}</MenuItem>,
-      children: [
-        {
-          key: 'molecule-style-radio-group',
-          label: <IndividualMoleculeStyleRadioGroup />,
-        },
-      ],
-    });
+        <IndividualMoleculeStyleRadioGroup />
 
-    items.push({
-      key: 'molecule-restraint',
-      label: <RestrainMoleculeInputField />,
-    });
+        <RestrainMoleculeInputField />
+      </>
+    );
   } else if (pickedAtomIndex !== -1) {
     const pickedAtom = useStore.getState().getAtomByIndex(pickedAtomIndex);
     if (pickedAtom) {
-      items.push({
-        key: 'atom-name',
-        label: (
-          <>
-            <MenuItem stayAfterClick={false} hasPadding={false} fontWeight={'bold'} cursor={'default'}>
-              {Element.getByName(pickedAtom.elementSymbol).fullName + ' (#' + pickedAtomIndex + ')'}
-            </MenuItem>
-          </>
-        ),
-      });
+      return (
+        <>
+          {/* atom-name */}
+          <MainMenuItem fontWeight={'bold'}>
+            {Element.getByName(pickedAtom.elementSymbol).fullName + ' (#' + pickedAtomIndex + ')'}
+          </MainMenuItem>
 
-      const mdRef = useRefStore.getState().molecularDynamicsRef;
-      if (mdRef?.current) {
-        const p = mdRef.current.atoms[pickedAtomIndex].position;
-        items.push({
-          key: 'atom-coordinates',
-          label: (
-            <>
-              <MenuItem stayAfterClick={false} hasPadding={false}>
-                {i18n.t('experiment.AtomicCoordinates', lang) +
-                  ': (' +
-                  p.x.toFixed(2) +
-                  ', ' +
-                  p.y.toFixed(2) +
-                  ', ' +
-                  p.z.toFixed(2) +
-                  ') Å'}
-              </MenuItem>
-            </>
-          ),
-        });
-      }
+          {/* atom-coordinates */}
+          {atomCoordinates()}
 
-      items.push({
-        key: 'atom-mass',
-        label: (
-          <>
-            <MenuItem stayAfterClick={false} hasPadding={false}>
-              {i18n.t('experiment.AtomicMass', lang) + ': ' + pickedAtom.mass.toFixed(2) + ' g/mol'}
-            </MenuItem>
-          </>
-        ),
-      });
+          {/* atom-mass */}
+          <MainMenuItem>
+            {i18n.t('experiment.AtomicMass', lang) + ': ' + pickedAtom.mass.toFixed(2) + ' g/mol'}
+          </MainMenuItem>
 
-      items.push({
-        key: 'atom-sigma',
-        label: (
-          <>
-            <MenuItem stayAfterClick={false} hasPadding={false}>
-              {i18n.t('experiment.AtomicRadius', lang) + ': ' + pickedAtom.sigma.toFixed(3) + ' Å'}
-            </MenuItem>
-            <hr style={{ marginTop: '10px', marginBottom: '6px' }} />
-          </>
-        ),
-      });
+          {/* atom-sigma */}
+          <MainMenuItem>
+            {i18n.t('experiment.AtomicRadius', lang) + ': ' + pickedAtom.sigma.toFixed(3) + ' Å'}
+          </MainMenuItem>
+          <hr style={{ marginTop: '10px', marginBottom: '6px' }} />
 
-      items.push({
-        key: 'atom-fix',
-        label: (
-          <Space>
+          {/* atom-fix */}
+          <Space style={{ display: 'flex', justifyContent: 'flex-start' }}>
             <TrajectoryCheckBox />
             <FixAtomCheckBox />
           </Space>
-        ),
-      });
 
-      items.push({
-        key: 'atom-epsilon',
-        label: <AtomEpsilonInputField />,
-      });
+          {/* atom-epsilon */}
+          <AtomEpsilonInputField />
 
-      items.push({
-        key: 'atom-charge',
-        label: <ChargeAtomInputField />,
-      });
+          {/* atom-charge */}
+          <ChargeAtomInputField />
 
-      items.push({
-        key: 'atom-restraint',
-        label: <RestrainAtomInputField />,
-      });
+          {/* atom-restraint */}
+          <RestrainAtomInputField />
 
-      items.push({
-        key: 'atom-damp',
-        label: <DampAtomInputField />,
-      });
+          {/* atom-damp */}
+          <DampAtomInputField />
+        </>
+      );
+    } else {
+      return null;
     }
   } else {
-    if (copiedMoleculeIndex !== -1 || cutMolecule) {
-      if (selectedPlane !== -1) {
-        items.push({
-          key: 'molecule-paste',
-          label: (
-            <>
-              <PasteMolecule />
-              <hr style={{ marginLeft: '24px' }} />
-            </>
-          ),
-        });
-      } else {
-        items.push({
-          key: 'molecule-nowhere-to-paste',
-          label: (
-            <>
-              <MenuItem stayAfterClick={false} hasPadding={true}>
-                {i18n.t('message.NoPlaneToPaste', lang)}
-              </MenuItem>
-              <hr style={{ marginLeft: '24px' }} />
-            </>
-          ),
-        });
-      }
-    }
+    return (
+      <>
+        {/* paste */}
+        {pasteMolecule()}
 
-    items.push({
-      key: 'molecular-viewer-auto-rotate',
-      label: <AutoRotateCheckBox />,
-    });
+        {/* molecular-viewer-auto-rotate */}
+        <AutoRotateCheckBox />
 
-    items.push({
-      key: 'molecular-viewer-navigation-mode',
-      label: <NavigationViewCheckBox popup={true} />,
-    });
+        {/* molecular-viewer-navigation-mode */}
+        <NavigationViewCheckBox popup={true} />
 
-    items.push({
-      key: 'molecular-viewer-axes',
-      label: <AxesCheckBox />,
-    });
+        {/* molecular-viewer-axes */}
+        <AxesCheckBox />
 
-    items.push({
-      key: 'molecular-viewer-container',
-      label: <ContainerCheckBox />,
-    });
+        {/* molecular-viewer-container */}
+        <ContainerCheckBox />
 
-    items.push({
-      key: 'molecular-viewer-foggy',
-      label: <FogCheckBox />,
-    });
+        {/* molecular-viewer-foggy */}
+        <FogCheckBox />
 
-    items.push({
-      key: 'molecular-viewer-view-angle-submenu',
-      label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.ViewDirection', lang)}</MenuItem>,
-      children: [
-        {
-          key: 'molecular-viewer-view-angle-items',
-          label: <ViewAngleMenuItems />,
-        },
-      ],
-    });
+        {/* molecular-viewer-view-angle-submenu */}
+        <ViewAngleSubmenu />
 
-    items.push({
-      key: 'molecular-viewer-mechanics-submenu',
-      label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Mechanics', lang)}</MenuItem>,
-      children: [
-        {
-          key: 'molecular-viewer-vdw-bonds',
-          label: <VdwBondsCheckBox />,
-        },
-        {
-          key: 'molecular-viewer-angular-bonds',
-          label: <AngularBondsCheckBox />,
-        },
-        {
-          key: 'molecular-viewer-torsional-bonds',
-          label: <TorsionalBondsCheckBox />,
-        },
-        {
-          key: 'molecular-viewer-momentum-vectors',
-          label: <MomentumVectorCheckBox />,
-        },
-        {
-          key: 'molecular-viewer-force-vectors',
-          label: <ForceVectorCheckBox />,
-        },
-      ],
-    });
+        <MainSubMenu hasPadding label={i18n.t('molecularViewer.Mechanics', lang)}>
+          {/* molecular-viewer-vdw-bonds */}
+          <VdwBondsCheckBox />
 
-    items.push({
-      key: 'molecular-viewer-style-submenu',
-      label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.GlobalStyle', lang)}</MenuItem>,
-      children: [
-        {
-          key: 'molecular-viewer-style-radio-group',
-          label: <GlobalStyleRadioGroup />,
-        },
-      ],
-    });
+          {/* molecular-viewer-angular-bonds */}
+          <AngularBondsCheckBox />
 
-    items.push({
-      key: 'molecular-viewer-material-submenu',
-      label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Material', lang)}</MenuItem>,
-      children: [
-        {
-          key: 'molecular-viewer-material-radio-group',
-          label: <MaterialRadioGroup />,
-        },
-      ],
-    });
+          {/* molecular-viewer-torsional-bonds */}
+          <TorsionalBondsCheckBox />
 
-    items.push({
-      key: 'molecular-viewer-coloring-submenu',
-      label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.Color', lang)}</MenuItem>,
-      children: [
-        {
-          key: 'molecular-viewer-coloring-radio-group',
-          label: <ColoringRadioGroup />,
-        },
-      ],
-    });
+          {/* molecular-viewer-momentum-vectors */}
+          <MomentumVectorCheckBox />
 
-    items.push({
-      key: 'molecular-viewer-background-color',
-      label: <BackgroundColor />,
-    });
+          {/* molecular-viewer-force-vectors */}
+          <ForceVectorCheckBox />
+        </MainSubMenu>
 
-    items.push({
-      key: 'molecular-viewer-screenshot',
-      label: <Screenshot />,
-    });
+        {/* molecular-viewer-style-submenu */}
+        <GlobalStyleRadioSubmenu hasPadding />
+
+        {/* molecular-viewer-material-submenu */}
+        <MaterialRadioSubmenu hasPadding />
+
+        {/* molecular-viewer-coloring-submenu */}
+        <ColoringRadioSubmenu hasPadding />
+
+        {/* molecular-viewer-background-color */}
+        <BackgroundColor />
+
+        {/* molecular-viewer-screenshot */}
+        <Screenshot />
+      </>
+    );
   }
-
-  return { items } as MenuProps;
 };
+
+export default MolecularModelingMenu;

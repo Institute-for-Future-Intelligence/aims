@@ -3,163 +3,93 @@
  */
 
 import { useStore } from '../../stores/common';
-import i18n from '../../i18n/i18n';
-import { MenuProps } from 'antd';
-import { MenuItem } from '../menuItem';
-import { MoleculeInterface } from '../../types.ts';
-import React from 'react';
+import { MainMenuItem } from '../menuItem';
 import {
   AutoRotateCheckBox,
   AxesCheckBox,
   BackgroundColor,
-  ColoringRadioGroup,
+  ColoringRadioSubmenu,
   ContainerCheckBox,
   FogCheckBox,
-  GlobalStyleRadioGroup,
-  MaterialRadioGroup,
+  GlobalStyleRadioSubmenu,
+  MaterialRadioSubmenu,
   NavigationViewCheckBox,
   Screenshot,
-  ViewAngleMenuItems,
+  ViewAngleSubmenu,
 } from './sharedMenuItems.tsx';
-import { RotateLigand, TranslateLigand } from './drugDiscoveryMenuItems.tsx';
+import { RotateLigandSubmenu, TranslateLigandSubmenu } from './drugDiscoveryMenuItems.tsx';
+import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
+import * as Selector from '../../stores/selector';
 
-export const createDrugDiscoveryDefaultMenu = (
-  pickedMoleculeIndex: number,
-  ligand: MoleculeInterface | null,
-  protein: MoleculeInterface | null,
-) => {
-  const lang = { lng: useStore.getState().language };
-
-  const items: MenuProps['items'] = [];
+const DrugDiscoveryMenu = () => {
+  const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
+  const protein = useStore(Selector.protein);
+  const ligand = useStore(Selector.ligand);
 
   let pickedMolecule = null;
   if (pickedMoleculeIndex === 0) pickedMolecule = protein;
   else if (pickedMoleculeIndex === 1) pickedMolecule = ligand;
 
-  if (pickedMolecule) {
-    items.push({
-      key: 'molecule-name',
-      label: (
+  return (
+    <>
+      {pickedMolecule ? (
         <>
-          <MenuItem stayAfterClick={false} hasPadding={false} fontWeight={'bold'} cursor={'default'}>
+          {/* molecule-name */}
+          <MainMenuItem stayAfterClick={false} fontWeight="bold">
             {pickedMolecule.name}
-          </MenuItem>
+          </MainMenuItem>
           <hr />
+
+          {pickedMolecule === ligand ? (
+            <>
+              {/* translate-ligand-submenu */}
+              <TranslateLigandSubmenu />
+
+              {/* rotate-molecule-submenu */}
+              <RotateLigandSubmenu />
+            </>
+          ) : (
+            <>
+              {/* molecular-viewer-style-submenu */}
+              <GlobalStyleRadioSubmenu />
+
+              {/* molecular-viewer-material-submenu */}
+              <MaterialRadioSubmenu />
+
+              {/* molecular-viewer-coloring-submenu */}
+              <ColoringRadioSubmenu />
+            </>
+          )}
         </>
-      ),
-    });
+      ) : (
+        <>
+          {/* molecular-viewer-auto-rotate */}
+          <AutoRotateCheckBox />
 
-    if (pickedMolecule === ligand) {
-      items.push({
-        key: 'translate-ligand-submenu',
-        label: (
-          <MenuItem stayAfterClick={true} hasPadding={false}>
-            {i18n.t('molecularViewer.TranslateMolecule', lang)}
-          </MenuItem>
-        ),
-        children: [
-          {
-            key: 'translate-ligand-fields',
-            label: <TranslateLigand />,
-          },
-        ],
-      });
+          {/* molecular-viewer-navigation-mode */}
+          <NavigationViewCheckBox popup={true} />
 
-      items.push({
-        key: 'rotate-molecule-submenu',
-        label: (
-          <MenuItem stayAfterClick={true} hasPadding={false}>
-            {i18n.t('molecularViewer.RotateMolecule', lang)}
-          </MenuItem>
-        ),
-        children: [
-          {
-            key: 'rotate-ligand-fields',
-            label: <RotateLigand />,
-          },
-        ],
-      });
-    } else {
-      items.push({
-        key: 'molecular-viewer-style-submenu',
-        label: <MenuItem hasPadding={false}>{i18n.t('molecularViewer.Style', lang)}</MenuItem>,
-        children: [
-          {
-            key: 'molecular-viewer-style-radio-group',
-            label: <GlobalStyleRadioGroup />,
-          },
-        ],
-      });
+          {/* molecular-viewer-axes */}
+          <AxesCheckBox />
 
-      items.push({
-        key: 'molecular-viewer-material-submenu',
-        label: <MenuItem hasPadding={false}>{i18n.t('molecularViewer.Material', lang)}</MenuItem>,
-        children: [
-          {
-            key: 'molecular-viewer-material-radio-group',
-            label: <MaterialRadioGroup />,
-          },
-        ],
-      });
+          {/* molecular-viewer-container */}
+          <ContainerCheckBox />
 
-      items.push({
-        key: 'molecular-viewer-coloring-submenu',
-        label: <MenuItem hasPadding={false}>{i18n.t('molecularViewer.Color', lang)}</MenuItem>,
-        children: [
-          {
-            key: 'molecular-viewer-coloring-radio-group',
-            label: <ColoringRadioGroup />,
-          },
-        ],
-      });
-    }
-  } else {
-    items.push({
-      key: 'molecular-viewer-auto-rotate',
-      label: <AutoRotateCheckBox />,
-    });
+          {/* molecular-viewer-foggy */}
+          <FogCheckBox />
 
-    items.push({
-      key: 'molecular-viewer-navigation-mode',
-      label: <NavigationViewCheckBox popup={true} />,
-    });
+          {/* molecular-viewer-view-angle-submenu */}
+          <ViewAngleSubmenu />
 
-    items.push({
-      key: 'molecular-viewer-axes',
-      label: <AxesCheckBox />,
-    });
+          {/* molecular-viewer-background-color */}
+          <BackgroundColor />
 
-    items.push({
-      key: 'molecular-viewer-container',
-      label: <ContainerCheckBox />,
-    });
-
-    items.push({
-      key: 'molecular-viewer-foggy',
-      label: <FogCheckBox />,
-    });
-
-    items.push({
-      key: 'molecular-viewer-view-angle-submenu',
-      label: <MenuItem hasPadding={true}>{i18n.t('molecularViewer.ViewDirection', lang)}</MenuItem>,
-      children: [
-        {
-          key: 'molecular-viewer-view-angle-items',
-          label: <ViewAngleMenuItems />,
-        },
-      ],
-    });
-
-    items.push({
-      key: 'molecular-viewer-background-color',
-      label: <BackgroundColor />,
-    });
-
-    items.push({
-      key: 'molecular-viewer-screenshot',
-      label: <Screenshot />,
-    });
-  }
-
-  return { items } as MenuProps;
+          {/* molecular-viewer-screenshot */}
+          <Screenshot />
+        </>
+      )}
+    </>
+  );
 };
+
+export default DrugDiscoveryMenu;

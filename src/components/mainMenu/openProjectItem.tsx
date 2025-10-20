@@ -4,7 +4,7 @@
 
 import { useLanguage } from '../../hooks.ts';
 import { useTranslation } from 'react-i18next';
-import { LabelMark, MenuItem } from '../menuItem.tsx';
+import { LabelMark, MainMenuItem } from '../menuItem.tsx';
 import { App } from 'antd';
 import { HookAPI } from 'antd/lib/modal/useModal';
 
@@ -20,11 +20,9 @@ export const OpenProjectItem = ({
   const { modal } = App.useApp();
 
   return (
-    <>
-      <MenuItem hasPadding={false} onClick={() => askToOpenProject(modal)}>
-        {t('menu.project.OpenProject', lang)}
-        <LabelMark>({isMac ? '⌘' : 'Ctrl'}+O)</LabelMark>...
-      </MenuItem>
-    </>
+    <MainMenuItem onClick={() => askToOpenProject(modal)}>
+      {t('menu.project.OpenProject', lang)}
+      <LabelMark>({isMac ? '⌘' : 'Ctrl'}+O)</LabelMark>...
+    </MainMenuItem>
   );
 };

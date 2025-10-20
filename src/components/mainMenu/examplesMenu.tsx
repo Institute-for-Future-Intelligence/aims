@@ -2,7 +2,7 @@
  * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 import { MenuProps } from 'antd';
-import { MenuItem } from '../menuItem.tsx';
+import { MainMenuItem, MainSubMenu } from '../menuItem.tsx';
 import i18n from '../../i18n/i18n';
 import { useStore } from '../../stores/common.ts';
 import { ProjectState } from '../../types.ts';
@@ -10,6 +10,8 @@ import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
 import { fetchProject, postFetch } from '../../cloudProjectUtil.ts';
 import { HOME_URL } from '../../constants.ts';
 import { useDataStore } from '../../stores/commonData.ts';
+import { t } from 'i18next';
+import { useLanguage } from '../../hooks.ts';
 
 export const createExamplesMenu = (viewOnly: boolean) => {
   const setCommonStore = useStore.getState().set;
@@ -48,260 +50,262 @@ export const createExamplesMenu = (viewOnly: boolean) => {
   const items: MenuProps['items'] = [
     {
       key: 'chemistry',
-      label: <MenuItem>{i18n.t('menu.examples.chemistrySubMenu', lang)}</MenuItem>,
+      label: <MainMenuItem>{i18n.t('menu.examples.chemistrySubMenu', lang)}</MainMenuItem>,
       children: [
         {
           key: 'Monatomic Molecules',
           label: (
-            <MenuItem onClick={() => loadProject('Monatomic Molecules')}>
+            <MainMenuItem onClick={() => loadProject('Monatomic Molecules')}>
               {i18n.t('menu.examples.chemistry.MonatomicMolecules', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Maxwell-Boltzmann Speed Distribution of Argon',
           label: (
-            <MenuItem onClick={() => loadProject('Maxwell-Boltzmann Speed Distribution of Argon')}>
+            <MainMenuItem onClick={() => loadProject('Maxwell-Boltzmann Speed Distribution of Argon')}>
               {i18n.t('menu.examples.chemistry.MaxwellBoltzmannSpeedDistributionArgon', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Speed Distributions of Carbon and Hydrogen Atoms in Molecules',
           label: (
-            <MenuItem onClick={() => loadProject('Speed Distributions of Carbon and Hydrogen Atoms in Molecules')}>
+            <MainMenuItem onClick={() => loadProject('Speed Distributions of Carbon and Hydrogen Atoms in Molecules')}>
               {i18n.t('menu.examples.chemistry.SpeedDistributionsOfCarbonAndHydrogenInMolecules', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Diatomic Molecules',
           label: (
-            <MenuItem onClick={() => loadProject('Diatomic Molecules')}>
+            <MainMenuItem onClick={() => loadProject('Diatomic Molecules')}>
               {i18n.t('menu.examples.chemistry.DiatomicMolecules', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Triatomic Molecules',
           label: (
-            <MenuItem onClick={() => loadProject('Triatomic Molecules')}>
+            <MainMenuItem onClick={() => loadProject('Triatomic Molecules')}>
               {i18n.t('menu.examples.chemistry.TriatomicMolecules', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Liquid in a Box',
           label: (
-            <MenuItem onClick={() => loadProject('Liquid in a Box')}>
+            <MainMenuItem onClick={() => loadProject('Liquid in a Box')}>
               {i18n.t('menu.examples.chemistry.LiquidInBox', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Solid vs. Gas',
           label: (
-            <MenuItem onClick={() => loadProject('Solid vs Gas')}>
+            <MainMenuItem onClick={() => loadProject('Solid vs Gas')}>
               {i18n.t('menu.examples.chemistry.SolidVsGas', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Linear Alkanes',
           label: (
-            <MenuItem onClick={() => loadProject('Alkanes')}>
+            <MainMenuItem onClick={() => loadProject('Alkanes')}>
               {i18n.t('menu.examples.chemistry.LinearAlkanes', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Cycloalkanes',
           label: (
-            <MenuItem onClick={() => loadProject('Cycloalkanes')}>
+            <MainMenuItem onClick={() => loadProject('Cycloalkanes')}>
               {i18n.t('menu.examples.chemistry.Cycloalkanes', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Acenes',
           label: (
-            <MenuItem onClick={() => loadProject('Acenes')}>{i18n.t('menu.examples.chemistry.Acenes', lang)}</MenuItem>
+            <MainMenuItem onClick={() => loadProject('Acenes')}>
+              {i18n.t('menu.examples.chemistry.Acenes', lang)}
+            </MainMenuItem>
           ),
         },
         {
           key: 'Chlorobenzenes',
           label: (
-            <MenuItem onClick={() => loadProject('Chlorobenzenes')}>
+            <MainMenuItem onClick={() => loadProject('Chlorobenzenes')}>
               {i18n.t('menu.examples.chemistry.Chlorobenzenes', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Bu-2-ene Isomers',
           label: (
-            <MenuItem onClick={() => loadProject('Bu-2-ene Isomers')}>
+            <MainMenuItem onClick={() => loadProject('Bu-2-ene Isomers')}>
               {i18n.t('menu.examples.chemistry.Bu2EneIsomers', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Enantiomers - Arketamine vs Esketamine',
           label: (
-            <MenuItem onClick={() => loadProject('Enantiomers - Arketamine vs Esketamine')}>
+            <MainMenuItem onClick={() => loadProject('Enantiomers - Arketamine vs Esketamine')}>
               {i18n.t('menu.examples.chemistry.ArketamineVsEsketamine', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'C₈H₁₈O Isomers',
           label: (
-            <MenuItem onClick={() => loadProject('C₈H₁₈O Isomers')}>
+            <MainMenuItem onClick={() => loadProject('C₈H₁₈O Isomers')}>
               {i18n.t('menu.examples.chemistry.C8H18OIsomers', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Cis–Trans Isomerism of Fatty Acids',
           label: (
-            <MenuItem onClick={() => loadProject('Cis–Trans Isomerism of Fatty Acids')}>
+            <MainMenuItem onClick={() => loadProject('Cis–Trans Isomerism of Fatty Acids')}>
               {i18n.t('menu.examples.chemistry.CisTransIsomerismOfFattyAcids', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'PFAS',
           label: (
-            <MenuItem onClick={() => loadProject('PFAS')}>
+            <MainMenuItem onClick={() => loadProject('PFAS')}>
               {i18n.t('menu.examples.chemistry.ForeverChemicals', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
       ],
     },
     {
       key: 'biology',
-      label: <MenuItem>{i18n.t('menu.examples.biologySubMenu', lang)}</MenuItem>,
+      label: <MainMenuItem>{i18n.t('menu.examples.biologySubMenu', lang)}</MainMenuItem>,
       children: [
         {
           key: 'Protein Alpha Helix',
           label: (
-            <MenuItem onClick={() => loadProject('Alpha Helix')}>
+            <MainMenuItem onClick={() => loadProject('Alpha Helix')}>
               {i18n.t('menu.examples.biology.ProteinAlphaHelix', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'DNA Double Helix',
           label: (
-            <MenuItem onClick={() => loadProject('DNA Double Helix')}>
+            <MainMenuItem onClick={() => loadProject('DNA Double Helix')}>
               {i18n.t('menu.examples.biology.DNADoubleHelix', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
       ],
     },
     {
       key: 'materials-science',
-      label: <MenuItem>{i18n.t('menu.examples.materialsScienceSubMenu', lang)}</MenuItem>,
+      label: <MainMenuItem>{i18n.t('menu.examples.materialsScienceSubMenu', lang)}</MainMenuItem>,
       children: [
         {
           key: 'Gold Crystal',
           label: (
-            <MenuItem onClick={() => loadProject('Gold Crystal')}>
+            <MainMenuItem onClick={() => loadProject('Gold Crystal')}>
               {i18n.t('menu.examples.materialsScience.GoldCrystal', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Silver Crystal',
           label: (
-            <MenuItem onClick={() => loadProject('Silver Crystal')}>
+            <MainMenuItem onClick={() => loadProject('Silver Crystal')}>
               {i18n.t('menu.examples.materialsScience.SilverCrystal', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Iron Crystal',
           label: (
-            <MenuItem onClick={() => loadProject('Iron Crystal')}>
+            <MainMenuItem onClick={() => loadProject('Iron Crystal')}>
               {i18n.t('menu.examples.materialsScience.IronCrystal', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Salt Crystal',
           label: (
-            <MenuItem onClick={() => loadProject('Salt Crystal')}>
+            <MainMenuItem onClick={() => loadProject('Salt Crystal')}>
               {i18n.t('menu.examples.materialsScience.SaltCrystal', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Diamond Crystal',
           label: (
-            <MenuItem onClick={() => loadProject('Diamond')}>
+            <MainMenuItem onClick={() => loadProject('Diamond')}>
               {i18n.t('menu.examples.materialsScience.DiamondCrystal', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Graphite',
           label: (
-            <MenuItem onClick={() => loadProject('Graphite')}>
+            <MainMenuItem onClick={() => loadProject('Graphite')}>
               {i18n.t('menu.examples.materialsScience.Graphite', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Graphenes',
           label: (
-            <MenuItem onClick={() => loadProject('Graphenes')}>
+            <MainMenuItem onClick={() => loadProject('Graphenes')}>
               {i18n.t('menu.examples.materialsScience.Graphenes', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Zeolite',
           label: (
-            <MenuItem onClick={() => loadProject('Zeolite')}>
+            <MainMenuItem onClick={() => loadProject('Zeolite')}>
               {i18n.t('menu.examples.materialsScience.Zeolite', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
       ],
     },
     {
       key: 'nanotechnology',
-      label: <MenuItem>{i18n.t('menu.examples.nanotechnologySubMenu', lang)}</MenuItem>,
+      label: <MainMenuItem>{i18n.t('menu.examples.nanotechnologySubMenu', lang)}</MainMenuItem>,
       children: [
         {
           key: 'Buckyballs',
           label: (
-            <MenuItem onClick={() => loadProject('Buckyballs')}>
+            <MainMenuItem onClick={() => loadProject('Buckyballs')}>
               {i18n.t('menu.examples.nanotechnology.Buckyballs', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
         {
           key: 'Carbon Nanotube',
           label: (
-            <MenuItem onClick={() => loadProject('Water Molecules in a Carbon Nanotube')}>
+            <MainMenuItem onClick={() => loadProject('Water Molecules in a Carbon Nanotube')}>
               {i18n.t('menu.examples.nanotechnology.CarbonNanotube', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
       ],
     },
     {
       key: 'biotechnology',
-      label: <MenuItem>{i18n.t('menu.examples.biotechnologySubMenu', lang)}</MenuItem>,
+      label: <MainMenuItem>{i18n.t('menu.examples.biotechnologySubMenu', lang)}</MainMenuItem>,
       children: [
         {
           key: 'HIV-1 Protease Inhibitor',
           label: (
-            <MenuItem onClick={() => loadProject('HIV-1 Protease Inhibitor')}>
+            <MainMenuItem onClick={() => loadProject('HIV-1 Protease Inhibitor')}>
               {i18n.t('menu.examples.biotechnology.HIV1ProteaseInhibitor', lang)}
-            </MenuItem>
+            </MainMenuItem>
           ),
         },
       ],
@@ -310,3 +314,206 @@ export const createExamplesMenu = (viewOnly: boolean) => {
 
   return items;
 };
+
+interface Props {
+  viewOnly: boolean;
+}
+
+const ExampleMenu = ({ viewOnly }: Props) => {
+  const lang = useLanguage();
+  const setCommonStore = useStore.getState().set;
+  const setWaiting = usePrimitiveStore.getState().setWaiting;
+
+  const setProjectState = (projectState: ProjectState) => {
+    setCommonStore((state) => {
+      state.projectState = { ...projectState };
+    });
+    usePrimitiveStore.getState().set((state) => {
+      state.updateProjectsFlag = true;
+      state.changed = false;
+      state.resetSimulation = true;
+    });
+    useDataStore.getState().energyTimeSeries.clear();
+    useDataStore.getState().speedArrayMap.clear();
+    useDataStore.getState().positionTimeSeriesMap.clear();
+  };
+
+  const loadProject = (title: string) => {
+    const owner = import.meta.env.VITE_EXAMPLE_PROJECT_OWNER;
+    if (title && owner) {
+      setWaiting(true);
+      fetchProject(owner, title, setProjectState).finally(() => {
+        setWaiting(false);
+        postFetch();
+      });
+      if (useStore.getState().loggable) useStore.getState().logAction('Open Example: ' + title);
+      if (!viewOnly) {
+        window.history.pushState({}, document.title, HOME_URL);
+      }
+    }
+  };
+
+  return (
+    <MainSubMenu label={t('menu.examplesSubMenu', lang)}>
+      {/* chemistry */}
+      <MainSubMenu label={t('menu.examples.chemistrySubMenu', lang)}>
+        {/* Monatomic Molecules */}
+        <MainMenuItem onClick={() => loadProject('Monatomic Molecules')}>
+          {i18n.t('menu.examples.chemistry.MonatomicMolecules', lang)}
+        </MainMenuItem>
+
+        {/* Maxwell-Boltzmann Speed Distribution of Argon */}
+        <MainMenuItem onClick={() => loadProject('Maxwell-Boltzmann Speed Distribution of Argon')}>
+          {i18n.t('menu.examples.chemistry.MaxwellBoltzmannSpeedDistributionArgon', lang)}
+        </MainMenuItem>
+
+        {/* Speed Distributions of Carbon and Hydrogen Atoms in Molecules */}
+        <MainMenuItem onClick={() => loadProject('Speed Distributions of Carbon and Hydrogen Atoms in Molecules')}>
+          {i18n.t('menu.examples.chemistry.SpeedDistributionsOfCarbonAndHydrogenInMolecules', lang)}
+        </MainMenuItem>
+
+        {/* Diatomic Molecules */}
+        <MainMenuItem onClick={() => loadProject('Diatomic Molecules')}>
+          {i18n.t('menu.examples.chemistry.DiatomicMolecules', lang)}
+        </MainMenuItem>
+
+        {/* Triatomic Molecules */}
+        <MainMenuItem onClick={() => loadProject('Triatomic Molecules')}>
+          {i18n.t('menu.examples.chemistry.TriatomicMolecules', lang)}
+        </MainMenuItem>
+
+        {/* Liquid in a Box */}
+        <MainMenuItem onClick={() => loadProject('Liquid in a Box')}>
+          {i18n.t('menu.examples.chemistry.LiquidInBox', lang)}
+        </MainMenuItem>
+
+        {/* Solid vs. Gas */}
+        <MainMenuItem onClick={() => loadProject('Solid vs Gas')}>
+          {i18n.t('menu.examples.chemistry.SolidVsGas', lang)}
+        </MainMenuItem>
+
+        {/* Linear Alkanes */}
+        <MainMenuItem onClick={() => loadProject('Alkanes')}>
+          {i18n.t('menu.examples.chemistry.LinearAlkanes', lang)}
+        </MainMenuItem>
+
+        {/* Cycloalkanes */}
+        <MainMenuItem onClick={() => loadProject('Cycloalkanes')}>
+          {i18n.t('menu.examples.chemistry.Cycloalkanes', lang)}
+        </MainMenuItem>
+
+        {/* Acenes */}
+        <MainMenuItem onClick={() => loadProject('Acenes')}>
+          {i18n.t('menu.examples.chemistry.Acenes', lang)}
+        </MainMenuItem>
+
+        {/* Chlorobenzenes */}
+        <MainMenuItem onClick={() => loadProject('Chlorobenzenes')}>
+          {i18n.t('menu.examples.chemistry.Chlorobenzenes', lang)}
+        </MainMenuItem>
+
+        {/* Bu-2-ene Isomers */}
+        <MainMenuItem onClick={() => loadProject('Bu-2-ene Isomers')}>
+          {i18n.t('menu.examples.chemistry.Bu2EneIsomers', lang)}
+        </MainMenuItem>
+
+        {/* Enantiomers - Arketamine vs Esketamine */}
+        <MainMenuItem onClick={() => loadProject('Enantiomers - Arketamine vs Esketamine')}>
+          {i18n.t('menu.examples.chemistry.ArketamineVsEsketamine', lang)}
+        </MainMenuItem>
+
+        {/* C₈H₁₈O Isomers */}
+        <MainMenuItem onClick={() => loadProject('C₈H₁₈O Isomers')}>
+          {i18n.t('menu.examples.chemistry.C8H18OIsomers', lang)}
+        </MainMenuItem>
+
+        {/* Cis–Trans Isomerism of Fatty Acids */}
+        <MainMenuItem onClick={() => loadProject('Cis–Trans Isomerism of Fatty Acids')}>
+          {i18n.t('menu.examples.chemistry.CisTransIsomerismOfFattyAcids', lang)}
+        </MainMenuItem>
+
+        {/* PFAS */}
+        <MainMenuItem onClick={() => loadProject('PFAS')}>
+          {i18n.t('menu.examples.chemistry.ForeverChemicals', lang)}
+        </MainMenuItem>
+      </MainSubMenu>
+
+      {/* biology */}
+      <MainSubMenu label={t('menu.examples.biologySubMenu', lang)}>
+        {/* 'Protein Alpha Helix', */}
+        <MainMenuItem onClick={() => loadProject('Alpha Helix')}>
+          {i18n.t('menu.examples.biology.ProteinAlphaHelix', lang)}
+        </MainMenuItem>
+        {/* 'DNA Double Helix', */}
+        <MainMenuItem onClick={() => loadProject('DNA Double Helix')}>
+          {i18n.t('menu.examples.biology.DNADoubleHelix', lang)}
+        </MainMenuItem>
+      </MainSubMenu>
+
+      {/* materials-science */}
+      <MainSubMenu label={t('menu.examples.materialsScienceSubMenu', lang)}>
+        {/* Gold Crystal */}
+        <MainMenuItem onClick={() => loadProject('Gold Crystal')}>
+          {i18n.t('menu.examples.materialsScience.GoldCrystal', lang)}
+        </MainMenuItem>
+
+        {/* Silver Crystal */}
+        <MainMenuItem onClick={() => loadProject('Silver Crystal')}>
+          {i18n.t('menu.examples.materialsScience.SilverCrystal', lang)}
+        </MainMenuItem>
+
+        {/* Iron Crystal */}
+        <MainMenuItem onClick={() => loadProject('Iron Crystal')}>
+          {i18n.t('menu.examples.materialsScience.IronCrystal', lang)}
+        </MainMenuItem>
+
+        {/* Salt Crystal */}
+        <MainMenuItem onClick={() => loadProject('Salt Crystal')}>
+          {i18n.t('menu.examples.materialsScience.SaltCrystal', lang)}
+        </MainMenuItem>
+
+        {/* Diamond Crystal */}
+        <MainMenuItem onClick={() => loadProject('Diamond')}>
+          {i18n.t('menu.examples.materialsScience.DiamondCrystal', lang)}
+        </MainMenuItem>
+
+        {/* Graphite */}
+        <MainMenuItem onClick={() => loadProject('Graphite')}>
+          {i18n.t('menu.examples.materialsScience.Graphite', lang)}
+        </MainMenuItem>
+
+        {/* Graphenes */}
+        <MainMenuItem onClick={() => loadProject('Graphenes')}>
+          {i18n.t('menu.examples.materialsScience.Graphenes', lang)}
+        </MainMenuItem>
+
+        {/* Zeolite */}
+        <MainMenuItem onClick={() => loadProject('Zeolite')}>
+          {i18n.t('menu.examples.materialsScience.Zeolite', lang)}
+        </MainMenuItem>
+      </MainSubMenu>
+
+      {/* nanotechnology */}
+      <MainSubMenu label={t('menu.examples.nanotechnologySubMenu', lang)}>
+        {/* 'Buckyballs', */}
+        <MainMenuItem onClick={() => loadProject('Buckyballs')}>
+          {i18n.t('menu.examples.nanotechnology.Buckyballs', lang)}
+        </MainMenuItem>
+        {/* 'Carbon Nanotube', */}
+        <MainMenuItem onClick={() => loadProject('Water Molecules in a Carbon Nanotube')}>
+          {i18n.t('menu.examples.nanotechnology.CarbonNanotube', lang)}
+        </MainMenuItem>
+      </MainSubMenu>
+
+      {/* biotechnology */}
+      <MainSubMenu label={t('menu.examples.biotechnologySubMenu', lang)}>
+        {/* HIV-1 Protease Inhibitor */}
+        <MainMenuItem onClick={() => loadProject('HIV-1 Protease Inhibitor')}>
+          {i18n.t('menu.examples.biotechnology.HIV1ProteaseInhibitor', lang)}
+        </MainMenuItem>
+      </MainSubMenu>
+    </MainSubMenu>
+  );
+};
+
+export default ExampleMenu;

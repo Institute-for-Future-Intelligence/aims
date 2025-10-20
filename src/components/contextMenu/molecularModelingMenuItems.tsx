@@ -7,9 +7,9 @@ import { Matrix4, Vector3 } from 'three';
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { useLanguage } from '../../hooks';
-import { Button, Checkbox, InputNumber, Radio, RadioChangeEvent, Space } from 'antd';
+import { Button, Checkbox, InputNumber, Space } from 'antd';
 import { UndoableChange } from '../../undo/UndoableChange';
-import { MenuItem } from '../menuItem';
+import { MainMenuItem, MainSubMenu } from '../menuItem';
 import { UndoableCheck } from '../../undo/UndoableCheck';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +25,7 @@ import { Restraint } from '../../models/Restraint.ts';
 import { UndoableDeleteMoleculeInChamber } from '../../undo/UndoableDelete.ts';
 import { Undoable } from '../../undo/Undoable.ts';
 import { UndoableMoleculeRotation, UndoableMoleculeTranslation } from '../../undo/UndoableMove.ts';
+import { ClickEvent, MenuItem, MenuRadioGroup, RadioChangeEvent } from '@szhsin/react-menu';
 
 export const TranslateMolecule = () => {
   const setCommonStore = useStore(Selector.set);
@@ -90,7 +91,7 @@ export const TranslateMolecule = () => {
 
   return (
     pickedIndex !== -1 && (
-      <Space direction={'vertical'} onClick={(e) => e.stopPropagation()}>
+      <Space direction={'vertical'} style={{ margin: '6px' }} onClick={(e) => e.stopPropagation()}>
         <InputNumber
           style={{ width: '140px' }}
           addonBefore={'X'}
@@ -213,7 +214,7 @@ export const RotateMolecule = () => {
 
   return (
     pickedIndex !== -1 && (
-      <Space direction={'vertical'} onClick={(e) => e.stopPropagation()}>
+      <Space direction={'vertical'} style={{ margin: '6px' }} onClick={(e) => e.stopPropagation()}>
         <Space direction={'horizontal'}>
           <span>{t('molecularViewer.AboutXAxis', lang) + ':'}</span>
           <Button
@@ -324,11 +325,7 @@ export const CutMolecule = () => {
     setChanged(true);
   };
 
-  return (
-    <MenuItem stayAfterClick={false} hasPadding={false} onClick={undoableCutSelectedMolecule}>
-      {t('word.Cut', lang)}
-    </MenuItem>
-  );
+  return <MainMenuItem onClick={undoableCutSelectedMolecule}>{t('word.Cut', lang)}</MainMenuItem>;
 };
 
 export const CopyMolecule = () => {
@@ -348,11 +345,7 @@ export const CopyMolecule = () => {
     if (loggable) logAction('Copy Selected Molecule');
   };
 
-  return (
-    <MenuItem stayAfterClick={false} hasPadding={false} onClick={copySelectedMolecule}>
-      {t('word.Copy', lang)}
-    </MenuItem>
-  );
+  return <MainMenuItem onClick={copySelectedMolecule}>{t('word.Copy', lang)}</MainMenuItem>;
 };
 
 export const PasteMolecule = () => {
@@ -409,14 +402,14 @@ export const PasteMolecule = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={true} onClick={undoablePasteSelectedMolecule}>
+    <MainMenuItem hasPadding={true} onClick={undoablePasteSelectedMolecule}>
       {t('word.Paste', lang) +
         (cutMolecule
           ? ' ' + cutMolecule.name
           : copiedMoleculeIndex !== -1
             ? ' ' + testMolecules[copiedMoleculeIndex]?.name
             : '')}
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -484,7 +477,7 @@ export const RestrainMoleculeInputField = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={true}>
+    <MainMenuItem stayAfterClick={true}>
       <InputNumber
         addonBefore={t('experiment.Restraint', lang) + ':'}
         addonAfter={'eV/Å²'}
@@ -500,7 +493,7 @@ export const RestrainMoleculeInputField = () => {
           setRestraint(s);
         }}
       />
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -524,6 +517,7 @@ export const TrajectoryCheckBox = () => {
     setAtomTrajectoryByIndex(pickedAtomIndex, checked);
     if (mdRef?.current) {
       mdRef.current.atoms[pickedAtomIndex].trajectory = checked;
+      setChecked(checked);
     }
     if (positionTimeSeriesMap) {
       positionTimeSeriesMap.delete(pickedAtomIndex);
@@ -532,11 +526,16 @@ export const TrajectoryCheckBox = () => {
     setChanged(true);
   };
 
+  const [checked, setChecked] = useState(!!getAtomByIndex(pickedAtomIndex)?.trajectory);
+  useEffect(() => {
+    setChecked(!!getAtomByIndex(pickedAtomIndex)?.trajectory);
+  }, [pickedAtomIndex]);
+
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
+    <MainMenuItem stayAfterClick>
       <Checkbox
         style={{ width: '100%' }}
-        checked={!!getAtomByIndex(pickedAtomIndex)?.trajectory}
+        checked={checked}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
           const undoableCheck = {
@@ -557,7 +556,7 @@ export const TrajectoryCheckBox = () => {
       >
         {t('molecularViewer.Trajectory', lang)}
       </Checkbox>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -581,16 +580,22 @@ export const FixAtomCheckBox = () => {
       setChanged(true);
       if (mdRef?.current) {
         mdRef.current.atoms[pickedAtomIndex].fixed = checked;
+        setChecked(checked);
       }
       updateViewer();
     }
   };
 
+  const [checked, setChecked] = useState(!!getAtomByIndex(pickedAtomIndex)?.fixed);
+  useEffect(() => {
+    setChecked(!!getAtomByIndex(pickedAtomIndex)?.fixed);
+  }, [pickedAtomIndex]);
+
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
+    <MainMenuItem stayAfterClick>
       <Checkbox
         style={{ width: '100%' }}
-        checked={!!getAtomByIndex(pickedAtomIndex)?.fixed}
+        checked={checked}
         onChange={(e: CheckboxChangeEvent) => {
           const checked = e.target.checked;
           const undoableCheck = {
@@ -611,7 +616,7 @@ export const FixAtomCheckBox = () => {
       >
         {t('experiment.FixAtom', lang)}
       </Checkbox>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -665,7 +670,7 @@ export const RestrainAtomInputField = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={true} hasPadding={false}>
+    <MainMenuItem stayAfterClick>
       <InputNumber
         addonBefore={t('experiment.Restraint', lang) + ':'}
         addonAfter={'eV/Å²'}
@@ -682,7 +687,7 @@ export const RestrainAtomInputField = () => {
           setStrength(s);
         }}
       />
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -724,7 +729,7 @@ export const DampAtomInputField = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={true} hasPadding={false}>
+    <MainMenuItem stayAfterClick>
       <InputNumber
         addonBefore={t('experiment.DampingCoefficient', lang) + ':'}
         addonAfter={'eV⋅fs/Å²'}
@@ -741,7 +746,7 @@ export const DampAtomInputField = () => {
           setDamp(s);
         }}
       />
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -783,7 +788,7 @@ export const ChargeAtomInputField = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={true} hasPadding={false}>
+    <MainMenuItem stayAfterClick>
       <InputNumber
         addonBefore={t('experiment.ElectricCharge', lang) + ':'}
         addonAfter={'e'}
@@ -800,7 +805,7 @@ export const ChargeAtomInputField = () => {
           setCharge(s);
         }}
       />
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -840,7 +845,7 @@ export const AtomEpsilonInputField = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={true} hasPadding={false}>
+    <MainMenuItem stayAfterClick>
       <InputNumber
         addonBefore={t('experiment.CohesiveEnergy', lang) + ':'}
         addonAfter={'eV'}
@@ -857,7 +862,7 @@ export const AtomEpsilonInputField = () => {
           setEpsilon(s);
         }}
       />
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -879,7 +884,7 @@ export const VdwBondsCheckBox = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
+    <MainMenuItem stayAfterClick={true}>
       <Checkbox
         style={{ width: '100%' }}
         checked={visible}
@@ -903,7 +908,7 @@ export const VdwBondsCheckBox = () => {
       >
         {t('molecularViewer.VanDerWaalsBonds', lang)}
       </Checkbox>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -925,7 +930,7 @@ export const AngularBondsCheckBox = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
+    <MainMenuItem stayAfterClick={true}>
       <Checkbox
         style={{ width: '100%' }}
         checked={visible}
@@ -949,7 +954,7 @@ export const AngularBondsCheckBox = () => {
       >
         {t('molecularViewer.AngularBonds', lang)}
       </Checkbox>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -971,7 +976,7 @@ export const TorsionalBondsCheckBox = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
+    <MainMenuItem stayAfterClick={true}>
       <Checkbox
         style={{ width: '100%' }}
         checked={visible}
@@ -995,7 +1000,7 @@ export const TorsionalBondsCheckBox = () => {
       >
         {t('molecularViewer.TorsionalBonds', lang)}
       </Checkbox>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -1017,7 +1022,7 @@ export const MomentumVectorCheckBox = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
+    <MainMenuItem stayAfterClick={true}>
       <Checkbox
         style={{ width: '100%' }}
         checked={visible}
@@ -1041,7 +1046,7 @@ export const MomentumVectorCheckBox = () => {
       >
         {t('molecularViewer.MomentumVectors', lang)}
       </Checkbox>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -1063,7 +1068,7 @@ export const ForceVectorCheckBox = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
+    <MainMenuItem stayAfterClick={true}>
       <Checkbox
         style={{ width: '100%' }}
         checked={visible}
@@ -1087,7 +1092,7 @@ export const ForceVectorCheckBox = () => {
       >
         {t('molecularViewer.ForceVectors', lang)}
       </Checkbox>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -1113,13 +1118,17 @@ export const IndividualMoleculeStyleRadioGroup = () => {
     return !!testMolecules[pickedMoleculeIndex]?.multipleResidues;
   }, [testMolecules, pickedMoleculeIndex]);
 
+  const onClick = (e: ClickEvent) => {
+    e.keepOpen = true;
+  };
+
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
-      <Radio.Group
+    <MainSubMenu label={t('molecularViewer.Style', lang)}>
+      <MenuRadioGroup
         value={testMolecules[pickedMoleculeIndex]?.style ?? molecularViewerStyle}
-        onChange={(e: RadioChangeEvent) => {
+        onRadioChange={(e: RadioChangeEvent) => {
           const oldValue = molecularViewerStyle;
-          const newValue = e.target.value;
+          const newValue = e.value;
           const undoableChange = {
             name: 'Select Style for Selected Molecule',
             timestamp: Date.now(),
@@ -1136,17 +1145,15 @@ export const IndividualMoleculeStyleRadioGroup = () => {
           setStyle(newValue);
         }}
       >
-        <Space direction="vertical">
-          {INDIVIDUAL_MOLECULE_STYLE_LABELS.map((radio, idx) => {
-            if (!multipleResidues && isCartoon(radio.value)) return null;
-            return (
-              <Radio key={`${idx}-${radio.value}`} value={radio.value} style={{ width: '100%' }}>
-                {t(radio.label, lang)}
-              </Radio>
-            );
-          })}
-        </Space>
-      </Radio.Group>
-    </MenuItem>
+        {INDIVIDUAL_MOLECULE_STYLE_LABELS.map((radio, idx) => {
+          if (!multipleResidues && isCartoon(radio.value)) return null;
+          return (
+            <MenuItem type="radio" key={`${idx}-${radio.value}`} value={radio.value} onClick={onClick}>
+              {t(radio.label, lang)}
+            </MenuItem>
+          );
+        })}
+      </MenuRadioGroup>
+    </MainSubMenu>
   );
 };

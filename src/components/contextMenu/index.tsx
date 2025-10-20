@@ -2,50 +2,55 @@
  * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
  */
 
-import React from 'react';
-import { Dropdown } from 'antd';
+import React, { useState } from 'react';
 import './style.css';
-import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
 import * as Selector from '../../stores/selector';
 import { useStore } from '../../stores/common.ts';
 import { ProjectType } from '../../constants.ts';
-import { createDrugDiscoveryDefaultMenu } from './drugDiscoveryDefaultMenu.tsx';
-import { createMolecularModelingDefaultMenu } from './molecularModelingDefaultMenu.tsx';
+import DrugDiscoveryMenu from './drugDiscoveryDefaultMenu.tsx';
+import MolecularModelingMenu from './molecularModelingDefaultMenu.tsx';
+import { ControlledMenu } from '@szhsin/react-menu';
 
 export interface ContextMenuProps {
   [key: string]: any;
 }
 
 const DropdownContextMenu: React.FC<ContextMenuProps> = ({ children }) => {
-  const pickedAtomIndex = usePrimitiveStore(Selector.pickedAtomIndex);
-  const pickedMoleculeIndex = usePrimitiveStore(Selector.pickedMoleculeIndex);
-  const copiedMoleculeIndex = usePrimitiveStore(Selector.copiedMoleculeIndex);
-  const cutMolecule = usePrimitiveStore(Selector.cutMolecule);
-  const selectedPlane = usePrimitiveStore(Selector.selectedPlane);
   const projectType = useStore(Selector.projectType);
-  const testMolecules = useStore(Selector.testMolecules);
-  const ligand = useStore(Selector.ligand);
-  const protein = useStore(Selector.protein);
+
+  const [isOpen, setOpen] = useState(false);
+  const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
+
+  const menus = () => {
+    if (projectType === ProjectType.DRUG_DISCOVERY) {
+      return <DrugDiscoveryMenu />;
+    } else {
+      return <MolecularModelingMenu />;
+    }
+  };
 
   return (
-    <Dropdown
-      trigger={['contextMenu']}
-      menu={
-        projectType === ProjectType.DRUG_DISCOVERY
-          ? createDrugDiscoveryDefaultMenu(pickedMoleculeIndex, ligand, protein)
-          : createMolecularModelingDefaultMenu(
-              pickedAtomIndex,
-              pickedMoleculeIndex,
-              copiedMoleculeIndex,
-              cutMolecule,
-              selectedPlane,
-              testMolecules,
-            )
-      }
-      overlayClassName="my-overlay"
+    <div
+      onContextMenu={(e) => {
+        if (typeof document.hasFocus === 'function' && !document.hasFocus()) return;
+
+        e.preventDefault();
+        setAnchorPoint({ x: e.clientX, y: e.clientY });
+        setOpen(true);
+      }}
     >
       {children}
-    </Dropdown>
+      <ControlledMenu
+        anchorPoint={anchorPoint}
+        state={isOpen ? 'open' : 'closed'}
+        onClose={() => {
+          setOpen(false);
+        }}
+        menuStyle={{ fontSize: '14px', minWidth: '4rem', borderRadius: '0.35rem' }}
+      >
+        {menus()}
+      </ControlledMenu>
+    </div>
   );
 };
 

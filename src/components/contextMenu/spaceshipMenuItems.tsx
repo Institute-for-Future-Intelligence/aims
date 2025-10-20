@@ -7,9 +7,9 @@ import * as Selector from '../../stores/selector';
 import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../hooks.ts';
-import { MenuItem } from '../menuItem.tsx';
-import { Radio, RadioChangeEvent, Space } from 'antd';
+import { MainMenuItem } from '../menuItem.tsx';
 import { UndoableChange } from '../../undo/UndoableChange.ts';
+import { ClickEvent, MenuItem, MenuRadioGroup, RadioChangeEvent } from '@szhsin/react-menu';
 
 export const ResetOrientation = () => {
   const setChanged = usePrimitiveStore(Selector.setChanged);
@@ -28,11 +28,7 @@ export const ResetOrientation = () => {
     setChanged(true);
   };
 
-  return (
-    <MenuItem stayAfterClick={false} hasPadding={false} onClick={reset}>
-      {t('spaceship.ResetOrientation', lang)}
-    </MenuItem>
-  );
+  return <MainMenuItem onClick={reset}>{t('spaceship.ResetOrientation', lang)}</MainMenuItem>;
 };
 
 export const SizeRadioGroup = () => {
@@ -48,38 +44,38 @@ export const SizeRadioGroup = () => {
     setChanged(true);
   };
 
+  const onClick = (e: ClickEvent) => {
+    e.keepOpen = true;
+  };
+
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
-      <Radio.Group
-        value={size}
-        onChange={(e: RadioChangeEvent) => {
-          const oldValue = size;
-          const newValue = e.target.value;
-          const undoableChange = {
-            name: 'Select Spaceship Size',
-            timestamp: Date.now(),
-            oldValue: oldValue,
-            newValue: newValue,
-            undo: () => {
-              setSize(undoableChange.oldValue as number);
-            },
-            redo: () => {
-              setSize(undoableChange.newValue as number);
-            },
-          } as UndoableChange;
-          useStore.getState().addUndoable(undoableChange);
-          setSize(newValue);
-        }}
-      >
-        <Space direction="vertical">
-          <Radio key={1} value={1}>
-            {t('word.Small', lang)}
-          </Radio>
-          <Radio key={2} value={2}>
-            {t('word.Large', lang)}
-          </Radio>
-        </Space>
-      </Radio.Group>
-    </MenuItem>
+    <MenuRadioGroup
+      value={size}
+      onRadioChange={(e: RadioChangeEvent) => {
+        const oldValue = size;
+        const newValue = e.value;
+        const undoableChange = {
+          name: 'Select Spaceship Size',
+          timestamp: Date.now(),
+          oldValue: oldValue,
+          newValue: newValue,
+          undo: () => {
+            setSize(undoableChange.oldValue as number);
+          },
+          redo: () => {
+            setSize(undoableChange.newValue as number);
+          },
+        } as UndoableChange;
+        useStore.getState().addUndoable(undoableChange);
+        setSize(newValue);
+      }}
+    >
+      <MenuItem type="radio" key={1} value={1} onClick={onClick}>
+        {t('word.Small', lang)}
+      </MenuItem>
+      <MenuItem type="radio" key={2} value={2} onClick={onClick}>
+        {t('word.Large', lang)}
+      </MenuItem>
+    </MenuRadioGroup>
   );
 };

@@ -2,19 +2,21 @@
  * @Copyright 2024-2025. Institute for Future Intelligence, Inc.
  */
 
-import { MenuProps } from 'antd';
 import i18n from '../../i18n/i18n';
 import { useStore } from '../../stores/common';
 import { usePrimitiveStore } from '../../stores/commonPrimitive';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { CreateNewProjectItem } from './createNewProjectItem.tsx';
+import NewProjectItem from './createNewProjectItem.tsx';
 import { OpenProjectItem } from './openProjectItem.tsx';
 import { SaveProjectItem } from './saveProjectItem.tsx';
 import { SaveProjectAsItem } from './saveProjectAsItem.tsx';
-import { MenuItem } from '../menuItem.tsx';
+import { MainMenuItem, MainSubMenu } from '../menuItem.tsx';
 import { Util } from '../../Util.ts';
 import { HookAPI } from 'antd/lib/modal/useModal';
 import { setMessage } from '../../helpers.tsx';
+import { t } from 'i18next';
+import { useLanguage } from '../../hooks.ts';
+import * as Selector from '../../stores/selector';
 
 export const askToCreateProject = (modal: HookAPI) => {
   const lang = { lng: useStore.getState().language };
@@ -83,42 +85,28 @@ export const saveProjectAs = () => {
   if (useStore.getState().loggable) useStore.getState().logAction('Save Project As');
 };
 
-export const createProjectMenu = (isMac: boolean, generating: boolean) => {
-  const items: MenuProps['items'] = [];
-  const lang = { lng: useStore.getState().language };
-  const user = useStore.getState().user;
+interface Props {
+  isMac: boolean;
+}
+
+const ProjectMenu = ({ isMac }: Props) => {
+  const lang = useLanguage();
+  const generating = usePrimitiveStore(Selector.generating);
   const projectTitle = useStore.getState().projectState.title;
+  const user = useStore.getState().user;
 
-  items.push({
-    key: 'create-new-project',
-    disabled: generating,
-    label: <CreateNewProjectItem isMac={isMac} />,
-  });
+  return (
+    <MainSubMenu label={t('menu.projectSubMenu', lang)}>
+      <NewProjectItem isMac={isMac} generating={generating} />
 
-  items.push({
-    key: 'open-project',
-    disabled: generating,
-    label: <OpenProjectItem isMac={isMac} askToOpenProject={askToOpenProject} />,
-  });
+      <OpenProjectItem isMac={isMac} askToOpenProject={askToOpenProject} />
 
-  if (useStore.getState().projectState.title) {
-    items.push({
-      key: 'save-project',
-      label: <SaveProjectItem isMac={isMac} saveProject={saveProject} />,
-    });
-  }
+      {!!projectTitle && <SaveProjectItem isMac={isMac} saveProject={saveProject} />}
 
-  items.push({
-    key: 'save-project-as',
-    label: <SaveProjectAsItem isMac={isMac} saveProjectAs={saveProjectAs} />,
-  });
+      <SaveProjectAsItem isMac={isMac} saveProjectAs={saveProjectAs} />
 
-  if (user.uid && projectTitle) {
-    items.push({
-      key: 'generate-project-link',
-      label: (
-        <MenuItem
-          hasPadding={false}
+      {user.uid && projectTitle && (
+        <MainMenuItem
           onClick={() => {
             if (!user.uid || !projectTitle) return;
             Util.generateProjectLink(user.uid, projectTitle, () => {
@@ -127,10 +115,10 @@ export const createProjectMenu = (isMac: boolean, generating: boolean) => {
           }}
         >
           {i18n.t('projectListPanel.GenerateProjectLink', lang)}
-        </MenuItem>
-      ),
-    });
-  }
-
-  return items;
+        </MainMenuItem>
+      )}
+    </MainSubMenu>
+  );
 };
+
+export default ProjectMenu;

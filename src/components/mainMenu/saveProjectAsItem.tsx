@@ -5,7 +5,7 @@
 import { usePrimitiveStore } from '../../stores/commonPrimitive.ts';
 import * as Selector from '../../stores/selector';
 import { useLanguage } from '../../hooks.ts';
-import { LabelMark, MenuItem } from '../menuItem.tsx';
+import { LabelMark, MainMenuItem } from '../menuItem.tsx';
 import i18n from '../../i18n/i18n.ts';
 import NewProjectDialog from './newProjectDialog.tsx';
 
@@ -15,10 +15,10 @@ export const SaveProjectAsItem = ({ isMac, saveProjectAs }: { isMac: boolean; sa
 
   return (
     <>
-      <MenuItem hasPadding={false} onClick={() => saveProjectAs()}>
+      <MainMenuItem onClick={() => saveProjectAs()}>
         {i18n.t('menu.project.SaveProjectAs', lang)}
         <LabelMark>({isMac ? '⌘' : 'Ctrl'}+Shift+S)</LabelMark>...
-      </MenuItem>
+      </MainMenuItem>
       {saveProjectDialog && <NewProjectDialog saveAs={true} />}
     </>
   );

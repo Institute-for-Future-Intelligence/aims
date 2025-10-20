@@ -6,9 +6,9 @@ import React, { useMemo } from 'react';
 import { useStore } from '../../stores/common';
 import * as Selector from '../../stores/selector';
 import { useLanguage } from '../../hooks';
-import { Checkbox, ColorPicker, Radio, RadioChangeEvent, Space } from 'antd';
+import { Checkbox, ColorPicker } from 'antd';
 import { UndoableChange } from '../../undo/UndoableChange';
-import { LabelMark, MenuItem } from '../menuItem';
+import { LabelMark, MainMenuItem, MainSubMenu } from '../menuItem';
 import { UndoableCheck } from '../../undo/UndoableCheck';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useTranslation } from 'react-i18next';
@@ -26,8 +26,10 @@ import {
 } from '../../view/displayOptions';
 import { isCartoon } from '../../view/moleculeTools.ts';
 import { SpaceshipDisplayMode } from '../../constants.ts';
+import { ClickEvent, MenuItem, MenuRadioGroup, RadioChangeEvent } from '@szhsin/react-menu';
+import i18n from '../../i18n/i18n.ts';
 
-export const ViewAngleMenuItems = () => {
+export const ViewAngleSubmenu = () => {
   const navigationView = useStore(Selector.navigationView);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
@@ -115,22 +117,20 @@ export const ViewAngleMenuItems = () => {
   };
 
   return (
-    <Space direction="vertical">
+    <MainSubMenu hasPadding={true} label={i18n.t('molecularViewer.ViewDirection', lang)}>
       {CHAMBER_VIEW_ANGLES.map((item, idx) => {
         return (
-          <MenuItem
-            stayAfterClick={false}
-            hasPadding={false}
+          <MainMenuItem
             key={`${idx}-${item.value}`}
             onClick={() => {
               setAngle(item.value);
             }}
           >
             {t(item.label, lang)}
-          </MenuItem>
+          </MainMenuItem>
         );
       })}
-    </Space>
+    </MainSubMenu>
   );
 };
 
@@ -147,7 +147,7 @@ export const AutoRotateCheckBox = ({ isMac }: { isMac?: boolean }) => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
+    <MainMenuItem stayAfterClick>
       <Checkbox
         style={{ width: '100%' }}
         checked={autoRotate}
@@ -171,7 +171,7 @@ export const AutoRotateCheckBox = ({ isMac }: { isMac?: boolean }) => {
         {t('menu.view.AutoRotate', lang)}
         {isMac !== undefined && <LabelMark>({isMac ? '⌘' : 'Ctrl'}+M)</LabelMark>}
       </Checkbox>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -192,9 +192,9 @@ export const Screenshot = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={true} onClick={takeScreenshot}>
+    <MainMenuItem hasPadding={true} onClick={takeScreenshot}>
       {t('molecularViewer.TakeScreenshot', lang)}
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -212,7 +212,7 @@ export const AxesCheckBox = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
+    <MainMenuItem stayAfterClick>
       <Checkbox
         style={{ width: '100%' }}
         checked={axes}
@@ -235,7 +235,7 @@ export const AxesCheckBox = () => {
       >
         {t('molecularViewer.Axes', lang)}
       </Checkbox>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -253,7 +253,7 @@ export const ContainerCheckBox = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
+    <MainMenuItem stayAfterClick>
       <Checkbox
         style={{ width: '100%' }}
         checked={visible}
@@ -276,7 +276,7 @@ export const ContainerCheckBox = () => {
       >
         {t('molecularViewer.Container', lang)}
       </Checkbox>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -303,7 +303,7 @@ export const NavigationViewCheckBox = ({ isMac, popup }: { isMac?: boolean; popu
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
+    <MainMenuItem stayAfterClick={false}>
       <Checkbox
         style={{ width: '100%' }}
         checked={navigationView}
@@ -327,7 +327,7 @@ export const NavigationViewCheckBox = ({ isMac, popup }: { isMac?: boolean; popu
         {t('menu.view.NavigationView', lang)}
         <LabelMark>{popup ? '' : isMac ? '(⌘+U)' : '(Ctrl+U)'}</LabelMark>
       </Checkbox>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -345,7 +345,7 @@ export const GalleryCheckBox = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
+    <MainMenuItem stayAfterClick={false}>
       <Checkbox
         style={{ width: '100%' }}
         checked={!hideGallery}
@@ -368,7 +368,7 @@ export const GalleryCheckBox = () => {
       >
         {t('menu.view.ShowGallery', lang)}
       </Checkbox>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -386,7 +386,7 @@ export const FogCheckBox = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
+    <MainMenuItem stayAfterClick>
       <Checkbox
         style={{ width: '100%' }}
         checked={foggy}
@@ -409,7 +409,7 @@ export const FogCheckBox = () => {
       >
         {t('molecularViewer.Fog', lang)}
       </Checkbox>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
@@ -427,7 +427,7 @@ export const BackgroundColor = () => {
   };
 
   return (
-    <MenuItem stayAfterClick={false} hasPadding={true}>
+    <MainMenuItem hasPadding stayAfterClick>
       <ColorPicker
         trigger={'hover'}
         value={color}
@@ -451,11 +451,11 @@ export const BackgroundColor = () => {
       >
         {t('molecularViewer.BackgroundColor', lang)}
       </ColorPicker>
-    </MenuItem>
+    </MainMenuItem>
   );
 };
 
-export const GlobalStyleRadioGroup = () => {
+export const GlobalStyleRadioSubmenu = ({ hasPadding }: { hasPadding?: boolean }) => {
   const testMolecules = useStore(Selector.testMolecules);
   const molecularViewerStyle = useStore(Selector.chamberViewerStyle);
   const setChanged = usePrimitiveStore(Selector.setChanged);
@@ -479,13 +479,17 @@ export const GlobalStyleRadioGroup = () => {
     return false;
   }, [testMolecules]);
 
+  const onItemClick = (e: ClickEvent) => {
+    e.keepOpen = true;
+  };
+
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
-      <Radio.Group
+    <MainSubMenu hasPadding={hasPadding} label={i18n.t('molecularViewer.GlobalStyle', lang)}>
+      <MenuRadioGroup
         value={molecularViewerStyle}
-        onChange={(e: RadioChangeEvent) => {
+        onRadioChange={(e: RadioChangeEvent) => {
           const oldValue = molecularViewerStyle;
-          const newValue = e.target.value;
+          const newValue = e.value;
           const undoableChange = {
             name: 'Select Molecular Viewer Style',
             timestamp: Date.now(),
@@ -502,22 +506,20 @@ export const GlobalStyleRadioGroup = () => {
           setStyle(newValue);
         }}
       >
-        <Space direction="vertical">
-          {CHAMBER_STYLE_LABELS.map((radio, idx) => {
-            if (!multipleResidues && isCartoon(radio.value)) return null;
-            return (
-              <Radio key={`${idx}-${radio.value}`} value={radio.value} style={{ width: '100%' }}>
-                {t(radio.label, lang)}
-              </Radio>
-            );
-          })}
-        </Space>
-      </Radio.Group>
-    </MenuItem>
+        {CHAMBER_STYLE_LABELS.map((radio, idx) => {
+          if (!multipleResidues && isCartoon(radio.value)) return null;
+          return (
+            <MenuItem type="radio" key={`${idx}-${radio.value}`} value={radio.value} onClick={onItemClick}>
+              {t(radio.label, lang)}
+            </MenuItem>
+          );
+        })}
+      </MenuRadioGroup>
+    </MainSubMenu>
   );
 };
 
-export const MaterialRadioGroup = () => {
+export const MaterialRadioSubmenu = ({ hasPadding }: { hasPadding?: boolean }) => {
   const molecularViewerMaterial = useStore(Selector.chamberViewerMaterial);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
@@ -530,13 +532,17 @@ export const MaterialRadioGroup = () => {
     setChanged(true);
   };
 
+  const onItemClick = (e: ClickEvent) => {
+    e.keepOpen = true;
+  };
+
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
-      <Radio.Group
+    <MainSubMenu hasPadding={hasPadding} label={i18n.t('molecularViewer.Material', lang)}>
+      <MenuRadioGroup
         value={molecularViewerMaterial}
-        onChange={(e: RadioChangeEvent) => {
+        onRadioChange={(e: RadioChangeEvent) => {
           const oldValue = molecularViewerMaterial;
-          const newValue = e.target.value;
+          const newValue = e.value;
           const undoableChange = {
             name: 'Select Molecular Viewer Material',
             timestamp: Date.now(),
@@ -553,19 +559,17 @@ export const MaterialRadioGroup = () => {
           setMaterial(newValue);
         }}
       >
-        <Space direction="vertical">
-          {MATERIAL_LABELS.map((radio, idx) => (
-            <Radio key={`${idx}-${radio.value}`} value={radio.value} style={{ width: '100%' }}>
-              {t(radio.label, lang)}
-            </Radio>
-          ))}
-        </Space>
-      </Radio.Group>
-    </MenuItem>
+        {MATERIAL_LABELS.map((radio, idx) => (
+          <MenuItem type="radio" key={`${idx}-${radio.value}`} value={radio.value} onClick={onItemClick}>
+            {t(radio.label, lang)}
+          </MenuItem>
+        ))}
+      </MenuRadioGroup>
+    </MainSubMenu>
   );
 };
 
-export const ColoringRadioGroup = () => {
+export const ColoringRadioSubmenu = ({ hasPadding }: { hasPadding?: boolean }) => {
   const molecularViewerColoring = useStore(Selector.chamberViewerColoring);
   const setChanged = usePrimitiveStore(Selector.setChanged);
   const { t } = useTranslation();
@@ -578,13 +582,17 @@ export const ColoringRadioGroup = () => {
     setChanged(true);
   };
 
+  const onItemClick = (e: ClickEvent) => {
+    e.keepOpen = true;
+  };
+
   return (
-    <MenuItem stayAfterClick={false} hasPadding={false}>
-      <Radio.Group
+    <MainSubMenu hasPadding={hasPadding} label={i18n.t('molecularViewer.Color', lang)}>
+      <MenuRadioGroup
         value={molecularViewerColoring}
-        onChange={(e: RadioChangeEvent) => {
+        onRadioChange={(e: RadioChangeEvent) => {
           const oldValue = molecularViewerColoring;
-          const newValue = e.target.value;
+          const newValue = e.value;
           const undoableChange = {
             name: 'Select Molecular Viewer Coloring',
             timestamp: Date.now(),
@@ -601,14 +609,12 @@ export const ColoringRadioGroup = () => {
           setColoring(newValue);
         }}
       >
-        <Space direction="vertical">
-          {CHAMBER_COLORING_LABELS.map((radio, idx) => (
-            <Radio key={`${idx}-${radio.value}`} value={radio.value} style={{ width: '100%' }}>
-              {t(radio.label, lang)}
-            </Radio>
-          ))}
-        </Space>
-      </Radio.Group>
-    </MenuItem>
+        {CHAMBER_COLORING_LABELS.map((radio, idx) => (
+          <MenuItem type="radio" key={`${idx}-${radio.value}`} value={radio.value} onClick={onItemClick}>
+            {t(radio.label, lang)}
+          </MenuItem>
+        ))}
+      </MenuRadioGroup>
+    </MainSubMenu>
   );
 };

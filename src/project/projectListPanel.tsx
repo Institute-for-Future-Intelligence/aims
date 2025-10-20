@@ -20,7 +20,7 @@ import Draggable from 'react-draggable';
 import { usePrimitiveStore } from '../stores/commonPrimitive.ts';
 import { useTranslation } from 'react-i18next';
 import { MenuProps } from 'antd/lib';
-import { MenuItem } from '../components/menuItem.tsx';
+import { AntdMenuItem } from '../components/menuItem.tsx';
 import { ProjectInfo, ProjectState } from '../types.ts';
 import { fetchProject, postFetch } from '../cloudProjectUtil.ts';
 import dayjs from 'dayjs';
@@ -381,7 +381,7 @@ const ProjectListPanel = React.memo(
                         key: 'project-title',
                         label: (
                           <>
-                            <MenuItem fontWeight={'bold'}>{title}</MenuItem>
+                            <AntdMenuItem fontWeight={'bold'}>{title}</AntdMenuItem>
                             <hr />
                           </>
                         ),
@@ -389,13 +389,15 @@ const ProjectListPanel = React.memo(
                       {
                         key: 'open-project',
                         label: (
-                          <MenuItem onClick={() => openProject(record as ProjectInfo)}>{t('word.Open', lang)}</MenuItem>
+                          <AntdMenuItem onClick={() => openProject(record as ProjectInfo)}>
+                            {t('word.Open', lang)}
+                          </AntdMenuItem>
                         ),
                       },
                       {
                         key: 'copy-title-to-clip-board',
                         label: (
-                          <MenuItem
+                          <AntdMenuItem
                             onClick={() => {
                               navigator.clipboard.writeText(title).then(() => {
                                 setMessage('success', i18n.t('projectListPanel.TitleCopiedToClipBoard', lang) + '.');
@@ -403,32 +405,34 @@ const ProjectListPanel = React.memo(
                             }}
                           >
                             {t('projectListPanel.CopyTitle', lang)}
-                          </MenuItem>
+                          </AntdMenuItem>
                         ),
                       },
                       {
                         key: 'rename-project',
                         label: (
-                          <MenuItem
+                          <AntdMenuItem
                             onClick={() => {
                               setOldTitle(title);
                               setRenameDialogVisible(true);
                             }}
                           >
                             {t('word.Rename', lang)}
-                          </MenuItem>
+                          </AntdMenuItem>
                         ),
                       },
                       {
                         key: 'delete-project',
                         label: (
-                          <MenuItem onClick={() => confirmDeleteProject(title)}>{t('word.Delete', lang)}</MenuItem>
+                          <AntdMenuItem onClick={() => confirmDeleteProject(title)}>
+                            {t('word.Delete', lang)}
+                          </AntdMenuItem>
                         ),
                       },
                       {
                         key: 'generate-project-link',
                         label: (
-                          <MenuItem
+                          <AntdMenuItem
                             onClick={() => {
                               if (user.uid)
                                 Util.generateProjectLink(user.uid, title, () => {
@@ -440,7 +444,7 @@ const ProjectListPanel = React.memo(
                             }}
                           >
                             {t('projectListPanel.GenerateProjectLink', lang)}
-                          </MenuItem>
+                          </AntdMenuItem>
                         ),
                       },
                     ];

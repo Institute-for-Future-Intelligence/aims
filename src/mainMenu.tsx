@@ -9,28 +9,22 @@ import enUS from 'antd/lib/locale/en_US';
 import React, { useMemo, useState } from 'react';
 import { useStore } from './stores/common';
 import styled from 'styled-components';
-import { Dropdown, MenuProps, Radio } from 'antd';
 import logo from './assets/aims-logo-32.png';
 import About from './about';
 import * as Selector from './stores/selector';
 import { Util } from './Util';
 import { useTranslation } from 'react-i18next';
-import { MenuItem } from './components/menuItem';
-import { createProjectMenu } from './components/mainMenu/projectMenu';
-import { createViewMenu } from './components/mainMenu/viewMenu';
-import { createEditMenu } from './components/mainMenu/editMenu';
+import ProjectMenu from './components/mainMenu/projectMenu';
+import ViewMenu from './components/mainMenu/viewMenu';
+import EditMenu from './components/mainMenu/editMenu';
 import { Language } from './constants';
-import { createExamplesMenu } from './components/mainMenu/examplesMenu.tsx';
-import { createAccessoriesMenu } from './components/mainMenu/accessoriesMenu.tsx';
-import { usePrimitiveStore } from './stores/commonPrimitive.ts';
-
-const languageRadioStyle = {
-  width: '100%',
-  display: 'block',
-  height: '30px',
-  paddingLeft: '10px',
-  lineHeight: '30px',
-};
+import ExampleMenu from './components/mainMenu/examplesMenu.tsx';
+import AccessoriesMenu from './components/mainMenu/accessoriesMenu.tsx';
+import { ClickEvent, Menu, MenuItem, MenuRadioGroup } from '@szhsin/react-menu';
+import { MainMenuItem, MainSubMenu } from './components/menuItem.tsx';
+import '@szhsin/react-menu/dist/index.css';
+import '@szhsin/react-menu/dist/transitions/zoom.css';
+import './components/mainMenu/style.css';
 
 const MainMenuContainer = styled.div`
   width: 100px;
@@ -67,23 +61,8 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
   const user = useStore.getState().user;
   const language = useStore(Selector.language);
-  const undoManager = useStore.getState().undoManager;
-  const projectTitle = useStore.getState().projectState.title;
-  const generating = usePrimitiveStore.getState().generating;
 
   const [aboutUs, setAboutUs] = useState(false);
-
-  // Manually update menu when visible to avoid listen to common store change.
-  const [updateMenuFlag, setUpdateMenuFlag] = useState(false);
-
-  const hasUndo = undoManager.hasUndo();
-  const hasRedo = undoManager.hasRedo();
-
-  const handleVisibleChange = (visible: boolean) => {
-    if (visible) {
-      setUpdateMenuFlag(!updateMenuFlag);
-    }
-  };
 
   const { t } = useTranslation();
   const lang = useMemo(() => {
@@ -105,120 +84,75 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
     return 'Ctrl+Home';
   }, []);
 
-  const createItems = useMemo(() => {
-    const items: MenuProps['items'] = [];
+  const menuButton = () => (
+    <MainMenuContainer>
+      <StyledImage src={logo} title={t('tooltip.clickToOpenMenu', lang)} />
+      <LabelContainer>
+        <span style={{ fontSize: '10px', alignContent: 'center', cursor: 'pointer' }}>{t('menu.mainMenu', lang)}</span>
+      </LabelContainer>
+    </MainMenuContainer>
+  );
 
-    // project menu
-    if (!viewOnly && user.uid) {
-      items.push({
-        key: 'project-sub-menu',
-        label: <MenuItem hasPadding={false}>{t('menu.projectSubMenu', lang)}</MenuItem>,
-        children: createProjectMenu(isMac, generating),
-      });
-    }
+  const onLanguageItemClick = (e: ClickEvent) => {
+    e.keepOpen = true;
+  };
 
-    // edit menu
-    if (hasUndo || hasRedo) {
-      items.push({
-        key: 'edit-sub-menu',
-        label: <MenuItem hasPadding={false}>{t('menu.editSubMenu', lang)}</MenuItem>,
-        children: createEditMenu(undoManager, isMac, () => setUpdateMenuFlag(!updateMenuFlag)),
-      });
-    }
+  return (
+    <>
+      <Menu
+        menuButton={menuButton}
+        menuStyle={{ fontSize: '14px', minWidth: '4rem', borderRadius: '0.35rem' }}
+        transition
+      >
+        {!viewOnly && user.uid && <ProjectMenu isMac={isMac} />}
 
-    // view menu
-    items.push({
-      key: 'view-sub-menu',
-      label: <MenuItem hasPadding={false}>{t('menu.viewSubMenu', lang)}</MenuItem>,
-      children: createViewMenu(keyHome, isMac),
-    });
+        {<EditMenu isMac={isMac} />}
 
-    // accessories menu
-    items.push({
-      key: 'accessories-sub-menu',
-      label: <MenuItem hasPadding={false}>{t('menu.accessoriesSubMenu', lang)}</MenuItem>,
-      children: createAccessoriesMenu(),
-    });
+        <ViewMenu keyHome={keyHome} isMac={isMac} />
 
-    // examples menu
-    items.push({
-      key: 'examples-sub-menu',
-      disabled: generating,
-      label: <MenuItem hasPadding={false}>{t('menu.examplesSubMenu', lang)}</MenuItem>,
-      children: createExamplesMenu(viewOnly),
-    });
+        <AccessoriesMenu />
 
-    // language menu
-    const languageMenuItems: MenuProps['items'] = [
-      {
-        key: 'language',
-        label: (
-          <MenuItem stayAfterClick>
-            <Radio.Group
-              value={language}
-              style={{ height: '100px' }}
-              onChange={(e) => {
-                setUpdateMenuFlag(!updateMenuFlag);
-                setCommonStore((state) => {
-                  state.language = e.target.value;
-                  switch (state.language) {
-                    case 'zh_cn':
-                      state.locale = zhCN;
-                      break;
-                    case 'zh_tw':
-                      state.locale = zhTW;
-                      break;
-                    default:
-                      state.locale = enUS;
-                  }
-                });
-              }}
-            >
-              <Radio style={languageRadioStyle} value={'en'}>
-                {Language.English}
-              </Radio>
-              <Radio style={languageRadioStyle} value={'zh_cn'}>
-                {Language.ChineseSimplified}
-              </Radio>
-              <Radio style={languageRadioStyle} value={'zh_tw'}>
-                {Language.ChineseTraditional}
-              </Radio>
-            </Radio.Group>
-          </MenuItem>
-        ),
-      },
-    ];
-    items.push({ key: 'language-sub-menu', label: t('menu.languageSubMenu', lang), children: languageMenuItems });
+        <ExampleMenu viewOnly={viewOnly} />
 
-    // about window
-    items.push({
-      key: 'about',
-      label: (
-        <MenuItem
+        <MainSubMenu label={t('menu.languageSubMenu', lang)}>
+          <MenuRadioGroup
+            value={language}
+            onRadioChange={(e) => {
+              setCommonStore((state) => {
+                state.language = e.value;
+                switch (state.language) {
+                  case 'zh_cn':
+                    state.locale = zhCN;
+                    break;
+                  case 'zh_tw':
+                    state.locale = zhTW;
+                    break;
+                  default:
+                    state.locale = enUS;
+                }
+              });
+            }}
+          >
+            <MenuItem type="radio" value={'en'} onClick={onLanguageItemClick}>
+              {Language.English}
+            </MenuItem>
+            <MenuItem type="radio" value={'zh_cn'} onClick={onLanguageItemClick}>
+              {Language.ChineseSimplified}
+            </MenuItem>
+            <MenuItem type="radio" value={'zh_tw'} onClick={onLanguageItemClick}>
+              {Language.ChineseTraditional}
+            </MenuItem>
+          </MenuRadioGroup>
+        </MainSubMenu>
+
+        <MainMenuItem
           onClick={() => {
             setAboutUs(true);
           }}
         >
           {t('menu.AboutUs', lang)}...
-        </MenuItem>
-      ),
-    });
-
-    return items;
-  }, [language, hasUndo, hasRedo, updateMenuFlag, user.uid, projectTitle, generating]);
-
-  return (
-    <>
-      <Dropdown menu={{ items: createItems }} trigger={['click']} onOpenChange={handleVisibleChange}>
-        <MainMenuContainer>
-          <StyledImage src={logo} title={t('tooltip.clickToOpenMenu', lang)} />
-          <LabelContainer>
-            <span style={{ fontSize: '10px', alignContent: 'center', cursor: 'pointer' }}>
-              {t('menu.mainMenu', lang)}
-            </span>
-          </LabelContainer>
-        </MainMenuContainer>
-      </Dropdown>
+        </MainMenuItem>
+      </Menu>
       {aboutUs && <About close={() => setAboutUs(false)} />}
     </>
   );
