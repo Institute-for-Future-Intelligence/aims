@@ -1,5 +1,5 @@
 /*
- * @Copyright 2023-2025. Institute for Future Intelligence, Inc.
+ * @Copyright 2023-2026. Institute for Future Intelligence, Inc.
  */
 
 import zhCN from 'antd/lib/locale/zh_CN';
@@ -59,7 +59,7 @@ const LabelContainer = styled.div`
 
 const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
   const setCommonStore = useStore(Selector.set);
-  const user = useStore.getState().user;
+  const user = useStore(Selector.user);
   const language = useStore(Selector.language);
 
   const [aboutUs, setAboutUs] = useState(false);
@@ -96,6 +96,8 @@ const MainMenu = React.memo(({ viewOnly }: { viewOnly: boolean }) => {
   const onLanguageItemClick = (e: ClickEvent) => {
     e.keepOpen = true;
   };
+
+  console.log(user.uid);
 
   return (
     <>
